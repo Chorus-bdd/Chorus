@@ -1,0 +1,98 @@
+/* Copyright (C) 2000-2011 The Software Conservancy as Trustee.
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Nothing in this notice shall be deemed to grant any rights to trademarks,
+ * copyrights, patents, trade secrets or any other intellectual property of the
+ * licensor or any contributor except as expressly stated herein. No patent
+ * license is granted separate from the Software, for code that you delete from
+ * the Software, or for combinations of the Software with other software or
+ * hardware.
+ */
+
+package uk.co.smartkey.chorus.remoting.jmx;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import uk.co.smartkey.chorus.core.interpreter.ChorusContext;
+import uk.co.smartkey.chorus.remoting.ChorusRemotingException;
+
+import javax.management.MBeanException;
+import java.util.Map;
+
+/**
+ * JMX proxy specifically interacting with Features exported by the ChorusHandlerJmxExporter class.
+ * Provides simple interface for interacting with the methods exposed by the ChorusHandlerJmxExporter:
+ * allows for step metadata to be downloaded from remote handlers, and for these methods to be
+ * invoked.
+ * <p/>
+ * Created by: Steve Neal
+ * Date: 14/10/11
+ */
+public class ChorusHandlerJmxProxy extends DynamicJmxProxy {
+
+    private Log log = LogFactory.getLog(getClass());
+
+    private Map<String, String[]> stepMetadata;
+
+    private static final String JMX_EXPORTER_NAME = "uk.co.smartkey.chorus:name=chorus_exporter";
+    private static final String JMX_EXPORTER_STEP_METADATA = "StepMetadata";
+
+    @SuppressWarnings("unchecked")
+    public ChorusHandlerJmxProxy(String host, int jmxPort) throws ChorusRemotingException {
+        super(host, jmxPort, JMX_EXPORTER_NAME);
+
+        //the step metadata won't change so load from the remote MBean and cache it here
+        stepMetadata = (Map<String, String[]>) getAttribute(JMX_EXPORTER_STEP_METADATA);
+
+        //debug logging of metadata
+        if (log.isDebugEnabled()) {
+            log.debug("Loading step metadata for (" + objectName + ")");
+            for (Map.Entry<String, String[]> entry : stepMetadata.entrySet()) {
+                log.debug(String.format("Found method (%s) matches (%s) pending (%s)",
+                        entry.getKey(), entry.getValue()[0], entry.getValue()[1] != null));
+            }
+        }
+    }
+
+    public Map<String, String[]> getStepMetadata() {
+        return stepMetadata;
+    }
+
+    /**
+     * Calls the invoke Step method on the remote MBean. The current ChorusContext will be
+     * serialized as part of this and marshalled to the remote bean.
+     *
+     * @param methodUid the uid of the method to call
+     * @param params    params to pass in the call
+     */
+    public void invokeStep(String methodUid, Object... params) throws Exception {
+        try {
+            //call the remote method
+            Object[] args = {methodUid, ChorusContext.getContext(), params};
+            String[] signature = {"java.lang.String", "uk.co.smartkey.chorus.core.interpreter.ChorusContext", "[Ljava.lang.Object;"};
+            log.debug(String.format("About to invoke method (%s) on MBean (%s)", methodUid, objectName));
+            ChorusContext update = (ChorusContext) mBeanServerConnection.invoke(objectName, "invokeStep", args, signature);
+            ChorusContext.resetContext(update);
+        } catch (MBeanException e) {
+            throw e.getTargetException();
+        }
+    }
+}

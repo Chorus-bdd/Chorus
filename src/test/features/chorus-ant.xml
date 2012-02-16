@@ -1,0 +1,21 @@
+<project name="run-chorus" default="run-chorus">
+
+    <path id="classpath">
+        <pathelement path="../dist/jar/chorus.jar"/>
+        <fileset dir="../../lib" includes="**/*.jar"/>
+        <fileset dir="../../testlib" includes="**/*.jar"/>
+        <pathelement location="../../out/production/bhavaya"/>
+        <pathelement location="../../out/test/bhavaya"/>
+    </path>
+
+    <taskdef classname="uk.co.smartkey.chorus.ant.ChorusTask" name="chorus" classpathref="classpath"/>
+
+    <target name="run-chorus">
+        <chorus handlerBasePackages="uk.co.smartkey.chorus.handlers" classpathref="classpath">
+            <fileset dir=".">
+                <include name="**/*.feature"/>
+            </fileset>
+        </chorus>
+    </target>
+
+</project>
