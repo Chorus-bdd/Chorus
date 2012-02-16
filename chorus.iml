@@ -31,6 +31,7 @@
     <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.46" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.8.2" level="project" />
+    <orderEntry type="library" name="Maven: javax.annotation:jsr250-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
   </component>
 </module>
