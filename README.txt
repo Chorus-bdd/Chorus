@@ -6,4 +6,6 @@ Key features:
  * Modular interpreter architecture that allows subprojects to extend/customise core features
  * Pure Java implementation
 
-For more information, see the Chorus wiki at: http://www.smartkey.co.uk/tools.html, or contact us at
+For more information:
+ * See the Chorus wiki at: https://github.com/steveneal/Chorus/wiki
+ * Or contact us here http://www.smartkey.co.uk/contact.html
