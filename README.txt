@@ -7,5 +7,5 @@ Key features:
  * Pure Java implementation
 
 For more information:
- * See the Chorus wiki at: https://github.com/steveneal/Chorus/wiki
+ * See the Chorus wiki at: http://www.chorus-bdd.org
  * Or contact us here http://www.smartkey.co.uk/contact.html
