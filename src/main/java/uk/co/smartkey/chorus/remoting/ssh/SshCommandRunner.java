@@ -36,7 +36,10 @@ import com.jcraft.jsch.UserInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by: Steve Neal
@@ -44,16 +47,27 @@ import java.io.InputStream;
  */
 public class SshCommandRunner {
 
+    private static final String PROMPT = "PROMPT";
+
     private Log log = LogFactory.getLog(getClass());
 
     private final String host;
     private final String user;
+
+    // "PROMPT" if should prompt for password when attempting connection
     private final String password;
 
     public SshCommandRunner(String host, String user, String password) {
         this.host = host;
         this.user = user;
         this.password = password;
+    }
+
+    /**
+     * Create a SshCommandRunnder which will prompt for a password from standard input
+     */
+    public SshCommandRunner(String host, String user) {
+        this(host, user, PROMPT);
     }
 
     public int connectAndRunCommand(String command) {
@@ -139,16 +153,33 @@ public class SshCommandRunner {
     }
 
     private class SimpleChorusUserInfo implements UserInfo {
+
+        private String pass = password;
+
         public String getPassphrase() {
             return null;//passphrase for keystore
         }
 
         public String getPassword() {
-            return password;
+            return pass;
         }
 
         public boolean promptPassword(String s) {
-            return true;//allow prompt for password
+            if ( PROMPT.equals(pass) ) {
+                readPasswordFromStandardInput();
+            }
+            return true;
+        }
+
+        private void readPasswordFromStandardInput() {
+            try {
+                System.out.print(String.format("Password for %s@%s? --> ", user, host));
+                InputStreamReader converter = new InputStreamReader(System.in);
+                BufferedReader in = new BufferedReader(converter);
+                pass = in.readLine();
+            } catch (Throwable t) {
+                log.error(String.format("Failed to read password for %s@%s from standard input", user, host), t);
+            }
         }
 
         public boolean promptPassphrase(String s) {
@@ -166,7 +197,7 @@ public class SshCommandRunner {
     }
 
     public static void main(String[] args) {
-        SshCommandRunner commandRunner = new SshCommandRunner("fftlrt9140.de.dresdnerkb.com", "ga2neil", "c0mputer");
+        SshCommandRunner commandRunner = new SshCommandRunner("www.objectdefinitions.com", "user" /**, "password" **/);
         commandRunner.connectAndRunCommand("ls -l /");
     }
 }
