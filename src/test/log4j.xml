@@ -19,7 +19,7 @@ ${feature.process.name} - a unique name generated for each process started
         </layout>
     </appender>
 
-    <category name="uk.co.smartkey.chorus">
+    <category name="org.chorusbdd.chorus">
         <priority value="WARN"/>
     </category>
 
