@@ -44,7 +44,7 @@ import static junit.framework.Assert.assertTrue;
 public class ChorusContextHandler {
 
     @Step("the context has no values in it")
-    public void conextIsEmpty() {
+    public void contextIsEmpty() {
         ChorusContext context = ChorusContext.getContext();
         assertTrue("The context is not empty: " + context, context.isEmpty());
     }

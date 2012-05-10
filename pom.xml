@@ -4,9 +4,29 @@
     <groupId>uk.co.smartkey</groupId>
     <artifactId>chorus</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>chorus</name>
     <url>http://www.smartkey.co.uk/tools.html</url>
+    <build>
+        <!-- Copy chorus resources from the main test/java subtree, so resource files
+        required by a handler can be local to the handler.java, rather than residing in
+        a separate tree under test/resources-->
+        <testResources>
+             <testResource>
+               <directory>src/test/java</directory>
+                 <includes>
+                   <include>**/*.xml</include>
+                   <include>**/*.properties</include>
+                   <include>**/*.feature</include>
+                 </includes>
+             </testResource>
+            <!-- include the standard test/resources directory, this is still supported
+            if you don't want to put resources within the test/java subtree -->
+            <testResource>
+               <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
