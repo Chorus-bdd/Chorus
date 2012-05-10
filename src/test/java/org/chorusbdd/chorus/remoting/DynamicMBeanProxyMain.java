@@ -8,7 +8,6 @@ import org.chorusbdd.chorus.remoting.jmx.DynamicJmxProxy;
  */
 public class DynamicMBeanProxyMain {
     public static void main(String[] args) throws ChorusRemotingException {
-        //try calling a method on the shadow pricer
         String host = "localhost";
         int jmxPort = 18080;
         String mBeanName = "org.chorusbdd.chorus:name=testbean";

@@ -15,8 +15,8 @@ import static org.junit.Assert.assertEquals;
  * Date: 19/01/12
  */
 @Handler("Configurations With Spring Fixtures")
-@ContextConfiguration("SpringFixtureHandler-context.xml")
-public class SpringFixtureHandler {
+@ContextConfiguration("ConfigurationsWithSpringFixturesHandler-context.xml")
+public class ConfigurationsWithSpringFixturesHandler {
 
     @Resource
     String injectedString;
