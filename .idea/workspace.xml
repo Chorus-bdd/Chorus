@@ -2,17 +2,61 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="740ddd9a-c271-4269-ac44-92fec1153aed" name="Default" comment="">
-      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\resources\org\chorusbdd\chorus\calculator\Calculator-context.xml" afterPath="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator-context.xml" />
-      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\resources\org\chorusbdd\chorus\calculator\Calculator.properties" afterPath="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator.properties" />
-      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\resources\org\chorusbdd\chorus\core\interpreter\ChorusParserTagsTest.test.feature" afterPath="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/core/interpreter/ChorusParserTagsTest.test.feature" />
-      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\resources\org\chorusbdd\chorus\handlers\ConfigurationsWithSpringFixturesHandler-context-confA.xml" afterPath="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context-confA.xml" />
-      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\resources\org\chorusbdd\chorus\handlers\ConfigurationsWithSpringFixturesHandler-context-confB.xml" afterPath="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context-confB.xml" />
-      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\resources\org\chorusbdd\chorus\handlers\ConfigurationsWithSpringFixturesHandler-context.xml" afterPath="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/features/calculator/conf/ProcessesWithJmx-processes.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/test/features/processes/conf/log4j.xml" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\features\conf\ProcessesWithJmx-processes.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers\configurations_for_processes\Lemming.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers\configurations_with_spring\ConfigurationsWithSpringFixturesHandler-context-confA.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers\configurations_with_spring\ConfigurationsWithSpringFixturesHandler-context-confB.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers\configurations_with_spring\ConfigurationsWithSpringFixturesHandler-context.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers\configurations_with_spring\ConfigurationsWithSpringFixturesHandler.java" afterPath="" />
+      <change type="DELETED" beforePath="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers\package.html" afterPath="" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\CalculatorWithAdvancedTypeCoercion.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/CalculatorWithAdvancedTypeCoercion.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\CalculatorWithBackground.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/CalculatorWithBackground.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\CalculatorWithRunConfigurations.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/CalculatorWithRunConfigurations.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\CalculatorWithScenarioOutline.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/CalculatorWithScenarioOutline.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\CalculatorWithSimpleScenarios.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/CalculatorWithSimpleScenarios.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\ChorusContextWithJmx.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/ChorusContextWithJmx.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\ConfigurationsForProcesses.feature" afterPath="$PROJECT_DIR$/src/test/features/configurations_for_processes/ConfigurationsForProcesses.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\ConfigurationsWithSpringFixtures.feature" afterPath="$PROJECT_DIR$/src/test/features/configurations_with_spring/ConfigurationsWithSpringFixtures.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\Processes.feature" afterPath="$PROJECT_DIR$/src/test/features/processes/Processes.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\ProcessesWithJmx.feature" afterPath="$PROJECT_DIR$/src/test/features/calculator/ProcessesWithJmx.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\ChorusContextWithJmx-jmx.properties" afterPath="$PROJECT_DIR$/src/test/features/calculator/conf/ChorusContextWithJmx-jmx.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\ChorusContextWithJmx-processes.properties" afterPath="$PROJECT_DIR$/src/test/features/calculator/conf/ChorusContextWithJmx-processes.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\ConfigurationsForProcesses-processes-confA.properties" afterPath="$PROJECT_DIR$/src/test/features/configurations_for_processes/conf/ConfigurationsForProcesses-processes-confA.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\ConfigurationsForProcesses-processes.properties" afterPath="$PROJECT_DIR$/src/test/features/configurations_for_processes/conf/ConfigurationsForProcesses-processes.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\Processes-processes.properties" afterPath="$PROJECT_DIR$/src/test/features/processes/conf/Processes-processes.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\ProcessesWithJmx-jmx.properties" afterPath="$PROJECT_DIR$/src/test/features/calculator/conf/ProcessesWithJmx-jmx.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\conf\log4j.xml" afterPath="$PROJECT_DIR$/src/test/features/configurations_for_processes/conf/log4j.xml" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\features\processes-test.bat" afterPath="$PROJECT_DIR$/src/test/features/processes/processes-test.bat" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator\Calculator-context.xml" afterPath="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator-context.xml" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator\Calculator.java" afterPath="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator\Calculator.properties" afterPath="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator.properties" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator\CalculatorHandler.java" afterPath="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/CalculatorHandler.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator\ExportCalculatorHandlerMain.java" afterPath="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/ExportCalculatorHandlerMain.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator\ExportCalculatorWithTwoHandlersMain.java" afterPath="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/ExportCalculatorWithTwoHandlersMain.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\core\interpreter\ChorusParserTagsTest.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/core/interpreter/ChorusParserTagsTest.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\core\interpreter\ChorusParserTagsTest.test.feature" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/core/interpreter/ChorusParserTagsTest.test.feature" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\core\interpreter\tagexpressions\TagExpressionEvaluatorTest.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/core/interpreter/tagexpressions/TagExpressionEvaluatorTest.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\dev\Main.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/dev/Main.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\dev\TryStuff.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/dev/TryStuff.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\remoting\DynamicMBeanProxyMain.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/remoting/DynamicMBeanProxyMain.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\remoting\DynamicMBeanProxyTest.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/remoting/DynamicMBeanProxyTest.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\remoting\jmx\RunChorusJmxFeatureExporter.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/remoting/jmx/RunChorusJmxFeatureExporter.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\remoting\jmx\TestBean.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/remoting/jmx/TestBean.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\remoting\jmx\TestBeanMBean.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/remoting/jmx/TestBeanMBean.java" />
+      <change type="MOVED" beforePath="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\tools\CommandLineParserTest.java" afterPath="$PROJECT_DIR$/src/test/junit/org/chorusbdd/chorus/tools/CommandLineParserTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/chorus.iml" afterPath="$PROJECT_DIR$/chorus.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/ChorusContextHandler.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/ChorusContextHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/Main.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/annotations/ChorusResource.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/annotations/ChorusResource.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/annotations/HandlerScope.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/annotations/HandlerScope.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/core/interpreter/ChorusInterpreter.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/core/interpreter/ChorusInterpreter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/core/interpreter/StepPendingException.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/core/interpreter/StepPendingException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/JmxHandler.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/JmxHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/remoting/jmx/ChorusHandlerJmxExporter.java" afterPath="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/remoting/jmx/ChorusHandlerJmxExporter.java" />
     </list>
     <ignored path="chorus.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,9 +120,9 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="Calculator-context.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator-context.xml">
+        <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator-context.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="21" selection-start="238" selection-end="238" vertical-scroll-proportion="-4.25">
+            <state line="8" column="21" selection-start="672" selection-end="672" vertical-scroll-proportion="-6.8">
               <folding />
             </state>
           </provider>
@@ -87,53 +131,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Calculator.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator.java">
+      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="13" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CalculatorWithSimpleScenarios.feature" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/features/CalculatorWithSimpleScenarios.feature">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="43" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CalculatorHandler.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/CalculatorHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="49" selection-start="1028" selection-end="1028" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="32" selection-start="1044" selection-end="1044" vertical-scroll-proportion="0.8004484">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ChorusParserTagsTest.test.feature" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/core/interpreter/ChorusParserTagsTest.test.feature">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="1" column="4" selection-start="13" selection-end="13" vertical-scroll-proportion="0.034764826">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="ConfigurationsWithSpringFixturesHandler-context-confA.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context-confA.xml">
+        <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_with_spring/ConfigurationsWithSpringFixturesHandler-context-confA.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
@@ -145,7 +153,7 @@
         </entry>
       </file>
       <file leaf-file-name="ConfigurationsWithSpringFixturesHandler-context-confB.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context-confB.xml">
+        <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_with_spring/ConfigurationsWithSpringFixturesHandler-context-confB.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
@@ -157,7 +165,7 @@
         </entry>
       </file>
       <file leaf-file-name="ConfigurationsWithSpringFixturesHandler-context.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context.xml">
+        <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_with_spring/ConfigurationsWithSpringFixturesHandler-context.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
               <folding />
@@ -168,10 +176,46 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="log4j.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/log4j.xml">
+      <file leaf-file-name="Lemming.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_for_processes/Lemming.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="36" selection-start="545" selection-end="545" vertical-scroll-proportion="0.0">
+            <state line="12" column="13" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="processes-test.bat" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/features/processes/processes-test.bat">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Processes.feature" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/features/processes/Processes.feature">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="log4j.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/features/processes/conf/log4j.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Processes-processes.properties" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/features/processes/conf/Processes-processes.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="36" selection-start="701" selection-end="701" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -191,12 +235,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/uk/co/smartkey/chorus/remoting/jmx/ChorusHandlerJmxExporter.java" />
-        <option value="$PROJECT_DIR$/src/test/log4j.xml" />
-        <option value="$PROJECT_DIR$/src/test/features/conf/ChorusContextWithJmx-processes.properties" />
-        <option value="$PROJECT_DIR$/src/test/features/conf/Processes-processes.properties" />
-        <option value="$PROJECT_DIR$/src/test/features/conf/ProcessesWithJmx-processes.properties" />
-        <option value="$PROJECT_DIR$/src/test/features/processes-test.bat" />
         <option value="$PROJECT_DIR$/src/main/java/uk/co/smartkey/chorus/core/interpreter/ChorusInterpreter.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/co/smartkey/chorus/handlers/ProcessesHandler.java" />
         <option value="$PROJECT_DIR$/README.txt" />
@@ -206,7 +244,13 @@
         <option value="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler.java" />
         <option value="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/remoting/DynamicMBeanProxyMain.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/ChorusContextHandler.java" />
+        <option value="$PROJECT_DIR$/src/test/features/logs/ChorusContextWithJmx-calcA.log" />
+        <option value="$PROJECT_DIR$/src/test/features/ChorusContextWithJmx.feature" />
+        <option value="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/selftest/handler/configurations_for_processes/Lemming.java" />
+        <option value="$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/selftest/handlers/configurations_for_processes/Lemming.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator-context.xml" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -239,6 +283,20 @@
         <PATH_ELEMENT>
           <option name="myItemId" value="Dependencies" />
           <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$DependenciesNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="chorus" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Plugins" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$PluginsNode" />
         </PATH_ELEMENT>
       </PATH>
       <PATH>
@@ -321,6 +379,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="org.chorusbdd.chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -382,7 +454,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="junit" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -416,19 +488,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="handlers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="org" />
+              <option name="myItemId" value="org.chorusbdd.chorus.selftest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="chorusbdd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -454,23 +536,63 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
+              <option name="myItemId" value="features" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="chorusbdd" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Chorus" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="calculator" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="features" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="features" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="conf" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -491,6 +613,22 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="org" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chorusbdd" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chorus" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -499,7 +637,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="recentsLimit" value="5" />
@@ -517,15 +655,49 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\dev\Chorus\src\test\features\configforprocesses\conf" />
       <recent name="$PROJECT_DIR$/src/test" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.chorusbdd.chorus.selftest" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\handlers" />
-      <recent name="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\core\interpreter" />
-      <recent name="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\calculator" />
+      <recent name="C:\dev\Chorus\src\test\handlers\org\chorusbdd\chorus\selftest\handlers\calculator" />
+      <recent name="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest\handlers" />
+      <recent name="C:\dev\Chorus\src\test\handlers\org.chorusbdd.chorus.selftest" />
+      <recent name="C:\dev\Chorus\src\test\java\org\chorusbdd\chorus\selftest\handler\configurations_with_spring" />
+      <recent name="C:\dev\Chorus\src\test\features\processes" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Chorus (all)">
+  <component name="RunManager" selected="JUnit.All Tests">
+    <configuration default="false" name="org in chorus" type="JUnit" factoryName="JUnit" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="org.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="chorus" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="package" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings">
@@ -674,7 +846,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="org.chorusbdd.chorus.dev.Main" />
       <option name="VM_PARAMETERS" value="-Dlog4j.configuration=file:$PROJECT_DIR$/src/test/log4j.xml" />
-      <option name="PROGRAM_PARAMETERS" value="-verbose -showsummary -trace -f $PROJECT_DIR$/src/test/features -h org.chorusbdd.chorus.calculator" />
+      <option name="PROGRAM_PARAMETERS" value="-verbose -showsummary -trace -f $PROJECT_DIR$/src/test/features -h org.chorusbdd.chorus.selftest.handlers" />
       <option name="WORKING_DIRECTORY" value="file://$USER_HOME$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -722,9 +894,10 @@
       <ConfigurationWrapper RunnerId="Run" />
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Application.Chorus (all)" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.All Tests" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.org in chorus" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -760,12 +933,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1276" y="-4" width="1288" height="1032" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26553673" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24900132" sideWeight="0.67075473" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48207548" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -776,13 +950,12 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924527" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18962723" sideWeight="0.6824859" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.039708264" sideWeight="0.6485876" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39986694" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4732577" sideWeight="0.6824859" order="0" side_tool="false" content_ui="combo" x="264" y="90" width="356" height="1060" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31751412" sideWeight="0.996008" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.44165316" sideWeight="0.6485876" order="0" side_tool="false" content_ui="combo" x="264" y="90" width="356" height="1060" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35141242" sideWeight="0.996008" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34915254" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -857,77 +1030,49 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.6.0_11/src.zip!/javax/management/JMRuntimeException.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/core/interpreter/ChorusInterpreter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="58" selection-start="292" selection-end="292" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/JmxHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="119" column="21" selection-start="5426" selection-end="5426" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/chorusbdd/chorus/handlers/ChorusContextHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="20" selection-start="1849" selection-end="1849" vertical-scroll-proportion="0.0">
+        <state line="454" column="25" selection-start="22466" selection-end="22466" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/features/ChorusContext.feature">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/ExportCalculatorHandlerMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="45" selection-start="525" selection-end="525" vertical-scroll-proportion="0.0">
+        <state line="10" column="13" selection-start="269" selection-end="269" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/features/CalculatorWithBackground.feature">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="14" selection-start="340" selection-end="340" vertical-scroll-proportion="0.0">
+        <state line="8" column="13" selection-start="150" selection-end="150" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator.properties">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/ExportCalculatorWithTwoHandlersMain.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="12" column="13" selection-start="364" selection-end="364" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator.java">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/CalculatorHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="13" selection-start="132" selection-end="132" vertical-scroll-proportion="0.0">
+        <state line="18" column="13" selection-start="605" selection-end="605" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/features/CalculatorWithSimpleScenarios.feature">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="43" selection-start="288" selection-end="288" vertical-scroll-proportion="0.0">
+        <state line="1" column="12" selection-start="52" selection-end="52" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/CalculatorHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="49" selection-start="1028" selection-end="1028" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/core/interpreter/ChorusParserTagsTest.test.feature">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context-confA.xml">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_with_spring/ConfigurationsWithSpringFixturesHandler-context-confA.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
@@ -937,17 +1082,7 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context-confB.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/handlers/ConfigurationsWithSpringFixturesHandler-context.xml">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_with_spring/ConfigurationsWithSpringFixturesHandler-context-confB.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
@@ -957,16 +1092,9 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/log4j.xml">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_with_spring/ConfigurationsWithSpringFixturesHandler-context.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="36" selection-start="545" selection-end="545" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/org/chorusbdd/chorus/calculator/Calculator-context.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="21" selection-start="238" selection-end="238" vertical-scroll-proportion="-4.25">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -974,9 +1102,54 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/configurations_for_processes/Lemming.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="32" selection-start="1044" selection-end="1044" vertical-scroll-proportion="0.8004484">
+        <state line="12" column="13" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/features/processes/processes-test.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/features/processes/Processes.feature">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/features/processes/conf/log4j.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/features/processes/conf/Processes-processes.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="36" selection-start="701" selection-end="701" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/handlers/org/chorusbdd/chorus/selftest/handlers/calculator/Calculator-context.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="21" selection-start="672" selection-end="672" vertical-scroll-proportion="-6.8">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.spring.perspectives.SpringBeansStructureEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="4" selection-start="13" selection-end="13" vertical-scroll-proportion="0.034764826">
           <folding />
         </state>
       </provider>
@@ -998,7 +1171,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>Bean Validation</last-edited>
+          <last-edited>Spring</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1010,6 +1183,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
+          <last-edited>reuters_jars</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

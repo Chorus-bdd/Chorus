@@ -8,24 +8,63 @@
     <name>chorus</name>
     <url>http://www.smartkey.co.uk/tools.html</url>
     <build>
-        <!-- Copy chorus resources from the main test/java subtree, so resource files
-        required by a handler can be local to the handler.java, rather than residing in
-        a separate tree under test/resources-->
+
+        <!-- Copy chorus resources from the test/handlers and test/junit subtree, so resource files
+        required by a handlers can be local to the .java, rather than residing in
+        a separate tree under test/resources, although the default test/resources location
+        is still supported -->
         <testResources>
              <testResource>
-               <directory>src/test/java</directory>
+               <directory>src/test/handlers</directory>
                  <includes>
                    <include>**/*.xml</include>
                    <include>**/*.properties</include>
                    <include>**/*.feature</include>
                  </includes>
              </testResource>
+
+            <testResource>
+               <directory>src/test/junit</directory>
+                 <includes>
+                   <include>**/*.xml</include>
+                   <include>**/*.properties</include>
+                   <include>**/*.feature</include>
+                 </includes>
+             </testResource>
+
             <!-- include the standard test/resources directory, this is still supported
             if you don't want to put resources within the test/java subtree -->
             <testResource>
                <directory>src/test/resources</directory>
             </testResource>
         </testResources>
+
+
+        <!-- Since we have separated our junit tests from our chorus handlers,
+        we need to configure both directories as test source directories -->
+        <plugins>
+            <plugin>
+               <groupId>org.codehaus.mojo</groupId>
+               <artifactId>build-helper-maven-plugin</artifactId>
+               <version>1.7</version>
+               <executions>
+                 <execution>
+                   <id>add-source</id>
+                   <phase>generate-sources</phase>
+                   <goals>
+                     <goal>add-test-source</goal>
+                   </goals>
+                   <configuration>
+                     <sources>
+                       <source>src/test/junit</source>
+                       <source>src/test/handlers</source>
+                     </sources>
+                   </configuration>
+                 </execution>
+               </executions>
+             </plugin>
+        </plugins>
+
     </build>
     <dependencies>
         <dependency>
