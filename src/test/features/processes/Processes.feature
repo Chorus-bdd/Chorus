@@ -3,9 +3,9 @@ Uses: Timers
 Feature: Processes
   Chorus should be able to stop and start external local processes
 
-  To start a Java processes, it must be defined in a properties file first. The properties file should be adjacent
-    to the .feature file and have the "-processes.properties" suffix. The purpose of the properties in this file
-    are explained with examples in the configuration for this feature: LocalProcesses-processes.properties.
+  To start a Java processes, it must be defined in a properties file first. The properties file should be in a conf
+    directory adjacent to the .feature file and have the "-processes.properties" suffix. The purpose of the properties
+    in this file are explained with examples in the configuration for this feature: Processes-processes.properties.
 
   To run a script the script file should be in the same directory as the .feature file.
    Processes can be named in a step to allow them to be explicitly stopped by a later step in a scenario
