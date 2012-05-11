@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.selftest.handlers.configurations_with_spring;
 
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.FeatureToken;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  * Date: 19/01/12
  */
 @Handler("Configurations With Spring Fixtures")
-@ContextConfiguration("ConfigurationsWithSpringFixturesHandler-context.xml")
+@SpringContext("ConfigurationsWithSpringFixturesHandler-context.xml")
 public class ConfigurationsWithSpringFixturesHandler {
 
     @Resource

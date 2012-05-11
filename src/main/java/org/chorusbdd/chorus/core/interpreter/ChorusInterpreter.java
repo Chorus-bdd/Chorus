@@ -63,10 +63,7 @@ public class ChorusInterpreter {
 
     private List<ChorusInterpreterExecutionListener> listeners = new ArrayList<ChorusInterpreterExecutionListener>();
 
-    /**
-     * Map: Handler instance -> Spring context
-     */
-    private Map<Object, FileSystemXmlApplicationContext> springContexts = new HashMap<Object, FileSystemXmlApplicationContext>();
+    private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
 
     /**
      * Always included in the Handlers base package scan
@@ -74,9 +71,27 @@ public class ChorusInterpreter {
     private static final String CHORUS_HANDLERS_PACKAGE = "org.chorusbdd.chorus.handlers";
 
     /**
+     * Defines the class which will be instantiated to perform injection of Spring context/resources
+     */
+    private final String SPRING_INJECTOR_CLASSNAME = "org.chorusbdd.chorus.core.interpreter.SpringContextInjector";
+
+
+    /**
      * Used to determine whether a scenario should be run
      */
     private final TagExpressionEvaluator tagExpressionEvaluator = new TagExpressionEvaluator();
+
+    public ChorusInterpreter() {
+        try {
+            Class c = Class.forName(SPRING_INJECTOR_CLASSNAME);
+            if ( c != null) {
+                springInjector = (SpringInjector)c.newInstance();
+            }
+        } catch (Exception e) {
+            log.error("Failed to instantiate " + SPRING_INJECTOR_CLASSNAME, e);
+        }
+    }
+
 
     public List<FeatureToken> processFeatures(List<File> featureFiles) throws Exception {
 
@@ -404,48 +419,12 @@ public class ChorusInterpreter {
      *
      * @param handler an instance of the handler class that will be used for testing
      */
-    private void injectSpringResources(Object handler, FeatureToken featureToken) {
-        Class<?> featureClass = handler.getClass();
-        ContextConfiguration contextConfiguration = featureClass.getAnnotation(ContextConfiguration.class);
-        if (contextConfiguration != null) {
-            String contextFileName = contextConfiguration.value()[0];
-
-            //check for a 'Configuration:' specific Spring context
-            if (featureToken.getConfigurationName() != null) {
-                if (contextFileName.endsWith(".xml")) {
-                    String tmp = String.format("%s-%s.xml", contextFileName.substring(0, contextFileName.length() - 4), featureToken.getConfigurationName());
-                    URL url = featureClass.getResource(tmp);
-                    if (url != null) {
-                        contextFileName = tmp;
-                    }
-                } else {
-                    log.warn("Unexpected suffix for Spring config file (should end with .xml) : " + contextFileName);
-                }
-            }
-
-            URL url = featureClass.getResource(contextFileName);
-            FileSystemXmlApplicationContext springContext = new FileSystemXmlApplicationContext(url.toExternalForm());
-            springContexts.put(handler, springContext);
-
-            //inject handler fields with the Spring beans
-            Field[] fields = featureClass.getDeclaredFields();
-            for (Field field : fields) {
-                Resource resourceAnnotation = field.getAnnotation(Resource.class);
-                if (resourceAnnotation != null) {
-                    boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
-                    String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
-                    Object bean = springContext.getBean(name);
-                    if (bean == null) {
-                        log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
-                    }
-                    try {
-                        field.setAccessible(true);
-                        field.set(handler, bean);
-                    } catch (IllegalAccessException e) {
-                        log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
-                    }
-                }
-            }
+    private void injectSpringResources(Object handler, FeatureToken featureToken) throws Exception {
+        Class<?> handlerClass = handler.getClass();
+        SpringContext springContext = handlerClass.getAnnotation(SpringContext.class);
+        if (springContext != null) {
+            String contextFileName = springContext.value()[0];
+            springInjector.injectSpringContext(handler, featureToken, handlerClass, contextFileName);
         }
     }
 
@@ -477,11 +456,7 @@ public class ChorusInterpreter {
     }
 
     private void cleanupHandler(Object handler) throws Exception {
-        //cleanup Spring fixture
-        FileSystemXmlApplicationContext springContext = springContexts.remove(handler);
-        if (springContext != null) {
-            springContext.destroy();
-        }
+        springInjector.disposeContext(handler);
 
         //call any destroy methods on handler instance
         for (Method method : handler.getClass().getMethods()) {

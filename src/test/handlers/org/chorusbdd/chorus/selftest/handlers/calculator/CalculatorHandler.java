@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.selftest.handlers.calculator;
 
 import org.chorusbdd.chorus.ChorusException;
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
 import java.math.BigDecimal;
 
 @Handler("Calculator")
-@ContextConfiguration("Calculator-context.xml")
+@SpringContext("Calculator-context.xml")
 @SuppressWarnings({"UnusedDeclaration"})
 public class CalculatorHandler {
 
