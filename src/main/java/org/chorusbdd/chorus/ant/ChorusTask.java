@@ -87,8 +87,11 @@ public class ChorusTask extends Task {
         //set the feature file args
         javaTask.createArg().setValue("-f");
         for (File featureFile : featureFiles) {
+            System.out.println("Found feature " + featureFile);
             javaTask.createArg().setFile(featureFile);
         }
+
+        System.out.println("Classpath " + classpath);
 
         //set the base packges args
         javaTask.createArg().setValue("-h");

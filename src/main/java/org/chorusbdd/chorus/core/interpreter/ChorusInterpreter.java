@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.core.interpreter.scanner.HandlerClassScanner;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.RegexpUtils;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -41,6 +42,7 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -284,7 +286,7 @@ public class ChorusInterpreter {
      * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
      * @return a Map of [feature-name -> feature class]
      */
-    private HashMap<String, Class> loadHandlerClasses(String[] basePackages) {
+    private HashMap<String, Class> loadHandlerClasses(String[] basePackages) throws Exception {
         //always include the Chorus handlers package
         String[] allBasePackages = new String[basePackages.length + 1];
         allBasePackages[0] = CHORUS_HANDLERS_PACKAGE;
@@ -292,16 +294,11 @@ public class ChorusInterpreter {
 
         HashMap<String, Class> featureClasses = new HashMap<String, Class>();
         HandlerClassScanner scanner = new HandlerClassScanner();
-        Set<BeanDefinitionHolder> holders = scanner.myscan(allBasePackages);
-        for (BeanDefinitionHolder holder : holders) {
-            try {
-                Class featureClass = Class.forName(holder.getBeanDefinition().getBeanClassName());
-                Handler f = (Handler) featureClass.getAnnotation(Handler.class);
-                String featureName = f.value();
-                featureClasses.put(featureName, featureClass);
-            } catch (ClassNotFoundException e) {
-                log.error(e);//should never get here
-            }
+        Set<Class> handlerClasses = scanner.doScan(allBasePackages);
+        for (Class handlerClass : handlerClasses) {
+            Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
+            String featureName = f.value();
+            featureClasses.put(featureName, handlerClass);
         }
         return featureClasses;
     }
