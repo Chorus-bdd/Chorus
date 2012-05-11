@@ -49,6 +49,18 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) throws Exception {
 
+        boolean failed = run(args);
+
+        System.out.println("Exiting with:" + (failed ? -1 : 0));
+        System.exit(failed ? -1 : 0);
+    }
+
+    /**
+     * Run without exiting, useful from tests
+     *
+     * @return true, if ran successfully
+     */
+    public static boolean run(String[] args) throws Exception {
         Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
 
         if (!parsedArgs.containsKey("f")) {
@@ -99,11 +111,8 @@ public class Main {
         }
         formatter.close();
 
-        boolean failed = summary.getUnavailableHandlers() > 0
+        return summary.getUnavailableHandlers() > 0
                 || summary.getScenariosFailed() > 0;
-
-        System.out.println("Exiting with:" + (failed ? -1 : 0));
-        System.exit(failed ? -1 : 0);
     }
 
     private static void exitWithHelp() {

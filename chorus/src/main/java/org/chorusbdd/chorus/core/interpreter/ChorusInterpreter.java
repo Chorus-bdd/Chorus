@@ -36,8 +36,6 @@ import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.RegexpUtils;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -73,7 +71,7 @@ public class ChorusInterpreter {
     /**
      * Defines the class which will be instantiated to perform injection of Spring context/resources
      */
-    private final String SPRING_INJECTOR_CLASSNAME = "org.chorusbdd.chorus.core.interpreter.SpringContextInjector";
+    private final String SPRING_INJECTOR_CLASSNAME = "org.chorusbdd.chorus.spring.SpringContextInjector";
 
 
     /**
@@ -83,7 +81,12 @@ public class ChorusInterpreter {
 
     public ChorusInterpreter() {
         try {
-            Class c = Class.forName(SPRING_INJECTOR_CLASSNAME);
+            Class c = null;
+            try {
+                c = Class.forName(SPRING_INJECTOR_CLASSNAME);
+            } catch ( ClassNotFoundException cnf ) {
+                //chorus-spring is not in classpath
+            }
             if ( c != null) {
                 springInjector = (SpringInjector)c.newInstance();
             }
