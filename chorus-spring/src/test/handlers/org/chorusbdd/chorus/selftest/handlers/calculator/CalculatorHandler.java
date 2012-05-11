@@ -5,7 +5,6 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
-import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.Resource;
 
