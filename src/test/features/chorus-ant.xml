@@ -1,18 +1,10 @@
 <project name="run-chorus" default="run-chorus">
 
-    <path id="classpath">
-        <pathelement path="../dist/jar/chorus.jar"/>
-        <fileset dir="../../lib" includes="**/*.jar"/>
-        <fileset dir="../../testlib" includes="**/*.jar"/>
-        <pathelement location="../../out/production/bhavaya"/>
-        <pathelement location="../../out/test/bhavaya"/>
-    </path>
-
-    <taskdef classname="org.chorusbdd.chorus.ant.ChorusTask" name="chorus" classpathref="classpath"/>
+    <taskdef classname="org.chorusbdd.chorus.ant.ChorusTask" name="chorus"/>
 
     <target name="run-chorus">
-        <chorus handlerBasePackages="org.chorusbdd.chorus.handlers" classpathref="classpath">
-            <fileset dir=".">
+        <chorus handlerBasePackages="org.chorusbdd.chorus.handlers" classpath="${java.class.path}" verbose="true">
+            <fileset dir="./">
                 <include name="**/*.feature"/>
             </fileset>
         </chorus>

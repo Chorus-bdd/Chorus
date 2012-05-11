@@ -3,9 +3,13 @@
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
     <buildFile url="file://$PROJECT_DIR$/src/test/features/chorus-ant.xml">
-      <additionalClassPath />
+      <additionalClassPath>
+        <entry path="file://$PROJECT_DIR$/target/classes" />
+        <entry path="file://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" />
+        <entry path="file://$MAVEN_REPOSITORY$/log4j/log4j/1.2.16/log4j-1.2.16.jar" />
+      </additionalClassPath>
       <antReference projectDefault="true" />
-      <customJdkName value="" />
+      <customJdkName value="1.7" />
       <maximumHeapSize value="128" />
       <maximumStackSize value="2" />
       <properties />
