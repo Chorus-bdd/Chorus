@@ -32,17 +32,16 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.core.interpreter.scanner.HandlerClassScanner;
+import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
+import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.RegexpUtils;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -293,8 +292,7 @@ public class ChorusInterpreter {
         System.arraycopy(basePackages, 0, allBasePackages, 1, basePackages.length);
 
         HashMap<String, Class> featureClasses = new HashMap<String, Class>();
-        HandlerClassScanner scanner = new HandlerClassScanner();
-        Set<Class> handlerClasses = scanner.doScan(allBasePackages);
+        Set<Class> handlerClasses = ClasspathScanner.doScan(new HandlerOnlyClassFilter(), allBasePackages);
         for (Class handlerClass : handlerClasses) {
             Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
             String featureName = f.value();
@@ -506,4 +504,5 @@ public class ChorusInterpreter {
     public void setFilterExpression(String filterExpression) {
         this.filterExpression = filterExpression;
     }
+
 }
