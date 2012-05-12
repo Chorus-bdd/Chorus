@@ -27,7 +27,7 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.remoting.ssh;
+package org.chorusbdd.chorus.tools.ssh;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -37,7 +37,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -64,7 +63,7 @@ public class SshCommandRunner {
     }
 
     /**
-     * Create a SshCommandRunnder which will prompt for a password from standard input
+     * Create a SshCommandRunner which will prompt for a password from standard input
      */
     public SshCommandRunner(String host, String user) {
         this(host, user, PROMPT);

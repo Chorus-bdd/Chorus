@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.chorusbdd</groupId>
-    <artifactId>chorus</artifactId>
+    <artifactId>chorus-tools</artifactId>
     <packaging>jar</packaging>
     <version>0.2.0-SNAPSHOT</version>
-    <name>chorus</name>
+    <name>chorus-tools</name>
     <url>http://www.chorusbdd.org</url>
     <build>
 
@@ -68,6 +68,11 @@
     </build>
     <dependencies>
         <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
@@ -78,14 +83,9 @@
             <version>1.1.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.46</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

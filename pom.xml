@@ -9,5 +9,6 @@
 	<modules>
 	  <module>chorus</module>
 	  <module>chorus-spring</module>
+	  <module>chorus-tools</module>
 	</modules>
 </project>
