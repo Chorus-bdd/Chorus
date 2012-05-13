@@ -29,7 +29,6 @@
 
 package org.chorusbdd.chorus.handlers;
 
-import junit.framework.AssertionFailedError;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.ChorusException;
@@ -151,10 +150,10 @@ public class JmxHandler {
             } catch (RuntimeMBeanException mbe) {
                 //here if an exception was thrown from the remote Step method
                 RuntimeException targetException = mbe.getTargetException();
-                if (targetException.getCause() instanceof AssertionFailedError) {
-                    throw (AssertionFailedError) targetException.getCause();
-                } else {
+                if (targetException instanceof ChorusRemotingException) {
                     throw targetException;
+                } else {
+                    throw new ChorusRemotingException(targetException);
                 }
             } catch (Exception e) {
                 throw new ChorusRemotingException(e);

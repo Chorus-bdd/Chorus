@@ -67,30 +67,38 @@
 
     </build>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-        </dependency>
+        <!-- All dependencies are optional -->
+
+        <!-- Ant is not required unless you make use of ChorusTask -->
+        <!-- There should be no classloading of ant dependencies outside ChorusTask -->
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
             <version>1.8.2</version>
+            <optional>true</optional>
         </dependency>
+
+        <!-- Logging classes are a compile-time dependency for the chorus core library, but not a runtime dependency
+        since there is only one class which directly depends on commons-logging, and this class is loaded by reflection
+        if found to be on the classpath. Hence they are optional, if found, will be used, otherwise logging to standard out/err -->
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
