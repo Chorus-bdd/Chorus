@@ -37,13 +37,11 @@ import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.RegexpUtils;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.*;
 
 /**
