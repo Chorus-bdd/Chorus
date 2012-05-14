@@ -45,8 +45,8 @@ package org.chorusbdd.chorus.remoting;
  */
 public class ChorusRemotingException extends RuntimeException {
 
-    private StackTraceElement[] remoteExceptionTrace;
-    private String remoteExceptionClassName;
+    private StackTraceElement[] remoteExceptionTrace = new StackTraceElement[0];
+    private String remoteExceptionClassName = "";
 
     public ChorusRemotingException(String message) {
         super(message);
@@ -92,11 +92,13 @@ public class ChorusRemotingException extends RuntimeException {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder("ChorusRemotingException caused by remote exception ");
-        sb.append(remoteExceptionClassName).append("\n");
-        sb.append("Remote stack trace \n");
-        for ( StackTraceElement s : remoteExceptionTrace) {
-            sb.append(s.toString()).append("\n");
+        StringBuilder sb = new StringBuilder(super.toString());
+        if ( ! "".equals(remoteExceptionClassName)) {
+            sb.append("Caused by").append(remoteExceptionClassName).append("\n");
+            sb.append("Remote stack trace \n");
+            for ( StackTraceElement s : remoteExceptionTrace) {
+                sb.append(s.toString()).append("\n");
+            }
         }
         return sb.toString();
     }
