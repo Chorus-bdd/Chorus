@@ -67,10 +67,19 @@
 
     </build>
     <dependencies>
-        <!-- All dependencies are optional -->
+        <!-- In general the philosophy is that because Chorus is a library, we are trying to
+        avoid any mandatory dependencies on other libraries, otherwise components using Chorus would be forced
+        to inherit those extra dependencies
 
-        <!-- Ant is not required unless you make use of ChorusTask -->
-        <!-- There should be no classloading of ant dependencies outside ChorusTask -->
+        For this reason Spring features have been pushed down into Chorus-Spring module,
+        and certain other features into Chorus-tools. Users seeking to run an interpreter with
+        these features enabled need to declare dependencies on these derived modules, as appropriate
+
+        The basic Chorus interpreter and the JMX remoting feature should run just fine with the
+        main chorus.jar and the JDK -->
+
+        <!-- Ant is not required unless you make use of ChorusTask, so it is an optional dependency -->
+        <!-- There should be no requirement for ant dependencies outside ChorusTask -->
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
@@ -80,7 +89,8 @@
 
         <!-- Logging classes are a compile-time dependency for the chorus core library, but not a runtime dependency
         since there is only one class which directly depends on commons-logging, and this class is loaded by reflection
-        if found to be on the classpath. Hence they are optional, if found, will be used, otherwise logging to standard out/err -->
+        if found to be on the classpath. Hence they are optional, if found, will be used, otherwise logging to standard
+        out/err -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -94,11 +104,15 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- junit is now a test scoped dependency -
+        We are using ChorusAssert to avoid a mandatory dependency on junit from the core interpreter
+        although client application can use and throw JUnit assertion errors if they perfer to do so -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
-            <!-- <scope>test</scope>   -->
+            <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>

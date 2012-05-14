@@ -29,12 +29,11 @@
 
 package org.chorusbdd.chorus.handlers;
 
-import junit.framework.Assert;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by: Steve Neal
@@ -46,7 +45,7 @@ public class ChorusContextHandler {
     @Step("the context has no values in it")
     public void contextIsEmpty() {
         ChorusContext context = ChorusContext.getContext();
-        assertTrue("The context is not empty: " + context, context.isEmpty());
+        ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
     }
 
     @Step(".*create a context variable (.*) with value (.*)")
@@ -57,19 +56,19 @@ public class ChorusContextHandler {
     @Step(".*context variable (.*) has value (.*)")
     public void assertVariableValue(String varName, Object expected) {
         Object actual = ChorusContext.getContext().get(varName);
-        Assert.assertEquals(expected, actual);
+        ChorusAssert.assertEquals(expected, actual);
     }
 
     @Step(".*context variable (.*) exists")
     public void assertVariableExists(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
-        Assert.assertNotNull("no such variable exists: " + varName, actual);
+        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
     }
 
     @Step(".*show context variable (.*)")
     public Object showVariable(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
-        Assert.assertNotNull("no such variable exists: " + varName, actual);
+        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
         if (actual instanceof CharSequence) {
             return String.format("%s='%s'", varName, actual);
         } else {
