@@ -25,11 +25,13 @@ public class ResultsPane extends JSplitPane implements ChorusExecutionListener {
     }
 
     public void testsStarted(TestExecutionToken testExecutionToken) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        featureTreeViewer.testsStarted(testExecutionToken);
+        executionOutputViewer.testsStarted(testExecutionToken);
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        featureTreeViewer.featureStarted(testExecutionToken, feature);
+        executionOutputViewer.featureStarted(testExecutionToken, feature);
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {

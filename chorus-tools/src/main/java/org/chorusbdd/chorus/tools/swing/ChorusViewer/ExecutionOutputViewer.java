@@ -5,6 +5,7 @@ import org.chorusbdd.chorus.core.interpreter.results.*;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import java.awt.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,22 +19,23 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     private JTextPane executionTextPane = new JTextPane();
 
     public ExecutionOutputViewer() {
+        setLayout(new BorderLayout());
+        JScrollPane sp = new JScrollPane();
+        sp.getViewport().add(executionTextPane);
+        add(sp, BorderLayout.CENTER);
     }
 
     public void testsStarted(TestExecutionToken testExecutionToken) {
-        try {
-            executionTextPane.getStyledDocument().insertString(0, "Starting tests " + testExecutionToken.toString(), null);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+        String textToAdd = "Starting tests " + testExecutionToken.toString();
+        addText(textToAdd);
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        addText("Started feature " + feature);
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        addText("Started scenario " + scenario);
     }
 
     public void stepExecuted(TestExecutionToken testExecutionToken, StepToken step) {
@@ -42,5 +44,14 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
 
     public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+    private void addText(String textToAdd) {
+        try {
+            executionTextPane.getStyledDocument().insertString(0, textToAdd, null);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 }

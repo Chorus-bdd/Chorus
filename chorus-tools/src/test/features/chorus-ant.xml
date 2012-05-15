@@ -1,0 +1,13 @@
+<project name="run-chorus" default="run-chorus">
+
+    <taskdef classname="org.chorusbdd.chorus.ant.ChorusTask" name="chorus"/>
+
+    <target name="run-chorus">
+        <chorus handlerBasePackages="org.chorusbdd.chorus.handlers" classpath="${java.class.path}" verbose="true">
+            <fileset dir="./">
+                <include name="**/*.feature"/>
+            </fileset>
+        </chorus>
+    </target>
+
+</project>
