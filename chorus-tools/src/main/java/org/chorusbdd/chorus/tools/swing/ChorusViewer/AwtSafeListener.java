@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.tools.swing.ChorusViewer;
+package org.chorusbdd.chorus.tools.swing.chorusviewer;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationHandler;

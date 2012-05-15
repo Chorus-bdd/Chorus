@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.tools.swing.ChorusViewer;
+package org.chorusbdd.chorus.tools.swing.chorusviewer;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
@@ -35,14 +35,17 @@ public class ResultsPane extends JSplitPane implements ChorusExecutionListener {
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        featureTreeViewer.scenarioStarted(testExecutionToken, scenario);
+        executionOutputViewer.scenarioStarted(testExecutionToken, scenario);
     }
 
     public void stepExecuted(TestExecutionToken testExecutionToken, StepToken step) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        featureTreeViewer.stepExecuted(testExecutionToken, step);
+        executionOutputViewer.stepExecuted(testExecutionToken, step);
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        featureTreeViewer.testsCompleted(testExecutionToken, results);
+        executionOutputViewer.testsCompleted(testExecutionToken, results);
     }
 }

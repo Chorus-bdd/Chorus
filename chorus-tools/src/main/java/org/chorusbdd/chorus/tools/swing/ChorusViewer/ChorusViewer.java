@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.tools.swing.ChorusViewer;
+package org.chorusbdd.chorus.tools.swing.chorusviewer;
 
 import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
@@ -24,8 +24,8 @@ public class ChorusViewer {
 
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
-                frame = new ChorusViewerMainFrame();
-                frame.setVisible(true);
+            frame = new ChorusViewerMainFrame();
+            frame.setVisible(true);
             }
         });
 
