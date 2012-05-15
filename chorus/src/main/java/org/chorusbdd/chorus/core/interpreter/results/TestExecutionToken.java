@@ -45,4 +45,24 @@ public class TestExecutionToken implements ResultToken {
     public String toString() {
         return "Tests at " + formatThreadLocal.get().format(new Date(executionStartTime));
     }
+
+
+    //a working equals and hashcode is required by ChorusViewer
+    //if this is running remotely, we may receive a new deserialized instance each time and cannot rely on reference
+    //equality
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TestExecutionToken that = (TestExecutionToken) o;
+
+        if (executionStartTime != that.executionStartTime) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (int) (executionStartTime ^ (executionStartTime >>> 32));
+    }
 }

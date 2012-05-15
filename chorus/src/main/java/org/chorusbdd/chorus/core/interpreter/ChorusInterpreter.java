@@ -113,23 +113,7 @@ public class ChorusInterpreter {
             ChorusParser parser = new ChorusParser();
             List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
-            //FILTER THE FEATURES AND SCENARIOS
-            if (filterExpression != null) {
-                for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
-                    //remove all filtered scenarios from this feature
-                    FeatureToken feature = fi.next();
-                    for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
-                        ScenarioToken scenario = si.next();
-                        if (!tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
-                            si.remove();
-                        }
-                    }
-                    //if there are no scenarios left, then remove this feature from the list to run
-                    if (feature.getScenarios().size() == 0) {
-                        fi.remove();
-                    }
-                }
-            }
+            filterFeaturesByScenarioTags(features);
 
             //RUN EACH FEATURE
             for (FeatureToken feature : features) {
@@ -263,6 +247,26 @@ public class ChorusInterpreter {
         ResultsSummary summary = new ResultsSummary(executionToken, results);
         notifyTestsCompleted(executionToken, summary);
         return summary;
+    }
+
+    private void filterFeaturesByScenarioTags(List<FeatureToken> features) {
+        //FILTER THE FEATURES AND SCENARIOS
+        if (filterExpression != null) {
+            for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
+                //remove all filtered scenarios from this feature
+                FeatureToken feature = fi.next();
+                for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
+                    ScenarioToken scenario = si.next();
+                    if (!tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
+                        si.remove();
+                    }
+                }
+                //if there are no scenarios left, then remove this feature from the list to run
+                if (feature.getScenarios().size() == 0) {
+                    fi.remove();
+                }
+            }
+        }
     }
 
     //
