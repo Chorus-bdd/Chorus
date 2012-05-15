@@ -29,16 +29,21 @@
 
 package org.chorusbdd.chorus.core.interpreter.results;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Simple class that compiles a summary of a test results
  * from a list of executed Features
+ *
+ * This is now the result of invoking the interpreter, and a wrapper around the list of
+ * features, and test execution token
+ * Nick May 2012
  * 
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class ResultsSummary {
+public class ResultsSummary implements ResultToken {
     
     //stats
     private int scenariosPassed = 0;
@@ -51,46 +56,57 @@ public class ResultsSummary {
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
 
+    private TestExecutionToken testExecutionToken;
     private List<FeatureToken> results;
 
-    public ResultsSummary(List<FeatureToken> results) {
+    private ResultsSummary() {
+    }
+
+    public ResultsSummary(TestExecutionToken testExecutionToken, List<FeatureToken> results) {
+        this.testExecutionToken = testExecutionToken;
         this.results = results;
+
         for (FeatureToken feature : results) {
             if (feature.getUnavailableHandlersMessage() == null) {
-                for (ScenarioToken scenario : feature.getScenarios()) {
-                    boolean scenarioPassed = true;
-                    for (StepToken step : scenario.getSteps()) {
-                        switch (step.getEndState()) {
-                            case PASSED:
-                                stepsPassed++;
-                                break;
-                            case FAILED:
-                                stepsFailed++;
-                                scenarioPassed = false;
-                                break;
-                            case PENDING:
-                                stepsPending++;
-                                break;
-                            case SKIPPED:
-                                stepsSkipped++;
-                                break;
-                            case UNDEFINED:
-                                stepsUndefined++;
-                                scenarioPassed = false;
-                                break;
-                        }
-                    }
-                    if (scenarioPassed) {
-                        scenariosPassed++;
-                    } else {
-                        scenariosFailed++;
-                    }
-                } 
+                processHandledScenarios(feature);
             } else {
                 unavailableHandlers++;
             }
         }
     }
+
+    private void processHandledScenarios(FeatureToken feature) {
+        for (ScenarioToken scenario : feature.getScenarios()) {
+            boolean scenarioPassed = true;
+            for (StepToken step : scenario.getSteps()) {
+                switch (step.getEndState()) {
+                    case PASSED:
+                        stepsPassed++;
+                        break;
+                    case FAILED:
+                        stepsFailed++;
+                        scenarioPassed = false;
+                        break;
+                    case PENDING:
+                        stepsPending++;
+                        break;
+                    case SKIPPED:
+                        stepsSkipped++;
+                        break;
+                    case UNDEFINED:
+                        stepsUndefined++;
+                        scenarioPassed = false;
+                        break;
+                }
+            }
+            if (scenarioPassed) {
+                scenariosPassed++;
+            } else {
+                scenariosFailed++;
+            }
+        }
+    }
+
 
     //
     // - getters
@@ -131,5 +147,30 @@ public class ResultsSummary {
 
     public List<FeatureToken> getFeatures() {
         return results;
+    }
+
+    public TestExecutionToken getTestExecutionToken() {
+        return testExecutionToken;
+    }
+
+    public Object deepCopy() {
+        ResultsSummary s = new ResultsSummary();
+        s.scenariosPassed = scenariosPassed;
+        s.scenariosFailed = scenariosFailed;
+        s.unavailableHandlers = unavailableHandlers;
+
+        s.stepsFailed = stepsFailed;
+        s.stepsPassed = stepsPassed;
+        s.stepsPending = stepsPending;
+        s.stepsUndefined = stepsUndefined;
+        s.stepsSkipped = stepsSkipped;
+
+        s.results = new ArrayList<FeatureToken>();
+        for (FeatureToken f : results ) {
+            s.results.add(f.deepCopy());
+        }
+
+        s.testExecutionToken = testExecutionToken.deepCopy();
+        return s;
     }
 }

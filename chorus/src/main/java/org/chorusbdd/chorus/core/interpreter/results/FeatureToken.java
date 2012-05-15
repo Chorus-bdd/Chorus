@@ -36,7 +36,7 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class FeatureToken implements DeepCopy {
+public class FeatureToken implements ResultToken, DeepCopy {
     private String name;
     private String[] usesFeatures;
     private String configurationName;

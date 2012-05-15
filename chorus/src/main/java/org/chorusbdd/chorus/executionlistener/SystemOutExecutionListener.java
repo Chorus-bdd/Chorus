@@ -1,10 +1,7 @@
 package org.chorusbdd.chorus.executionlistener;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreterExecutionListener;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
-import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.results.StepToken;
+import org.chorusbdd.chorus.core.interpreter.results.*;
 
 import java.io.PrintWriter;
 
@@ -35,19 +32,22 @@ public class SystemOutExecutionListener implements ChorusInterpreterExecutionLis
         this.formatter = formatter;
     }
 
-    public void featureStarted(FeatureToken feature) {
+    public void testsStarted(TestExecutionToken testExecutionToken) {
+    }
+
+    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
         if ( trace ) {
             formatter.printFeature(feature);
         }
     }
 
-    public void scenarioStarted(ScenarioToken scenario) {
+    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
         if ( trace ) {
             formatter.printScenario(scenario);
         }
     }
 
-    public void stepExecuted(StepToken step) {
+    public void stepExecuted(TestExecutionToken testExecutionToken, StepToken step) {
         if ( trace ) {
             formatter.printStep(step);
             if (step.getThrowable() != null) {
@@ -56,7 +56,7 @@ public class SystemOutExecutionListener implements ChorusInterpreterExecutionLis
         }
     }
 
-    public void testsCompleted(ResultsSummary results) {
+    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
         if (showSummary) {
             formatter.printResults(results.getFeatures(), verbose, results);
         } else {

@@ -97,6 +97,9 @@ public class ChorusInterpreter {
 
     public ResultsSummary processFeatures(List<File> featureFiles) throws Exception {
 
+        //identifies this execution, in case we have parallel or subsequent executions
+        TestExecutionToken executionToken = new TestExecutionToken();
+
         List<FeatureToken> results = new ArrayList<FeatureToken>();
 
         //load all available feature classes
@@ -162,7 +165,7 @@ public class ChorusInterpreter {
 
                 //run the scenarios in the feature
                 if (foundAllHandlerClasses) {
-                    notifyStartFeature(feature);
+                    notifyStartFeature(executionToken, feature);
 
                     //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
                     List<Object> handlerInstances = new ArrayList<Object>();
@@ -170,7 +173,7 @@ public class ChorusInterpreter {
                     List<ScenarioToken> scenarios = feature.getScenarios();
                     for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
                         ScenarioToken scenario = iterator.next();
-                        notifyStartScenario(scenario);
+                        notifyStartScenario(executionToken, scenario);
 
                         boolean isLastScenario = !iterator.hasNext();
                         log.info(String.format("Processing scenario: %s", scenario.getName()));
@@ -221,7 +224,7 @@ public class ChorusInterpreter {
 
                             //process the step
                             boolean forceSkip = !scenarioPassed;
-                            endState = processStep(handlerInstances, step, forceSkip);
+                            endState = processStep(executionToken, handlerInstances, step, forceSkip);
 
                             switch (endState) {
                                 case PASSED:
@@ -256,7 +259,7 @@ public class ChorusInterpreter {
             }
         }
 
-        ResultsSummary summary = new ResultsSummary(results);
+        ResultsSummary summary = new ResultsSummary(executionToken, results);
 
         return summary;
     }
@@ -273,27 +276,27 @@ public class ChorusInterpreter {
         return listeners.remove(listener);
     }
 
-    private void notifyStepExecuted(StepToken step) {
+    private void notifyStepExecuted(TestExecutionToken t, StepToken step) {
         for (ChorusInterpreterExecutionListener listener : listeners) {
-            listener.stepExecuted(step);
+            listener.stepExecuted(t, step);
         }
     }
 
-    private void notifyStartFeature(FeatureToken feature) {
+    private void notifyStartFeature(TestExecutionToken t, FeatureToken feature) {
         for (ChorusInterpreterExecutionListener listener : listeners) {
-            listener.featureStarted(feature);
+            listener.featureStarted(t, feature);
         }
     }
 
-    private void notifyStartScenario(ScenarioToken scenario) {
+    private void notifyStartScenario(TestExecutionToken t, ScenarioToken scenario) {
         for (ChorusInterpreterExecutionListener listener : listeners) {
-            listener.scenarioStarted(scenario);
+            listener.scenarioStarted(t, scenario);
         }
     }
 
-    private void notifyTestsCompleted(ResultsSummary results) {
+    private void notifyTestsCompleted(TestExecutionToken t, ResultsSummary results) {
             for (ChorusInterpreterExecutionListener listener : listeners) {
-                listener.testsCompleted(results);
+                listener.testsCompleted(t, results);
             }
         }
 
@@ -332,7 +335,7 @@ public class ChorusInterpreter {
      * @param skip      is true the step will be skipped if found
      * @return the exit state of the executed step
      */
-    private StepEndState processStep(List<Object> instances, StepToken step, boolean skip) {
+    private StepEndState processStep(TestExecutionToken executionToken, List<Object> instances, StepToken step, boolean skip) {
 
         //return this at the end
         StepEndState endState = null;
@@ -419,7 +422,7 @@ public class ChorusInterpreter {
         }
 
         step.setEndState(endState);
-        notifyStepExecuted(step);
+        notifyStepExecuted(executionToken, step);
         return endState;
     }
 

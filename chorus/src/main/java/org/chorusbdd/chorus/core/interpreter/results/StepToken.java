@@ -33,7 +33,7 @@ package org.chorusbdd.chorus.core.interpreter.results;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class StepToken implements DeepCopy {
+public class StepToken implements ResultToken, DeepCopy {
     private final String type;
     private final String action;
 
