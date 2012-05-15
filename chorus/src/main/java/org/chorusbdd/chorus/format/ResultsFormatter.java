@@ -29,9 +29,9 @@
 
 package org.chorusbdd.chorus.format;
 
-import org.chorusbdd.chorus.core.interpreter.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.StepToken;
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.token.StepToken;
 
 /**
  * Created by: Steve Neal

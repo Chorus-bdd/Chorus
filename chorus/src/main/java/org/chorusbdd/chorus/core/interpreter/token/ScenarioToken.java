@@ -27,7 +27,7 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.token;
 
 import java.util.ArrayList;
 import java.util.Collection;

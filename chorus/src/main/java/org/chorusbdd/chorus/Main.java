@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.TestResultsSummary;
 import org.chorusbdd.chorus.core.interpreter.TraceListener;
 import org.chorusbdd.chorus.format.PlainResultsFormatter;

@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.token;
 
 /**
  * Rather than using clone (where the semantics of the copy are unclear), use this interface to indicate that the object

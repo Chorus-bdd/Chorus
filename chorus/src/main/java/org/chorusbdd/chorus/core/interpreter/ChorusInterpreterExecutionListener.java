@@ -1,5 +1,9 @@
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.token.StepToken;
+
 /**
  * Implementors can register with a ChorusInterpreter to recieve callbacks during test execution.
  *

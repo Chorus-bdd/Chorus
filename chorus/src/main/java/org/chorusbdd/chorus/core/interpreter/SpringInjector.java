@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nick

@@ -30,6 +30,9 @@
 package org.chorusbdd.chorus.format;
 
 import org.chorusbdd.chorus.core.interpreter.*;
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.token.StepToken;
 
 import java.io.PrintWriter;
 import java.io.Writer;

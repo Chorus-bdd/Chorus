@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
 import org.junit.Test;
 
 import java.io.File;

@@ -1,19 +1,11 @@
 package org.chorusbdd.chorus.dev;
 
-import org.chorusbdd.chorus.core.interpreter.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.TraceListener;
 import org.chorusbdd.chorus.format.PlainResultsFormatter;
 import org.chorusbdd.chorus.util.CommandLineParser;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.TestResultsSummary;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 import java.io.File;
 import java.io.OutputStreamWriter;

@@ -1,5 +1,8 @@
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.token.StepToken;
 import org.chorusbdd.chorus.format.PlainResultsFormatter;
 import org.chorusbdd.chorus.format.ResultsFormatter;
 
