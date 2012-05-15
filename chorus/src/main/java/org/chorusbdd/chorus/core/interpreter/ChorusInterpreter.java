@@ -58,7 +58,7 @@ public class ChorusInterpreter {
     private String[] basePackages = new String[0];
     private String filterExpression;
 
-    private List<ChorusInterpreterExecutionListener> listeners = new ArrayList<ChorusInterpreterExecutionListener>();
+    private List<ChorusExecutionListener> listeners = new ArrayList<ChorusExecutionListener>();
 
     private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
 
@@ -268,34 +268,34 @@ public class ChorusInterpreter {
     // Execution event methods
     //
 
-    public void addExecutionListener(ChorusInterpreterExecutionListener listener) {
+    public void addExecutionListener(ChorusExecutionListener listener) {
         listeners.add(listener);
     }
 
-    public boolean removeExecutionListener(ChorusInterpreterExecutionListener listener) {
+    public boolean removeExecutionListener(ChorusExecutionListener listener) {
         return listeners.remove(listener);
     }
 
     private void notifyStepExecuted(TestExecutionToken t, StepToken step) {
-        for (ChorusInterpreterExecutionListener listener : listeners) {
+        for (ChorusExecutionListener listener : listeners) {
             listener.stepExecuted(t, step);
         }
     }
 
     private void notifyStartFeature(TestExecutionToken t, FeatureToken feature) {
-        for (ChorusInterpreterExecutionListener listener : listeners) {
+        for (ChorusExecutionListener listener : listeners) {
             listener.featureStarted(t, feature);
         }
     }
 
     private void notifyStartScenario(TestExecutionToken t, ScenarioToken scenario) {
-        for (ChorusInterpreterExecutionListener listener : listeners) {
+        for (ChorusExecutionListener listener : listeners) {
             listener.scenarioStarted(t, scenario);
         }
     }
 
     private void notifyTestsCompleted(TestExecutionToken t, ResultsSummary results) {
-            for (ChorusInterpreterExecutionListener listener : listeners) {
+            for (ChorusExecutionListener listener : listeners) {
                 listener.testsCompleted(t, results);
             }
         }

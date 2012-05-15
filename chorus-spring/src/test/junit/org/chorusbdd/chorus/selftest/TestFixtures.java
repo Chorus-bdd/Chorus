@@ -4,6 +4,9 @@ import junit.framework.TestCase;
 import org.chorusbdd.chorus.Main;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nick
@@ -27,7 +30,7 @@ public class TestFixtures extends TestCase {
         };
 
         try {
-            Main.run(args);
+            Main.run((Map<String, List<String>>) args);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed during test execution");

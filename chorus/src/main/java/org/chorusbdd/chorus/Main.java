@@ -29,6 +29,7 @@
 
 package org.chorusbdd.chorus;
 
+import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
@@ -45,11 +46,16 @@ import java.util.Map;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-
         boolean failed = run(args);
 
         System.out.println("Exiting with:" + (failed ? -1 : 0));
         System.exit(failed ? -1 : 0);
+    }
+
+    public static boolean run(String[] args) throws Exception {
+        Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
+        SystemOutExecutionListener l = createDefaultExecutionListener(parsedArgs);
+        return run(parsedArgs, l);
     }
 
     /**
@@ -57,8 +63,7 @@ public class Main {
      *
      * @return true, if ran successfully
      */
-    public static boolean run(String[] args) throws Exception {
-        Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
+    public static boolean run(Map<String, List<String>> parsedArgs, ChorusExecutionListener executionListener) throws Exception {
 
         if (!parsedArgs.containsKey("f")) {
             exitWithHelp();
@@ -88,16 +93,19 @@ public class Main {
         List<String> featureFileNames = parsedArgs.get("f");
         List<File> featureFiles = getFeatureFiles(featureFileNames);
 
-        boolean trace = parsedArgs.containsKey("trace");
-        boolean verbose = parsedArgs.containsKey("verbose");
-        boolean showSummary = parsedArgs.containsKey("showsummary");
-        SystemOutExecutionListener l = new SystemOutExecutionListener(showSummary, verbose, trace);
-        chorusInterpreter.addExecutionListener(l);
+        chorusInterpreter.addExecutionListener(executionListener);
 
         ResultsSummary results = chorusInterpreter.processFeatures(featureFiles);
 
         return results.getUnavailableHandlers() > 0
                 || results.getScenariosFailed() > 0;
+    }
+
+    private static SystemOutExecutionListener createDefaultExecutionListener(Map<String, List<String>> parsedArgs) {
+        boolean trace = parsedArgs.containsKey("trace");
+        boolean verbose = parsedArgs.containsKey("verbose");
+        boolean showSummary = parsedArgs.containsKey("showsummary");
+        return new SystemOutExecutionListener(showSummary, verbose, trace);
     }
 
     private static void exitWithHelp() {

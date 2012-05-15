@@ -4,6 +4,9 @@ import junit.framework.TestCase;
 import org.chorusbdd.chorus.Main;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nick

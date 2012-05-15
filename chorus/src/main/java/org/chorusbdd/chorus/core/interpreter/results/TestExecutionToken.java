@@ -1,5 +1,8 @@
 package org.chorusbdd.chorus.core.interpreter.results;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: GA2EBBU
@@ -19,6 +22,12 @@ package org.chorusbdd.chorus.core.interpreter.results;
  */
 public class TestExecutionToken implements ResultToken {
 
+    private static final ThreadLocal<SimpleDateFormat> formatThreadLocal = new ThreadLocal<SimpleDateFormat>() {
+        public SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("HH:mm:ss");
+        }
+    };
+
     private long executionStartTime;
 
     public TestExecutionToken() {
@@ -31,5 +40,9 @@ public class TestExecutionToken implements ResultToken {
 
     public TestExecutionToken deepCopy() {
         return new TestExecutionToken(executionStartTime);
+    }
+
+    public String toString() {
+        return "Tests at " + formatThreadLocal.get().format(new Date(executionStartTime));
     }
 }

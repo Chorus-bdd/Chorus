@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusInterpreterExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 
 import java.io.PrintWriter;
@@ -9,7 +9,7 @@ import java.io.PrintWriter;
  * Created by: Steve Neal
  * Date: 11/01/12
  */
-public class SystemOutExecutionListener implements ChorusInterpreterExecutionListener {
+public class SystemOutExecutionListener implements ChorusExecutionListener {
 
     private ResultsFormatter formatter;
 

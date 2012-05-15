@@ -8,7 +8,7 @@ import org.chorusbdd.chorus.core.interpreter.results.*;
  * Created by: Steve Neal
  * Date: 11/01/12
  */
-public interface ChorusInterpreterExecutionListener {
+public interface ChorusExecutionListener {
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests starting execution
