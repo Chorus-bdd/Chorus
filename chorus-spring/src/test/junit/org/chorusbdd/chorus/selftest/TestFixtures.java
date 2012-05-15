@@ -30,7 +30,7 @@ public class TestFixtures extends TestCase {
         };
 
         try {
-            Main.run((Map<String, List<String>>) args);
+            Main.run(args);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed during test execution");
