@@ -4,7 +4,7 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 
 import javax.annotation.Resource;
 
@@ -21,7 +21,7 @@ public class ConfigurationsWithSpringFixturesHandler {
     @Resource
     String injectedString;
 
-    @ChorusResource("feature.token")
+    @ChorusResource("feature.results")
     FeatureToken currentFeatureToken;
 
     @Step(".*the injected variable contains the name of the run configuration$")

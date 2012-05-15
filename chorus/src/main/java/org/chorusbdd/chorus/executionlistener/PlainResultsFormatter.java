@@ -27,12 +27,12 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.format;
+package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.core.interpreter.*;
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.token.StepToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
+import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -54,7 +54,7 @@ public class PlainResultsFormatter implements ResultsFormatter {
         printResults(features, verbose, null);
     }
 
-    public void printResults(List<FeatureToken> features, boolean verbose, TestResultsSummary summary) {
+    public void printResults(List<FeatureToken> features, boolean verbose, ResultsSummary summary) {
         for (FeatureToken feature : features) {
             if (feature.getUnavailableHandlersMessage() == null) {
                 printFeature(feature, "", "");

@@ -27,7 +27,7 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.core.interpreter.token;
+package org.chorusbdd.chorus.core.interpreter.results;
 
 /**
  * Created by: Steve Neal

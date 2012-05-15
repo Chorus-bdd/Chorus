@@ -27,29 +27,13 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.format;
-
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.token.StepToken;
+package org.chorusbdd.chorus.core.interpreter.results;
 
 /**
+ * Represents the different outcomes of running a Step
  * Created by: Steve Neal
- * Date: 30/09/11
+ * Date: 03/10/11
  */
-public interface ResultsFormatter {
-
-    void printFeature(FeatureToken feature);
-
-    void printFeature(FeatureToken feature, String status, String message);
-
-    void printScenario(ScenarioToken scenario);
-
-    void printStep(StepToken step);
-
-    void printStackTrace(Throwable t);
-
-    void printMessage(String message);
-
-    void close();
+public enum StepEndState {
+    PASSED, FAILED, PENDING, SKIPPED, UNDEFINED, DRYRUN
 }

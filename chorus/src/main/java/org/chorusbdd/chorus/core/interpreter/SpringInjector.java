@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 
 /**
  * Created with IntelliJ IDEA.

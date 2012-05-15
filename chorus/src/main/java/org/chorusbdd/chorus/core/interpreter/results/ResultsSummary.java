@@ -27,21 +27,18 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.core.interpreter;
-
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.token.StepToken;
+package org.chorusbdd.chorus.core.interpreter.results;
 
 import java.util.List;
 
 /**
- * Simple class that provides a summary of a test rerults
+ * Simple class that compiles a summary of a test results
+ * from a list of executed Features
  * 
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class TestResultsSummary {
+public class ResultsSummary {
     
     //stats
     private int scenariosPassed = 0;
@@ -54,7 +51,10 @@ public class TestResultsSummary {
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
 
-    public TestResultsSummary(List<FeatureToken> results) {
+    private List<FeatureToken> results;
+
+    public ResultsSummary(List<FeatureToken> results) {
+        this.results = results;
         for (FeatureToken feature : results) {
             if (feature.getUnavailableHandlersMessage() == null) {
                 for (ScenarioToken scenario : feature.getScenarios()) {
@@ -127,5 +127,9 @@ public class TestResultsSummary {
 
     public int getStepsSkipped() {
         return stepsSkipped;
+    }
+
+    public List<FeatureToken> getFeatures() {
+        return results;
     }
 }

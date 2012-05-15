@@ -30,13 +30,10 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.core.interpreter.results.*;
 import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.token.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.token.StepEndState;
-import org.chorusbdd.chorus.core.interpreter.token.StepToken;
 import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -98,7 +95,7 @@ public class ChorusInterpreter {
     }
 
 
-    public List<FeatureToken> processFeatures(List<File> featureFiles) throws Exception {
+    public ResultsSummary processFeatures(List<File> featureFiles) throws Exception {
 
         List<FeatureToken> results = new ArrayList<FeatureToken>();
 
@@ -259,7 +256,9 @@ public class ChorusInterpreter {
             }
         }
 
-        return results;
+        ResultsSummary summary = new ResultsSummary(results);
+
+        return summary;
     }
 
     //
@@ -282,15 +281,21 @@ public class ChorusInterpreter {
 
     private void notifyStartFeature(FeatureToken feature) {
         for (ChorusInterpreterExecutionListener listener : listeners) {
-            listener.startFeature(feature);
+            listener.featureStarted(feature);
         }
     }
 
     private void notifyStartScenario(ScenarioToken scenario) {
         for (ChorusInterpreterExecutionListener listener : listeners) {
-            listener.startScenario(scenario);
+            listener.scenarioStarted(scenario);
         }
     }
+
+    private void notifyTestsCompleted(ResultsSummary results) {
+            for (ChorusInterpreterExecutionListener listener : listeners) {
+                listener.testsCompleted(results);
+            }
+        }
 
     private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {
         Object featureInstance = handlerClass.newInstance();
@@ -446,7 +451,7 @@ public class ChorusInterpreter {
                     o = featureFile;
                 } else if ("feature.dir".equals(resourceName)) {
                     o = featureFile.getParentFile();
-                } else if ("feature.token".equals(resourceName)) {
+                } else if ("feature.results".equals(resourceName)) {
                     o = featureToken;
                 }
                 if (o != null) {

@@ -30,14 +30,11 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.TestResultsSummary;
-import org.chorusbdd.chorus.core.interpreter.TraceListener;
-import org.chorusbdd.chorus.format.PlainResultsFormatter;
+import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
+import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.util.CommandLineParser;
 
 import java.io.File;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -91,32 +88,20 @@ public class Main {
         List<String> featureFileNames = parsedArgs.get("f");
         List<File> featureFiles = getFeatureFiles(featureFileNames);
 
-        //run the features
-        if (parsedArgs.containsKey("trace")) {
-            //add an execution listener to interpreter that traces execution to standard out
-            chorusInterpreter.addExecutionListener(new TraceListener());
-        }
-        List<FeatureToken> results = chorusInterpreter.processFeatures(featureFiles);
-
-        //show the results
-        PlainResultsFormatter formatter = new PlainResultsFormatter(new OutputStreamWriter(System.out));
-
+        boolean trace = parsedArgs.containsKey("trace");
         boolean verbose = parsedArgs.containsKey("verbose");
         boolean showSummary = parsedArgs.containsKey("showsummary");
-        TestResultsSummary summary = new TestResultsSummary(results);
-        if (showSummary) {
-            formatter.printResults(results, verbose, summary);
-        } else {
-            formatter.printResults(results, verbose);
-        }
-        formatter.close();
+        SystemOutExecutionListener l = new SystemOutExecutionListener(showSummary, verbose, trace);
+        chorusInterpreter.addExecutionListener(l);
 
-        return summary.getUnavailableHandlers() > 0
-                || summary.getScenariosFailed() > 0;
+        ResultsSummary results = chorusInterpreter.processFeatures(featureFiles);
+
+        return results.getUnavailableHandlers() > 0
+                || results.getScenariosFailed() > 0;
     }
 
     private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-trace] [-dryrun] [-hidesummary] [-t tag_expression] -f [feature_dirs | feature_files] -h [handler base packages]");
+        System.err.println("Usage: Main [-verbose] [-trace] [-dryrun] [-showsummary] [-t tag_expression] -f [feature_dirs | feature_files] -h [handler base packages]");
         System.exit(-1);
     }
 

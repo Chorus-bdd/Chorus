@@ -36,7 +36,7 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.token.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
@@ -77,7 +77,7 @@ public class JmxHandler {
     @ChorusResource("feature.file")
     private File featureFile;
 
-    @ChorusResource("feature.token")
+    @ChorusResource("feature.results")
     private FeatureToken featureToken;
 
     /**

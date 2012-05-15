@@ -27,7 +27,7 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.core.interpreter.token;
+package org.chorusbdd.chorus.core.interpreter.results;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +105,7 @@ public class FeatureToken implements DeepCopy {
     }
 
     /**
-     * Returns a deep copy of the feature token and all its sub tokens
+     * Returns a deep copy of the feature results and all its sub tokens
      *
      * @return
      */

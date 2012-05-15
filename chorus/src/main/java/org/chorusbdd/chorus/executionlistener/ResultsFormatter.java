@@ -27,13 +27,37 @@
  * hardware.
  */
 
-package org.chorusbdd.chorus.core.interpreter.token;
+package org.chorusbdd.chorus.executionlistener;
+
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
+import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.results.StepToken;
+
+import java.util.List;
 
 /**
- * Represents the different outcomes of running a Step
  * Created by: Steve Neal
- * Date: 03/10/11
+ * Date: 30/09/11
  */
-public enum StepEndState {
-    PASSED, FAILED, PENDING, SKIPPED, UNDEFINED, DRYRUN
+public interface ResultsFormatter {
+
+    void printFeature(FeatureToken feature);
+
+    void printFeature(FeatureToken feature, String status, String message);
+
+    void printScenario(ScenarioToken scenario);
+
+    void printStep(StepToken step);
+
+    void printStackTrace(Throwable t);
+
+    void printMessage(String message);
+
+    void printResults(List<FeatureToken> features, boolean verbose);
+
+    void printResults(List<FeatureToken> features, boolean verbose, ResultsSummary summary);
+
+    void close();
+
 }
