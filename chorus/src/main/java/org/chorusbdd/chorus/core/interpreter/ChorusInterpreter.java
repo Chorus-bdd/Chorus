@@ -99,6 +99,7 @@ public class ChorusInterpreter {
 
         //identifies this execution, in case we have parallel or subsequent executions
         TestExecutionToken executionToken = new TestExecutionToken();
+        notifyStartTests(executionToken);
 
         List<FeatureToken> results = new ArrayList<FeatureToken>();
 
@@ -260,7 +261,7 @@ public class ChorusInterpreter {
         }
 
         ResultsSummary summary = new ResultsSummary(executionToken, results);
-
+        notifyTestsCompleted(executionToken, summary);
         return summary;
     }
 
@@ -274,6 +275,12 @@ public class ChorusInterpreter {
 
     public boolean removeExecutionListener(ChorusExecutionListener listener) {
         return listeners.remove(listener);
+    }
+
+    private void notifyStartTests(TestExecutionToken t) {
+       for (ChorusExecutionListener listener : listeners) {
+           listener.testsStarted(t);
+       }
     }
 
     private void notifyStepExecuted(TestExecutionToken t, StepToken step) {
@@ -295,10 +302,10 @@ public class ChorusInterpreter {
     }
 
     private void notifyTestsCompleted(TestExecutionToken t, ResultsSummary results) {
-            for (ChorusExecutionListener listener : listeners) {
-                listener.testsCompleted(t, results);
-            }
+        for (ChorusExecutionListener listener : listeners) {
+            listener.testsCompleted(t, results);
         }
+    }
 
     private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {
         Object featureInstance = handlerClass.newInstance();

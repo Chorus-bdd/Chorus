@@ -29,18 +29,18 @@
 
 package org.chorusbdd.chorus.handlers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.ChorusException;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
 import org.chorusbdd.chorus.util.RegexpUtils;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import javax.management.RuntimeMBeanException;
 import java.io.File;
@@ -69,7 +69,7 @@ import java.util.Properties;
 @SuppressWarnings("UnusedDeclaration")
 public class JmxHandler {
 
-    private Log log = LogFactory.getLog(getClass());
+    private ChorusLog log = ChorusLogFactory.getLog(getClass());
 
     @ChorusResource("feature.dir")
     private File featureDir;

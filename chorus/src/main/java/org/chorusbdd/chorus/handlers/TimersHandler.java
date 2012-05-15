@@ -34,6 +34,8 @@ import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 /**
  * Created by: Steve Neal
@@ -43,7 +45,7 @@ import org.chorusbdd.chorus.annotations.Step;
 @SuppressWarnings("UnusedDeclaration")
 public class TimersHandler {
 
-    private Log log = LogFactory.getLog(getClass());
+    private ChorusLog log = ChorusLogFactory.getLog(getClass());
 
     /**
      * Simple timer to make the calling thread sleep
