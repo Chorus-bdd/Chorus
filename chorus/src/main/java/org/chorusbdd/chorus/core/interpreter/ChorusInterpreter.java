@@ -29,13 +29,13 @@
 
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.RegexpUtils;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -51,7 +51,7 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class ChorusInterpreter {
 
-    private Log log = LogFactory.getLog(ChorusInterpreter.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
 
     private boolean dryRun;
     private String[] basePackages = new String[0];

@@ -67,6 +67,7 @@
 
     </build>
     <dependencies>
+
         <!-- In general the philosophy is that because Chorus is a library, we are trying to
         avoid any mandatory dependencies on other libraries, otherwise components using Chorus would be forced
         to inherit those extra dependencies
@@ -88,8 +89,9 @@
         </dependency>
 
         <!-- Logging classes are a compile-time dependency for the chorus core library, but not a runtime dependency
-        since there is only one class which directly depends on commons-logging, and this class is loaded by reflection
-        if found to be on the classpath. Hence they are optional, if found, will be used, otherwise logging to standard
+        since there is only one class ChorusCommonsLogProvider which directly depends on commons-logging, and this
+        class is loaded by reflection if found to be on the classpath. Hence these libraries are optional, if found,
+        will be used, otherwise logging to standard out
         out/err -->
         <dependency>
             <groupId>commons-logging</groupId>

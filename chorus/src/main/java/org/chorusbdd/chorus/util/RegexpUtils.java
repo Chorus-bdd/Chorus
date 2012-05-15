@@ -29,8 +29,8 @@
 
 package org.chorusbdd.chorus.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unchecked")
 public class RegexpUtils {
 
-    private static Log log = LogFactory.getLog(RegexpUtils.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(RegexpUtils.class);
 
     private static Pattern floatPattern = Pattern.compile("-?[0-9]+\\.[0-9]+");
     private static Pattern intPattern = Pattern.compile("-?[0-9]+");

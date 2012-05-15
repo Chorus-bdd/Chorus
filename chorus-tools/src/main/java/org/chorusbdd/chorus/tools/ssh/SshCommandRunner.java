@@ -33,8 +33,8 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -48,7 +48,7 @@ public class SshCommandRunner {
 
     private static final String PROMPT = "PROMPT";
 
-    private Log log = LogFactory.getLog(getClass());
+    private ChorusLog log = ChorusLogFactory.getLog(getClass());
 
     private final String host;
     private final String user;

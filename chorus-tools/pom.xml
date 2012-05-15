@@ -78,20 +78,5 @@
             <artifactId>jsch</artifactId>
             <version>0.1.46</version>
         </dependency>
-
-        <!-- Logging classes are optional in chorus core library, so included here optional also, so that we can use them
-        for our own testing-->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 </project>

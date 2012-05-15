@@ -1,9 +1,9 @@
 package org.chorusbdd.chorus.spring;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.core.interpreter.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.SpringInjector;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import javax.annotation.Resource;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class SpringContextInjector implements SpringInjector {
 
-    private Log log = LogFactory.getLog(SpringContextInjector.class);
+    private ChorusLog log = ChorusLogFactory.getLog(SpringContextInjector.class);
 
     /**
      * Map: Handler instance -> Spring context

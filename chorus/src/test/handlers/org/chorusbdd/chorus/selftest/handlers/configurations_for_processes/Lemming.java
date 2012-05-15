@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.selftest.handlers.configurations_for_processes;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 /**
  * Simple main class which will terminate itself after the number of seconds specified in the first
@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Lemming {
 
-    static Log log = LogFactory.getLog(Lemming.class);
+    static ChorusLog log = ChorusLogFactory.getLog(Lemming.class);
 
     public static void main(String[] args) throws Exception {
         log.info("Lemming will sleep for " + args[0] + " seconds before dying");
