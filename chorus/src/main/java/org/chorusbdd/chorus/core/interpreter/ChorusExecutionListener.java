@@ -49,7 +49,7 @@ public interface ChorusExecutionListener {
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param step, a token representing the test stop which has just started execution
      */
-    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step);
+    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running

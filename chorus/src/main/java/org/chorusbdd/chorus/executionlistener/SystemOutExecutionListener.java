@@ -53,7 +53,7 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
     }
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {

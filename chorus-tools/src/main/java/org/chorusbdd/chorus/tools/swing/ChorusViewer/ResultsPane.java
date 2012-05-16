@@ -64,7 +64,7 @@ public class ResultsPane extends JSplitPane implements ChorusExecutionListener {
         proxyingListener.scenarioCompleted(testExecutionToken, scenario);
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
         proxyingListener.stepStarted(testExecutionToken, step);
     }
 

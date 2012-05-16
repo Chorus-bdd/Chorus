@@ -117,136 +117,169 @@ public class ChorusInterpreter {
 
             //RUN EACH FEATURE
             for (FeatureToken feature : features) {
-                results.add(feature);
-                log.info(String.format("Loaded feature file: %s", featureFile));
-
-                //check that the required handler classes are all available and list them in order of precidence
-                StringBuilder unavailableHandlersMessage = new StringBuilder();
-                List<Class> orderedHandlerClasses = new ArrayList<Class>();
-                Class mainHandlerClass = allHandlerClasses.get(feature.getName());
-                if (mainHandlerClass == null) {
-                    log.info(String.format("No explicit handler was found for Feature: (%s), will only use those specified in the Uses statements",
-                            feature.getName()));
-                } else {
-                    log.debug(String.format("Loaded handler class (%s) for Feature: (%s)",
-                            mainHandlerClass.getName(),
-                            feature.getName()));
-
-                    orderedHandlerClasses.add(mainHandlerClass);
-                }
-                for (String usesFeatureWithName : feature.getUsesFeatures()) {
-                    Class usesHandlerClass = allHandlerClasses.get(usesFeatureWithName);
-                    if (usesHandlerClass == null) {
-                        unavailableHandlersMessage.append(String.format("'%s' ", usesFeatureWithName));
-                    } else {
-                        log.debug(String.format("Loaded handler class (%s) for Uses: (%s)",
-                                usesHandlerClass.getName(),
-                                usesFeatureWithName));
-
-                        orderedHandlerClasses.add(usesHandlerClass);
-                    }
-                }
-                boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
-
-                //run the scenarios in the feature
-                if (foundAllHandlerClasses) {
-                    notifyStartFeature(executionToken, feature);
-
-                    //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
-                    List<Object> handlerInstances = new ArrayList<Object>();
-                    //FOR EACH SCENARIO
-                    List<ScenarioToken> scenarios = feature.getScenarios();
-                    for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
-                        ScenarioToken scenario = iterator.next();
-                        notifyStartScenario(executionToken, scenario);
-
-                        boolean isLastScenario = !iterator.hasNext();
-                        log.info(String.format("Processing scenario: %s", scenario.getName()));
-
-                        //reset the ChorusContext for the scenario
-                        ChorusContext.destroy();
-
-                        //CREATE THE HANDLER INSTANCES
-                        if (handlerInstances.size() == 0) {
-                            //first scenario in file, so initialise the handler instances in order of precidence
-                            for (Class handlerClass : orderedHandlerClasses) {
-                                //create a new SCENARIO scoped handler
-                                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-                                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, featureFile, feature));
-                                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
-                                }
-                                //or (re)use an UNMANAGED scoped handlers
-                                else if (handlerAnnotation.scope() == HandlerScope.UNMANAGED) {
-                                    Object handler = unmanagedHandlerInstances.get(handlerClass);
-                                    if (handler == null) {
-                                        handler = createAndInitHandlerInstance(handlerClass, featureFile, feature);
-                                        unmanagedHandlerInstances.put(handlerClass, handler);
-                                        log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
-                                    }
-                                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, featureFile, feature));
-                                }
-                            }
-                        } else {
-                            //replace scenario scoped handlers if not first scenario in feature file
-                            for (int i = 0; i < handlerInstances.size(); i++) {
-                                Object handler = handlerInstances.get(i);
-                                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-                                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                                    handlerInstances.remove(i);
-                                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), featureFile, feature));
-                                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
-                                }
-                            }
-                        }
-
-
-                        //RUN THE STEPS IN THE SCENARIO
-                        boolean scenarioPassed = true;//track the scenario state
-                        List<StepToken> steps = scenario.getSteps();
-                        StepEndState endState;
-                        for (StepToken step : steps) {
-
-                            //process the step
-                            boolean forceSkip = !scenarioPassed;
-                            endState = processStep(executionToken, handlerInstances, step, forceSkip);
-
-                            switch (endState) {
-                                case PASSED:
-                                    break;
-                                case FAILED:
-                                    scenarioPassed = false;//skip (don't execute) the rest of the steps
-                                    break;
-                                case UNDEFINED:
-                                    scenarioPassed = false;//skip (don't execute) the rest of the steps
-                                    break;
-                                case PENDING:
-                                    scenarioPassed = false;//skip (don't execute) the rest of the steps
-                                    break;
-                                case SKIPPED:
-                                    break;
-                            }
-                        }
-
-                        //CLEAN UP SCENARIO SCOPED HANDLERS
-                        for (int i = 0; i < handlerInstances.size(); i++) {
-                            Object handler = handlerInstances.get(i);
-                            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-                            if (isLastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                                cleanupHandler(handler);
-                                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
-                            }
-                        }
-                    }
-                } else {
-                    feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
-                }
+                processFeature(
+                    executionToken,
+                    results,
+                    allHandlerClasses,
+                    unmanagedHandlerInstances,
+                    featureFile,
+                    feature
+                );
             }
         }
 
         ResultsSummary summary = new ResultsSummary(executionToken, results);
         notifyTestsCompleted(executionToken, summary);
         return summary;
+    }
+
+    private void processFeature(TestExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
+        //notify we started, even if there are missing handlers
+        //(but nothing will be done)
+        //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
+        notifyFeatureStarted(executionToken, feature);
+
+        results.add(feature);
+        log.info(String.format("Loaded feature file: %s", featureFile));
+
+        //check that the required handler classes are all available and list them in order of precidence
+        StringBuilder unavailableHandlersMessage = new StringBuilder();
+        List<Class> orderedHandlerClasses = new ArrayList<Class>();
+        Class mainHandlerClass = allHandlerClasses.get(feature.getName());
+        if (mainHandlerClass == null) {
+            log.info(String.format("No explicit handler was found for Feature: (%s), will only use those specified in the Uses statements",
+                    feature.getName()));
+        } else {
+            log.debug(String.format("Loaded handler class (%s) for Feature: (%s)",
+                    mainHandlerClass.getName(),
+                    feature.getName()));
+
+            orderedHandlerClasses.add(mainHandlerClass);
+        }
+        for (String usesFeatureWithName : feature.getUsesFeatures()) {
+            Class usesHandlerClass = allHandlerClasses.get(usesFeatureWithName);
+            if (usesHandlerClass == null) {
+                unavailableHandlersMessage.append(String.format("'%s' ", usesFeatureWithName));
+            } else {
+                log.debug(String.format("Loaded handler class (%s) for Uses: (%s)",
+                        usesHandlerClass.getName(),
+                        usesFeatureWithName));
+
+                orderedHandlerClasses.add(usesHandlerClass);
+            }
+        }
+        boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
+
+        //run the scenarios in the feature
+        if (foundAllHandlerClasses) {
+
+            //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
+            List<Object> handlerInstances = new ArrayList<Object>();
+            //FOR EACH SCENARIO
+            List<ScenarioToken> scenarios = feature.getScenarios();
+            for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
+                ScenarioToken scenario = iterator.next();
+                boolean isLastScenario = !iterator.hasNext();
+
+                processScenario(
+                    executionToken,
+                    unmanagedHandlerInstances,
+                    featureFile,
+                    feature,
+                    orderedHandlerClasses,
+                    handlerInstances,
+                    isLastScenario,
+                    scenario
+                );
+            }
+        } else {
+            feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
+        }
+
+        notifyFeatureCompleted(executionToken, feature);
+    }
+
+    private void processScenario(TestExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
+        notifyScenarioStarted(executionToken, scenario);
+
+        log.info(String.format("Processing scenario: %s", scenario.getName()));
+
+        //reset the ChorusContext for the scenario
+        ChorusContext.destroy();
+
+        //CREATE THE HANDLER INSTANCES
+        if (handlerInstances.size() == 0) {
+            //first scenario in file, so initialise the handler instances in order of precidence
+            for (Class handlerClass : orderedHandlerClasses) {
+                //create a new SCENARIO scoped handler
+                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
+                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, featureFile, feature));
+                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
+                }
+                //or (re)use an UNMANAGED scoped handlers
+                else if (handlerAnnotation.scope() == HandlerScope.UNMANAGED) {
+                    Object handler = unmanagedHandlerInstances.get(handlerClass);
+                    if (handler == null) {
+                        handler = createAndInitHandlerInstance(handlerClass, featureFile, feature);
+                        unmanagedHandlerInstances.put(handlerClass, handler);
+                        log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
+                    }
+                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, featureFile, feature));
+                }
+            }
+        } else {
+            //replace scenario scoped handlers if not first scenario in feature file
+            for (int i = 0; i < handlerInstances.size(); i++) {
+                Object handler = handlerInstances.get(i);
+                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
+                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+                    handlerInstances.remove(i);
+                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), featureFile, feature));
+                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
+                }
+            }
+        }
+
+
+        //RUN THE STEPS IN THE SCENARIO
+        boolean scenarioPassed = true;//track the scenario state
+        List<StepToken> steps = scenario.getSteps();
+        StepEndState endState;
+        for (StepToken step : steps) {
+
+            //process the step
+            boolean forceSkip = !scenarioPassed;
+            endState = processStep(executionToken, handlerInstances, step, forceSkip);
+
+            switch (endState) {
+                case PASSED:
+                    break;
+                case FAILED:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
+                    break;
+                case UNDEFINED:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
+                    break;
+                case PENDING:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
+                    break;
+                case SKIPPED:
+                    break;
+            }
+        }
+
+        //CLEAN UP SCENARIO SCOPED HANDLERS
+        for (int i = 0; i < handlerInstances.size(); i++) {
+            Object handler = handlerInstances.get(i);
+            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
+            if (isLastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+                cleanupHandler(handler);
+                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
+            }
+        }
+
+        notifyScenarioCompleted(executionToken, scenario);
     }
 
     private void filterFeaturesByScenarioTags(List<FeatureToken> features) {
@@ -287,21 +320,39 @@ public class ChorusInterpreter {
        }
     }
 
-    private void notifyStepExecuted(TestExecutionToken t, StepToken step) {
+    private void notifyStepStarted(TestExecutionToken t, StepToken step) {
+        for (ChorusExecutionListener listener : listeners) {
+            listener.stepStarted(t, step);
+        }
+    }
+
+    private void notifyStepCompleted(TestExecutionToken t, StepToken step) {
         for (ChorusExecutionListener listener : listeners) {
             listener.stepCompleted(t, step);
         }
     }
 
-    private void notifyStartFeature(TestExecutionToken t, FeatureToken feature) {
+    private void notifyFeatureStarted(TestExecutionToken t, FeatureToken feature) {
         for (ChorusExecutionListener listener : listeners) {
             listener.featureStarted(t, feature);
         }
     }
 
-    private void notifyStartScenario(TestExecutionToken t, ScenarioToken scenario) {
+    private void notifyFeatureCompleted(TestExecutionToken t, FeatureToken feature) {
+        for (ChorusExecutionListener listener : listeners) {
+            listener.featureCompleted(t, feature);
+        }
+    }
+
+    private void notifyScenarioStarted(TestExecutionToken t, ScenarioToken scenario) {
         for (ChorusExecutionListener listener : listeners) {
             listener.scenarioStarted(t, scenario);
+        }
+    }
+
+    private void notifyScenarioCompleted(TestExecutionToken t, ScenarioToken scenario) {
+        for (ChorusExecutionListener listener : listeners) {
+            listener.scenarioCompleted(t, scenario);
         }
     }
 
@@ -347,6 +398,8 @@ public class ChorusInterpreter {
      * @return the exit state of the executed step
      */
     private StepEndState processStep(TestExecutionToken executionToken, List<Object> instances, StepToken step, boolean skip) {
+
+        notifyStepStarted(executionToken, step);
 
         //return this at the end
         StepEndState endState = null;
@@ -433,7 +486,7 @@ public class ChorusInterpreter {
         }
 
         step.setEndState(endState);
-        notifyStepExecuted(executionToken, step);
+        notifyStepCompleted(executionToken, step);
         return endState;
     }
 

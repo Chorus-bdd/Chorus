@@ -53,7 +53,7 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

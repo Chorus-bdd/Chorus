@@ -51,7 +51,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         executionTokenToResultsPaneMap.get(testExecutionToken).scenarioCompleted(testExecutionToken, scenario);
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
         executionTokenToResultsPaneMap.get(testExecutionToken).stepStarted(testExecutionToken, step);
     }
 

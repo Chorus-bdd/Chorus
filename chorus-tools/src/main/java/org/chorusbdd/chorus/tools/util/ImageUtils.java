@@ -14,12 +14,14 @@ public class ImageUtils {
     public static final ImageIcon FEATURE_FAILED = getImageIcon("/images/feature_failed_32x32.png");
     public static final ImageIcon FEATURE_NOT_IMPLEMENTED = getImageIcon("/images/feature_not_implemented_32x32.png");
     public static final ImageIcon FEATURE_OK = getImageIcon("/images/feature_ok_32x32.png");
+    public static final ImageIcon FEATURE_IN_PROGRESS = getImageIcon("/images/feature_in_progress_32x32.png");
     public static final ImageIcon SCENARIO_FAILED = getImageIcon("/images/scenario_failed_24x24.png");
     public static final ImageIcon SCENARIO_NOT_IMPLEMENTED = getImageIcon("/images/scenario_not_implemented_24x24.png");
     public static final ImageIcon SCENARIO_OK = getImageIcon("/images/scenario_ok_24x24.png");
+    public static final ImageIcon SCENARIO_IN_PROGRESS = getImageIcon("/images/scenario_in_progress_24x24.png");
     public static final ImageIcon STEP_FAILED = getImageIcon("/images/step_failed_16x16.png");
     public static final ImageIcon STEP_NOT_IMPLEMENTED = getImageIcon("/images/step_not_implemented_16x16.png");
-    public static final ImageIcon STEP_RUNNING = getImageIcon("/images/step_running_16x16.png");
+    public static final ImageIcon STEP_IN_PROGRESS = getImageIcon("/images/step_in_progress_16x16.png");
     public static final ImageIcon STEP_OK = getImageIcon("/images/step_ok_16x16.png");
 
     public static ImageIcon getImageIcon(String name) {

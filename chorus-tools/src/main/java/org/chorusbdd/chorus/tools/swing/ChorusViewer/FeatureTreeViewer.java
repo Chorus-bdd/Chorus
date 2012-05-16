@@ -24,6 +24,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
 
     private FeatureNode currentFeature;
     private ScenarioNode currentScenario;
+    private StepNode currentStep;
 
     public FeatureTreeViewer(ExecutionOutputViewer executionOutputViewer) {
         this.executionOutputViewer = executionOutputViewer;
@@ -47,6 +48,8 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     }
 
     public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+        currentFeature = null;
+        featureTree.repaint(); //make sure we update icon to show no longer in progress
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
@@ -54,13 +57,17 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     }
 
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+        currentScenario = null;
+        featureTree.repaint(); //make sure we update icon to show no longer in progress
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
+        currentStep = addNode(new StepNode(step), currentScenario, true);
     }
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
-        addNode(new StepNode(step), currentScenario, true);
+        currentStep = null;
+        featureTree.repaint(); //make sure we update icon to show no longer in progress
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
@@ -104,7 +111,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         }
 
         public ImageIcon getIcon() {
-            return this == currentFeature ? ImageUtils.FEATURE_NOT_IMPLEMENTED : ImageUtils.FEATURE_OK;
+            return this == currentFeature ? ImageUtils.FEATURE_IN_PROGRESS : ImageUtils.FEATURE_OK;
         }
     }
 
@@ -119,7 +126,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         }
 
         public ImageIcon getIcon() {
-            return ImageUtils.SCENARIO_OK;
+            return this == currentScenario ? ImageUtils.SCENARIO_IN_PROGRESS : ImageUtils.SCENARIO_OK;
         }
     }
 
@@ -131,7 +138,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
 
 
         public ImageIcon getIcon() {
-            return ImageUtils.STEP_OK;
+            return this == currentStep ? ImageUtils.STEP_IN_PROGRESS : ImageUtils.STEP_OK;
         }
     }
 
