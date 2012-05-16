@@ -91,6 +91,10 @@ public class StepToken implements ResultToken {
         return endState != StepEndState.UNDEFINED;
     }
 
+    public boolean isPassed() {
+        return endState != StepEndState.FAILED;
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s", type, action);

@@ -167,6 +167,10 @@ public class ResultsSummary implements ResultToken {
         return unavailableHandlers + stepsUndefined == 0;
     }
 
+    public boolean isPassed() {
+        return stepsFailed == 0;
+    }
+
     public ResultsSummary deepCopy() {
         ResultsSummary s = new ResultsSummary();
         s.scenariosPassed = scenariosPassed;

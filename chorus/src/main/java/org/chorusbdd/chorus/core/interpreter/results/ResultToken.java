@@ -11,5 +11,14 @@ import java.io.Serializable;
  * All tokens should implement DeepCopy and Serializable
  */
 public interface ResultToken extends Serializable, DeepCopy {
+
+    /**
+     * @return true if all necessary handlers and step definitions were available
+     */
     boolean isFullyImplemented();
+
+    /**
+     * @return true if all executed steps passed (steps may be unimplemented or skipped and this will not cause test tests to 'fail')
+     */
+    boolean isPassed();
 }

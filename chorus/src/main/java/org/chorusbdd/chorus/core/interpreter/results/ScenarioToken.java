@@ -103,6 +103,14 @@ public class ScenarioToken implements ResultToken {
         return result;
     }
 
+    public boolean isPassed() {
+        boolean result = true;
+        for ( StepToken s : steps) {
+            result &= s.isPassed();
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return String.format("Scenario: %s", name);

@@ -149,6 +149,10 @@ public class TestExecutionToken implements ResultToken {
      * @return true, not meaningful for the TestExecutionToken in the same manner as the other token types
      */
     public boolean isFullyImplemented() {
-        return true;
+        return resultsSummary.isFullyImplemented();
+    }
+
+    public boolean isPassed() {
+        return resultsSummary.isPassed();
     }
 }

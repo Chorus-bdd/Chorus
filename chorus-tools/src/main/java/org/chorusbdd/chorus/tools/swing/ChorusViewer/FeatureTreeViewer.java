@@ -19,7 +19,7 @@ import java.util.List;
 public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener {
 
     private ExecutionOutputViewer executionOutputViewer;
-    private MutableTreeNode root = new DefaultMutableTreeNode();
+    private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
     private DefaultTreeModel model = new DefaultTreeModel(root);
     private JTree featureTree = new JTree(model);
 
@@ -49,6 +49,9 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     }
 
     public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+        //if we have received the updated token over the wire, the completed instance may be != the started instance
+        //completed instance has the finished state, so update our token reference to that
+        currentFeature.setToken(feature);
         currentFeature = null;
     }
 
@@ -57,6 +60,9 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     }
 
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+        //if we have received the updated token over the wire, the completed instance may be != the started instance
+        //completed instance has the finished state, so update our token reference to that
+        currentScenario.setToken(scenario);
         featureTree.collapsePath(new TreePath(currentScenario.getPath()));  //collapse down the detail nodes once feature finished
         currentScenario = null;
     }
@@ -66,10 +72,14 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     }
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
+        //if we have received the updated token over the wire, the completed instance may be != the started instance
+        //completed instance has the finished state, so update our token reference to that
+        currentStep.setToken(step);
         currentStep = null;
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+        //make sure we repaint to show the latest state
     }
 
     private <T extends AbstractTokenTreeNode> T addNode(T newNode, MutableTreeNode parent, boolean showNode) {
@@ -80,7 +90,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         return newNode;
     }
 
-    private abstract static class AbstractTokenTreeNode<N extends ResultToken> extends DefaultMutableTreeNode {
+    private abstract class AbstractTokenTreeNode<N extends ResultToken> extends DefaultMutableTreeNode {
 
         private N token;
 
@@ -92,11 +102,34 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             return token;
         }
 
+        public void setToken(N token) {
+            this.token = token;
+            model.nodeChanged(this);  //repaint to show the latest state from token
+        }
+
         public String toString() {
             return token.toString();
         }
 
-        public abstract ImageIcon getIcon();
+
+        public ImageIcon getIcon() {
+            return this == getCurrentlyProcessingNode() ? getInProgressIcon() :
+                    token.isPassed() ?
+                        token.isFullyImplemented() ? getOkIcon() : getNotImplementedIcon() :
+                        getFailedIcon();
+
+        }
+
+        protected abstract ImageIcon getFailedIcon();
+
+        protected abstract ImageIcon getNotImplementedIcon();
+
+        protected abstract ImageIcon getOkIcon();
+
+        protected abstract ImageIcon getInProgressIcon();
+
+        protected abstract AbstractTokenTreeNode<N> getCurrentlyProcessingNode();
+
     }
 
     private class FeatureNode extends AbstractTokenTreeNode<FeatureToken>  {
@@ -109,8 +142,24 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             return getToken().getNameWithConfiguration();
         }
 
-        public ImageIcon getIcon() {
-            return this == currentFeature ? ImageUtils.FEATURE_IN_PROGRESS : ImageUtils.FEATURE_OK;
+        protected ImageIcon getFailedIcon() {
+            return ImageUtils.FEATURE_FAILED;
+        }
+
+        protected ImageIcon getNotImplementedIcon() {
+            return ImageUtils.FEATURE_NOT_IMPLEMENTED;
+        }
+
+        protected ImageIcon getOkIcon() {
+            return ImageUtils.FEATURE_OK;
+        }
+
+        protected ImageIcon getInProgressIcon() {
+            return ImageUtils.FEATURE_IN_PROGRESS;
+        }
+
+        protected AbstractTokenTreeNode<FeatureToken> getCurrentlyProcessingNode() {
+            return currentFeature;
         }
     }
 
@@ -124,8 +173,24 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             return getToken().getName();
         }
 
-        public ImageIcon getIcon() {
-            return this == currentScenario ? ImageUtils.SCENARIO_IN_PROGRESS : ImageUtils.SCENARIO_OK;
+        protected ImageIcon getFailedIcon() {
+            return ImageUtils.SCENARIO_FAILED;
+        }
+
+        protected ImageIcon getNotImplementedIcon() {
+            return ImageUtils.SCENARIO_NOT_IMPLEMENTED;
+        }
+
+        protected ImageIcon getOkIcon() {
+            return ImageUtils.SCENARIO_OK;
+        }
+
+        protected ImageIcon getInProgressIcon() {
+            return ImageUtils.SCENARIO_IN_PROGRESS;
+        }
+
+        protected AbstractTokenTreeNode<ScenarioToken> getCurrentlyProcessingNode() {
+            return currentScenario;
         }
     }
 
@@ -135,10 +200,26 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             super(token);
         }
 
-
-        public ImageIcon getIcon() {
-            return this == currentStep ? ImageUtils.STEP_IN_PROGRESS : ImageUtils.STEP_OK;
+        protected ImageIcon getFailedIcon() {
+            return ImageUtils.STEP_FAILED;
         }
+
+        protected ImageIcon getNotImplementedIcon() {
+            return ImageUtils.STEP_NOT_IMPLEMENTED;
+        }
+
+        protected ImageIcon getOkIcon() {
+            return ImageUtils.STEP_OK;
+        }
+
+        protected ImageIcon getInProgressIcon() {
+            return ImageUtils.STEP_IN_PROGRESS;
+        }
+
+        protected AbstractTokenTreeNode<StepToken> getCurrentlyProcessingNode() {
+            return currentStep;
+        }
+
     }
 
     private static class ResultNodeCellRenderer extends DefaultTreeCellRenderer {

@@ -116,6 +116,14 @@ public class FeatureToken implements ResultToken {
         return result;
     }
 
+    public boolean isPassed() {
+        boolean result = true;
+        for ( ScenarioToken s : scenarios ) {
+            result &= s.isPassed();
+        }
+        return result;
+    }
+
     /**
      * Returns a deep copy of the feature results and all its sub tokens
      *
