@@ -17,9 +17,21 @@ public interface ChorusExecutionListener {
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
+     * @param results, a token representing the results of the test suite which has completed
+     */
+    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results);
+
+    /**
+     * @param testExecutionToken, a token representing the current suite of tests running
      * @param feature, a token representing the feature which is starting
      */
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature);
+
+    /**
+     * @param testExecutionToken, a token representing the current suite of tests running
+     * @param feature, a token representing the feature which has just completed
+     */
+    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
@@ -29,13 +41,20 @@ public interface ChorusExecutionListener {
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
-     * @param step, a token representing the test stop which has just completed excecution
+     * @param scenario, a token representing the scenario which has just completed
      */
-    public void stepExecuted(TestExecutionToken testExecutionToken, StepToken step);
+    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
-     * @param results, a token representing the results of the test suite
+     * @param step, a token representing the test stop which has just started execution
      */
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results);
+    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step);
+
+    /**
+     * @param testExecutionToken, a token representing the current suite of tests running
+     * @param step, a token representing the test stop which has just completed execution
+     */
+    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step);
+
 }

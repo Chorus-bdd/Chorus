@@ -289,7 +289,7 @@ public class ChorusInterpreter {
 
     private void notifyStepExecuted(TestExecutionToken t, StepToken step) {
         for (ChorusExecutionListener listener : listeners) {
-            listener.stepExecuted(t, step);
+            listener.stepCompleted(t, step);
         }
     }
 

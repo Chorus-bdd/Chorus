@@ -2,7 +2,7 @@ package org.chorusbdd.chorus.util.logging;
 
 /**
 * Created with IntelliJ IDEA.
-* User: GA2EBBU
+* User: Nick Ebbutt
 * Date: 15/05/12
 * Time: 11:50
 * To change this template use File | Settings | File Templates.

@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.tools.swing.chorusviewer;
 
 import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.tools.util.AwtSafeListener;
 import org.chorusbdd.chorus.util.CommandLineParser;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick Ebbutt
  * Date: 15/05/12
  * Time: 15:03
  *
@@ -33,7 +34,7 @@ public class ChorusViewer {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
             Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
-            ChorusExecutionListener l = AwtSafeListener.getAwtSafeListener(frame, ChorusExecutionListener.class);
+            ChorusExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ChorusExecutionListener.class);
             Main.run(parsedArgs, l);
         }
     }

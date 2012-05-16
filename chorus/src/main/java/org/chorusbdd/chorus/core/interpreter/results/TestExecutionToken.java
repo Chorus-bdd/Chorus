@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick Ebbutt
  * Date: 15/05/12
  * Time: 15:15
  *

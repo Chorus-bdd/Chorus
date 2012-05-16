@@ -41,13 +41,22 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
         }
     }
 
+    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    }
+
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
         if ( trace ) {
             formatter.printScenario(scenario);
         }
     }
 
-    public void stepExecuted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    }
+
+    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    }
+
+    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
         if ( trace ) {
             formatter.printStep(step);
             if (step.getThrowable() != null) {

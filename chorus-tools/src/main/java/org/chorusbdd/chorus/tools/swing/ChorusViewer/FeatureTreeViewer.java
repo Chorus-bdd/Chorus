@@ -2,12 +2,15 @@ package org.chorusbdd.chorus.tools.swing.chorusviewer;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
+import org.chorusbdd.chorus.tools.util.ImageUtils;
 
 import javax.swing.*;
+import javax.swing.tree.*;
+import java.awt.*;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick Ebbutt
  * Date: 15/05/12
  * Time: 16:03
  * To change this template use File | Settings | File Templates.
@@ -15,28 +18,142 @@ import javax.swing.*;
 public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener {
 
     private ExecutionOutputViewer executionOutputViewer;
+    private MutableTreeNode root = new DefaultMutableTreeNode();
+    private DefaultTreeModel model = new DefaultTreeModel(root);
+    private JTree featureTree = new JTree(model);
+
+    private FeatureNode currentFeature;
+    private ScenarioNode currentScenario;
 
     public FeatureTreeViewer(ExecutionOutputViewer executionOutputViewer) {
         this.executionOutputViewer = executionOutputViewer;
+        configureDisplay();
+        JScrollPane p = new JScrollPane(featureTree);
+        setLayout(new BorderLayout());
+        add(p, BorderLayout.CENTER);
+    }
+
+    private void configureDisplay() {
+        featureTree.setRootVisible(false);
+        featureTree.setBackground(Color.BLACK);
+        featureTree.setCellRenderer(new ResultNodeCellRenderer());
     }
 
     public void testsStarted(TestExecutionToken testExecutionToken) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFeature = addNode(new FeatureNode(feature), root, true);
+    }
+
+    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentScenario = addNode(new ScenarioNode(scenario), currentFeature, true);
     }
 
-    public void stepExecuted(TestExecutionToken testExecutionToken, StepToken step) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    }
+
+    public void stepStarted(TestExecutionToken testExecutionToken, TestExecutionToken step) {
+    }
+
+    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
+        addNode(new StepNode(step), currentScenario, true);
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    private <T extends AbstractTokenTreeNode> T addNode(T newNode, MutableTreeNode parent, boolean showNode) {
+        model.insertNodeInto(newNode, parent, parent.getChildCount());
+        if (showNode) {
+            featureTree.scrollPathToVisible(new TreePath(newNode.getPath()));
+        }
+        return newNode;
+    }
+
+    private abstract static class AbstractTokenTreeNode<N extends ResultToken> extends DefaultMutableTreeNode {
+
+        private N token;
+
+        public AbstractTokenTreeNode(N token) {
+            this.token = token;
+        }
+
+        public N getToken() {
+            return token;
+        }
+
+        public String toString() {
+            return token.toString();
+        }
+
+        public abstract ImageIcon getIcon();
+    }
+
+    private class FeatureNode extends AbstractTokenTreeNode<FeatureToken>  {
+
+        public FeatureNode(FeatureToken token) {
+            super(token);
+        }
+
+        public String toString() {
+            return getToken().getNameWithConfiguration();
+        }
+
+        public ImageIcon getIcon() {
+            return this == currentFeature ? ImageUtils.FEATURE_NOT_IMPLEMENTED : ImageUtils.FEATURE_OK;
+        }
+    }
+
+    private class ScenarioNode extends AbstractTokenTreeNode<ScenarioToken>  {
+
+        public ScenarioNode(ScenarioToken token) {
+            super(token);
+        }
+
+        public String toString() {
+            return getToken().getName();
+        }
+
+        public ImageIcon getIcon() {
+            return ImageUtils.SCENARIO_OK;
+        }
+    }
+
+    private class StepNode extends AbstractTokenTreeNode<StepToken>  {
+
+        public StepNode(StepToken token) {
+            super(token);
+        }
+
+
+        public ImageIcon getIcon() {
+            return ImageUtils.STEP_OK;
+        }
+    }
+
+    private static class ResultNodeCellRenderer extends DefaultTreeCellRenderer {
+
+        public Component getTreeCellRendererComponent(JTree tree, Object value,
+                                               boolean selected, boolean expanded,
+                                               boolean leaf, int row, boolean hasFocus) {
+
+
+            if ( value instanceof AbstractTokenTreeNode) {  //not so for root node
+                ImageIcon icon = ((AbstractTokenTreeNode) value).getIcon();
+                setClosedIcon(icon);
+                setOpenIcon(icon);
+                setLeafIcon(icon);
+            }
+
+            super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+            setBackgroundNonSelectionColor(Color.BLACK);
+            setBackgroundSelectionColor(Color.GRAY);
+            setForeground(Color.WHITE);
+            return this;
+        }
     }
 }
