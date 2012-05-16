@@ -60,9 +60,9 @@ public class Main {
     }
 
     /**
-     * Run without exiting, useful from tests
+     * Run without exiting on test completion, useful from tests
      *
-     * @return true, if ran successfully
+     * @return true, if all tests were fully implemented and all tests passed
      */
     public static boolean run(Map<String, List<String>> parsedArgs, ChorusExecutionListener executionListener) throws Exception {
 
@@ -97,9 +97,7 @@ public class Main {
         chorusInterpreter.addExecutionListener(executionListener);
 
         TestExecutionToken executionResults = chorusInterpreter.processFeatures(featureFiles);
-
-        return executionResults.getUnavailableHandlers() > 0
-                || executionResults.getScenariosFailed() > 0;
+        return executionResults.isPassed() && executionResults.isFullyImplemented();
     }
 
     private static SystemOutExecutionListener createDefaultExecutionListener(Map<String, List<String>> parsedArgs) {

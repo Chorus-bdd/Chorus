@@ -21,7 +21,7 @@ public class ChorusViewer {
 
     ChorusViewerMainFrame frame;
 
-    public ChorusViewer(String[] args) throws Exception {
+    public ChorusViewer() throws Exception {
 
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
@@ -29,18 +29,23 @@ public class ChorusViewer {
             frame.setVisible(true);
             }
         });
+    }
 
+    public boolean runFeatures(String[] args) throws Exception {
+        boolean success = true;
         if ( args.length > 0 ) {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
             Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
             ChorusExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ChorusExecutionListener.class);
-            Main.run(parsedArgs, l);
+            success = Main.run(parsedArgs, l);
         }
+        return success;
     }
 
     public static void main(String[] args) throws Exception {
-        new ChorusViewer(args);
+        ChorusViewer v = new ChorusViewer();
+        v.runFeatures(args);
     }
 
 }
