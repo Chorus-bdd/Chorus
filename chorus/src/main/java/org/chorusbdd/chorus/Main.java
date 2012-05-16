@@ -31,21 +31,28 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
 import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
+import org.chorusbdd.chorus.remoting.jmx.DynamicMBeanProxyHandler;
+import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.util.CommandLineParser;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
  */
 public class Main {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(Main.class);
+
     public static void main(String[] args) throws Exception {
         boolean failed = run(args);
 
@@ -55,7 +62,7 @@ public class Main {
 
     public static boolean run(String[] args) throws Exception {
         Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
-        SystemOutExecutionListener l = createDefaultExecutionListener(parsedArgs);
+        ChorusExecutionListener l = createExecutionListener(parsedArgs);
         return run(parsedArgs, l);
     }
 
@@ -100,15 +107,44 @@ public class Main {
         return executionResults.isPassed() && executionResults.isFullyImplemented();
     }
 
-    private static SystemOutExecutionListener createDefaultExecutionListener(Map<String, List<String>> parsedArgs) {
+    private static ChorusExecutionListener createExecutionListener(Map<String, List<String>> parsedArgs) {
+        ChorusExecutionListener result = null;
+        if ( parsedArgs.containsKey("remoteJmxListener")) {
+            result = createProxyForRemoteListener(parsedArgs, result);
+        }
+
+        if ( result == null) {
+            result = createDefaultExecutionListener(parsedArgs);
+        }
+        return result;
+    }
+
+    private static ChorusExecutionListener createDefaultExecutionListener(Map<String, List<String>> parsedArgs) {
+        ChorusExecutionListener result;
         boolean trace = parsedArgs.containsKey("trace");
         boolean verbose = parsedArgs.containsKey("verbose");
         boolean showSummary = parsedArgs.containsKey("showsummary");
-        return new SystemOutExecutionListener(showSummary, verbose, trace);
+        result = new SystemOutExecutionListener(showSummary, verbose, trace);
+        return result;
+    }
+
+    private static ChorusExecutionListener createProxyForRemoteListener(Map<String, List<String>> parsedArgs, ChorusExecutionListener result) {
+        try {
+            String hostAndPort = parsedArgs.get("remoteJmxListener").get(0);
+            StringTokenizer t = new StringTokenizer(hostAndPort, ":");
+            String host = t.nextToken();
+            int port = Integer.valueOf(t.nextToken());
+            DynamicMBeanProxyHandler h = new DynamicMBeanProxyHandler(host, port);
+            h.connect();
+            result = h.newMBeanProxy(RemoteExecutionListenerMBean.JMX_EXECUTION_LISTENER_NAME, RemoteExecutionListenerMBean.class);
+        } catch (Throwable t) {
+            log.error("Failed to create proxy for remote execution listener, will revert to standard listener", t);
+        }
+        return result;
     }
 
     private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-trace] [-dryrun] [-showsummary] [-t tag_expression] -f [feature_dirs | feature_files] -h [handler base packages]");
+        System.err.println("Usage: Main [-verbose] [-trace] [-dryrun] [-showsummary] [-t tag_expression] [ -remoteJmxListener host:port ] -f [feature_dirs | feature_files] -h [handler base packages]");
         System.exit(-1);
     }
 
