@@ -45,7 +45,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 @SuppressWarnings("UnusedDeclaration")
 public class TimersHandler {
 
-    private ChorusLog log = ChorusLogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(TimersHandler.class);
 
     /**
      * Simple timer to make the calling thread sleep

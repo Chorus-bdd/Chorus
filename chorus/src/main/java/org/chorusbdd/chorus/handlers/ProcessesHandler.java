@@ -51,7 +51,7 @@ import java.util.*;
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler {
 
-    private ChorusLog log = ChorusLogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
 
     @ChorusResource("feature.dir")
     private File featureDir;

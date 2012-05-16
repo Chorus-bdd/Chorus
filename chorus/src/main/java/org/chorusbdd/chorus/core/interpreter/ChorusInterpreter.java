@@ -34,7 +34,6 @@ import org.chorusbdd.chorus.core.interpreter.results.*;
 import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
-import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -52,15 +51,14 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class ChorusInterpreter {
 
-    private ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
 
     private boolean dryRun;
     private String[] basePackages = new String[0];
     private String filterExpression;
 
-    private List<ChorusExecutionListener> listeners = new ArrayList<ChorusExecutionListener>();
-
     private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
+    private ExecutionListenerSupport executionListenerSupport = new ExecutionListenerSupport();
 
     /**
      * Always included in the Handlers base package scan
@@ -99,7 +97,7 @@ public class ChorusInterpreter {
 
         //identifies this execution, in case we have parallel or subsequent executions
         TestExecutionToken executionToken = new TestExecutionToken();
-        notifyStartTests(executionToken);
+        executionListenerSupport.notifyStartTests(executionToken);
 
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
@@ -128,7 +126,7 @@ public class ChorusInterpreter {
             }
         }
 
-        notifyTestsCompleted(executionToken, allFeatures);
+        executionListenerSupport.notifyTestsCompleted(executionToken, allFeatures);
         return executionToken;
     }
 
@@ -136,7 +134,7 @@ public class ChorusInterpreter {
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
-        notifyFeatureStarted(executionToken, feature);
+        executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         results.add(feature);
         log.info(String.format("Loaded feature file: %s", featureFile));
@@ -196,20 +194,74 @@ public class ChorusInterpreter {
             executionToken.incrementUnavailableHandlers();
         }
 
-        notifyFeatureCompleted(executionToken, feature);
+        executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
     }
 
     private void processScenario(TestExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
-        notifyScenarioStarted(executionToken, scenario);
+        executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
 
         log.info(String.format("Processing scenario: %s", scenario.getName()));
 
         //reset the ChorusContext for the scenario
         ChorusContext.destroy();
 
+        addHandlerInstances(unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses, handlerInstances);
+
+        boolean scenarioPassed = runScenarioSteps(executionToken, handlerInstances, scenario);
+
+        if ( scenarioPassed ) {
+            executionToken.incrementScenariosPassed();
+        } else {
+            executionToken.incrementScenariosFailed();
+        }
+
+        //CLEAN UP SCENARIO SCOPED HANDLERS
+        for (int i = 0; i < handlerInstances.size(); i++) {
+            Object handler = handlerInstances.get(i);
+            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
+            if (isLastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+                cleanupHandler(handler);
+                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
+            }
+        }
+
+        executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
+    }
+
+    private boolean runScenarioSteps(TestExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
+        //RUN THE STEPS IN THE SCENARIO
+        boolean scenarioPassed = true;//track the scenario state
+        List<StepToken> steps = scenario.getSteps();
+        StepEndState endState;
+        for (StepToken step : steps) {
+
+            //process the step
+            boolean forceSkip = !scenarioPassed;
+            endState = processStep(executionToken, handlerInstances, step, forceSkip);
+
+            switch (endState) {
+                case PASSED:
+                    break;
+                case FAILED:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
+                    break;
+                case UNDEFINED:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
+                    break;
+                case PENDING:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
+                    break;
+                case SKIPPED:
+                    break;
+            }
+        }
+        return scenarioPassed;
+    }
+
+    private void addHandlerInstances(HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances) throws Exception {
         //CREATE THE HANDLER INSTANCES
         if (handlerInstances.size() == 0) {
-            //first scenario in file, so initialise the handler instances in order of precidence
+            //first scenario in file, so initialise the handler instances in order of precedence
             for (Class handlerClass : orderedHandlerClasses) {
                 //create a new SCENARIO scoped handler
                 Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
@@ -240,161 +292,6 @@ public class ChorusInterpreter {
                 }
             }
         }
-
-
-        //RUN THE STEPS IN THE SCENARIO
-        boolean scenarioPassed = true;//track the scenario state
-        List<StepToken> steps = scenario.getSteps();
-        StepEndState endState;
-        for (StepToken step : steps) {
-
-            //process the step
-            boolean forceSkip = !scenarioPassed;
-            endState = processStep(executionToken, handlerInstances, step, forceSkip);
-
-            switch (endState) {
-                case PASSED:
-                    break;
-                case FAILED:
-                    scenarioPassed = false;//skip (don't execute) the rest of the steps
-                    break;
-                case UNDEFINED:
-                    scenarioPassed = false;//skip (don't execute) the rest of the steps
-                    break;
-                case PENDING:
-                    scenarioPassed = false;//skip (don't execute) the rest of the steps
-                    break;
-                case SKIPPED:
-                    break;
-            }
-        }
-
-        if ( scenarioPassed ) {
-            executionToken.incrementScenariosPassed();
-        } else {
-            executionToken.incrementScenariosFailed();
-        }
-
-        //CLEAN UP SCENARIO SCOPED HANDLERS
-        for (int i = 0; i < handlerInstances.size(); i++) {
-            Object handler = handlerInstances.get(i);
-            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            if (isLastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                cleanupHandler(handler);
-                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
-            }
-        }
-
-        notifyScenarioCompleted(executionToken, scenario);
-    }
-
-    private void filterFeaturesByScenarioTags(List<FeatureToken> features) {
-        //FILTER THE FEATURES AND SCENARIOS
-        if (filterExpression != null) {
-            for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
-                //remove all filtered scenarios from this feature
-                FeatureToken feature = fi.next();
-                for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
-                    ScenarioToken scenario = si.next();
-                    if (!tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
-                        si.remove();
-                    }
-                }
-                //if there are no scenarios left, then remove this feature from the list to run
-                if (feature.getScenarios().size() == 0) {
-                    fi.remove();
-                }
-            }
-        }
-    }
-
-    //
-    // Execution event methods
-    //
-
-    public void addExecutionListener(ChorusExecutionListener listener) {
-        listeners.add(listener);
-    }
-
-    public boolean removeExecutionListener(ChorusExecutionListener listener) {
-        return listeners.remove(listener);
-    }
-
-    private void notifyStartTests(TestExecutionToken t) {
-       for (ChorusExecutionListener listener : listeners) {
-           listener.testsStarted(t);
-       }
-    }
-
-    private void notifyStepStarted(TestExecutionToken t, StepToken step) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.stepStarted(t, step);
-        }
-    }
-
-    private void notifyStepCompleted(TestExecutionToken t, StepToken step) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.stepCompleted(t, step);
-        }
-    }
-
-    private void notifyFeatureStarted(TestExecutionToken t, FeatureToken feature) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.featureStarted(t, feature);
-        }
-    }
-
-    private void notifyFeatureCompleted(TestExecutionToken t, FeatureToken feature) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.featureCompleted(t, feature);
-        }
-    }
-
-    private void notifyScenarioStarted(TestExecutionToken t, ScenarioToken scenario) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.scenarioStarted(t, scenario);
-        }
-    }
-
-    private void notifyScenarioCompleted(TestExecutionToken t, ScenarioToken scenario) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.scenarioCompleted(t, scenario);
-        }
-    }
-
-    private void notifyTestsCompleted(TestExecutionToken t, List<FeatureToken> features) {
-        for (ChorusExecutionListener listener : listeners) {
-            listener.testsCompleted(t, features);
-        }
-    }
-
-    private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {
-        Object featureInstance = handlerClass.newInstance();
-        injectSpringResources(featureInstance, featureToken);
-        injectInterpreterResources(featureInstance, featureFile, featureToken);
-        return featureInstance;
-    }
-
-    /**
-     * Scans the classpath for features
-     *
-     * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
-     * @return a Map of [feature-name -> feature class]
-     */
-    private HashMap<String, Class> loadHandlerClasses(String[] basePackages) throws Exception {
-        //always include the Chorus handlers package
-        String[] allBasePackages = new String[basePackages.length + 1];
-        allBasePackages[0] = CHORUS_HANDLERS_PACKAGE;
-        System.arraycopy(basePackages, 0, allBasePackages, 1, basePackages.length);
-
-        HashMap<String, Class> featureClasses = new HashMap<String, Class>();
-        Set<Class> handlerClasses = ClasspathScanner.doScan(new HandlerOnlyClassFilter(), allBasePackages);
-        for (Class handlerClass : handlerClasses) {
-            Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
-            String featureName = f.value();
-            featureClasses.put(featureName, handlerClass);
-        }
-        return featureClasses;
     }
 
     /**
@@ -405,7 +302,7 @@ public class ChorusInterpreter {
      */
     private StepEndState processStep(TestExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
 
-        notifyStepStarted(executionToken, step);
+        executionListenerSupport.notifyStepStarted(executionToken, step);
 
         //return this at the end
         StepEndState endState = null;
@@ -467,8 +364,57 @@ public class ChorusInterpreter {
         }
 
         step.setEndState(endState);
-        notifyStepCompleted(executionToken, step);
+        executionListenerSupport.notifyStepCompleted(executionToken, step);
         return endState;
+    }
+
+    private void filterFeaturesByScenarioTags(List<FeatureToken> features) {
+        //FILTER THE FEATURES AND SCENARIOS
+        if (filterExpression != null) {
+            for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
+                //remove all filtered scenarios from this feature
+                FeatureToken feature = fi.next();
+                for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
+                    ScenarioToken scenario = si.next();
+                    if (!tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
+                        si.remove();
+                    }
+                }
+                //if there are no scenarios left, then remove this feature from the list to run
+                if (feature.getScenarios().size() == 0) {
+                    fi.remove();
+                }
+            }
+        }
+    }
+
+    /**
+     * Scans the classpath for features
+     *
+     * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
+     * @return a Map of [feature-name -> feature class]
+     */
+    private HashMap<String, Class> loadHandlerClasses(String[] basePackages) throws Exception {
+        //always include the Chorus handlers package
+        String[] allBasePackages = new String[basePackages.length + 1];
+        allBasePackages[0] = CHORUS_HANDLERS_PACKAGE;
+        System.arraycopy(basePackages, 0, allBasePackages, 1, basePackages.length);
+
+        HashMap<String, Class> featureClasses = new HashMap<String, Class>();
+        Set<Class> handlerClasses = ClasspathScanner.doScan(new HandlerOnlyClassFilter(), allBasePackages);
+        for (Class handlerClass : handlerClasses) {
+            Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
+            String featureName = f.value();
+            featureClasses.put(featureName, handlerClass);
+        }
+        return featureClasses;
+    }
+
+    private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {
+        Object featureInstance = handlerClass.newInstance();
+        injectSpringResources(featureInstance, featureToken);
+        injectInterpreterResources(featureInstance, featureFile, featureToken);
+        return featureInstance;
     }
 
     /**
@@ -538,76 +484,12 @@ public class ChorusInterpreter {
         this.filterExpression = filterExpression;
     }
 
-    private class StepDefinitionMethodFinder {
-
-        private List<Object> handlerInstances;
-        private StepToken step;
-        private Method methodToCall;
-        private Object instanceToCallOn;
-        private Object[] methodCallArgs;
-        private String methodToCallPendingMessage = "";
-
-        public StepDefinitionMethodFinder(List<Object> handlerInstances, StepToken step) {
-            this.handlerInstances = handlerInstances;
-            this.step = step;
-        }
-
-        public Method getMethodToCall() {
-            return methodToCall;
-        }
-
-        public Object getInstanceToCallOn() {
-            return instanceToCallOn;
-        }
-
-        public Object[] getMethodCallArgs() {
-            return methodCallArgs;
-        }
-
-        public String getMethodToCallPendingMessage() {
-            return methodToCallPendingMessage;
-        }
-
-        public StepDefinitionMethodFinder findStepMethod() {
-
-            //find the method to call
-            for (Object instance : handlerInstances) {
-                for (Method method : instance.getClass().getMethods()) {
-
-                    //only check methods with Step annotation
-                    Step stepAnnotationInstance = method.getAnnotation(Step.class);
-                    if (stepAnnotationInstance != null) {
-                        checkForMatch(instance, method, stepAnnotationInstance);
-                    }
-                }
-            }
-            return this;
-        }
-
-        private void checkForMatch(Object instance, Method method, Step stepAnnotationInstance) {
-            String regex = stepAnnotationInstance.value();
-            String action = step.getAction();
-
-            Object[] values = RegexpUtils.extractGroups(regex, action, method.getParameterTypes());
-            if (values != null) { //the regexp matched the action and the method's parameters
-                if (methodToCall == null) {
-                    methodToCall = method;
-                    methodCallArgs = values;
-                    methodToCallPendingMessage = stepAnnotationInstance.pending();
-                    instanceToCallOn = instance;
-                } else {
-                    log.warn(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
-                            instance.getClass().getSimpleName(),
-                            method.getName(),
-                            step,
-                            instanceToCallOn.getClass().getSimpleName(),
-                            methodToCall.getName()));
-                }
-            }
-        }
-
-        public boolean isMethodAvailable() {
-            return methodToCall != null;
-        }
+    public void addExecutionListener(ChorusExecutionListener... listeners) {
+        executionListenerSupport.addExecutionListener(listeners);
     }
+
+    public boolean removeExecutionListener(ChorusExecutionListener... listeners) {
+        return executionListenerSupport.removeExecutionListener(listeners);
+    }
+
 }

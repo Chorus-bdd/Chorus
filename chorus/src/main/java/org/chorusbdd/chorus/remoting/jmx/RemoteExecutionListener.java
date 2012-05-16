@@ -5,7 +5,6 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
-import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 
 import java.util.List;
 

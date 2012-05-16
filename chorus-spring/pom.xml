@@ -98,6 +98,20 @@
             <version>3.0.7.RELEASE</version>
         </dependency>
 
+        <!-- These logging dependencies are optional, Spring has commons-logging dependency already, but possibly no log4j, but
+         we want to use it for our own self-testing -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

@@ -1,8 +1,8 @@
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -21,16 +21,16 @@ import java.lang.reflect.Proxy;
  * Time: 17:36
  * To change this template use File | Settings | File Templates.
  */
-public class DynamicMBeanProxyHandler {
+public class DynamicProxyMBeanCreator {
 
-    private Log log = LogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(DynamicProxyMBeanCreator.class);
 
     private JMXConnector jmxConnector;
     protected MBeanServerConnection mBeanServerConnection;
     private final String host;
     private final int jmxPort;
 
-    public DynamicMBeanProxyHandler(String host, int jmxPort) {
+    public DynamicProxyMBeanCreator(String host, int jmxPort) {
         this.host = host;
         this.jmxPort = jmxPort;
     }
@@ -53,7 +53,7 @@ public class DynamicMBeanProxyHandler {
         return result;
     }
 
-    public <T> T newMBeanProxy(final String mxbeanName, Class<T> mxbeanInterface) throws IOException {
+    public <T> T createMBeanProxy(final String mxbeanName, Class<T> mxbeanInterface) throws IOException {
 
         final InvocationHandler handler = new InvocationHandler() {
 
@@ -63,15 +63,15 @@ public class DynamicMBeanProxyHandler {
                     //this is the equals method being called on the proxy, we need to handle it locally
                     return args[0] == proxy;
                 } else {
-                    return mBeanServerConnection.invoke(new ObjectName(mxbeanName), method.getName(), args, getClassNameArray(args));
+                    return mBeanServerConnection.invoke(new ObjectName(mxbeanName), method.getName(), args, getClassNameArray(method.getParameterTypes()));
                 }
             }
 
-            private String[] getClassNameArray(Object[] args) {
+            private String[] getClassNameArray(Class[] args) {
                 String[] classNames = new String[args.length];
                 int pos=0;
-                for ( Object a : args) {
-                    classNames[pos++] = a.getClass().getName();
+                for ( Class a : args) {
+                    classNames[pos++] = a.getName();
                 }
                 return classNames;
             }
@@ -79,6 +79,7 @@ public class DynamicMBeanProxyHandler {
         return (T) Proxy.newProxyInstance(mxbeanInterface.getClassLoader(), new Class[]{mxbeanInterface}, handler);
     }
 
+    //@TODO arrange to close the connection? At what point?
     public void dispose() {
         try {
             jmxConnector.close();
@@ -86,7 +87,5 @@ public class DynamicMBeanProxyHandler {
             //safe to ignore this exception - may get here if server process dies before JMX connection is destroyed
         }
     }
-
-
 
 }

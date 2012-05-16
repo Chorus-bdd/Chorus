@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class ChorusViewer {
 
-    private ChorusLog log = ChorusLogFactory.getLog(ChorusViewer.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusViewer.class);
 
     private ChorusViewerMainFrame frame;
 

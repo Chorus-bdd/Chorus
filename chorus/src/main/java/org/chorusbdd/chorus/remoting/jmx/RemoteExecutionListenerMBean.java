@@ -11,5 +11,6 @@ import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
  */
 public interface RemoteExecutionListenerMBean extends ChorusExecutionListener {
 
-    String JMX_EXECUTION_LISTENER_NAME = "org.chorusbdd.chorus:name=chorus_execution_listener";
+    public static String JMX_EXECUTION_LISTENER_NAME = "org.chorusbdd.chorus:name=chorus_execution_listener";
+
 }

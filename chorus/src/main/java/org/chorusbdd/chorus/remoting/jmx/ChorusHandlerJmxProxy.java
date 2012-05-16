@@ -29,10 +29,10 @@
 
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import javax.management.MBeanException;
 import java.util.Map;
@@ -46,9 +46,9 @@ import java.util.Map;
  * Created by: Steve Neal
  * Date: 14/10/11
  */
-public class ChorusHandlerJmxProxy extends DynamicJmxProxy {
+public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
 
-    private Log log = LogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxProxy.class);
 
     private Map<String, String[]> stepMetadata;
 

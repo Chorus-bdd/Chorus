@@ -48,7 +48,7 @@ public class SshCommandRunner {
 
     private static final String PROMPT = "PROMPT";
 
-    private ChorusLog log = ChorusLogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(SshCommandRunner.class);
 
     private final String host;
     private final String user;

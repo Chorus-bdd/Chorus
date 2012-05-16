@@ -29,9 +29,9 @@
 
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -47,9 +47,9 @@ import java.util.Set;
  * Created by: Steve Neal
  * Date: 12/10/11
  */
-public class DynamicJmxProxy {
+public class AbstractJmxProxy {
 
-    private Log log = LogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(AbstractJmxProxy.class);
 
     private JMXConnector jmxConnector;
     protected MBeanServerConnection mBeanServerConnection;
@@ -63,7 +63,7 @@ public class DynamicJmxProxy {
      * @param mBeanName must be formatted according to the MBean spec
      * @throws ChorusRemotingException if not possible to connect
      */
-    public DynamicJmxProxy(String host, int jmxPort, String mBeanName) throws ChorusRemotingException {
+    public AbstractJmxProxy(String host, int jmxPort, String mBeanName) throws ChorusRemotingException {
         try {
             String serviceURL = String.format("service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi", host, jmxPort);
             jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(serviceURL), null);
@@ -107,6 +107,10 @@ public class DynamicJmxProxy {
      *
      * @throws ChorusRemotingException if not possible to complete the call
      */
+    /** Commented, since I don't think this is any longer in use
+     *  also it may not work if we pass in an ArrayList param, for example, but the remote MBean expects java.util.List
+     *  - I don't think jmx will support this covariance
+     *  Consider using the newer DynamicProxyMBeanCreator instead
     public Object invoke(String methodName, Object... params) throws ChorusRemotingException {
         try {
             //dynamically figure out the method signature
@@ -120,6 +124,7 @@ public class DynamicJmxProxy {
             throw new ChorusRemotingException("Failed to call MBean method", e);
         }
     }
+    **/
 
 
     /**

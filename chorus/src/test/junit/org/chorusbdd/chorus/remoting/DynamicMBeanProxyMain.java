@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.remoting;
 
-import org.chorusbdd.chorus.remoting.jmx.DynamicJmxProxy;
+import org.chorusbdd.chorus.remoting.jmx.AbstractJmxProxy;
 
 /**
  * Created by: Steve Neal
@@ -11,7 +11,7 @@ public class DynamicMBeanProxyMain {
         String host = "localhost";
         int jmxPort = 18080;
         String mBeanName = "org.chorusbdd.chorus:name=testbean";
-        DynamicJmxProxy proxy = new DynamicJmxProxy(host, jmxPort, mBeanName);
+        AbstractJmxProxy proxy = new AbstractJmxProxy(host, jmxPort, mBeanName);
         Object result = proxy.getAttribute("StepDefinitions");
         System.out.println(result);
     }

@@ -29,12 +29,12 @@
 
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
-    private Log log = LogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxExporter.class);
 
     /**
      * Maps: methodUid -> String[] {"step.regexp","step.pending"}

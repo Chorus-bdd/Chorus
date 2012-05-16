@@ -37,7 +37,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
 
     private void configureDisplay() {
         featureTree.setRootVisible(false);
-        featureTree.setBackground(Color.BLACK);
+        //featureTree.setBackground(Color.BLACK);
         featureTree.setCellRenderer(new ResultNodeCellRenderer());
     }
 
@@ -237,9 +237,9 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             }
 
             super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-            setBackgroundNonSelectionColor(Color.BLACK);
-            setBackgroundSelectionColor(Color.GRAY);
-            setForeground(Color.WHITE);
+            //setBackgroundNonSelectionColor(Color.BLACK);
+            //setBackgroundSelectionColor(Color.GRAY);
+            //setForeground(Color.WHITE);
             return this;
         }
     }

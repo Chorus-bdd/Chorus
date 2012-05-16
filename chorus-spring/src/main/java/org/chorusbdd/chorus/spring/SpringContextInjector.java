@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class SpringContextInjector implements SpringInjector {
 
-    private ChorusLog log = ChorusLogFactory.getLog(SpringContextInjector.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(SpringContextInjector.class);
 
     /**
      * Map: Handler instance -> Spring context

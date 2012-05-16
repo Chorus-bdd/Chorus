@@ -69,7 +69,7 @@ import java.util.Properties;
 @SuppressWarnings("UnusedDeclaration")
 public class JmxHandler {
 
-    private ChorusLog log = ChorusLogFactory.getLog(getClass());
+    private static ChorusLog log = ChorusLogFactory.getLog(JmxHandler.class);
 
     @ChorusResource("feature.dir")
     private File featureDir;
