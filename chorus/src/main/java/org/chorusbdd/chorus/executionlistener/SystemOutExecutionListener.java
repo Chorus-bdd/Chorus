@@ -4,6 +4,7 @@ import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by: Steve Neal
@@ -65,11 +66,11 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
         }
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
+    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
         if (showSummary) {
-            formatter.printResults(results.getFeatures(), verbose, results);
+            formatter.printResults(features, verbose, testExecutionToken.getResultsSummary());
         } else {
-            formatter.printResults(results.getFeatures(), verbose);
+            formatter.printResults(features, verbose);
         }
         formatter.close();
     }

@@ -7,6 +7,7 @@ import org.chorusbdd.chorus.tools.util.ImageUtils;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,7 +50,6 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
 
     public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
         currentFeature = null;
-        featureTree.repaint(); //make sure we update icon to show no longer in progress
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
@@ -57,8 +57,8 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     }
 
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+        featureTree.collapsePath(new TreePath(currentScenario.getPath()));  //collapse down the detail nodes once feature finished
         currentScenario = null;
-        featureTree.repaint(); //make sure we update icon to show no longer in progress
     }
 
     public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
@@ -67,10 +67,9 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
         currentStep = null;
-        featureTree.repaint(); //make sure we update icon to show no longer in progress
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
+    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
     }
 
     private <T extends AbstractTokenTreeNode> T addNode(T newNode, MutableTreeNode parent, boolean showNode) {

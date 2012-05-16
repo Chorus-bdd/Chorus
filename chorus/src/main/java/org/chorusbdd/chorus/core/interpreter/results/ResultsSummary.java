@@ -56,25 +56,7 @@ public class ResultsSummary implements ResultToken {
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
 
-    private TestExecutionToken testExecutionToken;
-    private List<FeatureToken> results;
-
-    private ResultsSummary() {
-    }
-
-    public ResultsSummary(TestExecutionToken testExecutionToken, List<FeatureToken> results) {
-        this.testExecutionToken = testExecutionToken;
-        this.results = results;
-
-        for (FeatureToken feature : results) {
-            if (feature.getUnavailableHandlersMessage() == null) {
-                processHandledScenarios(feature);
-            } else {
-                unavailableHandlers++;
-            }
-        }
-    }
-
+    /**
     private void processHandledScenarios(FeatureToken feature) {
         for (ScenarioToken scenario : feature.getScenarios()) {
             boolean scenarioPassed = true;
@@ -106,6 +88,7 @@ public class ResultsSummary implements ResultToken {
             }
         }
     }
+     **/
 
 
     //
@@ -117,43 +100,74 @@ public class ResultsSummary implements ResultToken {
         return scenariosPassed;
     }
 
+    public void incrementScenariosPassed() {
+        scenariosPassed++;
+    }
+
     public int getScenariosFailed() {
         return scenariosFailed;
+    }
+
+    public void incrementScenariosFailed() {
+        scenariosFailed++;
     }
 
     public int getUnavailableHandlers() {
         return unavailableHandlers;
     }
 
+    public void incrementUnavailableHandlers() {
+        unavailableHandlers++;
+    }
+
     public int getStepsPassed() {
         return stepsPassed;
+    }
+
+    public void incrementStepsPassed() {
+        stepsPassed++;
     }
 
     public int getStepsFailed() {
         return stepsFailed;
     }
 
+    public void incrementStepsFailed() {
+        stepsFailed++;
+    }
+
     public int getStepsPending() {
         return stepsPending;
+    }
+
+    public void incrementStepsPending() {
+        stepsPending++;
     }
 
     public int getStepsUndefined() {
         return stepsUndefined;
     }
 
+    public void incrementStepsUndefined() {
+        stepsUndefined++;
+    }
+
     public int getStepsSkipped() {
         return stepsSkipped;
     }
 
-    public List<FeatureToken> getFeatures() {
-        return results;
+    public void incrementStepsSkipped() {
+        stepsSkipped++;
     }
 
-    public TestExecutionToken getTestExecutionToken() {
-        return testExecutionToken;
+    /**
+     * @return true, if all features were fully implemented
+     */
+    public boolean isFullyImplemented() {
+        return unavailableHandlers + stepsUndefined == 0;
     }
 
-    public Object deepCopy() {
+    public ResultsSummary deepCopy() {
         ResultsSummary s = new ResultsSummary();
         s.scenariosPassed = scenariosPassed;
         s.scenariosFailed = scenariosFailed;
@@ -164,13 +178,7 @@ public class ResultsSummary implements ResultToken {
         s.stepsPending = stepsPending;
         s.stepsUndefined = stepsUndefined;
         s.stepsSkipped = stepsSkipped;
-
-        s.results = new ArrayList<FeatureToken>();
-        for (FeatureToken f : results ) {
-            s.results.add(f.deepCopy());
-        }
-
-        s.testExecutionToken = testExecutionToken.deepCopy();
         return s;
     }
+
 }

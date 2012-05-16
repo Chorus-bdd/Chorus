@@ -95,13 +95,13 @@ public class ChorusInterpreter {
     }
 
 
-    public ResultsSummary processFeatures(List<File> featureFiles) throws Exception {
+    public TestExecutionToken processFeatures(List<File> featureFiles) throws Exception {
 
         //identifies this execution, in case we have parallel or subsequent executions
         TestExecutionToken executionToken = new TestExecutionToken();
         notifyStartTests(executionToken);
 
-        List<FeatureToken> results = new ArrayList<FeatureToken>();
+        List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //load all available feature classes
         HashMap<String, Class> allHandlerClasses = loadHandlerClasses(basePackages);
@@ -119,7 +119,7 @@ public class ChorusInterpreter {
             for (FeatureToken feature : features) {
                 processFeature(
                     executionToken,
-                    results,
+                    allFeatures,
                     allHandlerClasses,
                     unmanagedHandlerInstances,
                     featureFile,
@@ -128,9 +128,8 @@ public class ChorusInterpreter {
             }
         }
 
-        ResultsSummary summary = new ResultsSummary(executionToken, results);
-        notifyTestsCompleted(executionToken, summary);
-        return summary;
+        notifyTestsCompleted(executionToken, allFeatures);
+        return executionToken;
     }
 
     private void processFeature(TestExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
@@ -194,6 +193,7 @@ public class ChorusInterpreter {
             }
         } else {
             feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
+            executionToken.incrementUnavailableHandlers();
         }
 
         notifyFeatureCompleted(executionToken, feature);
@@ -267,6 +267,12 @@ public class ChorusInterpreter {
                 case SKIPPED:
                     break;
             }
+        }
+
+        if ( scenarioPassed ) {
+            executionToken.incrementScenariosPassed();
+        } else {
+            executionToken.incrementScenariosFailed();
         }
 
         //CLEAN UP SCENARIO SCOPED HANDLERS
@@ -356,9 +362,9 @@ public class ChorusInterpreter {
         }
     }
 
-    private void notifyTestsCompleted(TestExecutionToken t, ResultsSummary results) {
+    private void notifyTestsCompleted(TestExecutionToken t, List<FeatureToken> features) {
         for (ChorusExecutionListener listener : listeners) {
-            listener.testsCompleted(t, results);
+            listener.testsCompleted(t, features);
         }
     }
 
@@ -392,12 +398,12 @@ public class ChorusInterpreter {
     }
 
     /**
-     * @param instances the objects on which to execute the step (ordered by greatest precidence first)
+     * @param handlerInstances the objects on which to execute the step (ordered by greatest precidence first)
      * @param step      details of the step to be executed
      * @param skip      is true the step will be skipped if found
      * @return the exit state of the executed step
      */
-    private StepEndState processStep(TestExecutionToken executionToken, List<Object> instances, StepToken step, boolean skip) {
+    private StepEndState processStep(TestExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
 
         notifyStepStarted(executionToken, step);
 
@@ -407,63 +413,32 @@ public class ChorusInterpreter {
         if (skip) {
             //output skipped and don't call the method
             endState = StepEndState.SKIPPED;
+            executionToken.incrementStepsSkipped();
         } else {
             //identify what method should be called and its parameters
-            Method methodToCall = null;
-            Object instanceToCallOn = null;
-            Object[] methodCallArgs = null;
-            String methodToCallPendingMessage = "";
-
-            //find the method to call
-            for (Object instance : instances) {
-                for (Method method : instance.getClass().getMethods()) {
-
-                    //only check methods with Step annotation
-                    Step stepAnnotationInstance = method.getAnnotation(Step.class);
-                    if (stepAnnotationInstance != null) {
-                        String regex = stepAnnotationInstance.value();
-                        String action = step.getAction();
-
-                        Object[] values = RegexpUtils.extractGroups(regex, action, method.getParameterTypes());
-                        if (values != null) { //the regexp matched the action and the method's parameters
-                            if (methodToCall == null) {
-                                methodToCall = method;
-                                methodCallArgs = values;
-                                methodToCallPendingMessage = stepAnnotationInstance.pending();
-                                instanceToCallOn = instance;
-                            } else {
-                                log.warn(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
-                                        instance.getClass().getSimpleName(),
-                                        method.getName(),
-                                        step,
-                                        instanceToCallOn.getClass().getSimpleName(),
-                                        methodToCall.getName()));
-                            }
-                        }
-                    }
-                }
-            }
+            StepDefinitionMethodFinder stepDefinitionMethodFinder = new StepDefinitionMethodFinder(handlerInstances, step);
+            stepDefinitionMethodFinder.findStepMethod();
 
             //call the method if found
-            if (methodToCall == null) {
-                //no method found yet for this step
-                endState = StepEndState.UNDEFINED;
-            } else {
-                if (!methodToCallPendingMessage.equals(Step.NO_PENDING_MESSAGE)) {
-                    step.setMessage(methodToCallPendingMessage);
+            if (stepDefinitionMethodFinder.isMethodAvailable()) {
+                if (!stepDefinitionMethodFinder.getMethodToCallPendingMessage().equals(Step.NO_PENDING_MESSAGE)) {
+                    step.setMessage(stepDefinitionMethodFinder.getMethodToCallPendingMessage());
                     endState = StepEndState.PENDING;
+                    executionToken.incrementStepsPending();
                 } else {
                     if (dryRun) {
                         step.setMessage("This step is OK");
                         endState = StepEndState.DRYRUN;
+                        executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
                     } else {
                         try {
                             //call the step method using reflection
-                            Object result = methodToCall.invoke(instanceToCallOn, methodCallArgs);
+                            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(stepDefinitionMethodFinder.getInstanceToCallOn(), stepDefinitionMethodFinder.getMethodCallArgs());
                             if (result != null) {
                                 step.setMessage(result.toString());
                             }
                             endState = StepEndState.PASSED;
+                            executionToken.incrementStepsPassed();
                         } catch (InvocationTargetException e) {
                             //here if the method called threw an exception
                             if (e.getTargetException() instanceof StepPendingException) {
@@ -471,17 +446,23 @@ public class ChorusInterpreter {
                                 step.setThrowable(spe);
                                 step.setMessage(spe.getMessage());
                                 endState = StepEndState.PENDING;
+                                executionToken.incrementStepsPending();
                             } else {
                                 Throwable cause = e.getCause();
                                 step.setThrowable(cause);
                                 step.setMessage(cause.getMessage());
                                 endState = StepEndState.FAILED;
+                                executionToken.incrementStepsFailed();
                             }
                         } catch (Exception e) {
                             log.error(e);
                         }
                     }
                 }
+            } else {
+                //no method found yet for this step
+                endState = StepEndState.UNDEFINED;
+                executionToken.incrementStepsUndefined();
             }
         }
 
@@ -557,4 +538,76 @@ public class ChorusInterpreter {
         this.filterExpression = filterExpression;
     }
 
+    private class StepDefinitionMethodFinder {
+
+        private List<Object> handlerInstances;
+        private StepToken step;
+        private Method methodToCall;
+        private Object instanceToCallOn;
+        private Object[] methodCallArgs;
+        private String methodToCallPendingMessage = "";
+
+        public StepDefinitionMethodFinder(List<Object> handlerInstances, StepToken step) {
+            this.handlerInstances = handlerInstances;
+            this.step = step;
+        }
+
+        public Method getMethodToCall() {
+            return methodToCall;
+        }
+
+        public Object getInstanceToCallOn() {
+            return instanceToCallOn;
+        }
+
+        public Object[] getMethodCallArgs() {
+            return methodCallArgs;
+        }
+
+        public String getMethodToCallPendingMessage() {
+            return methodToCallPendingMessage;
+        }
+
+        public StepDefinitionMethodFinder findStepMethod() {
+
+            //find the method to call
+            for (Object instance : handlerInstances) {
+                for (Method method : instance.getClass().getMethods()) {
+
+                    //only check methods with Step annotation
+                    Step stepAnnotationInstance = method.getAnnotation(Step.class);
+                    if (stepAnnotationInstance != null) {
+                        checkForMatch(instance, method, stepAnnotationInstance);
+                    }
+                }
+            }
+            return this;
+        }
+
+        private void checkForMatch(Object instance, Method method, Step stepAnnotationInstance) {
+            String regex = stepAnnotationInstance.value();
+            String action = step.getAction();
+
+            Object[] values = RegexpUtils.extractGroups(regex, action, method.getParameterTypes());
+            if (values != null) { //the regexp matched the action and the method's parameters
+                if (methodToCall == null) {
+                    methodToCall = method;
+                    methodCallArgs = values;
+                    methodToCallPendingMessage = stepAnnotationInstance.pending();
+                    instanceToCallOn = instance;
+                } else {
+                    log.warn(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
+                            instance.getClass().getSimpleName(),
+                            method.getName(),
+                            step,
+                            instanceToCallOn.getClass().getSimpleName(),
+                            methodToCall.getName()));
+                }
+            }
+        }
+
+        public boolean isMethodAvailable() {
+            return methodToCall != null;
+        }
+    }
 }

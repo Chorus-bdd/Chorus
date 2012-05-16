@@ -7,6 +7,7 @@ import org.chorusbdd.chorus.tools.util.CompositeListener;
 import javax.swing.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,8 +45,8 @@ public class ResultsPane extends JSplitPane implements ChorusExecutionListener {
         proxyingListener.testsStarted(testExecutionToken);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
-        proxyingListener.testsCompleted(testExecutionToken, results);
+    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+        proxyingListener.testsCompleted(testExecutionToken, features);
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {

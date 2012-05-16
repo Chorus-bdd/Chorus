@@ -6,6 +6,7 @@ import org.chorusbdd.chorus.core.interpreter.results.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,7 +62,7 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         addText("\n        " + step.toString(), red);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
+    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
         addText("\n\n\n", base);
     }
 

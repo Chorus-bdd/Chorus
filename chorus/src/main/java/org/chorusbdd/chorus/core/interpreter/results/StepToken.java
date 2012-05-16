@@ -34,6 +34,7 @@ package org.chorusbdd.chorus.core.interpreter.results;
  * Date: 30/09/11
  */
 public class StepToken implements ResultToken {
+
     private final String type;
     private final String action;
 
@@ -86,8 +87,13 @@ public class StepToken implements ResultToken {
         this.throwable = throwable;
     }
 
+    public boolean isFullyImplemented() {
+        return endState != StepEndState.UNDEFINED;
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s", type, action);
     }
+
 }

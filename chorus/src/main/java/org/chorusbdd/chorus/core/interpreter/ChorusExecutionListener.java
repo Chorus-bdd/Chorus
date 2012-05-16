@@ -2,6 +2,8 @@ package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.core.interpreter.results.*;
 
+import java.util.List;
+
 /**
  * Implementors can register with a ChorusInterpreter to recieve callbacks during test execution.
  *
@@ -16,10 +18,10 @@ public interface ChorusExecutionListener {
     public void testsStarted(TestExecutionToken testExecutionToken);
 
     /**
-     * @param testExecutionToken, a token representing the current suite of tests running
-     * @param results, a token representing the results of the test suite which has completed
+     * @param testExecutionToken, a token representing the current suite of tests
+     * @param features a List of features executed
      */
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results);
+    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running

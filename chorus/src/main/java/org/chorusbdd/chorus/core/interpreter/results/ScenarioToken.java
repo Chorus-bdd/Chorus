@@ -92,8 +92,20 @@ public class ScenarioToken implements ResultToken {
         return copy;
     }
 
+    /**
+     * @return true, if all steps for the feature are fully implemented
+     */
+    public boolean isFullyImplemented() {
+        boolean result = true;
+        for ( StepToken s : steps) {
+            result &= s.isFullyImplemented();
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return String.format("Scenario: %s", name);
     }
+
 }

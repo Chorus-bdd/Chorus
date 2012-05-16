@@ -11,4 +11,5 @@ import java.io.Serializable;
  * All tokens should implement DeepCopy and Serializable
  */
 public interface ResultToken extends Serializable, DeepCopy {
+    boolean isFullyImplemented();
 }

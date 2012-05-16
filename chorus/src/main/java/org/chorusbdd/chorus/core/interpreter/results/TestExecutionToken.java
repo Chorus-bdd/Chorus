@@ -13,6 +13,14 @@ import java.util.Date;
  * interpreter. This token is passed to each callback of a ChorusInterpreterExecutionListener to
  * identify which test execution triggered the callback.
  *
+ * The execution token also wraps a ResultsSummary - this gives an up to date summary of current
+ * test results
+ *
+ * n.b. this class does not actually contain any features/scenarios/step tokens - this is because
+ * it is sent with each callback on the ChorusExecutionListener, and may be serialized and sent at each stage
+ * It would be too heavyweight to send the entire tree of features/scenarios/steps each time, but a summary of
+ * current results is beneficial. A full list of features is send on completion.
+ *
  * This will enable two things -->
  * - parallelisation of test execution, with output separated by execution token
  * - collation of results across multiple test executions, in a swing test runner, for example
@@ -29,6 +37,7 @@ public class TestExecutionToken implements ResultToken {
     };
 
     private long executionStartTime;
+    private ResultsSummary resultsSummary = new ResultsSummary();
 
     public TestExecutionToken() {
         this(System.currentTimeMillis());
@@ -38,8 +47,78 @@ public class TestExecutionToken implements ResultToken {
         this.executionStartTime = executionStartTime;
     }
 
+    public int getScenariosPassed() {
+        return resultsSummary.getScenariosPassed();
+    }
+
+    public void incrementScenariosFailed() {
+        resultsSummary.incrementScenariosFailed();
+    }
+
+    public int getUnavailableHandlers() {
+        return resultsSummary.getUnavailableHandlers();
+    }
+
+    public void incrementStepsFailed() {
+        resultsSummary.incrementStepsFailed();
+    }
+
+    public int getStepsSkipped() {
+        return resultsSummary.getStepsSkipped();
+    }
+
+    public int getScenariosFailed() {
+        return resultsSummary.getScenariosFailed();
+    }
+
+    public void incrementStepsSkipped() {
+        resultsSummary.incrementStepsSkipped();
+    }
+
+    public void incrementStepsUndefined() {
+        resultsSummary.incrementStepsUndefined();
+    }
+
+    public void incrementUnavailableHandlers() {
+        resultsSummary.incrementUnavailableHandlers();
+    }
+
+    public int getStepsPending() {
+        return resultsSummary.getStepsPending();
+    }
+
+    public int getStepsFailed() {
+        return resultsSummary.getStepsFailed();
+    }
+
+    public void incrementScenariosPassed() {
+        resultsSummary.incrementScenariosPassed();
+    }
+
+    public int getStepsPassed() {
+        return resultsSummary.getStepsPassed();
+    }
+
+    public void incrementStepsPending() {
+        resultsSummary.incrementStepsPending();
+    }
+
+    public int getStepsUndefined() {
+        return resultsSummary.getStepsUndefined();
+    }
+
+    public void incrementStepsPassed() {
+        resultsSummary.incrementStepsPassed();
+    }
+
+    public ResultsSummary getResultsSummary() {
+        return resultsSummary;
+    }
+
     public TestExecutionToken deepCopy() {
-        return new TestExecutionToken(executionStartTime);
+        TestExecutionToken t = new TestExecutionToken(executionStartTime);
+        t.resultsSummary = resultsSummary.deepCopy();
+        return t;
     }
 
     public String toString() {
@@ -64,5 +143,12 @@ public class TestExecutionToken implements ResultToken {
 
     public int hashCode() {
         return (int) (executionStartTime ^ (executionStartTime >>> 32));
+    }
+
+    /**
+     * @return true, not meaningful for the TestExecutionToken in the same manner as the other token types
+     */
+    public boolean isFullyImplemented() {
+        return true;
     }
 }

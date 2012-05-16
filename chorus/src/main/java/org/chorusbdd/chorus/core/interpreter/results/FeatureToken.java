@@ -106,6 +106,17 @@ public class FeatureToken implements ResultToken {
     }
 
     /**
+     *  @return true, if all handlers for this feature are implemented, and all scenarios/steps are fully implemented
+     */
+    public boolean isFullyImplemented() {
+        boolean result = this.unavailableHandlersMessage == null;
+        for ( ScenarioToken s : scenarios ) {
+            result &= s.isFullyImplemented();
+        }
+        return result;
+    }
+
+    /**
      * Returns a deep copy of the feature results and all its sub tokens
      *
      * @return

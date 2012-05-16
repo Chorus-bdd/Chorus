@@ -32,6 +32,7 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
+import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.util.CommandLineParser;
 
@@ -95,10 +96,10 @@ public class Main {
 
         chorusInterpreter.addExecutionListener(executionListener);
 
-        ResultsSummary results = chorusInterpreter.processFeatures(featureFiles);
+        TestExecutionToken executionResults = chorusInterpreter.processFeatures(featureFiles);
 
-        return results.getUnavailableHandlers() > 0
-                || results.getScenariosFailed() > 0;
+        return executionResults.getUnavailableHandlers() > 0
+                || executionResults.getScenariosFailed() > 0;
     }
 
     private static SystemOutExecutionListener createDefaultExecutionListener(Map<String, List<String>> parsedArgs) {

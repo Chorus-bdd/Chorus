@@ -5,8 +5,8 @@ import org.chorusbdd.chorus.core.interpreter.results.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,8 +59,8 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         executionTokenToResultsPaneMap.get(testExecutionToken).stepCompleted(testExecutionToken, step);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, ResultsSummary results) {
-        executionTokenToResultsPaneMap.get(testExecutionToken).testsCompleted(testExecutionToken, results);
+    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+        executionTokenToResultsPaneMap.get(testExecutionToken).testsCompleted(testExecutionToken, features);
     }
 
 }
