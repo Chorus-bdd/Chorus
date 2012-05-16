@@ -337,16 +337,16 @@ public class ProcessesHandler {
         public ChildProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
             this.process = Runtime.getRuntime().exec(command);
             if (null == stdoutLogPath) {
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), System.out);
+                this.outRedirector = new ProcessRedirector(process.getInputStream(), System.out, false);
             } else {
                 PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath));
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), out);
+                this.outRedirector = new ProcessRedirector(process.getInputStream(), out, true);
             }
             if (null == stderrLogPath) {
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), System.err);
+                this.errRedirector = new ProcessRedirector(process.getErrorStream(), System.err, false);
             } else {
                 PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath));
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), err);
+                this.errRedirector = new ProcessRedirector(process.getErrorStream(), err, true);
             }
             Thread outThread = new Thread(outRedirector, name + "-stdout");
             outThread.setDaemon(true);
@@ -372,22 +372,31 @@ public class ProcessesHandler {
     private class ProcessRedirector implements Runnable {
         private BufferedInputStream in;
         private PrintStream out;
+        private boolean closeOnExit;
 
-        public ProcessRedirector(InputStream in, PrintStream out) {
+        public ProcessRedirector(InputStream in, PrintStream out, boolean closeOnExit) {
+            this.closeOnExit = closeOnExit;
             this.in = new BufferedInputStream(in);
             this.out = out;
         }
 
         public void run() {
-            byte[] buf = new byte[1024];
-            int x = 0;
             try {
-                while ((x = in.read(buf)) != -1) {
-                    if (null != out) {
-                        out.write(buf, 0, x);
+                byte[] buf = new byte[1024];
+                int x = 0;
+                try {
+                    while ((x = in.read(buf)) != -1) {
+                        if (null != out) {
+                            out.write(buf, 0, x);
+                        }
                     }
+                } catch (IOException e) {}
+            } finally {
+                out.flush();
+                if ( closeOnExit ) {
+                    out.close();
                 }
-            } catch (IOException e) { /* swallow */ }
+            }
         }
     }
 }
