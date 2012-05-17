@@ -201,7 +201,7 @@ public class ProcessesHandler {
     }
 
 
-    @Step(".*stop process named ([a-zA-Z0-9-_]*) ?.*")
+    @Step(".*stop (?:the ){0,1}process named ([a-zA-Z0-9-_]*) ?.*")
     public void stopProcess(String name) {
         ChildProcess p = processes.get(name);
         if (p != null) {
