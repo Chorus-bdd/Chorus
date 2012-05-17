@@ -42,7 +42,7 @@ Feature: Processes with JMX
   Scenario: Interact with two different handlers within the same process
     # this process exports an Addition handler and an echoing handler
     Given I can start a calc2handlers process
-    And I wait for 1 second for the process to complete its start up
+    And I wait for 2 second for the process to complete its start up
     # call a method on the Calculator handler
     And I have entered 10 in calc2handlers
     # call a method on the Echo handler
