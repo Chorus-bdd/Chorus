@@ -37,6 +37,9 @@ public class ChorusLogFactory {
         }
         if ( result == null ) {
             result = createStandardOutLogFactory();
+            result.getLog(ChorusLogFactory.class).info(
+                "Could not find commons logging on the classpath will use default stdout logging"
+            );
         }
         logProvider = result;
     }
@@ -57,7 +60,7 @@ public class ChorusLogFactory {
             Class chorusWrapperProvider = Class.forName(CHORUS_COMMONS_LOG_PROVIDER);
             result = (ChorusLogProvider)chorusWrapperProvider.newInstance();
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not find class " + e.getMessage() + " on the classpath will use default logging");
+            //Could not find java commons logging on the classpath will use default logging
         } catch (InstantiationException e) {
             System.err.println("Failed to instantiate ChorusLogProvider will revert to default logging");
             e.printStackTrace();
