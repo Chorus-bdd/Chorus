@@ -33,8 +33,6 @@ import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 import org.chorusbdd.chorus.util.CommandLineParser;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -98,7 +96,7 @@ public class Main {
 
         chorusInterpreter.addExecutionListener(executionListeners);
 
-        String testSuiteName = parsedArgs.get("name") != null ? concatanateName(parsedArgs.get("name")) : "";
+        String testSuiteName = parsedArgs.get("name") != null ? concatenateName(parsedArgs.get("name")) : "";
         TestExecutionToken executionResultsToken = new TestExecutionToken(testSuiteName);
         chorusInterpreter.processFeatures(executionResultsToken, featureFiles);
 
@@ -147,7 +145,7 @@ public class Main {
         return featureFile.isFile() && featureFile.getName().endsWith(".feature");
     }
 
-    private static String concatanateName(List<String> name) {
+    private static String concatenateName(List<String> name) {
         StringBuilder sb = new StringBuilder();
         if ( name.size() > 0 ) {
             Iterator<String> i = name.iterator();
