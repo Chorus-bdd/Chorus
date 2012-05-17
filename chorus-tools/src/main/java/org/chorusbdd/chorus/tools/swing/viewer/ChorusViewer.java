@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.tools.swing.chorusviewer;
+package org.chorusbdd.chorus.tools.swing.viewer;
 
 import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
