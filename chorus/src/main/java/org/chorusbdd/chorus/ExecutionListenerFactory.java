@@ -27,7 +27,7 @@ public class ExecutionListenerFactory {
 
     public List<ChorusExecutionListener> createExecutionListener(Map<String, List<String>> parsedArgs) {
         List<ChorusExecutionListener> result = new ArrayList<ChorusExecutionListener>();
-        if ( parsedArgs.containsKey("remoteJmxListener")) {
+        if ( parsedArgs.containsKey("jmxListener")) {
             //we can have zero to many remote jmx execution listeners available
             addProxyForRemoteJmxListener(parsedArgs, result);
         }
@@ -43,7 +43,7 @@ public class ExecutionListenerFactory {
     }
 
     private void addProxyForRemoteJmxListener(Map<String, List<String>> parsedArgs, List<ChorusExecutionListener> result) {
-        List<String> remoteListenerHostAndPorts = parsedArgs.get("remoteJmxListener");
+        List<String> remoteListenerHostAndPorts = parsedArgs.get("jmxListener");
         for ( String hostAndPort : remoteListenerHostAndPorts ) {
             addRemoteListener(result, hostAndPort);
         }

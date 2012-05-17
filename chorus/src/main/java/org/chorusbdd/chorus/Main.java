@@ -103,7 +103,7 @@ public class Main {
     }
 
     private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [ -remoteJmxListener host:port ] -f [feature_dirs | feature_files] -h [handler base packages]");
+        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [ -jmxListener host:port ] -f [feature_dirs | feature_files] -h [handler base packages]");
         System.exit(-1);
     }
 
