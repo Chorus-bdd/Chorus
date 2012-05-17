@@ -105,11 +105,15 @@ public class FeatureToken implements ResultToken {
         this.unavailableHandlersMessage = unavailableHandlersMessage;
     }
 
+    public boolean foundAllHandlers() {
+        return unavailableHandlersMessage == null;
+    }
+
     /**
      *  @return true, if all handlers for this feature are implemented, and all scenarios/steps are fully implemented
      */
     public boolean isFullyImplemented() {
-        boolean result = this.unavailableHandlersMessage == null;
+        boolean result = foundAllHandlers();
         for ( ScenarioToken s : scenarios ) {
             result &= s.isFullyImplemented();
         }

@@ -50,31 +50,7 @@ public class PlainResultsFormatter implements ResultsFormatter {
         this.out = new PrintWriter(out, true);
     }
 
-    public void printResults(List<FeatureToken> features, boolean verbose) {
-        printResults(features, verbose, null);
-    }
-
-    public void printResults(List<FeatureToken> features, boolean verbose, ResultsSummary summary) {
-        for (FeatureToken feature : features) {
-            if (feature.getUnavailableHandlersMessage() == null) {
-                printFeature(feature, "", "");
-
-                for (ScenarioToken scenario : feature.getScenarios()) {
-                    printScenario(scenario);
-
-                    for (StepToken step : scenario.getSteps()) {
-                        printStep(step);
-                        if (verbose && step.getThrowable() != null) {
-                            printStackTrace(step.getThrowable());
-                        }
-                    }
-                    out.printf("%n");
-                }
-            } else {
-                printFeature(feature, "UNDEFINED", feature.getUnavailableHandlersMessage());
-            }
-        }
-
+    public void printResults(ResultsSummary summary) {
         if (summary != null) {
             //print scenarios summary
             printMessage(String.format("%nScenarios (total:%d) (passed:%d) (failed:%d)",

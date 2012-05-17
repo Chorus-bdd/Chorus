@@ -47,11 +47,6 @@ import java.util.Map;
  */
 public class Main {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(Main.class);
-
-    //used to create execution listeners according to command line arguments
-    private static ExecutionListenerFactory executionListenerFactory = new ExecutionListenerFactory();
-
     public static void main(String[] args) throws Exception {
         boolean failed = run(args);
 
@@ -61,7 +56,7 @@ public class Main {
 
     public static boolean run(String[] args) throws Exception {
         Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
-        List<ChorusExecutionListener> l = executionListenerFactory.createExecutionListener(parsedArgs);
+        List<ChorusExecutionListener> l = new ExecutionListenerFactory().createExecutionListener(parsedArgs);
         return run(parsedArgs, l.toArray(new ChorusExecutionListener[l.size()]));
     }
 
@@ -108,7 +103,7 @@ public class Main {
     }
 
     private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-trace] [-dryrun] [-showsummary] [-t tag_expression] [ -remoteJmxListener host:port ] -f [feature_dirs | feature_files] -h [handler base packages]");
+        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [ -remoteJmxListener host:port ] -f [feature_dirs | feature_files] -h [handler base packages]");
         System.exit(-1);
     }
 

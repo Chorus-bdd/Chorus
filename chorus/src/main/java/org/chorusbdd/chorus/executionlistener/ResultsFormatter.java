@@ -54,9 +54,7 @@ public interface ResultsFormatter {
 
     void printMessage(String message);
 
-    void printResults(List<FeatureToken> features, boolean verbose);
-
-    void printResults(List<FeatureToken> features, boolean verbose, ResultsSummary summary);
+    void printResults(ResultsSummary summary);
 
     void close();
 

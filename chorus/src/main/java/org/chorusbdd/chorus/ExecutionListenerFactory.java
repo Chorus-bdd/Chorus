@@ -37,10 +37,9 @@ public class ExecutionListenerFactory {
     }
 
     private void addSystemOutExecutionListener(Map<String, List<String>> parsedArgs, List<ChorusExecutionListener> result) {
-        boolean trace = parsedArgs.containsKey("trace");
         boolean verbose = parsedArgs.containsKey("verbose");
         boolean showSummary = parsedArgs.containsKey("showsummary");
-        result.add(new SystemOutExecutionListener(showSummary, verbose, trace));
+        result.add(new SystemOutExecutionListener(showSummary, verbose));
     }
 
     private void addProxyForRemoteJmxListener(Map<String, List<String>> parsedArgs, List<ChorusExecutionListener> result) {

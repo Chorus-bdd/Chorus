@@ -16,14 +16,12 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
 
     private boolean showSummary = true;
     private boolean verbose = false;
-    private boolean trace = true;
 
     public SystemOutExecutionListener() {
-        this(true, false, true);
+        this(true, false);
     }
 
-    public SystemOutExecutionListener(boolean showSummary, boolean verbose, boolean trace) {
-        this.trace = trace;
+    public SystemOutExecutionListener(boolean showSummary, boolean verbose) {
         this.formatter = new PlainResultsFormatter(new PrintWriter(System.out, true));
         this.showSummary = showSummary;
         this.verbose = verbose;
@@ -37,18 +35,17 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        if ( trace ) {
-            formatter.printFeature(feature);
-        }
+        formatter.printFeature(feature);
     }
 
     public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+        if (! feature.foundAllHandlers()) {
+            formatter.printMessage(feature.getUnavailableHandlersMessage());
+        }
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        if ( trace ) {
-            formatter.printScenario(scenario);
-        }
+        formatter.printScenario(scenario);
     }
 
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
@@ -58,19 +55,15 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
     }
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
-        if ( trace ) {
-            formatter.printStep(step);
-            if (step.getThrowable() != null) {
-                step.getThrowable().printStackTrace(System.out);
-            }
+        formatter.printStep(step);
+        if (step.getThrowable() != null && verbose) {
+            formatter.printStackTrace(step.getThrowable());
         }
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
         if (showSummary) {
-            formatter.printResults(features, verbose, testExecutionToken.getResultsSummary());
-        } else {
-            formatter.printResults(features, verbose);
+            formatter.printResults(testExecutionToken.getResultsSummary());
         }
         formatter.close();
     }
