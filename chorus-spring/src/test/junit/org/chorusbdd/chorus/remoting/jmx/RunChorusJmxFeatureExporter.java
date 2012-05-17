@@ -8,7 +8,7 @@ import org.chorusbdd.chorus.selftest.handlers.calculator.CalculatorHandler;
  */
 public class RunChorusJmxFeatureExporter {
     public static void main(String[] args) throws Exception {
-        new ChorusHandlerJmxExporter(new CalculatorHandler());
+        new ChorusHandlerJmxExporter(new CalculatorHandler()).export();
         Thread.sleep(1000 * 60 * 30); //30 minutes
     }
 }

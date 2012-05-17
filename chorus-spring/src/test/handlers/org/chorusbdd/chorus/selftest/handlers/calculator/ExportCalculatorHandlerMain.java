@@ -11,7 +11,7 @@ import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 public class ExportCalculatorHandlerMain {
 
     public static void main(String[] args) throws Exception {
-        new ChorusHandlerJmxExporter(new CalculatorHandler());
+        new ChorusHandlerJmxExporter(new CalculatorHandler()).export();
         Thread.sleep(1000 * 60 * 5); //keeps process alive for 5 mins
     }
 

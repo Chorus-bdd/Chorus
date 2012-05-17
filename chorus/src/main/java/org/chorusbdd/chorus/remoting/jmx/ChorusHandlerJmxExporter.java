@@ -76,7 +76,13 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
 
+    private Object handler;
+
     public ChorusHandlerJmxExporter(Object handler) throws ChorusRemotingException {
+        this.handler = handler;
+    }
+
+    public ChorusHandlerJmxExporter export() {
         //only register the stub if the chorus mbeans property is set
         String enabled = System.getProperty(JMX_EXPORTER_ENABLED_PROPERTY);
         if ("true".equals(enabled)) {
@@ -120,6 +126,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
                     handler.getClass().getSimpleName(),
                     JMX_EXPORTER_ENABLED_PROPERTY));
         }
+        return this;
     }
 
     public ChorusContext invokeStep(String methodUid, ChorusContext context, Object... args) throws Exception {
