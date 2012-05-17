@@ -30,14 +30,18 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
     public FeatureTreeViewer(ExecutionOutputViewer executionOutputViewer) {
         this.executionOutputViewer = executionOutputViewer;
         configureDisplay();
-        JScrollPane p = new JScrollPane(featureTree);
+        JScrollPane p = new JScrollPane(
+            featureTree,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
         setLayout(new BorderLayout());
         add(p, BorderLayout.CENTER);
+        setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
     }
 
     private void configureDisplay() {
         featureTree.setRootVisible(false);
-        //featureTree.setBackground(Color.BLACK);
         featureTree.setCellRenderer(new ResultNodeCellRenderer());
     }
 
@@ -237,9 +241,6 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             }
 
             super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
-            //setBackgroundNonSelectionColor(Color.BLACK);
-            //setBackgroundSelectionColor(Color.GRAY);
-            //setForeground(Color.WHITE);
             return this;
         }
     }

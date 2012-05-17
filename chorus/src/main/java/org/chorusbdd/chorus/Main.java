@@ -38,6 +38,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -97,13 +98,15 @@ public class Main {
 
         chorusInterpreter.addExecutionListener(executionListeners);
 
-        TestExecutionToken executionResults = chorusInterpreter.processFeatures(featureFiles);
+        String testSuiteName = parsedArgs.get("name") != null ? concatanateName(parsedArgs.get("name")) : "";
+        TestExecutionToken executionResultsToken = new TestExecutionToken(testSuiteName);
+        chorusInterpreter.processFeatures(executionResultsToken, featureFiles);
 
-        return executionResults.isPassed() && executionResults.isFullyImplemented();
+        return executionResultsToken.isPassed() && executionResultsToken.isFullyImplemented();
     }
 
     private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [ -jmxListener host:port ] -f [feature_dirs | feature_files] -h [handler base packages]");
+        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [-jmxListener host:port] -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name]");
         System.exit(-1);
     }
 
@@ -142,5 +145,18 @@ public class Main {
 
     private static boolean isFeatureFile(File featureFile) {
         return featureFile.isFile() && featureFile.getName().endsWith(".feature");
+    }
+
+    private static String concatanateName(List<String> name) {
+        StringBuilder sb = new StringBuilder();
+        if ( name.size() > 0 ) {
+            Iterator<String> i = name.iterator();
+            sb.append(i.next());
+            while (i.hasNext()) {
+                sb.append(" ");
+                sb.append(i.next());
+            }
+        }
+        return sb.toString();
     }
 }

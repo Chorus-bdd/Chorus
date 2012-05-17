@@ -24,7 +24,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(resultsTabbedPane, BorderLayout.CENTER);
-        setSize(1024, 768);
+        setSize(ChorusViewerConstants.DEFAULT_INITIAL_FRAME_SIZE);
         setLocationRelativeTo(null); //centre on screen
     }
 
@@ -32,6 +32,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         ResultsPane resultPane = new ResultsPane(testExecutionToken);
         executionTokenToResultsPaneMap.put(testExecutionToken, resultPane);
         resultsTabbedPane.addTab(testExecutionToken.toString(), resultPane);
+        resultsTabbedPane.setSelectedComponent(resultPane);
         resultPane.testsStarted(testExecutionToken);
     }
 

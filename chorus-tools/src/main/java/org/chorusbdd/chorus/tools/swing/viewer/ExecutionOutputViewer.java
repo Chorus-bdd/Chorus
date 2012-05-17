@@ -25,13 +25,17 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
 
     public ExecutionOutputViewer() {
         setLayout(new BorderLayout());
-        JScrollPane sp = new JScrollPane();
-        sp.getViewport().add(executionTextPane);
+        JScrollPane sp = new JScrollPane(
+            executionTextPane,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
         add(sp, BorderLayout.CENTER);
 
         executionTextPane.setBackground(PALE_YELLOW);
         StyleConstants.setForeground(base, Color.BLUE);
         StyleConstants.setForeground(red, Color.RED);
+        setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
     }
 
     public void testsStarted(TestExecutionToken testExecutionToken) {

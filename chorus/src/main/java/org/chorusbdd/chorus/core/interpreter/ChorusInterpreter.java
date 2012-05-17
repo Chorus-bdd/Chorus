@@ -93,10 +93,9 @@ public class ChorusInterpreter {
     }
 
 
-    public TestExecutionToken processFeatures(List<File> featureFiles) throws Exception {
+    public TestExecutionToken processFeatures(TestExecutionToken executionToken, List<File> featureFiles) throws Exception {
 
         //identifies this execution, in case we have parallel or subsequent executions
-        TestExecutionToken executionToken = new TestExecutionToken();
         executionListenerSupport.notifyStartTests(executionToken);
 
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();

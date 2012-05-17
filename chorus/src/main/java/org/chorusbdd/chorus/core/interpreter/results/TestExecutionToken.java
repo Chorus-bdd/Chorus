@@ -36,14 +36,16 @@ public class TestExecutionToken implements ResultToken {
         }
     };
 
-    private long executionStartTime;
+    private final String testSuiteName;
+    private final long executionStartTime;
     private ResultsSummary resultsSummary = new ResultsSummary();
 
-    public TestExecutionToken() {
-        this(System.currentTimeMillis());
+    public TestExecutionToken(String testSuiteName) {
+        this(testSuiteName, System.currentTimeMillis());
     }
 
-    public TestExecutionToken(long executionStartTime) {
+    public TestExecutionToken(String testSuiteName, long executionStartTime) {
+        this.testSuiteName = testSuiteName;
         this.executionStartTime = executionStartTime;
     }
 
@@ -115,21 +117,27 @@ public class TestExecutionToken implements ResultToken {
         return resultsSummary;
     }
 
+    public String getTestSuiteName() {
+        return testSuiteName;
+    }
+
     public TestExecutionToken deepCopy() {
-        TestExecutionToken t = new TestExecutionToken(executionStartTime);
+        TestExecutionToken t = new TestExecutionToken(testSuiteName, executionStartTime);
         t.resultsSummary = resultsSummary.deepCopy();
         return t;
     }
 
     public String toString() {
-        return "Tests at " + formatThreadLocal.get().format(new Date(executionStartTime));
+        return ("".equals(testSuiteName) ? "" : testSuiteName + " at ") + formatThreadLocal.get().format(new Date(executionStartTime));
     }
 
 
     //a working equals and hashcode is required by ChorusViewer
     //if this is running remotely, we may receive a new deserialized instance each time and cannot rely on reference
     //equality
+    //equals and hashcode should not include results, since these are mutable and comparisons would break
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -137,13 +145,19 @@ public class TestExecutionToken implements ResultToken {
         TestExecutionToken that = (TestExecutionToken) o;
 
         if (executionStartTime != that.executionStartTime) return false;
+        if (testSuiteName != null ? !testSuiteName.equals(that.testSuiteName) : that.testSuiteName != null)
+            return false;
 
         return true;
     }
 
+    @Override
     public int hashCode() {
-        return (int) (executionStartTime ^ (executionStartTime >>> 32));
+        int result = testSuiteName != null ? testSuiteName.hashCode() : 0;
+        result = 31 * result + (int) (executionStartTime ^ (executionStartTime >>> 32));
+        return result;
     }
+
 
     /**
      * @return true, not meaningful for the TestExecutionToken in the same manner as the other token types
