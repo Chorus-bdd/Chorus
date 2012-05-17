@@ -26,7 +26,7 @@ public class TestFixtures extends TestCase {
     @Test
     public void testFixtures() {
         String[] args = new String[] {
-            "-verbose", "-showsummary", "-trace", "-f", "src/test/features", "-h", "org.chorusbdd.chorus.selftest.handlers", "-remoteJmxListener", "localhost:9999"
+            "-verbose", "-showsummary", "-trace", "-f", "src/test/features", "-h", "org.chorusbdd.chorus.selftest.handlers"
         };
 
         try {
