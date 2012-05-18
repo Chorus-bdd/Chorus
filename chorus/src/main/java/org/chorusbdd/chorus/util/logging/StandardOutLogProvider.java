@@ -48,27 +48,27 @@ class StandardOutLogProvider implements ChorusLogProvider {
         }
 
         public boolean isDebugEnabled() {
-            return false;
+            return logLevel >= LogLevel.DEBUG.getLevel();
         }
 
         public boolean isErrorEnabled() {
-            return true;
+            return logLevel >= LogLevel.ERROR.getLevel();
         }
 
         public boolean isFatalEnabled() {
-            return true;
+            return logLevel >= LogLevel.FATAL.getLevel();
         }
 
         public boolean isInfoEnabled() {
-            return true;
+            return logLevel >= LogLevel.INFO.getLevel();
         }
 
         public boolean isTraceEnabled() {
-            return false;
+            return logLevel >= LogLevel.TRACE.getLevel();
         }
 
         public boolean isWarnEnabled() {
-            return true;
+            return logLevel >= LogLevel.WARN.getLevel();
         }
 
         public void info(Object message) {

@@ -48,24 +48,24 @@ public class ChorusContextHandler {
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
     }
 
-    @Step(".*create a context variable (.*) with value (.*)")
+    @Step(".*create a (?:context )?variable (.*) with value (.*)")
     public void createVariable(String varName, Object value) {
         ChorusContext.getContext().put(varName, value);
     }
 
-    @Step(".*context variable (.*) has value (.*)")
+    @Step(".*(?:context)? variable (.*) has value (.*)")
     public void assertVariableValue(String varName, Object expected) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertEquals(expected, actual);
     }
 
-    @Step(".*context variable (.*) exists")
+    @Step(".*(?:context)? variable (.*) exists")
     public void assertVariableExists(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
     }
 
-    @Step(".*show context variable (.*)")
+    @Step(".*show (?:context )?variable (.*)")
     public Object showVariable(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);

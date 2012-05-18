@@ -46,7 +46,11 @@ public class DynamicProxyMBeanCreator {
 
         } catch (Exception e) {
             String msg = String.format("Failed to connect to mBean server on (%s:%s)", host, jmxPort);
-            log.error(msg);
+            if ( log.isDebugEnabled()) {
+                log.debug(msg, e);
+            } else {
+                log.warn(msg);
+            }
             throw new ChorusRemotingException(msg, e);
         }
         mBeanServerConnection = result;

@@ -427,7 +427,7 @@ public class ChorusInterpreter {
         SpringContext springContext = handlerClass.getAnnotation(SpringContext.class);
         if (springContext != null) {
             String contextFileName = springContext.value()[0];
-            springInjector.injectSpringContext(handler, featureToken, handlerClass, contextFileName);
+            springInjector.injectSpringContext(handler, featureToken, contextFileName);
         }
     }
 

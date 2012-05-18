@@ -58,7 +58,11 @@ public class ExecutionListenerFactory {
             h.connect();
             result.add(h.createMBeanProxy(RemoteExecutionListenerMBean.JMX_EXECUTION_LISTENER_NAME, RemoteExecutionListenerMBean.class));
         } catch (Throwable t) {
-            log.error("Failed to create event handler for remote execution listener at " + hostAndPort, t);
+            if ( ! log.isDebugEnabled() ) {
+                log.warn("Failed to create proxy for jmx execution listener at " + hostAndPort);
+            } else {
+                log.debug("Failed to create proxy for jmx execution listener at " + hostAndPort, t);
+            }
         }
     }
 

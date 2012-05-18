@@ -16,7 +16,7 @@ public interface SpringInjector {
     SpringInjector NULL_INJECTOR = new SpringInjector() {
 
         //if the null injector is in use, this means we failed to find and instantiate the SpringContextInjector from the chorus-spring module
-        public void injectSpringContext(Object handler, FeatureToken featureToken, Class<?> featureClass, String contextFileName) {
+        public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) {
             throw new UnsupportedOperationException("You need to add chorus-spring to your classpath to use the SpringContext annotation");
         }
 
@@ -24,7 +24,7 @@ public interface SpringInjector {
         }
     };
 
-    public void injectSpringContext(Object handler, FeatureToken featureToken, Class<?> featureClass, String contextFileName) throws Exception;
+    public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) throws Exception;
 
     void disposeContext(Object handler);
 }

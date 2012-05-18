@@ -4,7 +4,9 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.SpringInjector;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
@@ -28,17 +30,18 @@ public class SpringContextInjector implements SpringInjector {
     /**
      * Map: Handler instance -> Spring context
      *
-     * n.b. Nick - I am guess the reason for storing in this map may be to retain a strong reference to the context until we
+     * n.b. Nick, I am guessing the reason for storing in this map may be to retain a strong reference to the context until we
      * explicitly clear down after the scenario, since I couldn't find another obvious reason
      */
-    private Map<Object, FileSystemXmlApplicationContext> springContexts = new HashMap<Object, FileSystemXmlApplicationContext>();
+    private Map<Object, ContextWithURL> springContextByCreatingHandler = new HashMap<Object, ContextWithURL>();
 
-    public void injectSpringContext(Object handler, FeatureToken featureToken, Class<?> featureClass, String contextFileName) {
+    public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) {
+        Class handlerClass = handler.getClass();
         //check for a 'Configuration:' specific Spring context
         if (featureToken.getConfigurationName() != null) {
             if (contextFileName.endsWith(".xml")) {
                 String tmp = String.format("%s-%s.xml", contextFileName.substring(0, contextFileName.length() - 4), featureToken.getConfigurationName());
-                URL url = featureClass.getResource(tmp);
+                URL url = handlerClass.getResource(tmp);
                 if (url != null) {
                     contextFileName = tmp;
                 }
@@ -47,12 +50,44 @@ public class SpringContextInjector implements SpringInjector {
             }
         }
 
-        URL url = featureClass.getResource(contextFileName);
-        FileSystemXmlApplicationContext springContext = new FileSystemXmlApplicationContext(url.toExternalForm());
-        springContexts.put(handler, springContext);
+        URL url = handlerClass.getResource(contextFileName);
 
+        //this spring context may have been already loaded for another handler instance - if so, reuse it
+        AbstractApplicationContext springContext = getExistingContextByUrl(url);
+
+        //not already created, new one up
+        if ( springContext == null) {
+            springContext = new ClassPathXmlApplicationContext(contextFileName, handlerClass);
+            springContextByCreatingHandler.put(handler, new ContextWithURL(springContext, url));
+        }
+
+        //FileSystemXmlApplicationContext springContext = new FileSystemXmlApplicationContext(url.toExternalForm());
+        injectResourceFields(handler, springContext);
+    }
+
+    private AbstractApplicationContext getExistingContextByUrl(URL url) {
+        AbstractApplicationContext result = null;
+        for ( ContextWithURL c : springContextByCreatingHandler.values()) {
+            if ( c.url.equals(url)) {
+                result = c.springContext;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Inject the fields annotated with @Resource annotation with beans from a SpringContext, using the field
+     * name to match the bean name, or where a different annotation value is supplied use the annotation value
+     * as the bean name
+     *
+     * @param handler           handler instance to configure
+     * @param springContext     Spring context to supply beans
+     */
+    public static void injectResourceFields(Object handler, ApplicationContext springContext) {
+        Class handlerClass = handler.getClass();
         //inject handler fields with the Spring beans
-        Field[] fields = featureClass.getDeclaredFields();
+        Field[] fields = handlerClass.getDeclaredFields();
         for (Field field : fields) {
             Resource resourceAnnotation = field.getAnnotation(Resource.class);
             if (resourceAnnotation != null) {
@@ -74,9 +109,19 @@ public class SpringContextInjector implements SpringInjector {
 
     public void disposeContext(Object handler) {
         //cleanup Spring fixture which was associated with this handler instance
-        FileSystemXmlApplicationContext springContext = springContexts.remove(handler);
+        ContextWithURL springContext = springContextByCreatingHandler.remove(handler);
         if (springContext != null) {
-            springContext.destroy();
+            springContext.springContext.destroy();
+        }
+    }
+
+    private class ContextWithURL {
+        URL url;
+        AbstractApplicationContext springContext;
+
+        public ContextWithURL(AbstractApplicationContext springContext, URL url) {
+            this.springContext = springContext;
+            this.url = url;
         }
     }
 

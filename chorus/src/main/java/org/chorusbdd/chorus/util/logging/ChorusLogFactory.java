@@ -25,7 +25,7 @@ public class ChorusLogFactory {
 
     private static final ChorusLogProvider logProvider;
 
-    public static final String LOG_PROVIDER_SYSTEM_PROPERTY = "chorusLogProvider";
+    public static final String LOG_PROVIDER_SYSTEM_PROPERTY = "logProvider";
 
     private static final String COMMONS_LOG_FACTORY_CLASSNAME = "org.apache.commons.logging.LogFactory";
     private static final String CHORUS_COMMONS_LOG_PROVIDER = "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider";
