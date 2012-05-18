@@ -62,7 +62,7 @@ public class SpringContextInjector implements SpringInjector {
         }
 
         //FileSystemXmlApplicationContext springContext = new FileSystemXmlApplicationContext(url.toExternalForm());
-        injectResourceFields(handler, springContext);
+        injectResourceFields(springContext, handler);
     }
 
     private AbstractApplicationContext getExistingContextByUrl(URL url) {
@@ -81,27 +81,29 @@ public class SpringContextInjector implements SpringInjector {
      * name to match the bean name, or where a different annotation value is supplied use the annotation value
      * as the bean name
      *
-     * @param handler           handler instance to configure
+     * @param handlers          handler instances to configure
      * @param springContext     Spring context to supply beans
      */
-    public static void injectResourceFields(Object handler, ApplicationContext springContext) {
-        Class handlerClass = handler.getClass();
-        //inject handler fields with the Spring beans
-        Field[] fields = handlerClass.getDeclaredFields();
-        for (Field field : fields) {
-            Resource resourceAnnotation = field.getAnnotation(Resource.class);
-            if (resourceAnnotation != null) {
-                boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
-                String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
-                Object bean = springContext.getBean(name);
-                if (bean == null) {
-                    log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
-                }
-                try {
-                    field.setAccessible(true);
-                    field.set(handler, bean);
-                } catch (IllegalAccessException e) {
-                    log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
+    public static void injectResourceFields(ApplicationContext springContext, Object... handlers ) {
+        for (Object handler : handlers) {
+            Class handlerClass = handler.getClass();
+            //inject handler fields with the Spring beans
+            Field[] fields = handlerClass.getDeclaredFields();
+            for (Field field : fields) {
+                Resource resourceAnnotation = field.getAnnotation(Resource.class);
+                if (resourceAnnotation != null) {
+                    boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
+                    String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
+                    Object bean = springContext.getBean(name);
+                    if (bean == null) {
+                        log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
+                    }
+                    try {
+                        field.setAccessible(true);
+                        field.set(handler, bean);
+                    } catch (IllegalAccessException e) {
+                        log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
+                    }
                 }
             }
         }
