@@ -87,11 +87,20 @@ public class StepToken implements ResultToken {
         this.throwable = throwable;
     }
 
+    /**
+     * Useful where we show step results as one of three categories, passed, failed, and anything else in between
+     * this means that 'dry run' also counts as passed
+     */
+    public boolean isUndefinedPendingOrSkipped() {
+        return endState == StepEndState.UNDEFINED || endState == StepEndState.PENDING || endState == StepEndState.SKIPPED;
+    }
+
     public boolean isFullyImplemented() {
-        return endState != StepEndState.UNDEFINED;
+        return endState != StepEndState.UNDEFINED && endState != StepEndState.PENDING;
     }
 
     public boolean isPassed() {
+        //this means 'dry run' also counts as passed
         return endState != StepEndState.FAILED;
     }
 

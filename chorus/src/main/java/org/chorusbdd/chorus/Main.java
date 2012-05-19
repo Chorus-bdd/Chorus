@@ -100,7 +100,7 @@ public class Main {
         TestExecutionToken executionResultsToken = new TestExecutionToken(testSuiteName);
         chorusInterpreter.processFeatures(executionResultsToken, featureFiles);
 
-        return executionResultsToken.isPassed() && executionResultsToken.isFullyImplemented();
+        return executionResultsToken.isPassedAndFullyImplemented();
     }
 
     private static void exitWithHelp() {

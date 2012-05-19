@@ -42,12 +42,12 @@ import java.io.Serializable;
 public interface ResultToken extends Serializable, DeepCopy {
 
     /**
-     * @return true if all necessary handlers and step definitions were available
+     * @return true if all necessary handlers and step definitions were implemented and not pending
      */
     boolean isFullyImplemented();
 
     /**
-     * @return true if all executed steps passed (steps may be unimplemented or skipped and this will not cause test tests to 'fail')
+     * @return true if no failures occurred, although steps may have been unimplemented, pending
      */
     boolean isPassed();
 }

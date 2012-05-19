@@ -142,6 +142,13 @@ public class TestExecutionToken implements ResultToken {
         resultsSummary.incrementStepsPassed();
     }
 
+    /**
+     * @return this is useful, for cases where we simplify results into three categories - passed, failed, and anything else
+     */
+    public int getUndefinedPendingOrSkipped() {
+        return resultsSummary.getUndefinedPendingOrSkipped();
+    }
+
     public ResultsSummary getResultsSummary() {
         return resultsSummary;
     }
@@ -157,7 +164,8 @@ public class TestExecutionToken implements ResultToken {
     }
 
     public String toString() {
-        return ("".equals(testSuiteName) ? "" : testSuiteName + " at ") + formatThreadLocal.get().format(new Date(executionStartTime));
+        return ( "".equals(testSuiteName) ? "" : testSuiteName +
+                " (") + formatThreadLocal.get().format(new Date(executionStartTime))  + ")";
     }
 
 
@@ -189,13 +197,23 @@ public class TestExecutionToken implements ResultToken {
 
 
     /**
-     * @return true, not meaningful for the TestExecutionToken in the same manner as the other token types
+     * @return true, if all scenarios and steps were implemented and not pending
      */
     public boolean isFullyImplemented() {
         return resultsSummary.isFullyImplemented();
     }
 
+    /**
+     * @return true, if there were no step failures (but there may have been steps undefined, pending or skipped)
+     */
     public boolean isPassed() {
         return resultsSummary.isPassed();
+    }
+
+    /**
+     * @return true, if no step failures, and no undefined or pending steps
+     */
+    public boolean isPassedAndFullyImplemented() {
+        return isPassed() && isFullyImplemented();
     }
 }

@@ -161,10 +161,17 @@ public class ResultsSummary implements ResultToken {
     }
 
     /**
+     * @return this is useful, for cases where we need to show passed, failed, and anything else in between
+     */
+    public int getUndefinedPendingOrSkipped() {
+        return stepsUndefined + stepsPending + stepsSkipped;
+    }
+
+    /**
      * @return true, if all features were fully implemented
      */
     public boolean isFullyImplemented() {
-        return unavailableHandlers + stepsUndefined == 0;
+        return unavailableHandlers + stepsUndefined + stepsPending == 0;
     }
 
     public boolean isPassed() {

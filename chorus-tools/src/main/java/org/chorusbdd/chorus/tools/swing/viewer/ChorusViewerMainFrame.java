@@ -31,9 +31,12 @@ package org.chorusbdd.chorus.tools.swing.viewer;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
+import org.chorusbdd.chorus.tools.util.ImageUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
@@ -46,13 +49,16 @@ import java.util.List;
  */
 public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionListener {
 
-    private JTabbedPane resultsTabbedPane = new JTabbedPane();
+    private JTabbedPane tabbedPane = new JTabbedPane();
+
     private Map<TestExecutionToken, ResultsPane> executionTokenToResultsPaneMap = new HashMap<TestExecutionToken, ResultsPane>();
+    private Map<TestExecutionToken, ResultsTabComponent> executionTokenToTabComponent = new HashMap<TestExecutionToken, ResultsTabComponent>();
+
 
     public ChorusViewerMainFrame() {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(resultsTabbedPane, BorderLayout.CENTER);
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
         setSize(ChorusViewerConstants.DEFAULT_INITIAL_FRAME_SIZE);
         setLocationRelativeTo(null); //centre on screen
     }
@@ -60,8 +66,11 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
     public void testsStarted(TestExecutionToken testExecutionToken) {
         ResultsPane resultPane = new ResultsPane(testExecutionToken);
         executionTokenToResultsPaneMap.put(testExecutionToken, resultPane);
-        resultsTabbedPane.addTab(testExecutionToken.toString(), resultPane);
-        resultsTabbedPane.setSelectedComponent(resultPane);
+        ResultsTabComponent t = new ResultsTabComponent(testExecutionToken);
+        executionTokenToTabComponent.put(testExecutionToken, t);
+        tabbedPane.addTab(testExecutionToken.toString(), resultPane);
+        tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, t);
+        tabbedPane.setSelectedComponent(resultPane);
         resultPane.testsStarted(testExecutionToken);
     }
 
@@ -87,10 +96,72 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
         executionTokenToResultsPaneMap.get(testExecutionToken).stepCompleted(testExecutionToken, step);
+
+        //update the tab to show the latest results from the test execution token
+        executionTokenToTabComponent.get(testExecutionToken).setTestExecutionToken(testExecutionToken);
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
         executionTokenToResultsPaneMap.get(testExecutionToken).testsCompleted(testExecutionToken, features);
     }
 
+    public void removeTab(TestExecutionToken t) {
+        ResultsPane p = executionTokenToResultsPaneMap.get(t);
+        for ( int index=0; index < tabbedPane.getTabCount(); index ++) {
+            if ( tabbedPane.getComponentAt(index) == p) {
+                tabbedPane.removeTabAt(index);
+                break;
+            }
+        }
+    }
+
+    private class ResultsTabComponent extends JPanel {
+
+        private JLabel resultsLabel = new JLabel();
+        private JButton closeButton = new JButton("X");
+
+        public ResultsTabComponent(final TestExecutionToken t) {
+            setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            add(resultsLabel);
+            add(closeButton);
+            closeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    removeTab(t);
+                }
+            });
+            configureLabel(t);
+            resultsLabel.setOpaque(false);
+            setOpaque(false);
+            closeButton.setOpaque(false);
+            closeButton.setBorderPainted(false);
+            closeButton.setContentAreaFilled(false);
+            closeButton.setIconTextGap(0);
+        }
+
+        //we get a new instance on each step with updated metadata
+        public void setTestExecutionToken(TestExecutionToken t) {
+            configureLabel(t);
+            repaint();
+        }
+
+        private void configureLabel(TestExecutionToken t) {
+            ImageIcon i = t.isPassedAndFullyImplemented() ? ImageUtils.SCENARIO_OK :
+                    t.isPassed() ? ImageUtils.SCENARIO_NOT_IMPLEMENTED : ImageUtils.SCENARIO_FAILED;
+            resultsLabel.setIcon(i);
+            resultsLabel.setText(getTabText(t));
+        }
+
+        private String getTabText(TestExecutionToken t) {
+            StringBuilder sb = new StringBuilder("<html>");
+            sb.append(t.toString());
+            sb.append("<font color='green'>&nbsp;&nbsp;");
+            sb.append(t.getStepsPassed());
+            sb.append(" </font><font color='#FFC90E'>&nbsp;&nbsp;");
+            sb.append(t.getUndefinedPendingOrSkipped());
+            sb.append(" </font><font color='red'>&nbsp;&nbsp;");
+            sb.append(t.getStepsFailed());
+            sb.append(" </html>");
+            return sb.toString();
+        }
+    }
 }
