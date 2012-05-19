@@ -1,3 +1,32 @@
+/**
+ *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  All rights reserved.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to
+ *  deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ *  sell copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ *
+ *  Nothing in this notice shall be deemed to grant any rights to trademarks,
+ *  copyrights, patents, trade secrets or any other intellectual property of the
+ *  licensor or any contributor except as expressly stated herein. No patent
+ *  license is granted separate from the Software, for code that you delete from
+ *  the Software, or for combinations of the Software with other software or
+ *  hardware.
+ */
 package org.chorusbdd.chorus.spring;
 
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
@@ -62,7 +91,7 @@ public class SpringContextInjector implements SpringInjector {
         }
 
         //FileSystemXmlApplicationContext springContext = new FileSystemXmlApplicationContext(url.toExternalForm());
-        injectResourceFields(handler, springContext);
+        injectResourceFields(springContext, handler);
     }
 
     private AbstractApplicationContext getExistingContextByUrl(URL url) {
@@ -81,27 +110,29 @@ public class SpringContextInjector implements SpringInjector {
      * name to match the bean name, or where a different annotation value is supplied use the annotation value
      * as the bean name
      *
-     * @param handler           handler instance to configure
+     * @param handlers          handler instances to configure
      * @param springContext     Spring context to supply beans
      */
-    public static void injectResourceFields(Object handler, ApplicationContext springContext) {
-        Class handlerClass = handler.getClass();
-        //inject handler fields with the Spring beans
-        Field[] fields = handlerClass.getDeclaredFields();
-        for (Field field : fields) {
-            Resource resourceAnnotation = field.getAnnotation(Resource.class);
-            if (resourceAnnotation != null) {
-                boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
-                String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
-                Object bean = springContext.getBean(name);
-                if (bean == null) {
-                    log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
-                }
-                try {
-                    field.setAccessible(true);
-                    field.set(handler, bean);
-                } catch (IllegalAccessException e) {
-                    log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
+    public static void injectResourceFields(ApplicationContext springContext, Object... handlers ) {
+        for (Object handler : handlers) {
+            Class handlerClass = handler.getClass();
+            //inject handler fields with the Spring beans
+            Field[] fields = handlerClass.getDeclaredFields();
+            for (Field field : fields) {
+                Resource resourceAnnotation = field.getAnnotation(Resource.class);
+                if (resourceAnnotation != null) {
+                    boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
+                    String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
+                    Object bean = springContext.getBean(name);
+                    if (bean == null) {
+                        log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
+                    }
+                    try {
+                        field.setAccessible(true);
+                        field.set(handler, bean);
+                    } catch (IllegalAccessException e) {
+                        log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
+                    }
                 }
             }
         }

@@ -63,6 +63,23 @@
                  </execution>
                </executions>
              </plugin>
+
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <header>src/etc/header.txt</header>
+                    <includes>
+                        <include>src/main/java/**/*.java</include>
+                        <include>src/test/junit/**/*.java</include>
+                        <include>src/test/handlers/**/*.java</include>
+                    </includes>
+                    <properties>
+                        <year>2012</year>
+                    </properties>
+                </configuration>
+            </plugin>
         </plugins>
 
     </build>
