@@ -45,6 +45,17 @@ import java.lang.annotation.Target;
  * </table>
  * Created by: Steve Neal
  * Date: 07/11/11
+ *
+ * Sometimes handlers need to be provided with state from the running interpreter, so that they can locate resources relative
+ * to the feature files, for example.
+ * This annotation is provided so that Handler's can annotate
+ * fields with resources which will be initialized by the interpreter, and describe aspects
+ * of the current test execution state, current supported values:
+ *
+ * feature.dir - annotation for a File field, interpreter will set this to the directory of the executing feature
+ * feature.file - annotation for a File field, interpreter will set this to the executing feature file
+ * feature.results - annotation for a FeatureToken field, interpreter will set this to the FeatureToken which contains the results
+ *
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
