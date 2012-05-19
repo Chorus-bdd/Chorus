@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
 import java.awt.*;
 import java.util.List;
@@ -49,7 +50,18 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     private final JTextPane executionTextPane = new JTextPane();
     private final StyledDocument document = executionTextPane.getStyledDocument();
     private final Style base = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-    private final Style red = document.addStyle("red", base);
+
+    private final Style testsHeader = document.addStyle("testsHeader", base);
+
+    private final Style featureHeader = document.addStyle("featureHeader", base);
+    private final Style featureDetail = document.addStyle("featureDetail", base);
+
+    private final Style scenarioHeader = document.addStyle("scenarioHeader", base);
+    private final Style scenarioDetail = document.addStyle("scenarioDetail", base);
+
+    private final Style stepHeader = document.addStyle("stepHeader", base);
+    private final Style stepDetail = document.addStyle("stepDetail", base);
+
     private final Color PALE_YELLOW = new Color(255, 253, 221);
 
     public ExecutionOutputViewer() {
@@ -62,25 +74,55 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         add(sp, BorderLayout.CENTER);
 
         executionTextPane.setBackground(PALE_YELLOW);
-        StyleConstants.setForeground(base, Color.BLUE);
-        StyleConstants.setForeground(red, Color.RED);
+        executionTextPane.setBorder(new EmptyBorder(8,5,5,5));
+
+        StyleConstants.setFontFamily(base, "monospaced");
+        StyleConstants.setFontFamily(featureHeader, "monospaced");
+
+        //make base and all headers blue
+        applyStyle(new StyleApplicator() {
+            public void applyStyle(Style s) {
+                StyleConstants.setForeground(base, Color.BLUE);
+            }
+        }, base, featureHeader, scenarioHeader, stepHeader);
+
+        StyleConstants.setFontSize(testsHeader, executionTextPane.getFont().getSize() + 6);
+        StyleConstants.setForeground(testsHeader, Color.MAGENTA.darker().darker());
+        StyleConstants.setFontFamily(testsHeader, "proportional");
+
+
+        StyleConstants.setForeground(featureDetail, Color.GREEN.darker().darker());
+        StyleConstants.setForeground(scenarioDetail, Color.GREEN.darker().darker());
+        StyleConstants.setForeground(stepDetail, Color.BLACK);
+
         setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
     }
 
+    private void applyStyle(StyleApplicator styleApplicator, Style... styles) {
+        for ( Style s : styles) {
+            styleApplicator.applyStyle(s);
+        }
+    }
+
     public void testsStarted(TestExecutionToken testExecutionToken) {
-        //addText("Starting tests " + testExecutionToken.toString(), base);
+        if ( ! "".equals(testExecutionToken.getTestSuiteName())) {
+            addText("Suite: " + testExecutionToken.getTestSuiteName() + "\n", testsHeader);
+        }
+        addText("\n", featureHeader);
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        addText("\n\n\nFeature:  " + feature.getName(), base);
+        addText("Feature:  ", featureHeader);
+        addText(feature.getName(), featureDetail);
     }
 
     public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        addText("\n\n\n", featureDetail);
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        addText("\n\n    Scenario:  " + scenario.getName(), base);
+        addText("\n\n    Scenario:  ", scenarioHeader);
+        addText(scenario.getName(), scenarioDetail);
     }
 
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
@@ -92,7 +134,15 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     }
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
-        addText("\n        " + step.toString(), red);
+        String stepText = step.toString();
+        String stepHeaderText = stepText, stepDetailText = "";
+        int firstSpace = stepText.indexOf(' ');
+        if ( firstSpace != -1) {
+            stepHeaderText = stepText.substring(0, firstSpace);
+            stepDetailText = stepText.substring(firstSpace);
+        }
+        addText("\n        " + stepHeaderText, stepHeader);
+        addText(stepDetailText, stepDetail);
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
@@ -109,5 +159,9 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
             e.printStackTrace();
         }
         return result;
+    }
+
+    private interface StyleApplicator {
+        public void applyStyle(Style s);
     }
 }

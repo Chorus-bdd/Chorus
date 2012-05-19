@@ -62,7 +62,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         JScrollPane p = new JScrollPane(
             featureTree,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
         );
         setLayout(new BorderLayout());
         add(p, BorderLayout.CENTER);
