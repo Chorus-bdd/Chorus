@@ -71,6 +71,7 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
         if (! feature.foundAllHandlers()) {
             formatter.printMessage(feature.getUnavailableHandlersMessage());
         }
+        formatter.printMessage(""); //just a blank line between features
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {

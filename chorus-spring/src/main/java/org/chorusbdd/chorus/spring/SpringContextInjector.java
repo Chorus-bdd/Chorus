@@ -86,12 +86,20 @@ public class SpringContextInjector implements SpringInjector {
 
         //not already created, new one up
         if ( springContext == null) {
-            springContext = new ClassPathXmlApplicationContext(contextFileName, handlerClass);
-            springContextByCreatingHandler.put(handler, new ContextWithURL(springContext, url));
+            springContext = createNewContext(handler, contextFileName, handlerClass, url);
         }
 
         //FileSystemXmlApplicationContext springContext = new FileSystemXmlApplicationContext(url.toExternalForm());
         injectResourceFields(springContext, handler);
+    }
+
+    private AbstractApplicationContext createNewContext(Object handler, String contextFileName, Class handlerClass, URL url) {
+        AbstractApplicationContext springContext;
+        log.debug("Creating Spring Context from URL " + url);
+        springContext = new ClassPathXmlApplicationContext(contextFileName, handlerClass);
+        springContextByCreatingHandler.put(handler, new ContextWithURL(springContext, url));
+        log.info("Created new SpringContext for handler " + handlerClass + " at " + contextFileName);
+        return springContext;
     }
 
     private AbstractApplicationContext getExistingContextByUrl(URL url) {

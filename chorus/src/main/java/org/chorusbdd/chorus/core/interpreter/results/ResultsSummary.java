@@ -44,7 +44,9 @@ import java.util.List;
  * Date: 16/11/11
  */
 public class ResultsSummary implements ResultToken {
-    
+
+    private static final long serialVersionUID = 1;
+
     //stats
     private int scenariosPassed = 0;
     private int scenariosFailed = 0;
@@ -55,46 +57,6 @@ public class ResultsSummary implements ResultToken {
     private int stepsPending = 0;
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
-
-    /**
-    private void processHandledScenarios(FeatureToken feature) {
-        for (ScenarioToken scenario : feature.getScenarios()) {
-            boolean scenarioPassed = true;
-            for (StepToken step : scenario.getSteps()) {
-                switch (step.getEndState()) {
-                    case PASSED:
-                        stepsPassed++;
-                        break;
-                    case FAILED:
-                        stepsFailed++;
-                        scenarioPassed = false;
-                        break;
-                    case PENDING:
-                        stepsPending++;
-                        break;
-                    case SKIPPED:
-                        stepsSkipped++;
-                        break;
-                    case UNDEFINED:
-                        stepsUndefined++;
-                        scenarioPassed = false;
-                        break;
-                }
-            }
-            if (scenarioPassed) {
-                scenariosPassed++;
-            } else {
-                scenariosFailed++;
-            }
-        }
-    }
-     **/
-
-
-    //
-    // - getters
-    //
-
 
     public int getScenariosPassed() {
         return scenariosPassed;

@@ -15,7 +15,7 @@ Feature: Processes with JMX
 
   Scenario: Start and interact with a single Java process using JMX
     Given I can start a calculator process named calc which exports an Addition handler
-    And I wait for 1 second for the process to complete its start up
+    And I wait for 2 seconds for the process to complete its start up
     When I have entered 50 in calc
     And I have entered 70 in calc
     And I press add in calc

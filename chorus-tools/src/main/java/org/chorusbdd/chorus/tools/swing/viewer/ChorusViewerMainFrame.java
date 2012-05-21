@@ -37,6 +37,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
         setSize(ChorusViewerConstants.DEFAULT_INITIAL_FRAME_SIZE);
+        setTitle("Chorus Viewer");
         setLocationRelativeTo(null); //centre on screen
     }
 
@@ -69,9 +71,20 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         ResultsTabComponent t = new ResultsTabComponent(testExecutionToken);
         executionTokenToTabComponent.put(testExecutionToken, t);
         tabbedPane.addTab(testExecutionToken.toString(), resultPane);
-        tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, t);
+        setTabComponentUsingReflection(t);
         tabbedPane.setSelectedComponent(resultPane);
         resultPane.testsStarted(testExecutionToken);
+    }
+
+    //do this using reflection, because the method does not exist in jdk < 1.5
+    //we want to maintain compatibility
+    private void setTabComponentUsingReflection(ResultsTabComponent t) {
+        try {
+            Method m = JTabbedPane.class.getMethod("setTabComponentAt", Integer.class, Component.class);
+            m.invoke(tabbedPane, tabbedPane.getTabCount() - 1, t);
+        } catch (Exception e) {
+            //probably no jdk 1.6, this method is 1.6+
+        }
     }
 
     public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {

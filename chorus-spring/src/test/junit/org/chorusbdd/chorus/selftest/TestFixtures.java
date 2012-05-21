@@ -59,7 +59,10 @@ public class TestFixtures extends TestCase {
         };
 
         try {
-            Main.run(args);
+            boolean success = Main.run(args);
+            if ( ! success ) {
+                fail("Some chorus tests failed");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed during test execution");

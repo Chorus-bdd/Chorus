@@ -43,6 +43,8 @@ import java.util.Set;
  */
 public class ChorusContext implements Map<String, Object>, Serializable {
 
+    private static final long serialVersionUID = 1;
+
     private static ThreadLocal<ChorusContext> threadLocal = new ThreadLocal<ChorusContext>();
 
     private Map<String, Object> state = new HashMap<String, Object>();

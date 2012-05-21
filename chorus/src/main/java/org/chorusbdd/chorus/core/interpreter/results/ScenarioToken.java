@@ -39,6 +39,9 @@ import java.util.List;
  * Date: 30/09/11
  */
 public class ScenarioToken implements ResultToken {
+
+    private static final long serialVersionUID = 1;
+
     private String name;
     private List<StepToken> steps = new ArrayList<StepToken>();
     private List<String> tags = new ArrayList<String>();//all tags listed on this scenario and its parent feature

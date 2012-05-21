@@ -9,7 +9,7 @@ Feature: Chorus Context with JMX
 
   Scenario: Values added to a local Context are propagated to a remote process
     Given I start a calculator process named calcA which exports a Calculator handler
-    And I wait for 1 second for the process to start up
+    And I wait for 2 seconds for the process to start up
     When I have entered 70 in calc
     And I have entered 50 in calc
     # this call to the remote calc process will put the result in the context
@@ -20,7 +20,7 @@ Feature: Chorus Context with JMX
 
   Scenario: Values added in a remote context are available locally
     Given I start a calculator process named calcB which exports a Calculator handler
-    And I wait for 1 second for the process to start up
+    And I wait for 2 seconds for the process to start up
     # creates variables in the local context
     When I create a context variable a with value 5
     And I create a context variable b with value 20
@@ -33,7 +33,7 @@ Feature: Chorus Context with JMX
 
   Scenario: Performing multiple calculations does not corrupt the context
     Given I start a calculator process named calcC which exports a Calculator handler
-    And I wait for 1 second for the process to start up
+    And I wait for 2 seconds for the process to start up
     When I have entered 70 in calc
     And I have entered 50 in calc
     And I press subtract in calc

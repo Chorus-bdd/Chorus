@@ -59,6 +59,8 @@ import java.util.Date;
  */
 public class TestExecutionToken implements ResultToken {
 
+    private static final long serialVersionUID = 1;
+
     private static final ThreadLocal<SimpleDateFormat> formatThreadLocal = new ThreadLocal<SimpleDateFormat>() {
         public SimpleDateFormat initialValue() {
             return new SimpleDateFormat("HH:mm:ss");

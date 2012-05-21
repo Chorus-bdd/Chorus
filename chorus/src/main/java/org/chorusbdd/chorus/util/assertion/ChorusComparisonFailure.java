@@ -36,12 +36,15 @@ package org.chorusbdd.chorus.util.assertion;
  * Time: 14:36
  */
 public class ChorusComparisonFailure extends AssertionError {
-    /**
+
+    private static final long serialVersionUID= 1L;
+
+
+         /**
     	 * The maximum length for fExpected and fActual. If it is exceeded, the strings should be shortened.
     	 * @see ComparisonCompactor
     	 */
     	private static final int MAX_CONTEXT_LENGTH= 20;
-    	private static final long serialVersionUID= 1L;
 
     	private String fExpected;
     	private String fActual;

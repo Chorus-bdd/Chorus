@@ -38,6 +38,8 @@ import java.util.List;
  */
 public class FeatureToken implements ResultToken {
 
+    private static final long serialVersionUID = 1;
+
     private String name;
     private String[] usesFeatures;
     private String configurationName;

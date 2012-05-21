@@ -35,6 +35,8 @@ package org.chorusbdd.chorus.core.interpreter.results;
  */
 public class StepToken implements ResultToken {
 
+    private static final long serialVersionUID = 1;
+
     private final String type;
     private final String action;
 

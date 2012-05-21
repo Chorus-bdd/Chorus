@@ -31,11 +31,15 @@ package org.chorusbdd.chorus.tools.swing.viewer;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
+import org.chorusbdd.chorus.executionlistener.PlainResultsFormatter;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.*;
 import java.awt.*;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -61,6 +65,8 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
 
     private final Style stepHeader = document.addStyle("stepHeader", base);
     private final Style stepDetail = document.addStyle("stepDetail", base);
+
+    private final Style resultsSummary = document.addStyle("resultsSummary", base);
 
     private final Color PALE_YELLOW = new Color(255, 253, 221);
 
@@ -94,6 +100,7 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         StyleConstants.setForeground(featureDetail, Color.GREEN.darker().darker());
         StyleConstants.setForeground(scenarioDetail, Color.GREEN.darker().darker());
         StyleConstants.setForeground(stepDetail, Color.BLACK);
+        StyleConstants.setForeground(resultsSummary, Color.BLUE.darker().darker());
 
         setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
     }
@@ -117,7 +124,7 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     }
 
     public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        addText("\n\n\n", featureDetail);
+        addText("\n\n", featureDetail);
     }
 
     public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
@@ -126,11 +133,9 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     }
 
     public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
@@ -146,7 +151,17 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
-        addText("\n\n\n", base);
+        String resultsSummaryText = getResultsSummaryString(testExecutionToken);
+        addText(resultsSummaryText, resultsSummary);
+        addText("\n\n", base);
+    }
+
+    private String getResultsSummaryString(TestExecutionToken testExecutionToken) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+        PrintWriter pw = new PrintWriter(os);
+        PlainResultsFormatter f = new PlainResultsFormatter(pw);
+        f.printResults(testExecutionToken.getResultsSummary());
+        return new String(os.toByteArray());
     }
 
     private Segment addText(String textToAdd, Style style) {
