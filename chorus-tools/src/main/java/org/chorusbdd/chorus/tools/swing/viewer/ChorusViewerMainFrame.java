@@ -80,9 +80,10 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
     //we want to maintain compatibility
     private void setTabComponentUsingReflection(ResultsTabComponent t) {
         try {
-            Method m = JTabbedPane.class.getMethod("setTabComponentAt", Integer.class, Component.class);
+            Method m = JTabbedPane.class.getMethod("setTabComponentAt", int.class, Component.class);
             m.invoke(tabbedPane, tabbedPane.getTabCount() - 1, t);
         } catch (Exception e) {
+            e.printStackTrace();
             //probably no jdk 1.6, this method is 1.6+
         }
     }
