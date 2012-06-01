@@ -43,9 +43,9 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class ResultsSummary implements ResultToken {
+public class ResultsSummary extends AbstractToken implements ResultToken {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
 
     //stats
     private int scenariosPassed = 0;
@@ -57,6 +57,14 @@ public class ResultsSummary implements ResultToken {
     private int stepsPending = 0;
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
+
+    public ResultsSummary() {
+        super(getNextId());
+    }
+
+    private ResultsSummary(long tokenId) {
+        super(tokenId);
+    }
 
     public int getScenariosPassed() {
         return scenariosPassed;
@@ -141,7 +149,7 @@ public class ResultsSummary implements ResultToken {
     }
 
     public ResultsSummary deepCopy() {
-        ResultsSummary s = new ResultsSummary();
+        ResultsSummary s = new ResultsSummary(getTokenId());
         s.scenariosPassed = scenariosPassed;
         s.scenariosFailed = scenariosFailed;
         s.unavailableHandlers = unavailableHandlers;
