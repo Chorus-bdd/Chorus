@@ -33,6 +33,13 @@ public class ExecutionOutputDocument extends DefaultStyledDocument {
     private final Style stepHeader = addStyle("stepHeader", base);
     private final Style stepDetail = addStyle("stepDetail", base);
 
+    private final Style failedStepHeader = addStyle("failedStepHeader", base);
+    private final Style failedStepDetail = addStyle("failedStepDetail", base);
+
+    private final Style incompleteStepHeader = addStyle("incompleteStepHeader", base);
+    private final Style incompleteStepDetail = addStyle("incompleteStepDetail", base);
+
+
     private final Style resultsSummary = addStyle("resultsSummary", base);
 
     public ExecutionOutputDocument() {
@@ -54,6 +61,10 @@ public class ExecutionOutputDocument extends DefaultStyledDocument {
         StyleConstants.setForeground(featureDetail, Color.GREEN.darker().darker());
         StyleConstants.setForeground(scenarioDetail, Color.GREEN.darker().darker());
         StyleConstants.setForeground(stepDetail, Color.BLACK);
+        StyleConstants.setForeground(incompleteStepDetail, Color.ORANGE);
+        StyleConstants.setForeground(incompleteStepHeader, Color.ORANGE);
+        StyleConstants.setForeground(failedStepHeader, Color.RED);
+        StyleConstants.setForeground(failedStepDetail, Color.RED);
         StyleConstants.setForeground(resultsSummary, Color.BLUE.darker().darker());
     }
 
@@ -86,6 +97,12 @@ public class ExecutionOutputDocument extends DefaultStyledDocument {
     }
 
     public void stepCompleted(StepToken step) {
+        Style s = step.isUndefinedPendingOrSkipped() ? incompleteStepDetail :
+                step.isPassed() ? stepDetail : failedStepDetail;
+
+        Style h = step.isUndefinedPendingOrSkipped() ? incompleteStepHeader :
+                        step.isPassed() ? stepHeader : failedStepHeader;
+
         String stepText = step.toString();
         String stepHeaderText = stepText, stepDetailText = "";
         int firstSpace = stepText.indexOf(' ');
@@ -93,8 +110,8 @@ public class ExecutionOutputDocument extends DefaultStyledDocument {
             stepHeaderText = stepText.substring(0, firstSpace);
             stepDetailText = stepText.substring(firstSpace);
         }
-        addText("\n        " + stepHeaderText, stepHeader);
-        addText(stepDetailText, stepDetail);
+        addText("\n        " + stepHeaderText, h);
+        addText(stepDetailText, s);
     }
 
     public void testsCompleted(TestExecutionToken testExecutionToken) {
