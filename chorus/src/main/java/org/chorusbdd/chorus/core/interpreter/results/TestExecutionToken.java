@@ -54,12 +54,17 @@ import java.util.Date;
  * - parallelisation of test execution, with output separated by execution token
  * - collation of results across multiple test executions, in a swing test runner, for example
  *
+ * Notes on Key / ID for Execution Token:
+ * The key for execution token is creation time + test suite name
+ * - the token id should not be used in the viewer, since this may be duplicated between
+ * different interpreter sessions.
+ *
  * @TODO - add more information, eg. classpath, params to the interpreter?
  * Might be nice to be able to check these in the results post testing
  */
-public class TestExecutionToken implements ResultToken {
+public class TestExecutionToken extends AbstractToken implements ResultToken {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
 
     private static final ThreadLocal<SimpleDateFormat> formatThreadLocal = new ThreadLocal<SimpleDateFormat>() {
         public SimpleDateFormat initialValue() {
@@ -72,10 +77,15 @@ public class TestExecutionToken implements ResultToken {
     private ResultsSummary resultsSummary = new ResultsSummary();
 
     public TestExecutionToken(String testSuiteName) {
-        this(testSuiteName, System.currentTimeMillis());
+        this(getNextId(), testSuiteName, System.currentTimeMillis());
     }
 
     public TestExecutionToken(String testSuiteName, long executionStartTime) {
+        this(getNextId(), testSuiteName, executionStartTime);
+    }
+
+    private TestExecutionToken(long id, String testSuiteName, long executionStartTime) {
+        super(id);
         this.testSuiteName = testSuiteName;
         this.executionStartTime = executionStartTime;
     }
@@ -160,7 +170,9 @@ public class TestExecutionToken implements ResultToken {
     }
 
     public TestExecutionToken deepCopy() {
-        TestExecutionToken t = new TestExecutionToken(testSuiteName, executionStartTime);
+        TestExecutionToken t = new TestExecutionToken(
+            getTokenId(), testSuiteName, executionStartTime
+        );
         t.resultsSummary = resultsSummary.deepCopy();
         return t;
     }

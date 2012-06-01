@@ -36,9 +36,9 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class FeatureToken implements ResultToken {
+public class FeatureToken extends AbstractToken implements ResultToken {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
 
     private String name;
     private String[] usesFeatures;
@@ -47,6 +47,14 @@ public class FeatureToken implements ResultToken {
     private List<ScenarioToken> scenarios = new ArrayList<ScenarioToken>();
 
     private String unavailableHandlersMessage;
+
+    public FeatureToken() {
+        super(getNextId());
+    }
+
+    private FeatureToken(long tokenId) {
+        super(tokenId);
+    }
 
     public String getName() {
         return name;
@@ -136,7 +144,7 @@ public class FeatureToken implements ResultToken {
      * @return
      */
     public FeatureToken deepCopy() {
-        FeatureToken copy = new FeatureToken();
+        FeatureToken copy = new FeatureToken(getTokenId());
         copy.name = this.name;
         copy.usesFeatures = usesFeatures.clone();
         copy.configurationName = this.configurationName;

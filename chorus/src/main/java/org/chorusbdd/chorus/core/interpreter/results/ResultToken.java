@@ -50,4 +50,21 @@ public interface ResultToken extends Serializable, DeepCopy {
      * @return true if no failures occurred, although steps may have been unimplemented, pending
      */
     boolean isPassed();
+
+    /**
+     * It is useful for each token to supply an immutable id which logically
+     * represents this token within the context of the currently executing test suite
+     * (i.e. the current TestExecutionToken)
+     *
+     * Although other fields may be mutable (e.g. a step token once executed
+     * may be modified to represent the success/failure) the token Id should not change.
+     *
+     * This is especially helpful when during execution the token is sent by value
+     * to a remote process (e.g. the viewer), since we cannot use instance equality
+     * remotely to match two received token instances - it simplifies things greatly
+     * if the token has an id which is guaranteed not to change
+     *
+     * @return an immutable id representing this token
+     */
+    long getTokenId();
 }
