@@ -62,6 +62,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
         setSize(ChorusViewerConstants.DEFAULT_INITIAL_FRAME_SIZE);
         setTitle("Chorus Viewer");
+        setIconImage(ImageUtils.SCENARIO_OK.getImage());
         setLocationRelativeTo(null); //centre on screen
     }
 
@@ -132,11 +133,12 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
     private class ResultsTabComponent extends JPanel {
 
         private JLabel resultsLabel = new JLabel();
-        private JButton closeButton = new JButton("X");
+        private JButton closeButton = new JButton();
 
         public ResultsTabComponent(final TestExecutionToken t) {
             setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
             add(resultsLabel);
+            add(Box.createHorizontalGlue());
             add(closeButton);
             closeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -144,12 +146,14 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
                 }
             });
             configureLabel(t);
-            resultsLabel.setOpaque(false);
-            setOpaque(false);
-            closeButton.setOpaque(false);
             closeButton.setBorderPainted(false);
             closeButton.setContentAreaFilled(false);
             closeButton.setIconTextGap(0);
+            closeButton.setIcon(ImageUtils.REMOVE_TAB);
+            closeButton.setMargin(new Insets(0,2,0,0));
+            resultsLabel.setOpaque(false);
+            setOpaque(false);
+            closeButton.setOpaque(false);
         }
 
         //we get a new instance on each step with updated metadata
@@ -159,23 +163,10 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         }
 
         private void configureLabel(TestExecutionToken t) {
-            ImageIcon i = t.isPassedAndFullyImplemented() ? ImageUtils.SCENARIO_OK :
-                    t.isPassed() ? ImageUtils.SCENARIO_NOT_IMPLEMENTED : ImageUtils.SCENARIO_FAILED;
+            ImageIcon i = t.isPassedAndFullyImplemented() ? ImageUtils.FEATURE_OK :
+                    t.isPassed() ? ImageUtils.FEATURE_NOT_IMPLEMENTED : ImageUtils.FEATURE_FAILED;
             resultsLabel.setIcon(i);
-            resultsLabel.setText(getTabText(t));
-        }
-
-        private String getTabText(TestExecutionToken t) {
-            StringBuilder sb = new StringBuilder("<html>");
-            sb.append(t.toString());
-            sb.append("<font color='green'>&nbsp;&nbsp;");
-            sb.append(t.getStepsPassed());
-            sb.append(" </font><font color='#FFC90E'>&nbsp;&nbsp;");
-            sb.append(t.getUndefinedPendingOrSkipped());
-            sb.append(" </font><font color='red'>&nbsp;&nbsp;");
-            sb.append(t.getStepsFailed());
-            sb.append(" </html>");
-            return sb.toString();
+            resultsLabel.setText(t.toString());
         }
     }
 }

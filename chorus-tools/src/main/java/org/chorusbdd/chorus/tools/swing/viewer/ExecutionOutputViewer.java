@@ -56,8 +56,6 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
     //document which contains the complete execution output
     private final ExecutionOutputDocument mainDocument = new ExecutionOutputDocument();
 
-    private final Color PALE_YELLOW = new Color(255, 253, 221);
-
     public ExecutionOutputViewer() {
         setLayout(new BorderLayout());
         JScrollPane sp = new JScrollPane(
@@ -68,7 +66,6 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         add(sp, BorderLayout.CENTER);
 
         executionTextPane.setDocument(mainDocument);
-        executionTextPane.setBackground(PALE_YELLOW);
         executionTextPane.setBorder(new EmptyBorder(8,5,5,5));
         setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
     }

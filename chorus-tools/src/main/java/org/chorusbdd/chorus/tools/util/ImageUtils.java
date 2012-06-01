@@ -52,6 +52,7 @@ public class ImageUtils {
     public static final ImageIcon SUITE_NOT_IMPLEMENTED = getImageIcon("/images/cubes_yellow.png");
     public static final ImageIcon SUITE_IN_PROGRESS = getImageIcon("/images/cubes_yellow_play.png");
     public static final ImageIcon SUITE_OK = getImageIcon("/images/cubes_green.png");
+    public static final ImageIcon REMOVE_TAB = getImageIcon("/images/dismiss.png");
 
     public static ImageIcon getImageIcon(String name) {
         ImageIcon imageIcon = null;

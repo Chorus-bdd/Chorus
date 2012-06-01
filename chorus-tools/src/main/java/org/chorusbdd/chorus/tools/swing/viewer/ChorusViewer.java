@@ -41,6 +41,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import javax.management.*;
 import javax.swing.*;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -58,17 +59,18 @@ public class ChorusViewer {
 
     private ChorusViewerMainFrame frame;
 
-    public ChorusViewer() throws Exception {
+    public ChorusViewer() {}
 
+    private void createUI() throws Exception {
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
-            frame = new ChorusViewerMainFrame();
-            frame.setVisible(true);
+                frame = new ChorusViewerMainFrame();
+                frame.setVisible(true);
             }
         });
     }
 
-    public boolean runFeatures(String[] args) throws Exception {
+    private boolean runFeatures(String[] args) throws Exception {
         boolean success = true;
         if ( args.length > 0 ) {
             //we are executing in standalone one off test mode
@@ -83,6 +85,7 @@ public class ChorusViewer {
 
     public static void main(String[] args) throws Exception {
         ChorusViewer v = new ChorusViewer();
+        v.createUI();
         v.runFeatures(args);
     }
 

@@ -63,7 +63,7 @@ public class ResultsPane extends JSplitPane implements ChorusExecutionListener {
         this.testExecutionToken = testExecutionToken;
         setLeftComponent(featureTreeViewer);
         setRightComponent(executionOutputViewer);
-        setResizeWeight(0.45);
+        setResizeWeight(0.4);
     }
 
     public void testsStarted(TestExecutionToken testExecutionToken) {

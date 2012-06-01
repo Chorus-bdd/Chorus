@@ -40,7 +40,7 @@ import java.awt.*;
  */
 public class ChorusViewerConstants {
     
-    public static final Dimension DEFAULT_INITIAL_FRAME_SIZE = new Dimension(1024,768);
+    public static final Dimension DEFAULT_INITIAL_FRAME_SIZE = new Dimension(800,600);
     
     //this needs to be half the width of main frame size
     public static final Dimension DEFAULT_SPLIT_PANE_CONTENT_SIZE = new Dimension(
