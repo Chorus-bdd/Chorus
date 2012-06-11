@@ -123,14 +123,14 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- junit is now a test scoped dependency -
+        <!-- junit is now an optional dependency -
         We are using ChorusAssert to avoid a mandatory dependency on junit from the core interpreter
         although client application can use and throw JUnit assertion errors if they perfer to do so -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>
