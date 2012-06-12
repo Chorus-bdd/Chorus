@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.selftest;
 
 import junit.framework.TestCase;
 import org.chorusbdd.chorus.Main;
+import org.chorusbdd.chorus.util.config.InterpreterProperty;
 import org.junit.Test;
 
 import java.util.List;
@@ -54,8 +55,12 @@ public class TestFixtures extends TestCase {
 
     @Test
     public void testFixtures() {
+
         String[] args = new String[] {
-            "-verbose", "-showsummary", "-trace", "-f", "src/test/features", "-h", "org.chorusbdd.chorus.selftest.handlers"
+            InterpreterProperty.SHOW_ERRORS.getHyphenatedSwitch(),
+            InterpreterProperty.SHOW_SUMMARY.getHyphenatedSwitch(),
+            InterpreterProperty.FEATURE_PATHS.getHyphenatedSwitch(), "src/test/features",
+            InterpreterProperty.HANDLER_PACKAGES.getHyphenatedSwitch(), "org.chorusbdd.chorus.selftest.handlers"
         };
 
         try {

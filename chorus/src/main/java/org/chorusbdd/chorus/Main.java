@@ -32,7 +32,11 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
-import org.chorusbdd.chorus.util.CommandLineParser;
+import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
+import org.chorusbdd.chorus.util.config.CommandLineParser;
+import org.chorusbdd.chorus.util.config.InterpreterConfiguration;
+import org.chorusbdd.chorus.util.config.InterpreterProperty;
+import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,22 +45,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by: Steve Neal
- * Date: 30/09/11
+ * Created by: Steve Neal & Nick Ebbutt, ChorusBDD.org
  */
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        boolean failed = run(args);
+        boolean failed = true;
+        try {
+            failed = run(args);
+        } catch (InterpreterPropertyException e) {
+            System.err.println(e.getMessage());
+            InterpreterConfiguration.logHelp();
+        }
 
         System.out.println("Exiting with:" + (failed ? -1 : 0));
         System.exit(failed ? -1 : 0);
     }
 
     public static boolean run(String[] args) throws Exception {
-        Map<String, List<String>> parsedArgs = new CommandLineParser().parseArgs(args);
-        List<ChorusExecutionListener> l = new ExecutionListenerFactory().createExecutionListener(parsedArgs);
-        return run(parsedArgs, l.toArray(new ChorusExecutionListener[l.size()]));
+        InterpreterConfiguration c = new InterpreterConfiguration(args).readConfiguration();
+        List<ChorusExecutionListener> l = new ExecutionListenerFactory().createExecutionListener(c);
+        return run(c, l.toArray(new ChorusExecutionListener[l.size()]));
     }
 
     /**
@@ -64,24 +73,20 @@ public class Main {
      *
      * @return true, if all tests were fully implemented and all tests passed
      */
-    public static boolean run(Map<String, List<String>> parsedArgs, ChorusExecutionListener... executionListeners) throws Exception {
-
-        if (!parsedArgs.containsKey("f")) {
-            exitWithHelp();
-        }
+    public static boolean run(InterpreterConfiguration config, ChorusExecutionListener... executionListeners) throws Exception {
 
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        List<String> handlerPackages = parsedArgs.get("h");
+        List<String> handlerPackages = config.getValues(InterpreterProperty.HANDLER_PACKAGES);
         if (handlerPackages != null) {
             chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
         }
 
-        chorusInterpreter.setDryRun(parsedArgs.containsKey("dryrun"));
+        chorusInterpreter.setDryRun(config.isSet(InterpreterProperty.DRY_RUN));
 
         //set a filter tags expression if provided
-        if (parsedArgs.containsKey("t")) {
-            List<String> tagExpressionParts = parsedArgs.get("t");
+        if (config.isSet(InterpreterProperty.TAG_EXPRESSION)) {
+            List<String> tagExpressionParts = config.getValues(InterpreterProperty.TAG_EXPRESSION);
             StringBuilder builder = new StringBuilder();
             for (String tagExpressionPart : tagExpressionParts) {
                 builder.append(tagExpressionPart);
@@ -91,70 +96,17 @@ public class Main {
         }
 
         //identify the feature files
-        List<String> featureFileNames = parsedArgs.get("f");
-        List<File> featureFiles = getFeatureFiles(featureFileNames);
+        List<String> featureFileNames = config.getValues(InterpreterProperty.FEATURE_PATHS);
+        List<File> featureFiles = new FeatureScanner().getFeatureFiles(featureFileNames);
 
         chorusInterpreter.addExecutionListener(executionListeners);
 
-        String testSuiteName = parsedArgs.get("name") != null ? concatenateName(parsedArgs.get("name")) : "";
+        String testSuiteName = config.getSuiteName();
+
         TestExecutionToken executionResultsToken = new TestExecutionToken(testSuiteName);
         chorusInterpreter.processFeatures(executionResultsToken, featureFiles);
 
         return executionResultsToken.isPassedAndFullyImplemented();
     }
 
-    private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [-jmxListener host:port] -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name]");
-        System.exit(-1);
-    }
-
-    private static List<File> getFeatureFiles(List<String> cmdLineFeatures) {
-        List<File> result = new ArrayList<File>();
-        for (String featureFileName : cmdLineFeatures) {
-            File f = new File(featureFileName);
-            if (f.exists()) {
-                if (f.isDirectory()) {
-                    //add all files in this dir and its subdirs
-                    addFeaturesRecursively(f, result);
-                } else if (isFeatureFile(f)) {
-                    //just add this single file
-                    result.add(f);
-                }
-            } else {
-                System.err.printf("Cannot find file or directory named: %s %n", featureFileName);
-                System.exit(-1);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Recursively scans subdirectories, adding all feature files to the targetList.
-     */
-    private static void addFeaturesRecursively(File directory, List<File> targetList) {
-        for (File f : directory.listFiles()) {
-            if (f.isDirectory()) {
-                addFeaturesRecursively(f, targetList);
-            } else if (isFeatureFile(f)) {
-                targetList.add(f);
-            }
-        }
-    }
-
-    private static boolean isFeatureFile(File featureFile) {
-        return featureFile.isFile() && featureFile.getName().endsWith(".feature");
-    }
-
-    private static String concatenateName(List<String> name) {
-        StringBuilder sb = new StringBuilder();
-        if ( name.size() > 0 ) {
-            Iterator<String> i = name.iterator();
-            sb.append(i.next());
-            while (i.hasNext()) {
-                sb.append(" ");
-                sb.append(i.next());
-            }
-        }
-        return sb.toString();
-    }
 }

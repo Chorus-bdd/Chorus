@@ -130,7 +130,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         return newNode;
     }
 
-    private abstract class AbstractTokenTreeNode<N extends ResultToken> extends DefaultMutableTreeNode {
+    private abstract class AbstractTokenTreeNode<N extends Token> extends DefaultMutableTreeNode {
 
         private N token;
 

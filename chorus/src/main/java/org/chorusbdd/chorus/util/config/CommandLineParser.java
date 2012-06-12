@@ -27,45 +27,53 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.util.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by: Steve Neal
  * Date: 31/10/11
+ *
+ * This class is responsible for parsing command line switches into a Map of arguments by switch name
  */
-public class CommandLineParser {
+public class CommandLineParser extends AbstractPropertySource {
 
     /**
-     * Creates a Map<flag names, values following that flag>
+     * Add to the provided propertyMap any properties available from this source
+     *
+     * Where the map already contains property values under a given key, extra property values should be
+     * appended to the List
+
+     * @return propertyMap, with parsed properties added
      */
-    public Map<String, List<String>> parseArgs(String[] args) {
-        Map<String, List<String>> results = new HashMap<String, List<String>>();
-        String lastFlag = null;
+    public Map<InterpreterProperty, List<String>> parseProperties(Map<InterpreterProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
+        InterpreterProperty lastFlag = null;
         for (String arg : args) {
-            lastFlag = processArgument(results, lastFlag, arg);
+            lastFlag = processArgument(propertyMap, lastFlag, arg);
         }
-        return results;
+        return propertyMap;
     }
 
-    private String processArgument(Map<String, List<String>> results, String lastFlag, String arg) {
-        List<String> lastFlagsValues;
+    private InterpreterProperty processArgument(Map<InterpreterProperty, List<String>> results, InterpreterProperty lastProperty, String arg) throws InterpreterPropertyException {
         if (arg.startsWith("-")) {
-            lastFlag = arg.substring(1, arg.length());
-            lastFlagsValues = results.get(lastFlag);
-            if (lastFlagsValues == null) {
-                lastFlagsValues = new ArrayList<String>();
-                results.put(lastFlag, lastFlagsValues);
+            String flag = arg.substring(1, arg.length());
+            lastProperty = InterpreterProperty.getProperty(flag);
+            if (lastProperty == null ) {
+                throw new InterpreterPropertyException("Unsupported parameter " + flag);
             }
-        } else {
-            List<String> values = results.get(lastFlag);
+            //we want to create an empty list, even if there are no subsequent values
+            //since this is used to determine that the flag was present
+            getOrCreatePropertyList(results, lastProperty);
+        } else if ( lastProperty != null ) {
+            //add value to value list for this property
+            List<String> values = getOrCreatePropertyList(results, lastProperty);
             values.add(arg);
+        } else {
+            throw new InterpreterPropertyException("Unknown argument " + arg);
         }
-        return lastFlag;
+        return lastProperty;
     }
 
 }

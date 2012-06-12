@@ -29,10 +29,14 @@
  */
 package org.chorusbdd.chorus.tools;
 
-import org.chorusbdd.chorus.util.CommandLineParser;
+import org.chorusbdd.chorus.util.config.CommandLineParser;
+import org.chorusbdd.chorus.util.config.InterpreterProperty;
+import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,33 +46,41 @@ import java.util.Map;
  */
 public class CommandLineParserTest {
 
-    private static final String[] TEST_ARGS = new String[]{"-verbose", "-f", "file1", "-h", "handlers.package1", "handlers.package2"};
+    private static final String[] TEST_ARGS = new String[]{"-showErrors", "-f", "file1", "-h", "handlers.package1", "handlers.package2"};
 
-    @Test
-    public void testArgWithNoValues() {
-        Map<String, List<String>> parsedArgs = new CommandLineParser().parseArgs(TEST_ARGS);
-        Assert.assertTrue("-verbose flag not found", parsedArgs.containsKey("verbose"));
+    private HashMap<InterpreterProperty,List<String>> propertyMap;
+
+    @Before
+    public void doSetUp() {
+        propertyMap = new HashMap<InterpreterProperty, List<String>>();
     }
 
     @Test
-    public void testArgWithSingleValue() {
-        Map<String, List<String>> parsedArgs = new CommandLineParser().parseArgs(TEST_ARGS);
-        List<String> fValues = parsedArgs.get("f");
+    public void testArgWithNoValues() throws InterpreterPropertyException {
+        propertyMap = new HashMap<InterpreterProperty, List<String>>();
+        Map<InterpreterProperty, List<String>> parsedArgs = new CommandLineParser().parseProperties(propertyMap, TEST_ARGS);
+        Assert.assertTrue("-showErrors flag not found", parsedArgs.containsKey(InterpreterProperty.SHOW_ERRORS));
+    }
+
+    @Test
+    public void testArgWithSingleValue() throws InterpreterPropertyException {
+        Map<InterpreterProperty, List<String>> parsedArgs = new CommandLineParser().parseProperties(propertyMap, TEST_ARGS);
+        List<String> fValues = parsedArgs.get(InterpreterProperty.FEATURE_PATHS);
         Assert.assertEquals("incorrect nunber of -f args found", 1, fValues.size());
     }
 
     @Test
-    public void testValueOfWithSingleArg() {
-        Map<String, List<String>> parsedArgs = new CommandLineParser().parseArgs(TEST_ARGS);
-        List<String> fValues = parsedArgs.get("f");
+    public void testValueOfWithSingleArg() throws InterpreterPropertyException {
+        Map<InterpreterProperty, List<String>> parsedArgs = new CommandLineParser().parseProperties(propertyMap, TEST_ARGS);
+        List<String> fValues = parsedArgs.get(InterpreterProperty.FEATURE_PATHS);
         Assert.assertEquals("incorrect value for -f arg found", "file1", fValues.get(0));
     }
 
     @Test
-    public void testArgWithMultipleValues() {
-        Map<String, List<String>> parsedArgs = new CommandLineParser().parseArgs(TEST_ARGS);
-        Assert.assertTrue("-h flag not found", parsedArgs.containsKey("h"));
-        Assert.assertEquals("wrong number of values found for -h flag", 2, parsedArgs.get("h").size());
+    public void testArgWithMultipleValues() throws InterpreterPropertyException {
+        Map<InterpreterProperty, List<String>> parsedArgs = new CommandLineParser().parseProperties(propertyMap, TEST_ARGS);
+        Assert.assertTrue("-h flag not found", parsedArgs.containsKey(InterpreterProperty.HANDLER_PACKAGES));
+        Assert.assertEquals("wrong number of values found for -h flag", 2, parsedArgs.get(InterpreterProperty.HANDLER_PACKAGES).size());
     }
 
 }

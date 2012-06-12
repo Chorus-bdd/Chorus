@@ -34,16 +34,14 @@ import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.tools.util.AwtSafeListener;
-import org.chorusbdd.chorus.util.CommandLineParser;
+import org.chorusbdd.chorus.util.config.InterpreterConfiguration;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
-import javax.management.*;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.swing.*;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -75,9 +73,9 @@ public class ChorusViewer {
         if ( args.length > 0 ) {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
-            Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
+            InterpreterConfiguration c = new InterpreterConfiguration(args).readConfiguration();
             ChorusExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ChorusExecutionListener.class);
-            success = Main.run(parsedArgs, l);
+            success = Main.run(c, l);
         }
         setUpJmxExecutionListener();
         return success;

@@ -46,10 +46,6 @@ public class SystemOutExecutionListener implements ChorusExecutionListener {
     private boolean showSummary = true;
     private boolean verbose = false;
 
-    public SystemOutExecutionListener() {
-        this(true, false);
-    }
-
     public SystemOutExecutionListener(boolean showSummary, boolean verbose) {
         this.formatter = new PlainResultsFormatter(new PrintWriter(System.out, true));
         this.showSummary = showSummary;
