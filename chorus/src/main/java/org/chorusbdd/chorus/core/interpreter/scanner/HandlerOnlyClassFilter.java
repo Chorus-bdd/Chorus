@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.core.interpreter.scanner;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.core.interpreter.scanner.ClassFilter;
 
 /**
 * Created with IntelliJ IDEA.

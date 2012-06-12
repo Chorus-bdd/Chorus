@@ -96,16 +96,11 @@ public class ChorusJUnitRunner {
             try {
                 //run using the base config filtered through a mutator which replaces the
                 //feature file paths property with the specific path for this feature file
-                List<FeatureToken> tokens = chorusMain.run(executionToken, new ConfigMutator() {
-                    public ChorusConfig getNewConfig(ChorusConfig baseConfig) {
-                        ChorusConfig config = baseConfig.deepCopy();
-                        config.setProperty(
-                            InterpreterProperty.FEATURE_PATHS,
-                            Collections.singletonList(featureFile.getPath())
-                        );
-                        return config;
-                    }
-                });
+                List<FeatureToken> tokens = chorusMain.run(
+                    executionToken,
+                    chorusMain.getDefaultListeners(),
+                    new SingleFeatureConfigMutator()
+                );
 
                 boolean success = true;
                 for ( FeatureToken f : tokens) {
@@ -121,11 +116,32 @@ public class ChorusJUnitRunner {
             } catch (Throwable t) {
                 testResult.addError(this, t);
             }
+
+            //this sleep is purely superficial - so that asynchronous log4j logging output
+            //ends up under the right test in the junit viewer
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             testResult.endTest(this);
         }
 
         public String getName() {
             return featureFile.getName();
+        }
+
+        //mutate the base config to replace the feature paths with the path of just one selected feature file
+        private class SingleFeatureConfigMutator implements ConfigMutator {
+
+            public ChorusConfig getNewConfig(ChorusConfig baseConfig) {
+                ChorusConfig config = baseConfig.deepCopy();
+                config.setProperty(
+                    InterpreterProperty.FEATURE_PATHS,
+                    Collections.singletonList(featureFile.getPath())
+                );
+                return config;
+            }
         }
     }
 }

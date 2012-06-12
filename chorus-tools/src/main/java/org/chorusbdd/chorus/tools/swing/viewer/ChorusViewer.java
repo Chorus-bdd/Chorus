@@ -42,6 +42,8 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.swing.*;
 import java.lang.management.ManagementFactory;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created with IntelliJ IDEA.
@@ -73,9 +75,8 @@ public class ChorusViewer {
         if ( args.length > 0 ) {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
-            ChorusConfig c = new ChorusConfig(args).readConfiguration();
             ExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ExecutionListener.class);
-            success = Main.run(c, l);
+            success = new Main(args).run(Arrays.asList(l));
         }
         setUpJmxExecutionListener();
         return success;

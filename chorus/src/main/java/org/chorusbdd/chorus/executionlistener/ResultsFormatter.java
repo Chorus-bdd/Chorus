@@ -34,8 +34,6 @@ import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 
-import java.util.List;
-
 /**
  * Created by: Steve Neal
  * Date: 30/09/11

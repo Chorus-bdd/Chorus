@@ -34,9 +34,6 @@ import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.util.config.InterpreterProperty;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created with IntelliJ IDEA.
  * User: nick

@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ExecutionListenerSupport;
 import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
@@ -51,6 +51,7 @@ public class Main {
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
     private final ExecutionListenerFactory factory = new ExecutionListenerFactory();
     private final ChorusConfig baseConfig;
+    public List<ExecutionListener> listeners;
 
     public static void main(String[] args) throws Exception {
         boolean failed = true;
@@ -69,6 +70,7 @@ public class Main {
     public Main(String[] args) throws InterpreterPropertyException {
         baseConfig = new ChorusConfig(args);
         baseConfig.readConfiguration();
+        listeners = factory.createExecutionListener(baseConfig);
     }
 
     /**
@@ -76,7 +78,6 @@ public class Main {
      * @return true, if all tests were fully implemented and passed
      */
     public boolean run() throws Exception {
-        List<ExecutionListener> listeners = factory.createExecutionListener(baseConfig);
         return run(listeners);
     }
 
@@ -157,6 +158,10 @@ public class Main {
         chorusInterpreter.addExecutionListeners(listeners);
         List<FeatureToken> features = chorusInterpreter.processFeatures(executionToken, featureFiles);
         return features;
+    }
+
+    public List<ExecutionListener> getDefaultListeners() {
+        return listeners;
     }
 
     public String getSuiteName() {

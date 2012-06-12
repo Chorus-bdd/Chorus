@@ -30,7 +30,10 @@
 package org.chorusbdd.chorus.executionlistener;
 
 import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
-import org.chorusbdd.chorus.core.interpreter.results.*;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 
 import java.io.PrintWriter;
 import java.util.List;

@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.annotations.Step;

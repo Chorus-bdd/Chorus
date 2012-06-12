@@ -36,7 +36,6 @@ import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.List;
 
 /**
  * Created by: Steve Neal
