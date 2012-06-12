@@ -63,7 +63,7 @@ public class TestFixtures extends TestCase {
         };
 
         try {
-            boolean success = Main.run(args);
+            boolean success = new Main(args).run();
             if ( ! success ) {
                 fail("Some chorus tests failed");
             }

@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.results;
+package org.chorusbdd.chorus.util;
 
 /**
  * Rather than using clone (where the semantics of the copy are unclear), use this interface to indicate that the object

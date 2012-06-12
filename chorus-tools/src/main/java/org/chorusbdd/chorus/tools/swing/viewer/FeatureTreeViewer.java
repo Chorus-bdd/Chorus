@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 import org.chorusbdd.chorus.tools.util.ImageUtils;
 
@@ -47,7 +47,7 @@ import java.util.List;
  * Time: 16:03
  * To change this template use File | Settings | File Templates.
  */
-public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener {
+public class FeatureTreeViewer extends JPanel implements ExecutionListener {
 
     private ExecutionOutputViewer executionOutputViewer;
     private DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode());
@@ -81,28 +81,28 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         featureTree.setCellRenderer(new ResultNodeCellRenderer());
     }
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken) {
         rootNode = new SuiteNode(testExecutionToken);
         currentSuiteNode = rootNode;
         model.setRoot(currentSuiteNode);
     }
 
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
         currentFeatureNode = addNode(new FeatureNode(feature), currentSuiteNode, true);
     }
 
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         //if we have received the updated token over the wire, the completed instance may be != the started instance
         //completed instance has the finished state, so update our token reference to that
         currentFeatureNode.setToken(feature);
         currentFeatureNode = null;
     }
 
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         currentScenarioNode = addNode(new ScenarioNode(scenario), currentFeatureNode, true);
     }
 
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         //if we have received the updated token over the wire, the completed instance may be != the started instance
         //completed instance has the finished state, so update our token reference to that
         currentScenarioNode.setToken(scenario);
@@ -110,13 +110,13 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         currentScenarioNode = null;
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
     }
 
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         currentSuiteNode.setToken(testExecutionToken);
         currentSuiteNode = null; //otherwise we never 'stop processing' root node and renders as in progress
         featureTree.repaint();
@@ -234,9 +234,9 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         }
     }
     
-    private class SuiteNode extends AbstractTokenTreeNode<TestExecutionToken>  {
+    private class SuiteNode extends AbstractTokenTreeNode<ExecutionToken>  {
 
-        public SuiteNode(TestExecutionToken token) {
+        public SuiteNode(ExecutionToken token) {
             super(token);
         }
 
@@ -260,7 +260,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
             return ImageUtils.SUITE_IN_PROGRESS;
         }
 
-        protected AbstractTokenTreeNode<TestExecutionToken> getCurrentlyProcessingNode() {
+        protected AbstractTokenTreeNode<ExecutionToken> getCurrentlyProcessingNode() {
             return currentSuiteNode;
         }
     }

@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.core.interpreter.results;
 
+import org.chorusbdd.chorus.util.DeepCopy;
+
 import java.io.Serializable;
 
 /**

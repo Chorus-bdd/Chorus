@@ -94,11 +94,8 @@ public class ChorusInterpreter {
     }
 
 
-    public TestExecutionToken processFeatures(TestExecutionToken executionToken, List<File> featureFiles) throws Exception {
-
+    public List<FeatureToken> processFeatures(ExecutionToken executionToken, List<File> featureFiles) throws Exception {
         //identifies this execution, in case we have parallel or subsequent executions
-        executionListenerSupport.notifyStartTests(executionToken);
-
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //load all available feature classes
@@ -125,12 +122,10 @@ public class ChorusInterpreter {
                 );
             }
         }
-
-        executionListenerSupport.notifyTestsCompleted(executionToken, allFeatures);
-        return executionToken;
+        return allFeatures;
     }
 
-    private void processFeature(TestExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
+    private void processFeature(ExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
@@ -197,7 +192,7 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
     }
 
-    private void processScenario(TestExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
+    private void processScenario(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
 
         log.info(String.format("Processing scenario: %s", scenario.getName()));
@@ -228,7 +223,7 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 
-    private boolean runScenarioSteps(TestExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
+    private boolean runScenarioSteps(ExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
         //RUN THE STEPS IN THE SCENARIO
         boolean scenarioPassed = true;//track the scenario state
         List<StepToken> steps = scenario.getSteps();
@@ -300,7 +295,7 @@ public class ChorusInterpreter {
      * @param skip      is true the step will be skipped if found
      * @return the exit state of the executed step
      */
-    private StepEndState processStep(TestExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
+    private StepEndState processStep(ExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
 
         executionListenerSupport.notifyStepStarted(executionToken, step);
 
@@ -485,11 +480,15 @@ public class ChorusInterpreter {
         this.filterExpression = filterExpression;
     }
 
-    public void addExecutionListener(ChorusExecutionListener... listeners) {
+    public void addExecutionListener(ExecutionListener... listeners) {
         executionListenerSupport.addExecutionListener(listeners);
     }
 
-    public boolean removeExecutionListener(ChorusExecutionListener... listeners) {
+    public void addExecutionListeners(List<ExecutionListener> executionListeners) {
+        executionListenerSupport.addExecutionListeners(executionListeners);
+    }
+
+    public boolean removeExecutionListener(ExecutionListener... listeners) {
         return executionListenerSupport.removeExecutionListener(listeners);
     }
 

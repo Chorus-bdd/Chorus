@@ -39,53 +39,53 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 11/01/12
  */
-public interface ChorusExecutionListener {
+public interface ExecutionListener {
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests starting execution
      */
-    public void testsStarted(TestExecutionToken testExecutionToken);
+    public void testsStarted(ExecutionToken testExecutionToken);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests
      * @param features a List of features executed
      */
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features);
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param feature, a token representing the feature which is starting
      */
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature);
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param feature, a token representing the feature which has just completed
      */
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature);
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param scenario, a token representing the scenario which is starting
      */
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario);
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param scenario, a token representing the scenario which has just completed
      */
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario);
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param step, a token representing the test stop which has just started execution
      */
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step);
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step);
 
     /**
      * @param testExecutionToken, a token representing the current suite of tests running
      * @param step, a token representing the test stop which has just completed execution
      */
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step);
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step);
 
 }

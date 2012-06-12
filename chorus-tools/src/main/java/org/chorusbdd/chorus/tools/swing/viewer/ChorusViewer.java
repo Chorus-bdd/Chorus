@@ -30,11 +30,11 @@
 package org.chorusbdd.chorus.tools.swing.viewer;
 
 import org.chorusbdd.chorus.Main;
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.tools.util.AwtSafeListener;
-import org.chorusbdd.chorus.util.config.InterpreterConfiguration;
+import org.chorusbdd.chorus.util.config.ChorusConfig;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -73,8 +73,8 @@ public class ChorusViewer {
         if ( args.length > 0 ) {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
-            InterpreterConfiguration c = new InterpreterConfiguration(args).readConfiguration();
-            ChorusExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ChorusExecutionListener.class);
+            ChorusConfig c = new ChorusConfig(args).readConfiguration();
+            ExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ExecutionListener.class);
             success = Main.run(c, l);
         }
         setUpJmxExecutionListener();
@@ -89,7 +89,7 @@ public class ChorusViewer {
 
     private void setUpJmxExecutionListener() {
         if ( System.getProperty("com.sun.management.jmxremote") != null) {
-            ChorusExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ChorusExecutionListener.class);
+            ExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ExecutionListener.class);
             RemoteExecutionListener r = new RemoteExecutionListener(l);
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
             try {

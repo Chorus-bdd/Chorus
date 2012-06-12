@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 import org.chorusbdd.chorus.tools.util.ImageUtils;
 
@@ -48,12 +48,12 @@ import java.util.List;
  * Time: 15:03
  *
  */
-public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionListener {
+public class ChorusViewerMainFrame extends JFrame implements ExecutionListener {
 
     private JTabbedPane tabbedPane = new JTabbedPane();
 
-    private Map<TestExecutionToken, ResultsPane> executionTokenToResultsPaneMap = new HashMap<TestExecutionToken, ResultsPane>();
-    private Map<TestExecutionToken, ResultsTabComponent> executionTokenToTabComponent = new HashMap<TestExecutionToken, ResultsTabComponent>();
+    private Map<ExecutionToken, ResultsPane> executionTokenToResultsPaneMap = new HashMap<ExecutionToken, ResultsPane>();
+    private Map<ExecutionToken, ResultsTabComponent> executionTokenToTabComponent = new HashMap<ExecutionToken, ResultsTabComponent>();
 
 
     public ChorusViewerMainFrame() {
@@ -66,7 +66,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         setLocationRelativeTo(null); //centre on screen
     }
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken) {
         ResultsPane resultPane = new ResultsPane(testExecutionToken);
         executionTokenToResultsPaneMap.put(testExecutionToken, resultPane);
         ResultsTabComponent t = new ResultsTabComponent(testExecutionToken);
@@ -89,38 +89,38 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         }
     }
 
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
         executionTokenToResultsPaneMap.get(testExecutionToken).featureStarted(testExecutionToken, feature);
     }
 
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         executionTokenToResultsPaneMap.get(testExecutionToken).featureCompleted(testExecutionToken, feature);
     }
 
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         executionTokenToResultsPaneMap.get(testExecutionToken).scenarioStarted(testExecutionToken, scenario);
     }
 
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         executionTokenToResultsPaneMap.get(testExecutionToken).scenarioCompleted(testExecutionToken, scenario);
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
         executionTokenToResultsPaneMap.get(testExecutionToken).stepStarted(testExecutionToken, step);
     }
 
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
         executionTokenToResultsPaneMap.get(testExecutionToken).stepCompleted(testExecutionToken, step);
 
         //update the tab to show the latest results from the test execution token
         executionTokenToTabComponent.get(testExecutionToken).setTestExecutionToken(testExecutionToken);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         executionTokenToResultsPaneMap.get(testExecutionToken).testsCompleted(testExecutionToken, features);
     }
 
-    public void removeTab(TestExecutionToken t) {
+    public void removeTab(ExecutionToken t) {
         ResultsPane p = executionTokenToResultsPaneMap.get(t);
         for ( int index=0; index < tabbedPane.getTabCount(); index ++) {
             if ( tabbedPane.getComponentAt(index) == p) {
@@ -135,7 +135,7 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         private JLabel resultsLabel = new JLabel();
         private JButton closeButton = new JButton();
 
-        public ResultsTabComponent(final TestExecutionToken t) {
+        public ResultsTabComponent(final ExecutionToken t) {
             setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
             add(resultsLabel);
             add(Box.createHorizontalGlue());
@@ -157,12 +157,12 @@ public class ChorusViewerMainFrame extends JFrame implements ChorusExecutionList
         }
 
         //we get a new instance on each step with updated metadata
-        public void setTestExecutionToken(TestExecutionToken t) {
+        public void setTestExecutionToken(ExecutionToken t) {
             configureLabel(t);
             repaint();
         }
 
-        private void configureLabel(TestExecutionToken t) {
+        private void configureLabel(ExecutionToken t) {
             ImageIcon i = t.isPassedAndFullyImplemented() ? ImageUtils.FEATURE_OK :
                     t.isPassed() ? ImageUtils.FEATURE_NOT_IMPLEMENTED : ImageUtils.FEATURE_FAILED;
             resultsLabel.setIcon(i);

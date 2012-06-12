@@ -29,11 +29,11 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
-import org.chorusbdd.chorus.util.config.InterpreterConfiguration;
+import org.chorusbdd.chorus.util.config.ChorusConfig;
 import org.chorusbdd.chorus.util.config.InterpreterProperty;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -55,8 +55,8 @@ public class ExecutionListenerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(Main.class);
 
-    public List<ChorusExecutionListener> createExecutionListener(InterpreterConfiguration config) {
-        List<ChorusExecutionListener> result = new ArrayList<ChorusExecutionListener>();
+    public List<ExecutionListener> createExecutionListener(ChorusConfig config) {
+        List<ExecutionListener> result = new ArrayList<ExecutionListener>();
         if ( config.isSet(InterpreterProperty.JMX_LISTENER)) {
             //we can have zero to many remote jmx execution listeners available
             addProxyForRemoteJmxListener(config.getValues(InterpreterProperty.JMX_LISTENER), result);
@@ -66,19 +66,19 @@ public class ExecutionListenerFactory {
         return result;
     }
 
-    private void addSystemOutExecutionListener(InterpreterConfiguration config, List<ChorusExecutionListener> result) {
-        boolean verbose = config.isSet(InterpreterProperty.SHOW_ERRORS);
-        boolean showSummary = config.isSet(InterpreterProperty.SHOW_SUMMARY);
+    private void addSystemOutExecutionListener(ChorusConfig config, List<ExecutionListener> result) {
+        boolean verbose = config.isTrue(InterpreterProperty.SHOW_ERRORS);
+        boolean showSummary = config.isTrue(InterpreterProperty.SHOW_SUMMARY);
         result.add(new SystemOutExecutionListener(showSummary, verbose));
     }
 
-    private void addProxyForRemoteJmxListener(List<String> remoteListenerHostAndPorts, List<ChorusExecutionListener> result) {
+    private void addProxyForRemoteJmxListener(List<String> remoteListenerHostAndPorts, List<ExecutionListener> result) {
         for ( String hostAndPort : remoteListenerHostAndPorts ) {
             addRemoteListener(result, hostAndPort);
         }
     }
 
-    private void addRemoteListener(List<ChorusExecutionListener> result, String hostAndPort) {
+    private void addRemoteListener(List<ExecutionListener> result, String hostAndPort) {
         try {
             StringTokenizer t = new StringTokenizer(hostAndPort, ":");
             String host = t.nextToken();

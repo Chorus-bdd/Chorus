@@ -1,10 +1,9 @@
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
-import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 import org.chorusbdd.chorus.executionlistener.PlainResultsFormatter;
 
 import javax.swing.text.*;
@@ -69,7 +68,7 @@ public class ExecutionOutputDocument extends DefaultStyledDocument {
     }
 
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken) {
         if ( ! "".equals(testExecutionToken.getTestSuiteName())) {
             addText("Suite: " + testExecutionToken.getTestSuiteName() + "\n", testsHeader);
         }
@@ -114,13 +113,13 @@ public class ExecutionOutputDocument extends DefaultStyledDocument {
         addText(stepDetailText, s);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken) {
+    public void testsCompleted(ExecutionToken testExecutionToken) {
         String resultsSummaryText = getResultsSummaryString(testExecutionToken);
         addText(resultsSummaryText, resultsSummary);
         addText("\n\n", base);
     }
 
-    private String getResultsSummaryString(TestExecutionToken testExecutionToken) {
+    private String getResultsSummaryString(ExecutionToken testExecutionToken) {
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
         PrintWriter pw = new PrintWriter(os);
         PlainResultsFormatter f = new PlainResultsFormatter(pw);

@@ -62,7 +62,7 @@ import java.util.Date;
  * @TODO - add more information, eg. classpath, params to the interpreter?
  * Might be nice to be able to check these in the results post testing
  */
-public class TestExecutionToken extends AbstractToken implements Token {
+public class ExecutionToken extends AbstractToken implements Token {
 
     private static final long serialVersionUID = 2;
 
@@ -76,15 +76,15 @@ public class TestExecutionToken extends AbstractToken implements Token {
     private final long executionStartTime;
     private ResultsSummary resultsSummary = new ResultsSummary();
 
-    public TestExecutionToken(String testSuiteName) {
+    public ExecutionToken(String testSuiteName) {
         this(getNextId(), testSuiteName, System.currentTimeMillis());
     }
 
-    public TestExecutionToken(String testSuiteName, long executionStartTime) {
+    public ExecutionToken(String testSuiteName, long executionStartTime) {
         this(getNextId(), testSuiteName, executionStartTime);
     }
 
-    private TestExecutionToken(long id, String testSuiteName, long executionStartTime) {
+    private ExecutionToken(long id, String testSuiteName, long executionStartTime) {
         super(id);
         this.testSuiteName = testSuiteName;
         this.executionStartTime = executionStartTime;
@@ -169,8 +169,8 @@ public class TestExecutionToken extends AbstractToken implements Token {
         return testSuiteName;
     }
 
-    public TestExecutionToken deepCopy() {
-        TestExecutionToken t = new TestExecutionToken(
+    public ExecutionToken deepCopy() {
+        ExecutionToken t = new ExecutionToken(
             getTokenId(), testSuiteName, executionStartTime
         );
         t.resultsSummary = resultsSummary.deepCopy();
@@ -193,7 +193,7 @@ public class TestExecutionToken extends AbstractToken implements Token {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TestExecutionToken that = (TestExecutionToken) o;
+        ExecutionToken that = (ExecutionToken) o;
 
         if (executionStartTime != that.executionStartTime) return false;
         if (testSuiteName != null ? !testSuiteName.equals(that.testSuiteName) : that.testSuiteName != null)

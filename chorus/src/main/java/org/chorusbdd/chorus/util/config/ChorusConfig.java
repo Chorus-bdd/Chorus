@@ -1,9 +1,8 @@
 package org.chorusbdd.chorus.util.config;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import org.chorusbdd.chorus.util.DeepCopy;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,7 +19,7 @@ import java.util.regex.Pattern;
  *
  * The available parameters are specified in InterpreterProperty enumeration
  */
-public class InterpreterConfiguration {
+public class ChorusConfig implements DeepCopy<ChorusConfig> {
 
     private String[] args;
     private Map<InterpreterProperty, List<String>> propertyMap = new HashMap<InterpreterProperty, List<String>>();
@@ -35,18 +34,18 @@ public class InterpreterConfiguration {
     /**
      * Create a configuration using System Properties only
      */
-    public InterpreterConfiguration() {
+    public ChorusConfig() {
         this(new String[0]);
     }
 
     /**
      * Create a configuration using process arguments and System Properties
      */
-    public InterpreterConfiguration(String[] args) {
+    public ChorusConfig(String[] args) {
         this.args = args;
     }
 
-    public InterpreterConfiguration readConfiguration() throws InterpreterPropertyException {
+    public ChorusConfig readConfiguration() throws InterpreterPropertyException {
         for ( PropertySource s : propertySources) {
             s.parseProperties(propertyMap, args);
         }
@@ -55,12 +54,24 @@ public class InterpreterConfiguration {
         return this;
     }
 
+    public void setProperty(InterpreterProperty property, List<String> values) {
+        propertyMap.put(property, values);
+    }
+
     public List<String> getValues(InterpreterProperty property) {
         return propertyMap.get(property);
     }
 
     public boolean isSet(InterpreterProperty property) {
         return propertyMap.containsKey(property);
+    }
+
+    /**
+     * for boolean properties, is the property set true
+     */
+    public boolean isTrue(InterpreterProperty property) {
+        return isSet(property) && propertyMap.get(property).size() == 1
+            && "true".equalsIgnoreCase(propertyMap.get(property).get(0));
     }
 
     private void validateProperties(Map<InterpreterProperty, List<String>> results) throws InterpreterPropertyException {
@@ -131,4 +142,17 @@ public class InterpreterConfiguration {
         }
         return sb.toString();
     }
+
+    public ChorusConfig deepCopy() {
+        ChorusConfig c = new ChorusConfig();
+        c.args = args;
+        c.propertyMap = new HashMap<InterpreterProperty, List<String>>();
+        for ( Map.Entry<InterpreterProperty, List<String>> e : propertyMap.entrySet()) {
+            List<String> cloneList = new ArrayList<String>();
+            cloneList.addAll(e.getValue());
+            c.propertyMap.put(e.getKey(), cloneList);
+        }
+        return c;
+    }
+
 }

@@ -13,7 +13,6 @@ package org.chorusbdd.chorus.util.config;
  */
 public enum InterpreterProperty {
 
-
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, new String[0], ".*", "c:\\my\\path or ..\\my\\path"),
     HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", true, 1, Integer.MAX_VALUE, new String[0], "[\\w\\.]+", "my.package.name"),
     DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "(false|true)"),

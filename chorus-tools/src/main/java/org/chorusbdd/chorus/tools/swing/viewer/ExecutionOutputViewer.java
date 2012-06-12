@@ -29,17 +29,15 @@
  */
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
-import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 /**
@@ -49,7 +47,7 @@ import java.util.List;
  * Time: 16:03
  * To change this template use File | Settings | File Templates.
  */
-public class ExecutionOutputViewer extends JPanel implements ChorusExecutionListener {
+public class ExecutionOutputViewer extends JPanel implements ExecutionListener {
 
     private final JTextPane executionTextPane = new JTextPane();
 
@@ -99,35 +97,35 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         d.scenarioCompleted(s);
     }
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken) {
         mainDocument.testsStarted(testExecutionToken);
     }
 
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
         mainDocument.featureStarted(feature);
     }
 
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         mainDocument.featureCompleted(feature);
     }
 
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         mainDocument.scenarioStarted(scenario);
     }
 
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         mainDocument.scenarioCompleted(scenario);
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
         mainDocument.stepStarted(step);
     }
 
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
         mainDocument.stepCompleted(step);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         mainDocument.testsCompleted(testExecutionToken);
     }
 }
