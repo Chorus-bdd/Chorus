@@ -29,12 +29,15 @@ public class JUnitTestRunner {
         }
         suite.setName("My Suite");
         return suite;
-      }
+    }
 
     private static Test[] findAllTestCasesRuntime() {
+
+
+
+
         return new Test[] {
             new TestCase() {
-
                 public int countTestCases() {
                     return 1;
                 }

@@ -1,0 +1,2 @@
+showSummary switch - clarify
+handlerPackage switch - exclude core packages by default to enable this to be optional

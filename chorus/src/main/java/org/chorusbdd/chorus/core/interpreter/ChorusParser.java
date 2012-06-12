@@ -196,7 +196,7 @@ public class ChorusParser {
     private FeatureToken createFeature(String line, List<String> usingDeclarations) {
         FeatureToken feature = new FeatureToken();
         feature.setName(line.substring(8, line.length()).trim());
-        feature.setUsesFeatures(usingDeclarations.toArray(new String[usingDeclarations.size()]));
+        feature.setUsesHandlers(usingDeclarations.toArray(new String[usingDeclarations.size()]));
         return feature;
     }
 

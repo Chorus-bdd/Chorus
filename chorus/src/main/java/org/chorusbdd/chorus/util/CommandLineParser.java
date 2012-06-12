@@ -42,28 +42,30 @@ public class CommandLineParser {
 
     /**
      * Creates a Map<flag names, values following that flag>
-     *
-     * @param args
-     * @return
      */
-    public static Map<String, List<String>> parseArgs(String[] args) {
+    public Map<String, List<String>> parseArgs(String[] args) {
         Map<String, List<String>> results = new HashMap<String, List<String>>();
         String lastFlag = null;
-        List<String> lastFlagsValues = null;
         for (String arg : args) {
-            if (arg.startsWith("-")) {
-                lastFlag = arg.substring(1, arg.length());
-                lastFlagsValues = results.get(lastFlag);
-                if (lastFlagsValues == null) {
-                    lastFlagsValues = new ArrayList<String>();
-                    results.put(lastFlag, lastFlagsValues);
-                }
-            } else {
-                List<String> values = results.get(lastFlag);
-                values.add(arg);
-            }
+            lastFlag = processArgument(results, lastFlag, arg);
         }
         return results;
+    }
+
+    private String processArgument(Map<String, List<String>> results, String lastFlag, String arg) {
+        List<String> lastFlagsValues;
+        if (arg.startsWith("-")) {
+            lastFlag = arg.substring(1, arg.length());
+            lastFlagsValues = results.get(lastFlag);
+            if (lastFlagsValues == null) {
+                lastFlagsValues = new ArrayList<String>();
+                results.put(lastFlag, lastFlagsValues);
+            }
+        } else {
+            List<String> values = results.get(lastFlag);
+            values.add(arg);
+        }
+        return lastFlag;
     }
 
 }

@@ -54,7 +54,7 @@ public class Main {
     }
 
     public static boolean run(String[] args) throws Exception {
-        Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
+        Map<String, List<String>> parsedArgs = new CommandLineParser().parseArgs(args);
         List<ChorusExecutionListener> l = new ExecutionListenerFactory().createExecutionListener(parsedArgs);
         return run(parsedArgs, l.toArray(new ChorusExecutionListener[l.size()]));
     }

@@ -153,14 +153,14 @@ public class ChorusInterpreter {
 
             orderedHandlerClasses.add(mainHandlerClass);
         }
-        for (String usesFeatureWithName : feature.getUsesFeatures()) {
-            Class usesHandlerClass = allHandlerClasses.get(usesFeatureWithName);
+        for (String usesHandler : feature.getUsesHandlers()) {
+            Class usesHandlerClass = allHandlerClasses.get(usesHandler);
             if (usesHandlerClass == null) {
-                unavailableHandlersMessage.append(String.format("'%s' ", usesFeatureWithName));
+                unavailableHandlersMessage.append(String.format("'%s' ", usesHandler));
             } else {
                 log.debug(String.format("Loaded handler class (%s) for Uses: (%s)",
                         usesHandlerClass.getName(),
-                        usesFeatureWithName));
+                        usesHandler));
 
                 orderedHandlerClasses.add(usesHandlerClass);
             }

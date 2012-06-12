@@ -29,9 +29,6 @@
  */
 package org.chorusbdd.chorus.core.interpreter.results;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Simple class that compiles a summary of a test results
  * from a list of executed Features
@@ -43,7 +40,7 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class ResultsSummary extends AbstractToken implements ResultToken {
+public class ResultsSummary extends AbstractToken implements Token {
 
     private static final long serialVersionUID = 2;
 
