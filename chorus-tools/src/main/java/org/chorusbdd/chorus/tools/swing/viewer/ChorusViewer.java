@@ -76,7 +76,9 @@ public class ChorusViewer {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
             ExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ExecutionListener.class);
-            success = new Main(args).run(Arrays.asList(l));
+            Main chorusMain = new Main(args);
+            chorusMain.setExecutionListener(l);
+            chorusMain.run();
         }
         setUpJmxExecutionListener();
         return success;

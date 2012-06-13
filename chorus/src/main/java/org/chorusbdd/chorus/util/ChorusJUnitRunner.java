@@ -98,7 +98,6 @@ public class ChorusJUnitRunner {
                 //feature file paths property with the specific path for this feature file
                 List<FeatureToken> tokens = chorusMain.run(
                     executionToken,
-                    chorusMain.getDefaultListeners(),
                     new SingleFeatureConfigMutator()
                 );
 

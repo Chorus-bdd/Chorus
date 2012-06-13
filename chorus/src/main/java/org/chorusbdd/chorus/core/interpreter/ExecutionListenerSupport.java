@@ -61,12 +61,20 @@ public class ExecutionListenerSupport {
         return this.listeners.removeAll(Arrays.asList(listeners));
     }
 
-    public void addExecutionListeners(Collection<ExecutionListener> listeners) {
+    public void addExecutionListener(Collection<ExecutionListener> listeners) {
         this.listeners.addAll(listeners);
     }
 
     public void removeExecutionListeners(List<ExecutionListener> listeners) {
         this.listeners.removeAll(listeners);
+    }
+
+    /**
+     * Clear any existing listeners and add the listeners provided
+     */
+    public void setExecutionListener(ExecutionListener... listener) {
+        listeners.clear();
+        listeners.addAll(Arrays.asList(listener));
     }
 
     public void notifyStartTests(ExecutionToken t) {
@@ -115,6 +123,10 @@ public class ExecutionListenerSupport {
         for (ExecutionListener listener : listeners) {
             listener.testsCompleted(t, features);
         }
+    }
+
+    public List<ExecutionListener> getListeners() {
+        return new ArrayList<ExecutionListener>(listeners);
     }
 
 }

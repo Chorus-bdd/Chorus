@@ -41,6 +41,7 @@ import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -51,7 +52,6 @@ public class Main {
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
     private final ExecutionListenerFactory factory = new ExecutionListenerFactory();
     private final ChorusConfig baseConfig;
-    public List<ExecutionListener> listeners;
 
     public static void main(String[] args) throws Exception {
         boolean failed = true;
@@ -70,7 +70,8 @@ public class Main {
     public Main(String[] args) throws InterpreterPropertyException {
         baseConfig = new ChorusConfig(args);
         baseConfig.readConfiguration();
-        listeners = factory.createExecutionListener(baseConfig);
+        List<ExecutionListener> listeners = factory.createExecutionListener(baseConfig);
+        listenerSupport.addExecutionListener(listeners);
     }
 
     /**
@@ -78,19 +79,9 @@ public class Main {
      * @return true, if all tests were fully implemented and passed
      */
     public boolean run() throws Exception {
-        return run(listeners);
-    }
-
-    /**
-     * Run interpreter using just the base configuration and the listeners provided
-     * @return true, if all tests were fully implemented and passed
-     */
-    public boolean run(List<ExecutionListener> listeners) throws Exception {
-        listenerSupport.addExecutionListeners(listeners);
         ExecutionToken t = startTests();
-        List<FeatureToken> features = run(t, listeners, ConfigMutator.NULL_MUTATOR);
+        List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
         endTests(t, features);
-        listenerSupport.removeExecutionListeners(listeners);
         return t.isPassedAndFullyImplemented();
     }
 
@@ -117,11 +108,11 @@ public class Main {
      * Run the interpreter once for each configMutator, adding executed features to the list of features
      * and collating results within the executionToken
      */
-    public List<FeatureToken> run(ExecutionToken t, List<ExecutionListener> listeners, ConfigMutator... configMutators) throws Exception {
+    public List<FeatureToken> run(ExecutionToken t, ConfigMutator... configMutators) throws Exception {
         List<FeatureToken> features = new ArrayList<FeatureToken>();
         for ( ConfigMutator c : configMutators) {
             ChorusConfig childConfig = c.getNewConfig(baseConfig);
-            List<FeatureToken> featuresThisPass = run(t, childConfig, listeners);
+            List<FeatureToken> featuresThisPass = run(t, childConfig);
             features.addAll(featuresThisPass);
         }
         return features;
@@ -130,7 +121,7 @@ public class Main {
     /**
      * Run the interpreter, collating results into the executionToken and notifying
      */
-    private List<FeatureToken> run(ExecutionToken executionToken, ChorusConfig config, List<ExecutionListener> listeners) throws Exception {
+    private List<FeatureToken> run(ExecutionToken executionToken, ChorusConfig config) throws Exception {
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
         List<String> handlerPackages = config.getValues(InterpreterProperty.HANDLER_PACKAGES);
@@ -155,13 +146,9 @@ public class Main {
         List<String> featureFileNames = config.getValues(InterpreterProperty.FEATURE_PATHS);
         List<File> featureFiles = new FeatureScanner().getFeatureFiles(featureFileNames);
 
-        chorusInterpreter.addExecutionListeners(listeners);
+        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
         List<FeatureToken> features = chorusInterpreter.processFeatures(executionToken, featureFiles);
         return features;
-    }
-
-    public List<ExecutionListener> getDefaultListeners() {
-        return listeners;
     }
 
     public String getSuiteName() {
@@ -170,5 +157,29 @@ public class Main {
 
     public List<String> getFeatureFilePaths() {
         return baseConfig.getValues(InterpreterProperty.FEATURE_PATHS);
+    }
+
+    public void addExecutionListener(ExecutionListener... listeners) {
+        listenerSupport.addExecutionListener(listeners);
+    }
+
+    public boolean removeExecutionListener(ExecutionListener... listeners) {
+        return listenerSupport.removeExecutionListener(listeners);
+    }
+
+    public void addExecutionListener(Collection<ExecutionListener> listeners) {
+        listenerSupport.addExecutionListener(listeners);
+    }
+
+    public void removeExecutionListeners(List<ExecutionListener> listeners) {
+        listenerSupport.removeExecutionListeners(listeners);
+    }
+
+    public void setExecutionListener(ExecutionListener... listener) {
+        listenerSupport.setExecutionListener(listener);
+    }
+
+    public List<ExecutionListener> getListeners() {
+        return listenerSupport.getListeners();
     }
 }

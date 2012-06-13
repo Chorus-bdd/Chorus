@@ -485,7 +485,7 @@ public class ChorusInterpreter {
     }
 
     public void addExecutionListeners(List<ExecutionListener> executionListeners) {
-        executionListenerSupport.addExecutionListeners(executionListeners);
+        executionListenerSupport.addExecutionListener(executionListeners);
     }
 
     public boolean removeExecutionListener(ExecutionListener... listeners) {
