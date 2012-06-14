@@ -1,0 +1,112 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.chorusbdd</groupId>
+    <artifactId>chorus-selftest</artifactId>
+    <packaging>jar</packaging>
+    <version>0.3.1-SNAPSHOT</version>
+    <name>chorus-selftest</name>
+    <url>http://www.chorusbdd.org</url>
+    <build>
+
+        <!-- Copy chorus resources from the test/handlers and test/junit subtree, so resource files
+        required by a handlers can be local to the .java, rather than residing in
+        a separate tree under test/resources, although the default test/resources location
+        is still supported -->
+        <testResources>
+             <testResource>
+               <directory>src/test/handlers</directory>
+                 <includes>
+                   <include>**/*.xml</include>
+                   <include>**/*.properties</include>
+                   <include>**/*.feature</include>
+                 </includes>
+             </testResource>
+
+            <testResource>
+               <directory>src/test/junit</directory>
+                 <includes>
+                   <include>**/*.xml</include>
+                   <include>**/*.properties</include>
+                   <include>**/*.feature</include>
+                 </includes>
+             </testResource>
+
+            <!-- include the standard test/resources directory, this is still supported
+            if you don't want to put resources within the test/java subtree -->
+            <testResource>
+               <directory>src/test/**/resources</directory>
+            </testResource>
+        </testResources>
+
+
+        <!-- Since we have separated our junit tests from our chorus handlers,
+        we need to configure both directories as test source directories -->
+        <plugins>
+            <plugin>
+               <groupId>org.codehaus.mojo</groupId>
+               <artifactId>build-helper-maven-plugin</artifactId>
+               <version>1.7</version>
+               <executions>
+                 <execution>
+                   <id>add-source</id>
+                   <phase>generate-sources</phase>
+                   <goals>
+                     <goal>add-test-source</goal>
+                   </goals>
+                   <configuration>
+                     <sources>
+                       <!-- I don't think wildcards work here, would would be ideal -->
+                       <source>src/test/junit</source>
+                       <source>src/test/handlers</source>
+                     </sources>
+                   </configuration>
+                 </execution>
+               </executions>
+             </plugin>
+
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <header>src/etc/header.txt</header>
+                    <includes>
+                        <include>src/main/java/**/*.java</include>
+                        <include>src/test/**/*.java</include>
+                    </includes>
+                    <properties>
+                        <year>2012</year>
+                    </properties>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus</artifactId>
+            <version>0.3.1-SNAPSHOT</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-spring</artifactId>
+            <version>0.3.1-SNAPSHOT</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-tools</artifactId>
+            <version>0.3.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

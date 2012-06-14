@@ -10,5 +10,6 @@
 	  <module>chorus</module>
 	  <module>chorus-spring</module>
 	  <module>chorus-tools</module>
+      <module>chorus-selftest</module>
 	</modules>
 </project>
