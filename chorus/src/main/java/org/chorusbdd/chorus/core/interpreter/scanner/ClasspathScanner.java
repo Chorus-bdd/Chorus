@@ -57,27 +57,12 @@ import java.util.zip.ZipFile;
  */
 public class ClasspathScanner {
 
-    public static Set<Class> doScan(String... packageName) throws IOException, ClassNotFoundException {
-        return doScan(ClassFilter.NULL_FILTER, packageName);
-    }
-
-    public static Set<Class> doScan(ClassFilter classFilter, String... packageName) throws ClassNotFoundException, IOException {
-        Set<Class> s = new HashSet<Class>();
-        for (String p : packageName) {
-            s.addAll(doScan(classFilter, p));
-        }
-        return s;
-    }
-
-    public static Set<Class> doScan(ClassFilter classFilter, String packageName) throws IOException, ClassNotFoundException {
+    public static Set<Class> doScan(ClassFilter classFilter) throws IOException, ClassNotFoundException {
         Set<Class> s = new HashSet<Class>();
         for (String clazz : getClasspathClassNames()) {
-            if (clazz.startsWith(packageName)) {
-
-                Class c = Class.forName(clazz);
-                if (classFilter.accept(c)) {
-                    s.add(c);
-                }
+            Class c = Class.forName(clazz);
+            if (classFilter.acceptByClass(c)) {
+                s.add(c);
             }
         }
         return s;

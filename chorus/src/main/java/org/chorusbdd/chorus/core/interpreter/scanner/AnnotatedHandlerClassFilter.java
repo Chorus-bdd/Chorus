@@ -39,8 +39,13 @@ import org.chorusbdd.chorus.annotations.Handler;
 *
 * Filter out classes with the Handler annotation
 */
-public class HandlerOnlyClassFilter implements ClassFilter {
-    public boolean accept(Class clazz) {
+public class AnnotatedHandlerClassFilter implements ClassFilter {
+
+    public boolean acceptByName(String className) {
+        return true;
+    }
+
+    public boolean acceptByClass(Class clazz) {
         return clazz.getAnnotation(Handler.class) != null;
     }
 }

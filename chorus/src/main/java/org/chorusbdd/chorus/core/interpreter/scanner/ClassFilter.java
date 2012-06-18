@@ -30,19 +30,52 @@
 package org.chorusbdd.chorus.core.interpreter.scanner;
 
 /**
-* Created with IntelliJ IDEA.
-* User: nick
-* Date: 11/05/12
-* Time: 15:31
-* To change this template use File | Settings | File Templates.
-*/
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 11/05/12
+ * Time: 15:31
+ *
+ * Class filter for classpath class scanning
+ *
+ *
+ */
 public interface ClassFilter {
 
-    public static final ClassFilter NULL_FILTER = new ClassFilter() {
-        public boolean accept(Class clazz) {
-            return true;
+    public static final ClassFilter NULL_PERMISSIVE_FILTER = new ClassFilter() {
+        public boolean acceptByName(String className) {
+            return false;
+        }
+
+        public boolean acceptByClass(Class clazz) {
+            return false;
         }
     };
 
-    public boolean accept(Class clazz);
+    public static final ClassFilter NULL_RESTRICTIVE_FILTER = new ClassFilter() {
+        public boolean acceptByName(String className) {
+            return false;
+        }
+
+        public boolean acceptByClass(Class clazz) {
+            return false;
+        }
+    };
+
+    /**
+     *  A first stage in filtering - check the class passes filter by it's class/package name
+     *
+     * @return true, if the Class with the given fully qualified class name passes the filter
+     */
+    public boolean acceptByName(String className);
+
+    /**
+     * A second stage of filtering, only performed if stage one has passed filter checks
+     * Check that the instantiated Class instance passes filters (e.g. using annotations)
+     *
+     * This requires class loading to take place, it is best to use the filter by class
+     * name where possible
+     *
+     * @return true, if the Class clazz passes the filter criteria
+     */
+    public boolean acceptByClass(Class clazz);
 }
