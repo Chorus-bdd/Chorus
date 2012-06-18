@@ -1,6 +1,7 @@
 package simplefeature;
 
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,6 +12,15 @@ import org.chorusbdd.chorus.annotations.Handler;
 @Handler("Simple Feature")
 public class SimpleFeatureHandler {
 
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
+
+    }
+
+    @Step("I can run a feature with a single scenario")
+    public void canRunAFeature() {
+
+    }
 
 
 }

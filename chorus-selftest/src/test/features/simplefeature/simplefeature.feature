@@ -4,5 +4,5 @@ Feature: Simple Feature
 
   Scenario: Simple Scenario
     Given Chorus is working properly
-    I can run a feature with a single scenario
+    Then I can run a feature with a single scenario
 
