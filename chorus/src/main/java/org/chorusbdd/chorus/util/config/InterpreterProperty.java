@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.util.config;
 
+import org.chorusbdd.chorus.util.ChorusConstants;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -14,7 +16,7 @@ package org.chorusbdd.chorus.util.config;
 public enum InterpreterProperty {
 
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, new String[0], ".*", "c:\\my\\path or ..\\my\\path"),
-    HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", true, 1, Integer.MAX_VALUE, new String[0], "[\\w\\.]+", "my.package.name"),
+    HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "my.package.name"),
     DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "(false|true)"),
     SHOW_SUMMARY("-showsummary", "-s", "chorusShowSummary", false, 0, 1, new String[] {"true"},  "(?i)(false|true)", "(false|true)"),
     TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, new String[0], "\\w+", "MyTagName"),

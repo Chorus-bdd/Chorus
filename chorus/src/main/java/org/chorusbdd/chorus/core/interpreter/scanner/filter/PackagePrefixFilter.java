@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.core.interpreter.scanner.filter;
 
+import org.chorusbdd.chorus.util.ChorusConstants;
+
 import java.util.Arrays;
 
 /**
@@ -8,26 +10,26 @@ import java.util.Arrays;
  * Date: 18/06/12
  * Time: 17:42
  *
- * Reject or accept classes based on the package name / package prefix
- *
- * Support filter chaining, if a delegate filter is specified, delegate to the filter if package
- * name tests pass
+ * Accept any packages which match user specified prefixes
+ * Deny any packages which do not
  */
 public class PackagePrefixFilter extends ChainableFilterRule {
 
-    public static final String[] ANY_PACKAGE = new String[] {".*"};
-
     private String[] packageNames;
-    private boolean allowAll;
+    private boolean userPackagesWereSpecified;
 
     public PackagePrefixFilter(ClassFilter filterDelegate, String... packageNames) {
         super(filterDelegate);
         this.packageNames = packageNames;
-        allowAll = Arrays.equals(packageNames, ANY_PACKAGE);
+        userPackagesWereSpecified = ! Arrays.equals(packageNames, ChorusConstants.ANY_PACKAGE);
     }
 
-    public boolean doAcceptByName(String className) {
-        return allowAll || checkMatch(className);
+    public boolean shouldAccept(String className) {
+        return userPackagesWereSpecified && checkMatch(className);
+    }
+
+    public boolean shouldDeny(String className) {
+        return userPackagesWereSpecified && ! checkMatch(className);
     }
 
     private boolean checkMatch(String className) {

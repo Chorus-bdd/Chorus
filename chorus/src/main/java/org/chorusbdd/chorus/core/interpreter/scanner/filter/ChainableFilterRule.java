@@ -17,12 +17,21 @@ public class ChainableFilterRule implements ClassFilter {
     }
 
     public final boolean acceptByName(String className) {
-        boolean passesPackageFilter = doAcceptByName(className);
-        return passesPackageFilter && filterDelegate.acceptByName(className);
+        if ( shouldAccept(className) ) {
+            return true;
+        } else if ( shouldDeny(className)) {
+            return false;
+        }  else {
+            return filterDelegate.acceptByName(className);
+        }
     }
 
-    protected boolean doAcceptByName(String className) {
-        return true;
+    protected boolean shouldDeny(String className) {
+        return false;
+    }
+
+    protected boolean shouldAccept(String className) {
+        return false;
     }
 
     public final boolean acceptByClass(Class clazz) {

@@ -56,7 +56,7 @@ public class TestFixtures extends TestCase {
            InterpreterProperty.SHOW_ERRORS.getHyphenatedSwitch(),
            InterpreterProperty.SHOW_SUMMARY.getHyphenatedSwitch(),
            InterpreterProperty.FEATURE_PATHS.getHyphenatedSwitch(), "src/test/features",
-           InterpreterProperty.HANDLER_PACKAGES.getHyphenatedSwitch(), "org.chorusbdd.chorus.selftest.handlers"
+           //InterpreterProperty.HANDLER_PACKAGES.getHyphenatedSwitch(), "org.chorusbdd.chorus.selftest.handlers"
         };
 
         try {

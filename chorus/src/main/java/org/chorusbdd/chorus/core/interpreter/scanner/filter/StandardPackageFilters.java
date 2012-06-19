@@ -6,7 +6,7 @@ package org.chorusbdd.chorus.core.interpreter.scanner.filter;
  * Date: 19/06/12
  * Time: 09:43
  *
- * Don't bother scanning for handler classes in core packages
+ * Reject any classes from standard non-handler packages
  */
 public class StandardPackageFilters extends ChainableFilterRule {
 
@@ -35,11 +35,11 @@ public class StandardPackageFilters extends ChainableFilterRule {
         super(filterDelegate);
     }
 
-    public boolean doAcceptByName(String packageName) {
-        boolean result = true;
+    public boolean shouldDeny(String packageName) {
+        boolean result = false;
         for ( String denyPackage : DENY_PACKAGES ) {
             if ( packageName.startsWith(denyPackage)) {
-                result = false;
+                result = true;
                 break;
             }
         }

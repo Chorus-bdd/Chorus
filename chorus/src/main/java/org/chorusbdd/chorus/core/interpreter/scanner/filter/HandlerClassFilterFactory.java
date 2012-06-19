@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.core.interpreter.scanner.filter;
 
+import org.chorusbdd.chorus.util.ChorusConstants;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -30,7 +32,7 @@ public class HandlerClassFilterFactory {
         StandardPackageFilters standardPackageFilter = new StandardPackageFilters(handlerAnnotationFilter);
 
         //if user has specified package prefixes, restrict to those
-        String[] userPackageNames = userSpecifiedPrefixes.length == 0 ? PackagePrefixFilter.ANY_PACKAGE : userSpecifiedPrefixes;
+        String[] userPackageNames = userSpecifiedPrefixes.length == 0 ? ChorusConstants.ANY_PACKAGE : userSpecifiedPrefixes;
         ClassFilter packagePrefixFilter = new PackagePrefixFilter(standardPackageFilter, userPackageNames);
 
          //always permit built in handlers, deny other chorus packages

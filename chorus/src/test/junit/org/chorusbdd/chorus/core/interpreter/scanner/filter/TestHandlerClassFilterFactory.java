@@ -17,7 +17,8 @@ public class TestHandlerClassFilterFactory extends Assert {
     @Test
     public void testChorusBuildInHandlersPermitted() {
         ClassFilter classFilter = filterFactory.createClassFilters(new String[] {});
-        assertTrue("Allows built in handler", classFilter.acceptByName(ChorusConstants.BUILT_IN_HANDLER_PACKAGE));
+        assertTrue("Allows built in handler", classFilter.acceptByName("org.chorusbdd.chorus.handlers"));
+        assertTrue("Allows built in tests handlers", classFilter.acceptByName("org.chorusbdd.chorus.selftest.wibble"));
     }
 
     @Test
@@ -36,8 +37,14 @@ public class TestHandlerClassFilterFactory extends Assert {
     @Test
     public void testUserPrefixesSpecified() {
         ClassFilter classFilter = filterFactory.createClassFilters(new String[] {"com.test"});
-        assertFalse("Denies non-specified if user did not restrict", classFilter.acceptByName("com.mynew.google"));
-        assertTrue("Allows specified if user did not restrict", classFilter.acceptByName("com.test.mypackage"));
+        assertFalse("Denies non-specified if user restricted", classFilter.acceptByName("com.mynew.google"));
+        assertTrue("Allows specified if user restricted", classFilter.acceptByName("com.test.mypackage"));
+    }
+
+    @Test
+    public void testCoreHandlersIfUserPackagesSpecified() {
+       ClassFilter classFilter = filterFactory.createClassFilters(new String[] {"com.test"});
+       assertTrue("Allow standard handlers even if users sets handler package prefixes", classFilter.acceptByName("org.chorusbdd.chorus.handlers.MyHandler"));
     }
 
     @Test
