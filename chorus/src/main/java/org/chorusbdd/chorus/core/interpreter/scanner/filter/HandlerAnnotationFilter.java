@@ -27,9 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.scanner;
+package org.chorusbdd.chorus.core.interpreter.scanner.filter;
 
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
 
 /**
 * Created with IntelliJ IDEA.
@@ -39,7 +40,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 *
 * Filter out classes with the Handler annotation
 */
-public class AnnotatedHandlerClassFilter implements ClassFilter {
+public class HandlerAnnotationFilter implements ClassFilter {
 
     public boolean acceptByName(String className) {
         return true;

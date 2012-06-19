@@ -32,8 +32,8 @@ package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.results.*;
-import org.chorusbdd.chorus.core.interpreter.scanner.AnnotatedHandlerClassFilter;
-import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
+import org.chorusbdd.chorus.core.interpreter.scanner.*;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.*;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -392,16 +392,12 @@ public class ChorusInterpreter {
      */
     private HashMap<String, Class> loadHandlerClasses(String[] basePackages) throws Exception {
         //always include the Chorus handlers package
-        String[] allBasePackages = new String[basePackages.length + 1];
-        allBasePackages[0] = CHORUS_HANDLERS_PACKAGE;
-        System.arraycopy(basePackages, 0, allBasePackages, 1, basePackages.length);
-
         HashMap<String, Class> featureClasses = new HashMap<String, Class>();
 
-        Set<Class> handlerClasses = ClasspathScanner.doScan(
+        HandlerClassFilterFactory filterFactory = new HandlerClassFilterFactory();
+        ClassFilter chainStart = filterFactory.createClassFilters(basePackages);
 
-            new AnnotatedHandlerClassFilter(), allBasePackages
-        );
+        Set<Class> handlerClasses = ClasspathScanner.doScan(chainStart);
         for (Class handlerClass : handlerClasses) {
             Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
             String featureName = f.value();

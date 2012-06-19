@@ -29,6 +29,9 @@
  */
 package org.chorusbdd.chorus.core.interpreter.scanner;
 
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.FilenameFilter;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -60,9 +63,13 @@ public class ClasspathScanner {
     public static Set<Class> doScan(ClassFilter classFilter) throws IOException, ClassNotFoundException {
         Set<Class> s = new HashSet<Class>();
         for (String clazz : getClasspathClassNames()) {
-            Class c = Class.forName(clazz);
-            if (classFilter.acceptByClass(c)) {
-                s.add(c);
+            //check the name/package first before we try class loading
+            //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
+            if ( classFilter.acceptByName( clazz )) {
+                Class c = Class.forName(clazz);
+                if (classFilter.acceptByClass(c)) {
+                    s.add(c);
+                }
             }
         }
         return s;
