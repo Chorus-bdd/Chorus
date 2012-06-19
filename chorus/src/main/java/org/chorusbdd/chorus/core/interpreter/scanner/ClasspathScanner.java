@@ -65,7 +65,7 @@ public class ClasspathScanner {
         for (String clazz : getClasspathClassNames()) {
             //check the name/package first before we try class loading
             //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
-            if ( classFilter.acceptByName( clazz )) {
+            if ( classFilter.acceptByName(clazz)) {
                 Class c = Class.forName(clazz);
                 if (classFilter.acceptByClass(c)) {
                     s.add(c);

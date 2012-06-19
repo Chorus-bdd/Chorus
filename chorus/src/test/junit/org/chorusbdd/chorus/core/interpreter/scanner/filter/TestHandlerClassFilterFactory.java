@@ -40,5 +40,10 @@ public class TestHandlerClassFilterFactory extends Assert {
         assertTrue("Allows specified if user did not restrict", classFilter.acceptByName("com.test.mypackage"));
     }
 
+    @Test
+    public void testStandardJavaPackagesDenied() {
+        ClassFilter classFilter = filterFactory.createClassFilters(new String[] {});
+        assertFalse("Does not search for handlers in standard jdk packages", classFilter.acceptByName("java.mypackage"));
+    }
 
 }

@@ -1,7 +1,5 @@
 package org.chorusbdd.chorus.core.interpreter.scanner.filter;
 
-import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
