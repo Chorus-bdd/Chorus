@@ -60,6 +60,8 @@ import java.util.zip.ZipFile;
  */
 public class ClasspathScanner {
 
+    private static String[] classpathNames;
+
     public static Set<Class> doScan(ClassFilter classFilter) throws IOException, ClassNotFoundException {
         Set<Class> s = new HashSet<Class>();
         for (String clazz : getClasspathClassNames()) {
@@ -118,7 +120,17 @@ public class ClasspathScanner {
      * zip files and the directories. In other words,
      * the filter will not be used to sort directories.
      */
-    public static String[] getClasspathFileNames() throws ZipException, IOException {
+    public static String[] getClasspathFileNames() throws IOException {
+        //for performance we most likely only want to do this once for each interpreter session,
+        //classpath should not change dynamically
+        System.out.println("Getting file names " + Thread.currentThread().getName());
+        if ( classpathNames == null ) {
+            classpathNames = findClassNames();
+        }
+        return classpathNames;
+    }
+
+    private static String[] findClassNames() throws IOException {
         final StringTokenizer tokenizer = new StringTokenizer(System.getProperty("java.class.path"), File.pathSeparator, false);
         final Set<String> filenames = new LinkedHashSet<String>();
 

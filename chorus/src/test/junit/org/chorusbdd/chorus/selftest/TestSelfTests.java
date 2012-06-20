@@ -1,3 +1,5 @@
+package org.chorusbdd.chorus.selftest;
+
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.chorusbdd.chorus.util.ChorusJUnitRunner;
