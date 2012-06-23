@@ -20,7 +20,7 @@ ${feature.process.name} - a unique name generated for each process started
     </appender>
 
     <category name="org.chorusbdd.chorus">
-        <priority value="WARN"/>
+        <priority value="INFO"/>
     </category>
 
     <category name="org.springframework">
