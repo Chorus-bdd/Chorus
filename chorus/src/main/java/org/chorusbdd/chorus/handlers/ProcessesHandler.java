@@ -151,8 +151,20 @@ public class ProcessesHandler {
                     debugPort);
         }
 
+
+        //surrounding the classpath in quotes is currently breaking the classpath parsing for linux when launched via
+        //Runtime.getRuntime().exec() (but it is ok from the shell)
+        //I think we want to keep this in on windows, since we will more likely encounter directory names with spaces -
+        //I'm worried those will break for linux although this will fix the classpath issue.
+        //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
+        boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+        String commandTxt = isWindows ?
+            "%s%sbin%sjava %s %s %s %s -classpath \"%s\" %s %s" :
+            "%s%sbin%sjava %s %s %s %s -classpath %s %s %s";
+
         //construct a command
-        String command = String.format("%s%sbin%sjava %s %s %s %s -classpath \"%s\" %s %s",
+        String command = String.format(
+                commandTxt,
                 jre,
                 File.separatorChar,
                 File.separatorChar,
