@@ -381,7 +381,7 @@ public class ProcessesHandler {
         }
     }
 
-    private class ProcessRedirector implements Runnable {
+    public static class ProcessRedirector implements Runnable {
         private BufferedInputStream in;
         private PrintStream out;
         private boolean closeOnExit;
