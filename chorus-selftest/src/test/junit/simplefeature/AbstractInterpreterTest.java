@@ -21,9 +21,20 @@ public class AbstractInterpreterTest extends Assert {
     protected void checkTestResults(ChorusSelfTestResults testResults, ChorusSelfTestResults expectedResults) {
         //System.out.println("*" + testResults.getStandardError() + "*");
         //System.out.println("*" + expectedResults.getStandardError() + "*");
-        assertEquals("Interpreter exit code", expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
-        assertEquals("Check interpreter std out", expectedResults.getStandardOutput(), testResults.getStandardOutput());
-        assertEquals("Check interpreter std err", expectedResults.getStandardError(), testResults.getStandardError());
+        testResults.preProcessForTests();
+        diffAssertEquals("exit code", expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
+        diffAssertEquals("std out", expectedResults.getStandardOutput(), testResults.getStandardOutput());
+        diffAssertEquals("std err", expectedResults.getStandardError(), testResults.getStandardError());
+    }
+
+    //assert equal with more difference information
+    private void diffAssertEquals(String s, Object expected, Object actual) {
+        if ( ! expected.equals(actual)) {
+            System.err.println("Unexpected difference in " + s);
+            System.err.println("Expected: [" + expected.toString() + "]\n\n");
+            System.err.println("Actual: [" + actual.toString() + "]\n\n");
+            assertEquals(s, expected, actual);
+        }
     }
 
     protected ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) throws IOException, InterruptedException {
@@ -92,4 +103,10 @@ public class AbstractInterpreterTest extends Assert {
         );
     }
 
+    /**
+     * @return a String path replacing \ with the platform specific separator (will be identical, for Win)
+     */
+    protected String getPlatformPath(String s) {
+        return s.replace("\\", System.getProperty("file.separator"));
+    }
 }

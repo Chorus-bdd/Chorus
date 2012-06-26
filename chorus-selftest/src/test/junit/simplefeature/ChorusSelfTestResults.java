@@ -17,8 +17,8 @@ class ChorusSelfTestResults {
      * Strip any carriage return characters from standard err and out
      */
     ChorusSelfTestResults(String standardOutput, String standardError, int interpreterReturnCode) {
-        this.standardOutput = standardOutput.replaceAll("\r", "");
-        this.standardError = standardError.replaceAll("\r", "");
+        this.standardOutput = standardOutput;
+        this.standardError = standardError;
         this.interpreterReturnCode = interpreterReturnCode;
     }
 
@@ -32,6 +32,26 @@ class ChorusSelfTestResults {
 
     public int getInterpreterExitCode() {
         return interpreterReturnCode;
+    }
+
+    public void preProcessForTests() {
+        this.standardOutput = preProcessTestResultOutput(this.standardOutput);
+        this.standardError = preProcessTestResultOutput(this.standardError);
+    }
+
+    private String preProcessTestResultOutput(String output) {
+        output = removeCarriageReturns(output);
+        output = removeJavaOptionsVariable(output);
+        return output;
+    }
+
+    //this appears in the std out in some envs where a sys property _JAVA_OPTIONS is set
+    private String removeJavaOptionsVariable(String result) {
+        return result.replaceAll("Picked up _JAVA_OPTIONS: .*?\n", "");
+    }
+
+    private String removeCarriageReturns(String output) {
+        return output.replaceAll("\r", "");
     }
 
     @Override

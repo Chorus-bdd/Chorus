@@ -36,7 +36,7 @@ public class TestSimpleFeature extends AbstractInterpreterTest {
             "Steps (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)\n",
 
             //stderr
-            "ChorusInterpreter         --> INFO    - Loaded feature file: src\\test\\features\\simplefeature\\simplefeature.feature\n" +
+            "ChorusInterpreter         --> INFO    - Loaded feature file: " + getPlatformPath("src\\test\\features\\simplefeature\\simplefeature.feature") + "\n" +
             "ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario\n",
 
             //exitCode
