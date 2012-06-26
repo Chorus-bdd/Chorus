@@ -31,6 +31,8 @@ package org.chorusbdd.chorus.core.interpreter.scanner;
 
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.FilenameFilter;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -59,6 +61,8 @@ import java.util.zip.ZipFile;
  * @author Nick Ebbutt, added ClassFilter
  */
 public class ClasspathScanner {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
 
     private static String[] classpathNames;
 
@@ -123,9 +127,11 @@ public class ClasspathScanner {
     public static String[] getClasspathFileNames() throws IOException {
         //for performance we most likely only want to do this once for each interpreter session,
         //classpath should not change dynamically
-        System.out.println("Getting file names " + Thread.currentThread().getName());
+        log.debug("Getting file names " + Thread.currentThread().getName());
+        long start = System.currentTimeMillis();
         if ( classpathNames == null ) {
             classpathNames = findClassNames();
+            log.debug("Getting file names took " + (System.currentTimeMillis() - start) + " millis" );
         }
         return classpathNames;
     }
