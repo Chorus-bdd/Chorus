@@ -62,11 +62,6 @@ public class ChorusInterpreter {
     private ExecutionListenerSupport executionListenerSupport = new ExecutionListenerSupport();
 
     /**
-     * Always included in the Handlers base package scan
-     */
-    private static final String CHORUS_HANDLERS_PACKAGE = "org.chorusbdd.chorus.handlers";
-
-    /**
      * Defines the class which will be instantiated to perform injection of Spring context/resources
      */
     private final String SPRING_INJECTOR_CLASSNAME = "org.chorusbdd.chorus.spring.SpringContextInjector";
