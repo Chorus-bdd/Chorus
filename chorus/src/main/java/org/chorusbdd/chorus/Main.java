@@ -54,17 +54,21 @@ public class Main {
     private final ChorusConfig baseConfig;
 
     public static void main(String[] args) throws Exception {
-        boolean failed = true;
+        boolean success = false;
         try {
             Main main = new Main(args);
-            failed = main.run();
+            success = main.run();
         } catch (InterpreterPropertyException e) {
             System.err.println(e.getMessage());
             ChorusConfig.logHelp();
         }
 
-        System.out.println("Exiting with:" + (failed ? -1 : 0));
-        System.exit(failed ? -1 : 0);
+        //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
+        //(windows supports signed integer exit status, unix does not)
+        //choosing the most obvious, 0 = success, 1 = failure, we could expand on this if needed
+        int exitCode = success ? 0 : 1;
+        System.out.println("Exiting with:" + exitCode);
+        System.exit(exitCode);
     }
 
     public Main(String[] args) throws InterpreterPropertyException {
