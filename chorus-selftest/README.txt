@@ -1,13 +1,17 @@
 
-chorus-selftest is a module containing a set of tests intended to provide good overall coverage for Chorus
+CHORUS-SELFTEST:
+****************
 
-Here, we're testing Chorus' output across all use cases - i.e what should happen when a test run with Chorus runs
-successfully, what happens if a step fails etc.
+chorus-selftest is a module containing component tests intended to provide good coverage for Chorus
+
+Here, we're testing Chorus' output across all use cases -
+i.e what should happen when a test run with Chorus run successfully, but also what happens if a test fails etc.
 
 Chorus has three main 'outputs' -
- - the text written to standard out/err (descriptions of the features/scenarios/steps invoked)
- - the return code (0/1) when the interpreter terminates.
- - logging written to the registered log provider (by default unless another log provider is configured this also
-   appears as standard out/err)
+ - text written to standard out (this is interpreter output describing features/scenarios/steps invoked)
+ - text written to standard err (log statements and warnings/errors)
+ - the return code when the interpreter terminates.
 
-Hence, these tests are intended to validate Chrous's standard output and return codes in different situations
+If a non-default log provider is set, the log statements may be written elsewhere (i.e. not to standard err) - so all tests here use the default log implementation running at log level info (we don't bother validating debug or trace level logging)
+
+In summary, these tests are intended to validate Chrous's standard output, all log output at info level and above, and return codes in different situations

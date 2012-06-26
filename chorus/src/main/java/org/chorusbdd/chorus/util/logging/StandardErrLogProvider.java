@@ -30,13 +30,13 @@
 package org.chorusbdd.chorus.util.logging;
 
 /**
-* Created with IntelliJ IDEA.
+* Creaxted with IntelliJ IDEA.
 * User: Nick Ebbutt
 * Date: 15/05/12
 * Time: 11:50
 * To change this template use File | Settings | File Templates.
 */
-class StandardOutLogProvider implements ChorusLogProvider {
+class StandardErrLogProvider implements ChorusLogProvider {
 
     public ChorusLog getLog(Class clazz) {
         return new StandardOutLog(clazz);
@@ -54,7 +54,7 @@ class StandardOutLogProvider implements ChorusLogProvider {
         }
 
         private static void setLogLevel() {
-            String logLevel = System.getProperty("logLevel", "WARN");
+            String logLevel = System.getProperty("chorusLogLevel", "WARN");
 
             boolean found = false;
             for (LogLevel l : LogLevel.values()) {
@@ -178,8 +178,13 @@ class StandardOutLogProvider implements ChorusLogProvider {
             }
         }
 
+        /**
+         * At present we are logging all messages to the standard error stream rather than
+         * standard out. This is to differentiate the logging output from the results of the
+         * interpreter execution which are written to System.out
+         */
         private void logOut(String type, Object message) {
-            System.out.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
         }
 
         private void logErr(String type, Object message) {
