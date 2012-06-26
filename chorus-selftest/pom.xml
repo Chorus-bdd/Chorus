@@ -32,6 +32,15 @@
                  </includes>
              </testResource>
 
+            <testResource>
+                <directory>src/test/features</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.feature</include>
+                </includes>
+            </testResource>
+
             <!-- include the standard test/resources directory, this is still supported
             if you don't want to put resources within the test/java subtree -->
             <testResource>
@@ -59,6 +68,7 @@
                        <!-- I don't think wildcards work here, would would be ideal -->
                        <source>src/test/junit</source>
                        <source>src/test/handlers</source>
+                       <source>src/test/features</source>
                      </sources>
                    </configuration>
                  </execution>
