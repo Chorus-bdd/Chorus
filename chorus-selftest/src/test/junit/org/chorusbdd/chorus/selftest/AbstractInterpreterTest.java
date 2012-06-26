@@ -1,4 +1,4 @@
-package simplefeature;
+package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
 import org.chorusbdd.chorus.handlers.ProcessesHandler;

@@ -1,4 +1,4 @@
-package simplefeature;
+package org.chorusbdd.chorus.selftest;
 
 import java.util.Properties;
 

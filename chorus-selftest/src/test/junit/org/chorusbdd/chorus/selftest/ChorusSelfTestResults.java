@@ -1,4 +1,4 @@
-package simplefeature;
+package org.chorusbdd.chorus.selftest;
 
 /**
 * Created by IntelliJ IDEA.
@@ -6,7 +6,7 @@ package simplefeature;
 * Date: 26/06/12
 * Time: 08:42
 */
-class ChorusSelfTestResults {
+public class ChorusSelfTestResults {
 
     private String standardOutput;
     private String standardError;
@@ -16,7 +16,7 @@ class ChorusSelfTestResults {
      * Create a new ChorusSelfTestResults
      * Strip any carriage return characters from standard err and out
      */
-    ChorusSelfTestResults(String standardOutput, String standardError, int interpreterReturnCode) {
+    public ChorusSelfTestResults(String standardOutput, String standardError, int interpreterReturnCode) {
         this.standardOutput = standardOutput;
         this.standardError = standardError;
         this.interpreterReturnCode = interpreterReturnCode;
