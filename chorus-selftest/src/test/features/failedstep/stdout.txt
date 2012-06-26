@@ -1,0 +1,10 @@
+Feature: Failed Step                                                                                 
+  Scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+    And if a step fails                                                                      FAILED  This step threw an exception to fail it
+    Then the subsequent step is skipped                                                      SKIPPED 
+
+
+Scenarios (total:1) (passed:0) (failed:1)
+Steps (total:4) (passed:2) (failed:1) (undefined:0) (pending:0) (skipped:1)

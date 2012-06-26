@@ -3,10 +3,7 @@ package org.chorusbdd.chorus.selftest;
 import junit.framework.Assert;
 import org.chorusbdd.chorus.handlers.ProcessesHandler;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 
@@ -22,6 +19,8 @@ public class AbstractInterpreterTest extends Assert {
         //System.out.println("*" + testResults.getStandardError() + "*");
         //System.out.println("*" + expectedResults.getStandardError() + "*");
         testResults.preProcessForTests();
+        expectedResults.preProcessForTests();
+
         diffAssertEquals("exit code", expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
         diffAssertEquals("std out", expectedResults.getStandardOutput(), testResults.getStandardOutput());
         diffAssertEquals("std err", expectedResults.getStandardError(), testResults.getStandardError());
@@ -33,7 +32,11 @@ public class AbstractInterpreterTest extends Assert {
             System.err.println("Unexpected difference in " + s);
             System.err.println("Expected: [" + expected.toString() + "]\n\n");
             System.err.println("Actual: [" + actual.toString() + "]\n\n");
-            assertEquals(s, expected, actual);
+            if ( expected instanceof String) {
+                assertEquals(s, (String)expected, (String)actual);
+            } else {
+                assertEquals(s, expected, actual);
+            }
         }
     }
 
@@ -115,11 +118,30 @@ public class AbstractInterpreterTest extends Assert {
         return jvmArgs;
     }
 
-    /**
-     * @return a String path replacing / with the platform specific separator (will be identical, for nix)
-     */
-    protected String getPlatformPath(String s) {
-        return s.replace("/", System.getProperty("file.separator"));
+    protected static String readToString(Class clazz, String relativePath) {
+        InputStream is = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            is = clazz.getResourceAsStream(relativePath);
+            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+            String s = r.readLine();
+            while( s != null) {
+                sb.append(s + "\n");
+                s = r.readLine();
+            }
+        } catch (IOException e) {
+            fail("Failed to read contents of file at relative path " + relativePath);
+            e.printStackTrace();
+        }  finally {
+            try {
+                if ( is != null) {
+                    is.close();
+                }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 
 }

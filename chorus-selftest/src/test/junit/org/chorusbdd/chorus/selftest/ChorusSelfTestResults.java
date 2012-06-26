@@ -42,7 +42,13 @@ public class ChorusSelfTestResults {
     private String preProcessTestResultOutput(String output) {
         output = removeCarriageReturns(output);
         output = removeJavaOptionsVariable(output);
+        output = replaceWindowsWithUnixPaths(output);
         return output;
+    }
+
+    //ensure we have consistent paths to compare
+    private String replaceWindowsWithUnixPaths(String output) {
+        return output.replace('\\', '/');
     }
 
     //this appears in the std out in some envs where a sys property _JAVA_OPTIONS is set

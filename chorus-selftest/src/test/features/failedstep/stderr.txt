@@ -1,0 +1,2 @@
+ChorusInterpreter         --> INFO    - Loaded feature file: src/test/features/failedstep/failedstep.feature
+ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario

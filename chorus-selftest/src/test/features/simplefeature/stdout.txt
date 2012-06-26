@@ -1,0 +1,8 @@
+Feature: Simple Feature                                                                              
+  Scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+
+
+Scenarios (total:1) (passed:1) (failed:0)
+Steps (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)
