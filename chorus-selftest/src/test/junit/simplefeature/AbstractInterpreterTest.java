@@ -37,6 +37,12 @@ public class AbstractInterpreterTest extends Assert {
         }
     }
 
+    protected ChorusSelfTestResults runFeature(String featurePath) throws IOException, InterruptedException {
+        DefaultTestProperties sysProps = new DefaultTestProperties();
+        sysProps.put("chorusFeaturePaths", featurePath);
+        return runChorusInterpreter(sysProps);
+    }
+
     protected ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) throws IOException, InterruptedException {
         String jre = System.getProperty("java.home");
 
@@ -53,16 +59,9 @@ public class AbstractInterpreterTest extends Assert {
 
         String classPath = System.getProperty("java.class.path");
 
-        String args = "";
+        String switches = "";
 
-        StringBuilder jvmArgs = new StringBuilder();
-        for ( Map.Entry<Object,Object> property : systemProperties.entrySet()) {
-            jvmArgs.append("-D");
-            jvmArgs.append(property.getKey());
-            jvmArgs.append("=");
-            jvmArgs.append(property.getValue());
-            jvmArgs.append(" ");
-        }
+        StringBuilder jvmArgs = getJvmArgs(systemProperties);
 
         //construct a command
         String command = String.format(
@@ -73,7 +72,7 @@ public class AbstractInterpreterTest extends Assert {
                 jvmArgs,
                 classPath,
                 "org.chorusbdd.chorus.Main",
-                args).trim();
+                switches).trim();
 
         System.out.println("About to run Java: " + command);
 
@@ -93,8 +92,9 @@ public class AbstractInterpreterTest extends Assert {
 
         int result = process.waitFor();
 
-        //wait for end of logging to be written to output buffers
-        Thread.sleep(250);
+        //wait for logging to be flushed to output byte array asynchronously
+        errThread.join(10000);
+        outThread.join(10000);
 
         return new ChorusSelfTestResults(
             interpreterOut.toString("UTF-8"),
@@ -103,10 +103,23 @@ public class AbstractInterpreterTest extends Assert {
         );
     }
 
+    private StringBuilder getJvmArgs(Properties systemProperties) {
+        StringBuilder jvmArgs = new StringBuilder();
+        for ( Map.Entry<Object,Object> property : systemProperties.entrySet()) {
+            jvmArgs.append("-D");
+            jvmArgs.append(property.getKey());
+            jvmArgs.append("=");
+            jvmArgs.append(property.getValue());
+            jvmArgs.append(" ");
+        }
+        return jvmArgs;
+    }
+
     /**
-     * @return a String path replacing \ with the platform specific separator (will be identical, for Win)
+     * @return a String path replacing / with the platform specific separator (will be identical, for nix)
      */
     protected String getPlatformPath(String s) {
-        return s.replace("\\", System.getProperty("file.separator"));
+        return s.replace("/", System.getProperty("file.separator"));
     }
+
 }
