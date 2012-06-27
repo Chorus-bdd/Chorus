@@ -64,6 +64,9 @@ public class RegexpUtils {
 
             //check that there are the same number of expected values as there are regex groups
             if (groupCount != types.length) {
+                //I think this is always an error in the handler's step definition
+                //it's worth logging it to warn level, or people may spend hours looking and may not spot the problem
+                log.warn("Number of method parameters does not match regex groups");
                 return null;
             }
 

@@ -1,5 +1,5 @@
-ChorusInterpreter         --> INFO    - Loaded feature file: src/test/features/multiplescenario/multiplescenario.feature
-ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario One
-ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario Two
-ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario Three
-ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario Four
+ChorusInterpreter         --> INFO    - Loaded feature file: src/test/features/mismatchedcapturegroups/mismatchedcapturegroups.feature
+ChorusInterpreter         --> INFO    - Processing scenario: Mismatched Capture Groups Params One
+RegexpUtils               --> WARN    - Number of method parameters does not match regex groups
+ChorusInterpreter         --> INFO    - Processing scenario: Mismatched Capture Groups Params Two
+RegexpUtils               --> WARN    - Number of method parameters does not match regex groups

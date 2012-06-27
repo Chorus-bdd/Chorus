@@ -2,6 +2,7 @@ package mismatchedcapturegroups;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 import org.junit.Test;
 
 /**
@@ -12,7 +13,7 @@ import org.junit.Test;
  */
 public class TestMismatchedCaptureGroups extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/multiplescenario";
+    final String featurePath = "src/test/features/mismatchedcapturegroups";
 
     final int expectedExitCode = 1;  //fail
 

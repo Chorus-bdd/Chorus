@@ -43,7 +43,14 @@ public class AbstractInterpreterTest extends Assert {
     protected ChorusSelfTestResults runFeature(String featurePath) throws IOException, InterruptedException {
         DefaultTestProperties sysProps = new DefaultTestProperties();
         sysProps.put("chorusFeaturePaths", featurePath);
+        doUpdateTestProperties(sysProps);
         return runChorusInterpreter(sysProps);
+    }
+
+    /**
+     * A test can override this method to modify the sys properties being used from the default set
+     */
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
     }
 
     protected ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) throws IOException, InterruptedException {

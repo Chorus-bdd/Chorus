@@ -17,18 +17,16 @@ public class MismatchedCaptureGroupsHandler {
     public void isWorkingProperly() {
     }
 
-    @Step("I can run a step in scenario (.*)")
-    public void canRunAStep(String parameter) {
+    @Step("I pass a parameter (.*) matched by a regex with one capture group but no method params")
+    public void canRunAStepMissingOneParam() {
     }
 
-    @Step("if a step fails")
-    public void ifAStepFails() {
-        throw new ChorusAssertionError("This step threw an exception to fail it");
+    @Step("I pass a parameter (.*) matched by a regex with (.*) capture groups but just one param")
+    public void canRunAStepMissingOneParam(String justOneParam) {
     }
 
     @Step("the subsequent steps are skipped")
     public void theSubsequentStepsAreSkipped() {
     }
-
 
 }
