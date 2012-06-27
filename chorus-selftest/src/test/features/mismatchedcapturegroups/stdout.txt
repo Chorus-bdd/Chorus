@@ -1,0 +1,23 @@
+Feature: Multiple Scenario                                                                           
+  Scenario: Simple Scenario One
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario one                                                    PASSED  
+    And if a step fails                                                                      FAILED  This step threw an exception to fail it
+    Then the subsequent steps are skipped                                                    SKIPPED 
+    But the next scenario still runs                                                         SKIPPED 
+  Scenario: Simple Scenario Two
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario two                                                    PASSED  
+    And if a step is not implemented                                                         UNDEFINED 
+    Then the subsequent steps are skipped                                                    SKIPPED 
+    But the next scenario still runs                                                         SKIPPED 
+  Scenario: Simple Scenario Three
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario three                                                  PASSED  
+  Scenario: Simple Scenario Four
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario four                                                   PASSED  
+
+
+Scenarios (total:4) (passed:2) (failed:2)
+Steps (total:14) (passed:8) (failed:1) (undefined:1) (pending:0) (skipped:4)
