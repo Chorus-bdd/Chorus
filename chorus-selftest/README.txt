@@ -14,4 +14,7 @@ Chorus has three main 'outputs' -
 
 If a non-default log provider is set, the log statements may be written elsewhere (i.e. not to standard err) - so all tests here use the default log implementation running at log level info (we don't bother validating debug or trace level logging)
 
-In summary, these tests are intended to validate Chrous's standard output, all log output at info level and above, and return codes in different situations
+In normal usage, chrous log level will default to WARN - this means the INFO level logging will not be visible in the console (although warnings and errors will be). It makes sense to validate the INFO level logging since increasing the log
+ level will probably be the first action if a user is trying to debug a failing test
+
+In summary, these tests are intended to validate Chrous's Standard output, all Standard error log output at info level and above, and return codes in different situations
