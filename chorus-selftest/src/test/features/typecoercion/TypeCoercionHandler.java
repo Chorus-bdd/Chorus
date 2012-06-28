@@ -18,12 +18,12 @@ public class TypeCoercionHandler {
 
     }
 
-    @Step("I can coerce a value (\\d) to an int")
+    @Step("I can coerce a value (.*) to an int")
     public int test(int val) {
         return val;
     }
 
-    @Step("I can coerce a value (\\d) to an Integer")
+    @Step("I can coerce a value (.*) to an Integer")
     public Integer test(Integer val) {
         return val;
     }
@@ -58,22 +58,22 @@ public class TypeCoercionHandler {
         return val;
     }
 
-    @Step("I can coerce a value (\\w) to a byte")
+    @Step("I can coerce a value (.*) to a byte")
     public byte test(byte val) {
         return val;
     }
 
-    @Step("I can coerce a value b to a Byte")
+    @Step("I can coerce a value (.*) to a Byte")
     public Byte test(Byte val) {
         return val;
     }
 
-    @Step("I can coerce a value a to a char")
+    @Step("I can coerce a value (.*) to a char")
     public char test(char val) {
         return val;
     }
 
-    @Step("I can coerce a value b to a Character")
+    @Step("I can coerce a value (.*) to a Character")
     public Character test(Character val) {
         return val;
     }

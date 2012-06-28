@@ -15,13 +15,13 @@ Feature: Type Coercion
     And I can coerce a value true to a Boolean
     And I can coerce a value FaLsE to a boolean
     And I can coerce a value tRuE to a Boolean
-    And I can coerce a value a to a byte
-    And I can coerce a value b to a Byte
+    And I can coerce a value 1 to a byte
+    And I can coerce a value 2 to a Byte
     And I can coerce a value a to a char
     And I can coerce a value b to a Character
 
   Scenario: Failed int conversion
-    Fail I can coerce a value wibble to an int primitive
+    Fail I can coerce a value wibble to an int
 
   Scenario: Failed int conversion from float value
     Fail I can coerce a value 1.2 to an int
@@ -30,9 +30,9 @@ Feature: Type Coercion
     Fail I can coerce a value wibble to a boolean
 
   Scenario: Failed byte conversion
-    Fail I can coerce a value ab to a byte
+    Fail I can coerce a value Z to a byte
 
   Scenario: Failed char conversion
-    Fail I can coerce a value cd to a char
+    Fail I can coerce a value Foxtrot to a char
 
 

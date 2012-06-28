@@ -11,3 +11,21 @@ Feature: Type Coercion
     And I can coerce a value true to a Boolean                                               PASSED  true
     And I can coerce a value FaLsE to a boolean                                              PASSED  false
     And I can coerce a value tRuE to a Boolean                                               PASSED  true
+    And I can coerce a value 1 to a byte                                                     PASSED  1
+    And I can coerce a value 2 to a Byte                                                     PASSED  2
+    And I can coerce a value a to a char                                                     PASSED  a
+    And I can coerce a value b to a Character                                                PASSED  b
+  Scenario: Failed int conversion
+    Fail I can coerce a value wibble to an int                                               UNDEFINED 
+  Scenario: Failed int conversion from float value
+    Fail I can coerce a value 1.2 to an int                                                  UNDEFINED 
+  Scenario: Failed boolean conversion
+    Fail I can coerce a value wibble to a boolean                                            UNDEFINED 
+  Scenario: Failed byte conversion
+    Fail I can coerce a value Z to a byte                                                    UNDEFINED 
+  Scenario: Failed char conversion
+    Fail I can coerce a value Foxtrot to a char                                              UNDEFINED 
+
+
+Scenarios (total:6) (passed:1) (failed:5)
+Steps (total:20) (passed:15) (failed:0) (undefined:5) (pending:0) (skipped:0)
