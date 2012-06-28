@@ -30,7 +30,14 @@ Feature: Type Coercion
     Ensure I can't coerce a value Z to a byte                                                UNDEFINED 
   Scenario: Failed char conversion
     Ensure I can't coerce a value Foxtrot to a char                                          UNDEFINED 
+  Scenario: Coercion to Object
+    Given Chorus is working properly                                                         PASSED  
+    Then the value false is converted to Boolean when the method parameter type is Object    PASSED  Boolean
+    And the value true is converted to Boolean when the method parameter type is Object      PASSED  Boolean
+    And the value 1.234 is converted to Double when the method parameter type is Object      PASSED  Double
+    And the value 1 is converted to Long when the method parameter type is Object            PASSED  Long
+    And the value AndThenThereWereThree is converted to String when the method parameter type is ObjectPASSED  String
 
 
-Scenarios (total:7) (passed:1) (failed:6)
-Steps (total:24) (passed:18) (failed:0) (undefined:6) (pending:0) (skipped:0)
+Scenarios (total:8) (passed:2) (failed:6)
+Steps (total:30) (passed:24) (failed:0) (undefined:6) (pending:0) (skipped:0)

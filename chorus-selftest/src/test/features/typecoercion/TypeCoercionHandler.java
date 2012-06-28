@@ -3,6 +3,7 @@ package typecoercion;
 import com.sun.org.apache.xpath.internal.operations.And;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
@@ -81,5 +82,12 @@ public class TypeCoercionHandler {
     @Step("I can(?:'t)? coerce the value (.*) to a GenesisAlbum")
     public GenesisAlbum test(GenesisAlbum a) {
         return a;
+    }
+
+    @Step("the value (.*) is converted to (.*) when the method parameter type is Object")
+    public String test(Object parameter, String expectedClassName) {
+        String actualClassName = parameter.getClass().getSimpleName();
+        ChorusAssert.assertEquals(actualClassName, expectedClassName);
+        return actualClassName;
     }
 }

@@ -41,4 +41,15 @@ Feature: Type Coercion
   Scenario: Failed char conversion
     Ensure I can't coerce a value Foxtrot to a char
 
+  #we have some rules which define which class to coerce when the param type is Object
+  #not sure why one wouldn't require a specific type - but let's enforce consistency since already in place
+  Scenario: Coercion to Object
+    Given Chorus is working properly
+    Then the value false is converted to Boolean when the method parameter type is Object
+    And the value true is converted to Boolean when the method parameter type is Object
+    And the value 1.234 is converted to Double when the method parameter type is Object
+    And the value 1 is converted to Long when the method parameter type is Object
+    And the value AndThenThereWereThree is converted to String when the method parameter type is Object
+
+
 

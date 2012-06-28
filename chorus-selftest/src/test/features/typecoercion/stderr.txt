@@ -12,3 +12,4 @@ ChorusInterpreter         --> INFO    - Processing scenario: Failed byte convers
 RegexpUtils               --> INFO    - Matched step but could not coerce Z to type byte
 ChorusInterpreter         --> INFO    - Processing scenario: Failed char conversion
 RegexpUtils               --> INFO    - Matched step but could not coerce Foxtrot to type char
+ChorusInterpreter         --> INFO    - Processing scenario: Coercion to Object
