@@ -18,63 +18,68 @@ public class TypeCoercionHandler {
 
     }
 
-    @Step("I can coerce a value (.*) to an int")
+    @Step("I can(?:'t)? coerce a value (.*) to an int")
     public int test(int val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to an Integer")
+    @Step("I can(?:'t)? coerce a value (.*) to an Integer")
     public Integer test(Integer val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a double")
+    @Step("I can(?:'t)? coerce a value (.*) to a double")
     public double test(double val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a Double")
+    @Step("I can(?:'t)? coerce a value (.*) to a Double")
     public Double test(Double val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a String")
+    @Step("I can(?:'t)? coerce a value (.*) to a String")
     public String test(String val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a StringBuffer")
+    @Step("I can(?:'t)? coerce a value (.*) to a StringBuffer")
     public StringBuffer test(StringBuffer val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a boolean")
+    @Step("I can(?:'t)? coerce a value (.*) to a boolean")
     public boolean test(boolean val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a Boolean")
+    @Step("I can(?:'t)? coerce a value (.*) to a Boolean")
     public Boolean test(Boolean val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a byte")
+    @Step("I can(?:'t)? coerce a value (.*) to a byte")
     public byte test(byte val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a Byte")
+    @Step("I can(?:'t)? coerce a value (.*) to a Byte")
     public Byte test(Byte val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a char")
+    @Step("I can(?:'t)? coerce a value (.*) to a char")
     public char test(char val) {
         return val;
     }
 
-    @Step("I can coerce a value (.*) to a Character")
+    @Step("I can(?:'t)? coerce a value (.*) to a Character")
     public Character test(Character val) {
         return val;
+    }
+
+    @Step("I can(?:'t)? coerce the value (.*) to a GenesisAlbum")
+    public GenesisAlbum test(GenesisAlbum a) {
+        return a;
     }
 }

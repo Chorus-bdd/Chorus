@@ -15,17 +15,22 @@ Feature: Type Coercion
     And I can coerce a value 2 to a Byte                                                     PASSED  2
     And I can coerce a value a to a char                                                     PASSED  a
     And I can coerce a value b to a Character                                                PASSED  b
+  Scenario: Enum Value Coercion
+    Given Chorus is working properly                                                         PASSED  
+    Then I can coerce the value Genesis to a GenesisAlbum                                    PASSED  Genesis
+    And I can coerce the value Trespass to a GenesisAlbum                                    PASSED  Trespass
+    But I can't coerce the value Quadrophenia to a GenesisAlbum                              UNDEFINED 
   Scenario: Failed int conversion
-    Fail I can coerce a value wibble to an int                                               UNDEFINED 
+    Ensure I can't coerce a value wibble to an int                                           UNDEFINED 
   Scenario: Failed int conversion from float value
-    Fail I can coerce a value 1.2 to an int                                                  UNDEFINED 
+    Ensure I can't coerce a value 1.2 to an int                                              UNDEFINED 
   Scenario: Failed boolean conversion
-    Fail I can coerce a value wibble to a boolean                                            UNDEFINED 
+    Ensure I can't coerce a value wibble to a boolean                                        UNDEFINED 
   Scenario: Failed byte conversion
-    Fail I can coerce a value Z to a byte                                                    UNDEFINED 
+    Ensure I can't coerce a value Z to a byte                                                UNDEFINED 
   Scenario: Failed char conversion
-    Fail I can coerce a value Foxtrot to a char                                              UNDEFINED 
+    Ensure I can't coerce a value Foxtrot to a char                                          UNDEFINED 
 
 
-Scenarios (total:6) (passed:1) (failed:5)
-Steps (total:20) (passed:15) (failed:0) (undefined:5) (pending:0) (skipped:0)
+Scenarios (total:7) (passed:1) (failed:6)
+Steps (total:24) (passed:18) (failed:0) (undefined:6) (pending:0) (skipped:0)

@@ -20,19 +20,25 @@ Feature: Type Coercion
     And I can coerce a value a to a char
     And I can coerce a value b to a Character
 
+  Scenario: Enum Value Coercion
+    Given Chorus is working properly
+    Then I can coerce the value Genesis to a GenesisAlbum
+    And I can coerce the value Trespass to a GenesisAlbum
+    But I can't coerce the value Quadrophenia to a GenesisAlbum
+
   Scenario: Failed int conversion
-    Fail I can coerce a value wibble to an int
+    Ensure I can't coerce a value wibble to an int
 
   Scenario: Failed int conversion from float value
-    Fail I can coerce a value 1.2 to an int
+    Ensure I can't coerce a value 1.2 to an int
 
   Scenario: Failed boolean conversion
-    Fail I can coerce a value wibble to a boolean
+    Ensure I can't coerce a value wibble to a boolean
 
   Scenario: Failed byte conversion
-    Fail I can coerce a value Z to a byte
+    Ensure I can't coerce a value Z to a byte
 
   Scenario: Failed char conversion
-    Fail I can coerce a value Foxtrot to a char
+    Ensure I can't coerce a value Foxtrot to a char
 
 
