@@ -125,7 +125,7 @@ public class JmxHandler {
             }
 
             //see if this method will do
-            Object[] args = RegexpUtils.extractGroups(regex, action, types);
+            Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, types);
             if (args != null) {
                 if (methodUidToCall == null) {
                     methodUidToCall = methodUid;

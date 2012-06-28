@@ -98,7 +98,7 @@ class StepDefinitionMethodFinder {
         String regex = stepAnnotationInstance.value();
         String action = step.getAction();
 
-        Object[] values = RegexpUtils.extractGroups(regex, action, method.getParameterTypes());
+        Object[] values = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, method.getParameterTypes());
         if (values != null) { //the regexp matched the action and the method's parameters
             if (methodToCall == null) {
                 methodToCall = method;

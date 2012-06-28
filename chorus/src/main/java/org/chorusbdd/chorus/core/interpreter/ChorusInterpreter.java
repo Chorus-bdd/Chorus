@@ -321,7 +321,10 @@ public class ChorusInterpreter {
                     } else {
                         try {
                             //call the step method using reflection
-                            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(stepDefinitionMethodFinder.getInstanceToCallOn(), stepDefinitionMethodFinder.getMethodCallArgs());
+                            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
+                                stepDefinitionMethodFinder.getInstanceToCallOn(),
+                                stepDefinitionMethodFinder.getMethodCallArgs()
+                            );
                             if (result != null) {
                                 step.setMessage(result.toString());
                             }

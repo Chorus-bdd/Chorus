@@ -1,0 +1,13 @@
+Feature: Type Coercion                                                                               
+  Scenario: Successful Single Value Coercion
+    Given Chorus is working properly                                                         PASSED  
+    Then I can coerce a value 1 to an int                                                    PASSED  1
+    And I can coerce a value 2 to an Integer                                                 PASSED  2
+    And I can coerce a value 3.12345 to a double                                             PASSED  3.12345
+    And I can coerce a value 4.12345 to a Double                                             PASSED  4.12345
+    And I can coerce a value Duke to a String                                                PASSED  Duke
+    And I can coerce a value Abacab to a StringBuffer                                        PASSED  Abacab
+    And I can coerce a value false to a boolean                                              PASSED  false
+    And I can coerce a value true to a Boolean                                               PASSED  true
+    And I can coerce a value FaLsE to a boolean                                              PASSED  false
+    And I can coerce a value tRuE to a Boolean                                               PASSED  true
