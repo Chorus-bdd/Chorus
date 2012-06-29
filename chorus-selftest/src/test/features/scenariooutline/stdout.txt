@@ -1,0 +1,41 @@
+Feature: Scenario Outline                                                                            
+  Scenario: Simple Scenario [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value A Long Value                                            PASSED  A Long Value
+    And I can run a step with numeric value 100                                              PASSED  100.0
+    And I can run a step with value valc and vald                                            PASSED  valc and vald
+    And value e is not used                                                                  PASSED  
+  Scenario: Simple Scenario [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value B Long Value                                            PASSED  B Long Value
+    And I can run a step with numeric value 200                                              PASSED  200.0
+    And I can run a step with value valc2 and vald2                                          PASSED  valc2 and vald2
+    And value e is not used                                                                  PASSED  
+  Scenario: Simple Scenario [3]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value C Long Value                                            PASSED  C Long Value
+    And I can run a step with numeric value 300                                              PASSED  300.0
+    And I can run a step with value valc3 and vald3                                          PASSED  valc3 and vald3
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario with bad examples formatting [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value A Long Value                                            PASSED  A Long Value
+    And I can run a step with numeric value 100                                              PASSED  100.0
+    And I can run a step with value valc and vald                                            PASSED  valc and vald
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario with bad examples formatting [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value B Long Value                                            PASSED  B Long Value
+    And I can run a step with numeric value 200                                              PASSED  200.0
+    And I can run a step with value valc2 and vald2                                          PASSED  valc2 and vald2
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario with bad examples formatting [3]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value C Long Value                                            PASSED  C Long Value
+    And I can run a step with numeric value 300                                              PASSED  300.0
+    And I can run a step with value valc3 and vald3                                          PASSED  valc3 and vald3
+    And value e is not used                                                                  PASSED  
+
+
+Scenarios (total:6) (passed:6) (failed:0)
+Steps (total:30) (passed:30) (failed:0) (undefined:0) (pending:0) (skipped:0)

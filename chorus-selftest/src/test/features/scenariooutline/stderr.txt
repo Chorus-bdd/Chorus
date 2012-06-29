@@ -1,0 +1,7 @@
+Chorus --> INFO    - Loaded feature file: src/test/features/scenariooutline/scenariooutline.feature
+Chorus --> INFO    - Processing scenario: Simple Scenario [1]
+Chorus --> INFO    - Processing scenario: Simple Scenario [2]
+Chorus --> INFO    - Processing scenario: Simple Scenario [3]
+Chorus --> INFO    - Processing scenario: Scenario with bad examples formatting [1]
+Chorus --> INFO    - Processing scenario: Scenario with bad examples formatting [2]
+Chorus --> INFO    - Processing scenario: Scenario with bad examples formatting [3]
