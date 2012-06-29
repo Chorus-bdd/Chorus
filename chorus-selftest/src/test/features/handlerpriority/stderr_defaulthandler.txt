@@ -1,7 +1,7 @@
-ChorusInterpreter         --> INFO    - Loaded feature file: src/test/features/handlerpriority/handlerpriority_defaulthandler.feature
-ChorusInterpreter         --> INFO    - Processing scenario: Simple Scenario
-StepDefinitionMethodFinder --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
-StepDefinitionMethodFinder --> WARN    - Ambiguous method (HandlerPriorityHandlerThree.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
-StepDefinitionMethodFinder --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
-StepDefinitionMethodFinder --> WARN    - Ambiguous method (HandlerPriorityHandlerThree.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
-StepDefinitionMethodFinder --> WARN    - Ambiguous method (HandlerPriorityHandlerThree.stepsInJustTwoAndThree) found for step (And steps in just handler two and three should be handled by Handler Priority Two) will use first method found (HandlerPriorityHandlerTwo.stepsInJustTwoAndThree)
+Chorus --> INFO    - Loaded feature file: src/test/features/handlerpriority/handlerpriority_defaulthandler.feature
+Chorus --> INFO    - Processing scenario: Simple Scenario
+Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
+Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerThree.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
+Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
+Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerThree.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
+Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerThree.stepsInJustTwoAndThree) found for step (And steps in just handler two and three should be handled by Handler Priority Two) will use first method found (HandlerPriorityHandlerTwo.stepsInJustTwoAndThree)

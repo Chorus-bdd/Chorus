@@ -1,15 +1,15 @@
-ChorusInterpreter         --> INFO    - Loaded feature file: src/test/features/typecoercion/typecoercion.feature
-ChorusInterpreter         --> INFO    - Processing scenario: Successful Single Value Coercion
-ChorusInterpreter         --> INFO    - Processing scenario: Enum Value Coercion
-RegexpUtils               --> INFO    - Matched step but could not coerce Quadrophenia to type class typecoercion.GenesisAlbum
-ChorusInterpreter         --> INFO    - Processing scenario: Failed int conversion
-RegexpUtils               --> INFO    - Matched step but could not coerce wibble to type int
-ChorusInterpreter         --> INFO    - Processing scenario: Failed int conversion from float value
-RegexpUtils               --> INFO    - Matched step but could not coerce 1.2 to type int
-ChorusInterpreter         --> INFO    - Processing scenario: Failed boolean conversion
-RegexpUtils               --> INFO    - Matched step but could not coerce wibble to type boolean
-ChorusInterpreter         --> INFO    - Processing scenario: Failed byte conversion
-RegexpUtils               --> INFO    - Matched step but could not coerce Z to type byte
-ChorusInterpreter         --> INFO    - Processing scenario: Failed char conversion
-RegexpUtils               --> INFO    - Matched step but could not coerce Foxtrot to type char
-ChorusInterpreter         --> INFO    - Processing scenario: Coercion to Object
+Chorus --> INFO    - Loaded feature file: src/test/features/typecoercion/typecoercion.feature
+Chorus --> INFO    - Processing scenario: Successful Single Value Coercion
+Chorus --> INFO    - Processing scenario: Enum Value Coercion
+Chorus --> INFO    - Matched step but could not coerce Quadrophenia to type class typecoercion.GenesisAlbum
+Chorus --> INFO    - Processing scenario: Failed int conversion
+Chorus --> INFO    - Matched step but could not coerce wibble to type int
+Chorus --> INFO    - Processing scenario: Failed int conversion from float value
+Chorus --> INFO    - Matched step but could not coerce 1.2 to type int
+Chorus --> INFO    - Processing scenario: Failed boolean conversion
+Chorus --> INFO    - Matched step but could not coerce wibble to type boolean
+Chorus --> INFO    - Processing scenario: Failed byte conversion
+Chorus --> INFO    - Matched step but could not coerce Z to type byte
+Chorus --> INFO    - Processing scenario: Failed char conversion
+Chorus --> INFO    - Matched step but could not coerce Foxtrot to type char
+Chorus --> INFO    - Processing scenario: Coercion to Object

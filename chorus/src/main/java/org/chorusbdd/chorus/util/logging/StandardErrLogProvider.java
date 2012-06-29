@@ -184,11 +184,17 @@ class StandardErrLogProvider implements ChorusLogProvider {
          * interpreter execution which are written to System.out
          */
         private void logOut(String type, Object message) {
-            System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+            //and don't want refactoring the code to break tests if log statements move class
+            //System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            System.err.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
         private void logErr(String type, Object message) {
-            System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+            //and don't want refactoring the code to break tests if log statements move class
+            //System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            System.err.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
         private static enum LogLevel {
