@@ -28,7 +28,7 @@ public class FeatureScanner {
                 }
             } else {
                 System.err.printf("Cannot find file or directory named: %s %n", featureFileName);
-                System.exit(-1);
+                System.exit(1);
             }
         }
         return result;
