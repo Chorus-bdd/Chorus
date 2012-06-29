@@ -1,0 +1,3 @@
+
+Scenarios (total:0) (passed:0) (failed:0)
+Steps (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)

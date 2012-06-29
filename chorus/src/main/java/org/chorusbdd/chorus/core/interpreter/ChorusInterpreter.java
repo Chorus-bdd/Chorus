@@ -90,7 +90,6 @@ public class ChorusInterpreter {
 
 
     public List<FeatureToken> processFeatures(ExecutionToken executionToken, List<File> featureFiles) throws Exception {
-        //identifies this execution, in case we have parallel or subsequent executions
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //load all available feature classes
@@ -101,20 +100,26 @@ public class ChorusInterpreter {
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
             ChorusParser parser = new ChorusParser();
-            List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
-            filterFeaturesByScenarioTags(features);
+            try {
+                List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
-            //RUN EACH FEATURE
-            for (FeatureToken feature : features) {
-                processFeature(
-                    executionToken,
-                    allFeatures,
-                    allHandlerClasses,
-                    unmanagedHandlerInstances,
-                    featureFile,
-                    feature
-                );
+                filterFeaturesByScenarioTags(features);
+
+                //RUN EACH FEATURE
+                for (FeatureToken feature : features) {
+                    processFeature(
+                        executionToken,
+                        allFeatures,
+                        allHandlerClasses,
+                        unmanagedHandlerInstances,
+                        featureFile,
+                        feature
+                    );
+                }
+            } catch (Exception e) {
+                log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
+                log.warn(e.getMessage());
             }
         }
         return allFeatures;
