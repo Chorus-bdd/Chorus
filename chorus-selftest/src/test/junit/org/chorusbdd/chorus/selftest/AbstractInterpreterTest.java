@@ -21,22 +21,31 @@ public class AbstractInterpreterTest extends Assert {
         testResults.preProcessForTests();
         expectedResults.preProcessForTests();
 
+        System.out.println("\n\nSummary:\n");
+
+        //show differences where appropriate
         diffAssertEquals("exit code", expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
         diffAssertEquals("std out", expectedResults.getStandardOutput(), testResults.getStandardOutput());
         diffAssertEquals("std err", expectedResults.getStandardError(), testResults.getStandardError());
+
+        //now actually fail the test if appropriate
+        assertEquals(expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
+        assertEquals(expectedResults.getStandardOutput(), testResults.getStandardOutput());
+        assertEquals(expectedResults.getStandardError(), testResults.getStandardError());
+
+        try {
+            Thread.sleep(25);  //prevent output being confused by junit plugin with next test
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     //assert equal with more difference information
     private void diffAssertEquals(String s, Object expected, Object actual) {
         if ( ! expected.equals(actual)) {
-            System.err.println("Unexpected difference in " + s);
-            System.err.println("Expected: [" + expected.toString() + "]\n\n");
-            System.err.println("Actual: [" + actual.toString() + "]\n\n");
-            if ( expected instanceof String) {
-                assertEquals(s, (String)expected, (String)actual);
-            } else {
-                assertEquals(s, expected, actual);
-            }
+            System.out.println("Unexpected difference in " + s);
+            System.out.println("Expected: [" + expected.toString() + "]\n");
+            System.out.println("Actual: [" + actual.toString() + "]\n");
         }
     }
 
@@ -90,8 +99,8 @@ public class AbstractInterpreterTest extends Assert {
         ByteArrayOutputStream interpreterErr = new ByteArrayOutputStream();
 
         Process process = Runtime.getRuntime().exec(command);
-        ProcessesHandler.ProcessRedirector outRedirector = new ProcessesHandler.ProcessRedirector(process.getInputStream(), new PrintStream(interpreterOut), false);
-        ProcessesHandler.ProcessRedirector errRedirector = new ProcessesHandler.ProcessRedirector(process.getErrorStream(), new PrintStream(interpreterErr), false);
+        ProcessesHandler.ProcessRedirector outRedirector = new ProcessesHandler.ProcessRedirector(process.getInputStream(), false, new PrintStream(interpreterOut), System.out);  //dumping both to out
+        ProcessesHandler.ProcessRedirector errRedirector = new ProcessesHandler.ProcessRedirector(process.getErrorStream(), false, new PrintStream(interpreterErr), System.out);  //tend to get more consistent ordering
 
         Thread outThread = new Thread(outRedirector, "interpreter-stdout");
         outThread.setDaemon(true);

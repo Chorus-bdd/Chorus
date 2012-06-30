@@ -1,5 +1,0 @@
-Chorus --> INFO    - Loaded feature file: src/test/features/mismatchedcapturegroups/mismatchedcapturegroups.feature
-Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params One
-Chorus --> WARN    - Number of method parameters does not match regex groups
-Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params Two
-Chorus --> WARN    - Number of method parameters does not match regex groups

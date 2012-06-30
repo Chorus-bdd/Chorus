@@ -14,7 +14,7 @@ public class DefaultTestProperties extends Properties {
 
     public DefaultTestProperties() {
         //test output at log level info using chorus built in log provider
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.StandardErrLogProvider");
+        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.StandardOutLogProvider");
         put("chorusLogLevel", "info");
     }
 }

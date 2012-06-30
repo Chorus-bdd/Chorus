@@ -132,7 +132,7 @@ public class JmxHandler {
                     methodUidToCallPendingMessage = pending;
                     methodArgsToPass = args;
                 } else {
-                    log.warn(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
+                    log.info(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
                             methodUid,
                             action,
                             componentName,

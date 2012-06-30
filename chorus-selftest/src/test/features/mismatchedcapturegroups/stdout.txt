@@ -1,13 +1,19 @@
 Feature: Mismatched Capture Groups                                                                   
+Chorus --> INFO    - Loaded feature file: src/test/features/mismatchedcapturegroups/mismatchedcapturegroups.feature
   Scenario: Mismatched Capture Groups Params One
+Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params One
     Given Chorus is working properly                                                         PASSED  
+Chorus --> WARN    - Number of method parameters does not match regex groups
     And I pass a parameter 10 matched by a regex with one capture group but no method params UNDEFINED 
     Then the subsequent steps fail                                                           SKIPPED 
   Scenario: Mismatched Capture Groups Params Two
+Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params Two
     Given Chorus is working properly                                                         PASSED  
+Chorus --> WARN    - Number of method parameters does not match regex groups
     And I pass a parameter 10 matched by a regex with 2 capture groups but just one param    UNDEFINED 
     Then the subsequent steps fail                                                           SKIPPED 
 
 
+Features  (total:1) (passed:0) (failed:1)
 Scenarios (total:2) (passed:0) (failed:2)
-Steps (total:6) (passed:2) (failed:0) (undefined:2) (pending:0) (skipped:2)
+Steps     (total:6) (passed:2) (failed:0) (undefined:2) (pending:0) (skipped:2)

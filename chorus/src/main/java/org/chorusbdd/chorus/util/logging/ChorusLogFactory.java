@@ -78,7 +78,7 @@ public class ChorusLogFactory {
     }
 
     private static ChorusLogProvider createStandardErrLogProvider() {
-        return new StandardErrLogProvider();
+        return new StandardOutLogProvider();
     }
 
     private static ChorusLogProvider createCommonsLogFactoryProvider(ChorusLogProvider result) {

@@ -54,6 +54,7 @@ public class Main {
     private final ChorusConfig baseConfig;
 
     public static void main(String[] args) throws Exception {
+
         boolean success = false;
         try {
             Main main = new Main(args);
@@ -67,9 +68,9 @@ public class Main {
         //(windows supports signed integer exit status, unix does not)
         //choosing the most obvious, 0 = success, 1 = failure, we could expand on this if needed
         int exitCode = success ? 0 : 1;
-        System.out.println("Exiting with:" + exitCode);
         System.exit(exitCode);
     }
+
 
     public Main(String[] args) throws InterpreterPropertyException {
         baseConfig = new ChorusConfig(args);

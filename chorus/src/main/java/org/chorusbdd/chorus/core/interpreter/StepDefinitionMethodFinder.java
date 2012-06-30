@@ -106,7 +106,7 @@ class StepDefinitionMethodFinder {
                 methodToCallPendingMessage = stepAnnotationInstance.pending();
                 instanceToCallOn = instance;
             } else {
-                log.warn(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
+                log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
                         instance.getClass().getSimpleName(),
                         method.getName(),
                         step,

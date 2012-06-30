@@ -1,6 +1,7 @@
 Feature: Scenario Outline With Wrong Value Count
 
  Test that a parsing fails when the wong number of values is supplied
+ This should mean that in the test summary we end with 1 'failed' feature and the exit status is fail
 
  Scenario-Outline: Scenario Outline with wrong value count
     Given Chorus is working properly

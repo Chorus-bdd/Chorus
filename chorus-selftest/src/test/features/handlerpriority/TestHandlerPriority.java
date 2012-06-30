@@ -12,12 +12,12 @@ import org.junit.Test;
  */
 public class TestHandlerPriority extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/handlerpriority/handlerpriority_defaulthandler.feature";
+    final String featurePath = "src/test/features/handlerpriority/handlerpriority.feature";
 
     final int expectedExitCode = 0;  //pass
 
-    final String standardOutput = readToString(TestHandlerPriority.class, "stdout_defaulthandler.txt");
-    final String standardError = readToString(TestHandlerPriority.class, "stderr_defaulthandler.txt");
+    final String standardOutput = readToString(TestHandlerPriority.class, "stdout.txt");
+    final String standardError = readToString(TestHandlerPriority.class, "stderr.txt");
 
     @Test
     public void runTest() throws Exception {

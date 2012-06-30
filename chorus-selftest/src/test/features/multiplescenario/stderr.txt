@@ -1,5 +1,0 @@
-Chorus --> INFO    - Loaded feature file: src/test/features/multiplescenario/multiplescenario.feature
-Chorus --> INFO    - Processing scenario: Simple Scenario One
-Chorus --> INFO    - Processing scenario: Simple Scenario Two
-Chorus --> INFO    - Processing scenario: Simple Scenario Three
-Chorus --> INFO    - Processing scenario: Simple Scenario Four

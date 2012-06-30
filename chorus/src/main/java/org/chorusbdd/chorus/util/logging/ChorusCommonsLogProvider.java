@@ -49,10 +49,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ChorusCommonsLogProvider implements ChorusLogProvider {
 
-    static {
-        System.out.println("Loading Chorus Commons Logger");
-    }
-
     public ChorusLog getLog(Class clazz) {
         Log log = LogFactory.getLog(clazz);
         return new ChorusCommonsLog(log);

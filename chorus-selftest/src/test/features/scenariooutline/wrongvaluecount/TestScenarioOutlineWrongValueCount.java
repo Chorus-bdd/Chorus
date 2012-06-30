@@ -14,7 +14,7 @@ public class TestScenarioOutlineWrongValueCount extends AbstractInterpreterTest 
 
     final String featurePath = "src/test/features/scenariooutline/wrongvaluecount/wrongvaluecount.feature";
 
-    final int expectedExitCode = 0;  //fail
+    final int expectedExitCode = 1;  //fail
 
     final String standardOutput = readToString(TestScenarioOutlineWrongValueCount.class, "stdout.txt");
     final String standardError = readToString(TestScenarioOutlineWrongValueCount.class, "stderr.txt");

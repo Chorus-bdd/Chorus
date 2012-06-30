@@ -1,5 +1,7 @@
 Feature: Failed Step                                                                                 
+Chorus --> INFO    - Loaded feature file: src/test/features/failedstep/failedstep.feature
   Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
     Given Chorus is working properly                                                         PASSED  
     Then I can run a feature with a single scenario                                          PASSED  
     And if a step fails                                                                      FAILED  This step threw an exception to fail it

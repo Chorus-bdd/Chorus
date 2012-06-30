@@ -1,6 +1,0 @@
-Chorus --> INFO    - Loaded feature file: src/test/features/handlerpriority/handlerpriority_nodefaulthandler.feature
-Chorus --> INFO    - No explicit handler was found for Feature: (Handler Priority No Default Handler), will only use those specified in the Uses statements
-Chorus --> INFO    - Processing scenario: Simple Scenario
-Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandlerThree.isWorkingProperly)
-Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority Three) will use first method found (HandlerPriorityHandlerThree.stepsInAllThreeHandlers)
-Chorus --> WARN    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInJustTwoAndThree) found for step (And steps in just handler two and three should be handled by Handler Priority Three) will use first method found (HandlerPriorityHandlerThree.stepsInJustTwoAndThree)

@@ -349,16 +349,16 @@ public class ProcessesHandler {
         public ChildProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
             this.process = Runtime.getRuntime().exec(command);
             if (null == stdoutLogPath) {
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), System.out, false);
+                this.outRedirector = new ProcessRedirector(process.getInputStream(), false, System.out);
             } else {
                 PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath));
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), out, true);
+                this.outRedirector = new ProcessRedirector(process.getInputStream(), true, out);
             }
             if (null == stderrLogPath) {
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), System.err, false);
+                this.errRedirector = new ProcessRedirector(process.getErrorStream(), false, System.err);
             } else {
                 PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath));
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), err, true);
+                this.errRedirector = new ProcessRedirector(process.getErrorStream(), true, err);
             }
             Thread outThread = new Thread(outRedirector, name + "-stdout");
             outThread.setDaemon(true);
@@ -383,10 +383,10 @@ public class ProcessesHandler {
 
     public static class ProcessRedirector implements Runnable {
         private BufferedInputStream in;
-        private PrintStream out;
+        private PrintStream[] out;
         private boolean closeOnExit;
 
-        public ProcessRedirector(InputStream in, PrintStream out, boolean closeOnExit) {
+        public ProcessRedirector(InputStream in, boolean closeOnExit, PrintStream... out) {
             this.closeOnExit = closeOnExit;
             this.in = new BufferedInputStream(in);
             this.out = out;
@@ -398,15 +398,19 @@ public class ProcessesHandler {
                 int x = 0;
                 try {
                     while ((x = in.read(buf)) != -1) {
-                        if (null != out) {
-                            out.write(buf, 0, x);
+                        for ( PrintStream s : out) {
+                            s.write(buf, 0, x);
                         }
                     }
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } finally {
-                out.flush();
-                if ( closeOnExit ) {
-                    out.close();
+                for ( PrintStream s : out) {
+                    s.flush();
+                    if ( closeOnExit ) {
+                        s.close();
+                    }
                 }
             }
         }

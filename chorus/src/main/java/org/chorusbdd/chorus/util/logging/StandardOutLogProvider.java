@@ -36,7 +36,7 @@ package org.chorusbdd.chorus.util.logging;
 * Time: 11:50
 * To change this template use File | Settings | File Templates.
 */
-class StandardErrLogProvider implements ChorusLogProvider {
+class StandardOutLogProvider implements ChorusLogProvider {
 
     public ChorusLog getLog(Class clazz) {
         return new StandardOutLog(clazz);
@@ -186,15 +186,13 @@ class StandardErrLogProvider implements ChorusLogProvider {
         private void logOut(String type, Object message) {
             //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
             //and don't want refactoring the code to break tests if log statements move class
-            //System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
-            System.err.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+            System.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
         private void logErr(String type, Object message) {
             //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
             //and don't want refactoring the code to break tests if log statements move class
-            //System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
-            System.err.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+            System.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
         private static enum LogLevel {
