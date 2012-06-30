@@ -120,6 +120,10 @@ public class ChorusInterpreter {
             } catch (Exception e) {
                 log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
                 log.warn(e.getMessage());
+
+                //in fact the feature file might contain more than one feature although this is probably a bad practice-
+                // we can't know if parsing failed, best we can do is increment failed by one
+                executionToken.incrementFeaturesFailed();
             }
         }
         return allFeatures;
@@ -135,8 +139,51 @@ public class ChorusInterpreter {
         log.info(String.format("Loaded feature file: %s", featureFile));
 
         //check that the required handler classes are all available and list them in order of precidence
-        StringBuilder unavailableHandlersMessage = new StringBuilder();
         List<Class> orderedHandlerClasses = new ArrayList<Class>();
+        StringBuilder unavailableHandlersMessage = findHandlerClasses(allHandlerClasses, feature, orderedHandlerClasses);
+        boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
+
+        //run the scenarios in the feature
+        if (foundAllHandlerClasses) {
+            runScenarios(executionToken, unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses);
+            if ( feature.isPassed()) {
+                executionToken.incrementFeaturesPassed();
+            } else {
+                executionToken.incrementFeaturesFailed();
+            }
+        } else {
+            feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
+            executionToken.incrementUnavailableHandlers();
+            executionToken.incrementFeaturesFailed();
+        }
+
+        executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
+    }
+
+    private void runScenarios(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses) throws Exception {
+        //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
+        List<Object> handlerInstances = new ArrayList<Object>();
+        //FOR EACH SCENARIO
+        List<ScenarioToken> scenarios = feature.getScenarios();
+        for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
+            ScenarioToken scenario = iterator.next();
+            boolean isLastScenario = !iterator.hasNext();
+
+            processScenario(
+                executionToken,
+                unmanagedHandlerInstances,
+                featureFile,
+                feature,
+                orderedHandlerClasses,
+                handlerInstances,
+                isLastScenario,
+                scenario
+            );
+        }
+    }
+
+    private StringBuilder findHandlerClasses(HashMap<String, Class> allHandlerClasses, FeatureToken feature, List<Class> orderedHandlerClasses) {
+        StringBuilder unavailableHandlersMessage = new StringBuilder();
         Class mainHandlerClass = allHandlerClasses.get(feature.getName());
         if (mainHandlerClass == null) {
             log.info(String.format("No explicit handler was found for Feature: (%s), will only use those specified in the Uses statements",
@@ -160,36 +207,7 @@ public class ChorusInterpreter {
                 orderedHandlerClasses.add(usesHandlerClass);
             }
         }
-        boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
-
-        //run the scenarios in the feature
-        if (foundAllHandlerClasses) {
-
-            //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
-            List<Object> handlerInstances = new ArrayList<Object>();
-            //FOR EACH SCENARIO
-            List<ScenarioToken> scenarios = feature.getScenarios();
-            for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
-                ScenarioToken scenario = iterator.next();
-                boolean isLastScenario = !iterator.hasNext();
-
-                processScenario(
-                    executionToken,
-                    unmanagedHandlerInstances,
-                    featureFile,
-                    feature,
-                    orderedHandlerClasses,
-                    handlerInstances,
-                    isLastScenario,
-                    scenario
-                );
-            }
-        } else {
-            feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
-            executionToken.incrementUnavailableHandlers();
-        }
-
-        executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
+        return unavailableHandlersMessage;
     }
 
     private void processScenario(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
@@ -202,9 +220,9 @@ public class ChorusInterpreter {
 
         addHandlerInstances(unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses, handlerInstances);
 
-        boolean scenarioPassed = runScenarioSteps(executionToken, handlerInstances, scenario);
+        runScenarioSteps(executionToken, handlerInstances, scenario);
 
-        if ( scenarioPassed ) {
+        if ( scenario.isPassed() ) {
             executionToken.incrementScenariosPassed();
         } else {
             executionToken.incrementScenariosFailed();

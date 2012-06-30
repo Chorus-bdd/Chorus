@@ -6,5 +6,6 @@ Feature: Handler Priority
     And steps in just handler two should be handled by Handler Priority Two                  PASSED  
 
 
+Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:1) (passed:1) (failed:0)
-Steps (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

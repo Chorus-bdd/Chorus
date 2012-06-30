@@ -6,5 +6,6 @@ Feature: Failed Step
     Then the subsequent step is skipped                                                      SKIPPED 
 
 
+Features  (total:1) (passed:0) (failed:1)
 Scenarios (total:1) (passed:0) (failed:1)
-Steps (total:4) (passed:2) (failed:1) (undefined:0) (pending:0) (skipped:1)
+Steps     (total:4) (passed:2) (failed:1) (undefined:0) (pending:0) (skipped:1)

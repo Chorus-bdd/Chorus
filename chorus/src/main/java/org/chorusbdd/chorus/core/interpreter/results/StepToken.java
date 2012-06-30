@@ -107,8 +107,7 @@ public class StepToken extends AbstractToken implements Token {
     }
 
     public boolean isPassed() {
-        //this means 'dry run' also counts as passed
-        return endState != StepEndState.FAILED;
+        return endState == StepEndState.PASSED || endState == StepEndState.DRYRUN;
     }
 
     @Override

@@ -44,6 +44,9 @@ public class ResultsSummary extends AbstractToken implements Token {
 
     private static final long serialVersionUID = 2;
 
+    private int featuresPassed = 0;
+    private int featuresFailed = 0;
+
     //stats
     private int scenariosPassed = 0;
     private int scenariosFailed = 0;
@@ -77,6 +80,22 @@ public class ResultsSummary extends AbstractToken implements Token {
 
     public void incrementScenariosFailed() {
         scenariosFailed++;
+    }
+
+    public int getFeaturesPassed() {
+       return featuresPassed;
+    }
+
+    public void incrementFeaturesPassed() {
+       featuresPassed++;
+    }
+
+    public int getFeaturesFailed() {
+       return featuresFailed;
+    }
+
+    public void incrementFeaturesFailed() {
+       featuresFailed++;
     }
 
     public int getUnavailableHandlers() {
@@ -142,11 +161,15 @@ public class ResultsSummary extends AbstractToken implements Token {
     }
 
     public boolean isPassed() {
-        return stepsFailed == 0;
+        return featuresFailed == 0;
     }
 
     public ResultsSummary deepCopy() {
         ResultsSummary s = new ResultsSummary(getTokenId());
+
+        s.featuresFailed = featuresFailed;
+        s.featuresPassed = featuresPassed;
+
         s.scenariosPassed = scenariosPassed;
         s.scenariosFailed = scenariosFailed;
         s.unavailableHandlers = unavailableHandlers;

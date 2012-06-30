@@ -154,6 +154,22 @@ public class ExecutionToken extends AbstractToken implements Token {
         resultsSummary.incrementStepsPassed();
     }
 
+    public void incrementFeaturesPassed() {
+        resultsSummary.incrementFeaturesPassed();
+    }
+
+    public int getFeaturesPassed() {
+        return resultsSummary.getFeaturesPassed();
+    }
+
+    public void incrementFeaturesFailed() {
+        resultsSummary.incrementFeaturesFailed();
+    }
+
+    public int getFeaturesFailed() {
+        return resultsSummary.getFeaturesFailed();
+    }
+
     /**
      * @return this is useful, for cases where we simplify results into three categories - passed, failed, and anything else
      */
