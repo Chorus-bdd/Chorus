@@ -30,8 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter.scanner;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -67,7 +66,17 @@ public class FeatureScanner {
      * Recursively scans subdirectories, adding all feature files to the targetList.
      */
     private void addFeaturesRecursively(File directory, List<File> targetList) {
-        for (File f : directory.listFiles()) {
+        File[] files = directory.listFiles();
+
+        //sort the files here, since otherwise we get differences in execution order between 'nix, case sensitive
+        //and win, case insensitive, toys 'r us
+        Arrays.sort(files, new Comparator<File>() {
+            public int compare(File o1, File o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+        for (File f : files) {
             if (f.isDirectory()) {
                 addFeaturesRecursively(f, targetList);
             } else if (isFeatureFile(f)) {
