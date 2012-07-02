@@ -45,21 +45,12 @@ public class TestScenarioOutlineWrongValueCount extends AbstractInterpreterTest 
 
     final int expectedExitCode = 1;  //fail
 
-    final String standardOutput = readToString(TestScenarioOutlineWrongValueCount.class, "stdout.txt");
-    final String standardError = readToString(TestScenarioOutlineWrongValueCount.class, "stderr.txt");
 
-    @Test
-    public void runTest() throws Exception {
-
-        ChorusSelfTestResults testResults = runFeature(featurePath);
-
-        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
-            standardOutput,
-            standardError,
-            expectedExitCode
-        );
-
-        checkTestResults(testResults, expectedResults);
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
+    protected String getFeaturePath() {
+        return featurePath;
+    }
 }

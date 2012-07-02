@@ -45,22 +45,13 @@ public class TestUndefinedStep extends AbstractInterpreterTest {
 
     final int expectedExitCode = 1;  //fail
 
-    final String standardOutput = readToString(TestUndefinedStep.class, "stdout.txt");
-    final String standardError = readToString(TestUndefinedStep.class, "stderr.txt");
 
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    @Test
-    public void runTest() throws Exception {
-
-        ChorusSelfTestResults testResults = runFeature(featurePath);
-
-        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
-            standardOutput,
-            standardError,
-            expectedExitCode
-        );
-
-        checkTestResults(testResults, expectedResults);
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }

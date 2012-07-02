@@ -45,21 +45,12 @@ public class TestHandlerPriorityNoDefaultHandler extends AbstractInterpreterTest
 
     final int expectedExitCode = 0;  //pass
 
-    final String standardOutput = readToString(TestHandlerPriorityNoDefaultHandler.class, "stdout.txt");
-    final String standardError = readToString(TestHandlerPriorityNoDefaultHandler.class, "stderr.txt");
 
-    @Test
-    public void runTest() throws Exception {
-
-        ChorusSelfTestResults testResults = runFeature(featurePath);
-
-        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
-            standardOutput,
-            standardError,
-            expectedExitCode
-        );
-
-        checkTestResults(testResults, expectedResults);
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
+    protected String getFeaturePath() {
+        return featurePath;
+    }
 }

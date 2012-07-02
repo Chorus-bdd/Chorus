@@ -45,21 +45,13 @@ public class TestMultipleScenario extends AbstractInterpreterTest {
 
     final int expectedExitCode = 1;  //fail
 
-    final String standardOutput = readToString(TestMultipleScenario.class, "stdout.txt");
-    final String standardError = readToString(TestMultipleScenario.class, "stderr.txt");
 
-    @Test
-    public void runTest() throws Exception {
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-        ChorusSelfTestResults testResults = runFeature(featurePath);
-
-        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
-            standardOutput,
-            standardError,
-            expectedExitCode
-        );
-
-        checkTestResults(testResults, expectedResults);
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }

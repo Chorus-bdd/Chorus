@@ -1,5 +1,5 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/handlerpriority/handlerpriority.feature
 Feature: Handler Priority                                                                            
-Chorus --> INFO    - Loaded feature file: src/test/features/handlerpriority/handlerpriority.feature
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
 Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)

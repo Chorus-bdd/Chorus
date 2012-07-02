@@ -45,21 +45,12 @@ public class TestSimpleFeature extends AbstractInterpreterTest {
 
     final int expectedExitCode = 0;  //success
 
-    final String standardOutput = readToString(TestSimpleFeature.class, "stdout.txt");
-    final String standardError = readToString(TestSimpleFeature.class, "stderr.txt");
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    @Test
-    public void runTest() throws Exception {
-
-        ChorusSelfTestResults testResults = runFeature(featurePath);
-
-        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
-            standardOutput,
-            standardError,
-            expectedExitCode
-        );
-
-        checkTestResults(testResults, expectedResults);
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }

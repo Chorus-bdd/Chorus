@@ -101,6 +101,7 @@ public class ChorusInterpreter {
             ChorusParser parser = new ChorusParser();
 
             try {
+                log.info(String.format("Loading feature from file: %s", featureFile));
                 List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
                 filterFeaturesByScenarioTags(features);
@@ -135,7 +136,6 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         results.add(feature);
-        log.info(String.format("Loaded feature file: %s", featureFile));
 
         //check that the required handler classes are all available and list them in order of precidence
         List<Class> orderedHandlerClasses = new ArrayList<Class>();

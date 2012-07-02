@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
 import org.chorusbdd.chorus.handlers.ProcessesHandler;
+import org.junit.Test;
 
 import java.io.*;
 import java.util.Map;
@@ -42,7 +43,7 @@ import java.util.Properties;
  * Date: 26/06/12
  * Time: 08:40
  */
-public class AbstractInterpreterTest extends Assert {
+public abstract class AbstractInterpreterTest extends Assert {
 
     protected void checkTestResults(ChorusSelfTestResults testResults, ChorusSelfTestResults expectedResults) {
         //System.out.println("*" + testResults.getStandardError() + "*");
@@ -163,11 +164,9 @@ public class AbstractInterpreterTest extends Assert {
         return jvmArgs;
     }
 
-    protected static String readToString(Class clazz, String relativePath) {
-        InputStream is = null;
+    protected static String readToString(InputStream is) {
         StringBuilder sb = new StringBuilder();
         try {
-            is = clazz.getResourceAsStream(relativePath);
             BufferedReader r = new BufferedReader(new InputStreamReader(is));
             String s = r.readLine();
             while( s != null) {
@@ -175,7 +174,7 @@ public class AbstractInterpreterTest extends Assert {
                 s = r.readLine();
             }
         } catch (IOException e) {
-            fail("Failed to read contents of file at relative path " + relativePath);
+            fail("Failed to read contents of file stream " + is);
             e.printStackTrace();
         }  finally {
             try {
@@ -189,4 +188,32 @@ public class AbstractInterpreterTest extends Assert {
         return sb.toString();
     }
 
+    @Test
+    public void runTest() throws Exception {
+
+        ChorusSelfTestResults testResults = runFeature(getFeaturePath());
+
+        String standardOut = readToString(getExpectedStandardOutStream());
+        String standardErr = readToString(getExpectedStandardErrStream());
+
+        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
+            standardOut,
+            standardErr,
+            getExpectedExitCode()
+        );
+
+        checkTestResults(testResults, expectedResults);
+    }
+
+    protected abstract int getExpectedExitCode();
+
+    protected abstract String getFeaturePath();
+
+    public InputStream getExpectedStandardOutStream() {
+        return getClass().getResourceAsStream("stdout.txt");
+    }
+
+    public InputStream getExpectedStandardErrStream() {
+       return getClass().getResourceAsStream("stderr.txt");
+    }
 }

@@ -60,6 +60,12 @@ public class ChorusParser {
     //the filter tags are read before a feature or scenario so when found store them here until next line is read
     private String lastTagsLine = null;
 
+    /**
+     * There is a limit of 1 feature definition per feature file, but where the 'configurations' feature is used,
+     * we can return more than one feature here, one for each configuration detected
+     *
+     * @return List containing single feature, or multiple features where configurations are used
+     */
     public List<FeatureToken> parse(Reader reader) throws IOException, ParseException {
 
         List<String> usingDeclarations = new ArrayList<String>();
@@ -100,6 +106,9 @@ public class ChorusParser {
             }
 
             if (line.startsWith("Uses:")) {
+                if ( currentFeature != null) {
+                    throw new ParseException("Uses: declarations must precede Feature: declarations", lineNumber);
+                }
                 usingDeclarations.add(line.substring(6, line.length()).trim());
                 continue;
             }
