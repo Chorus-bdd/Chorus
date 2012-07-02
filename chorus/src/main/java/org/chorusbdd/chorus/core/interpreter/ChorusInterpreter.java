@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,7 +27,6 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
@@ -102,6 +101,7 @@ public class ChorusInterpreter {
             ChorusParser parser = new ChorusParser();
 
             try {
+                log.info(String.format("Loading feature from file: %s", featureFile));
                 List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
                 filterFeaturesByScenarioTags(features);
@@ -136,7 +136,6 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         results.add(feature);
-        log.info(String.format("Loaded feature file: %s", featureFile));
 
         //check that the required handler classes are all available and list them in order of precidence
         List<Class> orderedHandlerClasses = new ArrayList<Class>();

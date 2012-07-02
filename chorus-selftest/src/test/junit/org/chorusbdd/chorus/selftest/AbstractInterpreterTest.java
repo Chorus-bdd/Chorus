@@ -1,7 +1,37 @@
+/**
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
+ *  All rights reserved.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to
+ *  deal in the Software without restriction, including without limitation the
+ *  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ *  sell copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ *  IN THE SOFTWARE.
+ *
+ *  Nothing in this notice shall be deemed to grant any rights to trademarks,
+ *  copyrights, patents, trade secrets or any other intellectual property of the
+ *  licensor or any contributor except as expressly stated herein. No patent
+ *  license is granted separate from the Software, for code that you delete from
+ *  the Software, or for combinations of the Software with other software or
+ *  hardware.
+ */
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
 import org.chorusbdd.chorus.handlers.ProcessesHandler;
+import org.junit.Test;
 
 import java.io.*;
 import java.util.Map;
@@ -13,7 +43,7 @@ import java.util.Properties;
  * Date: 26/06/12
  * Time: 08:40
  */
-public class AbstractInterpreterTest extends Assert {
+public abstract class AbstractInterpreterTest extends Assert {
 
     protected void checkTestResults(ChorusSelfTestResults testResults, ChorusSelfTestResults expectedResults) {
         //System.out.println("*" + testResults.getStandardError() + "*");
@@ -134,11 +164,9 @@ public class AbstractInterpreterTest extends Assert {
         return jvmArgs;
     }
 
-    protected static String readToString(Class clazz, String relativePath) {
-        InputStream is = null;
+    protected static String readToString(InputStream is) {
         StringBuilder sb = new StringBuilder();
         try {
-            is = clazz.getResourceAsStream(relativePath);
             BufferedReader r = new BufferedReader(new InputStreamReader(is));
             String s = r.readLine();
             while( s != null) {
@@ -146,7 +174,7 @@ public class AbstractInterpreterTest extends Assert {
                 s = r.readLine();
             }
         } catch (IOException e) {
-            fail("Failed to read contents of file at relative path " + relativePath);
+            fail("Failed to read contents of file stream " + is);
             e.printStackTrace();
         }  finally {
             try {
@@ -160,4 +188,32 @@ public class AbstractInterpreterTest extends Assert {
         return sb.toString();
     }
 
+    @Test
+    public void runTest() throws Exception {
+
+        ChorusSelfTestResults testResults = runFeature(getFeaturePath());
+
+        String standardOut = readToString(getExpectedStandardOutStream());
+        String standardErr = readToString(getExpectedStandardErrStream());
+
+        ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
+            standardOut,
+            standardErr,
+            getExpectedExitCode()
+        );
+
+        checkTestResults(testResults, expectedResults);
+    }
+
+    protected abstract int getExpectedExitCode();
+
+    protected abstract String getFeaturePath();
+
+    public InputStream getExpectedStandardOutStream() {
+        return getClass().getResourceAsStream("stdout.txt");
+    }
+
+    public InputStream getExpectedStandardErrStream() {
+       return getClass().getResourceAsStream("stderr.txt");
+    }
 }

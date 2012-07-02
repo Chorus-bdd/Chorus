@@ -1,5 +1,5 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/mismatchedcapturegroups/mismatchedcapturegroups.feature
 Feature: Mismatched Capture Groups                                                                   
-Chorus --> INFO    - Loaded feature file: src/test/features/mismatchedcapturegroups/mismatchedcapturegroups.feature
   Scenario: Mismatched Capture Groups Params One
 Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params One
     Given Chorus is working properly                                                         PASSED  

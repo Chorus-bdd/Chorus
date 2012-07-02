@@ -1,5 +1,5 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature
 Feature: Handler Priority No Default Handler                                                         
-Chorus --> INFO    - Loaded feature file: src/test/features/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature
 Chorus --> INFO    - No explicit handler was found for Feature: (Handler Priority No Default Handler), will only use those specified in the Uses statements
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
