@@ -247,12 +247,12 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     protected String getStdOutFilePath() {
         String packageName = getClass().getPackage().getName();
-        return"./src/test/features/" + packageName + "/" + getStdOutFileName();
+        return"./src/test/features/" + packageName.replaceAll("\\.", "/") + "/" + getStdOutFileName();
     }
 
     protected String getStdErrFilePath() {
         String packageName = getClass().getPackage().getName();
-        return "./src/test/features/" + packageName + "/" + getStdErrFileName();
+        return "./src/test/features/" + packageName.replaceAll("\\.", "/") + "/" + getStdErrFileName();
     }
 
     public InputStream getStreamFromExpectedStdOutFile() {
