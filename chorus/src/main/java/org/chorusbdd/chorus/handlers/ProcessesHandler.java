@@ -403,7 +403,8 @@ public class ProcessesHandler {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    //tends to be verbose on Linux when process terminates
                 }
             } finally {
                 for ( PrintStream s : out) {
