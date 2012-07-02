@@ -1,5 +1,5 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/typecoercion/typecoercion.feature
 Feature: Type Coercion                                                                               
-Chorus --> INFO    - Loaded feature file: src/test/features/typecoercion/typecoercion.feature
   Scenario: Successful Single Value Coercion
 Chorus --> INFO    - Processing scenario: Successful Single Value Coercion
     Given Chorus is working properly                                                         PASSED  

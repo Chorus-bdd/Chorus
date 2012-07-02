@@ -1,5 +1,5 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/scenariooutline/scenariooutline.feature
 Feature: Scenario Outline                                                                            
-Chorus --> INFO    - Loaded feature file: src/test/features/scenariooutline/scenariooutline.feature
   Scenario: Simple Scenario [1]
 Chorus --> INFO    - Processing scenario: Simple Scenario [1]
     Given Chorus is working properly                                                         PASSED  

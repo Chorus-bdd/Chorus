@@ -1,5 +1,5 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/multiplescenario/multiplescenario.feature
 Feature: Multiple Scenario                                                                           
-Chorus --> INFO    - Loaded feature file: src/test/features/multiplescenario/multiplescenario.feature
   Scenario: Simple Scenario One
 Chorus --> INFO    - Processing scenario: Simple Scenario One
     Given Chorus is working properly                                                         PASSED  

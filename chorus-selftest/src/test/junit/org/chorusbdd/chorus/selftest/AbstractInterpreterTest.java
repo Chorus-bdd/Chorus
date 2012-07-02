@@ -45,23 +45,32 @@ import java.util.Properties;
  */
 public abstract class AbstractInterpreterTest extends Assert {
 
-    protected void checkTestResults(ChorusSelfTestResults testResults, ChorusSelfTestResults expectedResults) {
-        //System.out.println("*" + testResults.getStandardError() + "*");
+    //set this sys property to have the actual test output overwrite expected output in the stdout.txt stderr.txt files
+    //useful if you make a minor change to the output which breaks all the tests
+    //review changes before you commit, and remove the sys prop
+    private static final boolean overwriteStdOutAndErr = Boolean.valueOf(System.getProperty("overwriteStdOutAndErr", "false"));
+
+    protected void checkTestResults(ChorusSelfTestResults actualResults, ChorusSelfTestResults expectedResults) {
+        //System.out.println("*" + actualResults.getStandardError() + "*");
         //System.out.println("*" + expectedResults.getStandardError() + "*");
-        testResults.preProcessForTests();
+        actualResults.preProcessForTests();
         expectedResults.preProcessForTests();
 
         System.out.println("\n\nSummary:\n");
 
         //show differences where appropriate
-        diffAssertEquals("exit code", expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
-        diffAssertEquals("std out", expectedResults.getStandardOutput(), testResults.getStandardOutput());
-        diffAssertEquals("std err", expectedResults.getStandardError(), testResults.getStandardError());
+        diffAssertEquals("exit code", expectedResults.getInterpreterExitCode(), actualResults.getInterpreterExitCode());
+
+        boolean diff = diffAssertEquals("std out", expectedResults.getStandardOutput(), actualResults.getStandardOutput());
+        overwriteOutputIfSysPropertySet(diff, overwriteStdOutAndErr, actualResults.getStandardOutput(), getStdOutFilePath());
+
+        diff =  diffAssertEquals("std err", expectedResults.getStandardError(), actualResults.getStandardError());
+        overwriteOutputIfSysPropertySet(diff, overwriteStdOutAndErr, actualResults.getStandardError(), getStdErrFilePath());
 
         //now actually fail the test if appropriate
-        assertEquals(expectedResults.getInterpreterExitCode(), testResults.getInterpreterExitCode());
-        assertEquals(expectedResults.getStandardOutput(), testResults.getStandardOutput());
-        assertEquals(expectedResults.getStandardError(), testResults.getStandardError());
+        assertEquals(expectedResults.getInterpreterExitCode(), actualResults.getInterpreterExitCode());
+        assertEquals(expectedResults.getStandardOutput(), actualResults.getStandardOutput());
+        assertEquals(expectedResults.getStandardError(), actualResults.getStandardError());
 
         try {
             Thread.sleep(25);  //prevent output being confused by junit plugin with next test
@@ -70,13 +79,32 @@ public abstract class AbstractInterpreterTest extends Assert {
         }
     }
 
+    private void overwriteOutputIfSysPropertySet(boolean isDifferent, boolean overwriteStdOutAndErr, String actualText, String stdOutFileName) {
+        if ( isDifferent && overwriteStdOutAndErr ) {
+            try {
+                File f = new File(stdOutFileName);
+                if ( f.canWrite()) {
+                    PrintWriter w = new PrintWriter(stdOutFileName);
+                    w.write(actualText);
+                    w.flush();
+                    w.close();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     //assert equal with more difference information
-    private void diffAssertEquals(String s, Object expected, Object actual) {
+    private boolean diffAssertEquals(String s, Object expected, Object actual) {
+        boolean result = false;
         if ( ! expected.equals(actual)) {
+            result = true;
             System.out.println("Unexpected difference in " + s);
             System.out.println("Expected: [" + expected.toString() + "]\n");
             System.out.println("Actual: [" + actual.toString() + "]\n");
         }
+        return result;
     }
 
     protected ChorusSelfTestResults runFeature(String featurePath) throws IOException, InterruptedException {
@@ -193,8 +221,8 @@ public abstract class AbstractInterpreterTest extends Assert {
 
         ChorusSelfTestResults testResults = runFeature(getFeaturePath());
 
-        String standardOut = readToString(getExpectedStandardOutStream());
-        String standardErr = readToString(getExpectedStandardErrStream());
+        String standardOut = readToString(getStreamFromExpectedStdOutFile());
+        String standardErr = readToString(getStreamFromExpectedStdErrFile());
 
         ChorusSelfTestResults expectedResults = new ChorusSelfTestResults(
             standardOut,
@@ -209,11 +237,29 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     protected abstract String getFeaturePath();
 
-    public InputStream getExpectedStandardOutStream() {
-        return getClass().getResourceAsStream("stdout.txt");
+    protected String getStdOutFileName() {
+        return "stdout.txt";
     }
 
-    public InputStream getExpectedStandardErrStream() {
-       return getClass().getResourceAsStream("stderr.txt");
+    protected String getStdErrFileName() {
+        return "stderr.txt";
+    }
+
+    protected String getStdOutFilePath() {
+        String packageName = getClass().getPackage().getName();
+        return"./src/test/features/" + packageName + "/" + getStdOutFileName();
+    }
+
+    protected String getStdErrFilePath() {
+        String packageName = getClass().getPackage().getName();
+        return "./src/test/features/" + packageName + "/" + getStdErrFileName();
+    }
+
+    public InputStream getStreamFromExpectedStdOutFile() {
+        return getClass().getResourceAsStream(getStdOutFileName());
+    }
+
+    public InputStream getStreamFromExpectedStdErrFile() {
+       return getClass().getResourceAsStream(getStdErrFileName());
     }
 }
