@@ -198,7 +198,7 @@ public class ChorusParser {
                     }
                     break;
                 default:
-                    throw new ParseException("Parse error", lineNumber);
+                    throw new ParseException("Parse error, unexpected text '" + line + "'", lineNumber);
 
             }
         }
