@@ -1,5 +1,5 @@
 
-Feature: Handler Priority
+Feature: Uses Must Appear Before Feature
 
 Uses: Feature Parsing
 

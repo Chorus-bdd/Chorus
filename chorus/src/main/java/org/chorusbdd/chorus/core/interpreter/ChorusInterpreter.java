@@ -185,7 +185,7 @@ public class ChorusInterpreter {
         StringBuilder unavailableHandlersMessage = new StringBuilder();
         Class mainHandlerClass = allHandlerClasses.get(feature.getName());
         if (mainHandlerClass == null) {
-            log.info(String.format("No explicit handler was found for Feature: (%s), will only use those specified in the Uses statements",
+            log.info(String.format("No default handler found for Feature: (%s), will use built-in handlers and Uses: statements",
                     feature.getName()));
         } else {
             log.debug(String.format("Loaded handler class (%s) for Feature: (%s)",

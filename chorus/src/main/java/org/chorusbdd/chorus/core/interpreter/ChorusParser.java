@@ -106,9 +106,7 @@ public class ChorusParser {
             }
 
             if (line.startsWith("Uses:")) {
-                if ( currentFeature != null) {
-                    throw new ParseException("Uses: declarations must precede Feature: declarations", lineNumber);
-                }
+                checkNoCurrentFeature(currentFeature, lineNumber, "Uses: declarations must precede Feature: declarations");
                 usingDeclarations.add(line.substring(6, line.length()).trim());
                 continue;
             }
@@ -119,6 +117,7 @@ public class ChorusParser {
             }
 
             if (line.startsWith("Feature:")) {
+                checkNoCurrentFeature(currentFeature, lineNumber, "Cannot define more than one Feature: in a .feature file");
                 currentFeaturesTags = extractTagsAndResetLastTagsLineField();
                 currentFeature = createFeature(line, usingDeclarations);
                 parserState = READING_FEATURE_DESCRIPTION;
@@ -218,6 +217,12 @@ public class ChorusParser {
         }
         return results;
 
+    }
+
+    private void checkNoCurrentFeature(FeatureToken currentFeature, int lineNumber, String message) throws ParseException {
+        if ( currentFeature != null) {
+            throw new ParseException(message, lineNumber);
+        }
     }
 
     private FeatureToken createFeature(String line, List<String> usingDeclarations) {

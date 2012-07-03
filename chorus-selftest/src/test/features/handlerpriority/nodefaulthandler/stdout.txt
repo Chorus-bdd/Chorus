@@ -1,6 +1,6 @@
 Chorus --> INFO    - Loading feature from file: src/test/features/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature
 Feature: Handler Priority No Default Handler                                                         
-Chorus --> INFO    - No explicit handler was found for Feature: (Handler Priority No Default Handler), will only use those specified in the Uses statements
+Chorus --> INFO    - No default handler found for Feature: (Handler Priority No Default Handler), will use built-in handlers and Uses: statements
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
 Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandlerThree.isWorkingProperly)

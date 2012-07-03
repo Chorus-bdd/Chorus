@@ -3,12 +3,15 @@ Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsi
 Chorus --> WARN    - null
 Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/nosceanario.feature
 Feature: No Scenario In Feature                                                                      
-Chorus --> INFO    - No explicit handler was found for Feature: (No Scenario In Feature), will only use those specified in the Uses statements
+Chorus --> INFO    - No default handler found for Feature: (No Scenario In Feature), will use built-in handlers and Uses: statements
 
-Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/usesmayappearanywhere.feature
-Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/usesmayappearanywhere.feature will skip this feature file
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/twofeaturesinafile.feature
+Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/twofeaturesinafile.feature will skip this feature file
+Chorus --> WARN    - Cannot define more than one Feature: in a .feature file (at line:10)
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/usesmustappearbeforefeature.feature
+Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/usesmustappearbeforefeature.feature will skip this feature file
 Chorus --> WARN    - Uses: declarations must precede Feature: declarations (at line:4)
 
-Features  (total:3) (passed:1) (failed:2)
+Features  (total:4) (passed:1) (failed:3)
 Scenarios (total:0) (passed:0) (failed:0)
 Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)
