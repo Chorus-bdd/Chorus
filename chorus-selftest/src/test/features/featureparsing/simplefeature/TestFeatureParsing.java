@@ -1,4 +1,4 @@
-package featureparsing;
+package featureparsing.simplefeature;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;

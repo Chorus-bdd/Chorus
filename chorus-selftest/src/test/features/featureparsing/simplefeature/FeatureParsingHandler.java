@@ -1,4 +1,4 @@
-package featureparsing;
+package featureparsing.simplefeature;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
