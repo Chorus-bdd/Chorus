@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,8 +33,6 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ResultsSummary;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
-
-import java.util.List;
 
 /**
  * Created by: Steve Neal

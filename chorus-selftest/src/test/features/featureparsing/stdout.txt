@@ -1,0 +1,20 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/descriptiononlyafterfeature.feature
+Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/descriptiononlyafterfeature.feature will skip this feature file
+Chorus --> WARN    - Parse error, unexpected text 'Free text description is not allowed here it must go straight after the Feature statement' (at line:3)
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/nofeaturestatement.feature
+Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/nofeaturestatement.feature will skip this feature file
+Chorus --> WARN    - null
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/nosceanario.feature
+Feature: No Scenario In Feature                                                                      
+Chorus --> INFO    - No default handler found for Feature: (No Scenario In Feature), will use built-in handlers and Uses: statements
+
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/twofeaturesinafile.feature
+Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/twofeaturesinafile.feature will skip this feature file
+Chorus --> WARN    - Cannot define more than one Feature: in a .feature file (at line:10)
+Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/usesmustappearbeforefeature.feature
+Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/usesmustappearbeforefeature.feature will skip this feature file
+Chorus --> WARN    - Uses: declarations must precede Feature: declarations (at line:4)
+
+Features  (total:5) (passed:1) (failed:4)
+Scenarios (total:0) (passed:0) (failed:0)
+Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)

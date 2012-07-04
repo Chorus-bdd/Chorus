@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,7 +38,7 @@ import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
  * Time: 16:48
  *
  */
-public interface RemoteExecutionListenerMBean extends ChorusExecutionListener {
+public interface RemoteExecutionListenerMBean extends ExecutionListener {
 
     public static String JMX_EXECUTION_LISTENER_NAME = "org.chorusbdd.chorus:name=chorus_execution_listener";
 

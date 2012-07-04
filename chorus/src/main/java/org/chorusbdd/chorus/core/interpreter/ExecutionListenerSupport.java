@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,13 +29,14 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
-import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,65 +48,85 @@ import java.util.List;
  */
 public class ExecutionListenerSupport {
 
-    private List<ChorusExecutionListener> listeners = new ArrayList<ChorusExecutionListener>();
+    private List<ExecutionListener> listeners = new ArrayList<ExecutionListener>();
 
     //
     // Execution event methods
     //
-    public void addExecutionListener(ChorusExecutionListener... listeners) {
+    public void addExecutionListener(ExecutionListener... listeners) {
         this.listeners.addAll(Arrays.asList(listeners));
     }
 
-    public boolean removeExecutionListener(ChorusExecutionListener... listeners) {
+    public boolean removeExecutionListener(ExecutionListener... listeners) {
         return this.listeners.removeAll(Arrays.asList(listeners));
     }
 
-    public void notifyStartTests(TestExecutionToken t) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void addExecutionListener(Collection<ExecutionListener> listeners) {
+        this.listeners.addAll(listeners);
+    }
+
+    public void removeExecutionListeners(List<ExecutionListener> listeners) {
+        this.listeners.removeAll(listeners);
+    }
+
+    /**
+     * Clear any existing listeners and add the listeners provided
+     */
+    public void setExecutionListener(ExecutionListener... listener) {
+        listeners.clear();
+        listeners.addAll(Arrays.asList(listener));
+    }
+
+    public void notifyStartTests(ExecutionToken t) {
+        for (ExecutionListener listener : listeners) {
             listener.testsStarted(t);
         }
     }
 
-    public void notifyStepStarted(TestExecutionToken t, StepToken step) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyStepStarted(ExecutionToken t, StepToken step) {
+        for (ExecutionListener listener : listeners) {
             listener.stepStarted(t, step);
         }
     }
 
-    public void notifyStepCompleted(TestExecutionToken t, StepToken step) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyStepCompleted(ExecutionToken t, StepToken step) {
+        for (ExecutionListener listener : listeners) {
             listener.stepCompleted(t, step);
         }
     }
 
-    public void notifyFeatureStarted(TestExecutionToken t, FeatureToken feature) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyFeatureStarted(ExecutionToken t, FeatureToken feature) {
+        for (ExecutionListener listener : listeners) {
             listener.featureStarted(t, feature);
         }
     }
 
-    public void notifyFeatureCompleted(TestExecutionToken t, FeatureToken feature) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyFeatureCompleted(ExecutionToken t, FeatureToken feature) {
+        for (ExecutionListener listener : listeners) {
             listener.featureCompleted(t, feature);
         }
     }
 
-    public void notifyScenarioStarted(TestExecutionToken t, ScenarioToken scenario) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyScenarioStarted(ExecutionToken t, ScenarioToken scenario) {
+        for (ExecutionListener listener : listeners) {
             listener.scenarioStarted(t, scenario);
         }
     }
 
-    public void notifyScenarioCompleted(TestExecutionToken t, ScenarioToken scenario) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyScenarioCompleted(ExecutionToken t, ScenarioToken scenario) {
+        for (ExecutionListener listener : listeners) {
             listener.scenarioCompleted(t, scenario);
         }
     }
 
-    public void notifyTestsCompleted(TestExecutionToken t, List<FeatureToken> features) {
-        for (ChorusExecutionListener listener : listeners) {
+    public void notifyTestsCompleted(ExecutionToken t, List<FeatureToken> features) {
+        for (ExecutionListener listener : listeners) {
             listener.testsCompleted(t, features);
         }
+    }
+
+    public List<ExecutionListener> getListeners() {
+        return new ArrayList<ExecutionListener>(listeners);
     }
 
 }

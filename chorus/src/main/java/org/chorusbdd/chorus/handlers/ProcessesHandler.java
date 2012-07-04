@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -151,8 +151,20 @@ public class ProcessesHandler {
                     debugPort);
         }
 
+
+        //surrounding the classpath in quotes is currently breaking the classpath parsing for linux when launched via
+        //Runtime.getRuntime().exec() (but it is ok from the shell)
+        //I think we want to keep this in on windows, since we will more likely encounter directory names with spaces -
+        //I'm worried those will break for linux although this will fix the classpath issue.
+        //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
+        boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+        String commandTxt = isWindows ?
+            "%s%sbin%sjava %s %s %s %s -classpath \"%s\" %s %s" :
+            "%s%sbin%sjava %s %s %s %s -classpath %s %s %s";
+
         //construct a command
-        String command = String.format("%s%sbin%sjava %s %s %s %s -classpath \"%s\" %s %s",
+        String command = String.format(
+                commandTxt,
                 jre,
                 File.separatorChar,
                 File.separatorChar,
@@ -337,16 +349,16 @@ public class ProcessesHandler {
         public ChildProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
             this.process = Runtime.getRuntime().exec(command);
             if (null == stdoutLogPath) {
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), System.out, false);
+                this.outRedirector = new ProcessRedirector(process.getInputStream(), false, System.out);
             } else {
                 PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath));
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), out, true);
+                this.outRedirector = new ProcessRedirector(process.getInputStream(), true, out);
             }
             if (null == stderrLogPath) {
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), System.err, false);
+                this.errRedirector = new ProcessRedirector(process.getErrorStream(), false, System.err);
             } else {
                 PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath));
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), err, true);
+                this.errRedirector = new ProcessRedirector(process.getErrorStream(), true, err);
             }
             Thread outThread = new Thread(outRedirector, name + "-stdout");
             outThread.setDaemon(true);
@@ -369,12 +381,12 @@ public class ProcessesHandler {
         }
     }
 
-    private class ProcessRedirector implements Runnable {
+    public static class ProcessRedirector implements Runnable {
         private BufferedInputStream in;
-        private PrintStream out;
+        private PrintStream[] out;
         private boolean closeOnExit;
 
-        public ProcessRedirector(InputStream in, PrintStream out, boolean closeOnExit) {
+        public ProcessRedirector(InputStream in, boolean closeOnExit, PrintStream... out) {
             this.closeOnExit = closeOnExit;
             this.in = new BufferedInputStream(in);
             this.out = out;
@@ -386,15 +398,20 @@ public class ProcessesHandler {
                 int x = 0;
                 try {
                     while ((x = in.read(buf)) != -1) {
-                        if (null != out) {
-                            out.write(buf, 0, x);
+                        for ( PrintStream s : out) {
+                            s.write(buf, 0, x);
                         }
                     }
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    //e.printStackTrace();
+                    //tends to be verbose on Linux when process terminates
+                }
             } finally {
-                out.flush();
-                if ( closeOnExit ) {
-                    out.close();
+                for ( PrintStream s : out) {
+                    s.flush();
+                    if ( closeOnExit ) {
+                        s.close();
+                    }
                 }
             }
         }

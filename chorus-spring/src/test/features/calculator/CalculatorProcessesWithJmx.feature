@@ -25,7 +25,7 @@ Feature: Processes with JMX
   Scenario: Start and interact with two Java processes using JMX
     Given I can start a calculatorA process named calcA which exports an Addition handler
     And I can start a calculatorB process named calcB which exports an Addition handler
-    And I wait for 1 second for the processes to complete their start up
+    And I wait for 2 seconds for the processes to complete their start up
     # work with one process
     When I have entered 10 in calcA
     And I have entered 30 in calcA
@@ -42,7 +42,7 @@ Feature: Processes with JMX
   Scenario: Interact with two different handlers within the same process
     # this process exports an Addition handler and an echoing handler
     Given I can start a calc2handlers process
-    And I wait for 2 second for the process to complete its start up
+    And I wait for 2 seconds for the process to complete its start up
     # call a method on the Calculator handler
     And I have entered 10 in calc2handlers
     # call a method on the Echo handler

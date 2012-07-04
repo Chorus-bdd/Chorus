@@ -1,0 +1,71 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/scenariooutline/scenariooutline.feature
+Feature: Scenario Outline                                                                            
+  Scenario: Simple Scenario [1]
+Chorus --> INFO    - Processing scenario: Simple Scenario [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value A Long Value                                            PASSED  A Long Value
+    And I can run a step with numeric value 100                                              PASSED  100.0
+    And I can run a step with value valc and vald                                            PASSED  valc and vald
+    And value e is not used                                                                  PASSED  
+  Scenario: Simple Scenario [2]
+Chorus --> INFO    - Processing scenario: Simple Scenario [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value B Long Value                                            PASSED  B Long Value
+    And I can run a step with numeric value 200                                              PASSED  200.0
+    And I can run a step with value valc2 and vald2                                          PASSED  valc2 and vald2
+    And value e is not used                                                                  PASSED  
+  Scenario: Simple Scenario [3]
+Chorus --> INFO    - Processing scenario: Simple Scenario [3]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value C Long Value                                            PASSED  C Long Value
+    And I can run a step with numeric value 300                                              PASSED  300.0
+    And I can run a step with value valc3 and vald3                                          PASSED  valc3 and vald3
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario with bad examples formatting [1]
+Chorus --> INFO    - Processing scenario: Scenario with bad examples formatting [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value A Long Value                                            PASSED  A Long Value
+    And I can run a step with numeric value 100                                              PASSED  100.0
+    And I can run a step with value valc and vald                                            PASSED  valc and vald
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario with bad examples formatting [2]
+Chorus --> INFO    - Processing scenario: Scenario with bad examples formatting [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value B Long Value                                            PASSED  B Long Value
+    And I can run a step with numeric value 200                                              PASSED  200.0
+    And I can run a step with value valc2 and vald2                                          PASSED  valc2 and vald2
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario with bad examples formatting [3]
+Chorus --> INFO    - Processing scenario: Scenario with bad examples formatting [3]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value C Long Value                                            PASSED  C Long Value
+    And I can run a step with numeric value 300                                              PASSED  300.0
+    And I can run a step with value valc3 and vald3                                          PASSED  valc3 and vald3
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario Outline with empty lines before and after Examples [1]
+Chorus --> INFO    - Processing scenario: Scenario Outline with empty lines before and after Examples [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value A Long Value                                            PASSED  A Long Value
+  Scenario: Scenario Outline with empty lines before and after Examples [2]
+Chorus --> INFO    - Processing scenario: Scenario Outline with empty lines before and after Examples [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value Another Long Value                                      PASSED  Another Long Value
+  Scenario: Scenario Outline with Blank Values [1]
+Chorus --> INFO    - Processing scenario: Scenario Outline with Blank Values [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value A Long Value                                            PASSED  A Long Value
+    And I can run a step with numeric value 100                                              PASSED  100.0
+    And I can run a step with value hola and                                                 PASSED  hola and 
+    And value e is not used                                                                  PASSED  
+  Scenario: Scenario Outline with Blank Values [2]
+Chorus --> INFO    - Processing scenario: Scenario Outline with Blank Values [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step with value B Long Value                                            PASSED  B Long Value
+    And I can run a step with numeric value 200                                              PASSED  200.0
+    And I can run a step with value  and                                                     PASSED   and 
+    And value e is not used                                                                  PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:10) (passed:10) (failed:0)
+Steps     (total:44) (passed:44) (failed:0) (undefined:0) (pending:0) (skipped:0)

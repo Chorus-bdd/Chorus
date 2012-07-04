@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,11 +29,11 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
-import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
 
 import java.util.List;
 
@@ -47,41 +47,41 @@ import java.util.List;
  */
 public class RemoteExecutionListener implements RemoteExecutionListenerMBean {
 
-    private ChorusExecutionListener chorusExecutionListener;
+    private ExecutionListener chorusExecutionListener;
 
-    public RemoteExecutionListener(ChorusExecutionListener chorusExecutionListener) {
+    public RemoteExecutionListener(ExecutionListener chorusExecutionListener) {
         this.chorusExecutionListener = chorusExecutionListener;
     }
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken) {
         chorusExecutionListener.testsStarted(testExecutionToken);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         chorusExecutionListener.testsCompleted(testExecutionToken, features);
     }
 
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
         chorusExecutionListener.featureStarted(testExecutionToken, feature);
     }
 
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         chorusExecutionListener.featureCompleted(testExecutionToken, feature);
     }
 
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         chorusExecutionListener.scenarioStarted(testExecutionToken, scenario);
     }
 
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         chorusExecutionListener.scenarioCompleted(testExecutionToken, scenario);
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
         chorusExecutionListener.stepStarted(testExecutionToken, step);
     }
 
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
         chorusExecutionListener.stepCompleted(testExecutionToken, step);
     }
 }

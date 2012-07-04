@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -125,14 +125,14 @@ public class JmxHandler {
             }
 
             //see if this method will do
-            Object[] args = RegexpUtils.extractGroups(regex, action, types);
+            Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, types);
             if (args != null) {
                 if (methodUidToCall == null) {
                     methodUidToCall = methodUid;
                     methodUidToCallPendingMessage = pending;
                     methodArgsToPass = args;
                 } else {
-                    log.warn(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
+                    log.info(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
                             methodUid,
                             action,
                             componentName,

@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -53,7 +53,7 @@ public class ChorusParserTagsTest {
     private final String TEST_FEATURE_FILE = "ChorusParserTagsTest.test.feature";
 
     @Test
-    public void scenarioInheritsTagsFromFeature() throws IOException {
+    public void scenarioInheritsTagsFromFeature() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         ChorusParser p = new ChorusParser();
@@ -74,7 +74,7 @@ public class ChorusParserTagsTest {
     }
 
     @Test
-    public void scenarioInheritsTagsFromFeatureAndAddsOwn() throws IOException {
+    public void scenarioInheritsTagsFromFeatureAndAddsOwn() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         ChorusParser p = new ChorusParser();
@@ -95,7 +95,7 @@ public class ChorusParserTagsTest {
     }
 
     @Test
-    public void outlineScenarioInheritsTagsFromFeatureAndAddsOwn() throws IOException {
+    public void outlineScenarioInheritsTagsFromFeatureAndAddsOwn() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         ChorusParser p = new ChorusParser();

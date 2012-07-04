@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,9 +29,6 @@
  */
 package org.chorusbdd.chorus.core.interpreter.results;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Simple class that compiles a summary of a test results
  * from a list of executed Features
@@ -43,9 +40,12 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class ResultsSummary implements ResultToken {
+public class ResultsSummary extends AbstractToken implements Token {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
+
+    private int featuresPassed = 0;
+    private int featuresFailed = 0;
 
     //stats
     private int scenariosPassed = 0;
@@ -57,6 +57,14 @@ public class ResultsSummary implements ResultToken {
     private int stepsPending = 0;
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
+
+    public ResultsSummary() {
+        super(getNextId());
+    }
+
+    private ResultsSummary(long tokenId) {
+        super(tokenId);
+    }
 
     public int getScenariosPassed() {
         return scenariosPassed;
@@ -72,6 +80,22 @@ public class ResultsSummary implements ResultToken {
 
     public void incrementScenariosFailed() {
         scenariosFailed++;
+    }
+
+    public int getFeaturesPassed() {
+       return featuresPassed;
+    }
+
+    public void incrementFeaturesPassed() {
+       featuresPassed++;
+    }
+
+    public int getFeaturesFailed() {
+       return featuresFailed;
+    }
+
+    public void incrementFeaturesFailed() {
+       featuresFailed++;
     }
 
     public int getUnavailableHandlers() {
@@ -137,11 +161,15 @@ public class ResultsSummary implements ResultToken {
     }
 
     public boolean isPassed() {
-        return stepsFailed == 0;
+        return featuresFailed == 0;
     }
 
     public ResultsSummary deepCopy() {
-        ResultsSummary s = new ResultsSummary();
+        ResultsSummary s = new ResultsSummary(getTokenId());
+
+        s.featuresFailed = featuresFailed;
+        s.featuresPassed = featuresPassed;
+
         s.scenariosPassed = scenariosPassed;
         s.scenariosFailed = scenariosFailed;
         s.unavailableHandlers = unavailableHandlers;

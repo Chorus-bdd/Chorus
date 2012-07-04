@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,18 +29,16 @@
  */
 package org.chorusbdd.chorus.core.interpreter.scanner;
 
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.FilenameFilter;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -64,25 +62,18 @@ import java.util.zip.ZipFile;
  */
 public class ClasspathScanner {
 
-    public static Set<Class> doScan(String... packageName) throws IOException, ClassNotFoundException {
-        return doScan(ClassFilter.NULL_FILTER, packageName);
-    }
+    private static ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
 
-    public static Set<Class> doScan(ClassFilter classFilter, String... packageName) throws ClassNotFoundException, IOException {
-        Set<Class> s = new HashSet<Class>();
-        for (String p : packageName) {
-            s.addAll(doScan(classFilter, p));
-        }
-        return s;
-    }
+    private static String[] classpathNames;
 
-    public static Set<Class> doScan(ClassFilter classFilter, String packageName) throws IOException, ClassNotFoundException {
+    public static Set<Class> doScan(ClassFilter classFilter) throws IOException, ClassNotFoundException {
         Set<Class> s = new HashSet<Class>();
         for (String clazz : getClasspathClassNames()) {
-            if (clazz.startsWith(packageName)) {
-
+            //check the name/package first before we try class loading
+            //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
+            if ( classFilter.acceptByName(clazz)) {
                 Class c = Class.forName(clazz);
-                if (classFilter.accept(c)) {
+                if (classFilter.acceptByClass(c)) {
                     s.add(c);
                 }
             }
@@ -133,7 +124,19 @@ public class ClasspathScanner {
      * zip files and the directories. In other words,
      * the filter will not be used to sort directories.
      */
-    public static String[] getClasspathFileNames() throws ZipException, IOException {
+    public static String[] getClasspathFileNames() throws IOException {
+        //for performance we most likely only want to do this once for each interpreter session,
+        //classpath should not change dynamically
+        log.debug("Getting file names " + Thread.currentThread().getName());
+        long start = System.currentTimeMillis();
+        if ( classpathNames == null ) {
+            classpathNames = findClassNames();
+            log.debug("Getting file names took " + (System.currentTimeMillis() - start) + " millis" );
+        }
+        return classpathNames;
+    }
+
+    private static String[] findClassNames() throws IOException {
         final StringTokenizer tokenizer = new StringTokenizer(System.getProperty("java.class.path"), File.pathSeparator, false);
         final Set<String> filenames = new LinkedHashSet<String>();
 

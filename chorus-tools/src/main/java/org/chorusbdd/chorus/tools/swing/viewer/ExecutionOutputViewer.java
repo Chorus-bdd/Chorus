@@ -29,17 +29,15 @@
  */
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
-import org.chorusbdd.chorus.core.interpreter.results.*;
-import org.chorusbdd.chorus.executionlistener.PlainResultsFormatter;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.*;
 import java.awt.*;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -49,26 +47,12 @@ import java.util.List;
  * Time: 16:03
  * To change this template use File | Settings | File Templates.
  */
-public class ExecutionOutputViewer extends JPanel implements ChorusExecutionListener {
+public class ExecutionOutputViewer extends JPanel implements ExecutionListener {
 
     private final JTextPane executionTextPane = new JTextPane();
-    private final StyledDocument document = executionTextPane.getStyledDocument();
-    private final Style base = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
-    private final Style testsHeader = document.addStyle("testsHeader", base);
-
-    private final Style featureHeader = document.addStyle("featureHeader", base);
-    private final Style featureDetail = document.addStyle("featureDetail", base);
-
-    private final Style scenarioHeader = document.addStyle("scenarioHeader", base);
-    private final Style scenarioDetail = document.addStyle("scenarioDetail", base);
-
-    private final Style stepHeader = document.addStyle("stepHeader", base);
-    private final Style stepDetail = document.addStyle("stepDetail", base);
-
-    private final Style resultsSummary = document.addStyle("resultsSummary", base);
-
-    private final Color PALE_YELLOW = new Color(255, 253, 221);
+    //document which contains the complete execution output
+    private final ExecutionOutputDocument mainDocument = new ExecutionOutputDocument();
 
     public ExecutionOutputViewer() {
         setLayout(new BorderLayout());
@@ -79,104 +63,69 @@ public class ExecutionOutputViewer extends JPanel implements ChorusExecutionList
         );
         add(sp, BorderLayout.CENTER);
 
-        executionTextPane.setBackground(PALE_YELLOW);
+        executionTextPane.setDocument(mainDocument);
         executionTextPane.setBorder(new EmptyBorder(8,5,5,5));
-
-        StyleConstants.setFontFamily(base, "monospaced");
-        StyleConstants.setFontFamily(featureHeader, "monospaced");
-
-        //make base and all headers blue
-        applyStyle(new StyleApplicator() {
-            public void applyStyle(Style s) {
-                StyleConstants.setForeground(base, Color.BLUE);
-            }
-        }, base, featureHeader, scenarioHeader, stepHeader);
-
-        StyleConstants.setFontSize(testsHeader, executionTextPane.getFont().getSize() + 6);
-        StyleConstants.setForeground(testsHeader, Color.MAGENTA.darker().darker());
-        StyleConstants.setFontFamily(testsHeader, "proportional");
-
-
-        StyleConstants.setForeground(featureDetail, Color.GREEN.darker().darker());
-        StyleConstants.setForeground(scenarioDetail, Color.GREEN.darker().darker());
-        StyleConstants.setForeground(stepDetail, Color.BLACK);
-        StyleConstants.setForeground(resultsSummary, Color.BLUE.darker().darker());
-
         setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
     }
 
-    private void applyStyle(StyleApplicator styleApplicator, Style... styles) {
-        for ( Style s : styles) {
-            styleApplicator.applyStyle(s);
+    public void showAll() {
+        executionTextPane.setDocument(mainDocument);
+    }
+
+    public void showFeature(FeatureToken f) {
+        ExecutionOutputDocument d = new ExecutionOutputDocument();
+        d.featureStarted(f);
+        for ( ScenarioToken s : f.getScenarios()) {
+            showScenario(s, d);
         }
+        d.featureCompleted(f);
+        executionTextPane.setDocument(d);
     }
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
-        if ( ! "".equals(testExecutionToken.getTestSuiteName())) {
-            addText("Suite: " + testExecutionToken.getTestSuiteName() + "\n", testsHeader);
+    public void showScenario(ScenarioToken s) {
+        ExecutionOutputDocument d = new ExecutionOutputDocument();
+        showScenario(s, d);
+        executionTextPane.setDocument(d);
+    }
+
+    private void showScenario(ScenarioToken s, ExecutionOutputDocument d) {
+        d.scenarioStarted(s);
+        for ( StepToken step : s.getSteps()) {
+            d.stepStarted(step);
+            d.stepCompleted(step);
         }
-        addText("\n", featureHeader);
+        d.scenarioCompleted(s);
     }
 
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        addText("Feature:  ", featureHeader);
-        addText(feature.getName(), featureDetail);
+    public void testsStarted(ExecutionToken testExecutionToken) {
+        mainDocument.testsStarted(testExecutionToken);
     }
 
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        addText("\n\n", featureDetail);
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+        mainDocument.featureStarted(feature);
     }
 
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        addText("\n\n    Scenario:  ", scenarioHeader);
-        addText(scenario.getName(), scenarioDetail);
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
+        mainDocument.featureCompleted(feature);
     }
 
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+        mainDocument.scenarioStarted(scenario);
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+        mainDocument.scenarioCompleted(scenario);
     }
 
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
-        String stepText = step.toString();
-        String stepHeaderText = stepText, stepDetailText = "";
-        int firstSpace = stepText.indexOf(' ');
-        if ( firstSpace != -1) {
-            stepHeaderText = stepText.substring(0, firstSpace);
-            stepDetailText = stepText.substring(firstSpace);
-        }
-        addText("\n        " + stepHeaderText, stepHeader);
-        addText(stepDetailText, stepDetail);
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
+        mainDocument.stepStarted(step);
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
-        String resultsSummaryText = getResultsSummaryString(testExecutionToken);
-        addText(resultsSummaryText, resultsSummary);
-        addText("\n\n", base);
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
+        mainDocument.stepCompleted(step);
     }
 
-    private String getResultsSummaryString(TestExecutionToken testExecutionToken) {
-        ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
-        PrintWriter pw = new PrintWriter(os);
-        PlainResultsFormatter f = new PlainResultsFormatter(pw);
-        f.printResults(testExecutionToken.getResultsSummary());
-        return new String(os.toByteArray());
-    }
-
-    private Segment addText(String textToAdd, Style style) {
-        Segment result = new Segment();
-        try {
-            int insertPosition = document.getLength();
-            document.insertString(insertPosition, textToAdd, style);
-            document.getText(insertPosition, textToAdd.length(), result);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private interface StyleApplicator {
-        public void applyStyle(Style s);
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+        mainDocument.testsCompleted(testExecutionToken);
     }
 }

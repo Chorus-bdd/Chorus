@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,59 +29,116 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.results.TestExecutionToken;
-import org.chorusbdd.chorus.util.CommandLineParser;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListenerSupport;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
+import org.chorusbdd.chorus.util.config.ChorusConfig;
+import org.chorusbdd.chorus.util.config.InterpreterProperty;
+import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Created by: Steve Neal
- * Date: 30/09/11
+ * Created by: Steve Neal & Nick Ebbutt, ChorusBDD.org
  */
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        boolean failed = run(args);
+    private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
+    private final ExecutionListenerFactory factory = new ExecutionListenerFactory();
+    private final ChorusConfig baseConfig;
 
-        System.out.println("Exiting with:" + (failed ? -1 : 0));
-        System.exit(failed ? -1 : 0);
+    public static void main(String[] args) throws Exception {
+
+        boolean success = false;
+        try {
+            Main main = new Main(args);
+            success = main.run();
+        } catch (InterpreterPropertyException e) {
+            System.err.println(e.getMessage());
+            ChorusConfig.logHelp();
+        }
+
+        //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
+        //(windows supports signed integer exit status, unix does not)
+        //choosing the most obvious, 0 = success, 1 = failure, we could expand on this if needed
+        int exitCode = success ? 0 : 1;
+        System.exit(exitCode);
     }
 
-    public static boolean run(String[] args) throws Exception {
-        Map<String, List<String>> parsedArgs = CommandLineParser.parseArgs(args);
-        List<ChorusExecutionListener> l = new ExecutionListenerFactory().createExecutionListener(parsedArgs);
-        return run(parsedArgs, l.toArray(new ChorusExecutionListener[l.size()]));
+
+    public Main(String[] args) throws InterpreterPropertyException {
+        baseConfig = new ChorusConfig(args);
+        baseConfig.readConfiguration();
+        List<ExecutionListener> listeners = factory.createExecutionListener(baseConfig);
+        listenerSupport.addExecutionListener(listeners);
     }
 
     /**
-     * Run without exiting on test completion, useful from tests
-     *
-     * @return true, if all tests were fully implemented and all tests passed
+     * Run interpreter using just the base configuration and the listeners provided
+     * @return true, if all tests were fully implemented and passed
      */
-    public static boolean run(Map<String, List<String>> parsedArgs, ChorusExecutionListener... executionListeners) throws Exception {
+    public boolean run() throws Exception {
+        ExecutionToken t = startTests();
+        List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
+        endTests(t, features);
+        return t.isPassedAndFullyImplemented();
+    }
 
-        if (!parsedArgs.containsKey("f")) {
-            exitWithHelp();
+    /**
+     * Start tests, notifying executionListeners
+     * @return an executionToken to collate results for this test run
+     */
+    public ExecutionToken startTests() {
+        ExecutionToken t = new ExecutionToken(baseConfig.getSuiteName());
+        listenerSupport.notifyStartTests(t);
+        return t;
+    }
+
+    /**
+     * End tests, notifying executionListeners
+     * @param t, the executionToken containing results for this test run
+     * @param features, the features which were run during this test run
+     */
+    public void endTests(ExecutionToken t, List<FeatureToken> features) {
+        listenerSupport.notifyTestsCompleted(t, features);
+    }
+
+    /**
+     * Run the interpreter once for each configMutator, adding executed features to the list of features
+     * and collating results within the executionToken
+     */
+    public List<FeatureToken> run(ExecutionToken t, ConfigMutator... configMutators) throws Exception {
+        List<FeatureToken> features = new ArrayList<FeatureToken>();
+        for ( ConfigMutator c : configMutators) {
+            ChorusConfig childConfig = c.getNewConfig(baseConfig);
+            List<FeatureToken> featuresThisPass = run(t, childConfig);
+            features.addAll(featuresThisPass);
         }
+        return features;
+    }
 
+    /**
+     * Run the interpreter, collating results into the executionToken and notifying
+     */
+    private List<FeatureToken> run(ExecutionToken executionToken, ChorusConfig config) throws Exception {
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        List<String> handlerPackages = parsedArgs.get("h");
+        List<String> handlerPackages = config.getValues(InterpreterProperty.HANDLER_PACKAGES);
         if (handlerPackages != null) {
             chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
         }
 
-        chorusInterpreter.setDryRun(parsedArgs.containsKey("dryrun"));
+        chorusInterpreter.setDryRun(config.isTrue(InterpreterProperty.DRY_RUN));
 
         //set a filter tags expression if provided
-        if (parsedArgs.containsKey("t")) {
-            List<String> tagExpressionParts = parsedArgs.get("t");
+        if (config.isSet(InterpreterProperty.TAG_EXPRESSION)) {
+            List<String> tagExpressionParts = config.getValues(InterpreterProperty.TAG_EXPRESSION);
             StringBuilder builder = new StringBuilder();
             for (String tagExpressionPart : tagExpressionParts) {
                 builder.append(tagExpressionPart);
@@ -91,70 +148,43 @@ public class Main {
         }
 
         //identify the feature files
-        List<String> featureFileNames = parsedArgs.get("f");
-        List<File> featureFiles = getFeatureFiles(featureFileNames);
+        List<String> featureFileNames = config.getValues(InterpreterProperty.FEATURE_PATHS);
+        List<File> featureFiles = new FeatureScanner().getFeatureFiles(featureFileNames);
 
-        chorusInterpreter.addExecutionListener(executionListeners);
-
-        String testSuiteName = parsedArgs.get("name") != null ? concatenateName(parsedArgs.get("name")) : "";
-        TestExecutionToken executionResultsToken = new TestExecutionToken(testSuiteName);
-        chorusInterpreter.processFeatures(executionResultsToken, featureFiles);
-
-        return executionResultsToken.isPassedAndFullyImplemented();
+        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
+        List<FeatureToken> features = chorusInterpreter.processFeatures(executionToken, featureFiles);
+        return features;
     }
 
-    private static void exitWithHelp() {
-        System.err.println("Usage: Main [-verbose] [-dryrun] [-showsummary] [-t tag_expression] [-jmxListener host:port] -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name]");
-        System.exit(-1);
+    public String getSuiteName() {
+        return baseConfig.getSuiteName();
     }
 
-    private static List<File> getFeatureFiles(List<String> cmdLineFeatures) {
-        List<File> result = new ArrayList<File>();
-        for (String featureFileName : cmdLineFeatures) {
-            File f = new File(featureFileName);
-            if (f.exists()) {
-                if (f.isDirectory()) {
-                    //add all files in this dir and its subdirs
-                    addFeaturesRecursively(f, result);
-                } else if (isFeatureFile(f)) {
-                    //just add this single file
-                    result.add(f);
-                }
-            } else {
-                System.err.printf("Cannot find file or directory named: %s %n", featureFileName);
-                System.exit(-1);
-            }
-        }
-        return result;
+    public List<String> getFeatureFilePaths() {
+        return baseConfig.getValues(InterpreterProperty.FEATURE_PATHS);
     }
 
-    /**
-     * Recursively scans subdirectories, adding all feature files to the targetList.
-     */
-    private static void addFeaturesRecursively(File directory, List<File> targetList) {
-        for (File f : directory.listFiles()) {
-            if (f.isDirectory()) {
-                addFeaturesRecursively(f, targetList);
-            } else if (isFeatureFile(f)) {
-                targetList.add(f);
-            }
-        }
+    public void addExecutionListener(ExecutionListener... listeners) {
+        listenerSupport.addExecutionListener(listeners);
     }
 
-    private static boolean isFeatureFile(File featureFile) {
-        return featureFile.isFile() && featureFile.getName().endsWith(".feature");
+    public boolean removeExecutionListener(ExecutionListener... listeners) {
+        return listenerSupport.removeExecutionListener(listeners);
     }
 
-    private static String concatenateName(List<String> name) {
-        StringBuilder sb = new StringBuilder();
-        if ( name.size() > 0 ) {
-            Iterator<String> i = name.iterator();
-            sb.append(i.next());
-            while (i.hasNext()) {
-                sb.append(" ");
-                sb.append(i.next());
-            }
-        }
-        return sb.toString();
+    public void addExecutionListener(Collection<ExecutionListener> listeners) {
+        listenerSupport.addExecutionListener(listeners);
+    }
+
+    public void removeExecutionListeners(List<ExecutionListener> listeners) {
+        listenerSupport.removeExecutionListeners(listeners);
+    }
+
+    public void setExecutionListener(ExecutionListener... listener) {
+        listenerSupport.setExecutionListener(listener);
+    }
+
+    public List<ExecutionListener> getListeners() {
+        return listenerSupport.getListeners();
     }
 }

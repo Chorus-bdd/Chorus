@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,9 +33,9 @@ package org.chorusbdd.chorus.core.interpreter.results;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class StepToken implements ResultToken {
+public class StepToken extends AbstractToken implements Token {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
 
     private final String type;
     private final String action;
@@ -45,12 +45,17 @@ public class StepToken implements ResultToken {
     private Throwable throwable;
 
     public StepToken(String type, String action) {
+        this(getNextId(), type, action);
+    }
+
+    private StepToken(long id, String type, String action) {
+        super(id);
         this.type = type;
         this.action = action;
     }
 
     public StepToken deepCopy() {
-        StepToken copy = new StepToken(this.type, this.action);
+        StepToken copy = new StepToken(getTokenId(), this.type, this.action);
         copy.endState = this.endState;
         copy.message = this.message;
         copy.throwable = this.throwable;
@@ -102,8 +107,7 @@ public class StepToken implements ResultToken {
     }
 
     public boolean isPassed() {
-        //this means 'dry run' also counts as passed
-        return endState != StepEndState.FAILED;
+        return endState == StepEndState.PASSED || endState == StepEndState.DRYRUN;
     }
 
     @Override

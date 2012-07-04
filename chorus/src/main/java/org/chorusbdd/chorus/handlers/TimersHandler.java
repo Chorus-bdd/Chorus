@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.annotations.Step;

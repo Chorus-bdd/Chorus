@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,13 +27,12 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.results.*;
-import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
-import org.chorusbdd.chorus.core.interpreter.scanner.HandlerOnlyClassFilter;
+import org.chorusbdd.chorus.core.interpreter.scanner.*;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.*;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -60,11 +59,6 @@ public class ChorusInterpreter {
 
     private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
     private ExecutionListenerSupport executionListenerSupport = new ExecutionListenerSupport();
-
-    /**
-     * Always included in the Handlers base package scan
-     */
-    private static final String CHORUS_HANDLERS_PACKAGE = "org.chorusbdd.chorus.handlers";
 
     /**
      * Defines the class which will be instantiated to perform injection of Spring context/resources
@@ -94,11 +88,7 @@ public class ChorusInterpreter {
     }
 
 
-    public TestExecutionToken processFeatures(TestExecutionToken executionToken, List<File> featureFiles) throws Exception {
-
-        //identifies this execution, in case we have parallel or subsequent executions
-        executionListenerSupport.notifyStartTests(executionToken);
-
+    public List<FeatureToken> processFeatures(ExecutionToken executionToken, List<File> featureFiles) throws Exception {
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //load all available feature classes
@@ -109,42 +99,93 @@ public class ChorusInterpreter {
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
             ChorusParser parser = new ChorusParser();
-            List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
-            filterFeaturesByScenarioTags(features);
+            try {
+                log.info(String.format("Loading feature from file: %s", featureFile));
+                List<FeatureToken> features = parser.parse(new FileReader(featureFile));
 
-            //RUN EACH FEATURE
-            for (FeatureToken feature : features) {
-                processFeature(
-                    executionToken,
-                    allFeatures,
-                    allHandlerClasses,
-                    unmanagedHandlerInstances,
-                    featureFile,
-                    feature
-                );
+                filterFeaturesByScenarioTags(features);
+
+                //RUN EACH FEATURE
+                for (FeatureToken feature : features) {
+                    processFeature(
+                        executionToken,
+                        allFeatures,
+                        allHandlerClasses,
+                        unmanagedHandlerInstances,
+                        featureFile,
+                        feature
+                    );
+                }
+            } catch (Exception e) {
+                log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
+                log.warn(e.getMessage());
+
+                //in fact the feature file might contain more than one feature although this is probably a bad practice-
+                // we can't know if parsing failed, best we can do is increment failed by one
+                executionToken.incrementFeaturesFailed();
             }
         }
-
-        executionListenerSupport.notifyTestsCompleted(executionToken, allFeatures);
-        return executionToken;
+        return allFeatures;
     }
 
-    private void processFeature(TestExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
+    private void processFeature(ExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
         executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         results.add(feature);
-        log.info(String.format("Loaded feature file: %s", featureFile));
 
         //check that the required handler classes are all available and list them in order of precidence
-        StringBuilder unavailableHandlersMessage = new StringBuilder();
         List<Class> orderedHandlerClasses = new ArrayList<Class>();
+        StringBuilder unavailableHandlersMessage = findHandlerClasses(allHandlerClasses, feature, orderedHandlerClasses);
+        boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
+
+        //run the scenarios in the feature
+        if (foundAllHandlerClasses) {
+            runScenarios(executionToken, unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses);
+            if ( feature.isPassed()) {
+                executionToken.incrementFeaturesPassed();
+            } else {
+                executionToken.incrementFeaturesFailed();
+            }
+        } else {
+            feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
+            executionToken.incrementUnavailableHandlers();
+            executionToken.incrementFeaturesFailed();
+        }
+
+        executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
+    }
+
+    private void runScenarios(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses) throws Exception {
+        //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
+        List<Object> handlerInstances = new ArrayList<Object>();
+        //FOR EACH SCENARIO
+        List<ScenarioToken> scenarios = feature.getScenarios();
+        for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
+            ScenarioToken scenario = iterator.next();
+            boolean isLastScenario = !iterator.hasNext();
+
+            processScenario(
+                executionToken,
+                unmanagedHandlerInstances,
+                featureFile,
+                feature,
+                orderedHandlerClasses,
+                handlerInstances,
+                isLastScenario,
+                scenario
+            );
+        }
+    }
+
+    private StringBuilder findHandlerClasses(HashMap<String, Class> allHandlerClasses, FeatureToken feature, List<Class> orderedHandlerClasses) {
+        StringBuilder unavailableHandlersMessage = new StringBuilder();
         Class mainHandlerClass = allHandlerClasses.get(feature.getName());
         if (mainHandlerClass == null) {
-            log.info(String.format("No explicit handler was found for Feature: (%s), will only use those specified in the Uses statements",
+            log.info(String.format("No default handler found for Feature: (%s), will use built-in handlers and Uses: statements",
                     feature.getName()));
         } else {
             log.debug(String.format("Loaded handler class (%s) for Feature: (%s)",
@@ -153,51 +194,22 @@ public class ChorusInterpreter {
 
             orderedHandlerClasses.add(mainHandlerClass);
         }
-        for (String usesFeatureWithName : feature.getUsesFeatures()) {
-            Class usesHandlerClass = allHandlerClasses.get(usesFeatureWithName);
+        for (String usesHandler : feature.getUsesHandlers()) {
+            Class usesHandlerClass = allHandlerClasses.get(usesHandler);
             if (usesHandlerClass == null) {
-                unavailableHandlersMessage.append(String.format("'%s' ", usesFeatureWithName));
+                unavailableHandlersMessage.append(String.format("'%s' ", usesHandler));
             } else {
                 log.debug(String.format("Loaded handler class (%s) for Uses: (%s)",
                         usesHandlerClass.getName(),
-                        usesFeatureWithName));
+                        usesHandler));
 
                 orderedHandlerClasses.add(usesHandlerClass);
             }
         }
-        boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
-
-        //run the scenarios in the feature
-        if (foundAllHandlerClasses) {
-
-            //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
-            List<Object> handlerInstances = new ArrayList<Object>();
-            //FOR EACH SCENARIO
-            List<ScenarioToken> scenarios = feature.getScenarios();
-            for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
-                ScenarioToken scenario = iterator.next();
-                boolean isLastScenario = !iterator.hasNext();
-
-                processScenario(
-                    executionToken,
-                    unmanagedHandlerInstances,
-                    featureFile,
-                    feature,
-                    orderedHandlerClasses,
-                    handlerInstances,
-                    isLastScenario,
-                    scenario
-                );
-            }
-        } else {
-            feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
-            executionToken.incrementUnavailableHandlers();
-        }
-
-        executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
+        return unavailableHandlersMessage;
     }
 
-    private void processScenario(TestExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
+    private void processScenario(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
 
         log.info(String.format("Processing scenario: %s", scenario.getName()));
@@ -207,9 +219,9 @@ public class ChorusInterpreter {
 
         addHandlerInstances(unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses, handlerInstances);
 
-        boolean scenarioPassed = runScenarioSteps(executionToken, handlerInstances, scenario);
+        runScenarioSteps(executionToken, handlerInstances, scenario);
 
-        if ( scenarioPassed ) {
+        if ( scenario.isPassed() ) {
             executionToken.incrementScenariosPassed();
         } else {
             executionToken.incrementScenariosFailed();
@@ -228,7 +240,7 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 
-    private boolean runScenarioSteps(TestExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
+    private boolean runScenarioSteps(ExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
         //RUN THE STEPS IN THE SCENARIO
         boolean scenarioPassed = true;//track the scenario state
         List<StepToken> steps = scenario.getSteps();
@@ -300,7 +312,7 @@ public class ChorusInterpreter {
      * @param skip      is true the step will be skipped if found
      * @return the exit state of the executed step
      */
-    private StepEndState processStep(TestExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
+    private StepEndState processStep(ExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
 
         executionListenerSupport.notifyStepStarted(executionToken, step);
 
@@ -331,7 +343,10 @@ public class ChorusInterpreter {
                     } else {
                         try {
                             //call the step method using reflection
-                            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(stepDefinitionMethodFinder.getInstanceToCallOn(), stepDefinitionMethodFinder.getMethodCallArgs());
+                            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
+                                stepDefinitionMethodFinder.getInstanceToCallOn(),
+                                stepDefinitionMethodFinder.getMethodCallArgs()
+                            );
                             if (result != null) {
                                 step.setMessage(result.toString());
                             }
@@ -397,12 +412,12 @@ public class ChorusInterpreter {
      */
     private HashMap<String, Class> loadHandlerClasses(String[] basePackages) throws Exception {
         //always include the Chorus handlers package
-        String[] allBasePackages = new String[basePackages.length + 1];
-        allBasePackages[0] = CHORUS_HANDLERS_PACKAGE;
-        System.arraycopy(basePackages, 0, allBasePackages, 1, basePackages.length);
-
         HashMap<String, Class> featureClasses = new HashMap<String, Class>();
-        Set<Class> handlerClasses = ClasspathScanner.doScan(new HandlerOnlyClassFilter(), allBasePackages);
+
+        HandlerClassFilterFactory filterFactory = new HandlerClassFilterFactory();
+        ClassFilter chainStart = filterFactory.createClassFilters(basePackages);
+
+        Set<Class> handlerClasses = ClasspathScanner.doScan(chainStart);
         for (Class handlerClass : handlerClasses) {
             Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
             String featureName = f.value();
@@ -485,11 +500,15 @@ public class ChorusInterpreter {
         this.filterExpression = filterExpression;
     }
 
-    public void addExecutionListener(ChorusExecutionListener... listeners) {
+    public void addExecutionListener(ExecutionListener... listeners) {
         executionListenerSupport.addExecutionListener(listeners);
     }
 
-    public boolean removeExecutionListener(ChorusExecutionListener... listeners) {
+    public void addExecutionListeners(List<ExecutionListener> executionListeners) {
+        executionListenerSupport.addExecutionListener(executionListeners);
+    }
+
+    public boolean removeExecutionListener(ExecutionListener... listeners) {
         return executionListenerSupport.removeExecutionListener(listeners);
     }
 

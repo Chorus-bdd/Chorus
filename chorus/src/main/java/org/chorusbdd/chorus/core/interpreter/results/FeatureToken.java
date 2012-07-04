@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,17 +36,25 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class FeatureToken implements ResultToken {
+public class FeatureToken extends AbstractToken implements Token {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
 
     private String name;
-    private String[] usesFeatures;
+    private String[] usesHandlers;
     private String configurationName;
     private StringBuilder description = new StringBuilder();
     private List<ScenarioToken> scenarios = new ArrayList<ScenarioToken>();
 
     private String unavailableHandlersMessage;
+
+    public FeatureToken() {
+        super(getNextId());
+    }
+
+    private FeatureToken(long tokenId) {
+        super(tokenId);
+    }
 
     public String getName() {
         return name;
@@ -91,12 +99,12 @@ public class FeatureToken implements ResultToken {
         scenarios.add(scenario);
     }
 
-    public void setUsesFeatures(String[] usesFeatures) {
-        this.usesFeatures = usesFeatures;
+    public void setUsesHandlers(String[] usesHandlers) {
+        this.usesHandlers = usesHandlers;
     }
 
-    public String[] getUsesFeatures() {
-        return usesFeatures;
+    public String[] getUsesHandlers() {
+        return usesHandlers;
     }
 
     public String getUnavailableHandlersMessage() {
@@ -136,9 +144,9 @@ public class FeatureToken implements ResultToken {
      * @return
      */
     public FeatureToken deepCopy() {
-        FeatureToken copy = new FeatureToken();
+        FeatureToken copy = new FeatureToken(getTokenId());
         copy.name = this.name;
-        copy.usesFeatures = usesFeatures.clone();
+        copy.usesHandlers = usesHandlers.clone();
         copy.configurationName = this.configurationName;
         copy.scenarios = new ArrayList<ScenarioToken>(this.scenarios.size());
         for (ScenarioToken scenario : this.scenarios) {
@@ -153,10 +161,10 @@ public class FeatureToken implements ResultToken {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (String s : usesFeatures) {
+        for (String s : usesHandlers) {
             sb.append("Using: ").append(s).append("\n");
         }
-        if (usesFeatures.length > 0) {
+        if (usesHandlers.length > 0) {
             sb.append("\n");
         }
         sb.append("Feature: ").append(name).append('\n');

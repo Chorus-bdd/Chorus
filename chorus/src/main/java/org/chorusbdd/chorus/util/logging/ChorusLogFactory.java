@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,7 +54,7 @@ public class ChorusLogFactory {
 
     private static final ChorusLogProvider logProvider;
 
-    public static final String LOG_PROVIDER_SYSTEM_PROPERTY = "logProvider";
+    public static final String LOG_PROVIDER_SYSTEM_PROPERTY = "chorusLogProvider";
 
     private static final String COMMONS_LOG_FACTORY_CLASSNAME = "org.apache.commons.logging.LogFactory";
     private static final String CHORUS_COMMONS_LOG_PROVIDER = "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider";
@@ -65,7 +65,7 @@ public class ChorusLogFactory {
             result = createCommonsLogFactoryProvider(result);
         }
         if ( result == null ) {
-            result = createStandardOutLogFactory();
+            result = createStandardErrLogProvider();
             result.getLog(ChorusLogFactory.class).info(
                 "Could not find commons logging on the classpath will use default stdout logging"
             );
@@ -77,7 +77,7 @@ public class ChorusLogFactory {
         return logProvider.getLog(clazz);
     }
 
-    private static ChorusLogProvider createStandardOutLogFactory() {
+    private static ChorusLogProvider createStandardErrLogProvider() {
         return new StandardOutLogProvider();
     }
 

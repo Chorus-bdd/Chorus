@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,13 +38,21 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class ScenarioToken implements ResultToken {
+public class ScenarioToken extends AbstractToken implements Token {
 
-    private static final long serialVersionUID = 1;
+    private static final long serialVersionUID = 2;
 
     private String name;
     private List<StepToken> steps = new ArrayList<StepToken>();
     private List<String> tags = new ArrayList<String>();//all tags listed on this scenario and its parent feature
+
+    public ScenarioToken() {
+        super(getNextId());
+    }
+
+    private ScenarioToken(long tokenId) {
+        super(tokenId);
+    }
 
     public String getName() {
         return name;
@@ -84,7 +92,7 @@ public class ScenarioToken implements ResultToken {
     }
 
     public ScenarioToken deepCopy() {
-        ScenarioToken copy = new ScenarioToken();
+        ScenarioToken copy = new ScenarioToken(getTokenId());
         copy.name = this.name;
         copy.steps = new ArrayList<StepToken>();
         for (StepToken step : steps) {

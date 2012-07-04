@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.util.logging;
 
 /**
-* Created with IntelliJ IDEA.
+* Creaxted with IntelliJ IDEA.
 * User: Nick Ebbutt
 * Date: 15/05/12
 * Time: 11:50
@@ -54,7 +54,7 @@ class StandardOutLogProvider implements ChorusLogProvider {
         }
 
         private static void setLogLevel() {
-            String logLevel = System.getProperty("logLevel", "WARN");
+            String logLevel = System.getProperty("chorusLogLevel", "WARN");
 
             boolean found = false;
             for (LogLevel l : LogLevel.values()) {
@@ -178,12 +178,21 @@ class StandardOutLogProvider implements ChorusLogProvider {
             }
         }
 
+        /**
+         * At present we are logging all messages to the standard error stream rather than
+         * standard out. This is to differentiate the logging output from the results of the
+         * interpreter execution which are written to System.out
+         */
         private void logOut(String type, Object message) {
-            System.out.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+            //and don't want refactoring the code to break tests if log statements move class
+            System.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
         private void logErr(String type, Object message) {
-            System.err.println(String.format("%-25s --> %-7s - %s", className, type, message));
+            //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+            //and don't want refactoring the code to break tests if log statements move class
+            System.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
         private static enum LogLevel {
