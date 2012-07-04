@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,6 +32,8 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +47,8 @@ import java.util.List;
  */
 public class ChorusParser {
 
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusParser.class);
+
     //finite state machine states
     private static final int START = 0;
     private static final int READING_FEATURE_DESCRIPTION = 1;
@@ -56,7 +60,13 @@ public class ChorusParser {
     //the filter tags are read before a feature or scenario so when found store them here until next line is read
     private String lastTagsLine = null;
 
-    public List<FeatureToken> parse(Reader reader) throws IOException {
+    /**
+     * There is a limit of 1 feature definition per feature file, but where the 'configurations' feature is used,
+     * we can return more than one feature here, one for each configuration detected
+     *
+     * @return List containing single feature, or multiple features where configurations are used
+     */
+    public List<FeatureToken> parse(Reader reader) throws IOException, ParseException {
 
         List<String> usingDeclarations = new ArrayList<String>();
         List<String> configurationNames = null;
@@ -96,6 +106,7 @@ public class ChorusParser {
             }
 
             if (line.startsWith("Uses:")) {
+                checkNoCurrentFeature(currentFeature, lineNumber, "Uses: declarations must precede Feature: declarations");
                 usingDeclarations.add(line.substring(6, line.length()).trim());
                 continue;
             }
@@ -106,6 +117,7 @@ public class ChorusParser {
             }
 
             if (line.startsWith("Feature:")) {
+                checkNoCurrentFeature(currentFeature, lineNumber, "Cannot define more than one Feature: in a .feature file");
                 currentFeaturesTags = extractTagsAndResetLastTagsLineField();
                 currentFeature = createFeature(line, usingDeclarations);
                 parserState = READING_FEATURE_DESCRIPTION;
@@ -157,22 +169,36 @@ public class ChorusParser {
                 case READING_EXAMPLES_TABLE:
                     if (examplesTableHeaders == null) {
                         //reading the headers row in the examples table
-                        examplesTableHeaders = readTableRowData(line);
+                        examplesTableHeaders = readTableRowData(line, false);
                         examplesCounter = 0;
                         //read or reset the last tags line
                     } else {
                         //reading a data row in the examples table
-                        ScenarioToken scenarioFromOutline = createScenarioFromOutline(outlineScenario,
-                                examplesTableHeaders,
-                                readTableRowData(line),
-                                currentFeaturesTags,
-                                currentScenariosTags,
-                                ++examplesCounter);
-                        currentFeature.addScenario(scenarioFromOutline);
+                        List<String> values = readTableRowData(line, true);
+                        ++examplesCounter;
+                        String scenarioName = String.format("%s [%s]", outlineScenario.getName(), examplesCounter);
+                        if ( values.size() != examplesTableHeaders.size()) {
+                            log.warn(
+                                "Wrong number of values for " + scenarioName + ", expecting " + examplesTableHeaders.size() +
+                                " but got " + values.size());
+                            log.warn(line);
+                            throw new ParseException("Failed to parse Scenario-Outline " + scenarioName, lineNumber);
+                        } else {
+                            ScenarioToken scenarioFromOutline = createScenarioFromOutline(
+                                   scenarioName,
+                                   outlineScenario,
+                                   examplesTableHeaders,
+                                   values,
+                                   currentFeaturesTags,
+                                   currentScenariosTags,
+                                   examplesCounter
+                            );
+                            currentFeature.addScenario(scenarioFromOutline);
+                        }
                     }
                     break;
                 default:
-                    throw new ParseError("Parse error", lineNumber);
+                    throw new ParseException("Parse error, unexpected text '" + line + "'", lineNumber);
 
             }
         }
@@ -193,10 +219,16 @@ public class ChorusParser {
 
     }
 
+    private void checkNoCurrentFeature(FeatureToken currentFeature, int lineNumber, String message) throws ParseException {
+        if ( currentFeature != null) {
+            throw new ParseException(message, lineNumber);
+        }
+    }
+
     private FeatureToken createFeature(String line, List<String> usingDeclarations) {
         FeatureToken feature = new FeatureToken();
         feature.setName(line.substring(8, line.length()).trim());
-        feature.setUsesFeatures(usingDeclarations.toArray(new String[usingDeclarations.size()]));
+        feature.setUsesHandlers(usingDeclarations.toArray(new String[usingDeclarations.size()]));
         return feature;
     }
 
@@ -226,9 +258,9 @@ public class ChorusParser {
         return scenario;
     }
 
-    private ScenarioToken createScenarioFromOutline(ScenarioToken outlineScenario, List<String> placeholders, List<String> values,List<String> currentFeaturesTags, List<String> currentScenariosTags, int counter) {
+    private ScenarioToken createScenarioFromOutline(String scenarioName, ScenarioToken outlineScenario, List<String> placeholders, List<String> values,List<String> currentFeaturesTags, List<String> currentScenariosTags, int counter) {
         ScenarioToken scenario = new ScenarioToken();
-        scenario.setName(String.format("%s [%s]", outlineScenario.getName(), counter));
+        scenario.setName(scenarioName);
         //then the outline scenario steps
         for (StepToken step : outlineScenario.getSteps()) {
             String action = step.getAction();
@@ -247,19 +279,21 @@ public class ChorusParser {
         return scenario;
     }
 
-    private List<String> readTableRowData(String line) {
-        String[] headers = line.trim().split("\\|");
+    private List<String> readTableRowData(String line, boolean blankValuesPermitted) {
+        String[] tokens = line.trim().split("\\|");
         List<String> rowData = new ArrayList<String>();
-        for (String header : headers) {
-            if (header.trim().length() > 0) {
-                rowData.add(header.trim());
+        for (int i = 0 ; i < tokens.length ; i ++) {
+            String token = tokens[i].trim();
+            //always skip any blank space before the first |
+            if ( i > 0 && (blankValuesPermitted || token.length() > 0)) {
+                rowData.add(token);
             }
         }
         return rowData;
     }
 
     private List<String> readConfigurationNames(String line) {
-        String[] names = line.trim().substring("Configuratons:".length() + 1).split(",");
+        String[] names = line.trim().substring("Configurations:".length() + 1).split(",");
         List<String> list = new ArrayList<String>();
         for (String name : names) {
             if (name.trim().length() > 0) {
@@ -291,9 +325,9 @@ public class ChorusParser {
         }
     }
 
-    class ParseError extends RuntimeException {
-        ParseError(String message, int lineNumber) {
-            super(String.format("%s (at lastTagsLine:%s)", message, lineNumber));
+    public static class ParseException extends Exception {
+        ParseException(String message, int lineNumber) {
+            super(String.format("%s (at line:%s)", message, lineNumber));
         }
     }
 }

@@ -29,11 +29,13 @@
  */
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 import org.chorusbdd.chorus.tools.util.ImageUtils;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.util.List;
@@ -45,16 +47,16 @@ import java.util.List;
  * Time: 16:03
  * To change this template use File | Settings | File Templates.
  */
-public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener {
+public class FeatureTreeViewer extends JPanel implements ExecutionListener {
 
     private ExecutionOutputViewer executionOutputViewer;
-    private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-    private DefaultTreeModel model = new DefaultTreeModel(root);
+    private DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode());
     private JTree featureTree = new JTree(model);
 
-    private FeatureNode currentFeature;
-    private ScenarioNode currentScenario;
-    private StepNode currentStep;
+    private SuiteNode rootNode;
+    private FeatureNode currentFeatureNode;
+    private ScenarioNode currentScenarioNode;
+    private SuiteNode currentSuiteNode;
 
     public FeatureTreeViewer(ExecutionOutputViewer executionOutputViewer) {
         this.executionOutputViewer = executionOutputViewer;
@@ -67,52 +69,57 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         setLayout(new BorderLayout());
         add(p, BorderLayout.CENTER);
         setPreferredSize(ChorusViewerConstants.DEFAULT_SPLIT_PANE_CONTENT_SIZE);
+        addSelectionListener();
+    }
+
+    private void addSelectionListener() {
+        featureTree.addTreeSelectionListener(new ShowSelectedNodeListener());
     }
 
     private void configureDisplay() {
-        featureTree.setRootVisible(false);
+        //featureTree.setRootVisible(false);
         featureTree.setCellRenderer(new ResultNodeCellRenderer());
     }
 
-    public void testsStarted(TestExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken) {
+        rootNode = new SuiteNode(testExecutionToken);
+        currentSuiteNode = rootNode;
+        model.setRoot(currentSuiteNode);
     }
 
-    public void featureStarted(TestExecutionToken testExecutionToken, FeatureToken feature) {
-        currentFeature = addNode(new FeatureNode(feature), root, true);
+    public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+        currentFeatureNode = addNode(new FeatureNode(feature), currentSuiteNode, true);
     }
 
-    public void featureCompleted(TestExecutionToken testExecutionToken, FeatureToken feature) {
+    public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         //if we have received the updated token over the wire, the completed instance may be != the started instance
         //completed instance has the finished state, so update our token reference to that
-        currentFeature.setToken(feature);
-        currentFeature = null;
+        currentFeatureNode.setToken(feature);
+        currentFeatureNode = null;
     }
 
-    public void scenarioStarted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
-        currentScenario = addNode(new ScenarioNode(scenario), currentFeature, true);
+    public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+        currentScenarioNode = addNode(new ScenarioNode(scenario), currentFeatureNode, true);
     }
 
-    public void scenarioCompleted(TestExecutionToken testExecutionToken, ScenarioToken scenario) {
+    public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         //if we have received the updated token over the wire, the completed instance may be != the started instance
         //completed instance has the finished state, so update our token reference to that
-        currentScenario.setToken(scenario);
-        featureTree.collapsePath(new TreePath(currentScenario.getPath()));  //collapse down the detail nodes once feature finished
-        currentScenario = null;
+        currentScenarioNode.setToken(scenario);
+        featureTree.collapsePath(new TreePath(currentScenarioNode.getPath()));  //collapse down the detail nodes once feature finished
+        currentScenarioNode = null;
     }
 
-    public void stepStarted(TestExecutionToken testExecutionToken, StepToken step) {
-        currentStep = addNode(new StepNode(step), currentScenario, true);
+    public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
     }
 
-    public void stepCompleted(TestExecutionToken testExecutionToken, StepToken step) {
-        //if we have received the updated token over the wire, the completed instance may be != the started instance
-        //completed instance has the finished state, so update our token reference to that
-        currentStep.setToken(step);
-        currentStep = null;
+    public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
     }
 
-    public void testsCompleted(TestExecutionToken testExecutionToken, List<FeatureToken> features) {
-        //make sure we repaint to show the latest state
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+        currentSuiteNode.setToken(testExecutionToken);
+        currentSuiteNode = null; //otherwise we never 'stop processing' root node and renders as in progress
+        featureTree.repaint();
     }
 
     private <T extends AbstractTokenTreeNode> T addNode(T newNode, MutableTreeNode parent, boolean showNode) {
@@ -123,7 +130,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         return newNode;
     }
 
-    private abstract class AbstractTokenTreeNode<N extends ResultToken> extends DefaultMutableTreeNode {
+    private abstract class AbstractTokenTreeNode<N extends Token> extends DefaultMutableTreeNode {
 
         private N token;
 
@@ -192,7 +199,7 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         }
 
         protected AbstractTokenTreeNode<FeatureToken> getCurrentlyProcessingNode() {
-            return currentFeature;
+            return currentFeatureNode;
         }
     }
 
@@ -223,36 +230,39 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
         }
 
         protected AbstractTokenTreeNode<ScenarioToken> getCurrentlyProcessingNode() {
-            return currentScenario;
+            return currentScenarioNode;
         }
     }
+    
+    private class SuiteNode extends AbstractTokenTreeNode<ExecutionToken>  {
 
-    private class StepNode extends AbstractTokenTreeNode<StepToken>  {
-
-        public StepNode(StepToken token) {
+        public SuiteNode(ExecutionToken token) {
             super(token);
         }
 
+        public String toString() {
+            return getToken().getTestSuiteName();
+        }
+
         protected ImageIcon getFailedIcon() {
-            return ImageUtils.STEP_FAILED;
+            return ImageUtils.SUITE_FAILED;
         }
 
         protected ImageIcon getNotImplementedIcon() {
-            return ImageUtils.STEP_NOT_IMPLEMENTED;
+            return ImageUtils.SUITE_NOT_IMPLEMENTED;
         }
 
         protected ImageIcon getOkIcon() {
-            return ImageUtils.STEP_OK;
+            return ImageUtils.SUITE_OK;
         }
 
         protected ImageIcon getInProgressIcon() {
-            return ImageUtils.STEP_IN_PROGRESS;
+            return ImageUtils.SUITE_IN_PROGRESS;
         }
 
-        protected AbstractTokenTreeNode<StepToken> getCurrentlyProcessingNode() {
-            return currentStep;
+        protected AbstractTokenTreeNode<ExecutionToken> getCurrentlyProcessingNode() {
+            return currentSuiteNode;
         }
-
     }
 
     private static class ResultNodeCellRenderer extends DefaultTreeCellRenderer {
@@ -271,6 +281,23 @@ public class FeatureTreeViewer extends JPanel implements ChorusExecutionListener
 
             super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
             return this;
+        }
+    }
+
+    /**
+     * Show the execution output for just the selected tree node
+     */
+    private class ShowSelectedNodeListener implements TreeSelectionListener {
+
+        public void valueChanged(TreeSelectionEvent e) {
+            AbstractTokenTreeNode n = (AbstractTokenTreeNode)e.getNewLeadSelectionPath().getLastPathComponent();
+            if ( n == rootNode) {
+                executionOutputViewer.showAll();
+            } else if ( n instanceof FeatureNode) {
+                executionOutputViewer.showFeature(((FeatureNode)n).getToken());
+            } else if ( n instanceof ScenarioNode) {
+                executionOutputViewer.showScenario(((ScenarioNode)n).getToken());
+            }
         }
     }
 }

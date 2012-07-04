@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,16 +29,17 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
+import org.chorusbdd.chorus.util.config.ChorusConfig;
+import org.chorusbdd.chorus.util.config.InterpreterProperty;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -54,31 +55,30 @@ public class ExecutionListenerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(Main.class);
 
-    public List<ChorusExecutionListener> createExecutionListener(Map<String, List<String>> parsedArgs) {
-        List<ChorusExecutionListener> result = new ArrayList<ChorusExecutionListener>();
-        if ( parsedArgs.containsKey("jmxListener")) {
+    public List<ExecutionListener> createExecutionListener(ChorusConfig config) {
+        List<ExecutionListener> result = new ArrayList<ExecutionListener>();
+        if ( config.isSet(InterpreterProperty.JMX_LISTENER)) {
             //we can have zero to many remote jmx execution listeners available
-            addProxyForRemoteJmxListener(parsedArgs, result);
+            addProxyForRemoteJmxListener(config.getValues(InterpreterProperty.JMX_LISTENER), result);
         }
 
-        addSystemOutExecutionListener(parsedArgs, result);
+        addSystemOutExecutionListener(config, result);
         return result;
     }
 
-    private void addSystemOutExecutionListener(Map<String, List<String>> parsedArgs, List<ChorusExecutionListener> result) {
-        boolean verbose = parsedArgs.containsKey("verbose");
-        boolean showSummary = parsedArgs.containsKey("showsummary");
+    private void addSystemOutExecutionListener(ChorusConfig config, List<ExecutionListener> result) {
+        boolean verbose = config.isTrue(InterpreterProperty.SHOW_ERRORS);
+        boolean showSummary = config.isTrue(InterpreterProperty.SHOW_SUMMARY);
         result.add(new SystemOutExecutionListener(showSummary, verbose));
     }
 
-    private void addProxyForRemoteJmxListener(Map<String, List<String>> parsedArgs, List<ChorusExecutionListener> result) {
-        List<String> remoteListenerHostAndPorts = parsedArgs.get("jmxListener");
+    private void addProxyForRemoteJmxListener(List<String> remoteListenerHostAndPorts, List<ExecutionListener> result) {
         for ( String hostAndPort : remoteListenerHostAndPorts ) {
             addRemoteListener(result, hostAndPort);
         }
     }
 
-    private void addRemoteListener(List<ChorusExecutionListener> result, String hostAndPort) {
+    private void addRemoteListener(List<ExecutionListener> result, String hostAndPort) {
         try {
             StringTokenizer t = new StringTokenizer(hostAndPort, ":");
             String host = t.nextToken();

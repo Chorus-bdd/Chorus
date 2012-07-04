@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -48,10 +48,6 @@ import org.apache.commons.logging.LogFactory;
  * dependency (and then we can make commons logging optional)
  */
 public class ChorusCommonsLogProvider implements ChorusLogProvider {
-
-    static {
-        System.out.println("Loading Chorus Commons Logger");
-    }
 
     public ChorusLog getLog(Class clazz) {
         Log log = LogFactory.getLog(clazz);

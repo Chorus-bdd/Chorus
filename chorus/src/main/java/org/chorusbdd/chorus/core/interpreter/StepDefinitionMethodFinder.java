@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -98,7 +98,7 @@ class StepDefinitionMethodFinder {
         String regex = stepAnnotationInstance.value();
         String action = step.getAction();
 
-        Object[] values = RegexpUtils.extractGroups(regex, action, method.getParameterTypes());
+        Object[] values = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, method.getParameterTypes());
         if (values != null) { //the regexp matched the action and the method's parameters
             if (methodToCall == null) {
                 methodToCall = method;
@@ -106,7 +106,7 @@ class StepDefinitionMethodFinder {
                 methodToCallPendingMessage = stepAnnotationInstance.pending();
                 instanceToCallOn = instance;
             } else {
-                log.warn(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
+                log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
                         instance.getClass().getSimpleName(),
                         method.getName(),
                         step,

@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2012 The Software Conservancy as Trustee.
+ *  Copyright (C) 2000-2012 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,7 +36,6 @@ import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.List;
 
 /**
  * Created by: Steve Neal
@@ -52,14 +51,19 @@ public class PlainResultsFormatter implements ResultsFormatter {
 
     public void printResults(ResultsSummary summary) {
         if (summary != null) {
+            printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
+                    summary.getFeaturesPassed() + summary.getFeaturesFailed(),
+                    summary.getFeaturesPassed(),
+                    summary.getFeaturesFailed()));
+
             //print scenarios summary
-            printMessage(String.format("%nScenarios (total:%d) (passed:%d) (failed:%d)",
+            printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
                     summary.getScenariosPassed() + summary.getScenariosFailed(),
                     summary.getScenariosPassed(),
                     summary.getScenariosFailed()));
 
             //print steps summary
-            printMessage(String.format("Steps (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
+            printMessage(String.format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
                     summary.getStepsPassed() + summary.getStepsFailed() + summary.getStepsUndefined() + summary.getStepsPending() + summary.getStepsSkipped(),
                     summary.getStepsPassed(),
                     summary.getStepsFailed(),
