@@ -41,10 +41,7 @@ import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -162,15 +159,19 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     private void clearAndResetChorusSysProperties(Properties systemProperties) {
         //clear any existing chorus sys props
-        for(String property : System.getProperties().stringPropertyNames() ) {
-            if ( property.toString().startsWith("chorus")) {
-                System.clearProperty(property.toString());
+        Iterator<Map.Entry<Object,Object>> i = System.getProperties().entrySet().iterator();
+        while(i.hasNext()) {
+            Map.Entry<Object,Object> e = i.next();
+            if ( e.getKey().toString().startsWith("chorus")) {
+                i.remove();
             }
         }
 
         //set new chorus sys props
-        for ( String propertyName : systemProperties.stringPropertyNames()) {
-            System.setProperty(propertyName, systemProperties.getProperty(propertyName));
+        i = systemProperties.entrySet().iterator();
+        while(i.hasNext()) {
+            Map.Entry<Object,Object> e = i.next();
+            System.setProperty(e.getKey().toString(), e.getValue().toString());
         }
     }
 
