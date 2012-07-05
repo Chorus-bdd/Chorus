@@ -76,8 +76,10 @@ public abstract class AbstractInterpreterTest extends Assert {
 
         if (runTestsInProcess) {
             ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysProps);
+            checkTestResults(r, expectedResults);
         }
         ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysProps);
+        checkTestResults(r, expectedResults);
     }
 
     protected boolean checkTestResults(ChorusSelfTestResults actualResults, ChorusSelfTestResults expectedResults) {

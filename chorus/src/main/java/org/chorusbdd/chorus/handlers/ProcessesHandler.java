@@ -350,29 +350,35 @@ public class ProcessesHandler {
 
         public ChildProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
             this.process = Runtime.getRuntime().exec(command);
+
+            InputStream processOutStream = process.getInputStream();
+            InputStream processErrorStream = process.getErrorStream();
+            log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
+
             if (null == stdoutLogPath) {
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), false, System.out);
+                this.outRedirector = new ProcessRedirector(processOutStream, false, System.out);
             } else {
-                PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath));
-                this.outRedirector = new ProcessRedirector(process.getInputStream(), true, out);
+                PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath), true);
+                this.outRedirector = new ProcessRedirector(processOutStream, true, out);
             }
             if (null == stderrLogPath) {
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), false, System.err);
+                this.errRedirector = new ProcessRedirector(processErrorStream, false, System.err);
             } else {
-                PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath));
-                this.errRedirector = new ProcessRedirector(process.getErrorStream(), true, err);
+                PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath), true);
+                this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
             }
+            
             Thread outThread = new Thread(outRedirector, name + "-stdout");
             outThread.setDaemon(true);
             outThread.start();
             Thread errThread = new Thread(errRedirector, name + "-stderr");
             errThread.setDaemon(true);
             errThread.start();
-
         }
 
         public void destroy() {
             // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
+            log.debug("Destroying process " + process);
             process.destroy();
             try {
                 //this ensures that all of the processes resources are cleaned up before proceeding
@@ -384,7 +390,7 @@ public class ProcessesHandler {
     }
 
     public static class ProcessRedirector implements Runnable {
-        private BufferedInputStream in;
+        private InputStream in;
         private PrintStream[] out;
         private boolean closeOnExit;
 
