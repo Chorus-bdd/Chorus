@@ -9,3 +9,5 @@ Key features:
 For more information:
  * See the Chorus wiki at: http://www.chorus-bdd.org
  * Or contact us here http://www.smartkey.co.uk/contact.html
+
+Chorus is available under the open source MIT license
