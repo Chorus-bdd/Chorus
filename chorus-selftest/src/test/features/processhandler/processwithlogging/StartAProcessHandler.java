@@ -27,10 +27,14 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package processhandler;
+package processhandler.processwithlogging;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,12 +42,44 @@ import org.chorusbdd.chorus.annotations.Step;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Start A Process")
-public class StartAProcessHandler {
+@Handler("Start A Process With Logging")
+public class StartAProcessHandler extends ChorusAssert {
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
 
+    }
+
+    @Step("the (.*) file contains a line (.*)")
+    public void logContainsLine(String resourcePath, String line) throws IOException {
+        String path = AbstractInterpreterTest.getPathToFile(getClass(), resourcePath);
+        checkFileContainsLine(line, path);
+    }
+
+    private void checkFileContainsLine(String line, String path) throws IOException {
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new FileReader(new File(path)));
+            line = line.trim();
+
+            String l = r.readLine();
+            boolean result = false;
+            while(l != null) {
+                if ( line.equals(l.trim())) {
+                    result = true;
+                    break;
+                }
+                l = r.readLine();
+            }
+            ChorusAssert.assertTrue("check contains line", result);
+        } finally {
+            if ( r != null) {
+                try {
+                    r.close();
+                } catch (Exception e) {
+                }
+            }
+        }
     }
 
 }

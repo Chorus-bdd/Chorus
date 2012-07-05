@@ -1,4 +1,4 @@
-package processhandler;
+package processhandler.processwithlogging;
 
 /**
  * Created by IntelliJ IDEA.

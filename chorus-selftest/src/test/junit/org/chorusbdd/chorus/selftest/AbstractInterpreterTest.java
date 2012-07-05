@@ -30,13 +30,9 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.Main;
-import org.chorusbdd.chorus.handlers.ProcessesHandler;
-import org.chorusbdd.chorus.util.ChorusOut;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -155,7 +151,7 @@ public abstract class AbstractInterpreterTest extends Assert {
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
     }
 
-    protected static String readToString(InputStream is) {
+    public static String readToString(InputStream is) {
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader r = new BufferedReader(new InputStreamReader(is));
@@ -192,13 +188,16 @@ public abstract class AbstractInterpreterTest extends Assert {
     }
 
     protected String getStdOutFilePath() {
-        String packageName = getClass().getPackage().getName();
-        return"./src/test/features/" + packageName.replaceAll("\\.", "/") + "/" + getStdOutFileName();
+        return getPathToFile(getClass(), getStdOutFileName());
     }
 
     protected String getStdErrFilePath() {
-        String packageName = getClass().getPackage().getName();
-        return "./src/test/features/" + packageName.replaceAll("\\.", "/") + "/" + getStdErrFileName();
+        return getPathToFile(getClass(), getStdErrFileName());
+    }
+
+    public static String getPathToFile(Class clazz, String filePath) {
+        String packageName = clazz.getPackage().getName();
+        return"./src/test/features/" + packageName.replaceAll("\\.", "/") + "/" + filePath;
     }
 
     public InputStream getStreamFromExpectedStdOutFile() {

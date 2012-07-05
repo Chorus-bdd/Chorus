@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package processhandler;
+package processhandler.processwithlogging;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
@@ -37,9 +37,9 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestStartAProcessFeature extends AbstractInterpreterTest {
+public class TestStartAProcessWithLoggingFeature extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/processhandler/startaprocess.feature";
+    final String featurePath = "src/test/features/processhandler/processwithlogging/startaprocesswithlogging.feature";
 
     final int expectedExitCode = 0;  //success
 
