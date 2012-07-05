@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.util.config;
 
+import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.DeepCopy;
 
 import java.util.*;
@@ -149,7 +150,7 @@ public class ChorusConfig implements DeepCopy<ChorusConfig> {
     }
 
     public static void logHelp() {
-        System.err.println("Usage: Main -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name] [-t tag_expression] [-jmxListener host:port] [-showErrors] [-dryrun] [-showsummary] ");
+        ChorusOut.err.println("Usage: Main -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name] [-t tag_expression] [-jmxListener host:port] [-showErrors] [-dryrun] [-showsummary] ");
     }
 
     //to get the suite name we concatenate all the values provided for suite name switch

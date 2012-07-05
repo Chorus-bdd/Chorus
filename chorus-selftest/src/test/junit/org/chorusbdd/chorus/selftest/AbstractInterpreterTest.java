@@ -30,12 +30,21 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
+import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.handlers.ProcessesHandler;
+import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.config.ChorusConfig;
+import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.logging.ChorusLogProvider;
+import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -68,9 +77,9 @@ public abstract class AbstractInterpreterTest extends Assert {
         overwriteOutputIfSysPropertySet(diff, overwriteStdOutAndErr, actualResults.getStandardError(), getStdErrFilePath());
 
         //now actually fail the test if appropriate
-        assertEquals(expectedResults.getInterpreterExitCode(), actualResults.getInterpreterExitCode());
-        assertEquals(expectedResults.getStandardOutput(), actualResults.getStandardOutput());
-        assertEquals(expectedResults.getStandardError(), actualResults.getStandardError());
+        assertEquals("wrong exit code", expectedResults.getInterpreterExitCode(), actualResults.getInterpreterExitCode());
+        assertEquals("wrong stdout", expectedResults.getStandardOutput(), actualResults.getStandardOutput());
+        assertEquals("wrong stderr", expectedResults.getStandardError(), actualResults.getStandardError());
 
         try {
             Thread.sleep(25);  //prevent output being confused by junit plugin with next test
@@ -111,13 +120,58 @@ public abstract class AbstractInterpreterTest extends Assert {
         DefaultTestProperties sysProps = new DefaultTestProperties();
         sysProps.put("chorusFeaturePaths", featurePath);
         doUpdateTestProperties(sysProps);
-        return runChorusInterpreter(sysProps);
+        return runChorusInterpreterInProcess(sysProps);
     }
 
     /**
      * A test can override this method to modify the sys properties being used from the default set
      */
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+    }
+
+    protected ChorusSelfTestResults runChorusInterpreterInProcess(Properties systemProperties) {
+
+        //some may only be applied / detected statically once per JVM session, nothing we can do about that
+        clearAndResetChorusSysProperties(systemProperties);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream outStream = new PrintStream(out);
+
+        ByteArrayOutputStream err = new ByteArrayOutputStream();
+        PrintStream errStream = new PrintStream(err);
+
+        boolean success = false;
+        try {
+            ChorusOut.setStdOutStream(outStream);
+            ChorusOut.setStdErrStream(errStream);
+
+            try {
+               Main main = new Main(new String[0]);
+               success = main.run();
+            } catch (Exception e) {
+               System.err.println(e.getMessage());
+            }
+
+        } finally {
+            ChorusOut.setStdOutStream(System.out);
+            ChorusOut.setStdErrStream(System.err);
+        }
+
+        return new ChorusSelfTestResults(out.toString(), err.toString(), success ? 0 : 1);
+    }
+
+    private void clearAndResetChorusSysProperties(Properties systemProperties) {
+        //clear any existing chorus sys props
+        for(String property : System.getProperties().stringPropertyNames() ) {
+            if ( property.toString().startsWith("chorus")) {
+                System.clearProperty(property.toString());
+            }
+        }
+
+        //set new chorus sys props
+        for ( String propertyName : systemProperties.stringPropertyNames()) {
+            System.setProperty(propertyName, systemProperties.getProperty(propertyName));
+        }
     }
 
     protected ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) throws IOException, InterruptedException {

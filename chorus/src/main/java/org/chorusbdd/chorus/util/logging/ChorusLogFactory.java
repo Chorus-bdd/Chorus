@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
+import org.chorusbdd.chorus.util.ChorusOut;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -77,6 +79,10 @@ public class ChorusLogFactory {
         return logProvider.getLog(clazz);
     }
 
+    public static ChorusLogProvider getLogProvider() {
+        return logProvider;
+    }
+
     private static ChorusLogProvider createStandardErrLogProvider() {
         return new StandardOutLogProvider();
     }
@@ -91,10 +97,10 @@ public class ChorusLogFactory {
         } catch (ClassNotFoundException e) {
             //Could not find java commons logging on the classpath will use default logging
         } catch (InstantiationException e) {
-            System.err.println("Failed to instantiate ChorusLogProvider will revert to default logging");
+            ChorusOut.err.println("Failed to instantiate ChorusLogProvider will revert to default logging");
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            System.err.println("IllegalAccessException when initializing ChorusLogProvider, will revert to default logging");
+            ChorusOut.err.println("IllegalAccessException when initializing ChorusLogProvider, will revert to default logging");
             e.printStackTrace();
         }
         return result;
@@ -110,7 +116,7 @@ public class ChorusLogFactory {
                 result = (ChorusLogProvider)c.newInstance();
             }
         } catch (Throwable t) {
-            System.err.println("Failed to instantiate ChorusLogProvider class " + provider + ", will look for alternative commons logger or use Std out");
+            ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + ", will look for alternative commons logger or use Std out");
         }
         return result;
     }

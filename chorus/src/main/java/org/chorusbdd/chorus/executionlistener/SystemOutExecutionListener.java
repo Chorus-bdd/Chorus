@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
+import org.chorusbdd.chorus.util.ChorusOut;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -50,7 +51,7 @@ public class SystemOutExecutionListener implements ExecutionListener {
     private boolean verbose = false;
 
     public SystemOutExecutionListener(boolean showSummary, boolean verbose) {
-        this.formatter = new PlainResultsFormatter(new PrintWriter(System.out, true));
+        this.formatter = new PlainResultsFormatter(new PrintWriter(ChorusOut.out, true));
         this.showSummary = showSummary;
         this.verbose = verbose;
     }

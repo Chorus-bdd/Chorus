@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.core.interpreter.ExecutionListenerSupport;
 import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
+import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.config.ChorusConfig;
 import org.chorusbdd.chorus.util.config.InterpreterProperty;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
@@ -60,7 +61,7 @@ public class Main {
             Main main = new Main(args);
             success = main.run();
         } catch (InterpreterPropertyException e) {
-            System.err.println(e.getMessage());
+            ChorusOut.err.println(e.getMessage());
             ChorusConfig.logHelp();
         }
 

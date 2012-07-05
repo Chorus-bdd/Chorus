@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.selftest;
 
+import org.chorusbdd.chorus.handlers.ProcessesHandler;
+
 /**
 * Created by IntelliJ IDEA.
 * User: Nick Ebbutt
@@ -72,7 +74,12 @@ public class ChorusSelfTestResults {
         output = removeCarriageReturns(output);
         output = removeJavaOptionsVariable(output);
         output = replaceWindowsWithUnixPaths(output);
+        output = replaceSystemSpecificProcessDetails(output);
         return output;
+    }
+
+    private String replaceSystemSpecificProcessDetails(String output) {
+        return output.replaceAll(ProcessesHandler.STARTING_JAVA_LOG_PREFIX + ".*", ProcessesHandler.STARTING_JAVA_LOG_PREFIX + " <system specific process details replaced>");
     }
 
     //ensure we have consistent paths to compare

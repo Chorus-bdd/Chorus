@@ -70,6 +70,8 @@ public class ProcessesHandler {
 
     private static boolean haveCreatedLogDir = false;
 
+    public static final String STARTING_JAVA_LOG_PREFIX = "About to run Java: ";
+
     /**
      * Starts a new Java process using properties defined in a properties file alongside the feature file
      *
@@ -176,7 +178,7 @@ public class ProcessesHandler {
                 mainClass,
                 args).trim();
 
-        log.info("About to run Java: " + command);
+        log.info(STARTING_JAVA_LOG_PREFIX + command);
         startProcess(alias, command, stdoutLogPath, stderrLogPath);
     }
 

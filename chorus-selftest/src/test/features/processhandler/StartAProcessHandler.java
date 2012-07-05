@@ -27,54 +27,23 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers;
+package processhandler;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 /**
- * Created by: Steve Neal
- * Date: 12/10/11
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-@Handler(value = "Timers", scope = HandlerScope.UNMANAGED)
-@SuppressWarnings("UnusedDeclaration")
-public class TimersHandler {
+@Handler("Start A Process")
+public class StartAProcessHandler {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(TimersHandler.class);
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
 
-    /**
-     * Simple timer to make the calling thread sleep
-     *
-     * @param seconds the number of seconds that the thread will sleep for
-     */
-    @Step(".*wait for ([0-9]*) seconds?.*")
-    public void waitForSeconds(int seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping", e);
-        }
-    }
-
-    @Step(".*wait for ([0-9]*) milliseconds?.*")
-    public void waitForMilliseconds(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping", e);
-        }
-    }
-
-    @Step(".*wait for half a second.*")
-    public void waitForHalfASecond() {
-       try {
-           Thread.sleep(500);
-       } catch (InterruptedException e) {
-           log.error("Thread interrupted while sleeping", e);
-       }
     }
 
 }

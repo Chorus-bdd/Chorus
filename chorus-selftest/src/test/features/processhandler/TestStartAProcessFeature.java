@@ -27,54 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers;
+package processhandler;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by: Steve Neal
- * Date: 12/10/11
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-@Handler(value = "Timers", scope = HandlerScope.UNMANAGED)
-@SuppressWarnings("UnusedDeclaration")
-public class TimersHandler {
+public class TestStartAProcessFeature extends AbstractInterpreterTest {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(TimersHandler.class);
+    final String featurePath = "src/test/features/processhandler/startaprocess.feature";
 
-    /**
-     * Simple timer to make the calling thread sleep
-     *
-     * @param seconds the number of seconds that the thread will sleep for
-     */
-    @Step(".*wait for ([0-9]*) seconds?.*")
-    public void waitForSeconds(int seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping", e);
-        }
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    @Step(".*wait for ([0-9]*) milliseconds?.*")
-    public void waitForMilliseconds(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping", e);
-        }
-    }
-
-    @Step(".*wait for half a second.*")
-    public void waitForHalfASecond() {
-       try {
-           Thread.sleep(500);
-       } catch (InterruptedException e) {
-           log.error("Thread interrupted while sleeping", e);
-       }
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }

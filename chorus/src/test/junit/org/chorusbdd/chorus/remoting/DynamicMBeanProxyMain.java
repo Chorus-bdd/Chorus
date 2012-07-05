@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.remoting;
 
 import org.chorusbdd.chorus.remoting.jmx.AbstractJmxProxy;
+import org.chorusbdd.chorus.util.ChorusOut;
 
 /**
  * Created by: Steve Neal
@@ -42,6 +43,6 @@ public class DynamicMBeanProxyMain {
         String mBeanName = "org.chorusbdd.chorus:name=testbean";
         AbstractJmxProxy proxy = new AbstractJmxProxy(host, jmxPort, mBeanName);
         Object result = proxy.getAttribute("StepDefinitions");
-        System.out.println(result);
+        ChorusOut.out.println(result);
     }
 }
