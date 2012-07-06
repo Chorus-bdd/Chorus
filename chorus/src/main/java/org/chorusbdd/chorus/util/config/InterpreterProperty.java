@@ -44,15 +44,32 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  */
 public enum InterpreterProperty {
 
-    FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "c:\\my\\path or ..\\my\\path"),
-    HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "my.package.name"),
-    DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "(false|true)"),
-    SHOW_SUMMARY("-showsummary", "-s", "chorusShowSummary", false, 0, 1, new String[] {"true"},  "(?i)(false|true)", "(false|true)"),
-    TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, null, "\\w+", "MyTagName"),
-    JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+:\\d{2,5}", "myhost.mydomain:1001"),
-    SUITE_NAME("-suiteName", "-n", "chorusSuiteName", false, 1, Integer.MAX_VALUE, new String[] {"Test Suite"}, "[\\w\\s]+", "My Suite Name"),
-    SHOW_ERRORS("-showErrors", "-e", "chorusShowErrors", false, 0, 1, new String[] {"false"},  "(?i)(false|true)",  "(false|true)"),
-    LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "(trace|debug|info|warn|error|fatal)");
+    FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
+    "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively"),
+
+    HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "-h my.package.name",
+    "Handler package names to restrict the search for handler classes - this is optional but may speed up handler searching for larger projects"),
+
+    DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-d (false|true)",
+    "Whether to actually execute steps or just detect and log the discovery of handlers and step definitions"),
+
+    SHOW_SUMMARY("-showsummary", "-s", "chorusShowSummary", false, 0, 1, new String[] {"true"},  "(?i)(false|true)", "-s (false|true)",
+    "Whether to show the closing summary of pass/fail information"),
+
+    TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, null, "\\w+", "-t MyTagName",
+    "One or more tags which can be used to restrict features which are executed"),
+
+    JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+:\\d{2,5}", "-j myhost.mydomain:1001",
+    "Network address of an agent which will receive execution events as the interpreter runs"),
+
+    SUITE_NAME("-suiteName", "-n", "chorusSuiteName", false, 1, Integer.MAX_VALUE, new String[] {"Test Suite"}, "[\\w\\s]+", "-n My Suite Name",
+    "Name for the test suite to be run"),
+
+    SHOW_ERRORS("-showErrors", "-e", "chorusShowErrors", false, 0, 1, new String[] {"false"},  "(?i)(false|true)",  "-e (false|true)",
+    "Whether stack traces should be shown in the interpreter output (rather than just a message) when step implementations throws exceptions"),
+
+    LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "-l (trace|debug|info|warn|error|fatal)",
+    "The log level to be used by Chorus' built in log provider");
 
     private String switchName;
     private String switchShortName;
@@ -63,6 +80,7 @@ public enum InterpreterProperty {
     private String validatingExpression;    //regular expression to validate property values
     private String[] defaults;              //default values for this property if not defined by user
     private String example;                 //example property values to show to user
+    private String description;
 
     private InterpreterProperty(String switchName,
                                 String switchShortName,
@@ -72,9 +90,11 @@ public enum InterpreterProperty {
                                 int maxValues,
                                 String[] defaults, //be be null == 'not set'
                                 String validatingExpression,
-                                String example) {
+                                String example,
+                                String description) {
         this.defaults = defaults;
         this.example = example;
+        this.description = description;
         this.switchName = switchName.substring(1);
         this.switchShortName = switchShortName.substring(1);
         this.systemProperty = systemProperty;
@@ -139,10 +159,29 @@ public enum InterpreterProperty {
         return example;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     /**
      * @return default values for this property, or null if the property defaults to 'not set'
      */
     public String[] getDefaults() {
         return defaults;
+    }
+
+    //useful for generating a table of chorus' input parameters in csv format
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        for ( InterpreterProperty p : values() ) {
+            sb.append(p.getSwitchName()).append(",").
+               append("-").append(p.getSwitchShortName()).append(",").
+               append(p.getSystemProperty()).append(",").
+               append(p.isMandatory()).append(",").
+               append(p.getDefaults() != null ? p.getDefaults()[0] : "").append(",").
+               append(p.getExample()).append(",").
+               append(p.getDescription()).append("\n");
+        }
+        System.out.println(sb);
     }
 }

@@ -5,7 +5,7 @@ Chorus --> INFO    - Processing scenario: Start a Single Java Process
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     And I start a config1 process named Frodo                                                PASSED  
-    And I wait for half a second for the process to run                                      PASSED  
+    And I wait for 1 second for the process to run                                           PASSED  
     And I can stop the process named Frodo                                                   PASSED  
     Then the logs/startaprocesswithlogging-Frodo-out.log file contains a line 1              PASSED  
     And the logs/startaprocesswithlogging-Frodo-out.log file contains a line Woohoo, we have started a processPASSED  
