@@ -105,7 +105,8 @@ public class TestConfigReader extends ChorusAssert {
     }
 
     @Test
-    public void testMandatoryPropertyMustBeSet() {
+    public void mandatoryPropertyMustBeSet() {
+        System.clearProperty(ChorusConfigProperty.FEATURE_PATHS.getSystemProperty());  //in case set
         String[] switches = new String[] { "-d" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         try {
