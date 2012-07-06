@@ -31,8 +31,9 @@ package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.results.*;
-import org.chorusbdd.chorus.core.interpreter.scanner.*;
-import org.chorusbdd.chorus.core.interpreter.scanner.filter.*;
+import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
+import org.chorusbdd.chorus.core.interpreter.scanner.filter.HandlerClassFilterFactory;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;

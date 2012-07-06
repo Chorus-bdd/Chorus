@@ -31,6 +31,10 @@ package org.chorusbdd.chorus.util.config;
 
 import org.chorusbdd.chorus.util.ChorusConstants;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -42,7 +46,7 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  * Each has a long switch name, a short switch name, min and max bounds for number of values,
  * and regular expression to validate values
  */
-public enum InterpreterProperty {
+public enum ChorusConfigProperty implements ConfigurationProperty {
 
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
     "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively"),
@@ -82,16 +86,16 @@ public enum InterpreterProperty {
     private String example;                 //example property values to show to user
     private String description;
 
-    private InterpreterProperty(String switchName,
-                                String switchShortName,
-                                String systemProperty,
-                                boolean mandatory,
-                                int minValues,
-                                int maxValues,
-                                String[] defaults, //be be null == 'not set'
-                                String validatingExpression,
-                                String example,
-                                String description) {
+    private ChorusConfigProperty(String switchName,
+                                 String switchShortName,
+                                 String systemProperty,
+                                 boolean mandatory,
+                                 int minValues,
+                                 int maxValues,
+                                 String[] defaults, //be be null == 'not set'
+                                 String validatingExpression,
+                                 String example,
+                                 String description) {
         this.defaults = defaults;
         this.example = example;
         this.description = description;
@@ -106,17 +110,10 @@ public enum InterpreterProperty {
 
 
     /**
-     * @return the InterpreterProperty for which either switchName or switchShortName matches flag
+     * @return the ConfigurationProperty for which either switchName or switchShortName matches flag
      */
-    public static InterpreterProperty getProperty(String flag) {
-        InterpreterProperty result = null;
-        for (InterpreterProperty p : values()) {
-            if ( p.getSwitchName().equals(flag) || p.getSwitchShortName().equals(flag)) {
-                result = p;
-                break;
-            }
-        }
-        return result;
+    public boolean matchesSwitch(String s) {
+        return getSwitchName().equals(s) || getSwitchShortName().equals(s);
     }
 
     public String getSwitchName() {
@@ -170,18 +167,25 @@ public enum InterpreterProperty {
         return defaults;
     }
 
-    //useful for generating a table of chorus' input parameters in csv format
-    public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
-        for ( InterpreterProperty p : values() ) {
-            sb.append(p.getSwitchName()).append(",").
-               append("-").append(p.getSwitchShortName()).append(",").
-               append(p.getSystemProperty()).append(",").
-               append(p.isMandatory()).append(",").
-               append(p.getDefaults() != null ? p.getDefaults()[0] : "").append(",").
-               append(p.getExample()).append(",").
-               append(p.getDescription()).append("\n");
-        }
-        System.out.println(sb);
+    public static List<ConfigurationProperty> getAll() {
+        List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>();
+        Collections.addAll(l, values());
+        return l;
     }
+
+    //useful for generating a table of chorus' input parameters in csv format
+//    public static void main(String[] args) {
+//        StringBuilder sb = new StringBuilder();
+//        for ( ConfigurationProperty p : values() ) {
+//            sb.append(p.getSwitchName()).append(",").
+//               append("-").append(p.getSwitchShortName()).append(",").
+//               append(p.getSystemProperty()).append(",").
+//               append(p.isMandatory()).append(",").
+//               append(p.getDefaults() != null ? p.getDefaults()[0] : "").append(",").
+//               append(p.getExample()).append(",").
+//               append(p.getDescription()).append("\n");
+//        }
+//        System.out.println(sb);
+//    }
+
 }

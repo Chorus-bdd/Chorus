@@ -39,14 +39,35 @@ import java.util.Map;
  * Date: 12/06/12
  * Time: 10:15
  */
-public abstract  class AbstractPropertySource implements PropertySource {
+public abstract class AbstractPropertySource implements PropertySource {
 
-    protected List<String> getOrCreatePropertyList(Map<InterpreterProperty, List<String>> propertyMap, InterpreterProperty switchName) {
+    List<ConfigurationProperty> properties;
+
+    protected AbstractPropertySource(List<ConfigurationProperty> properties) {
+        this.properties = properties;
+    }
+
+    protected List<String> getOrCreatePropertyList(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty switchName) {
         List<String> tokens = propertyMap.get(switchName);
         if ( tokens == null) {
             tokens = new ArrayList<String>();
             propertyMap.put(switchName, tokens);
         }
         return tokens;
+    }
+
+    protected List<ConfigurationProperty> getProperties() {
+        return properties;
+    }
+
+    protected ConfigurationProperty getProperty(String s) {
+        ConfigurationProperty result = null;
+        for (ConfigurationProperty p : properties) {
+            if ( p.matchesSwitch(s)) {
+                result = p;
+                break;
+            }
+        }
+        return result;
     }
 }

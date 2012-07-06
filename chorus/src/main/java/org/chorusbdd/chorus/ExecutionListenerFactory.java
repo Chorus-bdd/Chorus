@@ -33,8 +33,8 @@ import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
-import org.chorusbdd.chorus.util.config.ChorusConfig;
-import org.chorusbdd.chorus.util.config.InterpreterProperty;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -55,20 +55,20 @@ public class ExecutionListenerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(Main.class);
 
-    public List<ExecutionListener> createExecutionListener(ChorusConfig config) {
+    public List<ExecutionListener> createExecutionListener(ConfigReader configReader) {
         List<ExecutionListener> result = new ArrayList<ExecutionListener>();
-        if ( config.isSet(InterpreterProperty.JMX_LISTENER)) {
+        if ( configReader.isSet(ChorusConfigProperty.JMX_LISTENER)) {
             //we can have zero to many remote jmx execution listeners available
-            addProxyForRemoteJmxListener(config.getValues(InterpreterProperty.JMX_LISTENER), result);
+            addProxyForRemoteJmxListener(configReader.getValues(ChorusConfigProperty.JMX_LISTENER), result);
         }
 
-        addSystemOutExecutionListener(config, result);
+        addSystemOutExecutionListener(configReader, result);
         return result;
     }
 
-    private void addSystemOutExecutionListener(ChorusConfig config, List<ExecutionListener> result) {
-        boolean verbose = config.isTrue(InterpreterProperty.SHOW_ERRORS);
-        boolean showSummary = config.isTrue(InterpreterProperty.SHOW_SUMMARY);
+    private void addSystemOutExecutionListener(ConfigReader configReader, List<ExecutionListener> result) {
+        boolean verbose = configReader.isTrue(ChorusConfigProperty.SHOW_ERRORS);
+        boolean showSummary = configReader.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
         result.add(new SystemOutExecutionListener(showSummary, verbose));
     }
 

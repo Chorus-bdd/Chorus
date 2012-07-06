@@ -34,7 +34,6 @@ import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.tools.util.AwtSafeListener;
-import org.chorusbdd.chorus.util.config.ChorusConfig;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -42,8 +41,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.swing.*;
 import java.lang.management.ManagementFactory;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Created with IntelliJ IDEA.

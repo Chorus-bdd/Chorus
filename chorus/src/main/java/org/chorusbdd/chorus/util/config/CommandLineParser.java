@@ -41,6 +41,10 @@ import java.util.StringTokenizer;
  */
 public class CommandLineParser extends AbstractPropertySource {
 
+    public CommandLineParser(List<ConfigurationProperty> properties) {
+        super(properties);
+    }
+
     /**
      * Add to the provided propertyMap any properties available from this source
      *
@@ -49,61 +53,58 @@ public class CommandLineParser extends AbstractPropertySource {
 
      * @return propertyMap, with parsed properties added
      */
-    public Map<InterpreterProperty, List<String>> parseProperties(Map<InterpreterProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
-//        InterpreterProperty currentFlag = null;
-//        for (String arg : args) {
-//            currentFlag = processArgument(propertyMap, currentFlag, arg);
-//        }
-//        return propertyMap;
-        StringBuilder allArgs = new StringBuilder();
-        for (String s : args) {
-            allArgs.append(s);
-        }
+    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
 
-        for ( String s : allArgs.toString().split("-")) {
-            StringTokenizer st = new StringTokenizer(s);
-
-            InterpreterProperty property = InterpreterProperty.getProperty(s);
-            if (property == null ) {
-               throw new InterpreterPropertyException("Unsupported parameter " + s);
+        //if some command line switches were specified
+        if ( args.length > 0 ) {
+            //easiest to build the args back up into a single string then split by -
+            StringBuilder allArgs = new StringBuilder();
+            for (String s : args) {
+                allArgs.append(s).append(" ");
             }
-            List<String> l = getOrCreatePropertyList(propertyMap, property);
+
+            String allargs = allArgs.toString();
+            if ( ! allargs.startsWith("-")) {
+                throw new InterpreterPropertyException("arguments must start with a switch, e.g. -f");
+            }
+
+            //having checked the first char is a -, we now have to strip it
+            //otherwise end up with a first "" token following the split - not sure that's correct behaviour from split
+            allargs = allargs.substring(1);
+            String[] splitParameterList = allargs.split("-");
+
+            for ( String parameterList : splitParameterList) {
+
+                //tokenize, first token will be the property name, rest will be the values
+                StringTokenizer st = new StringTokenizer(parameterList, " ");
+
+                //find the property
+                ConfigurationProperty property = getProperty(parameterList, st);
+
+                //add its values
+                addPropertyValues(propertyMap, st, property);
+            }
+        }
+        return propertyMap;
+    }
+
+    private void addPropertyValues(Map<ConfigurationProperty, List<String>> propertyMap, StringTokenizer st, ConfigurationProperty property) {
+        List<String> l = getOrCreatePropertyList(propertyMap, property);
+        if ( ! st.hasMoreTokens()) {
+            l.add("true");
+        } else {
+            while(st.hasMoreTokens()) {
+                l.add(st.nextToken());
+            }
         }
     }
 
-    private InterpreterProperty processArgument(Map<InterpreterProperty, List<String>> results, InterpreterProperty property, String arg) throws InterpreterPropertyException {
-        List<String> currentPropertyValues = null;
-        if ( property != null) {
-            currentPropertyValues = getOrCreatePropertyList(results, property);
-        }
-
-        if (arg.startsWith("-")) {
-            handleBooleanFlag(property, currentPropertyValues);
-
-            //now find the next property
-            String flag = arg.substring(1, arg.length());
-            property = InterpreterProperty.getProperty(flag);
-            if (property == null ) {
-                throw new InterpreterPropertyException("Unsupported parameter " + flag);
-            }
-            //we want to create an empty list, even if there are no subsequent values
-            //since this is used to determine that the flag was present
-            getOrCreatePropertyList(results, property);
-        } else if ( property != null ) {
-            //add value to value list for this property
-            currentPropertyValues.add(arg);
-        } else {
-            throw new InterpreterPropertyException("Unknown argument " + arg);
+    private ConfigurationProperty getProperty(String parameterList, StringTokenizer st) throws InterpreterPropertyException {
+        String switchProperty = st.nextToken();
+        ConfigurationProperty property = getProperty(switchProperty);
+        if (property == null ) {
+           throw new InterpreterPropertyException("Unsupported parameter " + parameterList);
         }
         return property;
     }
-
-    //where we specify a flag with no value, this is a special case which means that property takes the
-    //boolean value 'true' , e.g -dryrun -f is the same as -dryrun true -f
-    private void handleBooleanFlag(InterpreterProperty property, List<String> currentPropertyValues) {
-        if ( property != null && currentPropertyValues.size() == 0) {
-            currentPropertyValues.add("true");
-        }
-    }
-
 }

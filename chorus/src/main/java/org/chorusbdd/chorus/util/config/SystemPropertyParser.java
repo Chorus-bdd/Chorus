@@ -42,6 +42,10 @@ import java.util.StringTokenizer;
  */
 public class SystemPropertyParser extends AbstractPropertySource implements PropertySource {
 
+    public SystemPropertyParser(List<ConfigurationProperty> properties) {
+        super(properties);
+    }
+
     /**
      * Add to the provided propertyMap any properties available from this source
      *
@@ -50,8 +54,8 @@ public class SystemPropertyParser extends AbstractPropertySource implements Prop
 
      * @return propertyMap, with parsed properties added
      */
-    public Map<InterpreterProperty, List<String>> parseProperties(Map<InterpreterProperty, List<String>> propertyMap, String... args) {
-        for ( InterpreterProperty p : InterpreterProperty.values()) {
+    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) {
+        for ( ConfigurationProperty p : getProperties()) {
            String value = System.getProperty(p.getSystemProperty());
            if ( value != null ) {
                addValues(propertyMap, p, value);
@@ -60,7 +64,7 @@ public class SystemPropertyParser extends AbstractPropertySource implements Prop
         return propertyMap;
     }
 
-    private void addValues(Map<InterpreterProperty, List<String>> propertyMap, InterpreterProperty property, String value) {
+    private void addValues(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty property, String value) {
         StringTokenizer st = new StringTokenizer(value, " ");
         List<String> tokens = getOrCreatePropertyList(propertyMap, property);
         while(st.hasMoreElements()) {

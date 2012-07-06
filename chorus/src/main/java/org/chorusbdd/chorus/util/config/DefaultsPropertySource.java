@@ -43,8 +43,13 @@ import java.util.Map;
  */
 public class DefaultsPropertySource extends AbstractPropertySource {
 
-    public Map<InterpreterProperty, List<String>> parseProperties(Map<InterpreterProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
-        for ( InterpreterProperty p : InterpreterProperty.values()) {
+
+    public DefaultsPropertySource(List<ConfigurationProperty> properties) {
+        super(properties);
+    }
+
+    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
+        for ( ConfigurationProperty p : getProperties()) {
             //if not already present, add defaults if there are default values set for the property
             if ( ! propertyMap.containsKey(p) && ( p.getDefaults() != null && p.getDefaults().length > 0)) {
                 List<String> properties = getOrCreatePropertyList(propertyMap, p);

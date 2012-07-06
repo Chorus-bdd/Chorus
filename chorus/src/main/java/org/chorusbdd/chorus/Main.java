@@ -36,14 +36,15 @@ import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
 import org.chorusbdd.chorus.util.ChorusOut;
-import org.chorusbdd.chorus.util.config.ChorusConfig;
-import org.chorusbdd.chorus.util.config.InterpreterProperty;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class Main {
 
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
     private final ExecutionListenerFactory factory = new ExecutionListenerFactory();
-    private final ChorusConfig baseConfig;
+    private final ConfigReader baseConfigReader;
 
     public static void main(String[] args) throws Exception {
 
@@ -63,7 +64,7 @@ public class Main {
             success = main.run();
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
-            ChorusConfig.logHelp();
+            ConfigReader.logHelp();
         }
 
         //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
@@ -75,9 +76,9 @@ public class Main {
 
 
     public Main(String[] args) throws InterpreterPropertyException {
-        baseConfig = new ChorusConfig(args);
-        baseConfig.readConfiguration();
-        List<ExecutionListener> listeners = factory.createExecutionListener(baseConfig);
+        baseConfigReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
+        baseConfigReader.readConfiguration();
+        List<ExecutionListener> listeners = factory.createExecutionListener(baseConfigReader);
         listenerSupport.addExecutionListener(listeners);
     }
 
@@ -86,7 +87,7 @@ public class Main {
      * @return true, if all tests were fully implemented and passed
      */
     public boolean run() throws Exception {
-        String logLevel = baseConfig.getSingleValue(InterpreterProperty.LOG_LEVEL);
+        String logLevel = baseConfigReader.getSingleValue(ChorusConfigProperty.LOG_LEVEL);
         setLogLevel(logLevel);
         ExecutionToken t = startTests();
         List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
@@ -106,7 +107,7 @@ public class Main {
      * @return an executionToken to collate results for this test run
      */
     public ExecutionToken startTests() {
-        ExecutionToken t = new ExecutionToken(baseConfig.getSuiteName());
+        ExecutionToken t = new ExecutionToken(getSuiteName());
         listenerSupport.notifyStartTests(t);
         return t;
     }
@@ -127,8 +128,8 @@ public class Main {
     public List<FeatureToken> run(ExecutionToken t, ConfigMutator... configMutators) throws Exception {
         List<FeatureToken> features = new ArrayList<FeatureToken>();
         for ( ConfigMutator c : configMutators) {
-            ChorusConfig childConfig = c.getNewConfig(baseConfig);
-            List<FeatureToken> featuresThisPass = run(t, childConfig);
+            ConfigReader childConfigReader = c.getNewConfig(baseConfigReader);
+            List<FeatureToken> featuresThisPass = run(t, childConfigReader);
             features.addAll(featuresThisPass);
         }
         return features;
@@ -137,19 +138,19 @@ public class Main {
     /**
      * Run the interpreter, collating results into the executionToken and notifying
      */
-    private List<FeatureToken> run(ExecutionToken executionToken, ChorusConfig config) throws Exception {
+    private List<FeatureToken> run(ExecutionToken executionToken, ConfigReader configReader) throws Exception {
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        List<String> handlerPackages = config.getValues(InterpreterProperty.HANDLER_PACKAGES);
+        List<String> handlerPackages = configReader.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
         if (handlerPackages != null) {
             chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
         }
 
-        chorusInterpreter.setDryRun(config.isTrue(InterpreterProperty.DRY_RUN));
+        chorusInterpreter.setDryRun(configReader.isTrue(ChorusConfigProperty.DRY_RUN));
 
         //set a filter tags expression if provided
-        if (config.isSet(InterpreterProperty.TAG_EXPRESSION)) {
-            List<String> tagExpressionParts = config.getValues(InterpreterProperty.TAG_EXPRESSION);
+        if (configReader.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
+            List<String> tagExpressionParts = configReader.getValues(ChorusConfigProperty.TAG_EXPRESSION);
             StringBuilder builder = new StringBuilder();
             for (String tagExpressionPart : tagExpressionParts) {
                 builder.append(tagExpressionPart);
@@ -159,7 +160,7 @@ public class Main {
         }
 
         //identify the feature files
-        List<String> featureFileNames = config.getValues(InterpreterProperty.FEATURE_PATHS);
+        List<String> featureFileNames = configReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
         List<File> featureFiles = new FeatureScanner().getFeatureFiles(featureFileNames);
 
         chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
@@ -167,12 +168,8 @@ public class Main {
         return features;
     }
 
-    public String getSuiteName() {
-        return baseConfig.getSuiteName();
-    }
-
     public List<String> getFeatureFilePaths() {
-        return baseConfig.getValues(InterpreterProperty.FEATURE_PATHS);
+        return baseConfigReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
     }
 
     public void addExecutionListener(ExecutionListener... listeners) {
@@ -197,5 +194,26 @@ public class Main {
 
     public List<ExecutionListener> getListeners() {
         return listenerSupport.getListeners();
+    }
+
+
+    //to get the suite name we concatenate all the values provided for suite name switch
+    public String getSuiteName() {
+        return baseConfigReader.isSet(ChorusConfigProperty.SUITE_NAME) ?
+                concatenateName(baseConfigReader.getValues(ChorusConfigProperty.SUITE_NAME)) :
+                "";
+    }
+
+    private String concatenateName(List<String> name) {
+        StringBuilder sb = new StringBuilder();
+        if ( name.size() > 0 ) {
+            Iterator<String> i = name.iterator();
+            sb.append(i.next());
+            while (i.hasNext()) {
+                sb.append(" ");
+                sb.append(i.next());
+            }
+        }
+        return sb.toString();
     }
 }

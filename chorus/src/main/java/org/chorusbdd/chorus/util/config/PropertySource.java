@@ -53,7 +53,7 @@ public interface PropertySource {
 
      * @return propertyMap, with parsed properties added
      */
-    Map<InterpreterProperty, List<String>> parseProperties(
-            Map<InterpreterProperty, List<String>> propertyMap,
+    Map<ConfigurationProperty, List<String>> parseProperties(
+            Map<ConfigurationProperty, List<String>> propertyMap,
             String... args) throws InterpreterPropertyException;
 }

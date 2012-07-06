@@ -35,8 +35,8 @@ import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
-import org.chorusbdd.chorus.util.config.ChorusConfig;
-import org.chorusbdd.chorus.util.config.InterpreterProperty;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
@@ -162,13 +162,13 @@ public class ChorusJUnitRunner {
         //mutate the base config to replace the feature paths with the path of just one selected feature file
         private class SingleFeatureConfigMutator implements ConfigMutator {
 
-            public ChorusConfig getNewConfig(ChorusConfig baseConfig) {
-                ChorusConfig config = baseConfig.deepCopy();
-                config.setProperty(
-                    InterpreterProperty.FEATURE_PATHS,
+            public ConfigReader getNewConfig(ConfigReader baseConfigReader) {
+                ConfigReader configReader = baseConfigReader.deepCopy();
+                configReader.setProperty(
+                    ChorusConfigProperty.FEATURE_PATHS,
                     Collections.singletonList(featureFile.getPath())
                 );
-                return config;
+                return configReader;
             }
         }
     }

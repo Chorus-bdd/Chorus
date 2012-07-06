@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.util.config.ChorusConfig;
+import org.chorusbdd.chorus.util.config.ConfigReader;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,13 +47,13 @@ import org.chorusbdd.chorus.util.config.ChorusConfig;
 public interface ConfigMutator {
 
     public static ConfigMutator NULL_MUTATOR = new ConfigMutator() {
-        public ChorusConfig getNewConfig(ChorusConfig baseConfig) {
-            return baseConfig.deepCopy();
+        public ConfigReader getNewConfig(ConfigReader baseConfigReader) {
+            return baseConfigReader.deepCopy();
         }
     };
 
     /**
-     * @return ChorusConfig - a deep clone of the baseConfig, with some altered properties
+     * @return ConfigReader - a deep clone of the baseConfigReader, with some altered properties
      */
-    public ChorusConfig getNewConfig(ChorusConfig baseConfig);
+    public ConfigReader getNewConfig(ConfigReader baseConfigReader);
 }
