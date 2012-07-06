@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.util.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Created by: Steve Neal
@@ -49,31 +50,60 @@ public class CommandLineParser extends AbstractPropertySource {
      * @return propertyMap, with parsed properties added
      */
     public Map<InterpreterProperty, List<String>> parseProperties(Map<InterpreterProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
-        InterpreterProperty lastFlag = null;
-        for (String arg : args) {
-            lastFlag = processArgument(propertyMap, lastFlag, arg);
+//        InterpreterProperty currentFlag = null;
+//        for (String arg : args) {
+//            currentFlag = processArgument(propertyMap, currentFlag, arg);
+//        }
+//        return propertyMap;
+        StringBuilder allArgs = new StringBuilder();
+        for (String s : args) {
+            allArgs.append(s);
         }
-        return propertyMap;
+
+        for ( String s : allArgs.toString().split("-")) {
+            StringTokenizer st = new StringTokenizer(s);
+
+            InterpreterProperty property = InterpreterProperty.getProperty(s);
+            if (property == null ) {
+               throw new InterpreterPropertyException("Unsupported parameter " + s);
+            }
+            List<String> l = getOrCreatePropertyList(propertyMap, property);
+        }
     }
 
-    private InterpreterProperty processArgument(Map<InterpreterProperty, List<String>> results, InterpreterProperty lastProperty, String arg) throws InterpreterPropertyException {
+    private InterpreterProperty processArgument(Map<InterpreterProperty, List<String>> results, InterpreterProperty property, String arg) throws InterpreterPropertyException {
+        List<String> currentPropertyValues = null;
+        if ( property != null) {
+            currentPropertyValues = getOrCreatePropertyList(results, property);
+        }
+
         if (arg.startsWith("-")) {
+            handleBooleanFlag(property, currentPropertyValues);
+
+            //now find the next property
             String flag = arg.substring(1, arg.length());
-            lastProperty = InterpreterProperty.getProperty(flag);
-            if (lastProperty == null ) {
+            property = InterpreterProperty.getProperty(flag);
+            if (property == null ) {
                 throw new InterpreterPropertyException("Unsupported parameter " + flag);
             }
             //we want to create an empty list, even if there are no subsequent values
             //since this is used to determine that the flag was present
-            getOrCreatePropertyList(results, lastProperty);
-        } else if ( lastProperty != null ) {
+            getOrCreatePropertyList(results, property);
+        } else if ( property != null ) {
             //add value to value list for this property
-            List<String> values = getOrCreatePropertyList(results, lastProperty);
-            values.add(arg);
+            currentPropertyValues.add(arg);
         } else {
             throw new InterpreterPropertyException("Unknown argument " + arg);
         }
-        return lastProperty;
+        return property;
+    }
+
+    //where we specify a flag with no value, this is a special case which means that property takes the
+    //boolean value 'true' , e.g -dryrun -f is the same as -dryrun true -f
+    private void handleBooleanFlag(InterpreterProperty property, List<String> currentPropertyValues) {
+        if ( property != null && currentPropertyValues.size() == 0) {
+            currentPropertyValues.add("true");
+        }
     }
 
 }
