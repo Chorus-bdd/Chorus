@@ -44,24 +44,25 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  */
 public enum InterpreterProperty {
 
-    FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, new String[0], ".*", "c:\\my\\path or ..\\my\\path"),
+    FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "c:\\my\\path or ..\\my\\path"),
     HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "my.package.name"),
     DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "(false|true)"),
     SHOW_SUMMARY("-showsummary", "-s", "chorusShowSummary", false, 0, 1, new String[] {"true"},  "(?i)(false|true)", "(false|true)"),
-    TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, new String[0], "\\w+", "MyTagName"),
-    JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, new String[0], "[\\w\\.]+:\\d{2,5}", "myhost.mydomain:1001"),
+    TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, null, "\\w+", "MyTagName"),
+    JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+:\\d{2,5}", "myhost.mydomain:1001"),
     SUITE_NAME("-suiteName", "-n", "chorusSuiteName", false, 1, Integer.MAX_VALUE, new String[] {"Test Suite"}, "[\\w\\s]+", "My Suite Name"),
-    SHOW_ERRORS("-showErrors", "-e", "chorusShowErrors", false, 0, 1, new String[] {"false"},  "(?i)(false|true)",  "(false|true)");
+    SHOW_ERRORS("-showErrors", "-e", "chorusShowErrors", false, 0, 1, new String[] {"false"},  "(?i)(false|true)",  "(false|true)"),
+    LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "(trace|debug|info|warn|error|fatal)");
 
     private String switchName;
     private String switchShortName;
     private String systemProperty;
-    private boolean mandatory;
-    private final int minValues;
-    private final int maxValues;
-    private String validatingExpression;
-    private String[] defaults;
-    private String example;
+    private boolean mandatory;              //if property must be defined, either user provided or defaulted
+    private final int minValueCount;        //min number of values for this property if defined
+    private final int maxValueCount;        //max number of values for this property if defined
+    private String validatingExpression;    //regular expression to validate property values
+    private String[] defaults;              //default values for this property if not defined by user
+    private String example;                 //example property values to show to user
 
     private InterpreterProperty(String switchName,
                                 String switchShortName,
@@ -69,7 +70,7 @@ public enum InterpreterProperty {
                                 boolean mandatory,
                                 int minValues,
                                 int maxValues,
-                                String[] defaults,
+                                String[] defaults, //be be null == 'not set'
                                 String validatingExpression,
                                 String example) {
         this.defaults = defaults;
@@ -78,8 +79,8 @@ public enum InterpreterProperty {
         this.switchShortName = switchShortName.substring(1);
         this.systemProperty = systemProperty;
         this.mandatory = mandatory;
-        this.minValues = minValues;
-        this.maxValues = maxValues;
+        this.minValueCount = minValues;
+        this.maxValueCount = maxValues;
         this.validatingExpression = validatingExpression;
     }
 
@@ -118,12 +119,12 @@ public enum InterpreterProperty {
         return mandatory;
     }
 
-    public int getMinValues() {
-        return minValues;
+    public int getMinValueCount() {
+        return minValueCount;
     }
 
-    public int getMaxValues() {
-        return maxValues;
+    public int getMaxValueCount() {
+        return maxValueCount;
     }
 
     public String toString() {
@@ -138,6 +139,9 @@ public enum InterpreterProperty {
         return example;
     }
 
+    /**
+     * @return default values for this property, or null if the property defaults to 'not set'
+     */
     public String[] getDefaults() {
         return defaults;
     }

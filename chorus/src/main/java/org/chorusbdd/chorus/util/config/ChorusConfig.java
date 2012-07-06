@@ -92,6 +92,17 @@ public class ChorusConfig implements DeepCopy<ChorusConfig> {
         return propertyMap.get(property);
     }
 
+    /**
+     * @return The value for a property which should always a single value
+     */
+    public String getSingleValue(InterpreterProperty property) {
+        List<String> values = propertyMap.get(property);
+        if ( values == null || values.size() != 1) {
+            throw new RuntimeException("Property " + property + " did not have a single value, instead had the values " + values);
+        }
+        return values.get(0);
+    }
+
     public boolean isSet(InterpreterProperty property) {
         return propertyMap.containsKey(property);
     }
@@ -131,10 +142,10 @@ public class ChorusConfig implements DeepCopy<ChorusConfig> {
     }
 
     private void checkValueCount(InterpreterProperty p, List<String> values) throws InterpreterPropertyException {
-        if ( values.size() < p.getMinValues()) {
-            throw new InterpreterPropertyException("At least " + p.getMinValues() + " value(s) must be supplied for the property " + p);
-        } else if ( values.size() > p.getMaxValues()) {
-            throw new InterpreterPropertyException("At most " + p.getMaxValues() + " value(s) must be supplied for the property " + p);
+        if ( values.size() < p.getMinValueCount()) {
+            throw new InterpreterPropertyException("At least " + p.getMinValueCount() + " value(s) must be supplied for the property " + p);
+        } else if ( values.size() > p.getMaxValueCount()) {
+            throw new InterpreterPropertyException("At most " + p.getMaxValueCount() + " value(s) must be supplied for the property " + p);
         }
     }
 

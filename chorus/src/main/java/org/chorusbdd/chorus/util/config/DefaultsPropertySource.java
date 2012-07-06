@@ -46,7 +46,7 @@ public class DefaultsPropertySource extends AbstractPropertySource {
     public Map<InterpreterProperty, List<String>> parseProperties(Map<InterpreterProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
         for ( InterpreterProperty p : InterpreterProperty.values()) {
             //if not already present, add defaults if there are default values set for the property
-            if ( ! propertyMap.containsKey(p) && p.getDefaults().length > 0) {
+            if ( ! propertyMap.containsKey(p) && ( p.getDefaults() != null && p.getDefaults().length > 0)) {
                 List<String> properties = getOrCreatePropertyList(propertyMap, p);
                 Collections.addAll(properties, p.getDefaults());
             }

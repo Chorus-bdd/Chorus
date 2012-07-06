@@ -39,6 +39,7 @@ import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.config.ChorusConfig;
 import org.chorusbdd.chorus.util.config.InterpreterProperty;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
+import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,10 +86,19 @@ public class Main {
      * @return true, if all tests were fully implemented and passed
      */
     public boolean run() throws Exception {
+        String logLevel = baseConfig.getSingleValue(InterpreterProperty.LOG_LEVEL);
+        setLogLevel(logLevel);
         ExecutionToken t = startTests();
         List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
         endTests(t, features);
         return t.isPassedAndFullyImplemented();
+    }
+
+    /**
+     * Set the log level of Chorus' built in logProvider to the logLevel provided
+     */
+    public void setLogLevel(String logLevel) {
+        StandardOutLogProvider.setLogLevel(logLevel);
     }
 
     /**

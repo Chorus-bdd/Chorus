@@ -40,6 +40,43 @@ import org.chorusbdd.chorus.util.ChorusOut;
 */
 public class StandardOutLogProvider implements ChorusLogProvider {
 
+    private static int logLevel = LogLevel.WARN.getLevel();
+
+    public static void setLogLevel(String logLevel) {
+
+       boolean found = false;
+       for (LogLevel l : LogLevel.values()) {
+           if ( l.name().equalsIgnoreCase(logLevel)) {
+               StandardOutLogProvider.logLevel = l.getLevel();
+               found = true;
+               break;
+           }
+       }
+
+       if ( ! found) {
+           ChorusOut.out.println("Did not recognise log level sys property " + logLevel + " will default to WARN");
+       }
+    }
+
+    private static enum LogLevel {
+        FATAL(0),
+        ERROR(1),
+        WARN(2),
+        INFO(3),
+        DEBUG(4),
+        TRACE(5);
+
+        private int level;
+
+        LogLevel(int level) {
+            this.level = level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+    }
+
     public ChorusLog getLog(Class clazz) {
         return new StandardOutLog(clazz);
     }
@@ -48,29 +85,6 @@ public class StandardOutLogProvider implements ChorusLogProvider {
      * Default to warn so we don't clutter the output
      */
     private static class StandardOutLog implements ChorusLog {
-
-        private static int logLevel = LogLevel.WARN.getLevel();
-
-        static {
-            setLogLevel();
-        }
-
-        private static void setLogLevel() {
-            String logLevel = System.getProperty("chorusLogLevel", "WARN");
-
-            boolean found = false;
-            for (LogLevel l : LogLevel.values()) {
-                if ( l.name().equalsIgnoreCase(logLevel)) {
-                    StandardOutLog.logLevel = l.getLevel();
-                    found = true;
-                    break;
-                }
-            }
-
-            if ( ! found) {
-                ChorusOut.out.println("Did not recognise log level sys property " + logLevel + " will default to WARN");
-            }
-        }
 
         private String className;
 
@@ -197,24 +211,6 @@ public class StandardOutLogProvider implements ChorusLogProvider {
             ChorusOut.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         }
 
-        private static enum LogLevel {
-            FATAL(0),
-            ERROR(1),
-            WARN(2),
-            INFO(3),
-            DEBUG(4),
-            TRACE(5);
-
-            private int level;
-
-            LogLevel(int level) {
-                this.level = level;
-            }
-
-            public int getLevel() {
-                return level;
-            }
-        }
 
         /**
         public static void main(String[] args) {
