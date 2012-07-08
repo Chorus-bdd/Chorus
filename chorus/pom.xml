@@ -4,7 +4,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus</artifactId>
     <packaging>jar</packaging>
-    <version>0.3.4-SNAPSHOT</version>
+    <version>0.3.4</version>
     <name>chorus</name>
     <url>http://www.chorusbdd.org</url>
     <build>
