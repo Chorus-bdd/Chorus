@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -356,13 +357,13 @@ public class ProcessesHandler {
             log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
 
             if (null == stdoutLogPath) {
-                this.outRedirector = new ProcessRedirector(processOutStream, false, System.out);
+                this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
             } else {
                 PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath), true);
                 this.outRedirector = new ProcessRedirector(processOutStream, true, out);
             }
             if (null == stderrLogPath) {
-                this.errRedirector = new ProcessRedirector(processErrorStream, false, System.err);
+                this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
             } else {
                 PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath), true);
                 this.errRedirector = new ProcessRedirector(processErrorStream, true, err);

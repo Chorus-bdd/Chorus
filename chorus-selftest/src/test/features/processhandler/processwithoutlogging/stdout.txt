@@ -1,0 +1,16 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/processhandler/processwithoutlogging/startaprocesswithoutlogging.feature
+Feature: Start A Process Without Logging                                                             
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    And I start a config1 process named Frodo                                                PASSED  
+1
+Woohoo, we have started a process
+    And I wait for 1 second for the process to run                                           PASSED  
+    And I can stop the process named Frodo                                                   PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
