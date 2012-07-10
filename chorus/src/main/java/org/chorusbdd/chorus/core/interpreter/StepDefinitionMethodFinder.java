@@ -79,14 +79,16 @@ class StepDefinitionMethodFinder {
     }
 
     public StepDefinitionMethodFinder findStepMethod() {
+        log.debug("Finding step method...");
 
         //find the method to call
         for (Object instance : handlerInstances) {
+            log.debug("Looking for step method on handler instance " + instance + " class " + instance.getClass());
             for (Method method : instance.getClass().getMethods()) {
-
                 //only check methods with Step annotation
                 Step stepAnnotationInstance = method.getAnnotation(Step.class);
                 if (stepAnnotationInstance != null) {
+                    log.debug("Checking @Step annotated method " + method + " on handler " + instance);
                     checkForMatch(instance, method, stepAnnotationInstance);
                 }
             }
@@ -98,8 +100,10 @@ class StepDefinitionMethodFinder {
         String regex = stepAnnotationInstance.value();
         String action = step.getAction();
 
+        log.debug("Regex to match is [" + regex + "] and action is [" + action + "]");
         Object[] values = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, method.getParameterTypes());
         if (values != null) { //the regexp matched the action and the method's parameters
+            log.trace("Matched!");
             if (methodToCall == null) {
                 methodToCall = method;
                 methodCallArgs = values;

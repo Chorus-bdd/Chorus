@@ -132,6 +132,7 @@ public class SpringContextInjector implements SpringInjector {
                     boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
                     String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
                     Object bean = springContext.getBean(name);
+                    log.trace("Found spring Resource annotation for field " + field + " will attempt to inject Spring bean " + bean);
                     if (bean == null) {
                         log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
                     }
@@ -150,6 +151,7 @@ public class SpringContextInjector implements SpringInjector {
         //cleanup Spring fixture which was associated with this handler instance
         ContextWithURL springContext = springContextByCreatingHandler.remove(handler);
         if (springContext != null) {
+            log.debug("Destroying spring context " + springContext + " for handler " + handler);
             springContext.springContext.destroy();
         }
     }

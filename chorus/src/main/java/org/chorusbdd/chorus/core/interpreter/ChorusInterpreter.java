@@ -104,6 +104,7 @@ public class ChorusInterpreter {
             try {
                 log.info(String.format("Loading feature from file: %s", featureFile));
                 List<FeatureToken> features = parser.parse(new FileReader(featureFile));
+                //we can end up with more than one feature per file if using Chorus 'configurations'
 
                 filterFeaturesByScenarioTags(features);
 
@@ -131,9 +132,11 @@ public class ChorusInterpreter {
     }
 
     private void processFeature(ExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {
+
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
+        log.trace("Processing feature " + feature);
         executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         results.add(feature);
@@ -145,13 +148,19 @@ public class ChorusInterpreter {
 
         //run the scenarios in the feature
         if (foundAllHandlerClasses) {
+            log.debug("The following handlers will be used " + orderedHandlerClasses);
             runScenarios(executionToken, unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses);
+
+            log.trace("The feature " + (feature.isPassed() ? " passed! " : " failed! ") +
+                      " and was " + (feature.isFullyImplemented() ? "" : " not ") + " fully implemented");
+
             if ( feature.isPassed()) {
                 executionToken.incrementFeaturesPassed();
             } else {
                 executionToken.incrementFeaturesFailed();
             }
         } else {
+            log.debug("The following handlers were not available, failing the feature " + unavailableHandlersMessage);
             feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
             executionToken.incrementUnavailableHandlers();
             executionToken.incrementFeaturesFailed();
@@ -165,6 +174,8 @@ public class ChorusInterpreter {
         List<Object> handlerInstances = new ArrayList<Object>();
         //FOR EACH SCENARIO
         List<ScenarioToken> scenarios = feature.getScenarios();
+
+        log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
             ScenarioToken scenario = iterator.next();
             boolean isLastScenario = !iterator.hasNext();
@@ -242,6 +253,7 @@ public class ChorusInterpreter {
     }
 
     private boolean runScenarioSteps(ExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
+        log.debug("Running scenario steps for Scenario " + scenario);
         //RUN THE STEPS IN THE SCENARIO
         boolean scenarioPassed = true;//track the scenario state
         List<StepToken> steps = scenario.getSteps();
@@ -274,6 +286,7 @@ public class ChorusInterpreter {
     private void addHandlerInstances(HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances) throws Exception {
         //CREATE THE HANDLER INSTANCES
         if (handlerInstances.size() == 0) {
+            log.debug("Creating handler instances for feature " + feature);
             //first scenario in file, so initialise the handler instances in order of precedence
             for (Class handlerClass : orderedHandlerClasses) {
                 //create a new SCENARIO scoped handler
@@ -315,16 +328,19 @@ public class ChorusInterpreter {
      */
     private StepEndState processStep(ExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
 
+        log.trace("Starting to process step " + step);
         executionListenerSupport.notifyStepStarted(executionToken, step);
 
         //return this at the end
         StepEndState endState = null;
 
         if (skip) {
+            log.debug("Skipping step  " + step);
             //output skipped and don't call the method
             endState = StepEndState.SKIPPED;
             executionToken.incrementStepsSkipped();
         } else {
+            log.debug("Processing step " + step);
             //identify what method should be called and its parameters
             StepDefinitionMethodFinder stepDefinitionMethodFinder = new StepDefinitionMethodFinder(handlerInstances, step);
             stepDefinitionMethodFinder.findStepMethod();
@@ -332,28 +348,34 @@ public class ChorusInterpreter {
             //call the method if found
             if (stepDefinitionMethodFinder.isMethodAvailable()) {
                 //setting a pending message in the step annotation implies the step is pending - we don't execute it
-                if (!stepDefinitionMethodFinder.getMethodToCallPendingMessage().equals(Step.NO_PENDING_MESSAGE)) {
-                    step.setMessage(stepDefinitionMethodFinder.getMethodToCallPendingMessage());
+                String pendingMessage = stepDefinitionMethodFinder.getMethodToCallPendingMessage();
+                if (!pendingMessage.equals(Step.NO_PENDING_MESSAGE)) {
+                    log.debug("Step has a pending message " + pendingMessage + " skipping step");
+                    step.setMessage(pendingMessage);
                     endState = StepEndState.PENDING;
                     executionToken.incrementStepsPending();
                 } else {
                     if (dryRun) {
+                        log.debug("Dry Run, so not executing this step");
                         step.setMessage("This step is OK");
                         endState = StepEndState.DRYRUN;
                         executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
                     } else {
+                        log.debug("Now executing the step using method " + stepDefinitionMethodFinder.getMethodToCall());
                         try {
                             //call the step method using reflection
                             Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
                                 stepDefinitionMethodFinder.getInstanceToCallOn(),
                                 stepDefinitionMethodFinder.getMethodCallArgs()
                             );
+                            log.debug("Finished executing the step, step passed, result was " + result);
                             if (result != null) {
                                 step.setMessage(result.toString());
                             }
                             endState = StepEndState.PASSED;
                             executionToken.incrementStepsPassed();
                         } catch (InvocationTargetException e) {
+                            log.debug("Step execution failed, we hit an exception invoking the step method");
                             //here if the method called threw an exception
                             if (e.getTargetException() instanceof StepPendingException) {
                                 StepPendingException spe = (StepPendingException) e.getTargetException();
@@ -361,12 +383,14 @@ public class ChorusInterpreter {
                                 step.setMessage(spe.getMessage());
                                 endState = StepEndState.PENDING;
                                 executionToken.incrementStepsPending();
+                                log.debug("Step Pending Exception prevented execution");
                             } else {
                                 Throwable cause = e.getCause();
                                 step.setThrowable(cause);
                                 step.setMessage(cause.getMessage());
                                 endState = StepEndState.FAILED;
                                 executionToken.incrementStepsFailed();
+                                log.debug("Exception failed due to exception " + e.getMessage());
                             }
                         } catch (Exception e) {
                             log.error(e);
@@ -374,6 +398,7 @@ public class ChorusInterpreter {
                     }
                 }
             } else {
+                log.debug("Could not find a step method definition for step " + step);
                 //no method found yet for this step
                 endState = StepEndState.UNDEFINED;
                 executionToken.incrementStepsUndefined();
@@ -386,6 +411,7 @@ public class ChorusInterpreter {
     }
 
     private void filterFeaturesByScenarioTags(List<FeatureToken> features) {
+        log.debug("Filtering by scenario tags");
         //FILTER THE FEATURES AND SCENARIOS
         if (filterExpression != null) {
             for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
@@ -394,11 +420,14 @@ public class ChorusInterpreter {
                 for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
                     ScenarioToken scenario = si.next();
                     if (!tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
+                        log.debug("Removing scenario " + scenario + " which does not match tag " + filterExpression);
                         si.remove();
                     }
                 }
                 //if there are no scenarios left, then remove this feature from the list to run
                 if (feature.getScenarios().size() == 0) {
+                    log.debug("Will not run feature " + fi + " which does not have any scenarios which " +
+                            "passed the tag filter " + filterExpression);
                     fi.remove();
                 }
             }
@@ -424,11 +453,13 @@ public class ChorusInterpreter {
             String featureName = f.value();
             featureClasses.put(featureName, handlerClass);
         }
+        log.trace("These were the handler classes discovered by handler class scanning " + featureClasses);
         return featureClasses;
     }
 
     private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {
         Object featureInstance = handlerClass.newInstance();
+        log.trace("Created handler class " + handlerClass + " instance " + featureInstance);
         injectSpringResources(featureInstance, featureToken);
         injectInterpreterResources(featureInstance, featureFile, featureToken);
         return featureInstance;
@@ -441,10 +472,12 @@ public class ChorusInterpreter {
      * @param handler an instance of the handler class that will be used for testing
      */
     private void injectSpringResources(Object handler, FeatureToken featureToken) throws Exception {
+        log.trace("Looking for SpringContext annotation on handler " + handler);
         Class<?> handlerClass = handler.getClass();
         SpringContext springContext = handlerClass.getAnnotation(SpringContext.class);
         if (springContext != null) {
             String contextFileName = springContext.value()[0];
+            log.debug("Found SpringContext annotation with value " + contextFileName  + " will inject spring context");
             springInjector.injectSpringContext(handler, featureToken, contextFileName);
         }
     }
@@ -452,11 +485,13 @@ public class ChorusInterpreter {
     private void injectInterpreterResources(Object handler, File featureFile, FeatureToken featureToken) {
         Class<?> featureClass = handler.getClass();
         Field[] fields = featureClass.getDeclaredFields();
+        log.trace("Now examining handler fields for ChorusResource annotation " + Arrays.asList(fields));
         for (Field field : fields) {
             ChorusResource a = field.getAnnotation(ChorusResource.class);
             if (a != null) {
-                field.setAccessible(true);
                 String resourceName = a.value();
+                log.debug("Found ChorusResource annotation " + resourceName + " on field " + field);
+                field.setAccessible(true);
                 Object o = null;
                 if ("feature.file".equals(resourceName)) {
                     o = featureFile;
@@ -471,18 +506,22 @@ public class ChorusInterpreter {
                     } catch (IllegalAccessException e) {
                         log.error("Failed to set @ChorusResource (" + resourceName + ") with object of type: " + o.getClass(), e);
                     }
+                } else {
+                    log.debug("Set field to value " + o);
                 }
             }
         }
     }
 
     private void cleanupHandler(Object handler) throws Exception {
+        log.debug("Cleaning Up Handler " + handler);
         springInjector.disposeContext(handler);
 
         //call any destroy methods on handler instance
         for (Method method : handler.getClass().getMethods()) {
             if (method.getParameterTypes().length == 0) {
                 if (method.getAnnotation(Destroy.class) != null) {
+                    log.trace("Found Destroy annotation on handler method " + method + " will invoke");
                     method.invoke(handler);
                 }
             }

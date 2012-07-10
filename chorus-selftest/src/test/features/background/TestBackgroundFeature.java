@@ -27,54 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.scanner.filter;
+package background;
 
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 18/06/12
- * Time: 18:43
- *
- * Delegate to the chained delegate filter only if this filter rule is passed
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class ChainableFilterRule implements ClassFilter {
+public class TestBackgroundFeature extends AbstractInterpreterTest {
 
-    ChorusLog log = ChorusLogFactory.getLog(ChainableFilterRule.class);
+    final String featurePath = "src/test/features/background";
 
-    private ClassFilter filterDelegate;
+    final int expectedExitCode = 0;  //success
 
-    public ChainableFilterRule(ClassFilter filterDelegate) {
-        this.filterDelegate = filterDelegate;
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    public final boolean acceptByName(String className) {
-        if ( shouldAccept(className) ) {
-            log.trace(getClass() + " accepting handler class " + className + " as permissible handler class");
-            return true;
-        } else if ( shouldDeny(className)) {
-            log.trace(getClass() + " denying handler class " + className + " as permissible handler class");
-            return false;
-        }  else {
-            return filterDelegate.acceptByName(className);
-        }
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
-    protected boolean shouldDeny(String className) {
-        return false;
-    }
-
-    protected boolean shouldAccept(String className) {
-        return false;
-    }
-
-    public final boolean acceptByClass(Class clazz) {
-        return doAcceptByClass(clazz) && filterDelegate.acceptByClass(clazz);
-    }
-
-    protected boolean doAcceptByClass(Class clazz) {
-        return true;
-    }
 }

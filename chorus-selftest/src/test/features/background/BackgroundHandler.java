@@ -27,54 +27,34 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.scanner.filter;
+package background;
 
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 18/06/12
- * Time: 18:43
- *
- * Delegate to the chained delegate filter only if this filter rule is passed
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class ChainableFilterRule implements ClassFilter {
+@Handler("Test Background")
+public class BackgroundHandler {
 
-    ChorusLog log = ChorusLogFactory.getLog(ChainableFilterRule.class);
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
 
-    private ClassFilter filterDelegate;
-
-    public ChainableFilterRule(ClassFilter filterDelegate) {
-        this.filterDelegate = filterDelegate;
     }
 
-    public final boolean acceptByName(String className) {
-        if ( shouldAccept(className) ) {
-            log.trace(getClass() + " accepting handler class " + className + " as permissible handler class");
-            return true;
-        } else if ( shouldDeny(className)) {
-            log.trace(getClass() + " denying handler class " + className + " as permissible handler class");
-            return false;
-        }  else {
-            return filterDelegate.acceptByName(className);
-        }
+    @Step("I have some background steps")
+    public void haveBackground() {
+
     }
 
-    protected boolean shouldDeny(String className) {
-        return false;
+    @Step("my background steps should appear in Scenario .*")
+    public void stepsShouldAppear() {
+
     }
 
-    protected boolean shouldAccept(String className) {
-        return false;
-    }
 
-    public final boolean acceptByClass(Class clazz) {
-        return doAcceptByClass(clazz) && filterDelegate.acceptByClass(clazz);
-    }
-
-    protected boolean doAcceptByClass(Class clazz) {
-        return true;
-    }
 }
