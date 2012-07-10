@@ -1,0 +1,13 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/pendingsteps/pendingsteps.feature
+Feature: Pending Steps                                                                               
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+    And a pending step gets a pending status                                                 PENDING bonjour, mes amis, I am a pending step
+    While subsequent steps are skipped                                                       SKIPPED 
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:1) (passed:0) (failed:1)
+Steps     (total:4) (passed:2) (failed:0) (undefined:0) (pending:1) (skipped:1)

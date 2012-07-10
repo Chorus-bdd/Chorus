@@ -1,0 +1,18 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/recursivesearch/recursivesearch.feature
+Feature: Recursive Search                                                                            
+  Scenario: Top Level Scenario
+Chorus --> INFO    - Processing scenario: Top Level Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+
+Chorus --> INFO    - Loading feature from file: src/test/features/recursivesearch/subpackage/subpackage.feature
+Feature: Sub Package Discovery                                                                       
+  Scenario: Child Level Scenario
+Chorus --> INFO    - Processing scenario: Child Level Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
