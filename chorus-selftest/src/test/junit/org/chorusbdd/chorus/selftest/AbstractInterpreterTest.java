@@ -50,10 +50,15 @@ public abstract class AbstractInterpreterTest extends Assert {
     private static final boolean overwriteStdOutAndErr = Boolean.getBoolean("chorusSelfTestsOverwriteStdOutAndErr");
 
     /**
-     * Set this sys prop if yuo want to run the tests in process, as well as forked
-     * This is very useful when running locally, if you want to use the debugger
+     * Set this sys prop if you want to run the tests in process (as well as forked)
+     * This is very useful when running locally, if you want to use the debugger, and also for generating coverage information
      */
-    private static final boolean runTestsInProcess = Boolean.getBoolean("chorusSelfTestsRunInProcess");
+    private static final boolean runTestsInProcess = Boolean.valueOf(System.getProperty("chorusSelfTestsRunInProcess", "true"));
+
+    /**
+     * Set this sys prop if you want to run the tests forked
+     */
+    private static final boolean runTestsForked = Boolean.valueOf(System.getProperty("chorusSelfTestsForked", "true"));
 
 
     @Test
@@ -74,8 +79,13 @@ public abstract class AbstractInterpreterTest extends Assert {
             ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysProps);
             checkTestResults(r, expectedResults);
         }
-        ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysProps);
-        checkTestResults(r, expectedResults);
+
+        if ( runTestsForked ) {
+            ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysProps);
+            checkTestResults(r, expectedResults);
+        }
+
+        assertTrue("Must execute tests using at least one runner", runTestsForked || runTestsInProcess);
     }
 
     protected boolean checkTestResults(ChorusSelfTestResults actualResults, ChorusSelfTestResults expectedResults) {
