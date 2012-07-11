@@ -30,13 +30,14 @@
 package org.chorusbdd.chorus.core.interpreter.results;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class FeatureToken extends AbstractToken implements Token {
+public class FeatureToken extends AbstractToken {
 
     private static final long serialVersionUID = 2;
 

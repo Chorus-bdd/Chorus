@@ -66,7 +66,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+:\\d{2,5}", "-j myhost.mydomain:1001",
     "Network address of an agent which will receive execution events as the interpreter runs"),
 
-    SUITE_NAME("-suiteName", "-n", "chorusSuiteName", false, 1, Integer.MAX_VALUE, new String[] {"Test Suite"}, "[\\w\\s]+", "-n My Suite Name",
+    SUITE_NAME("-suiteName", "-n", "chorusSuiteName", false, 1, Integer.MAX_VALUE, new String[] {ChorusConstants.DEFAULT_SUITE_NAME}, "[\\w\\s]+", "-n My Suite Name",
     "Name for the test suite to be run"),
 
     SHOW_ERRORS("-showErrors", "-e", "chorusShowErrors", false, 0, 1, new String[] {"false"},  "(?i)(false|true)",  "-e (false|true)",

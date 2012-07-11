@@ -62,7 +62,7 @@ import java.util.Date;
  * @TODO - add more information, eg. classpath, params to the interpreter?
  * Might be nice to be able to check these in the results post testing
  */
-public class ExecutionToken extends AbstractToken implements Token {
+public class ExecutionToken extends AbstractToken {
 
     private static final long serialVersionUID = 2;
 
@@ -203,6 +203,8 @@ public class ExecutionToken extends AbstractToken implements Token {
     //if this is running remotely, we may receive a new deserialized instance each time and cannot rely on reference
     //equality
     //equals and hashcode should not include results, since these are mutable and comparisons would break
+
+
 
     @Override
     public boolean equals(Object o) {

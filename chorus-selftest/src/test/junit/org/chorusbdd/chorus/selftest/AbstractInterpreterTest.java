@@ -123,9 +123,17 @@ public abstract class AbstractInterpreterTest extends Assert {
     private DefaultTestProperties getTestSysProps(String featurePath) {
         DefaultTestProperties sysProps = new DefaultTestProperties();
         sysProps.put("chorusFeaturePaths", featurePath);
+        sysProps.put("chorusSuiteName", getClass().getSimpleName());
         doUpdateTestProperties(sysProps);
         return sysProps;
     }
+
+    /**
+     * A test can override this method to modify the sys properties being used from the default set
+     */
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+    }
+
 
     private void overwriteOutputIfSysPropertySet(boolean isDifferent, boolean overwriteStdOutAndErr, String actualText, String stdOutFileName) {
         if ( isDifferent && overwriteStdOutAndErr ) {
@@ -153,12 +161,6 @@ public abstract class AbstractInterpreterTest extends Assert {
             System.out.println("Actual: [" + actual.toString() + "]\n");
         }
         return result;
-    }
-
-    /**
-     * A test can override this method to modify the sys properties being used from the default set
-     */
-    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
     }
 
     public static String readToString(InputStream is) {

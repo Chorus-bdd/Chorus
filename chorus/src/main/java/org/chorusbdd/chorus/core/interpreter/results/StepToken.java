@@ -33,7 +33,7 @@ package org.chorusbdd.chorus.core.interpreter.results;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class StepToken extends AbstractToken implements Token {
+public class StepToken extends AbstractToken {
 
     private static final long serialVersionUID = 2;
 

@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Date: 23/05/12
  * Time: 18:20
  */
-public class AbstractToken {
+public abstract class AbstractToken implements Token {
 
     //The token id only needs to be unique within the context of each
     //test execution. Here it will be unique to the JVM instance which is even better

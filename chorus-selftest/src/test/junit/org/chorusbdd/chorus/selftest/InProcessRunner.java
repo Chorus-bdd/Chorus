@@ -40,7 +40,8 @@ public class InProcessRunner implements ChorusSelfTestRunner {
                 Main main = new Main(new String[0]);
                 success = main.run();
              } catch (Exception e) {
-                System.err.println(e.getMessage());
+                System.err.println("Failed while running tests in line " + e.getMessage() + e);
+                e.printStackTrace();
              }
 
          } finally {

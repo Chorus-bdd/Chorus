@@ -50,7 +50,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ChorusParserTagsTest {
 
-    private final String TEST_FEATURE_FILE = "ChorusParserTagsTest.test.feature";
+    protected final String TEST_FEATURE_FILE = "ChorusParserTagsTest.test.feature";
 
     @Test
     public void scenarioInheritsTagsFromFeature() throws Exception {
@@ -113,7 +113,7 @@ public class ChorusParserTagsTest {
         }
     }
 
-    private File getFileResourceWithName(String fileName) {
+    protected File getFileResourceWithName(String fileName) {
         URL url = getClass().getResource(fileName);
         if (url != null) {
             File f = new File(url.getFile());

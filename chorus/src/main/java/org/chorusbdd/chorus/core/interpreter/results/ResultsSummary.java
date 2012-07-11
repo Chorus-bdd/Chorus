@@ -40,7 +40,7 @@ package org.chorusbdd.chorus.core.interpreter.results;
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class ResultsSummary extends AbstractToken implements Token {
+public class ResultsSummary extends AbstractToken {
 
     private static final long serialVersionUID = 2;
 

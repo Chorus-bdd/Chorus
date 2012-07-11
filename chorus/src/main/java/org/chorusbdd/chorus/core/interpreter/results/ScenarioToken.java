@@ -38,7 +38,7 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class ScenarioToken extends AbstractToken implements Token {
+public class ScenarioToken extends AbstractToken {
 
     private static final long serialVersionUID = 2;
 

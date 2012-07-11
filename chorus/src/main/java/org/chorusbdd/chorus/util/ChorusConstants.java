@@ -37,6 +37,8 @@ package org.chorusbdd.chorus.util;
  */
 public class ChorusConstants {
 
+    public static final String DEFAULT_SUITE_NAME = "Test Suite";
+
     public static final String[] BUILT_IN_HANDLER_PACKAGE_PREFIXES = new String[] {
         "org.chorusbdd.chorus.handlers",
         "org.chorusbdd.chorus.selftest"
