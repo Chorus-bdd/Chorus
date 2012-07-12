@@ -31,9 +31,6 @@ package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.results.*;
-import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
-import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
-import org.chorusbdd.chorus.core.interpreter.scanner.filter.HandlerClassFilterFactory;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -60,6 +57,8 @@ public class ChorusInterpreter {
 
     private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
     private ExecutionListenerSupport executionListenerSupport = new ExecutionListenerSupport();
+
+    private HandlerClassDiscovery handlerClassDiscovery = new HandlerClassDiscovery();
 
     /**
      * Defines the class which will be instantiated to perform injection of Spring context/resources
@@ -93,7 +92,7 @@ public class ChorusInterpreter {
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //load all available feature classes
-        HashMap<String, Class> allHandlerClasses = loadHandlerClasses(basePackages);
+        HashMap<String, Class> allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(basePackages);
 
         HashMap<Class, Object> unmanagedHandlerInstances = new HashMap<Class, Object>();
 
@@ -143,7 +142,7 @@ public class ChorusInterpreter {
 
         //check that the required handler classes are all available and list them in order of precidence
         List<Class> orderedHandlerClasses = new ArrayList<Class>();
-        StringBuilder unavailableHandlersMessage = findHandlerClasses(allHandlerClasses, feature, orderedHandlerClasses);
+        StringBuilder unavailableHandlersMessage = handlerClassDiscovery.findHandlerClasses(allHandlerClasses, feature, orderedHandlerClasses);
         boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
 
         //run the scenarios in the feature
@@ -160,7 +159,7 @@ public class ChorusInterpreter {
                 executionToken.incrementFeaturesFailed();
             }
         } else {
-            log.debug("The following handlers were not available, failing the feature " + unavailableHandlersMessage);
+            log.warn("The following handlers were not available, failing feature " + feature.getName());
             feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
             executionToken.incrementUnavailableHandlers();
             executionToken.incrementFeaturesFailed();
@@ -191,34 +190,6 @@ public class ChorusInterpreter {
                 scenario
             );
         }
-    }
-
-    private StringBuilder findHandlerClasses(HashMap<String, Class> allHandlerClasses, FeatureToken feature, List<Class> orderedHandlerClasses) {
-        StringBuilder unavailableHandlersMessage = new StringBuilder();
-        Class mainHandlerClass = allHandlerClasses.get(feature.getName());
-        if (mainHandlerClass == null) {
-            log.info(String.format("No default handler found for Feature: (%s), will use built-in handlers and Uses: statements",
-                    feature.getName()));
-        } else {
-            log.debug(String.format("Loaded handler class (%s) for Feature: (%s)",
-                    mainHandlerClass.getName(),
-                    feature.getName()));
-
-            orderedHandlerClasses.add(mainHandlerClass);
-        }
-        for (String usesHandler : feature.getUsesHandlers()) {
-            Class usesHandlerClass = allHandlerClasses.get(usesHandler);
-            if (usesHandlerClass == null) {
-                unavailableHandlersMessage.append(String.format("'%s' ", usesHandler));
-            } else {
-                log.debug(String.format("Loaded handler class (%s) for Uses: (%s)",
-                        usesHandlerClass.getName(),
-                        usesHandler));
-
-                orderedHandlerClasses.add(usesHandlerClass);
-            }
-        }
-        return unavailableHandlersMessage;
     }
 
     private void processScenario(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
@@ -432,29 +403,6 @@ public class ChorusInterpreter {
                 }
             }
         }
-    }
-
-    /**
-     * Scans the classpath for features
-     *
-     * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
-     * @return a Map of [feature-name -> feature class]
-     */
-    private HashMap<String, Class> loadHandlerClasses(String[] basePackages) throws Exception {
-        //always include the Chorus handlers package
-        HashMap<String, Class> featureClasses = new HashMap<String, Class>();
-
-        HandlerClassFilterFactory filterFactory = new HandlerClassFilterFactory();
-        ClassFilter chainStart = filterFactory.createClassFilters(basePackages);
-
-        Set<Class> handlerClasses = ClasspathScanner.doScan(chainStart);
-        for (Class handlerClass : handlerClasses) {
-            Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
-            String featureName = f.value();
-            featureClasses.put(featureName, handlerClass);
-        }
-        log.trace("These were the handler classes discovered by handler class scanning " + featureClasses);
-        return featureClasses;
     }
 
     private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {

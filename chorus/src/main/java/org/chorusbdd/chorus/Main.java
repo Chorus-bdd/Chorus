@@ -87,12 +87,22 @@ public class Main {
      * @return true, if all tests were fully implemented and passed
      */
     public boolean run() throws Exception {
-        String logLevel = baseConfigReader.getSingleValue(ChorusConfigProperty.LOG_LEVEL);
-        setLogLevel(logLevel);
-        ExecutionToken t = startTests();
-        List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
-        endTests(t, features);
-        return t.isPassedAndFullyImplemented();
+        boolean passed = false;
+        try {
+            String logLevel = baseConfigReader.getSingleValue(ChorusConfigProperty.LOG_LEVEL);
+            setLogLevel(logLevel);
+            ExecutionToken t = startTests();
+            List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
+            endTests(t, features);
+            passed = t.isPassedAndFullyImplemented();
+        } catch (InterpreterPropertyException e) {
+            ChorusOut.err.println(e.getMessage());
+            ConfigReader.logHelp();
+        } catch (Throwable t) {
+            ChorusOut.err.println(t.getMessage());
+            t.printStackTrace(ChorusOut.err);
+        }
+        return passed;
     }
 
     /**

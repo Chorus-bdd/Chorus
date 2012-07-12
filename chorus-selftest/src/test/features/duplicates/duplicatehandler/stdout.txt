@@ -1,0 +1,9 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/duplicates/duplicatehandler/duplicatehandler.feature
+Feature: Duplicate Handlers                                                                          
+Chorus --> WARN    - The following handlers were not available, failing feature Duplicate Handlers
+Duplicate Handlers [Duplicate Handlers] duplicates.duplicatehandler.DuplicateHandlerTwo and duplicates.duplicatehandler.DuplicateHandlerOne
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:0) (passed:0) (failed:0)
+Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -125,7 +125,7 @@ public class StandardOutLogProvider implements ChorusLogProvider {
         public void info(Object message, Throwable t) {
             if ( logLevel >= LogLevel.INFO.getLevel() ) {
                 logOut("INFO", message);
-                t.printStackTrace();
+                t.printStackTrace(ChorusOut.err);
             }
         }
 
@@ -138,7 +138,7 @@ public class StandardOutLogProvider implements ChorusLogProvider {
         public void warn(Object message, Throwable t) {
             if ( logLevel >= LogLevel.WARN.getLevel() ) {
                 logOut("WARN", message);
-                t.printStackTrace();
+                t.printStackTrace(ChorusOut.err);
             }
         }
 
@@ -151,7 +151,7 @@ public class StandardOutLogProvider implements ChorusLogProvider {
         public void error(Object message, Throwable t) {
             if ( logLevel >= LogLevel.ERROR.getLevel() ) {
                 logErr("ERROR", message);
-                t.printStackTrace();
+                t.printStackTrace(ChorusOut.err);
             }
         }
 
@@ -164,7 +164,7 @@ public class StandardOutLogProvider implements ChorusLogProvider {
         public void fatal(Object message, Throwable t) {
             if ( logLevel >= LogLevel.FATAL.getLevel() ) {
                 logErr("FATAL", message);
-                t.printStackTrace();
+                t.printStackTrace(ChorusOut.err);
             }
         }
 
@@ -177,7 +177,7 @@ public class StandardOutLogProvider implements ChorusLogProvider {
         public void trace(Object message, Throwable t) {
             if ( logLevel >= LogLevel.TRACE.getLevel() ) {
                 logErr("TRACE", message);
-                t.printStackTrace();
+                t.printStackTrace(ChorusOut.err);
             }
         }
 
@@ -190,7 +190,7 @@ public class StandardOutLogProvider implements ChorusLogProvider {
         public void debug(Object message, Throwable t) {
             if ( logLevel >= LogLevel.DEBUG.getLevel() ) {
                 logErr("DEBUG", message);
-                t.printStackTrace();
+                t.printStackTrace(ChorusOut.err);
             }
         }
 
