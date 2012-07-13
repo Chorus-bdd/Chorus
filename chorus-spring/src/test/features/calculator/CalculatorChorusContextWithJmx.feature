@@ -1,5 +1,5 @@
 Uses: Processes
-Uses: JMX
+Uses: Remoting
 Uses: Chorus Context
 Uses: Timers
 

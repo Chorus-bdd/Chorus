@@ -65,11 +65,11 @@ import java.util.Properties;
  * Created by: Steve Neal
  * Date: 12/10/11
  */
-@Handler("JMX")
+@Handler("Remoting")
 @SuppressWarnings("UnusedDeclaration")
-public class JmxHandler {
+public class RemotingHandler {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(JmxHandler.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
     @ChorusResource("feature.dir")
     private File featureDir;
@@ -85,7 +85,7 @@ public class JmxHandler {
      */
     private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
 
-    private Map<String, MBeanConfig> mBeanConfigMap = null;
+    private Map<String, RemotingConfig> remotingConfigMap = null;
 
     // System property values to override default properties loading behaviour
 
@@ -200,14 +200,14 @@ public class JmxHandler {
     private ChorusHandlerJmxProxy getProxyForComponent(String name) throws Exception {
         ChorusHandlerJmxProxy proxy = proxies.get(name);
         if (proxy == null) {
-            if (mBeanConfigMap == null) {
+            if (remotingConfigMap == null) {
                 loadMBeanConfigs();
             }
-            MBeanConfig mBeanConfig = mBeanConfigMap.get(name);
-            if (mBeanConfig == null) {
+            RemotingConfig remotingConfig = remotingConfigMap.get(name);
+            if (remotingConfig == null) {
                 throw new ChorusException("Failed to find MBean configuration for component: " + name);
             } else {
-                proxy = new ChorusHandlerJmxProxy(mBeanConfig.host, mBeanConfig.port);
+                proxy = new ChorusHandlerJmxProxy(remotingConfig.host, remotingConfig.port);
                 proxies.put(name, proxy);
                 log.debug("Opened JMX connection to: " + name);
             }
@@ -215,7 +215,8 @@ public class JmxHandler {
         return proxy;
     }
 
-    private class MBeanConfig {
+    private class RemotingConfig {
+        String protocol;
         String name;
         String host;
         int port;
@@ -242,7 +243,7 @@ public class JmxHandler {
             else {
                 //load the default properties
                 String mBeanPropertiesFile = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
-                mBeanPropertiesFile = mBeanPropertiesFile.replace(".feature", "-jmx.properties");
+                mBeanPropertiesFile = mBeanPropertiesFile.replace(".feature", "-remoting.properties");
 
                 FileInputStream fis = new FileInputStream(mBeanPropertiesFile);
                 Properties p = new Properties();
@@ -251,8 +252,8 @@ public class JmxHandler {
 
                 //override properties for a specific run configuration (if specified)
                 if (featureToken.getConfigurationName() != null) {
-                    String suffix = String.format("-jmx-%s.properties", featureToken.getConfigurationName());
-                    String overridePropertiesFilePath = mBeanPropertiesFile.replace("-jmx.properties", suffix);
+                    String suffix = String.format("-remoting-%s.properties", featureToken.getConfigurationName());
+                    String overridePropertiesFilePath = mBeanPropertiesFile.replace("-remoting.properties", suffix);
                     File overridePropertiesFile = new File(overridePropertiesFilePath);
                     if (overridePropertiesFile.exists()) {
                         fis = new FileInputStream(overridePropertiesFile);
@@ -266,22 +267,34 @@ public class JmxHandler {
             }
 
         } catch (Exception e) {
-            mBeanConfigMap = null;
+            remotingConfigMap = null;
             throw new ChorusException("Failed to load MBean configuration: " + e.toString());
         }
     }
 
     private void loadMBeanConfigsFromProperties(Properties p) {
-        mBeanConfigMap = new HashMap<String, MBeanConfig>();
+        remotingConfigMap = new HashMap<String, RemotingConfig>();
         for (Map.Entry<Object, Object> entry : p.entrySet()) {
             try {
-                MBeanConfig mBeanConfig = new MBeanConfig();
-                mBeanConfig.name = String.valueOf(entry.getKey());
-                mBeanConfig.host = String.valueOf(entry.getValue()).split(":")[0];
-                mBeanConfig.port = Integer.parseInt(String.valueOf(entry.getValue()).split(":")[1]);
-                mBeanConfigMap.put(mBeanConfig.name, mBeanConfig);
+                RemotingConfig remotingConfig = new RemotingConfig();
+                remotingConfig.name = String.valueOf(entry.getKey());
+                String[] vals = String.valueOf(entry.getValue()).split(":");
+                if ( vals.length != 3) {
+                    throw new ChorusException("Could not parse remoting property");
+                }
+                remotingConfig.protocol = vals[0];
+
+                if ( ! "jmx".equalsIgnoreCase(remotingConfig.protocol)) {
+                    log.error("At present only jmx protocol is supported for remoting");
+                    throw new ChorusException("Could not parse remoting property");
+                }
+
+                remotingConfig.host = vals[1];
+                remotingConfig.port = Integer.parseInt(vals[2]);
+                remotingConfigMap.put(remotingConfig.name, remotingConfig);
             } catch (Exception e) {
-                log.error(String.format("Failed to parse mBean data, key: %s, value: %s",
+                log.error(String.format(
+                        "Failed to parse remoting property, key: %s, value: %s, expecting value in form protocol:host:port",
                         entry.getKey(),
                         entry.getValue()));
             }
@@ -304,7 +317,7 @@ public class JmxHandler {
      */
     protected void loadMBeanConfigsFromDb(Properties p) {
         Connection conn = null;
-        mBeanConfigMap = new HashMap<String, MBeanConfig>();
+        remotingConfigMap = new HashMap<String, RemotingConfig>();
         try {
             //load MBean config from DB
             Class.forName(p.getProperty("jdbc.driver"));
@@ -312,15 +325,15 @@ public class JmxHandler {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(p.getProperty("jdbc.sql"));
             while (rs.next()) {
-                MBeanConfig mBeanConfig = new MBeanConfig();
-                mBeanConfig.name = rs.getString("mBeanName");
-                mBeanConfig.host = rs.getString("host");
-                mBeanConfig.port = rs.getInt("port");
-                mBeanConfigMap.put(mBeanConfig.name, mBeanConfig);
+                RemotingConfig remotingConfig = new RemotingConfig();
+                remotingConfig.name = rs.getString("mBeanName");
+                remotingConfig.host = rs.getString("host");
+                remotingConfig.port = rs.getInt("port");
+                remotingConfigMap.put(remotingConfig.name, remotingConfig);
             }
             rs.close();
             stmt.close();
-            log.debug("Loaded " + mBeanConfigMap.size() + " MBean configurations from database");
+            log.debug("Loaded " + remotingConfigMap.size() + " MBean configurations from database");
         } catch (Exception e) {
             throw new ChorusException("Failed to load MBean configuration from database" + e.toString());
         } finally {

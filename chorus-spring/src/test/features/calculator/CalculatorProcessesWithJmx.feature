@@ -1,15 +1,15 @@
-Uses: JMX
+Uses: Remoting
 Uses: Processes
 Uses: Timers
 
 Feature: Processes with JMX
-  Chorus should be able to use the JMX handler to invoke a @Step methods exported by a remote processes.
+  Chorus should be able to use the Remoting handler to invoke a @Step methods exported by remote processes.
 
-  The JMX handler will match steps formed as follows: '[step-type] [action] in [process-name]'. The process-name will
+  The Remoting handler will match steps formed as follows: '[step-type] [action] in [process-name]'. The process-name will
   be used to identify a host name and JMX port that the interpreter will connect to to access an report Chorus Handler
   that will handle the action. The host and JMX port are, by default, searched for in a conf folder adjacent to the
-  current feature file and in a file with the same name as the feature appended with '-jmx.properties'. For example,
-  this feature file`s JMX configuration can be found  in: './conf/ProcessesWithJmx-jmx.properties'. The action part of
+  current feature file and in a file with the same name as the feature appended with '-remoting.properties'. For example,
+  this feature file`s JMX configuration can be found  in: './conf/ProcessesWithJmx-remoting.properties'. The action part of
   the step will be forwarded to a Handler class that has been exported via the JMX server in the remote process. For
   further configuration options and usage details see the Javadocs.
 
