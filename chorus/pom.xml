@@ -1,12 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus</artifactId>
     <packaging>jar</packaging>
     <version>0.3.5-SNAPSHOT</version>
     <name>chorus</name>
-    <url>http://www.chorusbdd.org</url>
+    <url>http://www.chorus-bdd.org</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:Chorus-bdd/Chorus.git</connection>
+        <developerConnection>scm:git:git@github.com:Chorus-bdd/Chorus.git</developerConnection>
+        <url>git@github.com:Chorus-bdd/Chorus.git</url>
+    </scm>
     <build>
 
         <!-- Copy chorus resources from the test/handlers and test/junit subtree, so resource files
