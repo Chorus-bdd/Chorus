@@ -51,7 +51,7 @@ public class HandlerClassFilterFactory {
     /**
      * @return a ClassFilter chain to use when discovering Handler classes in the classpath
      *
-     * @param userSpecifiedPrefixes, any handler package prefixes specified by user
+     * @param userSpecifiedPrefixes any handler package prefixes specified by user
      */
     public ClassFilter createClassFilters(String[] userSpecifiedPrefixes) {
 

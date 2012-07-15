@@ -4,7 +4,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorusproject</artifactId>
     <packaging>pom</packaging>
-	<version>0.3.5</version>
+	<version>0.3.6-SNAPSHOT</version>
 	<name>Chorus BDD Project</name>
 	<modules>
 	  <module>chorus</module>

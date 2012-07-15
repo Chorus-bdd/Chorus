@@ -140,9 +140,7 @@ public class FeatureToken extends AbstractToken {
     }
 
     /**
-     * Returns a deep copy of the feature results and all its sub tokens
-     *
-     * @return
+     * @return a deep copy of the feature results and all its sub tokens
      */
     public FeatureToken deepCopy() {
         FeatureToken copy = new FeatureToken(getTokenId());

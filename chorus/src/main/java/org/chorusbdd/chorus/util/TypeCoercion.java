@@ -52,7 +52,7 @@ public class TypeCoercion {
     /**
      * Will attempt to convert the String to the required type
      *
-     * @returns the coerced value, or null if the value cannot be converted to the required type
+     * @return the coerced value, or null if the value cannot be converted to the required type
      */
     public static <T> T coerceType(String value, Class<T> requiredType) {
         T result = null;

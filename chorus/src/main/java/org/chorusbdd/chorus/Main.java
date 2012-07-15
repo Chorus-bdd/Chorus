@@ -124,8 +124,8 @@ public class Main {
 
     /**
      * End tests, notifying executionListeners
-     * @param t, the executionToken containing results for this test run
-     * @param features, the features which were run during this test run
+     * @param t the executionToken containing results for this test run
+     * @param features the features which were run during this test run
      */
     public void endTests(ExecutionToken t, List<FeatureToken> features) {
         listenerSupport.notifyTestsCompleted(t, features);

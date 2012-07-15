@@ -9,7 +9,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus-selftest</artifactId>
     <packaging>jar</packaging>
-    <version>0.3.5</version>
+    <version>0.3.6-SNAPSHOT</version>
     <name>chorus-selftest</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
@@ -88,7 +88,7 @@
                 <artifactId>maven-gpg-plugin</artifactId>
             </plugin>
 
-            <!-- <plugin>
+            <plugin>
                  <groupId>org.apache.maven.plugins</groupId>
                  <artifactId>maven-source-plugin</artifactId>
                  <version>2.1.2</version>
@@ -100,7 +100,7 @@
                      </goals>
                    </execution>
                  </executions>
-            </plugin> -->
+            </plugin>
 
             <plugin>
                <groupId>org.codehaus.mojo</groupId>
@@ -143,23 +143,34 @@
         </plugins>
 
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <dependencies>
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.6-SNAPSHOT</version>
         </dependency>
 		
 		<dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-spring</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.6-SNAPSHOT</version>
         </dependency>
 		
 		<dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-tools</artifactId>
-            <version>0.3.5</version>
+            <version>0.3.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>

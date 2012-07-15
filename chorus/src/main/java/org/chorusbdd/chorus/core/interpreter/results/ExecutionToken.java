@@ -59,7 +59,7 @@ import java.util.Date;
  * - the token id should not be used in the viewer, since this may be duplicated between
  * different interpreter sessions.
  *
- * @TODO - add more information, eg. classpath, params to the interpreter?
+ * TODO - add more information, eg. classpath, params to the interpreter?
  * Might be nice to be able to check these in the results post testing
  */
 public class ExecutionToken extends AbstractToken {

@@ -9,7 +9,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus</artifactId>
     <packaging>jar</packaging>
-    <version>0.3.5</version>
+    <version>0.3.6-SNAPSHOT</version>
     <name>chorus</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
@@ -77,20 +77,6 @@
                 <artifactId>maven-gpg-plugin</artifactId>
             </plugin>
 
-            <!-- <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                  <execution>
-                    <id>attach-sources</id>
-                    <goals>
-                      <goal>jar</goal>
-                    </goals>
-                  </execution>
-                </executions>
-            </plugin> -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -145,6 +131,17 @@
         </plugins>
 
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <dependencies>
 
         <!-- In general the philosophy is that because Chorus is a library, we are trying to
