@@ -12,5 +12,8 @@ import java.util.Properties;
  */
 public interface ChorusSelfTestRunner {
 
-    ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) throws Exception;
+    /**
+     * Run the tests, setting the provided System properties
+     */
+    ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) throws Exception;
 }

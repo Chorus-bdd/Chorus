@@ -18,10 +18,10 @@ import java.util.Properties;
  */
 public class ForkedRunner implements ChorusSelfTestRunner {
 
-    public ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) throws Exception {
+    public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) throws Exception {
         String jre = System.getProperty("java.home");
 
-        systemProperties.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-forked.xml");
+        sysPropsForTest.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-forked.xml");
 
         //See notes also in ProcessHandler
         //surrounding the classpath in quotes is currently breaking the classpath parsing for linux when launched via
@@ -38,7 +38,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
 
         String switches = "";
 
-        StringBuilder jvmArgs = getJvmArgs(systemProperties);
+        StringBuilder jvmArgs = getJvmArgs(sysPropsForTest);
 
         //construct a command
         String command = String.format(

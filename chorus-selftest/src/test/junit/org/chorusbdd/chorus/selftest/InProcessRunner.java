@@ -1,7 +1,5 @@
 package org.chorusbdd.chorus.selftest;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Main;
@@ -24,14 +22,11 @@ import java.util.Properties;
  */
 public class InProcessRunner implements ChorusSelfTestRunner {
 
-    public ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) {
-         systemProperties.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-inline.xml");
+    public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) {
+         //use log4j configuration for local tests
+         sysPropsForTest.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-inprocess.xml");
 
-         //some may only be applied / detected statically once per JVM session,
-         //nothing we can do about that - that just won't work for 'in process' testing
-         //and where this is important we may have to use just the 'forked runner'
-         clearAndResetChorusSysProperties(systemProperties);
-
+         setSystemProperties(sysPropsForTest);
 
          ByteArrayOutputStream out = new ByteArrayOutputStream();
          PrintStream outStream = new PrintStream(out);
@@ -44,15 +39,10 @@ public class InProcessRunner implements ChorusSelfTestRunner {
              ChorusOut.setStdOutStream(outStream);
              ChorusOut.setStdErrStream(errStream);
 
+             //there's a bit of jiggery pokery necessary here to get the log4j appender and
+             //change it's output stream so that it writes to the buffers we created for this particular test
              WriterAppender a = (WriterAppender)Logger.getRootLogger().getAppender("chorusOut");
-             //Layout l = a.getLayout();
              a.setWriter(new PrintWriter(ChorusOut.out));
-
-             //Logger.getRootLogger().removeAllAppenders();
-             //ChorusOutWriterAppender newAppender = new ChorusOutWriterAppender();
-             //newAppender.setLayout(l);
-             //newAppender.setName("chorusOut");
-             //Logger.getRootLogger().addAppender(newAppender);
 
              try {
                 Main main = new Main(new String[0]);
@@ -71,7 +61,7 @@ public class InProcessRunner implements ChorusSelfTestRunner {
     }
 
 
-    private void clearAndResetChorusSysProperties(Properties systemProperties) {
+    private void setSystemProperties(Properties testProperties) {
         //clear any existing chorus sys props
         Iterator<Map.Entry<Object,Object>> i = System.getProperties().entrySet().iterator();
         while(i.hasNext()) {
@@ -82,7 +72,7 @@ public class InProcessRunner implements ChorusSelfTestRunner {
         }
 
         //set new chorus sys props
-        i = systemProperties.entrySet().iterator();
+        i = testProperties.entrySet().iterator();
         while(i.hasNext()) {
             Map.Entry<Object,Object> e = i.next();
             System.setProperty(e.getKey().toString(), e.getValue().toString());

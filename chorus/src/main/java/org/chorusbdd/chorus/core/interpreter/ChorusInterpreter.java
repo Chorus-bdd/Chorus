@@ -120,7 +120,9 @@ public class ChorusInterpreter {
                 }
             } catch (Exception e) {
                 log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
-                log.warn(e.getMessage());
+                if ( e.getMessage() != null ) {
+                    log.warn(e.getMessage());
+                }
 
                 //in fact the feature file might contain more than one feature although this is probably a bad practice-
                 // we can't know if parsing failed, best we can do is increment failed by one

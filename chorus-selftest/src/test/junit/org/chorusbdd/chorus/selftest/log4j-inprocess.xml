@@ -12,6 +12,8 @@ ${feature.process.name} - a unique name generated for each process started
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
+    <!-- InProcessRunner resets the actual writer/output stream for each test, to write to a local buffer so we
+    can capture the test output -->
     <appender name="chorusOut" class="org.apache.log4j.WriterAppender">
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="Chorus --> %p    - %m%n"/>

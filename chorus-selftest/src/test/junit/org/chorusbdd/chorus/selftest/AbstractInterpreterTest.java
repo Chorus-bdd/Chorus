@@ -64,7 +64,7 @@ public abstract class AbstractInterpreterTest extends Assert {
     @Test
     public void runTest() throws Exception {
 
-        DefaultTestProperties sysProps = getTestSysProps(getFeaturePath());
+        DefaultTestProperties sysPropsForTest = getTestSysProps(getFeaturePath());
 
         String standardOut = readToString(getStreamFromExpectedStdOutFile());
         String standardErr = readToString(getStreamFromExpectedStdErrFile());
@@ -76,12 +76,12 @@ public abstract class AbstractInterpreterTest extends Assert {
         );
 
         if (runTestsInProcess) {
-            ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysProps);
+            ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysPropsForTest);
             checkTestResults(r, expectedResults);
         }
 
         if ( runTestsForked ) {
-            ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysProps);
+            ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysPropsForTest);
             checkTestResults(r, expectedResults);
         }
 
