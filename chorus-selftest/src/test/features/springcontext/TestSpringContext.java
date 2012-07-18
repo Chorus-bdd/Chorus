@@ -27,24 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package springcontext;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class DefaultTestProperties extends Properties {
+public class TestSpringContext extends AbstractInterpreterTest {
 
-    public DefaultTestProperties() {
-        //test output at log level info using chorus built in log provider
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        //put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.StandardOutLogProvider");
-        //put("chorusLogLevel", "info");
+    final String featurePath = "src/test/features/springcontext";
+
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
+
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+       // sysProps.remove("chorusLogProvider");
     }
 }

@@ -1,10 +1,15 @@
 package org.chorusbdd.chorus.selftest;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Logger;
+import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.util.ChorusOut;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -20,10 +25,13 @@ import java.util.Properties;
 public class InProcessRunner implements ChorusSelfTestRunner {
 
     public ChorusSelfTestResults runChorusInterpreter(Properties systemProperties) {
+         systemProperties.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-inline.xml");
+
          //some may only be applied / detected statically once per JVM session,
          //nothing we can do about that - that just won't work for 'in process' testing
          //and where this is important we may have to use just the 'forked runner'
          clearAndResetChorusSysProperties(systemProperties);
+
 
          ByteArrayOutputStream out = new ByteArrayOutputStream();
          PrintStream outStream = new PrintStream(out);
@@ -35,6 +43,16 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          try {
              ChorusOut.setStdOutStream(outStream);
              ChorusOut.setStdErrStream(errStream);
+
+             WriterAppender a = (WriterAppender)Logger.getRootLogger().getAppender("chorusOut");
+             //Layout l = a.getLayout();
+             a.setWriter(new PrintWriter(ChorusOut.out));
+
+             //Logger.getRootLogger().removeAllAppenders();
+             //ChorusOutWriterAppender newAppender = new ChorusOutWriterAppender();
+             //newAppender.setLayout(l);
+             //newAppender.setName("chorusOut");
+             //Logger.getRootLogger().addAppender(newAppender);
 
              try {
                 Main main = new Main(new String[0]);
