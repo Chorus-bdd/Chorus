@@ -86,9 +86,9 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         for ( Map.Entry<Object,Object> property : systemProperties.entrySet()) {
             jvmArgs.append("-D");
             jvmArgs.append(property.getKey());
-            jvmArgs.append("=");
+            jvmArgs.append("=\"");
             jvmArgs.append(property.getValue());
-            jvmArgs.append(" ");
+            jvmArgs.append("\" ");
         }
         return jvmArgs;
     }
