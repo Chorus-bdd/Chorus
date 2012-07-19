@@ -73,7 +73,12 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     "Whether stack traces should be shown in the interpreter output (rather than just a message) when step implementations throws exceptions"),
 
     LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "-l (trace|debug|info|warn|error|fatal)",
-    "The log level to be used by Chorus' built in log provider");
+    "The log level to be used by Chorus' built in log provider"),
+
+    LOG_PROVIDER("-logProvider", "-p", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-p org.chorusbdd.chorus.util.logging.StandardOutLogProvider",
+    "The log provider class to be used to instantiate Chorus loggers");
+
+
 
     private String switchName;
     private String switchShortName;
@@ -165,6 +170,17 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
      */
     public String[] getDefaults() {
         return defaults;
+    }
+
+    public static ConfigurationProperty getConfigPropertyForSysProp(String systemProperty) {
+        ConfigurationProperty result = null;
+        for ( ConfigurationProperty p : values()) {
+            if ( p.getSystemProperty().equals(systemProperty)) {
+                result = p;
+                break;
+            }
+        }
+        return result;
     }
 
     public static List<ConfigurationProperty> getAll() {

@@ -64,7 +64,7 @@ public class ChorusLogFactory {
     static {
         ChorusLogProvider result = createSystemPropertyProvider();
         if ( result == null ) {
-            result = createCommonsLogFactoryProvider(result);
+            result = createCommonsLogFactoryProvider();
         }
         if ( result == null ) {
             result = createStandardErrLogProvider();
@@ -87,7 +87,8 @@ public class ChorusLogFactory {
         return new StandardOutLogProvider();
     }
 
-    private static ChorusLogProvider createCommonsLogFactoryProvider(ChorusLogProvider result) {
+    private static ChorusLogProvider createCommonsLogFactoryProvider() {
+        ChorusLogProvider result = null;
         try {
             Class c = Class.forName(COMMONS_LOG_FACTORY_CLASSNAME);
             //commons is on the classpath, load our commons wrapper provider

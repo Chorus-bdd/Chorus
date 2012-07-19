@@ -1,6 +1,8 @@
 package org.chorusbdd.chorus.selftest;
 
 import org.chorusbdd.chorus.handlers.ProcessesHandler;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.util.config.ConfigurationProperty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,7 +38,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
 
         String classPath = System.getProperty("java.class.path");
 
-        String switches = "";
+        String switches = getSwitches(sysPropsForTest);
 
         StringBuilder jvmArgs = getJvmArgs(sysPropsForTest);
 
@@ -80,15 +82,34 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         );
     }
 
+    private String getSwitches(Properties sysPropsForTest) {
+        StringBuilder sb = new StringBuilder();
+        for ( Map.Entry<Object,Object> property : sysPropsForTest.entrySet()) {
+            String propertyName = property.getKey().toString();
+            if ( propertyName.startsWith("chorus")) {
+                ConfigurationProperty c = ChorusConfigProperty.getConfigPropertyForSysProp(propertyName);
+                sb.append(" ").append(c.getHyphenatedSwitch());
+                sb.append(" ").append(property.getValue().toString());
+            }
+        }
+        return sb.toString();
+    }
 
-    private StringBuilder getJvmArgs(Properties systemProperties) {
+
+    private StringBuilder getJvmArgs(Properties sysPropsForTest) {
         StringBuilder jvmArgs = new StringBuilder();
-        for ( Map.Entry<Object,Object> property : systemProperties.entrySet()) {
-            jvmArgs.append("-D");
-            jvmArgs.append(property.getKey());
-            jvmArgs.append("=\"");
-            jvmArgs.append(property.getValue());
-            jvmArgs.append("\" ");
+        for ( Map.Entry<Object,Object> property : sysPropsForTest.entrySet()) {
+            //use switches instead of sys props for chorus properties when running forked
+            //This tests the switches, but is also necessary since property values which include
+            //spaces otherwise do not work - surrounding a sys prop value in quotes "" or '' does not
+            //reliably work for both win and nix
+            if ( ! property.getKey().toString().startsWith("chorus")) {
+                jvmArgs.append("-D");
+                jvmArgs.append(property.getKey());
+                jvmArgs.append("=");
+                jvmArgs.append(property.getValue());
+                jvmArgs.append(" ");
+            }
         }
         return jvmArgs;
     }

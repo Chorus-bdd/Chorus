@@ -104,14 +104,11 @@ public class ConfigReader implements DeepCopy<ConfigReader> {
     }
 
     /**
-     * @return The value for a property which should always a single value
+     * @return Single value for a property
      */
-    public String getSingleValue(ConfigurationProperty property) {
+    public String getValue(ConfigurationProperty property) {
         List<String> values = propertyMap.get(property);
-        if ( values == null || values.size() != 1) {
-            throw new RuntimeException("Property " + property + " did not have a single value, instead had the values " + values);
-        }
-        return values.get(0);
+        return values != null ? values.get(0) : null;
     }
 
     public boolean isSet(ConfigurationProperty property) {
