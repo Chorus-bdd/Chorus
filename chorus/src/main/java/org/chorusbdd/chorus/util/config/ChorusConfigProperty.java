@@ -60,7 +60,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     SHOW_SUMMARY("-showsummary", "-s", "chorusShowSummary", false, 0, 1, new String[] {"true"},  "(?i)(false|true)", "-s (false|true)",
     "Whether to show the closing summary of pass/fail information"),
 
-    TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, null, "\\w+", "-t MyTagName",
+    TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, null, "[\\w+@\\|]+", "-t MyTagName",
     "One or more tags which can be used to restrict features which are executed"),
 
     JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+:\\d{2,5}", "-j myhost.mydomain:1001",

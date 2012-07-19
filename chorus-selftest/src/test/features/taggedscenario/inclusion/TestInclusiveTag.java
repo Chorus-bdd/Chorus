@@ -27,10 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package springcontext;
+package taggedscenario.inclusion;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,9 +39,9 @@ import org.chorusbdd.chorus.selftest.DefaultTestProperties;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestSpringContext extends AbstractInterpreterTest {
+public class TestInclusiveTag extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/springcontext";
+    final String featurePath = "src/test/features/taggedscenario/inclusion";
 
     final int expectedExitCode = 0;  //success
 
@@ -50,6 +51,11 @@ public class TestSpringContext extends AbstractInterpreterTest {
 
     protected String getFeaturePath() {
         return featurePath;
+    }
+
+
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+        sysProps.put(ChorusConfigProperty.TAG_EXPRESSION.getSystemProperty(), "@MyTag");
     }
 
 }
