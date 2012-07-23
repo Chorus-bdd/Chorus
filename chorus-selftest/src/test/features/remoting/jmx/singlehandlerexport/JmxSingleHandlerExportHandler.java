@@ -45,7 +45,7 @@ import java.io.IOException;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Start A Process Without Logging")
+@Handler("JMX Single Handler Export")
 public class JmxSingleHandlerExportHandler extends ChorusAssert {
 
     @Step("I can call a step method exported by the handler")
