@@ -160,9 +160,11 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
 
+
+
             //here we are sending the exception name and the stack trace elements, but not the exception instance itself
             //in case it is a user exception class which is not known to the chorus interpreter
-            throw new ChorusRemotingException("Exception invoking step", t.getClass().getSimpleName(), t.getStackTrace());
+            throw new ChorusRemotingException(t.getMessage(), t.getClass().getSimpleName(), t.getStackTrace());
         }
     }
 

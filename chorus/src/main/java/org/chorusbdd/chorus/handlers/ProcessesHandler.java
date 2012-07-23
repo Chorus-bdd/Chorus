@@ -234,6 +234,7 @@ public class ProcessesHandler {
     }
 
     @Destroy
+    //by default stop any processes which were started during a scenario
     public void destroy() {
         Set<String> processNames = new HashSet<String>(processes.keySet());
         for (String name : processNames) {
