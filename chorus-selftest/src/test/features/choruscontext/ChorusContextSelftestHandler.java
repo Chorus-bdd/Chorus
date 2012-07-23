@@ -27,52 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers;
+package choruscontext;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-
 
 /**
- * Created by: Steve Neal
- * Date: 03/11/11
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-@Handler("Chorus Context")
-public class ChorusContextHandler {
+@Handler("Check Chorus Context Handler")
+public class ChorusContextSelftestHandler {
 
-    @Step("the context has no values in it")
-    public void contextIsEmpty() {
-        ChorusContext context = ChorusContext.getContext();
-        ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
-    }
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
 
-    @Step(".*create a (?:context )?variable (.*) with value (.*)")
-    public void createVariable(String varName, Object value) {
-        ChorusContext.getContext().put(varName, value);
-    }
-
-    @Step(".*(?:context )?variable (.*) has (?:the )?value (.*)")
-    public void assertVariableValue(String varName, Object expected) {
-        Object actual = ChorusContext.getContext().get(varName);
-        ChorusAssert.assertEquals(expected, actual);
-    }
-
-    @Step(".*(?:context )?variable (.*) exists")
-    public void assertVariableExists(String varName) {
-        Object actual = ChorusContext.getContext().get(varName);
-        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
-    }
-
-    @Step(".*show (?:context )?variable (.*)")
-    public Object showVariable(String varName) {
-        Object actual = ChorusContext.getContext().get(varName);
-        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
-        if (actual instanceof CharSequence) {
-            return String.format("%s='%s'", varName, actual);
-        } else {
-            return String.format("%s=%s", varName, actual);
-        }
     }
 }
