@@ -1,0 +1,24 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/remoting/jmx/remoteexceptions/jmxremoteexceptions.feature
+Feature: Jmx Single Handler Export                                                                   
+Chorus --> INFO    - No default handler found for Feature: (Jmx Single Handler Export), will use built-in handlers and Uses: statements
+  Scenario: Handle Exceptions In Remote Steps
+Chorus --> INFO    - Processing scenario: Handle Exceptions In Remote Steps
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named SingleHandlerExport                                PASSED  
+Exporting the handler
+    And I wait for 1 second for the process to start up                                      PASSED  
+    And I call a method which throws an exception in SingleHandlerExport                     FAILED  This message should appear in interpreter output
+    Then my subsequent steps are skipped                                                     SKIPPED 
+  Scenario: Handle Assertion Exceptions In Remote Steps
+Chorus --> INFO    - Processing scenario: Handle Assertion Exceptions In Remote Steps
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named SingleHandlerExport                                PASSED  
+Exporting the handler
+    And I wait for 1 second for the process to start up                                      PASSED  
+    And I call a method which throws an assertion exception in SingleHandlerExport           FAILED  This assertion failed
+    Then my subsequent steps are skipped                                                     SKIPPED 
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:2) (passed:0) (failed:2)
+Steps     (total:8) (passed:4) (failed:2) (undefined:0) (pending:0) (skipped:2)

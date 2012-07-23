@@ -1,0 +1,27 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/processhandler/processwithconfigurations/processwithconfigurations.feature
+Feature: Process With Configurations [confA]                                                         
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    And I start a config1 process named Frodo                                                PASSED  
+ConfA
+Config
+    And I wait for 1 second for the process to run                                           PASSED  
+    And I can stop the process named Frodo                                                   PASSED  
+
+Feature: Process With Configurations [confB]                                                         
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    And I start a config1 process named Frodo                                                PASSED  
+Shared
+Config
+    And I wait for 1 second for the process to run                                           PASSED  
+    And I can stop the process named Frodo                                                   PASSED  
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:8) (passed:8) (failed:0) (undefined:0) (pending:0) (skipped:0)

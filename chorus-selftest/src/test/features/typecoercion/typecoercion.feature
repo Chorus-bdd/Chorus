@@ -42,7 +42,8 @@ Feature: Type Coercion
     Ensure I can't coerce a value Foxtrot to a char
 
   #we have some rules which define which class to coerce when the param type is Object
-  #not sure why one wouldn't require a specific type - but let's enforce consistency since already in place
+  #These are also used by the built in ChorusContext handler when we set a context
+  #In general we try to convert to a boolean or numeric type before falling back to String
   Scenario: Coercion to Object
     Given Chorus is working properly
     Then the value false is converted to Boolean when the method parameter type is Object

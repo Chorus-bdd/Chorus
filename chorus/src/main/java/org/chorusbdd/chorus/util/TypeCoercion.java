@@ -97,6 +97,13 @@ public class TypeCoercion {
         return result;
     }
 
+    /**
+     * Rules for object coercion are probably most important for the ChorusContext
+     * Here when we set the value of a variable, these rules are used to determine how the
+     * String value supplied is represented - since float pattern comes first
+     * I set the variable x with value 1.2 will become a float within the ChorusContext
+     * - this will give some extra utility if we add more powerful comparison methods to ChorusContext
+     */
     private static <T> T coerceObject(String value) {
         T result;
         //try boolean first
