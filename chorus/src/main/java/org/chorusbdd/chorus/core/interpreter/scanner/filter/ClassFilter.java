@@ -41,26 +41,6 @@ package org.chorusbdd.chorus.core.interpreter.scanner.filter;
  */
 public interface ClassFilter {
 
-    public static final ClassFilter NULL_PERMISSIVE_FILTER = new ClassFilter() {
-        public boolean acceptByName(String className) {
-            return false;
-        }
-
-        public boolean acceptByClass(Class clazz) {
-            return false;
-        }
-    };
-
-    public static final ClassFilter NULL_RESTRICTIVE_FILTER = new ClassFilter() {
-        public boolean acceptByName(String className) {
-            return false;
-        }
-
-        public boolean acceptByClass(Class clazz) {
-            return false;
-        }
-    };
-
     /**
      *  A first stage in filtering - check the class passes filter by it's class/package name
      *

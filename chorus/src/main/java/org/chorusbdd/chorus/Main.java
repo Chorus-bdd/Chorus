@@ -37,9 +37,9 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
 import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
 import java.io.File;
@@ -54,10 +54,9 @@ import java.util.List;
 public class Main {
 
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
-    private final ConfigReader baseConfigReader;
+    private final ConfigReader configReader;
 
     public static void main(String[] args) throws Exception {
-
         boolean success = false;
         try {
             Main main = new Main(args);
@@ -75,13 +74,13 @@ public class Main {
     }
 
     public Main(String[] args) throws InterpreterPropertyException {
-        baseConfigReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
-        baseConfigReader.readConfiguration();
+        configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
+        configReader.readConfiguration();
 
         setLoggingProvider();
 
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
-            baseConfigReader
+            configReader
         );
         listenerSupport.addExecutionListener(listeners);
     }
@@ -93,7 +92,7 @@ public class Main {
     public boolean run() throws Exception {
         boolean passed = false;
         try {
-            String logLevel = baseConfigReader.getValue(ChorusConfigProperty.LOG_LEVEL);
+            String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
             setLogLevel(logLevel);
             ExecutionToken t = startTests();
             List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
@@ -142,8 +141,8 @@ public class Main {
     public List<FeatureToken> run(ExecutionToken t, ConfigMutator... configMutators) throws Exception {
         List<FeatureToken> features = new ArrayList<FeatureToken>();
         for ( ConfigMutator c : configMutators) {
-            ConfigReader childConfigReader = c.getNewConfig(baseConfigReader);
-            List<FeatureToken> featuresThisPass = run(t, childConfigReader);
+            ConfigProperties p = c.getNewConfig(configReader);
+            List<FeatureToken> featuresThisPass = run(t, p);
             features.addAll(featuresThisPass);
         }
         return features;
@@ -152,19 +151,19 @@ public class Main {
     /**
      * Run the interpreter, collating results into the executionToken and notifying
      */
-    private List<FeatureToken> run(ExecutionToken executionToken, ConfigReader configReader) throws Exception {
+    private List<FeatureToken> run(ExecutionToken executionToken, ConfigProperties config) throws Exception {
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        List<String> handlerPackages = configReader.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
+        List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
         if (handlerPackages != null) {
             chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
         }
 
-        chorusInterpreter.setDryRun(configReader.isTrue(ChorusConfigProperty.DRY_RUN));
+        chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
 
         //set a filter tags expression if provided
-        if (configReader.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
-            List<String> tagExpressionParts = configReader.getValues(ChorusConfigProperty.TAG_EXPRESSION);
+        if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
+            List<String> tagExpressionParts = config.getValues(ChorusConfigProperty.TAG_EXPRESSION);
             StringBuilder builder = new StringBuilder();
             for (String tagExpressionPart : tagExpressionParts) {
                 builder.append(tagExpressionPart);
@@ -174,7 +173,7 @@ public class Main {
         }
 
         //identify the feature files
-        List<String> featureFileNames = configReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
+        List<String> featureFileNames = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
         List<File> featureFiles = new FeatureScanner().getFeatureFiles(featureFileNames);
 
         chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
@@ -183,7 +182,7 @@ public class Main {
     }
 
     public List<String> getFeatureFilePaths() {
-        return baseConfigReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
+        return configReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
     }
 
     public void addExecutionListener(ExecutionListener... listeners) {
@@ -213,8 +212,8 @@ public class Main {
 
     //to get the suite name we concatenate all the values provided for suite name switch
     public String getSuiteName() {
-        return baseConfigReader.isSet(ChorusConfigProperty.SUITE_NAME) ?
-                concatenateName(baseConfigReader.getValues(ChorusConfigProperty.SUITE_NAME)) :
+        return configReader.isSet(ChorusConfigProperty.SUITE_NAME) ?
+                concatenateName(configReader.getValues(ChorusConfigProperty.SUITE_NAME)) :
                 "";
     }
 
@@ -236,8 +235,8 @@ public class Main {
         //performs static initialization - the log provider must be set as a system property
         //even if provided as a switch
         ChorusConfigProperty p = ChorusConfigProperty.LOG_PROVIDER;
-        if ( System.getProperty(p.getSystemProperty()) == null && baseConfigReader.isSet(p)) {
-            System.setProperty(p.getSystemProperty(), baseConfigReader.getValue(p));
+        if ( System.getProperty(p.getSystemProperty()) == null && configReader.isSet(p)) {
+            System.setProperty(p.getSystemProperty(), configReader.getValue(p));
         }
     }
 }

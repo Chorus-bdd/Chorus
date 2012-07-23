@@ -27,16 +27,14 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus;
 
 import junit.framework.*;
-import org.chorusbdd.chorus.ConfigMutator;
-import org.chorusbdd.chorus.Main;
 import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigReader;
+import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
@@ -162,13 +160,13 @@ public class ChorusJUnitRunner {
         //mutate the base config to replace the feature paths with the path of just one selected feature file
         private class SingleFeatureConfigMutator implements ConfigMutator {
 
-            public ConfigReader getNewConfig(ConfigReader baseConfigReader) {
-                ConfigReader configReader = baseConfigReader.deepCopy();
-                configReader.setProperty(
+            public ConfigProperties getNewConfig(ConfigProperties baseConfig) {
+                ConfigProperties p = baseConfig.deepCopy();
+                p.setProperty(
                     ChorusConfigProperty.FEATURE_PATHS,
                     Collections.singletonList(featureFile.getPath())
                 );
-                return configReader;
+                return p;
             }
         }
     }

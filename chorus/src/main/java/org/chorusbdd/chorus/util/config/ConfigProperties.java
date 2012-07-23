@@ -27,33 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus;
+package org.chorusbdd.chorus.util.config;
 
-import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.util.DeepCopy;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Nick
- * Date: 12/06/12
- * Time: 14:42
+ * Date: 23/07/12
+ * Time: 13:23
  *
- * Used to generate a new config based on a baseConfig
- *
- * This can be useful, for example, if we want to generate multiple configs from a single
- * base - in the case of the JUnit runner we have a base config which would run all features
- * we want to generate from this a config for each feature file, so that each feature file
- * can be executed in a separate interpreter run, as part of a junit suite
+ * Provide access to get and set ConfigurationProperty
  */
-public interface ConfigMutator {
+public interface ConfigProperties extends DeepCopy<ConfigProperties> {
 
-    public static ConfigMutator NULL_MUTATOR = new ConfigMutator() {
-        public ConfigProperties getNewConfig(ConfigProperties baseConfig) {
-            return baseConfig.deepCopy();
-        }
-    };
+    void setProperty(ConfigurationProperty property, List<String> values);
 
-    /**
-     * @return ConfigReader - a deep clone of the baseConfig, with some altered properties
-     */
-    public ConfigProperties getNewConfig(ConfigProperties baseConfig);
+    List<String> getValues(ConfigurationProperty property);
+
+    String getValue(ConfigurationProperty property);
+
+    boolean isSet(ConfigurationProperty property);
+
+    boolean isTrue(ConfigurationProperty property);
 }

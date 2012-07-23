@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.util.config;
 
 import org.chorusbdd.chorus.util.ChorusOut;
-import org.chorusbdd.chorus.util.DeepCopy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +55,7 @@ import java.util.regex.Pattern;
  * The available parameters are provided as a List of ConfigurationProperty
  * Chorus has an enumeration ChorusConfigProperty which provides the config options for chorus
  */
-public class ConfigReader implements DeepCopy<ConfigReader> {
+public class ConfigReader implements ConfigProperties {
 
     private List<ConfigurationProperty> properties;
     private String[] args;
@@ -172,7 +171,7 @@ public class ConfigReader implements DeepCopy<ConfigReader> {
         ChorusOut.err.println("Usage: Main -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name] [-t tag_expression] [-jmxListener host:port] [-showErrors] [-dryrun] [-showsummary] ");
     }
 
-    public ConfigReader deepCopy() {
+    public ConfigProperties deepCopy() {
         List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>(properties);
         ConfigReader c = new ConfigReader(l);
 

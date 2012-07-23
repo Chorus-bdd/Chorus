@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigReader;
+import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -55,20 +55,20 @@ public class ExecutionListenerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(Main.class);
 
-    public List<ExecutionListener> createExecutionListener(ConfigReader configReader) {
+    public List<ExecutionListener> createExecutionListener(ConfigProperties config) {
         List<ExecutionListener> result = new ArrayList<ExecutionListener>();
-        if ( configReader.isSet(ChorusConfigProperty.JMX_LISTENER)) {
+        if ( config.isSet(ChorusConfigProperty.JMX_LISTENER)) {
             //we can have zero to many remote jmx execution listeners available
-            addProxyForRemoteJmxListener(configReader.getValues(ChorusConfigProperty.JMX_LISTENER), result);
+            addProxyForRemoteJmxListener(config.getValues(ChorusConfigProperty.JMX_LISTENER), result);
         }
 
-        addSystemOutExecutionListener(configReader, result);
+        addSystemOutExecutionListener(config, result);
         return result;
     }
 
-    private void addSystemOutExecutionListener(ConfigReader configReader, List<ExecutionListener> result) {
-        boolean verbose = configReader.isTrue(ChorusConfigProperty.SHOW_ERRORS);
-        boolean showSummary = configReader.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
+    private void addSystemOutExecutionListener(ConfigProperties config, List<ExecutionListener> result) {
+        boolean verbose = config.isTrue(ChorusConfigProperty.SHOW_ERRORS);
+        boolean showSummary = config.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
         result.add(new SystemOutExecutionListener(showSummary, verbose));
     }
 
