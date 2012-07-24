@@ -9,9 +9,6 @@ Feature: Jmx Remote Chorus Context
   remote components during step execution. Also if set remotely, variables are visible
   locally to the interpreter
 
-  TODO - really the result returned from a remote step should be inlined with the interpreter output as would
-  happen with a local step invocation
-
   Scenario: View And Change A Context Variable Remotely
     Given I start a config1 process named Casablanca
     And I wait for 1 second for the process to start up

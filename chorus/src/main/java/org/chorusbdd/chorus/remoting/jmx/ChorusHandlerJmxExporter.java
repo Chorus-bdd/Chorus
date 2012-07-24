@@ -129,7 +129,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return this;
     }
 
-    public ChorusContext invokeStep(String methodUid, ChorusContext context, Object... args) throws Exception {
+    public JmxStepResult invokeStep(String methodUid, ChorusContext context, Object... args) throws Exception {
 
         //log debug messages
         if (log.isDebugEnabled()) {
@@ -153,10 +153,10 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             //invoke the method
             Method m = stepMethods.get(methodUid);
             Object handler = stepHandlers.get(methodUid);
-            m.invoke(handler, args);
+            Object result = m.invoke(handler, args);
 
             //return the updated context
-            return ChorusContext.getContext();
+            return new JmxStepResult(ChorusContext.getContext(), result);
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
 

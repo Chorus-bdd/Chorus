@@ -98,7 +98,7 @@ public class RemotingHandler {
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
     @Step("(.*) in ([a-zA-Z0-9_-]*)$")
-    public void performActionInRemoteComponent(String action, String componentName) throws Exception {
+    public Object performActionInRemoteComponent(String action, String componentName) throws Exception {
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
 
@@ -142,11 +142,12 @@ public class RemotingHandler {
         }
 
         if (methodUidToCall != null) {
+            Object result;
             if (methodUidToCallPendingMessage != null) {
                 throw new StepPendingException(methodUidToCallPendingMessage);
             }
             try {
-                proxy.invokeStep(methodUidToCall, methodArgsToPass);
+                result = proxy.invokeStep(methodUidToCall, methodArgsToPass);
             } catch (RuntimeMBeanException mbe) {
                 //here if an exception was thrown from the remote Step method
                 RuntimeException targetException = mbe.getTargetException();
@@ -158,6 +159,7 @@ public class RemotingHandler {
             } catch (Exception e) {
                 throw new ChorusRemotingException(e);
             }
+            return result;
         } else {
             String message = String.format("There is no handler available for action (%s) on MBean (%s)", action, componentName);
             log.error(message);

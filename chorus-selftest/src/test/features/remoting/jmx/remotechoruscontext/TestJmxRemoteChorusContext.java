@@ -30,6 +30,8 @@
 package remoting.jmx.remotechoruscontext;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,4 +53,7 @@ public class TestJmxRemoteChorusContext extends AbstractInterpreterTest {
         return featurePath;
     }
 
+   protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+       sysProps.put(ChorusConfigProperty.SHOW_ERRORS.getSystemProperty(), "true");
+   }
 }

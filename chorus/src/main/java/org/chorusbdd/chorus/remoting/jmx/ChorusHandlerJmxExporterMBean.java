@@ -43,5 +43,5 @@ public interface ChorusHandlerJmxExporterMBean {
 
     public Map<String, String[]> getStepMetadata();
 
-    public ChorusContext invokeStep(String methodUid, ChorusContext context, Object... params) throws Exception;
+    public JmxStepResult invokeStep(String methodUid, ChorusContext context, Object... params) throws Exception;
 }
