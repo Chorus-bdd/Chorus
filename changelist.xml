@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
+<changes>
+    <version>
+        <versionNumber>0.3.7</versionNumber>
+        <comment>Final beta release candidate for chorus</comment>
+        <change desc="Support a returned value from remote step invocations"/>
+        <change desc="Fixes for scenario tagging features"/>
+        <change desc="Renamed Jxm Handler to Remoting Handler to support future protocols"/>
+    </version>
+    <version>
+        <versionNumber>0.3.6</versionNumber>
+        <comment>First beta release of Chorus</comment>
+        <change desc="Set up Chorus for publication to Maven central"/>
+    </version>
+</changes>
