@@ -12,6 +12,9 @@ public class StartAProcessMain {
 
     public static void main(String[] args) throws InterruptedException {
 
+        //just make sure the next standard out appears after the 'I wait for 1 second' in the interpreter output
+        Thread.sleep(250);
+
         //write out all the arguments so we can test them
         for (String s : args) {
             System.out.println(s);
