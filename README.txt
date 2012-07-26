@@ -1,4 +1,4 @@
-Chorus is a lightweight <a href="http://en.wikipedia.org/wiki/Behavior-driven_development">BDD</a> test framework written in Java, with a focus on distributed system testing
+Chorus is a lightweight BDD test framework written in Java, with a focus on distributed system testing
 
 Key features:
  * Replicates most features of the well-known 'Cucumber' framework for Ruby
