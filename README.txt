@@ -15,5 +15,8 @@ Key features:
 For more information:
  * See the Chorus wiki at: http://www.chorus-bdd.org
  * Or contact us here http://www.smartkey.co.uk/contact.html
+ 
+Releases:
+* See Release Changelist http://www.chorus-bdd.org/changelist.xml
 
 Chorus is available under the open source MIT license
