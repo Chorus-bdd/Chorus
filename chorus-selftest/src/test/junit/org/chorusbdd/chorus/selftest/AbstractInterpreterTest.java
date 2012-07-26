@@ -173,7 +173,7 @@ public abstract class AbstractInterpreterTest extends Assert {
                 s = r.readLine();
             }
         } catch (IOException e) {
-            fail("Failed to read contents of file stream " + is);
+            fail("Failed to read contents of stream " + is);
             e.printStackTrace();
         }  finally {
             try {

@@ -53,36 +53,4 @@ public class StartAProcessHandler extends ChorusAssert {
 
     }
 
-    @Step("the (.*) file contains a line (.*)")
-    public void logContainsLine(String resourcePath, String line) throws IOException {
-        String path = AbstractInterpreterTest.getPathToFile(getClass(), resourcePath);
-        checkFileContainsLine(line, path);
-    }
-
-    private void checkFileContainsLine(String line, String path) throws IOException {
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(new File(path)));
-            line = line.trim();
-
-            String l = r.readLine();
-            boolean result = false;
-            while(l != null) {
-                if ( line.equals(l.trim())) {
-                    result = true;
-                    break;
-                }
-                l = r.readLine();
-            }
-            ChorusAssert.assertTrue("check contains line", result);
-        } finally {
-            if ( r != null) {
-                try {
-                    r.close();
-                } catch (Exception e) {
-                }
-            }
-        }
-    }
-
 }

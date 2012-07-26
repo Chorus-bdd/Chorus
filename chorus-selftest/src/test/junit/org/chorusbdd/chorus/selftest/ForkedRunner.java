@@ -21,6 +21,10 @@ import java.util.Properties;
 public class ForkedRunner implements ChorusSelfTestRunner {
 
     public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) throws Exception {
+        return runForked(sysPropsForTest, "org.chorusbdd.chorus.Main", System.out, 30000);
+    }
+
+    public ChorusSelfTestResults runForked(Properties sysPropsForTest, String mainClass, PrintStream stdOutStream, int timeout) throws Exception {
         String jre = System.getProperty("java.home");
 
         sysPropsForTest.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-forked.xml");
@@ -50,35 +54,37 @@ public class ForkedRunner implements ChorusSelfTestRunner {
               File.separatorChar,
               jvmArgs,
               classPath,
-              "org.chorusbdd.chorus.Main",
+              mainClass,
               switches).trim();
 
         System.out.println("About to run Java: " + command);
 
-        ByteArrayOutputStream interpreterOut = new ByteArrayOutputStream();
-        ByteArrayOutputStream interpreterErr = new ByteArrayOutputStream();
+        ByteArrayOutputStream processOut = new ByteArrayOutputStream();
+        ByteArrayOutputStream processErr = new ByteArrayOutputStream();
 
         Process process = Runtime.getRuntime().exec(command);
-        ProcessesHandler.ProcessRedirector outRedirector = new ProcessesHandler.ProcessRedirector(process.getInputStream(), false, new PrintStream(interpreterOut), System.out);  //dumping both to out
-        ProcessesHandler.ProcessRedirector errRedirector = new ProcessesHandler.ProcessRedirector(process.getErrorStream(), false, new PrintStream(interpreterErr), System.out);  //tend to get more consistent ordering
+        ProcessesHandler.ProcessRedirector outRedirector = new ProcessesHandler.ProcessRedirector(process.getInputStream(), false, new PrintStream(processOut), stdOutStream);  //dumping both to out
+        ProcessesHandler.ProcessRedirector errRedirector = new ProcessesHandler.ProcessRedirector(process.getErrorStream(), false, new PrintStream(processErr), stdOutStream);  //tend to get more consistent ordering
 
-        Thread outThread = new Thread(outRedirector, "interpreter-stdout");
+        Thread outThread = new Thread(outRedirector, "stdout-redirector");
         outThread.setDaemon(true);
         outThread.start();
-        Thread errThread = new Thread(errRedirector, "interpreter-stderr");
+        Thread errThread = new Thread(errRedirector, "stderr-redirector");
         errThread.setDaemon(true);
         errThread.start();
 
-        int result = process.waitFor();
-
-        //wait for logging to be flushed to output byte array asynchronously
-        errThread.join(10000);
-        outThread.join(10000);
+        int result = 0;
+        if ( timeout > 0 ) {
+            result = process.waitFor();
+            //wait for logging to be flushed to output byte array asynchronously
+            errThread.join(timeout);
+            outThread.join(timeout);
+        }
 
         return new ChorusSelfTestResults(
-          interpreterOut.toString("UTF-8"),
-          interpreterErr.toString("UTF-8"),
-          result
+            processOut.toString("UTF-8"),
+            processErr.toString("UTF-8"),
+            result
         );
     }
 
@@ -106,8 +112,10 @@ public class ForkedRunner implements ChorusSelfTestRunner {
             if ( ! property.getKey().toString().startsWith("chorus")) {
                 jvmArgs.append("-D");
                 jvmArgs.append(property.getKey());
-                jvmArgs.append("=");
-                jvmArgs.append(property.getValue());
+                if ( ! property.getValue().equals("")) {
+                    jvmArgs.append("=");
+                    jvmArgs.append(property.getValue());
+                }
                 jvmArgs.append(" ");
             }
         }

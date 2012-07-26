@@ -1,13 +1,18 @@
 Chorus --> INFO    - Loading feature from file: src/test/features/pendingsteps/pendingsteps.feature
 Feature: Pending Steps                                                                               
-  Scenario: Simple Scenario
-Chorus --> INFO    - Processing scenario: Simple Scenario
+  Scenario: Pending Annotations
+Chorus --> INFO    - Processing scenario: Pending Annotations
     Given Chorus is working properly                                                         PASSED  
     Then I can run a feature with a single scenario                                          PASSED  
     And a pending step gets a pending status                                                 PENDING bonjour, mes amis, I am a pending step
     While subsequent steps are skipped                                                       SKIPPED 
+  Scenario: Pending Exceptions Are Handled
+Chorus --> INFO    - Processing scenario: Pending Exceptions Are Handled
+    Given Chorus is working properly                                                         PASSED  
+    If I throw a PendingException then that step is shown pending with the exception message PENDING Hola?
+    And subsequent steps are skipped                                                         SKIPPED 
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:1) (passed:0) (failed:1)
-Steps     (total:4) (passed:2) (failed:0) (undefined:0) (pending:1) (skipped:1)
+Scenarios (total:2) (passed:0) (failed:2)
+Steps     (total:7) (passed:3) (failed:0) (undefined:0) (pending:2) (skipped:2)

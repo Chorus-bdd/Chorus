@@ -27,11 +27,17 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package pendingsteps;
+package jmxexecutionlistener;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.StepPendingException;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,27 +45,17 @@ import org.chorusbdd.chorus.core.interpreter.StepPendingException;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Pending Steps")
-public class PendingStepsHandler {
+@Handler("Jmx Execution Listener")
+public class JmxExecutionListenerHandler extends ChorusAssert {
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
 
     }
 
-    @Step("I can run a feature with a single scenario")
-    public void canRunAFeature() {
-
-    }
-
-    @Step(value = "a pending step gets a pending status",
-          pending="bonjour, mes amis, I am a pending step")
-    public void aPendingStepGetsPendingStatus() {
-    }
-
-    @Step("I throw a PendingException then that step is shown pending with the exception message")
-    public void throwAPendingException() {
-        throw new StepPendingException("Hola?");
+    @Step("the remote jmx listener should be able to generate the same output as the local execution listener")
+    public void logContainsLine() throws IOException {
+        //will test this in the junit
     }
 
 }
