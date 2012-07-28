@@ -24,7 +24,8 @@ read VERSION?"What version are we releasing?"
 echo $VERSION
 fn_promptForContinue
 
-echo "Going to checkout tag chorus-$VERSION to a new branch and switch local git to the tagged branch, continue?"
+echo "You should already have created a tag chorus-$VERSION"
+echo "Going to checkout tag chorus-$VERSION to a new branch and switch to the tagged branch, continue?"
 fn_promptForContinue
 
 git checkout -b release-chorus-$VERSION chorus-$VERSION
