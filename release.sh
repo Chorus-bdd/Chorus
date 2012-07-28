@@ -13,11 +13,34 @@ function fn_promptForContinue {
   fi
 }
 
+function fn_exitOnError {
+    if [ $? -ne 0 ] ; then
+      echo "Failed to $1"
+      exit 1
+    fi
+}
+
 read VERSION?"What version are we releasing?"
 echo $VERSION
 fn_promptForContinue
 
+echo "Going to checkout tag chorus-$VERSION to a new branch and switch local git to the tagged branch, continue?"
+fn_promptForContinue
 
+git checkout -b release-chorus-$VERSION chorus-$VERSION
+fn_exitOnError "Failed to checkout branch from tag chorus-$VERSION"
+
+echo "Cleaning"
+mvn clean
+fn_exitOnError "Failed to clean"
+
+echo "Building packages"
+mvn package
+fn_exitOnError "Failed to package"
+
+echo "Building javadoc"
+mvn javadoc:jar
+fn_exitOnError "Failed to create javadoc jars"
 
 echo "Generating release script.."
 
