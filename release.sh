@@ -21,23 +21,25 @@ function fn_exitOnError {
 }
 
 read VERSION?"What version are we releasing?"
-echo $VERSION
+echo ${VERSION}
 fn_promptForContinue
 
-echo "You should already have created a tag chorus-$VERSION"
-echo "Going to checkout tag chorus-$VERSION to a new branch and switch to the tagged branch, continue?"
-fn_promptForContinue
+if [ -z "`git status | grep release-chorus-${VERSION}`" ] ; then
+  echo "You should already have created a tag chorus-${VERSION}"
+  echo "Going to checkout tag chorus-${VERSION} to a new branch and switch to the tagged branch, continue?"
+  fn_promptForContinue
 
-git checkout -b release-chorus-$VERSION chorus-$VERSION
-fn_exitOnError "Failed to checkout branch from tag chorus-$VERSION"
+  git checkout -b release-chorus-${VERSION} chorus-${VERSION}
+  fn_exitOnError "Failed to checkout branch from tag chorus-${VERSION}"
+fi
 
 echo "Cleaning"
 mvn clean
 fn_exitOnError "Failed to clean"
 
 echo "Building packages"
-mvn package
-fn_exitOnError "Failed to package"
+mvn install
+fn_exitOnError "Failed to install"
 
 echo "Building javadoc"
 mvn javadoc:jar
@@ -98,8 +100,8 @@ fi
 fn_addArtifactsToTar chorus
 fn_addArtifactsToTar chorus-spring
 fn_addArtifactsToTar chorus-tools
-fn_addToTar ./changelist.xml
-fn_addToTar ./changelist.xsl
+fn_addToTar changelist.xml
+fn_addToTar changelist.xsl
 gzip ${TARFILE}
 
 

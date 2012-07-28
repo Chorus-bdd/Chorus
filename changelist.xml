@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.3.8</versionNumber>
+        <comment>Full Chorus Release</comment>
+        <change desc="No functional changes, complete initial set of chorus self-tests"/>
+    </version>
+    <version>
         <versionNumber>0.3.7</versionNumber>
         <comment>Final beta release candidate for chorus</comment>
         <change desc="Support a returned value from remote step invocations"/>
