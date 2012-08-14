@@ -131,6 +131,9 @@ public class ChorusParser {
             }
 
             if (line.startsWith("Scenario:")) {
+                if ( currentFeature == null) {
+                    throw new ParseException("Feature: statement must precede Scenario:", lineNumber);
+                }
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
                 currentScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 currentFeature.addScenario(currentScenario);
