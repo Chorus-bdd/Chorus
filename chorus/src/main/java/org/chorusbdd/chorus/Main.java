@@ -79,6 +79,9 @@ public class Main {
 
         setLoggingProvider();
 
+        String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
+        setLogLevel(logLevel);
+
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
             configReader
         );
@@ -92,8 +95,6 @@ public class Main {
     public boolean run() throws Exception {
         boolean passed = false;
         try {
-            String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
-            setLogLevel(logLevel);
             ExecutionToken t = startTests();
             List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
             endTests(t, features);
