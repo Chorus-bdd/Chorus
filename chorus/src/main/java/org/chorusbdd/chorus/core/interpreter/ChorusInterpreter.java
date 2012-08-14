@@ -98,38 +98,49 @@ public class ChorusInterpreter {
 
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
-            ChorusParser parser = new ChorusParser();
 
-            try {
-                log.info(String.format("Loading feature from file: %s", featureFile));
-                List<FeatureToken> features = parser.parse(new FileReader(featureFile));
-                //we can end up with more than one feature per file if using Chorus 'configurations'
-
+            List<FeatureToken> features = parseFeatures(featureFile, executionToken);
+            if ( features != null ) {
                 filterFeaturesByScenarioTags(features);
 
                 //RUN EACH FEATURE
                 for (FeatureToken feature : features) {
-                    processFeature(
-                        executionToken,
-                        allFeatures,
-                        allHandlerClasses,
-                        unmanagedHandlerInstances,
-                        featureFile,
-                        feature
-                    );
+                    try {
+                        processFeature(
+                            executionToken,
+                            allFeatures,
+                            allHandlerClasses,
+                            unmanagedHandlerInstances,
+                            featureFile,
+                            feature
+                        );
+                    } catch (Throwable t) {
+                        log.error("Exception while running feature " + feature, t);
+                        executionToken.incrementFeaturesFailed();
+                    }
                 }
-            } catch (Exception e) {
-                log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
-                if ( e.getMessage() != null ) {
-                    log.warn(e.getMessage());
-                }
-
-                //in fact the feature file might contain more than one feature although this is probably a bad practice-
-                // we can't know if parsing failed, best we can do is increment failed by one
-                executionToken.incrementFeaturesFailed();
             }
         }
         return allFeatures;
+    }
+
+    private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken) {
+        List<FeatureToken> features = null;
+        ChorusParser parser = new ChorusParser();
+        try {
+            log.info(String.format("Loading feature from file: %s", featureFile));
+            features = parser.parse(new FileReader(featureFile));
+            //we can end up with more than one feature per file if using Chorus 'configurations'
+        } catch (Throwable t) {
+            log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
+            if ( t.getMessage() != null ) {
+                log.warn(t.getMessage());
+            }
+            //in fact the feature file might contain more than one feature although this is probably a bad practice-
+            // we can't know if parsing failed, best we can do is increment failed by one
+            executionToken.incrementFeaturesFailed();
+        }
+        return features;
     }
 
     private void processFeature(ExecutionToken executionToken, List<FeatureToken> results, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature) throws Exception {

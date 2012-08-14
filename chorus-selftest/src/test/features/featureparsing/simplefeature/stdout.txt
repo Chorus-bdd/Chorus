@@ -3,6 +3,7 @@ Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsi
 Chorus --> WARN    - Parse error, unexpected text 'Free text description is not allowed here it must go straight after the Feature statement' (at line:3)
 Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/simplefeature/nofeaturestatement.feature
 Chorus --> WARN    - Failed to parse feature file src/test/features/featureparsing/simplefeature/nofeaturestatement.feature will skip this feature file
+Chorus --> WARN    - Feature: statement must precede Scenario: (at line:2)
 Chorus --> INFO    - Loading feature from file: src/test/features/featureparsing/simplefeature/nosceanario.feature
 Feature: No Scenario In Feature                                                                      
 Chorus --> INFO    - No default handler found for Feature: (No Scenario In Feature), will use built-in handlers and Uses: statements
