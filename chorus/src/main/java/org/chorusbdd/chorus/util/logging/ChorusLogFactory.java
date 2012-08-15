@@ -45,12 +45,13 @@ import org.chorusbdd.chorus.util.ChorusOut;
  *  1) if the -DchorusLogProvider system property is set, take the value of this property as the name of the factory
  *  class to instantiate. This class must implement ChorusLogProvider
  *
- *  2) In the absence of a specified ChorusLogProvider system property, we examine the classpath to see if the commons
- *  LogFactory is available. If it is, we obtain a commons LogFactory instance. Commons Log instances returned are by the
- *  Commons LogFactory are wrapped in a ChorusLog wrapper class to avoid the rest of chorus having a depedency on commons
+ *  2) If chorusLogProvider is not set, use a StandardOutLogProvider
  *
- *  3) If neither of the above approaches works, create a ChorusStandardOutLogFactory which will return ChorusLog instances
- *  which write their logging output direct to standard out/err
+ *  To use commons logging specify -DchorusLogProvider=org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider
+ *
+ *  Commons is often on the classpath, although usually we want to see chorus log output inline with the chorus test output
+ *  (which always goes to std out). So we use the StandardOutLogProvider as the default, even where Chorus commons exists
+ *
  */
 public class ChorusLogFactory {
 
@@ -58,14 +59,8 @@ public class ChorusLogFactory {
 
     public static final String LOG_PROVIDER_SYSTEM_PROPERTY = "chorusLogProvider";
 
-    private static final String COMMONS_LOG_FACTORY_CLASSNAME = "org.apache.commons.logging.LogFactory";
-    private static final String CHORUS_COMMONS_LOG_PROVIDER = "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider";
-
     static {
         ChorusLogProvider result = createSystemPropertyProvider();
-        if ( result == null ) {
-            result = createCommonsLogFactoryProvider();
-        }
         if ( result == null ) {
             result = createStandardErrLogProvider();
             result.getLog(ChorusLogFactory.class).info(
@@ -87,26 +82,6 @@ public class ChorusLogFactory {
         return new StandardOutLogProvider();
     }
 
-    private static ChorusLogProvider createCommonsLogFactoryProvider() {
-        ChorusLogProvider result = null;
-        try {
-            Class c = Class.forName(COMMONS_LOG_FACTORY_CLASSNAME);
-            //commons is on the classpath, load our commons wrapper provider
-            //do this with reflection otherwise we'd load the class, and have a runtime mandatory dependency at this point
-            Class chorusWrapperProvider = Class.forName(CHORUS_COMMONS_LOG_PROVIDER);
-            result = (ChorusLogProvider)chorusWrapperProvider.newInstance();
-        } catch (ClassNotFoundException e) {
-            //Could not find java commons logging on the classpath will use default logging
-        } catch (InstantiationException e) {
-            ChorusOut.err.println("Failed to instantiate ChorusLogProvider will revert to default logging");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            ChorusOut.err.println("IllegalAccessException when initializing ChorusLogProvider, will revert to default logging");
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     private static ChorusLogProvider createSystemPropertyProvider() {
         ChorusLogProvider result = null;
         String provider = null;
@@ -117,7 +92,7 @@ public class ChorusLogFactory {
                 result = (ChorusLogProvider)c.newInstance();
             }
         } catch (Throwable t) {
-            ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + ", will look for alternative commons logger or use Std out");
+            ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + " will default to Standard Out logging");
         }
         return result;
     }
