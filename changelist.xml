@@ -2,6 +2,13 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.3.9</versionNumber>
+        <comment>General release, minor enhancements</comment>
+        <change>Better error logging during feature run, don't log as a feature parsing error when the error occurs during feature processing</change>
+        <change>Set log level correctly when executing chorus tests as a JUnit suite with ChorusJUnitRunner</change>
+        <change>Handle exceptions in user defined handler @Destroy methods</change>
+    </version>
+    <version>
         <versionNumber>1.3.8</versionNumber>
         <comment>Full Chorus Release</comment>
         <change desc="No functional changes, complete initial set of chorus self-tests"/>
