@@ -483,7 +483,11 @@ public class ChorusInterpreter {
             if (method.getParameterTypes().length == 0) {
                 if (method.getAnnotation(Destroy.class) != null) {
                     log.trace("Found Destroy annotation on handler method " + method + " will invoke");
-                    method.invoke(handler);
+                    try {
+                        method.invoke(handler);
+                    } catch ( Throwable t) {
+                        log.warn("Exception when calling @Destroy method [" + method + "] on handler " + handler.getClass(), t);
+                    }
                 }
             }
         }

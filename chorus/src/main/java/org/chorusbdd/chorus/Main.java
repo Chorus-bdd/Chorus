@@ -79,9 +79,6 @@ public class Main {
 
         setLoggingProvider();
 
-        String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
-        setLogLevel(logLevel);
-
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
             configReader
         );
@@ -143,6 +140,11 @@ public class Main {
         List<FeatureToken> features = new ArrayList<FeatureToken>();
         for ( ConfigMutator c : configMutators) {
             ConfigProperties p = c.getNewConfig(configReader);
+
+            //set log level here in case log level was a mutated property
+            String logLevel = p.getValue(ChorusConfigProperty.LOG_LEVEL);
+            setLogLevel(logLevel);
+
             List<FeatureToken> featuresThisPass = run(t, p);
             features.addAll(featuresThisPass);
         }
