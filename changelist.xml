@@ -3,11 +3,12 @@
 <changes>
     <version>
         <versionNumber>1.3.9</versionNumber>
-        <comment>General release, minor enhancements</comment>
-        <change>Better error logging during feature run, don't log as a feature parsing error when the error occurs during feature processing</change>
-        <change>Set log level correctly when executing chorus tests as a JUnit suite with ChorusJUnitRunner</change>
-        <change>Handle exceptions in user defined handler @Destroy methods</change>
-        <change>StandardOutLogProvider is now the default even where apache commons logging is on the classpath. Use -DchorusLogProvider=org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider if you really want to redirect Chorus logging, but usually it is better inline with the test output / std out</change>
+        <comment>General release, minor enhancements and fixes</comment>
+        <change desc="Better error logging during feature run, don't log as a feature parsing error when the error occurs during feature processing"/>
+        <change desc="StandardOutLogProvider is now the default even where apache commons logging is on the classpath. Use -DchorusLogProvider=org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider if you want Chorus to log using commons logging"/>
+        <change desc="ChorusJUnitRunner can now accept interpreter parameters as a String, as an alternative to setting sys props"/>
+        <bugfix desc="Set log level correctly when executing chorus tests as a JUnit suite with ChorusJUnitRunner"/>
+        <bugfix desc="Handle Runtime exceptions thrown by user defined handler @Destroy methods"/>
     </version>
     <version>
         <versionNumber>1.3.8</versionNumber>

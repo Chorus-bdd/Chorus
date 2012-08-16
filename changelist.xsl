@@ -19,6 +19,7 @@
                     	border-width: 1px;
                     	border-color: #999999;
                     	border-collapse: collapse;
+                        width: 1024px;
                     }
                     table.changeTable th {
                     	background:#b5cfd2 url('cell-blue.jpg');
@@ -52,12 +53,17 @@
 		<table class='changeTable'>
 		<tr><th>Changes in <xsl:value-of select="versionNumber"/></th></tr>
 		<xsl:apply-templates select="change"/>
+        <xsl:apply-templates select="bugfix"/>
 		</table><br/>
         <p/>
 	</xsl:template>
 
 	<xsl:template match="change">
-		<tr><td><xsl:value-of select="@desc"/></td></tr>
+		<tr><td>CHANGE: <xsl:value-of select="@desc"/></td></tr>
 	</xsl:template>
+
+    <xsl:template match="bugfix">
+    	<tr><td>BUGFIX: <xsl:value-of select="@desc"/></td></tr>
+    </xsl:template>
 
 </xsl:stylesheet>
