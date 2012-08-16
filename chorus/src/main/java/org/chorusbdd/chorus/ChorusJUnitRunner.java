@@ -59,15 +59,15 @@ import java.util.List;
 @RunWith(AllTests.class)
 public class ChorusJUnitRunner {
 
-    private static Main chorusMain;
-
-    static {
-        try {
-            chorusMain = new Main(new String[]{});
-        } catch (InterpreterPropertyException e) {
-            e.printStackTrace();
-        }
-    }
+//    private static Main chorusMain;
+//
+//    static {
+//        try {
+//            chorusMain = new Main(new String[]{});
+//        } catch (InterpreterPropertyException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     //executionToken for the test suite
     private static ExecutionToken executionToken;
@@ -75,20 +75,36 @@ public class ChorusJUnitRunner {
     //all tokens executed during the suite
     private static List<FeatureToken> featureTokens = new ArrayList<FeatureToken>();
 
-    public static TestSuite suite() throws InterpreterPropertyException {
-        TestSuite suite = new TestSuite() {
-            public void run(TestResult result) {
-                executionToken = chorusMain.startTests();
-                super.run(result);
-                chorusMain.endTests(executionToken, featureTokens);
+    public static TestSuite suite() {
+        return suite(new String[0]);
+    }
+
+    public static TestSuite suite(String params) {
+        return suite(params.split(" "));
+    }
+
+    public static TestSuite suite(String[] args) {
+        TestSuite suite = null;
+        try {
+            final Main chorusMain = new Main(args);
+
+            suite = new TestSuite() {
+                public void run(TestResult result) {
+                    executionToken = chorusMain.startTests();
+                    super.run(result);
+                    chorusMain.endTests(executionToken, featureTokens);
+                }
+            };
+
+            for (Test test : findAllTestCasesRuntime(chorusMain)) {
+                suite.addTest(test);
             }
-        };
 
-        for (Test test : findAllTestCasesRuntime(chorusMain)) {
-            suite.addTest(test);
+            suite.setName(chorusMain.getSuiteName());
+            return suite;
+        } catch (InterpreterPropertyException e) {
+          e.printStackTrace();
         }
-
-        suite.setName(chorusMain.getSuiteName());
         return suite;
     }
 
@@ -101,17 +117,19 @@ public class ChorusJUnitRunner {
         Test[] tests = new Test[featureFiles.size()];
         int index=0;
         for ( File f : featureFiles) {
-            tests[index++] = new ChorusTest(f);
+            tests[index++] = new ChorusTest(f, chorusMain);
         }
         return tests;
     }
 
     private static class ChorusTest extends TestCase {
         private File featureFile;
+        private Main chorusMain;
 
-        public ChorusTest(File featureFile) {
+        public ChorusTest(File featureFile, Main chorusMain) {
             //To change body of created methods use File | Settings | File Templates.
             this.featureFile = featureFile;
+            this.chorusMain = chorusMain;
         }
 
         public int countTestCases() {

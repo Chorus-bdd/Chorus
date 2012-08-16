@@ -44,35 +44,11 @@ import java.io.ByteArrayOutputStream;
  */
 public class TestJUnitRunner extends ChorusAssert {
 
-    public static ByteArrayOutputStream out;
-    public static ByteArrayOutputStream err;
-
-    public static TestSuite suite() throws InterpreterPropertyException {
-
-//        out = new ByteArrayOutputStream();
-//        PrintStream outStream = new PrintStream(out);
-//
-//        err = new ByteArrayOutputStream();
-//        PrintStream errStream = new PrintStream(err);
-//
-//        ChorusOut.err = errStream;
-//        ChorusOut.out = outStream;
+    public static TestSuite suite() {
 
         System.setProperty("chorusLogLevel", "info");
-        System.setProperty("chorusLogProvider", "org.chorusbdd.chorus.util.logging.StandardOutLogProvider");
-        System.setProperty("chorusFeaturePaths", "src/test/junit/org/chorusbdd/chorus/selftest/junitsuite");
+        //System.setProperty("chorusFeaturePaths", "src/test/junit/org/chorusbdd/chorus/selftest/junitsuite");
 
-        return ChorusJUnitRunner.suite();
+        return ChorusJUnitRunner.suite("-f src/test/junit/org/chorusbdd/chorus/selftest/junitsuite");
     }
-
-// TODO find a way to test the output of the suite the below would not get executed
-//    @After
-//    public void tearDown() {
-//        ChorusOut.err = System.err;
-//        ChorusOut.out = System.out;
-
-//        String output = out.toString();
-//        assertTrue(output.contains("INFO"));
-//    }
-
 }
