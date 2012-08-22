@@ -1,4 +1,4 @@
-Uses: Test JUnit Handler
+Uses: Test JUnit Suite Handler
 
 Feature: JUnit First Feature
 

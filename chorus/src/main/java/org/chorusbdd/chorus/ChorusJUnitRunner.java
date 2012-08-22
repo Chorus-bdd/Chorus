@@ -40,9 +40,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,21 +57,10 @@ import java.util.List;
 @RunWith(AllTests.class)
 public class ChorusJUnitRunner {
 
-//    private static Main chorusMain;
-//
-//    static {
-//        try {
-//            chorusMain = new Main(new String[]{});
-//        } catch (InterpreterPropertyException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    //executionToken for the test suite
-    private static ExecutionToken executionToken;
+    private static final String FEATURE_TOKEN_LIST = "FEATURE_TOKEN_LIST";
+    private static final String EXECUTION_TOKEN = "EXECUTION_TOKEN";
 
     //all tokens executed during the suite
-    private static List<FeatureToken> featureTokens = new ArrayList<FeatureToken>();
 
     public static TestSuite suite() {
         return suite(new String[0]);
@@ -86,17 +73,24 @@ public class ChorusJUnitRunner {
     public static TestSuite suite(String[] args) {
         TestSuite suite = null;
         try {
+            //a map which holds state for this suite execution
+            final Map<String, Object> executionEnvironment = new HashMap<String, Object>();
+
             final Main chorusMain = new Main(args);
+
+            final List<FeatureToken> featureTokens = new ArrayList<FeatureToken>();
+            executionEnvironment.put(FEATURE_TOKEN_LIST, featureTokens);
 
             suite = new TestSuite() {
                 public void run(TestResult result) {
-                    executionToken = chorusMain.startTests();
+                    ExecutionToken executionToken = chorusMain.startTests();
+                    executionEnvironment.put(EXECUTION_TOKEN, executionToken);
                     super.run(result);
                     chorusMain.endTests(executionToken, featureTokens);
                 }
             };
 
-            for (Test test : findAllTestCasesRuntime(chorusMain)) {
+            for (Test test : findAllTestCasesRuntime(chorusMain, executionEnvironment)) {
                 suite.addTest(test);
             }
 
@@ -108,7 +102,7 @@ public class ChorusJUnitRunner {
         return suite;
     }
 
-    private static Test[] findAllTestCasesRuntime(Main chorusMain) {
+    private static Test[] findAllTestCasesRuntime(Main chorusMain, Map<String, Object> executionEnvironment) {
         //scan for all feature files specified in base config
         FeatureScanner featureScanner = new FeatureScanner();
         List<File> featureFiles = featureScanner.getFeatureFiles(chorusMain.getFeatureFilePaths());
@@ -117,7 +111,7 @@ public class ChorusJUnitRunner {
         Test[] tests = new Test[featureFiles.size()];
         int index=0;
         for ( File f : featureFiles) {
-            tests[index++] = new ChorusTest(f, chorusMain);
+            tests[index++] = new ChorusTest(f, chorusMain, executionEnvironment);
         }
         return tests;
     }
@@ -125,11 +119,13 @@ public class ChorusJUnitRunner {
     private static class ChorusTest extends TestCase {
         private File featureFile;
         private Main chorusMain;
+        private Map<String, Object> executionEnvironment;
 
-        public ChorusTest(File featureFile, Main chorusMain) {
+        public ChorusTest(File featureFile, Main chorusMain, Map<String, Object> executionEnvironment) {
             //To change body of created methods use File | Settings | File Templates.
             this.featureFile = featureFile;
             this.chorusMain = chorusMain;
+            this.executionEnvironment = executionEnvironment;
         }
 
         public int countTestCases() {
@@ -142,7 +138,7 @@ public class ChorusJUnitRunner {
                 //run using the base config filtered through a mutator which replaces the
                 //feature file paths property with the specific path for this feature file
                 List<FeatureToken> tokens = chorusMain.run(
-                    executionToken,
+                    (ExecutionToken)executionEnvironment.get(EXECUTION_TOKEN),
                     new SingleFeatureConfigMutator()
                 );
 
@@ -154,8 +150,9 @@ public class ChorusJUnitRunner {
                     testResult.addFailure(this, new AssertionFailedError("Chorus test failed"));
                 }
 
+                List<FeatureToken> l = (List<FeatureToken>)executionEnvironment.get(FEATURE_TOKEN_LIST);
                 //add token for the feature to the list of all tokens for the suite
-                featureTokens.addAll(tokens);
+                l.addAll(tokens);
 
             } catch (Throwable t) {
                 testResult.addError(this, t);

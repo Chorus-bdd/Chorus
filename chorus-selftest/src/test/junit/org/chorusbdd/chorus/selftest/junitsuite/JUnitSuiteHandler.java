@@ -38,7 +38,7 @@ import org.chorusbdd.chorus.annotations.Step;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Test JUnit Handler")
+@Handler("Test JUnit Suite Handler")
 public class JUnitSuiteHandler {
 
     @Step("Chorus is working properly")

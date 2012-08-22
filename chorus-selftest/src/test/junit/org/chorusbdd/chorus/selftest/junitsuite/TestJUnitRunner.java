@@ -47,8 +47,8 @@ public class TestJUnitRunner extends ChorusAssert {
     public static TestSuite suite() {
 
         System.setProperty("chorusLogLevel", "info");
-        //System.setProperty("chorusFeaturePaths", "src/test/junit/org/chorusbdd/chorus/selftest/junitsuite");
-
-        return ChorusJUnitRunner.suite("-f src/test/junit/org/chorusbdd/chorus/selftest/junitsuite");
+        System.setProperty("chorusHandlerPackages", "org.chorusbdd.chorus.selftest.junitsuite");
+        System.setProperty("chorusFeaturePaths", "src/test/junit/org/chorusbdd/chorus/selftest/junitsuite");
+        return ChorusJUnitRunner.suite();
     }
 }
