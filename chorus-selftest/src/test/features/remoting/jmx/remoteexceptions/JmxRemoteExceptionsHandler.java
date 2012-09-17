@@ -56,4 +56,11 @@ public class JmxRemoteExceptionsHandler extends ChorusAssert {
     public void throwAnAssertException() {
         ChorusAssert.assertTrue("This assertion failed", false);
     }
+
+    //null pointers don't have a specific message, we need to handle that
+    //so that we see NullPointerException and a line in the remote interpreter output
+    @Step("I call a method which throws a NullPointerException")
+    public void throwANullPointer() {
+        throw new NullPointerException();
+    }
 }
