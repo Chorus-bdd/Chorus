@@ -14,7 +14,6 @@ public class StartAProcessMain {
         for (String s : args) {
             System.out.println(s);
         }
-        Thread.sleep(10000);
     }
 
 }

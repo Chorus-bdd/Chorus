@@ -10,6 +10,7 @@ Feature: Jmx Dual Handler Export
   Scenario: Call An Exported Method
     Given I start a config1 process named DualHandlerExport
     Then I can call a step method exported by the handler in DualHandlerExport
+    And I can stop process DualHandlerExport
 
   Scenario: Call A Conflicting Method
       Given I start a config1 process named DualHandlerExport
@@ -18,6 +19,7 @@ Feature: Jmx Dual Handler Export
       And I call a step method exported by both handlers in DualHandlerExport
       Then the ambiguity is logged and one of the matching steps is called in DualHandlerExport
       #TODO we should tighten the contract here to make it fully deterministic which definition will be used
+      And I can stop the process named DualHandlerExport
 
 
 

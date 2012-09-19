@@ -5,8 +5,7 @@ Chorus --> INFO    - Processing scenario: Start a Single Java Process
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     And I start a config1 process named Frodo                                                PASSED  
-    And I wait for 1 second for the process to run                                           PASSED  
-    And I can stop the process named Frodo                                                   PASSED  
+    And I wait for the process named Frodo to stop                                           PASSED  
     Then the logs/startaprocesswithlogging-Frodo-out.log file contains a line 1              PASSED  
     And the logs/startaprocesswithlogging-Frodo-out.log file contains a line Woohoo, we have started a processPASSED  
     And the logs/startaprocesswithlogging-Frodo-err.log file contains a line Eeek, an error might have occurredPASSED  
@@ -14,4 +13,4 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)

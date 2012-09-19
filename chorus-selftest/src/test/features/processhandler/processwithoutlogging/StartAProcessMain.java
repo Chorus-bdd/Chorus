@@ -17,8 +17,6 @@ public class StartAProcessMain {
 
         System.out.println("Woohoo, we have started a process");
         System.err.println("Eeek, an error might have occurred");
-
-        Thread.sleep(10000);
     }
 
 }

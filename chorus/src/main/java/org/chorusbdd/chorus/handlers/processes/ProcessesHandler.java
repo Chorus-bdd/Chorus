@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
+import org.chorusbdd.chorus.ChorusException;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
@@ -37,6 +38,8 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.HandlerPropertiesLoader;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.NamedExecutors;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -44,6 +47,9 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by: Steve Neal
@@ -52,6 +58,8 @@ import java.util.*;
 @Handler("Processes")
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler {
+
+    private static ScheduledExecutorService processexHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
 
@@ -217,7 +225,7 @@ public class ProcessesHandler {
     }
 
 
-    @Step(".*stop (?:the )?process named ([a-zA-Z0-9-_]*) ?.*")
+    @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]*) ?.*")
     public void stopProcess(String name) {
         ChildProcess p = processes.get(name);
         if (p != null) {
@@ -230,9 +238,68 @@ public class ProcessesHandler {
                 processes.remove(name);
             }
         } else {
-            throw new RuntimeException("There is no process named '" + name + "' to stop");
+            throw new ChorusException("There is no process named '" + name + "' to stop");
         }
     }
+
+    @Step(".*the process named ([a-zA-Z0-9-_]*) (?:is|has) (?:stopped|terminated).*")
+    public void checkProcessHasStopped(String processName) {
+        ChildProcess p = processes.get(processName);
+        if ( p == null ) {
+            throw new ChorusException("There is no process named '" + processName + "' to check is stopped");
+        }
+
+        ChorusAssert.assertTrue("The process " + processName + " was not stopped", p.isStopped());
+    }
+
+    @Step(".*wait for the process named ([a-zA-Z0-9-_]*) to (?:stop|terminate).*")
+    public void waitForProcessToTerminate(String processName) {
+        ChildProcess p = processes.get(processName);
+        if ( p == null ) {
+            throw new ChorusException("There is no process named '" + processName + "' to wait for");
+        }
+
+        long waitTime = 30000;
+        String wait = getOrCreatePropertiesLoader().readProperty(processName, "waitforterminate", "30000");
+        try {
+            waitTime = Long.parseLong(wait);
+        } catch (NumberFormatException nfe) {
+            log.warn("waitforterminate process property must be an integer, will default to 30000");
+        }
+
+        InterruptWaitTask t = new InterruptWaitTask(Thread.currentThread(), processName);
+        processexHandlerExecutor.schedule(t, waitTime, TimeUnit.MILLISECONDS);
+
+        try {
+            p.waitFor();
+        } catch (InterruptedException e) {
+            log.warn("Interrupted while waiting for process " + processName + " to terminate");
+            throw new ChorusException("Process " + processName + " failed to terminate after " + waitTime + " milliseconds");
+        }
+        t.setWaitFinished(); //prevent the interrupt, process finished naturally
+    }
+
+    class InterruptWaitTask implements Runnable {
+       private Thread waitingThread;
+       private String processName;
+       private volatile boolean isWaitFinished;
+
+       InterruptWaitTask(Thread waitingThread, String processName) {
+           this.waitingThread = waitingThread;
+           this.processName = processName;
+       }
+
+       public void setWaitFinished() {
+           isWaitFinished = true;
+       }
+
+       public void run() {
+           if ( ! isWaitFinished) {
+               log.warn("The process named " + processName + " appears not to have terminated, will stop waiting");
+               waitingThread.interrupt();
+           }
+       }
+   }
 
     @Destroy
     //by default stop any processes which were started during a scenario
@@ -331,6 +398,16 @@ public class ProcessesHandler {
             errThread.start();
         }
 
+        public boolean isStopped() {
+            boolean stopped = true;
+            try {
+                process.exitValue();
+            } catch (IllegalThreadStateException e) {
+                stopped = false;
+            }
+            return stopped;
+        }
+
         public void destroy() {
             // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
             log.debug("Destroying process " + process);
@@ -342,6 +419,12 @@ public class ProcessesHandler {
                 log.error("Interrupted while waiting for process to terminate",e);
             }
         }
+
+        public void waitFor() throws InterruptedException {
+            process.waitFor();
+        }
+
+
     }
 
     public static class ProcessRedirector implements Runnable {

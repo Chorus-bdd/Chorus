@@ -12,8 +12,8 @@ public class RemotingConfig {
     private String name;
     private String host;
     private int port;
-    private int connectionRetryAttempts = 5;
-    private int connectionRetryMillis = 10000;
+    private int connectionRetryAttempts = 40;
+    private int connectionRetryMillis = 250;
 
     public boolean isValid() {
         return getHost() != null && getProtocol() != null && getName() != null && getPort() > 0;

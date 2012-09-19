@@ -67,11 +67,11 @@ public class AbstractJmxProxy {
      */
     public AbstractJmxProxy(String host, int jmxPort, String mBeanName, int connectionRetryCount, long millisBetweenRetries) throws ChorusRemotingException {
         Exception connectException = null;
+        int connectionAttempt = 0;
         try {
             String serviceURL = String.format("service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi", host, jmxPort);
             log.debug("Connecting to JMX service URL: " + serviceURL);
 
-            int connectionAttempt = 0;
             while( jmxConnector == null && shouldAttemptConnection(connectionRetryCount, connectionAttempt)) {
                 connectionAttempt++;
                 connectException = null;
@@ -91,7 +91,7 @@ public class AbstractJmxProxy {
             }
 
             if ( jmxConnector == null ) {
-                throw new Exception("Failed to connect to JMX service at " + serviceURL, connectException);
+                throw new IOException("Failed to connect to JMX service at " + serviceURL, connectException);
             }
 
             mBeanServerConnection = jmxConnector.getMBeanServerConnection();
@@ -103,8 +103,14 @@ public class AbstractJmxProxy {
 
         try {
             this.objectName = new ObjectName(mBeanName);
-            Set<ObjectName> containsOne = mBeanServerConnection.queryNames(null, this.objectName);
-            if (containsOne.size() == 1) {
+            boolean found = false;
+            while( ! found && shouldAttemptConnection(connectionRetryCount, connectionAttempt)) {
+                connectionAttempt++;
+                Set<ObjectName> containsOne = mBeanServerConnection.queryNames(null, this.objectName);
+                found = containsOne.size() > 0;
+            }
+
+            if (found) {
                 log.debug("Found MBean: " + mBeanName);
             } else {
                 String msg = String.format("There is no MBean on server (%s:%d) with name (%s)", host, jmxPort, mBeanName);
