@@ -242,7 +242,7 @@ public class ProcessesHandler {
         }
     }
 
-    @Step(".*the process named ([a-zA-Z0-9-_]*) (?:is|has) (?:stopped|terminated).*")
+    @Step(".*the process (?:named )?([a-zA-Z0-9-_]*) (?:is|has) (?:stopped|terminated).*")
     public void checkProcessHasStopped(String processName) {
         ChildProcess p = processes.get(processName);
         if ( p == null ) {
@@ -252,29 +252,38 @@ public class ProcessesHandler {
         ChorusAssert.assertTrue("The process " + processName + " was not stopped", p.isStopped());
     }
 
-    @Step(".*wait for the process named ([a-zA-Z0-9-_]*) to (?:stop|terminate).*")
+    @Step(".*wait for (?:up to )?(\\d+) seconds for the process (?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*")
+    public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
+        waitForProcessToTerminate(processName, waitSeconds);
+    }
+
+    @Step(".*wait for the process (?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*")
     public void waitForProcessToTerminate(String processName) {
+        long waitTime = 30;
+        String wait = getOrCreatePropertiesLoader().readProperty(processName, "terminate_wait_time", "30");
+        try {
+            waitTime = Long.parseLong(wait);
+        } catch (NumberFormatException nfe) {
+            log.warn("terminate_wait_time process property must be an integer value representing max seconds to wait, will default to 30");
+        }
+
+        waitForProcessToTerminate(processName, waitTime);
+    }
+
+    private void waitForProcessToTerminate(String processName, long waitTimeSeconds) {
         ChildProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait for");
         }
 
-        long waitTime = 30000;
-        String wait = getOrCreatePropertiesLoader().readProperty(processName, "waitforterminate", "30000");
-        try {
-            waitTime = Long.parseLong(wait);
-        } catch (NumberFormatException nfe) {
-            log.warn("waitforterminate process property must be an integer, will default to 30000");
-        }
-
         InterruptWaitTask t = new InterruptWaitTask(Thread.currentThread(), processName);
-        processexHandlerExecutor.schedule(t, waitTime, TimeUnit.MILLISECONDS);
+        processexHandlerExecutor.schedule(t, waitTimeSeconds, TimeUnit.SECONDS);
 
         try {
             p.waitFor();
         } catch (InterruptedException e) {
             log.warn("Interrupted while waiting for process " + processName + " to terminate");
-            throw new ChorusException("Process " + processName + " failed to terminate after " + waitTime + " milliseconds");
+            throw new ChorusException("Process " + processName + " failed to terminate after " + waitTimeSeconds + " milliseconds");
         }
         t.setWaitFinished(); //prevent the interrupt, process finished naturally
     }

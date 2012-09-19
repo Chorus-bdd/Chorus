@@ -7,7 +7,7 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
     And I start a config1 process named Frodo                                                PASSED  
 ConfA
 Config
-    And I wait for the process named Frodo to terminate                                      PASSED  
+    And I wait for up to 10 seconds for the process Frodo to terminate                       PASSED  
     Then the process named Frodo has stopped                                                 PASSED  
 
 Feature: Process With Configurations [confB]                                                         
@@ -18,7 +18,7 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
     And I start a config1 process named Frodo                                                PASSED  
 Shared
 Config
-    And I wait for the process named Frodo to terminate                                      PASSED  
+    And I wait for up to 10 seconds for the process Frodo to terminate                       PASSED  
     Then the process named Frodo has stopped                                                 PASSED  
 
 

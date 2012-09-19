@@ -12,7 +12,7 @@ Feature: Process With Configurations
   Scenario: Start a Single Java Process
     Given Chorus is working properly
     And I start a config1 process named Frodo
-    And I wait for the process named Frodo to terminate
+    And I wait for up to 10 seconds for the process Frodo to terminate
     #seems to take up to 1s to start and for for the output to make it to the logs
     Then the process named Frodo has stopped
 
