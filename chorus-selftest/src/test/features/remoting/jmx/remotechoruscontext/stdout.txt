@@ -6,7 +6,6 @@ Chorus --> INFO    - Processing scenario: View And Change A Context Variable Rem
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named Casablanca                                         PASSED  
 Exporting the handler
-    And I wait for 1 second for the process to start up                                      PASSED  
     And I set the context variable theUsualSuspects to Nick in Casablanca                    PASSED  
     Then I can access the context variable theUsualSuspects in Casablanca                    PASSED  Nick:String
     And_if I set the context variable theUsualSuspects to Steve in Casablanca                PASSED  
@@ -15,4 +14,4 @@ Exporting the handler
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:5) (passed:5) (failed:0) (undefined:0) (pending:0) (skipped:0)

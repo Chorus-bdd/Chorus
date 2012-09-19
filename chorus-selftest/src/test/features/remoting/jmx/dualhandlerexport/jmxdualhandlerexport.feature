@@ -9,12 +9,10 @@ Feature: Jmx Dual Handler Export
 
   Scenario: Call An Exported Method
     Given I start a config1 process named DualHandlerExport
-    And I wait for 1 second for the process to start up
     Then I can call a step method exported by the handler in DualHandlerExport
 
   Scenario: Call A Conflicting Method
       Given I start a config1 process named DualHandlerExport
-      And I wait for 1 second for the process to start up
       And I call a step method exported by handler one in DualHandlerExport
       And I call a step method exported by handler two in DualHandlerExport
       And I call a step method exported by both handlers in DualHandlerExport

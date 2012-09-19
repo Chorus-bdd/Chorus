@@ -6,14 +6,12 @@ Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named DualHandlerExport                                  PASSED  
 Exporting the handler
-    And I wait for 1 second for the process to start up                                      PASSED  
     Then I can call a step method exported by the handler in DualHandlerExport               PASSED  
   Scenario: Call A Conflicting Method
 Chorus --> INFO    - Processing scenario: Call A Conflicting Method
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named DualHandlerExport                                  PASSED  
 Exporting the handler
-    And I wait for 1 second for the process to start up                                      PASSED  
     And I call a step method exported by handler one in DualHandlerExport                    PASSED  One
     And I call a step method exported by handler two in DualHandlerExport                    PASSED  two
 Chorus --> INFO    - Ambiguous method (JmxDualHandlerExportHandler.canCallAStepMethodExportedByBoth) found for step (I call a step method exported by both handlers) on (DualHandlerExport) will use first method found (JmxDualHandlerExportHandlerTwo.canCallAStepMethodExportedByBoth)
@@ -23,4 +21,4 @@ Chorus --> INFO    - Ambiguous method (JmxDualHandlerExportHandler.canCallAStepM
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:2) (passed:2) (failed:0)
-Steps     (total:9) (passed:9) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)
