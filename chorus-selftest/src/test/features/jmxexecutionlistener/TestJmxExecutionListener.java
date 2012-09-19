@@ -90,7 +90,7 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         sysPropsForTest.put("com.sun.management.jmxremote", "");
         sysPropsForTest.put("com.sun.management.jmxremote.ssl", "false");
         f.runForked(sysPropsForTest, "jmxexecutionlistener.ExecutionListenerMain", outStream, 0);
-        Thread.sleep(500);  //let the forked listener start up and create its MBeans
+        Thread.sleep(2000);  //let the forked listener start up and create its MBeans
     }
 
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
