@@ -91,7 +91,7 @@ public class AbstractJmxProxy {
             }
 
             if ( jmxConnector == null ) {
-                throw new IOException("Failed to connect to JMX service at " + serviceURL, connectException);
+                throw new Exception("Failed to connect to JMX service at " + serviceURL, connectException);
             }
 
             mBeanServerConnection = jmxConnector.getMBeanServerConnection();
