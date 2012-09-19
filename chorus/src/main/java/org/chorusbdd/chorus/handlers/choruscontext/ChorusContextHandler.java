@@ -27,54 +27,52 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers;
+package org.chorusbdd.chorus.handlers.choruscontext;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
 
 /**
  * Created by: Steve Neal
- * Date: 12/10/11
+ * Date: 03/11/11
  */
-@Handler(value = "Timers", scope = HandlerScope.UNMANAGED)
-@SuppressWarnings("UnusedDeclaration")
-public class TimersHandler {
+@Handler("Chorus Context")
+public class ChorusContextHandler {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(TimersHandler.class);
+    @Step("the context has no values in it")
+    public void contextIsEmpty() {
+        ChorusContext context = ChorusContext.getContext();
+        ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
+    }
 
-    /**
-     * Simple timer to make the calling thread sleep
-     *
-     * @param seconds the number of seconds that the thread will sleep for
-     */
-    @Step(".*wait for ([0-9]*) seconds?.*")
-    public void waitForSeconds(int seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping", e);
+    @Step(".*create a (?:context )?variable (.*) with value (.*)")
+    public void createVariable(String varName, Object value) {
+        ChorusContext.getContext().put(varName, value);
+    }
+
+    @Step(".*(?:context )?variable (.*) has (?:the )?value (.*)")
+    public void assertVariableValue(String varName, Object expected) {
+        Object actual = ChorusContext.getContext().get(varName);
+        ChorusAssert.assertEquals(expected, actual);
+    }
+
+    @Step(".*(?:context )?variable (.*) exists")
+    public void assertVariableExists(String varName) {
+        Object actual = ChorusContext.getContext().get(varName);
+        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
+    }
+
+    @Step(".*show (?:context )?variable (.*)")
+    public Object showVariable(String varName) {
+        Object actual = ChorusContext.getContext().get(varName);
+        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
+        if (actual instanceof CharSequence) {
+            return String.format("%s='%s'", varName, actual);
+        } else {
+            return String.format("%s=%s", varName, actual);
         }
     }
-
-    @Step(".*wait for ([0-9]*) milliseconds?.*")
-    public void waitForMilliseconds(int millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping", e);
-        }
-    }
-
-    @Step(".*wait for half a second.*")
-    public void waitForHalfASecond() {
-       try {
-           Thread.sleep(500);
-       } catch (InterruptedException e) {
-           log.error("Thread interrupted while sleeping", e);
-       }
-    }
-
 }

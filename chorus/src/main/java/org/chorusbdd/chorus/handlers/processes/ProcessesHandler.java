@@ -27,13 +27,14 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers;
+package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.handlers.util.HandlerPropertiesLoader;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -67,11 +68,11 @@ public class ProcessesHandler {
 
     private final Map<String, Integer> processCounters = new HashMap<String, Integer>();
 
-    private final Properties javaProcessProperties = new Properties();
-
     private static boolean haveCreatedLogDir = false;
 
     public static final String STARTING_JAVA_LOG_PREFIX = "About to run Java: ";
+
+    private HandlerPropertiesLoader propertiesLoader;
 
     /**
      * Starts a new Java process using properties defined in a properties file alongside the feature file
@@ -90,14 +91,14 @@ public class ProcessesHandler {
      */
     @Step(".*start an? (.*) process named ([a-zA-Z0-9-_]*) ?.*")
     public void startJavaNamed(String process, String alias) throws Exception {
-        String jre = getJavaProcessProperty(process, "jre", System.getProperty("java.home"));
-        String jvmArgs = getJavaProcessProperty(process, "jvmargs", "");
-        String logging = getJavaProcessProperty(process, "logging", "");
-        String jmxPort = getJavaProcessProperty(process, "jmxport", null);
-        String debugPort = getJavaProcessProperty(process, "debugport", null);
-        String classPath = getJavaProcessProperty(process, "classpath", System.getProperty("java.class.path"));
-        String mainClass = getJavaProcessProperty(process, "mainclass", null);
-        String args = getJavaProcessProperty(process, "args", "");
+        String jre = getOrCreatePropertiesLoader().readProperty(process, "jre", System.getProperty("java.home"));
+        String jvmArgs = getOrCreatePropertiesLoader().readProperty(process, "jvmargs", "");
+        String logging = getOrCreatePropertiesLoader().readProperty(process, "logging", "");
+        String jmxPort = getOrCreatePropertiesLoader().readProperty(process, "jmxport", null);
+        String debugPort = getOrCreatePropertiesLoader().readProperty(process, "debugport", null);
+        String classPath = getOrCreatePropertiesLoader().readProperty(process, "classpath", System.getProperty("java.class.path"));
+        String mainClass = getOrCreatePropertiesLoader().readProperty(process, "mainclass", null);
+        String args = getOrCreatePropertiesLoader().readProperty(process, "args", "");
 
         if (mainClass == null) {
             throw new RuntimeException("No configuration found for process: " + process);
@@ -197,7 +198,7 @@ public class ProcessesHandler {
 
         String stdoutLogPath = null;
         String stderrLogPath = null;
-        String logging = getJavaProcessProperty(script, "logging", "");
+        String logging = getOrCreatePropertiesLoader().readProperty(script, "logging", "");
         if (logging != null && "true".equals(logging)) {
             stdoutLogPath = String.format("%s%slogs%s%s-out.log",
                     featureDir.getAbsolutePath(),
@@ -240,54 +241,6 @@ public class ProcessesHandler {
         for (String name : processNames) {
             stopProcess(name);
         }
-    }
-
-    /**
-     * Will return the named property's value, or a default value if the name is not found.
-     *
-     * @param process      to which the property belongs
-     * @param property     to load
-     * @param defaultValue to use if the property does not exist
-     * @return
-     */
-    private String getJavaProcessProperty(String process, String property, String defaultValue) {
-        //make sure the properties are loaded
-        if (javaProcessProperties.size() == 0) {
-            try {
-                //figure out where the properties file is
-                String propertiesFilePath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
-                propertiesFilePath = propertiesFilePath.replace(".feature", "-processes.properties");
-
-                //load the properties
-                File propertiesFile = new File(propertiesFilePath);
-                if (propertiesFile.exists()) {
-                    FileInputStream fis = new FileInputStream(propertiesFilePath);
-                    javaProcessProperties.load(fis);
-                    fis.close();
-                    log.debug(String.format("Loaded process configuration properties from: %s", propertiesFilePath));
-                }
-
-                //override properties for a specific run configuration (if specified)
-                if (featureToken.getConfigurationName() != null) {
-                    String suffix = String.format("-processes-%s.properties", featureToken.getConfigurationName());
-                    String overridePropertiesFilePath = propertiesFilePath.replace("-processes.properties", suffix);
-                    File overridePropertiesFile = new File(overridePropertiesFilePath);
-                    if (overridePropertiesFile.exists()) {
-                        FileInputStream fis = new FileInputStream(overridePropertiesFile);
-                        javaProcessProperties.load(fis);
-                        fis.close();
-                        log.debug(String.format("Loaded overriding process configuration properties from: %s", overridePropertiesFilePath));
-                    }
-                }
-
-            } catch (IOException e) {
-                log.error("Failed to load process configuration properties", e);
-            }
-        }
-
-        //return the appropriate value
-        String value = javaProcessProperties.getProperty(process + "." + property);
-        return value != null ? value : defaultValue;
     }
 
 
@@ -425,5 +378,13 @@ public class ProcessesHandler {
                 }
             }
         }
+    }
+    
+    //must be lazy created since featureToken dir and file will not be set on construction
+    private HandlerPropertiesLoader getOrCreatePropertiesLoader() {
+        if ( propertiesLoader == null ) {
+            propertiesLoader = new HandlerPropertiesLoader("Processes", "-processes", featureToken, featureDir, featureFile);
+        }
+        return propertiesLoader;
     }
 }

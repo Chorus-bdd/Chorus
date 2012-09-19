@@ -55,9 +55,13 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
     private static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
     private static final String JMX_EXPORTER_STEP_METADATA = "StepMetadata";
 
+    public ChorusHandlerJmxProxy(String host, int jmxPort) {
+        this(host, jmxPort, 0, 0);
+    }
+
     @SuppressWarnings("unchecked")
-    public ChorusHandlerJmxProxy(String host, int jmxPort) throws ChorusRemotingException {
-        super(host, jmxPort, JMX_EXPORTER_NAME);
+    public ChorusHandlerJmxProxy(String host, int jmxPort, int connectionRetryCount, int millisBetweenConnectionAttempts) throws ChorusRemotingException {
+        super(host, jmxPort, JMX_EXPORTER_NAME, connectionRetryCount, millisBetweenConnectionAttempts);
 
         //the step metadata won't change so load from the remote MBean and cache it here
         stepMetadata = (Map<String, String[]>) getAttribute(JMX_EXPORTER_STEP_METADATA);

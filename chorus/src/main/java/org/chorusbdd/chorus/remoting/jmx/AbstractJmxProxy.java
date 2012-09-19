@@ -61,19 +61,44 @@ public class AbstractJmxProxy {
      * @param host      the host to connect to
      * @param jmxPort   the JMX server port
      * @param mBeanName must be formatted according to the MBean spec
+     * @param connectionRetryCount number of times to retry connection if initial connection fails
+     * @param millisBetweenRetries how log to wait between each connection attempt
      * @throws ChorusRemotingException if not possible to connect
      */
-    public AbstractJmxProxy(String host, int jmxPort, String mBeanName) throws ChorusRemotingException {
+    public AbstractJmxProxy(String host, int jmxPort, String mBeanName, int connectionRetryCount, long millisBetweenRetries) throws ChorusRemotingException {
+        Exception connectException = null;
         try {
             String serviceURL = String.format("service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi", host, jmxPort);
-            jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(serviceURL), null);
             log.debug("Connecting to JMX service URL: " + serviceURL);
+
+            int connectionAttempt = 0;
+            while( jmxConnector == null && shouldAttemptConnection(connectionRetryCount, connectionAttempt)) {
+                connectionAttempt++;
+                connectException = null;
+                try {
+                    jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(serviceURL), null);
+                } catch (Exception e) {
+                    connectException = e;
+                }
+                if ( jmxConnector == null) {
+                    log.debug("Failed to connect to service at " + serviceURL + " on attempt " +
+                            (connectionAttempt + 1) + " of " + (connectionRetryCount + 1));
+                    if ( shouldAttemptConnection(connectionRetryCount, connectionAttempt)) {
+                        log.debug("Will attempt another connection in " + millisBetweenRetries + " millis");
+                        Thread.sleep(millisBetweenRetries);
+                    }
+                }
+            }
+
+            if ( jmxConnector == null ) {
+                throw new IOException("Failed to connect to JMX service at " + serviceURL, connectException);
+            }
 
             mBeanServerConnection = jmxConnector.getMBeanServerConnection();
         } catch (Exception e) {
             String msg = String.format("Failed to connect to mBean server on (%s:%s)", host, jmxPort);
             log.error(msg);
-            throw new ChorusRemotingException(msg, e);
+            throw new ChorusRemotingException(msg, connectException == null ? e : connectException);
         }
 
         try {
@@ -91,6 +116,10 @@ public class AbstractJmxProxy {
             log.error(msg);
             throw new ChorusRemotingException(msg, e);
         }
+    }
+
+    private boolean shouldAttemptConnection(int connectionRetryCount, int connectionAttempt) {
+        return connectionAttempt <= connectionRetryCount;
     }
 
     public Object getAttribute(String name) throws ChorusRemotingException {
