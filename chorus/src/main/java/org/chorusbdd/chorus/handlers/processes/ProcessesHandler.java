@@ -37,7 +37,6 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.HandlerPropertiesLoader;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
-import org.chorusbdd.chorus.util.ChorusOut;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -47,7 +46,6 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +70,7 @@ public class ProcessesHandler {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
-    private final Map<String, ChildProcess> processes = new HashMap<String, ChildProcess>();
+    private final Map<String, ProcessHandlerProcess> processes = new HashMap<String, ProcessHandlerProcess>();
 
     private final Map<String, Integer> processCounters = new HashMap<String, Integer>();
 
@@ -235,7 +233,7 @@ public class ProcessesHandler {
 
     @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
     public void stopProcess(String name) {
-        ChildProcess p = processes.get(name);
+        ProcessHandlerProcess p = processes.get(name);
         if (p != null) {
             try {
                 p.destroy();
@@ -252,7 +250,7 @@ public class ProcessesHandler {
 
     @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) (?:is |has )(?:stopped|terminated).*?")
     public void checkProcessHasStopped(String processName) {
-        ChildProcess p = processes.get(processName);
+        ProcessHandlerProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to check is stopped");
         }
@@ -279,7 +277,7 @@ public class ProcessesHandler {
     }
 
     private void waitForProcessToTerminate(String processName, long waitTimeSeconds) {
-        ChildProcess p = processes.get(processName);
+        ProcessHandlerProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait for");
         }
@@ -370,7 +368,7 @@ public class ProcessesHandler {
         return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
     }
 
-    private ChildProcess startProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
+    private ProcessHandlerProcess startProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
 
         //check the default processes' logs directory exists
         if (stdoutLogPath != null || stderrLogPath != null && !haveCreatedLogDir) {
@@ -380,110 +378,11 @@ public class ProcessesHandler {
         }
 
         // have to redirect/consume stdout/stderr of child process to prevent it deadlocking
-        ChildProcess child = new ChildProcess(name, command, stdoutLogPath, stderrLogPath);
+        ProcessHandlerProcess child = new ProcessHandlerProcess(name, command, stdoutLogPath, stderrLogPath);
         processes.put(name, child);
         return child;
     }
 
-    private class ChildProcess {
-        private Process process;
-        private ProcessRedirector outRedirector;
-        private ProcessRedirector errRedirector;
-
-        public ChildProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
-            this.process = Runtime.getRuntime().exec(command);
-
-            InputStream processOutStream = process.getInputStream();
-            InputStream processErrorStream = process.getErrorStream();
-            log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
-
-            //if there are no log paths set, redirect the process output to appear inline with the chorus interpreter std out/err
-            if (null == stdoutLogPath) {
-                this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
-            } else {
-                PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath), true);
-                this.outRedirector = new ProcessRedirector(processOutStream, true, out);
-            }
-            if (null == stderrLogPath) {
-                this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
-            } else {
-                PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath), true);
-                this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
-            }
-            
-            Thread outThread = new Thread(outRedirector, name + "-stdout");
-            outThread.setDaemon(true);
-            outThread.start();
-            Thread errThread = new Thread(errRedirector, name + "-stderr");
-            errThread.setDaemon(true);
-            errThread.start();
-        }
-
-        public boolean isStopped() {
-            boolean stopped = true;
-            try {
-                process.exitValue();
-            } catch (IllegalThreadStateException e) {
-                stopped = false;
-            }
-            return stopped;
-        }
-
-        public void destroy() {
-            // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
-            log.debug("Destroying process " + process);
-            process.destroy();
-            try {
-                //this ensures that all of the processes resources are cleaned up before proceeding
-                process.waitFor();
-            } catch (InterruptedException e) {
-                log.error("Interrupted while waiting for process to terminate",e);
-            }
-        }
-
-        public void waitFor() throws InterruptedException {
-            process.waitFor();
-        }
-
-
-    }
-
-    public static class ProcessRedirector implements Runnable {
-        private InputStream in;
-        private PrintStream[] out;
-        private boolean closeOnExit;
-
-        public ProcessRedirector(InputStream in, boolean closeOnExit, PrintStream... out) {
-            this.closeOnExit = closeOnExit;
-            this.in = new BufferedInputStream(in);
-            this.out = out;
-        }
-
-        public void run() {
-            try {
-                byte[] buf = new byte[1024];
-                int x = 0;
-                try {
-                    while ((x = in.read(buf)) != -1) {
-                        for ( PrintStream s : out) {
-                            s.write(buf, 0, x);
-                        }
-                    }
-                } catch (IOException e) {
-                    //e.printStackTrace();
-                    //tends to be verbose on Linux when process terminates
-                }
-            } finally {
-                for ( PrintStream s : out) {
-                    s.flush();
-                    if ( closeOnExit ) {
-                        s.close();
-                    }
-                }
-            }
-        }
-    }
-    
     //must be lazy created since featureToken dir and file will not be set on construction
     private HandlerPropertiesLoader getOrCreatePropertiesLoader() {
         if ( propertiesLoader == null ) {

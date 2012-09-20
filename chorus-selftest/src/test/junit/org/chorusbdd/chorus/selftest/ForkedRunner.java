@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.selftest;
 
-import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
+import org.chorusbdd.chorus.handlers.processes.ProcessRedirector;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigurationProperty;
 
@@ -63,8 +63,8 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         ByteArrayOutputStream processErr = new ByteArrayOutputStream();
 
         Process process = Runtime.getRuntime().exec(command);
-        ProcessesHandler.ProcessRedirector outRedirector = new ProcessesHandler.ProcessRedirector(process.getInputStream(), false, new PrintStream(processOut), stdOutStream);  //dumping both to out
-        ProcessesHandler.ProcessRedirector errRedirector = new ProcessesHandler.ProcessRedirector(process.getErrorStream(), false, new PrintStream(processErr), stdOutStream);  //tend to get more consistent ordering
+        ProcessRedirector outRedirector = new ProcessRedirector(process.getInputStream(), false, new PrintStream(processOut), stdOutStream);  //dumping both to out
+        ProcessRedirector errRedirector = new ProcessRedirector(process.getErrorStream(), false, new PrintStream(processErr), stdOutStream);  //tend to get more consistent ordering
 
         Thread outThread = new Thread(outRedirector, "stdout-redirector");
         outThread.setDaemon(true);
