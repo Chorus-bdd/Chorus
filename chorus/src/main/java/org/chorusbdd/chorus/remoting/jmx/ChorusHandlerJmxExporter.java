@@ -76,25 +76,17 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
 
-    private Object handler;
+    public ChorusHandlerJmxExporter(Object... handlers) throws ChorusRemotingException {
 
-    public ChorusHandlerJmxExporter(Object handler) throws ChorusRemotingException {
-        this.handler = handler;
-    }
-
-    public ChorusHandlerJmxExporter export() {
-        //only register the stub if the chorus mbeans property is set
-        String enabled = System.getProperty(JMX_EXPORTER_ENABLED_PROPERTY);
-        if ("true".equals(enabled)) {
-
+        for ( Object handler : handlers) {
             //assert that this is a Handler
-            Class<?> featureClass = handler.getClass();
-            if (featureClass.getAnnotation(Handler.class) == null) {
-                throw new ChorusRemotingException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", featureClass.getName()));
+            Class<?> handlerClass = handler.getClass();
+            if (handlerClass.getAnnotation(Handler.class) == null) {
+                throw new ChorusRemotingException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", handlerClass.getName()));
             }
 
             //identify all methods that have step definitions and store metadata for them
-            for (Method m : featureClass.getMethods()) {
+            for (Method m : handlerClass.getMethods()) {
                 Step stepInstance = m.getAnnotation(Step.class);
                 if (stepInstance != null) {
                     //step annotation metadata
@@ -108,23 +100,31 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
                 }
             }
             if (stepMethods.size() == 0) {
-                throw new ChorusRemotingException(String.format("Cannot export object of type (%s) it no methods that declare the @Step annotation", featureClass.getName()));
+                log.warn(String.format("Cannot export object of type (%s) it no methods that declare the @Step annotation", handlerClass.getName()));
             }
+        }
+    }
 
+    /**
+     * Call this method once all handlers are fully initialized, to register the chorus remoting JMX bean
+     * and make all chorus handlers accessible remotely
+     */
+    public ChorusHandlerJmxExporter export() {
+        if (Boolean.getBoolean(JMX_EXPORTER_ENABLED_PROPERTY)) {
             //export this object as an MBean
             if (exported.getAndSet(true) == false) {
                 try {
-                    log.info(String.format("Exporting instance of chorus handler class (%s) with jmx name (%s)", handler.getClass().getSimpleName(), JMX_EXPORTER_NAME));
+                    log.info(String.format("Exporting ChorusHandlerJmxExporter with jmx name (%s)", JMX_EXPORTER_NAME));
                     MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
                     mbs.registerMBean(this, new ObjectName(JMX_EXPORTER_NAME));
                 } catch (Exception e) {
-                    throw new ChorusRemotingException("Failed to export chorus handler MBean with jmxName: " + JMX_EXPORTER_NAME, e);
+                    throw new ChorusRemotingException(String.format("Failed to export ChorusHandlerJmxExporter with jmx name (%s)", JMX_EXPORTER_NAME), e);
                 }
             }
         } else {
-            log.info(String.format("Will not export instance of chorus handler class (%s) : '%s' system property must be set to true.",
-                    handler.getClass().getSimpleName(),
-                    JMX_EXPORTER_ENABLED_PROPERTY));
+            log.info(String.format("Will not export ChorusHandlerJmxExporter : '%s' system property must be set to true.",
+                JMX_EXPORTER_ENABLED_PROPERTY)
+            );
         }
         return this;
     }

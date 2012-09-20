@@ -19,12 +19,10 @@ public class StartAProcessMain {
 
         System.out.println("Exporting the handler");
         JmxDualHandlerExportHandler handler = new JmxDualHandlerExportHandler();
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
-        exporter.export();
-
         JmxDualHandlerExportHandlerTwo handler2 = new JmxDualHandlerExportHandlerTwo();
-        ChorusHandlerJmxExporter exporter2 = new ChorusHandlerJmxExporter(handler2);
-        exporter2.export();
+
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler, handler2);
+        exporter.export();
 
         Thread.sleep(60000);
     }

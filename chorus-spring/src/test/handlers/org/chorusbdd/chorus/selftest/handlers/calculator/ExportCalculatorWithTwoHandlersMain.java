@@ -42,12 +42,11 @@ import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 public class ExportCalculatorWithTwoHandlersMain {
 
     public static void main(String[] args) throws Exception {
-        //export a calculator handlers
-
-        new ChorusHandlerJmxExporter(new EchoingHandler()).export();
-
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(new CalculatorHandler()).export();
-        exporter.getStepMetadata();
+        //export calculator handlers
+        new ChorusHandlerJmxExporter(
+            new EchoingHandler(),
+            new CalculatorHandler()
+        ).export();
 
         Thread.sleep(1000 * 60 * 5); //keeps process alive for 5 mins
     }
