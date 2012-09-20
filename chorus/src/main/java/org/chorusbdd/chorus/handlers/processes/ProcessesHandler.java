@@ -252,7 +252,7 @@ public class ProcessesHandler {
         ChorusAssert.assertTrue("The process " + processName + " was not stopped", p.isStopped());
     }
 
-    @Step(".*wait for (?:up to )?(\\d+) seconds for the process (?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*")
+    @Step(".*wait for (?:up to )?(\\d+) seconds for the process (?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
         waitForProcessToTerminate(processName, waitSeconds);
     }

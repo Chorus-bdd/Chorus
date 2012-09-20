@@ -72,7 +72,7 @@ public class HandlerPropertiesLoader {
 
           //override properties for a specific run configuration (if specified)
           if (featureToken.getConfigurationName() != null) {
-              String suffix = String.format("-processes-%s.properties", featureToken.getConfigurationName());
+              String suffix = String.format( propertiesSuffix + "-%s.properties", featureToken.getConfigurationName());
               String overridePropertiesFilePath = propertiesFilePath.replace(propertiesSuffix + ".properties", suffix);
               File overridePropertiesFile = new File(overridePropertiesFilePath);
               if (overridePropertiesFile.exists()) {
