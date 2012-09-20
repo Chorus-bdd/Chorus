@@ -1,4 +1,3 @@
-Uses: Timers
 
 Feature: Processes
   Chorus should be able to stop and start external local processes
@@ -25,5 +24,5 @@ Feature: Processes
 
   Scenario: Process termination should not cause a test to fail
     Given I start a lemming process named lemmingA
-    And I wait for 4 seconds for the lemming to kill itself
+    And I wait for up to 10 seconds for the process named lemmingA to terminate
     Then I can stop process named lemmingA without the test failing

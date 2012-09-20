@@ -1,5 +1,4 @@
 Uses: Processes
-Uses: Timers
 Uses: Remoting
 Uses: Chorus Context
 

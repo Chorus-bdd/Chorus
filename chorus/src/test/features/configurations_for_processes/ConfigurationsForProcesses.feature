@@ -1,5 +1,4 @@
 Uses: Processes
-Uses: Timers
 
 Configurations: confA, confB
 
@@ -16,4 +15,5 @@ Feature: Configurations for Processes
   #
   Scenario: Start and stop a Java process defined in the properties file
     Given I start a bertrand process named bert
-    Then wait for 3 seconds for it to write to its log file and shut down
+    And I wait for up to 10 seconds for bert to terminate and write to its log file
+    Then bert is stopped

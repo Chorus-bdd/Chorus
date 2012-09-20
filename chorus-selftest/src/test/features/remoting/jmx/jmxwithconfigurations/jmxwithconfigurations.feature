@@ -1,7 +1,6 @@
 Configurations: config1, config2
 
 Uses: Processes
-Uses: Timers
 Uses: Remoting
 
 Feature: Jmx With Configurations

@@ -1,5 +1,4 @@
 Uses: Processes
-Uses: Timers
 Uses: Remoting
 
 Feature: Jmx Dual Handler Export

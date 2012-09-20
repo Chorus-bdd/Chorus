@@ -1,6 +1,5 @@
 Uses: Remoting
 Uses: Processes
-Uses: Timers
 
 Feature: Processes with JMX
   Chorus should be able to use the Remoting handler to invoke a @Step methods exported by remote processes.
@@ -15,17 +14,14 @@ Feature: Processes with JMX
 
   Scenario: Start and interact with a single Java process using JMX
     Given I can start a calculator process named calc which exports an Addition handler
-    And I wait for 2 seconds for the process to complete its start up
     When I have entered 50 in calc
     And I have entered 70 in calc
     And I press add in calc
     Then the result should be 120 in calc
-    And I can stop process named calc
 
   Scenario: Start and interact with two Java processes using JMX
     Given I can start a calculatorA process named calcA which exports an Addition handler
     And I can start a calculatorB process named calcB which exports an Addition handler
-    And I wait for 2 seconds for the processes to complete their start up
     # work with one process
     When I have entered 10 in calcA
     And I have entered 30 in calcA
@@ -37,12 +33,10 @@ Feature: Processes with JMX
     And I have entered 10 in calcB
     And I press subtract in calcB
     Then the result should be 40 in calcB
-    And I can stop process named calcB
 
   Scenario: Interact with two different handlers within the same process
     # this process exports an Addition handler and an echoing handler
     Given I can start a calc2handlers process
-    And I wait for 2 seconds for the process to complete its start up
     # call a method on the Calculator handler
     And I have entered 10 in calc2handlers
     # call a method on the Echo handler

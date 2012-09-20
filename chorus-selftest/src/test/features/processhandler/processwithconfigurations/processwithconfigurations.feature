@@ -1,7 +1,6 @@
 Configurations: confA, confB
 
 Uses: Processes
-Uses: Timers
 
 Feature: Process With Configurations
 

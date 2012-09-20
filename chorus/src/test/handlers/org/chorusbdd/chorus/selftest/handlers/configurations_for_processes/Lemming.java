@@ -44,8 +44,6 @@ public class Lemming {
     static ChorusLog log = ChorusLogFactory.getLog(Lemming.class);
 
     public static void main(String[] args) throws Exception {
-        log.info("Lemming will sleep for " + args[0] + " seconds before dying");
-        Thread.sleep(Integer.parseInt(args[0]) * 1000);
-        System.exit(0);
+        log.info("Lemming was called with arg " + args[0]);
     }
 }

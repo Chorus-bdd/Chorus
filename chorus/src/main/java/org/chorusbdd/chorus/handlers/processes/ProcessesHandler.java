@@ -97,7 +97,7 @@ public class ProcessesHandler {
      *
      * @throws Exception
      */
-    @Step(".*start an? (.*) process named ([a-zA-Z0-9-_]*) ?.*")
+    @Step(".*start an? (.*) process named ([a-zA-Z0-9-_]*).*?")
     public void startJavaNamed(String process, String alias) throws Exception {
         String jre = getOrCreatePropertiesLoader().readProperty(process, "jre", System.getProperty("java.home"));
         String jvmArgs = getOrCreatePropertiesLoader().readProperty(process, "jvmargs", "");
@@ -225,7 +225,7 @@ public class ProcessesHandler {
     }
 
 
-    @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]*) ?.*")
+    @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
     public void stopProcess(String name) {
         ChildProcess p = processes.get(name);
         if (p != null) {
@@ -242,7 +242,7 @@ public class ProcessesHandler {
         }
     }
 
-    @Step(".*the process (?:named )?([a-zA-Z0-9-_]*) (?:is|has) (?:stopped|terminated).*")
+    @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) (?:is |has )(?:stopped|terminated).*?")
     public void checkProcessHasStopped(String processName) {
         ChildProcess p = processes.get(processName);
         if ( p == null ) {
@@ -252,12 +252,12 @@ public class ProcessesHandler {
         ChorusAssert.assertTrue("The process " + processName + " was not stopped", p.isStopped());
     }
 
-    @Step(".*wait for (?:up to )?(\\d+) seconds for the process (?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*")
+    @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*?")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
         waitForProcessToTerminate(processName, waitSeconds);
     }
 
-    @Step(".*wait for the process (?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*")
+    @Step(".*wait for (?:the process )?(?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*?")
     public void waitForProcessToTerminate(String processName) {
         long waitTime = 30;
         String wait = getOrCreatePropertiesLoader().readProperty(processName, "terminate_wait_time", "30");
