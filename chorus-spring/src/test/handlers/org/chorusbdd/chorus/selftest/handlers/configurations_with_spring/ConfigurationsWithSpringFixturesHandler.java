@@ -50,7 +50,7 @@ public class ConfigurationsWithSpringFixturesHandler {
     @Resource
     String injectedString;
 
-    @ChorusResource("feature.results")
+    @ChorusResource("feature.token")
     FeatureToken currentFeatureToken;
 
     @Step(".*the injected variable contains the name of the run configuration$")

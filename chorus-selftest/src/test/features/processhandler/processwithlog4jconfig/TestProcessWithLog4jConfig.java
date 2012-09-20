@@ -27,38 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.annotations;
+package processhandler.processwithlog4jconfig;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Allows named resources to be injected into handlers by the interpreter. Supported resources are:
- * <table>
- * <tr>
- * <td>feature.dir</td>
- * <td>File</td>
- * <td>The directory of the feature file that the handler is handling</td>
- * </tr>
- * </table>
- * Created by: Steve Neal
- * Date: 07/11/11
- *
- * Sometimes handlers need to be provided with state from the running interpreter, so that they can locate resources relative
- * to the feature files, for example.
- * This annotation is provided so that Handler's can annotate
- * fields with resources which will be initialized by the interpreter, and describe aspects
- * of the current test execution state, current supported values:
- *
- * feature.dir - annotation for a File field, interpreter will set this to the directory of the executing feature
- * feature.file - annotation for a File field, interpreter will set this to the executing feature file
- * feature.token - annotation for a FeatureToken field, interpreter will set this to the FeatureToken which contains the results and also details of the feature configuration
- *
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ChorusResource {
-    public String value() default "";
+public class TestProcessWithLog4jConfig extends AbstractInterpreterTest {
+
+    final String featurePath = "src/test/features/processhandler/processwithlog4jconfig";
+
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
+
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+
 }

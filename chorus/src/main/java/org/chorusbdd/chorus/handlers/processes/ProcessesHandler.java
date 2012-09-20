@@ -69,7 +69,7 @@ public class ProcessesHandler {
     @ChorusResource("feature.file")
     private File featureFile;
 
-    @ChorusResource("feature.results")
+    @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
     private final Map<String, ChildProcess> processes = new HashMap<String, ChildProcess>();
@@ -114,39 +114,47 @@ public class ProcessesHandler {
 
         String stdoutLogPath = null;
         String stderrLogPath = null;
-        String loggingProperties = "";
+        String log4jProperties = "";
+
+        //build a process name to use when naming log files
+        String processNameForLogFiles = featureFile.getName();
+        if (processNameForLogFiles.endsWith(".feature")) {
+            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
+        }
+        if (featureToken.getConfigurationName() == null) {
+            processNameForLogFiles = String.format("%s-%s", processNameForLogFiles, alias);
+        } else {
+            processNameForLogFiles = String.format("%s-%s-%s", processNameForLogFiles, featureToken.getConfigurationName(), alias);
+        }
+
+        //setting true for logging will turn on logging of the process std out and err to standard out and standard err log files
+        //otherwise this output will appear inline with the chorus interpreter process std out
         if ("true".equals(logging)) {
-
-            //build a process name for the log4j file to use when naming log files
-            String featureProcessName = featureFile.getName();
-            if (featureProcessName.endsWith(".feature")) {
-                featureProcessName = featureProcessName.substring(0, featureProcessName.length() - 8);
-            }
-            if (featureToken.getConfigurationName() == null) {
-                featureProcessName = String.format("%s-%s", featureProcessName, alias);
-            } else {
-                featureProcessName = String.format("%s-%s-%s", featureProcessName, featureToken.getConfigurationName(), alias);
-            }
-
-            //makes the ${feature.dir} and ${feature.process.name} values available to the log4j config file
-            loggingProperties = String.format("-Dlog4j.configuration=file:%s%sconf%slog4j.xml -Dfeature.dir=%s -Dfeature.process.name=%s",
-                    featureDir.getAbsolutePath(),
-                    File.separatorChar,
-                    File.separatorChar,
-                    featureDir.getAbsolutePath(),
-                    featureProcessName);
-
             stdoutLogPath = String.format("%s%slogs%s%s-out.log",
                     featureDir.getAbsolutePath(),
                     File.separatorChar,
                     File.separatorChar,
-                    featureProcessName);
+                    processNameForLogFiles);
 
             stderrLogPath = String.format("%s%slogs%s%s-err.log",
                     featureDir.getAbsolutePath(),
                     File.separatorChar,
                     File.separatorChar,
-                    featureProcessName);
+                    processNameForLogFiles);
+        }
+
+        //if there is a log4j configuration file within the local conf directory, set the log4j configuration sys property
+        //to point to this
+        String log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + "log4j.xml";
+        log.trace("looking for log4j config file at " + log4jConfigPath);
+        if ( new File(log4jConfigPath).exists()) {
+            log.debug("Found log4j config at " + log4jConfigPath + " will set -Dlog4j.configuration when starting process");
+            //makes the ${feature.dir} and ${feature.process.name} values available to the log4j config file
+            log4jProperties = String.format("-Dlog4j.configuration=file:%s -Dfeature.dir=%s -Dfeature.process.name=%s",
+                log4jConfigPath,
+                featureDir.getAbsolutePath(),
+                processNameForLogFiles
+            );
         }
 
         String jmxSystemProperties = "";
@@ -181,7 +189,7 @@ public class ProcessesHandler {
                 File.separatorChar,
                 File.separatorChar,
                 jvmArgs,
-                loggingProperties,
+                log4jProperties,
                 debugSystemProperties,
                 jmxSystemProperties,
                 classPath,
@@ -356,7 +364,10 @@ public class ProcessesHandler {
             counter++;
         }
         processCounters.put(prefix, counter);
-        return String.format("%s-%d", prefix, counter);
+        //for first process just use the config name with no suffix
+        //this is so if we just start a single myconfig process, it will be called myconfig
+        //the second will be called myconfig-2
+        return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
     }
 
     private ChildProcess startProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
@@ -386,6 +397,7 @@ public class ProcessesHandler {
             InputStream processErrorStream = process.getErrorStream();
             log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
 
+            //if there are no log paths set, redirect the process output to appear inline with the chorus interpreter std out/err
             if (null == stdoutLogPath) {
                 this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
             } else {

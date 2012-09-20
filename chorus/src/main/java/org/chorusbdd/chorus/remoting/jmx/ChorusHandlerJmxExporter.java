@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
+import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -166,22 +167,9 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
             String message = "remote " + t.getClass().getSimpleName() +
                 ( t.getMessage() == null ? " " : " - " + t.getMessage() );
-            StackTraceElement element = findStackTraceElement(t);
-            String location = element != null ? ":(" + element.getClassName() + ":" + element.getLineNumber() + ")" : "";
-            throw new ChorusRemotingException(message + location, t.getClass().getSimpleName(), t.getStackTrace());
+            String location = ExceptionHandling.getExceptionLocation(t);
+            throw new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
         }
-    }
-
-    //find a stack trace element to show where the exception occurred
-    //we want to skip frames with the JUnit or ChorusAssert
-    private StackTraceElement findStackTraceElement(Throwable t) {
-        StackTraceElement element = t.getStackTrace().length > 0 ? t.getStackTrace()[0] : null;
-        int index = 0;
-        while ( element != null && element.getClassName().contains("Assert")) {
-            index += 1;
-            element = t.getStackTrace().length > index ? t.getStackTrace()[index] : null;
-        }
-        return element;
     }
 
     public Map<String, String[]> getStepMetadata() {

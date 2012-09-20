@@ -76,7 +76,7 @@ public class RemotingHandler {
     @ChorusResource("feature.file")
     private File featureFile;
 
-    @ChorusResource("feature.results")
+    @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
     /**

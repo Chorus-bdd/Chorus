@@ -86,8 +86,7 @@ public class PlainResultsFormatter implements ResultsFormatter {
     }
 
     public void printStep(StepToken step) {
-        String message = (step.getThrowable() == null) ? step.getMessage() : step.getThrowable().getMessage();
-        out.printf("    %-89s%-7s %s%n", step.toString(), step.getEndState(), message);
+        out.printf("    %-89s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
     }
 
     public void printStackTrace(Throwable t) {

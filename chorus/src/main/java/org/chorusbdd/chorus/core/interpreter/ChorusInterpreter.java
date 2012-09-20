@@ -32,6 +32,8 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.results.*;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
+import org.chorusbdd.chorus.remoting.ChorusRemotingException;
+import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -371,7 +373,13 @@ public class ChorusInterpreter {
                             } else {
                                 Throwable cause = e.getCause();
                                 step.setThrowable(cause);
-                                step.setMessage(cause.getMessage());
+                                String location = "";
+                                if ( ! (cause instanceof ChorusRemotingException) ) {
+                                    //the remoting exception contains its own location in the message
+                                    location = ExceptionHandling.getExceptionLocation(cause);
+                                }
+                                String message = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
+                                step.setMessage(location + message);
                                 endState = StepEndState.FAILED;
                                 executionToken.incrementStepsFailed();
                                 log.debug("Exception failed due to exception " + e.getMessage());
@@ -458,7 +466,7 @@ public class ChorusInterpreter {
                     o = featureFile;
                 } else if ("feature.dir".equals(resourceName)) {
                     o = featureFile.getParentFile();
-                } else if ("feature.results".equals(resourceName)) {
+                } else if ("feature.token".equals(resourceName)) {
                     o = featureToken;
                 }
                 if (o != null) {
