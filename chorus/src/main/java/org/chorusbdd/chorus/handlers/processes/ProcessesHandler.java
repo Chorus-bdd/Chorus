@@ -198,11 +198,27 @@ public class ProcessesHandler {
 
     @Step(".*start a process using script '(.*)'$")
     public void startScript(String script) throws Exception {
-        startScript(script, nextProcessName());
+        startScript(script, nextProcessName(), false);
     }
 
     @Step(".*start a process using script '(.*)' named (.*)$")
     public void startScript(String script, String name) throws Exception {
+        startScript(script, name, false);
+    }
+
+    @Step(".*start a process using script '(.*)' with logging$")
+    public void startScriptWithLogging(String script) throws Exception {
+        startScript(script, nextProcessName(), true);
+    }
+
+    @Step(".*start a process using script '(.*)' named (.*) with logging$")
+    public void startScriptWithLogging(String script, String name) throws Exception {
+        startScript(script, name, true);
+    }
+
+    public void startScript(String script, String name, boolean logging) throws Exception {
+        String nameWithoutExtension = getScriptNameWithoutExtension(script);
+
         String command = String.format("%s%s%s",
                 featureDir.getAbsolutePath(),
                 File.separatorChar,
@@ -210,8 +226,6 @@ public class ProcessesHandler {
 
         String stdoutLogPath = null;
         String stderrLogPath = null;
-        ProcessesConfig processConfig = getProcessProperties(name);
-        boolean logging = processConfig.isLogging();
         if (logging) {
             stdoutLogPath = String.format("%s%slogs%s%s-out.log",
                     featureDir.getAbsolutePath(),
@@ -227,6 +241,10 @@ public class ProcessesHandler {
 
         log.debug("About to run script: " + command);
         startProcess(name, command, stdoutLogPath, stderrLogPath);
+    }
+
+    private String getScriptNameWithoutExtension(String script) {
+        return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
 
