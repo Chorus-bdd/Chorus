@@ -15,7 +15,7 @@ import java.util.*;
  * Date: 18/09/12
  * Time: 08:23
  */
-public class PropertiesConfigLoader extends AbstractRemotingConfigLoader {
+public class PropertiesConfigLoader extends RemotingConfigLoader {
 
     private static ChorusLog log = ChorusLogFactory.getLog(PropertiesConfigLoader.class);
 
@@ -27,55 +27,20 @@ public class PropertiesConfigLoader extends AbstractRemotingConfigLoader {
 
     public Map<String, RemotingConfig> loadRemotingConfigs() {
         try {
-            Properties p = handlerPropertiesLoader.getProperties();
-            loadRemotingConfigs(p);
+            Map<String,Properties> propertiesGroups = handlerPropertiesLoader.getPropertiesGroups();
+            for ( Map.Entry<String, Properties> props : propertiesGroups.entrySet()) {
+                RemotingConfig c = createHandlerConfig(props.getKey(), props.getValue());
+                addConfig(props.getKey(), c);
+            }
         } catch (Exception e) {
-            getRemotingConfigMap().clear();
-            throw new ChorusException("Failed to load Remoting configuration: " + e.toString());
+            getConfigs().clear();
+            log.error("Failed to load Remoting handler configuration",e);
+            throw new ChorusException("Failed to load Remoting handler configuration: " + e.toString());
         }
 
         removeInvalidConfigs();
 
-        return getRemotingConfigMap();
-    }
-
-    private void loadRemotingConfigs(Properties p) {
-        for (Map.Entry<Object, Object> entry : p.entrySet()) {
-            StringTokenizer st = new StringTokenizer(entry.getKey().toString(), ".");
-            String configName = st.nextToken();
-            String valueType = st.hasMoreTokens() ? st.nextToken() : "connection";
-
-            try {
-                RemotingConfig remotingConfig = getOrCreateRemotingConfig(configName);
-                remotingConfig.setName(configName);
-
-                if ("connection".equals(valueType)) {
-                    String[] vals = String.valueOf(entry.getValue()).split(":");
-                    if (vals.length != 3) {
-                        throw new ChorusException("Could not parse remoting property");
-                    }
-
-                    remotingConfig.setProtocol(vals[0]);
-                    if (!"jmx".equalsIgnoreCase(remotingConfig.getProtocol())) {
-                        log.error("At present only jmx protocol is supported for remoting");
-                        throw new ChorusException("Could not parse remoting property");
-                    }
-                    remotingConfig.setHost(vals[1]);
-                    remotingConfig.setPort(Integer.parseInt(vals[2]));
-                } else if ("connectionAttempts".equals(valueType)) {
-                    remotingConfig.setConnectionRetryAttempts(Integer.parseInt(entry.getValue().toString()));
-                } else if ("connectionAttemptMillis".equals(valueType)) {
-                    remotingConfig.setConnectionRetryMillis(Integer.parseInt(entry.getValue().toString()));
-                }
-            } catch (Exception e) {
-                log.error(String.format(
-                        "Failed to parse remoting property, key: %s, value: %s, expecting value in form protocol:host:port",
-                        configName,
-                        entry.getValue()));
-            }
-
-
-        }
+        return getConfigs();
     }
 
 }

@@ -7,6 +7,8 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -88,4 +90,7 @@ public class HandlerPropertiesLoader {
       }
    }
 
+    public Map<String, Properties> getPropertiesGroups() {
+        return null;
+    }
 }

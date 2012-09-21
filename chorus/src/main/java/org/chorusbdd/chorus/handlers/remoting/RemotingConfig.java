@@ -1,12 +1,14 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
+import org.chorusbdd.chorus.handlers.util.HandlerConfig;
+
 /**
 * Created by IntelliJ IDEA.
 * User: Nick Ebbutt
 * Date: 18/09/12
 * Time: 08:20
 */
-public class RemotingConfig {
+public class RemotingConfig implements HandlerConfig {
 
     private String protocol;
     private String name;

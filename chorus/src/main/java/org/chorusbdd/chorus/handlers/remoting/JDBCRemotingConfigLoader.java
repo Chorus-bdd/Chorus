@@ -1,11 +1,11 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.ChorusException;
+import org.chorusbdd.chorus.handlers.util.AbstractConfigLoader;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.sql.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -15,7 +15,7 @@ import java.util.Properties;
  * Date: 18/09/12
  * Time: 08:45
  */
-public class JDBCRemotingConfigLoader extends AbstractRemotingConfigLoader {
+public class JDBCRemotingConfigLoader extends AbstractConfigLoader {
 
     private static ChorusLog log = ChorusLogFactory.getLog(JDBCRemotingConfigLoader.class);
 
@@ -36,11 +36,11 @@ public class JDBCRemotingConfigLoader extends AbstractRemotingConfigLoader {
                 remotingConfig.setPort(rs.getInt("port"));
                 remotingConfig.setConnectionRetryAttempts(rs.getInt("retryAttempts"));
                 remotingConfig.setConnectionRetryMillis(rs.getInt("retryMillis"));
-                getRemotingConfigMap().put(remotingConfig.getName(), remotingConfig);
+                getConfigs().put(remotingConfig.getName(), remotingConfig);
             }
             rs.close();
             stmt.close();
-            log.debug("Loaded " + getRemotingConfigMap().size() + " remoting configurations from database");
+            log.debug("Loaded " + getConfigs().size() + " remoting configurations from database");
         } catch (Exception e) {
             throw new ChorusException("Failed to load remoting configuration from database" + e.toString());
         } finally {
@@ -54,7 +54,7 @@ public class JDBCRemotingConfigLoader extends AbstractRemotingConfigLoader {
         }
 
         removeInvalidConfigs();
-        return getRemotingConfigMap();
+        return getConfigs();
     }
 
 }
