@@ -17,10 +17,6 @@ public class RemotingConfig implements HandlerConfig {
     private int connectionRetryAttempts = 40;
     private int connectionRetryMillis = 250;
 
-    public boolean isValid() {
-        return getHost() != null && getProtocol() != null && getName() != null && getPort() > 0;
-    }
-
     public String getProtocol() {
         return protocol;
     }
@@ -67,6 +63,13 @@ public class RemotingConfig implements HandlerConfig {
 
     public void setConnectionRetryMillis(int connectionRetryMillis) {
         this.connectionRetryMillis = connectionRetryMillis;
+    }
+
+    public boolean isValid() {
+        return getHost() != null &&
+               getProtocol() != null &&
+               getName() != null &&
+               getPort() > 0;
     }
 
     public String toString() {

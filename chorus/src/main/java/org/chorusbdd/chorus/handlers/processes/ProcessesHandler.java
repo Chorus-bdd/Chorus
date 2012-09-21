@@ -35,17 +35,21 @@ import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
-import org.chorusbdd.chorus.handlers.util.HandlerPropertiesLoader;
+import org.chorusbdd.chorus.handlers.util.PropertiesConfigLoader;
+import org.chorusbdd.chorus.handlers.util.PropertiesFilePropertySource;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
-import java.io.*;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -78,7 +82,11 @@ public class ProcessesHandler {
 
     public static final String STARTING_JAVA_LOG_PREFIX = "About to run Java: ";
 
-    private HandlerPropertiesLoader propertiesLoader;
+    private PropertiesFilePropertySource propertiesLoader;
+
+    private Map<String, ProcessesConfig> configMap;
+
+    private Map<String, String> aliasToConfigName = new HashMap<String,String>();
 
     /**
      * Starts a new Java process using properties defined in a properties file alongside the feature file
@@ -96,19 +104,9 @@ public class ProcessesHandler {
      * @throws Exception
      */
     @Step(".*start an? (.*) process named ([a-zA-Z0-9-_]*).*?")
-    public void startJavaNamed(String process, String alias) throws Exception {
-        String jre = getOrCreatePropertiesLoader().readProperty(process, "jre", System.getProperty("java.home"));
-        String jvmArgs = getOrCreatePropertiesLoader().readProperty(process, "jvmargs", "");
-        String logging = getOrCreatePropertiesLoader().readProperty(process, "logging", "");
-        String jmxPort = getOrCreatePropertiesLoader().readProperty(process, "jmxport", null);
-        String debugPort = getOrCreatePropertiesLoader().readProperty(process, "debugport", null);
-        String classPath = getOrCreatePropertiesLoader().readProperty(process, "classpath", System.getProperty("java.class.path"));
-        String mainClass = getOrCreatePropertiesLoader().readProperty(process, "mainclass", null);
-        String args = getOrCreatePropertiesLoader().readProperty(process, "args", "");
-
-        if (mainClass == null) {
-            throw new RuntimeException("No configuration found for process: " + process);
-        }
+    public void startJavaNamed(String configName, String alias) throws Exception {
+        aliasToConfigName.put(alias, configName);
+        ProcessesConfig processesConfig = getProcessProperties(configName);
 
         String stdoutLogPath = null;
         String stderrLogPath = null;
@@ -127,7 +125,7 @@ public class ProcessesHandler {
 
         //setting true for logging will turn on logging of the process std out and err to standard out and standard err log files
         //otherwise this output will appear inline with the chorus interpreter process std out
-        if ("true".equals(logging)) {
+        if (processesConfig.isLogging()) {
             stdoutLogPath = String.format("%s%slogs%s%s-out.log",
                     featureDir.getAbsolutePath(),
                     File.separatorChar,
@@ -156,17 +154,17 @@ public class ProcessesHandler {
         }
 
         String jmxSystemProperties = "";
-        if (jmxPort != null) {
+        if (processesConfig.getJmxPort() > -1) {
             jmxSystemProperties = String.format("-Dcom.sun.management.jmxremote.ssl=false " +
                     "-Dcom.sun.management.jmxremote.authenticate=false " +
                     "-Dcom.sun.management.jmxremote.port=%s " +
-                    "-D" + ChorusHandlerJmxExporter.JMX_EXPORTER_ENABLED_PROPERTY + "=true", jmxPort);
+                    "-D" + ChorusHandlerJmxExporter.JMX_EXPORTER_ENABLED_PROPERTY + "=true", processesConfig.getJmxPort());
         }
 
         String debugSystemProperties = "";
-        if (debugPort != null) {
+        if (processesConfig.getDebugPort() > -1) {
             debugSystemProperties = String.format("-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=%s",
-                    debugPort);
+                    processesConfig.getDebugPort());
         }
 
 
@@ -183,16 +181,16 @@ public class ProcessesHandler {
         //construct a command
         String command = String.format(
                 commandTxt,
-                jre,
+                processesConfig.getJre(),
                 File.separatorChar,
                 File.separatorChar,
-                jvmArgs,
+                processesConfig.getJvmargs(),
                 log4jProperties,
                 debugSystemProperties,
                 jmxSystemProperties,
-                classPath,
-                mainClass,
-                args).trim();
+                processesConfig.getClasspath(),
+                processesConfig.getMainclass(),
+                processesConfig.getArgs()).trim();
 
         log.info(STARTING_JAVA_LOG_PREFIX + command);
         startProcess(alias, command, stdoutLogPath, stderrLogPath);
@@ -212,8 +210,9 @@ public class ProcessesHandler {
 
         String stdoutLogPath = null;
         String stderrLogPath = null;
-        String logging = getOrCreatePropertiesLoader().readProperty(script, "logging", "");
-        if (logging != null && "true".equals(logging)) {
+        ProcessesConfig processConfig = getProcessProperties(name);
+        boolean logging = processConfig.isLogging();
+        if (logging) {
             stdoutLogPath = String.format("%s%slogs%s%s-out.log",
                     featureDir.getAbsolutePath(),
                     File.separatorChar,
@@ -232,51 +231,54 @@ public class ProcessesHandler {
 
 
     @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
-    public void stopProcess(String name) {
-        ProcessHandlerProcess p = processes.get(name);
+    public void stopProcess(String alias) {
+        ProcessHandlerProcess p = processes.get(alias);
         if (p != null) {
             try {
                 p.destroy();
-                log.debug("Stopped process: " + name);
+                log.debug("Stopped process: " + alias);
             } catch (Exception e) {
                 log.warn("Failed to destroy process", e);
             } finally {
-                processes.remove(name);
+                processes.remove(alias);
             }
         } else {
-            throw new ChorusException("There is no process named '" + name + "' to stop");
+            throw new ChorusException("There is no process named '" + alias + "' to stop");
         }
     }
 
     @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) (?:is |has )(?:stopped|terminated).*?")
-    public void checkProcessHasStopped(String processName) {
-        ProcessHandlerProcess p = processes.get(processName);
+    public void checkProcessHasStopped(String alias) {
+        ProcessHandlerProcess p = processes.get(alias);
         if ( p == null ) {
-            throw new ChorusException("There is no process named '" + processName + "' to check is stopped");
+            throw new ChorusException("There is no process named '" + alias + "' to check is stopped");
         }
 
-        ChorusAssert.assertTrue("The process " + processName + " was not stopped", p.isStopped());
+        ChorusAssert.assertTrue("The process " + alias + " was not stopped", p.isStopped());
     }
 
     @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*?")
-    public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
-        waitForProcessToTerminate(processName, waitSeconds);
+    public void waitXSecondsForProcessToTerminate(int waitSeconds, String processAlias) {
+        waitForProcessToTerminate(processAlias, waitSeconds);
     }
 
     @Step(".*wait for (?:the process )?(?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*?")
-    public void waitForProcessToTerminate(String processName) {
-        long waitTime = 30;
-        String wait = getOrCreatePropertiesLoader().readProperty(processName, "terminate_wait_time", "30");
-        try {
-            waitTime = Long.parseLong(wait);
-        } catch (NumberFormatException nfe) {
-            log.warn("terminate_wait_time process property must be an integer value representing max seconds to wait, will default to 30");
-        }
-
-        waitForProcessToTerminate(processName, waitTime);
+    public void waitForProcessToTerminate(String processAlias) {
+        String configName = getConfigNameForAlias(processAlias);
+        ProcessesConfig c = getProcessProperties(configName);
+        int waitTime = c.getTerminateWaitTime();
+        waitForProcessToTerminate(processAlias, waitTime);
     }
 
-    private void waitForProcessToTerminate(String processName, long waitTimeSeconds) {
+    private String getConfigNameForAlias(String processAlias) {
+        String configName = aliasToConfigName.get(processAlias);
+        if ( configName == null) {
+            throw new ChorusException("Could not find a config name for process " + processAlias);
+        }
+        return configName;
+    }
+
+    private void waitForProcessToTerminate(String processName, int waitTimeSeconds) {
         ProcessHandlerProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait for");
@@ -384,9 +386,28 @@ public class ProcessesHandler {
     }
 
     //must be lazy created since featureToken dir and file will not be set on construction
-    private HandlerPropertiesLoader getOrCreatePropertiesLoader() {
-        if ( propertiesLoader == null ) {
-            propertiesLoader = new HandlerPropertiesLoader("Processes", "-processes", featureToken, featureDir, featureFile);
+    private ProcessesConfig getProcessProperties(String processName) {
+        if ( configMap == null ) {
+            loadProperties();
+        }
+        ProcessesConfig c = configMap.get(processName);
+        if (c == null) {
+            throw new RuntimeException("No configuration found for process: " + processName);
+        }
+        return c;
+    }
+
+    private PropertiesFilePropertySource loadProperties() {
+        if ( configMap == null ) {
+            PropertiesConfigLoader<ProcessesConfig> l = new PropertiesConfigLoader<ProcessesConfig>(
+                    new ProcessesConfigBuilder(),
+                    "Processes",
+                    "-processes",
+                    featureToken,
+                    featureDir,
+                    featureFile
+            );
+            configMap = l.loadRemotingConfigs();
         }
         return propertiesLoader;
     }

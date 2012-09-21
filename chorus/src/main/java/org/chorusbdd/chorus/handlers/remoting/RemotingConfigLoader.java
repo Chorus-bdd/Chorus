@@ -1,6 +1,14 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
+import org.chorusbdd.chorus.ChorusException;
 import org.chorusbdd.chorus.handlers.util.AbstractConfigLoader;
+import org.chorusbdd.chorus.handlers.util.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.HandlerConfigBuilder;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -8,9 +16,12 @@ import org.chorusbdd.chorus.handlers.util.AbstractConfigLoader;
  * Date: 21/09/12
  * Time: 08:57
  */
-public class RemotingConfigLoader extends AbstractConfigLoader<RemotingConfig> {
+public abstract class RemotingConfigLoader<E extends HandlerConfig> extends AbstractConfigLoader<E> {
 
-    public RemotingConfigLoader() {
-        super(new RemotingConfigFactory());
+    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigLoader.class);
+
+    public RemotingConfigLoader(HandlerConfigBuilder<E> handlerConfigFactory) {
+        super(handlerConfigFactory);
     }
+
 }

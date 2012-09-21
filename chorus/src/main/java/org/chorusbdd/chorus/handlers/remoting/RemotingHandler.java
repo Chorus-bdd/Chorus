@@ -37,6 +37,7 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
+import org.chorusbdd.chorus.handlers.util.PropertiesConfigLoader;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
 import org.chorusbdd.chorus.util.RegexpUtils;
@@ -213,7 +214,14 @@ public class RemotingHandler {
         if (mBeansDb != null) {
             loadRemotingConfigsFromDb(mBeansDb);
         } else {
-            PropertiesConfigLoader l = new PropertiesConfigLoader(featureToken, featureDir, featureFile);
+            PropertiesConfigLoader<RemotingConfig> l = new PropertiesConfigLoader<RemotingConfig>(
+                new RemotingConfigBuilder(),
+                "Remoting",
+                "-remoting",
+                featureToken,
+                featureDir,
+                featureFile
+            );
             remotingConfigMap = l.loadRemotingConfigs();
         }
     }
@@ -242,6 +250,6 @@ public class RemotingHandler {
      * </ul>
      */
     protected void loadRemotingConfigsFromDb(Properties p) {
-        remotingConfigMap = new JDBCRemotingConfigLoader().loadConfigsFromDb(p);
+        remotingConfigMap = new JDBCRemotingConfigLoader(p).loadRemotingConfigs();
     }
 }

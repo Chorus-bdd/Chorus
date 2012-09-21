@@ -10,7 +10,7 @@ import java.util.Properties;
  * Date: 21/09/12
  * Time: 08:59
  */
-public interface HandlerConfigFactory<E extends HandlerConfig> {
+public interface HandlerConfigBuilder<E extends HandlerConfig> {
 
     E createConfig(Properties p);
 }
