@@ -20,6 +20,7 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
 
     private static ChorusLog log = ChorusLogFactory.getLog(PropertiesConfigLoader.class);
 
+    private HandlerConfigBuilder<E> configBuilder;
     private String handlerDescription;
     private String propertiesFileSuffix;
     private final FeatureToken featureToken;
@@ -28,7 +29,7 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
 
     //"Remoting", "-remoting"
     public PropertiesConfigLoader(HandlerConfigBuilder<E> configBuilder, String handlerDescription, String propertiesFileSuffix, FeatureToken featureToken, File featureDir, File featureFile) {
-        super(configBuilder);
+        this.configBuilder = configBuilder;
         this.handlerDescription = handlerDescription;
         this.propertiesFileSuffix = propertiesFileSuffix;
         this.featureToken = featureToken;
@@ -36,10 +37,13 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
         this.featureFile = featureFile;
     }
 
-    public void doLoadConfigs() {
+    public Map<String, E> doLoadConfigs() {
         PropertiesFilePropertySource handlerPropertiesLoader = new PropertiesFilePropertySource(handlerDescription, propertiesFileSuffix, featureToken, featureDir, featureFile);
         Map<String,Properties> propertiesGroups = handlerPropertiesLoader.getPropertiesGroups();
-        loadRemotingConfigs(propertiesGroups);
+
+        Map<String, E> result = new HashMap<String, E>();
+        addConfigsFromPropertyGroups(propertiesGroups, result, configBuilder);
+        return result;
     }
 
 }
