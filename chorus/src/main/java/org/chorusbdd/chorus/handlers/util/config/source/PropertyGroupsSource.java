@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlers.util;
+package org.chorusbdd.chorus.handlers.util.config.source;
 
 import java.util.Map;
 import java.util.Properties;

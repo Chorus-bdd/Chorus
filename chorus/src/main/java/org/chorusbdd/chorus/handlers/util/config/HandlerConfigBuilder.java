@@ -1,6 +1,6 @@
-package org.chorusbdd.chorus.handlers.util;
+package org.chorusbdd.chorus.handlers.util.config;
 
-import org.chorusbdd.chorus.handlers.util.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 
 import java.util.Properties;
 

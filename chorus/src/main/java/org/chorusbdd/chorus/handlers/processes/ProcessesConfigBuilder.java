@@ -1,8 +1,8 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.ChorusException;
-import org.chorusbdd.chorus.handlers.util.AbstractHandlerConfigBuilder;
-import org.chorusbdd.chorus.handlers.util.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 
 import java.util.Map;
 import java.util.Properties;

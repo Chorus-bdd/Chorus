@@ -1,7 +1,8 @@
-package org.chorusbdd.chorus.handlers.remoting;
+package org.chorusbdd.chorus.handlers.util.config.loader;
 
-import org.chorusbdd.chorus.handlers.util.AbstractConfigLoader;
-import org.chorusbdd.chorus.handlers.util.JdbcPropertySource;
+import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlers.util.config.source.JdbcPropertySource;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -14,14 +15,14 @@ import java.util.Properties;
  * Date: 18/09/12
  * Time: 08:45
  */
-public class JDBCRemotingConfigLoader extends AbstractConfigLoader<RemotingConfig> {
+public class JDBCConfigLoader<E extends RemotingConfig> extends AbstractConfigLoader<E> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(JDBCRemotingConfigLoader.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(JDBCConfigLoader.class);
 
     private Properties dbProperties;
 
-    public JDBCRemotingConfigLoader(Properties dbProperties) {
-        super(new RemotingConfigBuilder());
+    public JDBCConfigLoader(Properties dbProperties, HandlerConfigBuilder<E> configBuilder) {
+        super(configBuilder);
         this.dbProperties = dbProperties;
     }
 

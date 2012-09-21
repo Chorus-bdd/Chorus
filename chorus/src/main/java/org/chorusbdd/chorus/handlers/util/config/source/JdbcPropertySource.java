@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlers.util;
+package org.chorusbdd.chorus.handlers.util.config.source;
 
 import org.chorusbdd.chorus.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

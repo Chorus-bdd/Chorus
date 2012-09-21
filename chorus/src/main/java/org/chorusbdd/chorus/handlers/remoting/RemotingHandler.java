@@ -37,7 +37,8 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
-import org.chorusbdd.chorus.handlers.util.PropertiesConfigLoader;
+import org.chorusbdd.chorus.handlers.util.config.loader.JDBCConfigLoader;
+import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.remoting.ChorusRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
 import org.chorusbdd.chorus.util.RegexpUtils;
@@ -188,7 +189,7 @@ public class RemotingHandler {
             if (remotingConfig == null) {
                 throw new ChorusException("Failed to find MBean configuration for component: " + name);
             } else {
-                proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionRetryAttempts(), remotingConfig.getConnectionRetryMillis());
+                proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
                 proxies.put(name, proxy);
                 log.debug("Opened JMX connection to: " + name);
             }
@@ -250,6 +251,6 @@ public class RemotingHandler {
      * </ul>
      */
     protected void loadRemotingConfigsFromDb(Properties p) {
-        remotingConfigMap = new JDBCRemotingConfigLoader(p).loadRemotingConfigs();
+        remotingConfigMap = new JDBCConfigLoader(p, new RemotingConfigBuilder()).loadRemotingConfigs();
     }
 }

@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.handlers.util.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 
 /**
 * Created by IntelliJ IDEA.
@@ -14,8 +14,8 @@ public class RemotingConfig implements HandlerConfig {
     private String name;
     private String host;
     private int port;
-    private int connectionRetryAttempts = 40;
-    private int connectionRetryMillis = 250;
+    private int connectionAttempts = 40;
+    private int connectionAttemptMillis = 250;
 
     public String getProtocol() {
         return protocol;
@@ -49,20 +49,20 @@ public class RemotingConfig implements HandlerConfig {
         this.port = port;
     }
 
-    public int getConnectionRetryAttempts() {
-        return connectionRetryAttempts;
+    public int getConnectionAttempts() {
+        return connectionAttempts;
     }
 
-    public void setConnectionRetryAttempts(int connectionRetryAttempts) {
-        this.connectionRetryAttempts = connectionRetryAttempts;
+    public void setConnnectionAttempts(int connectionAttempts) {
+        this.connectionAttempts = connectionAttempts;
     }
 
-    public int getConnectionRetryMillis() {
-        return connectionRetryMillis;
+    public int getConnectionAttemptMillis() {
+        return connectionAttemptMillis;
     }
 
-    public void setConnectionRetryMillis(int connectionRetryMillis) {
-        this.connectionRetryMillis = connectionRetryMillis;
+    public void setConnectionAttemptMillis(int connectionAttemptMillis) {
+        this.connectionAttemptMillis = connectionAttemptMillis;
     }
 
     public boolean isValid() {
@@ -78,8 +78,8 @@ public class RemotingConfig implements HandlerConfig {
                 ", name='" + name + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
-                ", connectionRetryAttempts=" + connectionRetryAttempts +
-                ", connectionRetryMillis=" + connectionRetryMillis +
+                ", connectionAttempts=" + connectionAttempts +
+                ", connectionAttemptMillis=" + connectionAttemptMillis +
                 '}';
     }
 }

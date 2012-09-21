@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.handlers.util.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

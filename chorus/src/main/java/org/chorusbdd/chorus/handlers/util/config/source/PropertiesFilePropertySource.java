@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlers.util;
+package org.chorusbdd.chorus.handlers.util.config.source;
 
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

@@ -1,9 +1,9 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.ChorusException;
-import org.chorusbdd.chorus.handlers.util.AbstractConfigLoader;
-import org.chorusbdd.chorus.handlers.util.HandlerConfig;
-import org.chorusbdd.chorus.handlers.util.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlers.util.config.loader.AbstractConfigLoader;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

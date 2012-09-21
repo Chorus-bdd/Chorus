@@ -1,8 +1,8 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.ChorusException;
-import org.chorusbdd.chorus.handlers.util.AbstractHandlerConfigBuilder;
-import org.chorusbdd.chorus.handlers.util.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
+import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -34,10 +34,10 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
                 r.setHost(value);
             } else if ("port".equals(key)) {
                 r.setPort(parseIntProperty(value, "port"));
-            } else if ("retryAttempts".equals(key)) {
-                r.setConnectionRetryAttempts(parseIntProperty(value, "retryAttempts"));
-            } else if ("retryMillis".equals(key)) {
-                r.setConnectionRetryMillis(parseIntProperty(value, "retryMillis"));
+            } else if ("connectionAttempts".equals(key)) {
+                r.setConnnectionAttempts(parseIntProperty(value, "connectionAttempts"));
+            } else if ("connectionAttemptsMillis".equals(key)) {
+                r.setConnectionAttemptMillis(parseIntProperty(value, "connectionAttemptsMillis"));
             } else if ( "connection".equals(key)) {
                 String[] vals = String.valueOf(value).split(":");
                 if (vals.length != 3) {
