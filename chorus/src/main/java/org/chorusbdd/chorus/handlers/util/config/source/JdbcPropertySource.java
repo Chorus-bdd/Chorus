@@ -40,8 +40,8 @@ public class JdbcPropertySource implements PropertyGroupsSource {
             while (rs.next()) {
                 Properties p = new Properties();
                 String groupName = rs.getString("name");
-                for ( int loop=1; loop < rs.getMetaData().getColumnCount(); loop ++) {
-                    String columnName = rs.getMetaData().getColumnName(loop);
+                for ( int loop=1; loop <= rs.getMetaData().getColumnCount(); loop ++) {
+                    String columnName = rs.getMetaData().getColumnLabel(loop);
                     Object o = rs.getObject(loop);
                     if ( o != null ) {
                         p.put(columnName, o.toString());

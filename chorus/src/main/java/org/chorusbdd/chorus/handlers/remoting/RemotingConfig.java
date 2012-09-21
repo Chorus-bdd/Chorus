@@ -10,7 +10,8 @@ import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 */
 public class RemotingConfig implements HandlerConfig {
 
-    private String protocol;
+    //default protocol to jmx so we don't have to specify it if loading props from db
+    private String protocol = "jmx";
     private String name;
     private String host;
     private int port;
