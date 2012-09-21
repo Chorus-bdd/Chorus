@@ -33,7 +33,10 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 import org.chorusbdd.chorus.selftest.ForkedRunner;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Properties;
 
 /**

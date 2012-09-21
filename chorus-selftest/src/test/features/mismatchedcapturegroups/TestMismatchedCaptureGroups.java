@@ -30,11 +30,6 @@
 package mismatchedcapturegroups;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.chorusbdd.chorus.selftest.DefaultTestProperties;
-import org.junit.Test;
-
-import java.io.InputStream;
 
 /**
  * Created with IntelliJ IDEA.

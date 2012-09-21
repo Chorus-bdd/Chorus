@@ -30,7 +30,10 @@
 package org.chorusbdd.chorus.tools.swing.viewer;
 
 import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
-import org.chorusbdd.chorus.core.interpreter.results.*;
+import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
+import org.chorusbdd.chorus.core.interpreter.results.StepToken;
 import org.chorusbdd.chorus.tools.util.ImageUtils;
 
 import javax.swing.*;
@@ -38,8 +41,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

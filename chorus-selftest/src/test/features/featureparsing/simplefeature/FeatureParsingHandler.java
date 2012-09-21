@@ -2,7 +2,6 @@ package featureparsing.simplefeature;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.assertion.ChorusAssertionError;
 
 /**
  * Created by IntelliJ IDEA.

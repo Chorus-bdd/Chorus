@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.selftest;
 
-import java.io.IOException;
 import java.util.Properties;
 
 /**

@@ -6,21 +6,21 @@ Chorus --> INFO    - Processing scenario: Handle Exceptions In Remote Steps
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
 Exporting the handler
-    And I call a method which throws an exception in SingleHandlerExport                     FAILED  (JmxRemoteExceptionsHandler:52)-remote RuntimeException - This message should appear in interpreter output
+    And I call a method which throws an exception in SingleHandlerExport                     FAILED  (JmxRemoteExceptionsHandler:51)-remote RuntimeException - This message should appear in interpreter output
     Then my subsequent steps are skipped                                                     SKIPPED 
   Scenario: Handle Assertion Exceptions In Remote Steps
 Chorus --> INFO    - Processing scenario: Handle Assertion Exceptions In Remote Steps
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
 Exporting the handler
-    And I call a method which throws an assertion exception in SingleHandlerExport           FAILED  (JmxRemoteExceptionsHandler:57)-remote ChorusAssertionError - This assertion failed
+    And I call a method which throws an assertion exception in SingleHandlerExport           FAILED  (JmxRemoteExceptionsHandler:56)-remote ChorusAssertionError - This assertion failed
     Then my subsequent steps are skipped                                                     SKIPPED 
   Scenario: Handler Null Pointer Exceptions in Remote Steps
 Chorus --> INFO    - Processing scenario: Handler Null Pointer Exceptions in Remote Steps
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
 Exporting the handler
-    And I call a method which throws a NullPointerException in SingleHandlerExport           FAILED  (JmxRemoteExceptionsHandler:64)-remote NullPointerException 
+    And I call a method which throws a NullPointerException in SingleHandlerExport           FAILED  (JmxRemoteExceptionsHandler:63)-remote NullPointerException 
     Then my subsequent steps are skipped                                                     SKIPPED 
 
 

@@ -49,7 +49,9 @@ import javax.management.RuntimeMBeanException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * This handler can be used to make calls over RMI to JMX MBeans.

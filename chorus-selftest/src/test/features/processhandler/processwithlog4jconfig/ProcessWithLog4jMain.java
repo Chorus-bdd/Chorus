@@ -1,6 +1,5 @@
 package processhandler.processwithlog4jconfig;
 
-import org.apache.log4j.Category;
 import org.apache.log4j.Logger;
 
 /**

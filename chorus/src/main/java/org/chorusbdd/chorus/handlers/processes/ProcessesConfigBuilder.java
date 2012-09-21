@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.ChorusException;
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 

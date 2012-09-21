@@ -29,7 +29,6 @@
  */
 package typecoercion;
 
-import com.sun.org.apache.xpath.internal.operations.And;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;

@@ -30,8 +30,6 @@
 package undefinedstep;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.junit.Test;
 
 /**
  * Created with IntelliJ IDEA.

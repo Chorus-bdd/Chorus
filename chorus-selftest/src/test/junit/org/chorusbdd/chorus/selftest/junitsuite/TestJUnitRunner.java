@@ -32,9 +32,6 @@ package org.chorusbdd.chorus.selftest.junitsuite;
 import junit.framework.TestSuite;
 import org.chorusbdd.chorus.ChorusJUnitRunner;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
-
-import java.io.ByteArrayOutputStream;
 
 /**
  * Created with IntelliJ IDEA.
