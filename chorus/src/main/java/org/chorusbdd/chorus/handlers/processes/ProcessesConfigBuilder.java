@@ -44,9 +44,14 @@ import java.util.Properties;
  */
 public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder implements HandlerConfigBuilder<ProcessesConfig> {
 
-    public ProcessesConfig createConfig(Properties p) {
+    public ProcessesConfig createConfig(Properties p, Properties defaults) {
         ProcessesConfig c = new ProcessesConfig();
+        setProperties(defaults, c);
+        setProperties(p, c);
+        return c;
+    }
 
+    private void setProperties(Properties p, ProcessesConfig c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
@@ -73,7 +78,6 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setLogging(parseBooleanProperty(value, "logging"));
             }
         }
-        return c;
     }
 
 }

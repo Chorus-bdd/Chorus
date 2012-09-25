@@ -39,5 +39,8 @@ import java.util.Properties;
  */
 public interface HandlerConfigBuilder<E extends HandlerConfig> {
 
-    E createConfig(Properties p);
+    /**
+     * Create a config, first initialising with the default properties, and then overriding the defaults with Properties p
+     */
+    E createConfig(Properties p, Properties defaults);
 }

@@ -36,6 +36,8 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -43,20 +45,74 @@ import java.util.*;
  * User: Nick Ebbutt
  * Date: 18/09/12
  * Time: 18:34
+ *
+ * Properties for the handlers used by a given feature are loaded from .properties files which are either in the
+ * same directory as the .feature or in a subdirectory /conf
+ *
+ * We support properties files which are handler-specific (i.e. have the handler name in the suffix, e.g. -remoting.properties)
+ * as well as general properties files which may contain properties for any handler
+ *
+ * In handler-specific files, the form of each property key should be:
+ * groupName.property
+ * e.g. myfirstprocess.jmxport=1234 - the groupName is myfirstprocess and the property is jmxport
+ * When the properties are parsed, we return a separate Properties instance for each groupName we encounter
+ *
+ * In non-handler-specific property files, e.g. chorus.properties, or featurename.properties we expect to find an
+ * additional prefix token which identifies the handler type:
+ * handlerType.groupName.property
+ * e.g. processes.myfirstprocess.jmxport=1234
+ *
+ * In general the user can choose whether to use the general form of the properties files (all
+ * properties in one place), or to opt for the handler-specific format (shorter property keys but more files!)
+ *
+ * We also support setting defaults for each handler type using the special groupName 'default'
+ * Any default values specified will be used to initialize handler configurations, before values for specific group names are applied.
+ * e.g. remoting.default.port could be used to set the default port to use for all remoting configs, unless overridden
+ * for a specific group name
+ *
+ * The order in which properties files are loaded is important, since properties may be specified in more than one file, and values
+ * loaded later override properties loaded up front. This is intentional, to enable defaults to be set in more 'general' properties
+ * files and then overridden by files specific to a particular feature or feature configuration.
+ *
+ * The order of loading properties files is therefore important, and is as follows:
+ *
+ * nb. In the below, handlerPropertySuffix will be for example '-remoting' for the Remoting handler
+ * or -processes for the Processes handler
+ *
+ * From classpath:
+ * 1. /chorus.properties
+ * 2. /chorus-${handlerPropertySuffix}.properties
+ *
+ * Then from feature dir:
+ * 3. chorus.properties
+ * 4. chorus-${handlerPropertySuffix}.properties
+ * 5. featureName.properties
+ * 6. featureName-${handlerPropertySuffix}.properties
+ * 7. featureName-featureConfig.properties
+ * 8. featureName-featureConfig-${handlerPropertySuffix}.properties
+ *
+ * Then from conf subdirectory of feature directory:
+ * 9. chorus.properties
+ * 10. chorus-${handlerPropertySuffix}.properties
+ * 11. featureName.properties
+ * 12. featureName-${handlerPropertySuffix}.properties
+ * 13. featureName-featureConfig.properties
+ * 14. featureName-featureConfig-${handlerPropertySuffix}.properties
+ *
  */
 public class PropertiesFilePropertySource implements PropertyGroupsSource {
 
     private static ChorusLog log = ChorusLogFactory.getLog(PropertiesFilePropertySource.class);
 
     private String handlerDescription;
-    private String propertiesSuffix;
+    private String handlerPropertySuffix;
     private final FeatureToken featureToken;
     private final File featureDir;
     private final File featureFile;
 
-    public PropertiesFilePropertySource(String handlerDescription, String propertiesSuffix, FeatureToken featureToken, File featureDir, File featureFile) {
+    public PropertiesFilePropertySource(String handlerDescription, String handlerPropertySuffix, FeatureToken featureToken, File featureDir, File featureFile) {
         this.handlerDescription = handlerDescription;
-        this.propertiesSuffix = propertiesSuffix;
+        this.handlerPropertySuffix = handlerPropertySuffix;
         this.featureToken = featureToken;
         this.featureDir = featureDir;
         this.featureFile = featureFile;
@@ -68,30 +124,60 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         Map<String, Properties> propertiesByGroup = new HashMap<String, Properties>();
         for ( Map.Entry e : p.entrySet()) {
             String key = e.getKey().toString();
-            int i = key.indexOf('.');
-            if ( i == -1 || i == key.length() - 1) {
-                log.warn("Skipping property " + key + " since it does not have a groupName prefix (property keys should be in the form groupName.property)");
-                continue;
-            }
-
-            String group = key.substring(0, i);
-            String property = key.substring(i + 1);
             String value = e.getValue().toString();
 
-            Properties g = getOrCreateProperties(propertiesByGroup, group);
-            g.setProperty(property, value);
+            //we can handle property keys either in the short form groupName.property or in the longer form handlerPropertySuffix.groupName.property
+            //the latter is useful in cases where we want to mix properties for different handlers in the same property file
+            //If we encounter properties in the long form, ignore any which don't start with the right handlerPropertySuffix
+            int tokenCount = getTokenCount(key);
+
+            if ( tokenCount == 1 || key.endsWith(".") ) {
+                log.warn("Skipping property " + key + " since it does not have a groupName prefix or ends with a period (property keys should be in the form groupName.property)");
+            } else {
+                if ( tokenCount == 2 ) {
+                    //some properties files mix properties for different handlers, in this case the property names we want start with the handler prefix token
+                    findGroupAndSetProperty(propertiesByGroup, key, value);
+                } else if ( tokenCount == 3 ) {
+                    if ( ! key.startsWith(handlerPropertySuffix)) {
+                        //skip any properties which have the extra token where the first token doesn't match this handler
+                        log.warn("Skipping property " + key + " since it does not start with the suffix for this handler " + handlerPropertySuffix);
+                    } else {
+                        //first token matched this handler, strip it off, and proceed as for a normal property
+                        int i = key.indexOf('.');
+                        String keyWithoutFirstToken = key.substring(i + 1);
+                        findGroupAndSetProperty(propertiesByGroup, keyWithoutFirstToken, value);
+                    }
+                } else {
+                    log.warn("Unrecognised property key format " + key + " will ignore this property");
+                }
+            }
         }
         return propertiesByGroup;
+    }
+
+    private void findGroupAndSetProperty(Map<String, Properties> propertiesByGroup, String key, String value) {
+        //find the groupName which should now be the first token in key, and get or create the Properties group for it
+        //the property to set in the groupName propertyGroup is the second token in key - set that property to value
+        int i = key.indexOf('.');
+        String groupName = key.substring(0, i);
+        String property = key.substring(i + 1, key.length());
+
+        Properties propertiesForThisGroup = getOrCreateProperties(propertiesByGroup, groupName);
+        propertiesForThisGroup.setProperty(property, value);
     }
 
     private Properties loadProperties() {
         Properties p = new Properties();
         log.trace("Reading properties for handler " + handlerDescription + ", feature: " + featureToken + ", dir: " + featureDir + ", file: " + featureFile);
         try {
+            //we support setting properties in a chorus.properties at the top of the classpath
+            //and a handler-specific chorus properties file for each built in handler at the top of the classpath
+            //this is chiefly to provide an easy way for the user to set 'default' properties
+            loadPropertiesFromClasspathResource(p, "/chorus.properties", false);
+            loadPropertiesFromClasspathResource(p, "/chorus-" + handlerPropertySuffix + ".properties", true);
+
             List<String> propertiesFilePaths = getPropertiesFilePaths();
-
             loadPropertiesFromFiles(p, propertiesFilePaths);
-
         } catch (IOException e) {
             log.error("Failed to load " + handlerDescription + " configuration properties", e);
         }
@@ -106,11 +192,12 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         List<String> propertiesFilePaths = new ArrayList<String>();
 
         //look for properties files locally in feature dir
-        addPropertiesPathsForDirectory(propertiesFilePaths, featureDir.getAbsolutePath());
+        String featureDirectory = this.featureDir.getAbsolutePath() + File.separatorChar;
+        addPropertiesPathsForDirectory(propertiesFilePaths, featureDirectory);
 
         //look for properties files in /conf subdir of feature dir
-        String propertyDirPrefix = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar;
-        addPropertiesPathsForDirectory(propertiesFilePaths, propertyDirPrefix);
+        String confDir = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar;
+        addPropertiesPathsForDirectory(propertiesFilePaths, confDir);
         return propertiesFilePaths;
     }
 
@@ -120,13 +207,18 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         propertiesFilePaths.add(chorusProperties);
 
         //then override with handler specific properties file, e.g. remoting.properties
-        String handlerTypeProperties = propertyDirPrefix + propertiesSuffix + ".properties";
+        String handlerTypeProperties = propertyDirPrefix + "chorus-" + handlerPropertySuffix + ".properties";
         propertiesFilePaths.add(handlerTypeProperties);
 
         //then override with feature specific properties file, e.g myfeaturename.properties
-        String featureProperties = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
+        String featureProperties = propertyDirPrefix + featureFile.getName();
         featureProperties = featureProperties.replace(".feature", ".properties");
         propertiesFilePaths.add(featureProperties);
+
+        //override properties for a specific feature and handler type, e.g. myfeaturename-remoting.properties
+        String featureAndHandlerProperties = propertyDirPrefix + featureFile.getName();
+        featureAndHandlerProperties = featureAndHandlerProperties.replace(".feature", "-" + handlerPropertySuffix + ".properties");
+        propertiesFilePaths.add(featureAndHandlerProperties);
 
          //override properties for a specific feature run configuration (if specified), e.g. myfeaturename-myconfig.properties
         if (featureToken.isConfiguration()) {
@@ -135,31 +227,60 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
             propertiesFilePaths.add(featureConfigOverrideProperties);
         }
 
-        //override properties for a specific feature and handler type, e.g. myfeaturename-remoting.properties
-        String featureAndHandlerProperties = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
-        featureAndHandlerProperties = featureAndHandlerProperties.replace(".feature", "-" + propertiesSuffix + ".properties");
-        propertiesFilePaths.add(featureAndHandlerProperties);
-
         //override properties for a specific feature and handler type with run configuration (if specified), e.g. myfeaturename-remoting-myconfig.properties
         if (featureToken.isConfiguration()) {
-            String suffix = String.format("-" + propertiesSuffix + "-%s.properties", featureToken.getConfigurationName());
-            String featureConfigOverrideProperties = featureAndHandlerProperties.replace("-" + propertiesSuffix + ".properties", suffix);
+            String suffix = String.format("-%s-" + handlerPropertySuffix + ".properties", featureToken.getConfigurationName());
+            String featureConfigOverrideProperties = featureAndHandlerProperties.replace("-" + handlerPropertySuffix + ".properties", suffix);
             propertiesFilePaths.add(featureConfigOverrideProperties);
         }
     }
 
     private void loadPropertiesFromFiles(Properties p, List<String> paths) throws IOException {
         for ( String path : paths) {
-            loadPropertiesFromFile(p, new File(path));
+            boolean isHandlerSpecificPropertyFile = path.endsWith("-" + handlerPropertySuffix + ".properties");
+            loadPropertiesFromFile(p, new File(path), isHandlerSpecificPropertyFile);
         }
     }
 
-    private void loadPropertiesFromFile(Properties p, File overridePropertiesFile) throws IOException {
-        if (overridePropertiesFile.exists()) {
-            FileInputStream fis = new FileInputStream(overridePropertiesFile);
-            p.load(fis);
+    private void loadPropertiesFromFile(Properties p, File propertiesFile, boolean handlerSpecificProperties) throws IOException {
+        if (propertiesFile.exists()) {
+            Properties props = new Properties();
+            FileInputStream fis = new FileInputStream(propertiesFile);
+            props.load(fis);
             fis.close();
-            log.debug(String.format("Loaded " + handlerDescription + " configuration properties from: %s", overridePropertiesFile.getAbsolutePath()));
+            filterByTokenCount(props, handlerSpecificProperties ? 2 : 3);
+            p.putAll(props);
+            log.debug(String.format("Loaded " + handlerDescription + " configuration properties from: %s", propertiesFile.getAbsolutePath()));
+        }
+    }
+
+    private void loadPropertiesFromClasspathResource(Properties p, String path, boolean handlerSpecificProperties) throws IOException {
+        Class c = getClass();
+        URL u = c.getResource(path);
+        if ( u != null ) {
+            Properties props = new Properties();
+            InputStream is = c.getResourceAsStream(path);
+            props.load(is);
+            is.close();
+            filterByTokenCount(props, handlerSpecificProperties ? 2 : 3);
+            p.putAll(props);
+            log.debug(String.format("Loaded " + handlerDescription + " configuration properties from classpath at path: %s", path));
+        }
+    }
+
+    //remove all properties for which the number of tokens in the key does not match the expected number of tokens
+    //we expect two tokens groupName.property in a handler-specific config file (e.g. in a -remoting.properties file)
+    //we three tokens, in which the handler type is the first token, e.g. 'remoting.' in a non-handler-specific file,
+    //eg. remoting.groupName.properties in a chorus.properties file
+    private void filterByTokenCount(Properties props, int expectedTokenCount) {
+        Iterator<Map.Entry<Object,Object>> i = props.entrySet().iterator();
+        while (i.hasNext()) {
+            Map.Entry<Object,Object> e = i.next();
+            String property = e.getKey().toString();
+            if ( getTokenCount(property) != expectedTokenCount) {
+                log.warn("Ignoring property " + property + " which is not in the expected form");
+                i.remove();
+            }
         }
     }
 
@@ -167,9 +288,21 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         Properties g = propertiesByGroup.get(groupName);
         if ( g == null ) {
             g = new Properties();
+            //always set the group name as a property
             g.setProperty("name", groupName);
             propertiesByGroup.put(groupName, g);
         }
         return g;
     }
+
+    private int getTokenCount(String key) {
+        int count = 1;
+        for (char c : key.toCharArray()) {
+            if ( c == '.') {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

@@ -48,6 +48,7 @@ import java.util.Properties;
 public abstract class AbstractConfigLoader<E extends HandlerConfig> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigLoader.class);
+    private static final Properties EMPTY_PROPERTIES = new Properties();
 
     private void removeInvalidConfigs(Map<String, E> remotingConfigMap) {
         Iterator<Map.Entry<String, E>> i = remotingConfigMap.entrySet().iterator();
@@ -70,8 +71,14 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> {
 
     protected void addConfigsFromPropertyGroups(Map<String, Properties> propertiesGroups, Map<String, E> configMap, HandlerConfigBuilder<E> handlerConfigBuilder) {
         try {
+           //get any default properties for this handler type
+           Properties defaultProperties = propertiesGroups.get("default");
+           if ( defaultProperties == null) {
+               defaultProperties = EMPTY_PROPERTIES;
+           }
+
            for ( Map.Entry<String, Properties> props : propertiesGroups.entrySet()) {
-               E c = handlerConfigBuilder.createConfig(props.getValue());
+               E c = handlerConfigBuilder.createConfig(props.getValue(), defaultProperties);
                configMap.put(props.getKey(), c);
            }
         } catch (Exception e) {

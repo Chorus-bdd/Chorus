@@ -48,9 +48,14 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBuilder.class);
 
-    public RemotingConfig createConfig(Properties p) {
-
+    public RemotingConfig createConfig(Properties p, Properties defaults) {
         RemotingConfig r = new RemotingConfig();
+        setProperties(defaults, r);
+        setProperties(p, r);
+        return r;
+    }
+
+    private void setProperties(Properties p, RemotingConfig r) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
@@ -80,7 +85,6 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
                 r.setPort(parseIntProperty(vals[2], "connection:port"));
             }
         }
-        return r;
     }
 
 }

@@ -40,5 +40,9 @@ import java.util.Properties;
  * To change this template use File | Settings | File Templates.
  */
 public interface PropertyGroupsSource {
+
+    /**
+     * @return a Map of Properties grouped by a String groupName
+     */
     Map<String, Properties> getPropertyGroups();
 }
