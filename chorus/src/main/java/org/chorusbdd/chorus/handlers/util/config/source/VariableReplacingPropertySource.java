@@ -15,6 +15,12 @@ import java.util.regex.Pattern;
  * User: Nick Ebbutt
  * Date: 24/09/12
  * Time: 08:45
+ *
+ * Replace variables in the form ${variableName} in chorus property files
+ * - support system properties
+ * - support a set of chorus specific properties:
+ *
+ *
  */
 public class VariableReplacingPropertySource implements PropertyGroupsSource {
 
@@ -26,6 +32,11 @@ public class VariableReplacingPropertySource implements PropertyGroupsSource {
     private File featureFile;
 
     private Pattern p = Pattern.compile("\\$\\{.+?\\}");
+
+    private final String CHORUS_FEATURE_DIR_VARIABLE = "chorus.featuredir";
+    private final String CHORUS_FEATURE_FILE_VARIABLE = "chorus.featurefile";
+    private final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.featureconfig";
+    private final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.featurename";
 
     public VariableReplacingPropertySource(PropertyGroupsSource wrappedSource, FeatureToken featureToken, File featureDir, File featureFile) {
         this.wrappedSource = wrappedSource;
@@ -74,16 +85,20 @@ public class VariableReplacingPropertySource implements PropertyGroupsSource {
     private boolean replaceWithChorusProperty(String fullPropertyName, String variable, StringBuilder sb, String property) {
         boolean replaced = false;
         int start = sb.indexOf(variable);
-        if ( "chorus.featuredir".equals(property)) {
+        if ( CHORUS_FEATURE_DIR_VARIABLE.equals(property)) {
             sb.replace(start, start + variable.length(), featureDir.getPath());
             log.debug("Replaced variable " + variable + " with value " + featureDir.getPath() + " for property " + fullPropertyName);
             replaced = true;
-        } else if ( "chorus.featurefile".equals(property)) {
+        } else if ( CHORUS_FEATURE_FILE_VARIABLE.equals(property)) {
             sb.replace(start, start + variable.length(), featureFile.getPath());
             log.debug("Replaced variable " + variable + " with value " + featureFile.getPath() + " for property " + fullPropertyName);
             replaced = true;
-        } else if ( "chorus.featureconfig".equals(property)) {
+        } else if ( CHORUS_FEATURE_CONFIGURATION_VARIABLE.equals(property)) {
             sb.replace(start, start + variable.length(), featureToken.getConfigurationName());
+            log.debug("Replaced variable " + variable + " with value " + featureToken.getConfigurationName() + " for property " + fullPropertyName);
+            replaced = true;
+        } else if ( CHORUS_FEATURE_NAME_VARIABLE.equals(property)) {
+            sb.replace(start, start + variable.length(), featureToken.getName());
             log.debug("Replaced variable " + variable + " with value " + featureToken.getConfigurationName() + " for property " + fullPropertyName);
             replaced = true;
         }
