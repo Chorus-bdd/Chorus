@@ -41,10 +41,10 @@ import java.util.Map;
  *
  * Provide default values where a property is not yet set
  */
-public class DefaultsPropertySource extends AbstractPropertySource {
+public class DefaultsConfigSource extends AbstractConfigSource {
 
 
-    public DefaultsPropertySource(List<ConfigurationProperty> properties) {
+    public DefaultsConfigSource(List<ConfigurationProperty> properties) {
         super(properties);
     }
 

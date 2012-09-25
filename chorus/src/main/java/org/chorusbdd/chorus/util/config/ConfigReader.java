@@ -62,7 +62,7 @@ public class ConfigReader implements ConfigProperties {
     private Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<ConfigurationProperty, List<String>>();
 
     //ordered list of property sources
-    private PropertySource[] propertySources;
+    private ConfigSource[] propertySources;
 
     /**
      * Create a configuration using System Properties and defaults only
@@ -78,15 +78,15 @@ public class ConfigReader implements ConfigProperties {
         this.properties = properties;
         this.args = args;
 
-        propertySources = new PropertySource[] {
+        propertySources = new ConfigSource[] {
             new CommandLineParser(properties),
             new SystemPropertyParser(properties),
-            new DefaultsPropertySource(properties)
+            new DefaultsConfigSource(properties)
         };
     }
 
     public ConfigReader readConfiguration() throws InterpreterPropertyException {
-        for ( PropertySource s : propertySources) {
+        for ( ConfigSource s : propertySources) {
             s.parseProperties(propertyMap, args);
         }
 

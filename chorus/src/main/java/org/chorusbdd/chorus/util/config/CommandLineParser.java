@@ -39,7 +39,7 @@ import java.util.StringTokenizer;
  *
  * This class is responsible for parsing command line switches into a Map of arguments by switch name
  */
-public class CommandLineParser extends AbstractPropertySource {
+public class CommandLineParser extends AbstractConfigSource {
 
     public CommandLineParser(List<ConfigurationProperty> properties) {
         super(properties);

@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
  * Time: 10:04
  * To change this template use File | Settings | File Templates.
  */
-public class SystemPropertyParser extends AbstractPropertySource implements PropertySource {
+public class SystemPropertyParser extends AbstractConfigSource implements ConfigSource {
 
     public SystemPropertyParser(List<ConfigurationProperty> properties) {
         super(properties);

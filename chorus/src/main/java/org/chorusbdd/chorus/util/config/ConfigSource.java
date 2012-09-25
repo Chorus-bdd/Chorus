@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.util.config;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,37 +36,24 @@ import java.util.Map;
  * Created with IntelliJ IDEA.
  * User: GA2EBBU
  * Date: 12/06/12
- * Time: 10:15
+ * Time: 10:01
+ *
+ *  A source for interpreter properties
+ *
+ *  Multiple sources may be used to set up the interpreter configuration, the two enabled by
+ *  default are command line properties and system properties
  */
-public abstract class AbstractPropertySource implements PropertySource {
+public interface ConfigSource {
 
-    List<ConfigurationProperty> properties;
+    /**
+     * Add to the provided propertyMap any properties available from this source
+     *
+     * Where the map already contains property values under a given key, extra property values should be
+     * appended to the List
 
-    protected AbstractPropertySource(List<ConfigurationProperty> properties) {
-        this.properties = properties;
-    }
-
-    protected List<String> getOrCreatePropertyList(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty switchName) {
-        List<String> tokens = propertyMap.get(switchName);
-        if ( tokens == null) {
-            tokens = new ArrayList<String>();
-            propertyMap.put(switchName, tokens);
-        }
-        return tokens;
-    }
-
-    protected List<ConfigurationProperty> getProperties() {
-        return properties;
-    }
-
-    protected ConfigurationProperty getProperty(String s) {
-        ConfigurationProperty result = null;
-        for (ConfigurationProperty p : properties) {
-            if ( p.matchesSwitch(s)) {
-                result = p;
-                break;
-            }
-        }
-        return result;
-    }
+     * @return propertyMap, with parsed properties added
+     */
+    Map<ConfigurationProperty, List<String>> parseProperties(
+            Map<ConfigurationProperty, List<String>> propertyMap,
+            String... args) throws InterpreterPropertyException;
 }
