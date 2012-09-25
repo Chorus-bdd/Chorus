@@ -2,9 +2,15 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
-        <versionNumber>1.3.10</versionNumber>
-        <comment>Minor enhancements and fixes</comment>
+        <versionNumber>1.4.10</versionNumber>
+        <comment>A new release of chorus with some important enhancements. In particular this release includes more robust handling for establishing remoting connections, and better configuration for handlers</comment>
+        <change desc="Remoting handler makes a configurable number of attempts to connect before failing when using JMX protocol - remove sleep steps from features"/>
+        <change desc="Allow a remote process to export multiple handlers in one atomic operation"/>
+        <change desc="Process handler now supports step handling to wait until a process terminates - remove sleep steps from features"/>
+        <change desc="Standardise property file configuration loading across all handlers"/>
+        <change desc="Expand system properties and chorus properties ${chorus.featuredir} ${chorus.featurefile} ${chorus.featurename} ${chorus.featureconfig} in property file values loaded"/>
         <change desc="Remote exceptions are named in the interpreter output and more details are provided to assist debugging"/>
+        <change desc="Provide line number and location for all exceptions, better handling for exceptions with no messages especially NullPointer"/>
     </version>
     <version>
         <versionNumber>1.3.9</versionNumber>
