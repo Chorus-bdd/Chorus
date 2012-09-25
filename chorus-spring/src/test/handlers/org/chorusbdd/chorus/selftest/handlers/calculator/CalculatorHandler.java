@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest.handlers.calculator;
 
-import org.chorusbdd.chorus.ChorusException;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;

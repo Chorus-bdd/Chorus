@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting;
+package org.chorusbdd.chorus.util;
 
 /**
  *  When exceptions occur remotely, we throw a ChorusRemotingException and this should be received by the

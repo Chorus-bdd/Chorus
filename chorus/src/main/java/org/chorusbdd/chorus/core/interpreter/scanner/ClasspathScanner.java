@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.core.interpreter.scanner;
 
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.FilenameFilter;
-import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

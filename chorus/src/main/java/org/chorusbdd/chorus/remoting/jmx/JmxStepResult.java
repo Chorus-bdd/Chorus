@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.ChorusException;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 
 import java.io.Serializable;

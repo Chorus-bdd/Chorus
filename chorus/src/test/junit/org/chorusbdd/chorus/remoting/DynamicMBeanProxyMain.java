@@ -30,7 +30,8 @@
 package org.chorusbdd.chorus.remoting;
 
 import org.chorusbdd.chorus.remoting.jmx.AbstractJmxProxy;
-import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 /**
  * Created by: Steve Neal

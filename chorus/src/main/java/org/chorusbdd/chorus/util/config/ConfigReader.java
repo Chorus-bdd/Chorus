@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.util.config;
 
-import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.util.ArrayList;
 import java.util.HashMap;

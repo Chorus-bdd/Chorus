@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
 import org.chorusbdd.chorus.core.interpreter.results.StepToken;
-import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.io.PrintWriter;
 import java.util.List;

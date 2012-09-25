@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
-import org.chorusbdd.chorus.util.ChorusOut;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 /**
  * Created by IntelliJ IDEA.

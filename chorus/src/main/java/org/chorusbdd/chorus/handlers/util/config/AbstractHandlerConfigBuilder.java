@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.util.config;
 
-import org.chorusbdd.chorus.ChorusException;
+import org.chorusbdd.chorus.util.ChorusException;
 
 /**
  * Created with IntelliJ IDEA.

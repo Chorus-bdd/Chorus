@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus;
+package org.chorusbdd.chorus.util;
 
 /**
  * General exeption to indicate a problem running Chorus

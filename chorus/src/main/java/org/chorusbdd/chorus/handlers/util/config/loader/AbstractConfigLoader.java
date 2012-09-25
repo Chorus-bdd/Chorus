@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.util.config.loader;
 
-import org.chorusbdd.chorus.ChorusException;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
