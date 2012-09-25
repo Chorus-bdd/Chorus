@@ -420,7 +420,7 @@ public class ProcessesHandler {
             PropertiesConfigLoader<ProcessesConfig> l = new PropertiesConfigLoader<ProcessesConfig>(
                     new ProcessesConfigBuilder(),
                     "Processes",
-                    "-processes",
+                    "processes",
                     featureToken,
                     featureDir,
                     featureFile

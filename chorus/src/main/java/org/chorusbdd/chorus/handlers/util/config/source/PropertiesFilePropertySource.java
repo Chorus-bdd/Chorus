@@ -36,9 +36,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -90,36 +88,79 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         Properties p = new Properties();
         log.trace("Reading properties for handler " + handlerDescription + ", feature: " + featureToken + ", dir: " + featureDir + ", file: " + featureFile);
         try {
-            //figure out where the properties file is
-            String propertiesFilePath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
-            propertiesFilePath = propertiesFilePath.replace(".feature", propertiesSuffix + ".properties");
+            List<String> propertiesFilePaths = getPropertiesFilePaths();
 
-            //load the properties
-            File propertiesFile = new File(propertiesFilePath);
-            if (propertiesFile.exists()) {
-                FileInputStream fis = new FileInputStream(propertiesFilePath);
-                p.load(fis);
-                fis.close();
-                log.debug(String.format("Loaded " + handlerDescription + " configuration properties from: %s", propertiesFilePath));
-            }
-
-            //override properties for a specific run configuration (if specified)
-            if (featureToken.isConfiguration()) {
-                String suffix = String.format(propertiesSuffix + "-%s.properties", featureToken.getConfigurationName());
-                String overridePropertiesFilePath = propertiesFilePath.replace(propertiesSuffix + ".properties", suffix);
-                File overridePropertiesFile = new File(overridePropertiesFilePath);
-                if (overridePropertiesFile.exists()) {
-                    FileInputStream fis = new FileInputStream(overridePropertiesFile);
-                    p.load(fis);
-                    fis.close();
-                    log.debug(String.format("Loaded overriding " + handlerDescription + " configuration properties from: %s", overridePropertiesFilePath));
-                }
-            }
+            loadPropertiesFromFiles(p, propertiesFilePaths);
 
         } catch (IOException e) {
             log.error("Failed to load " + handlerDescription + " configuration properties", e);
         }
         return p;
+    }
+
+    /**
+     * @return a list of the properties files paths which will be loaded for this handler/feature in order of override priority
+     */
+    private List<String> getPropertiesFilePaths() {
+
+        List<String> propertiesFilePaths = new ArrayList<String>();
+
+        //look for properties files locally in feature dir
+        addPropertiesPathsForDirectory(propertiesFilePaths, featureDir.getAbsolutePath());
+
+        //look for properties files in /conf subdir of feature dir
+        String propertyDirPrefix = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar;
+        addPropertiesPathsForDirectory(propertiesFilePaths, propertyDirPrefix);
+        return propertiesFilePaths;
+    }
+
+    private void addPropertiesPathsForDirectory(List<String> propertiesFilePaths, String propertyDirPrefix) {
+        //first look for chorus.properties
+        String chorusProperties = propertyDirPrefix + "chorus.properties";
+        propertiesFilePaths.add(chorusProperties);
+
+        //then override with handler specific properties file, e.g. remoting.properties
+        String handlerTypeProperties = propertyDirPrefix + propertiesSuffix + ".properties";
+        propertiesFilePaths.add(handlerTypeProperties);
+
+        //then override with feature specific properties file, e.g myfeaturename.properties
+        String featureProperties = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
+        featureProperties = featureProperties.replace(".feature", ".properties");
+        propertiesFilePaths.add(featureProperties);
+
+         //override properties for a specific feature run configuration (if specified), e.g. myfeaturename-myconfig.properties
+        if (featureToken.isConfiguration()) {
+            String suffix = String.format("-%s.properties", featureToken.getConfigurationName());
+            String featureConfigOverrideProperties = featureProperties.replace(".properties", suffix);
+            propertiesFilePaths.add(featureConfigOverrideProperties);
+        }
+
+        //override properties for a specific feature and handler type, e.g. myfeaturename-remoting.properties
+        String featureAndHandlerProperties = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + featureFile.getName();
+        featureAndHandlerProperties = featureAndHandlerProperties.replace(".feature", "-" + propertiesSuffix + ".properties");
+        propertiesFilePaths.add(featureAndHandlerProperties);
+
+        //override properties for a specific feature and handler type with run configuration (if specified), e.g. myfeaturename-remoting-myconfig.properties
+        if (featureToken.isConfiguration()) {
+            String suffix = String.format("-" + propertiesSuffix + "-%s.properties", featureToken.getConfigurationName());
+            String featureConfigOverrideProperties = featureAndHandlerProperties.replace("-" + propertiesSuffix + ".properties", suffix);
+            propertiesFilePaths.add(featureConfigOverrideProperties);
+        }
+    }
+
+    private void loadPropertiesFromFiles(Properties p, List<String> paths) throws IOException {
+        for ( String path : paths) {
+            loadPropertiesFromFile(p, new File(path));
+        }
+    }
+
+    private void loadPropertiesFromFile(Properties p, File overridePropertiesFile) throws IOException {
+        if (overridePropertiesFile.exists()) {
+            FileInputStream fis = new FileInputStream(overridePropertiesFile);
+            p.load(fis);
+            fis.close();
+            log.debug(String.format("Loaded " + handlerDescription + " configuration properties from: %s", overridePropertiesFile.getAbsolutePath()));
+        }
     }
 
     private Properties getOrCreateProperties(Map<String, Properties> propertiesByGroup, String groupName) {

@@ -220,7 +220,7 @@ public class RemotingHandler {
             PropertiesConfigLoader<RemotingConfig> l = new PropertiesConfigLoader<RemotingConfig>(
                 new RemotingConfigBuilder(),
                 "Remoting",
-                "-remoting",
+                "remoting",
                 featureToken,
                 featureDir,
                 featureFile
