@@ -64,7 +64,7 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         this.featureFile = featureFile;
     }
 
-    public Map<String, Properties> getPropertiesGroups() {
+    public Map<String, Properties> getPropertyGroups() {
         Properties p = loadProperties();
 
         Map<String, Properties> propertiesByGroup = new HashMap<String, Properties>();
@@ -104,7 +104,7 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
             }
 
             //override properties for a specific run configuration (if specified)
-            if (featureToken.getConfigurationName() != null) {
+            if (featureToken.isConfiguration()) {
                 String suffix = String.format(propertiesSuffix + "-%s.properties", featureToken.getConfigurationName());
                 String overridePropertiesFilePath = propertiesFilePath.replace(propertiesSuffix + ".properties", suffix);
                 File overridePropertiesFile = new File(overridePropertiesFilePath);

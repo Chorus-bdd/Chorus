@@ -38,11 +38,14 @@ import java.util.List;
  */
 public class FeatureToken extends AbstractToken {
 
+    public static final String BASE_CONFIGURATION = "base";
+
     private static final long serialVersionUID = 2;
+
 
     private String name;
     private String[] usesHandlers;
-    private String configurationName;
+    private String configurationName = BASE_CONFIGURATION;
     private StringBuilder description = new StringBuilder();
     private List<ScenarioToken> scenarios = new ArrayList<ScenarioToken>();
 
@@ -61,7 +64,7 @@ public class FeatureToken extends AbstractToken {
     }
 
     public String getNameWithConfiguration() {
-        if (configurationName != null && configurationName.length() > 0) {
+        if (isConfiguration() && configurationName.length() > 0) {
             return String.format("%s [%s]", name, configurationName);
         } else {
             return name;
@@ -72,6 +75,16 @@ public class FeatureToken extends AbstractToken {
         this.name = name;
     }
 
+    public boolean isConfiguration() {
+        return ! BASE_CONFIGURATION.equals(configurationName) &&
+                configurationName != null &&
+                configurationName.length() > 0;
+    }
+
+    /**
+     * @return the configuration under which this feature is running, or null if this feature
+     * does not have configurations
+     */
     public String getConfigurationName() {
         return configurationName;
     }

@@ -29,12 +29,15 @@
  */
 package org.chorusbdd.chorus.handlers.util.config.loader;
 
+import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.source.JdbcPropertySource;
+import org.chorusbdd.chorus.handlers.util.config.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -51,15 +54,23 @@ public class JDBCConfigLoader<E extends HandlerConfig> extends AbstractConfigLoa
 
     private Properties dbProperties;
     private HandlerConfigBuilder<E> configBuilder;
+    private final FeatureToken featureToken;
+    private final File featureDir;
+    private final File featureFile;
 
-    public JDBCConfigLoader(Properties dbProperties, HandlerConfigBuilder<E> configBuilder) {
+    public JDBCConfigLoader(Properties dbProperties, HandlerConfigBuilder<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
         this.dbProperties = dbProperties;
         this.configBuilder = configBuilder;
+        this.featureToken = featureToken;
+        this.featureDir = featureDir;
+        this.featureFile = featureFile;
     }
 
     public Map<String, E> doLoadConfigs() {
         JdbcPropertySource jdbcPropertiesLoader = new JdbcPropertySource(dbProperties);
-        Map<String,Properties> propertiesGroups = jdbcPropertiesLoader.getPropertiesGroups();
+
+        VariableReplacingPropertySource v = new VariableReplacingPropertySource(jdbcPropertiesLoader, featureToken, featureDir, featureFile);
+        Map<String,Properties> propertiesGroups = v.getPropertyGroups();
 
         Map<String, E> map = new HashMap<String, E>();
         addConfigsFromPropertyGroups(propertiesGroups, map, configBuilder);

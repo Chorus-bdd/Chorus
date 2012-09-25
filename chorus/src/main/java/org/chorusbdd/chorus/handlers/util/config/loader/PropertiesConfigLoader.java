@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.source.PropertiesFilePropertySource;
+import org.chorusbdd.chorus.handlers.util.config.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -70,7 +71,9 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
 
     public Map<String, E> doLoadConfigs() {
         PropertiesFilePropertySource handlerPropertiesLoader = new PropertiesFilePropertySource(handlerDescription, propertiesFileSuffix, featureToken, featureDir, featureFile);
-        Map<String,Properties> propertiesGroups = handlerPropertiesLoader.getPropertiesGroups();
+
+        VariableReplacingPropertySource v = new VariableReplacingPropertySource(handlerPropertiesLoader, featureToken, featureDir, featureFile);
+        Map<String,Properties> propertiesGroups = v.getPropertyGroups();
 
         Map<String, E> result = new HashMap<String, E>();
         addConfigsFromPropertyGroups(propertiesGroups, result, configBuilder);

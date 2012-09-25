@@ -40,5 +40,5 @@ import java.util.Properties;
  * To change this template use File | Settings | File Templates.
  */
 public interface PropertyGroupsSource {
-    Map<String, Properties> getPropertiesGroups();
+    Map<String, Properties> getPropertyGroups();
 }

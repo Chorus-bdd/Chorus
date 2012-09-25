@@ -117,7 +117,7 @@ public class ProcessesHandler {
         if (processNameForLogFiles.endsWith(".feature")) {
             processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
         }
-        if (featureToken.getConfigurationName() == null) {
+        if (! featureToken.isConfiguration()) {
             processNameForLogFiles = String.format("%s-%s", processNameForLogFiles, alias);
         } else {
             processNameForLogFiles = String.format("%s-%s-%s", processNameForLogFiles, featureToken.getConfigurationName(), alias);

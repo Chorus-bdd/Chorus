@@ -67,7 +67,7 @@ public class SpringContextInjector implements SpringInjector {
     public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) {
         Class handlerClass = handler.getClass();
         //check for a 'Configuration:' specific Spring context
-        if (featureToken.getConfigurationName() != null) {
+        if (featureToken.isConfiguration()) {
             if (contextFileName.endsWith(".xml")) {
                 String tmp = String.format("%s-%s.xml", contextFileName.substring(0, contextFileName.length() - 4), featureToken.getConfigurationName());
                 URL url = handlerClass.getResource(tmp);
