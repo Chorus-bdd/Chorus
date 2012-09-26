@@ -1,14 +1,12 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/processhandler/processwithoutlogging/startaprocesswithoutlogging.feature
-Feature: Start A Process Without Logging                                                             
+Chorus --> INFO    - Loading feature from file: src/test/features/propertiesinfeaturedir/propertiesinfeaturedir.feature
+Feature: Properties In Feature Directory                                                             
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
-    And I start a config1 process named Frodo                                                PASSED  
-1
-Woohoo, we have started a process
-    And I wait for the process named Frodo to terminate                                      PASSED  
-    Then the process named Frodo has terminated                                              PASSED  
+    And I start a config1 process                                                            PASSED  
+    And I wait for config1 to terminate                                                      PASSED  
+    Then there are logs in the local feature directory                                       PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
