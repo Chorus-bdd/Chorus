@@ -76,6 +76,8 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setTerminateWaitTime(parseIntProperty(value, "terminateWaitTime"));
             } else if ("logging".equals(key)) {
                 c.setLogging(parseBooleanProperty(value, "logging"));
+            } else if ("logDirectory".equals(key)) {
+                c.setLogDirectory(value);
             }
         }
     }

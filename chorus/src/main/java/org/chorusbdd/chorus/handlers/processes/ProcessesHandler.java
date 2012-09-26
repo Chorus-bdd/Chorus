@@ -126,16 +126,17 @@ public class ProcessesHandler {
         //setting true for logging will turn on logging of the process std out and err to standard out and standard err log files
         //otherwise this output will appear inline with the chorus interpreter process std out
         if (processesConfig.isLogging()) {
-            stdoutLogPath = String.format("%s%slogs%s%s-out.log",
-                    featureDir.getAbsolutePath(),
-                    File.separatorChar,
-                    File.separatorChar,
+            //if a logs directory was provided in the config use that, or default to featureDir/logs
+            String defaultPath = featureDir.getAbsolutePath() + File.separatorChar + "logs";
+            String directoryPath = processesConfig.getLogDirectory() != null ? processesConfig.getLogDirectory() : defaultPath;
+            stdoutLogPath = String.format("%s%s%s-out.log",
+                    directoryPath,
+                    File.separator,
                     processNameForLogFiles);
 
-            stderrLogPath = String.format("%s%slogs%s%s-err.log",
-                    featureDir.getAbsolutePath(),
-                    File.separatorChar,
-                    File.separatorChar,
+            stderrLogPath = String.format("%s%s%s-err.log",
+                    directoryPath,
+                    File.separator,
                     processNameForLogFiles);
         }
 

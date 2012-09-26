@@ -56,6 +56,7 @@ public class ProcessesConfig implements HandlerConfig {
     private int jmxPort = -1;
     private int debugPort = -1;
     private int terminateWaitTime = 30;
+    private String logDirectory;
 
     public String getName() {
         return name;
@@ -135,6 +136,14 @@ public class ProcessesConfig implements HandlerConfig {
 
     public void setTerminateWaitTime(int terminateWaitTime) {
         this.terminateWaitTime = terminateWaitTime;
+    }
+
+    public String getLogDirectory() {
+        return logDirectory;
+    }
+
+    public void setLogDirectory(String logDirectory) {
+        this.logDirectory = logDirectory;
     }
 
     public boolean isValid() {

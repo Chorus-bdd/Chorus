@@ -33,10 +33,10 @@ public class VariableReplacingPropertySource implements PropertyGroupsSource {
 
     private Pattern p = Pattern.compile("\\$\\{.+?\\}");
 
-    private final String CHORUS_FEATURE_DIR_VARIABLE = "chorus.featuredir";
-    private final String CHORUS_FEATURE_FILE_VARIABLE = "chorus.featurefile";
-    private final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.featureconfig";
-    private final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.featurename";
+    public static final String CHORUS_FEATURE_DIR_VARIABLE = "chorus.feature.dir";
+    public static final String CHORUS_FEATURE_FILE_VARIABLE = "chorus.feature.file";
+    public static final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.feature.config";
+    public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
     public VariableReplacingPropertySource(PropertyGroupsSource wrappedSource, FeatureToken featureToken, File featureDir, File featureFile) {
         this.wrappedSource = wrappedSource;
