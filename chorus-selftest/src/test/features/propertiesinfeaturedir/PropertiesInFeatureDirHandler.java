@@ -32,9 +32,11 @@ package propertiesinfeaturedir;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.selftest.SelftestUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,4 +64,9 @@ public class PropertiesInFeatureDirHandler extends ChorusAssert {
         assertTrue("log err does not exist at " + file.getAbsolutePath(), file.exists());
     }
 
+    @Step("the std out log contains the string (.*)")
+    public void logContainsSpaceWombats(String s) throws IOException {
+        File file = new File(featureDir, "propertiesinfeaturedir-config1-out.log");
+        SelftestUtils.checkFileContainsLine(s, file.getPath());
+    }
 }

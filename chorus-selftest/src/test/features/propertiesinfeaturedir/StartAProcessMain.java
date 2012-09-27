@@ -43,6 +43,7 @@ public class StartAProcessMain {
         for (String s : args) {
             System.out.println(s);
         }
+        System.out.println("wibble");
     }
 
 }

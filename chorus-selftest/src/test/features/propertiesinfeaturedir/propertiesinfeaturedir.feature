@@ -13,6 +13,7 @@ Feature: Properties In Feature Directory
     And I start a config1 process
     And I wait for config1 to terminate
     Then there are logs in the local feature directory
+    And the std out log contains the string spacewombats
 
 
 
