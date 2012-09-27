@@ -3,14 +3,20 @@
 <changes>
     <version>
         <versionNumber>1.4.10</versionNumber>
-        <comment>A new release of chorus with some important enhancements. In particular this release includes more robust handling for establishing remoting connections, and better configuration for handlers</comment>
-        <change desc="Remoting handler makes a configurable number of attempts to connect before failing when using JMX protocol - remove sleep steps from features"/>
-        <change desc="Allow a remote process to export multiple handlers in one atomic operation"/>
-        <change desc="Process handler now supports step handling to wait until a process terminates - remove sleep steps from features"/>
-        <change desc="Standardise property file configuration loading across all handlers"/>
+        <comment>A new release of chorus with some important enhancements. In particular this release includes more robust handling for establishing remote connections using Remoting handler jmx, and more flexible configuration options for handlers</comment>
+        <change desc="Remoting handler makes a configurable number of attempts to connect before failing when using JMX protocol. The number of attempts is configured using the connectionAttempts and the wait between each failed attempt and the next is configured using connectionAttemptMillis remoting handler properties"/>
+        <change desc="Changes to ChorusHandlerExporter to allow a remote process to export multiple handlers in one atomic operation"/>
+        <change desc="Process handler now supports a step to wait until a process terminates"/>
+        <change desc="Standardise property file loading logic across all built in handlers"/>
+        <change desc="Support loading a chorus.properties from the classpath, also support chorus.properties and featurename.properties local to feature directory"/>
+        <change desc="Handler property files may now be in either the main feature directory or the subdirectory conf"/>
+        <change desc="Where a property file name does not contain a suffix identifying the handler (e.g. -remoting.properties) then the handler type must be the first token of each property key e.g. remoting.myprocess.connectionAttempts=10"/>
+        <change desc="Support setting defaults for handler configuration properties in property files as handlerType.default.propertyName"/>
         <change desc="Expand system properties and chorus properties ${chorus.featuredir} ${chorus.featurefile} ${chorus.featurename} ${chorus.featureconfig} in property file values loaded"/>
-        <change desc="Remote exceptions are named in the interpreter output and more details are provided to assist debugging"/>
-        <change desc="Provide line number and location for all exceptions, better handling for exceptions with no messages especially NullPointer"/>
+        <change desc="Remote exceptions are named in the interpreter output and the class and line number where the exception occurred are provided to assist debugging"/>
+        <change desc="Better handling for exceptions with no messages set, especially NullPointer"/>
+        <change desc="New configurable property logDirectory for Processes handler - determines where the standard out and error go when logging is on"/>
+        <change desc="Handler property files for features with configurations now expect the configuration name before the handler type suffix. e.g. configA-remoting.properties instead of remoting-configA.properties"/>
     </version>
     <version>
         <versionNumber>1.3.9</versionNumber>

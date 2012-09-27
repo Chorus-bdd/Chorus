@@ -70,8 +70,8 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
                 r.setPort(parseIntProperty(value, "port"));
             } else if ("connectionAttempts".equals(key)) {
                 r.setConnnectionAttempts(parseIntProperty(value, "connectionAttempts"));
-            } else if ("connectionAttemptsMillis".equals(key)) {
-                r.setConnectionAttemptMillis(parseIntProperty(value, "connectionAttemptsMillis"));
+            } else if ("connectionAttemptMillis".equals(key)) {
+                r.setConnectionAttemptMillis(parseIntProperty(value, "connectionAttemptMillis"));
             } else if ( "connection".equals(key)) {
                 String[] vals = String.valueOf(value).split(":");
                 if (vals.length != 3) {
