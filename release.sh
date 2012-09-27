@@ -29,7 +29,7 @@ if [ -z "`git status | grep release-chorus-${VERSION}`" ] ; then
   echo "Going to checkout tag chorus-${VERSION} to a new branch and switch to the tagged branch, continue?"
   fn_promptForContinue
 
-  git checkout -b release-chorus-${VERSION} chorus-${VERSION}
+  git checkout -B release-chorus-${VERSION} chorus-${VERSION}
   fn_exitOnError "Failed to checkout branch from tag chorus-${VERSION}"
 fi
 
