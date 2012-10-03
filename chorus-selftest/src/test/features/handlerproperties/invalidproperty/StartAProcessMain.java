@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package propertiesinfeaturedir;
+package handlerproperties.invalidproperty;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,12 +38,6 @@ package propertiesinfeaturedir;
 public class StartAProcessMain {
 
     public static void main(String[] args) throws InterruptedException {
-
-        //write out all the arguments so we can test them
-        for (String s : args) {
-            System.out.println(s);
-        }
-        System.out.println("wibble");
     }
 
 }

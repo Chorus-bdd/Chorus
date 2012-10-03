@@ -58,7 +58,8 @@ public class JDBCConfigLoader<E extends HandlerConfig> extends AbstractConfigLoa
     private final File featureDir;
     private final File featureFile;
 
-    public JDBCConfigLoader(Properties dbProperties, HandlerConfigBuilder<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
+    public JDBCConfigLoader(Properties dbProperties, String handlerDescription, HandlerConfigBuilder<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
+        super(handlerDescription);
         this.dbProperties = dbProperties;
         this.configBuilder = configBuilder;
         this.featureToken = featureToken;

@@ -102,6 +102,10 @@ public class RemotingConfig implements HandlerConfig {
                getPort() > 0;
     }
 
+    public String getValidationRuleDescription() {
+        return "host, protocol, name and port must be set";
+    }
+
     public String toString() {
         return "RemotingConfig{" +
                 "protocol='" + protocol + '\'' +

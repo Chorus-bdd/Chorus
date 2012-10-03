@@ -27,17 +27,27 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.util.config;
+package handlerproperties.propertiesinfeaturedir;
+
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 21/09/12
- * Time: 08:44
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public interface HandlerConfig {
+public class TestPropertiesInFeatureDir extends AbstractInterpreterTest {
 
-    boolean isValid();
+    final String featurePath = "src/test/features/handlerproperties/propertiesinfeaturedir";
+    final int expectedExitCode = 0;  //success
 
-    String getValidationRuleDescription();
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
+
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+
 }

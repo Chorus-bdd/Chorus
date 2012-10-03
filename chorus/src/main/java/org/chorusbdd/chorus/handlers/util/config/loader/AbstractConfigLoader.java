@@ -49,13 +49,21 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigLoader.class);
     private static final Properties EMPTY_PROPERTIES = new Properties();
+    private String handlerDescription;
+
+    public AbstractConfigLoader(String handlerDescription) {
+        this.handlerDescription = handlerDescription;
+    }
 
     private void removeInvalidConfigs(Map<String, E> remotingConfigMap) {
         Iterator<Map.Entry<String, E>> i = remotingConfigMap.entrySet().iterator();
         while (i.hasNext()) {
             Map.Entry<String, E> e = i.next();
-            if (!e.getValue().isValid()) {
-                log.debug("Removing " + e + " which is not valid");
+            //apart from the 'default' configs all configs must pass validation rules
+            //the defaults specified may be an incomplete subset
+            if (!e.getKey().equals("default") && !e.getValue().isValid()) {
+                log.warn("Removing " + e.getKey() + " which is not a valid " + handlerDescription + " handler config " + e.getValue().getValidationRuleDescription());
+                log.debug(e.getValue().toString());
                 i.remove();
             }
         }

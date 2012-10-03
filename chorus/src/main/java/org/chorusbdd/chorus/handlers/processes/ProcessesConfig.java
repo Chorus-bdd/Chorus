@@ -167,6 +167,10 @@ public class ProcessesConfig implements HandlerConfig {
         return valid;
     }
 
+    public String getValidationRuleDescription() {
+        return "name, jre, classpath and mainclass must be set";
+    }
+
     @Override
     public String toString() {
         return "ProcessesConfig{" +

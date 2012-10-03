@@ -253,6 +253,6 @@ public class RemotingHandler {
      * </ul>
      */
     protected void loadRemotingConfigsFromDb(Properties p) {
-        remotingConfigMap = new JDBCConfigLoader(p, new RemotingConfigBuilder(), featureToken, featureDir, featureFile).loadRemotingConfigs();
+        remotingConfigMap = new JDBCConfigLoader(p, "Remoting", new RemotingConfigBuilder(), featureToken, featureDir, featureFile).loadRemotingConfigs();
     }
 }

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/propertiesinfeaturedir/propertiesinfeaturedir.feature
+Chorus --> INFO    - Loading feature from file: src/test/features/handlerproperties/propertiesinfeaturedir/propertiesinfeaturedir.feature
 Feature: Properties In Feature Directory                                                             
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process

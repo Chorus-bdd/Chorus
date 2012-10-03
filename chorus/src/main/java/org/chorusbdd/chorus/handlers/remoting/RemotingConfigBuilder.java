@@ -83,6 +83,8 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
                 r.setProtocol(vals[0]);
                 r.setHost(vals[1]);
                 r.setPort(parseIntProperty(vals[2], "connection:port"));
+            } else {
+                log.warn("Ignoring property " + key + " which is not a supported Remoting handler property");
             }
         }
     }

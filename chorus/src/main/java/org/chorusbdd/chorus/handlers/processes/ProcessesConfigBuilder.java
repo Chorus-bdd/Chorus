@@ -31,6 +31,8 @@ package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.util.Map;
 import java.util.Properties;
@@ -43,6 +45,8 @@ import java.util.Properties;
  * To change this template use File | Settings | File Templates.
  */
 public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder implements HandlerConfigBuilder<ProcessesConfig> {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBuilder.class);
 
     public ProcessesConfig createConfig(Properties p, Properties defaults) {
         ProcessesConfig c = new ProcessesConfig();
@@ -78,6 +82,8 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setLogging(parseBooleanProperty(value, "logging"));
             } else if ("logDirectory".equals(key)) {
                 c.setLogDirectory(value);
+            } else {
+                log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }
         }
     }

@@ -61,6 +61,7 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
 
     //"Remoting", "-remoting"
     public PropertiesConfigLoader(HandlerConfigBuilder<E> configBuilder, String handlerDescription, String propertiesFileSuffix, FeatureToken featureToken, File featureDir, File featureFile) {
+        super(handlerDescription);
         this.configBuilder = configBuilder;
         this.handlerDescription = handlerDescription;
         this.propertiesFileSuffix = propertiesFileSuffix;

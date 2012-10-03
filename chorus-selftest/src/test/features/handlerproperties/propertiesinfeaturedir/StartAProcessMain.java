@@ -27,27 +27,23 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package propertiesinfeaturedir;
-
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+package handlerproperties.propertiesinfeaturedir;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 25/06/12
- * Time: 22:14
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class TestPropertiesInFeatureDir extends AbstractInterpreterTest {
+public class StartAProcessMain {
 
-    final String featurePath = "src/test/features/propertiesinfeaturedir";
-    final int expectedExitCode = 0;  //success
+    public static void main(String[] args) throws InterruptedException {
 
-    protected int getExpectedExitCode() {
-        return expectedExitCode;
-    }
-
-    protected String getFeaturePath() {
-        return featurePath;
+        //write out all the arguments so we can test them
+        for (String s : args) {
+            System.out.println(s);
+        }
+        System.out.println("wibble");
     }
 
 }
