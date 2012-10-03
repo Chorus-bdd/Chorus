@@ -2,6 +2,12 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.4.11</versionNumber>
+        <comment>Minor fixes and enhancements for handler property files</comment>
+        <change desc="More logging when loading handler properties, logging when encountering an unsupported property"/>
+        <bugfix desc="Fixed a bug in which default properties not always applied"/>
+    </version>
+    <version>
         <versionNumber>1.4.10</versionNumber>
         <comment>A new release of chorus with some important enhancements. In particular this release includes more robust handling for establishing remote connections using Remoting handler jmx, and more flexible configuration options for handlers</comment>
         <change desc="Remoting handler makes a configurable number of attempts to connect before failing when using JMX protocol. The number of attempts is configured using the connectionAttempts and the wait between each failed attempt and the next is configured using connectionAttemptMillis remoting handler properties"/>
