@@ -1,14 +1,14 @@
 Uses: Processes
 Uses: Remoting
-#nb doesnt actually use Remoting but this causes the remoting props to be read
 
 Feature: Invalid Properties
 
-  Test that invalid property settings are logged as such and that default properties are picked up
+  Test that invalid property settings are logged as such
 
   Scenario: Start a Single Java Process
     I can start a config1 process
-    And wait for config1 to terminate
+    And then call a remote method in config1
+    #will fail no handler exported we should see the invalid remoting property logged anyway
 
 
 

@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -42,7 +42,7 @@ import java.io.File;
  * Time: 11:08
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessesConfig implements HandlerConfig {
+public class ProcessesConfig extends AbstractHandlerConfig {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfig.class);
 
@@ -58,7 +58,7 @@ public class ProcessesConfig implements HandlerConfig {
     private int terminateWaitTime = 30;
     private String logDirectory;
 
-    public String getName() {
+    public String getGroupName() {
         return name;
     }
 
@@ -149,26 +149,23 @@ public class ProcessesConfig implements HandlerConfig {
     public boolean isValid() {
         boolean valid = true;
         if ( name == null || name.trim().length() == 0) {
-            log.warn("invalid config, name was null or empty");
-            valid = false;
-        }
-        if ( jre == null || ! new File(jre).isDirectory() ) {
-            log.warn("invalid config, jre property is null or jre path does not exist");
-            valid = false;
-        }
-        if ( classpath == null ) {
-            log.warn("invalid config, classpath was null");
-            valid = false;
-        }
-        if ( mainclass == null || mainclass.trim().length() == 0 ) {
-            log.warn("invalid config, main class was null or empty");
-            valid = false;
+            valid = logInvalidConfig("group name was null or empty");
+        } else if ( jre == null || ! new File(jre).isDirectory() ) {
+            valid = logInvalidConfig("jre property is null or jre path does not exist");
+        } else if ( classpath == null ) {
+            valid = logInvalidConfig("classpath was null");
+        } else if ( mainclass == null || mainclass.trim().length() == 0 ) {
+            valid = logInvalidConfig("main class was null or empty");
         }
         return valid;
     }
 
     public String getValidationRuleDescription() {
         return "name, jre, classpath and mainclass must be set";
+    }
+
+    protected ChorusLog getLog() {
+        return log;
     }
 
     @Override
@@ -186,4 +183,5 @@ public class ProcessesConfig implements HandlerConfig {
                 ", terminateWaitTime=" + terminateWaitTime +
                 '}';
     }
+
 }

@@ -29,7 +29,9 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
+import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 /**
 * Created by IntelliJ IDEA.
@@ -37,7 +39,9 @@ import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 * Date: 18/09/12
 * Time: 08:20
 */
-public class RemotingConfig implements HandlerConfig {
+public class RemotingConfig extends AbstractHandlerConfig {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfig.class);
 
     //default protocol to jmx so we don't have to specify it if loading props from db
     private String protocol = "jmx";
@@ -55,7 +59,7 @@ public class RemotingConfig implements HandlerConfig {
         this.protocol = protocol;
     }
 
-    public String getName() {
+    public String getGroupName() {
         return name;
     }
 
@@ -96,14 +100,25 @@ public class RemotingConfig implements HandlerConfig {
     }
 
     public boolean isValid() {
-        return getHost() != null &&
-               getProtocol() != null &&
-               getName() != null &&
-               getPort() > 0;
+        boolean valid = true;
+        if ( getHost() == null || getHost().trim().length() == 0 ) {
+            valid = logInvalidConfig("host was not set");
+        } else if ( getProtocol() == null || getProtocol().trim().length() == 0) {
+            valid = logInvalidConfig("protocol was not set");
+        } else if ( getGroupName() == null || getGroupName().trim().length() == 0 ) {
+            valid = logInvalidConfig("group name was not set");
+        } else if ( getPort() <= 0 ) {
+            valid = logInvalidConfig("port was not set");
+        }
+        return valid;
     }
 
     public String getValidationRuleDescription() {
         return "host, protocol, name and port must be set";
+    }
+
+    protected ChorusLog getLog() {
+        return log;
     }
 
     public String toString() {
@@ -116,4 +131,5 @@ public class RemotingConfig implements HandlerConfig {
                 ", connectionAttemptMillis=" + connectionAttemptMillis +
                 '}';
     }
+
 }

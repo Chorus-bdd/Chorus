@@ -40,7 +40,7 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 public class TestInvalidProperty extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/features/handlerproperties/invalidproperty";
-    final int expectedExitCode = 0;  //success
+    final int expectedExitCode = 1;  //fail
 
     protected int getExpectedExitCode() {
         return expectedExitCode;

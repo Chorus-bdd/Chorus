@@ -1,0 +1,19 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/handlerproperties/invalidconfig/invalidhandlerconfig.feature
+Feature: Invalid Handler Config                                                                      
+Chorus --> INFO    - No default handler found for Feature: (Invalid Handler Config), will use built-in handlers and Uses: statements
+  Scenario: Invalid config1 Processes Properties
+Chorus --> INFO    - Processing scenario: Invalid config1 Processes Properties
+Chorus --> WARN    - Invalid ProcessesConfig config1 - main class was null or empty
+Chorus --> WARN    - Removing config1 which is not a valid Processes handler config name, jre, classpath and mainclass must be set
+    I can start a config1 process                                                            FAILED  (ProcessesHandler:415)-No configuration found for process: config1
+    And wait for config1 to terminate                                                        SKIPPED 
+  Scenario: Invalid config1 Remoting Properties
+Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties
+Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
+Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol, name and port must be set
+    I can call an exported method in config1                                                 FAILED  (RemotingHandler:192)-Failed to find MBean configuration for component: config1
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:2) (passed:0) (failed:2)
+Steps     (total:3) (passed:0) (failed:2) (undefined:0) (pending:0) (skipped:1)

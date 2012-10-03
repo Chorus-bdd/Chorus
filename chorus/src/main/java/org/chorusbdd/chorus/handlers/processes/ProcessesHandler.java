@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
+import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Destroy;

@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
+import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

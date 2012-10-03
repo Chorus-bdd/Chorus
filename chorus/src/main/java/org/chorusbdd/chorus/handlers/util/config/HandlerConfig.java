@@ -34,10 +34,17 @@ package org.chorusbdd.chorus.handlers.util.config;
  * User: Nick Ebbutt
  * Date: 21/09/12
  * Time: 08:44
+ *
+ * Interface for a handler config bean which supports validation rules
  */
 public interface HandlerConfig {
 
     boolean isValid();
 
     String getValidationRuleDescription();
+
+    /**
+     * @return the group name to which this HandlerConfig relates
+     */
+    String getGroupName();
 }
