@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.tools.swing.viewer;
 
-import org.chorusbdd.chorus.Main;
+import org.chorusbdd.chorus.Chorus;
 import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
@@ -73,9 +73,9 @@ public class ChorusViewer {
             //we are executing in standalone one off test mode
             //run the tests, adding the ChorusViewer as the execution listener
             ExecutionListener l = AwtSafeListener.getAwtInvokeLaterListener(frame, ExecutionListener.class);
-            Main chorusMain = new Main(args);
-            chorusMain.setExecutionListener(l);
-            chorusMain.run();
+            Chorus chorus = new Chorus(args);
+            chorus.setExecutionListener(l);
+            chorus.run();
         }
         setUpJmxExecutionListener();
         return success;

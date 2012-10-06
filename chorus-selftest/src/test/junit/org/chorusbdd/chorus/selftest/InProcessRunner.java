@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
-import org.chorusbdd.chorus.Main;
+import org.chorusbdd.chorus.Chorus;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.io.ByteArrayOutputStream;
@@ -74,8 +74,8 @@ public class InProcessRunner implements ChorusSelfTestRunner {
              a.setWriter(new PrintWriter(ChorusOut.out));
 
              try {
-                Main main = new Main(new String[0]);
-                success = main.run();
+                Chorus chorus = new Chorus(new String[0]);
+                success = chorus.run();
              } catch (Exception e) {
                 System.err.println("Failed while running tests in line " + e.getMessage() + e);
                 e.printStackTrace();

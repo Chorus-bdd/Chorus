@@ -76,25 +76,25 @@ public class ChorusJUnitRunner {
             //a map which holds state for this suite execution
             final Map<String, Object> executionEnvironment = new HashMap<String, Object>();
 
-            final Main chorusMain = new Main(args);
+            final Chorus chorus = new Chorus(args);
 
             final List<FeatureToken> featureTokens = new ArrayList<FeatureToken>();
             executionEnvironment.put(FEATURE_TOKEN_LIST, featureTokens);
 
             suite = new TestSuite() {
                 public void run(TestResult result) {
-                    ExecutionToken executionToken = chorusMain.startTests();
+                    ExecutionToken executionToken = chorus.startTests();
                     executionEnvironment.put(EXECUTION_TOKEN, executionToken);
                     super.run(result);
-                    chorusMain.endTests(executionToken, featureTokens);
+                    chorus.endTests(executionToken, featureTokens);
                 }
             };
 
-            for (Test test : findAllTestCasesRuntime(chorusMain, executionEnvironment)) {
+            for (Test test : findAllTestCasesRuntime(chorus, executionEnvironment)) {
                 suite.addTest(test);
             }
 
-            suite.setName(chorusMain.getSuiteName());
+            suite.setName(chorus.getSuiteName());
             return suite;
         } catch (InterpreterPropertyException e) {
           e.printStackTrace();
@@ -102,29 +102,29 @@ public class ChorusJUnitRunner {
         return suite;
     }
 
-    private static Test[] findAllTestCasesRuntime(Main chorusMain, Map<String, Object> executionEnvironment) {
+    private static Test[] findAllTestCasesRuntime(Chorus chorus, Map<String, Object> executionEnvironment) {
         //scan for all feature files specified in base config
         FeatureScanner featureScanner = new FeatureScanner();
-        List<File> featureFiles = featureScanner.getFeatureFiles(chorusMain.getFeatureFilePaths());
+        List<File> featureFiles = featureScanner.getFeatureFiles(chorus.getFeatureFilePaths());
 
         //generate a junit test to execute the interpreter for each feature file
         Test[] tests = new Test[featureFiles.size()];
         int index=0;
         for ( File f : featureFiles) {
-            tests[index++] = new ChorusTest(f, chorusMain, executionEnvironment);
+            tests[index++] = new ChorusTest(f, chorus, executionEnvironment);
         }
         return tests;
     }
 
     private static class ChorusTest extends TestCase {
         private File featureFile;
-        private Main chorusMain;
+        private Chorus chorus;
         private Map<String, Object> executionEnvironment;
 
-        public ChorusTest(File featureFile, Main chorusMain, Map<String, Object> executionEnvironment) {
+        public ChorusTest(File featureFile, Chorus chorus, Map<String, Object> executionEnvironment) {
             //To change body of created methods use File | Settings | File Templates.
             this.featureFile = featureFile;
-            this.chorusMain = chorusMain;
+            this.chorus = chorus;
             this.executionEnvironment = executionEnvironment;
         }
 
@@ -137,7 +137,7 @@ public class ChorusJUnitRunner {
             try {
                 //run using the base config filtered through a mutator which replaces the
                 //feature file paths property with the specific path for this feature file
-                List<FeatureToken> tokens = chorusMain.run(
+                List<FeatureToken> tokens = chorus.run(
                     (ExecutionToken)executionEnvironment.get(EXECUTION_TOKEN),
                     new SingleFeatureConfigMutator()
                 );

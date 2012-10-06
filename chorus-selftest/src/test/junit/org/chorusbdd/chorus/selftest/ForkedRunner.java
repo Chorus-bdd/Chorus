@@ -50,7 +50,7 @@ import java.util.Properties;
 public class ForkedRunner implements ChorusSelfTestRunner {
 
     public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) throws Exception {
-        return runForked(sysPropsForTest, "org.chorusbdd.chorus.Main", System.out, 30000);
+        return runForked(sysPropsForTest, "org.chorusbdd.Chorus", System.out, 30000);
     }
 
     public ChorusSelfTestResults runForked(Properties sysPropsForTest, String mainClass, PrintStream stdOutStream, int timeout) throws Exception {
