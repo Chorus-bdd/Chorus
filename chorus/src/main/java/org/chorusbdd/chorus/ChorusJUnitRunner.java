@@ -144,7 +144,7 @@ public class ChorusJUnitRunner {
 
                 boolean success = true;
                 for ( FeatureToken f : tokens) {
-                    success &= f.isPassed() && f.isFullyImplemented();
+                    success &= ( f.isPassed() || f.isPending() );
                 }
                 if ( ! success) {
                     testResult.addFailure(this, new AssertionFailedError("Chorus test failed"));

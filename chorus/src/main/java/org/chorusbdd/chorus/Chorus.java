@@ -95,7 +95,7 @@ public class Chorus {
             ExecutionToken t = startTests();
             List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
             endTests(t, features);
-            passed = t.isPassedAndFullyImplemented();
+            passed = t.isPassed() || t.isPending();
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
             ConfigReader.logHelp();

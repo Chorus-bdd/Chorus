@@ -165,11 +165,13 @@ public class ChorusInterpreter {
             log.debug("The following handlers will be used " + orderedHandlerClasses);
             runScenarios(executionToken, unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses);
 
-            log.trace("The feature " + (feature.isPassed() ? " passed! " : " failed! ") +
-                      " and was " + (feature.isFullyImplemented() ? "" : " not ") + " fully implemented");
+            String description = feature.isPassed() ? " passed! " : feature.isPending() ? " pending! " : " failed! ";
+            log.trace("The feature " + description);
 
             if ( feature.isPassed()) {
                 executionToken.incrementFeaturesPassed();
+            } else if ( feature.isPending() ) {
+                executionToken.incrementFeaturesPending();
             } else {
                 executionToken.incrementFeaturesFailed();
             }
@@ -221,6 +223,8 @@ public class ChorusInterpreter {
 
         if ( scenario.isPassed() ) {
             executionToken.incrementScenariosPassed();
+        } else if ( scenario.isPending()) {
+            executionToken.incrementScenariosPending();
         } else {
             executionToken.incrementScenariosFailed();
         }

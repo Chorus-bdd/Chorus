@@ -35,6 +35,12 @@ import java.util.List;
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
+ *
+ * A Feature is passed if all scenarios pass
+ *
+ * If one or more scenarios are pending and the rest pass, then the feature is pending
+ *
+ * If one or more scenarios fail, then the Feature fails
  */
 public class FeatureToken extends AbstractToken {
 
@@ -147,6 +153,23 @@ public class FeatureToken extends AbstractToken {
         boolean result = true;
         for ( ScenarioToken s : scenarios ) {
             result &= s.isPassed();
+        }
+        return result;
+    }
+
+    /**
+     * If any scenario 'failed' then the feature 'fails'
+     * otherwise feature is pending if any scenarios pending
+     */
+    public boolean isPending() {
+        boolean result = false;
+        for ( ScenarioToken s : scenarios) {
+            if ( s.isPending() ) {
+                result = true;
+            } else if ( ! s.isPassed()) {
+                result = false;
+                break;
+            }
         }
         return result;
     }

@@ -110,6 +110,10 @@ public class StepToken extends AbstractToken {
         return endState == StepEndState.PASSED || endState == StepEndState.DRYRUN;
     }
 
+    public boolean isPending() {
+        return endState == StepEndState.PENDING;
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s", type, action);

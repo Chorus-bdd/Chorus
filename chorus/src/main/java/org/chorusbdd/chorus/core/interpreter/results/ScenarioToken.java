@@ -37,6 +37,14 @@ import java.util.List;
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
+ *
+ * A Scenario passes if all its Steps pass
+ *
+ * If all steps pass until we reach a step which is marked pending the Scenario is pending
+ * (subsequent steps would be skipped)
+ *
+ * A scenario fails if we reach a step which was neither passed nor pending
+ * (i.e. step failed or was undefined)
  */
 public class ScenarioToken extends AbstractToken {
 
@@ -118,6 +126,17 @@ public class ScenarioToken extends AbstractToken {
         boolean result = true;
         for ( StepToken s : steps) {
             result &= s.isPassed();
+        }
+        return result;
+    }
+
+    public boolean isPending() {
+        boolean result = false;
+        for ( StepToken s : steps) {
+            if ( s.isPending() ) {
+                result = true;
+                break;
+            }
         }
         return result;
     }

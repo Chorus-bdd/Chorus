@@ -49,9 +49,19 @@ public interface Token extends Serializable, DeepCopy {
     boolean isFullyImplemented();
 
     /**
-     * @return true if no failures occurred, although steps may have been unimplemented, pending
+     * @return true if end state passed
      */
     boolean isPassed();
+
+    /**
+     * @return true if end state pending
+     */
+    boolean isPending();
+
+    /**
+     * @return true if end state neither passed nor pending
+     */
+    boolean isFailed();
 
     /**
      * It is useful for each token to supply an immutable id which logically
@@ -69,4 +79,5 @@ public interface Token extends Serializable, DeepCopy {
      * @return an immutable id representing this token
      */
     long getTokenId();
+
 }

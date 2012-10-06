@@ -45,10 +45,12 @@ public class ResultsSummary extends AbstractToken {
     private static final long serialVersionUID = 2;
 
     private int featuresPassed = 0;
+    private int featuresPending = 0;
     private int featuresFailed = 0;
 
     //stats
     private int scenariosPassed = 0;
+    private int scenariosPending = 0;
     private int scenariosFailed = 0;
     private int unavailableHandlers = 0;
 
@@ -82,6 +84,18 @@ public class ResultsSummary extends AbstractToken {
         scenariosFailed++;
     }
 
+    public void incrementScenariosPending() {
+        scenariosPending++;
+    }
+
+    public int getScenariosPending() {
+        return scenariosPending;
+    }
+
+    public int getTotalScenarios() {
+        return scenariosPassed + scenariosPending + scenariosFailed;
+    }
+
     public int getFeaturesPassed() {
        return featuresPassed;
     }
@@ -96,6 +110,18 @@ public class ResultsSummary extends AbstractToken {
 
     public void incrementFeaturesFailed() {
        featuresFailed++;
+    }
+
+    public void incrementFeaturesPending() {
+        featuresPending++;
+    }
+
+    public int getFeaturesPending() {
+        return featuresPending;
+    }
+
+    public int getTotalFeatures() {
+        return featuresPassed + featuresPending + featuresFailed;
     }
 
     public int getUnavailableHandlers() {
@@ -161,16 +187,22 @@ public class ResultsSummary extends AbstractToken {
     }
 
     public boolean isPassed() {
-        return featuresFailed == 0;
+        return featuresFailed == 0 && featuresPending == 0;
+    }
+
+    public boolean isPending() {
+        return featuresFailed == 0 && featuresPending > 0;
     }
 
     public ResultsSummary deepCopy() {
         ResultsSummary s = new ResultsSummary(getTokenId());
 
         s.featuresFailed = featuresFailed;
+        s.featuresPending = featuresPending;
         s.featuresPassed = featuresPassed;
 
         s.scenariosPassed = scenariosPassed;
+        s.scenariosPending = scenariosPending;
         s.scenariosFailed = scenariosFailed;
         s.unavailableHandlers = unavailableHandlers;
 

@@ -170,6 +170,22 @@ public class ExecutionToken extends AbstractToken {
         return resultsSummary.getFeaturesFailed();
     }
 
+    public int getScenariosPending() {
+        return resultsSummary.getScenariosPending();
+    }
+
+    public void incrementScenariosPending() {
+        resultsSummary.incrementScenariosPending();
+    }
+
+    public void incrementFeaturesPending() {
+        resultsSummary.incrementFeaturesPending();
+    }
+
+    public int getFeaturesPending() {
+        return resultsSummary.getFeaturesPending();
+    }
+
     /**
      * @return this is useful, for cases where we simplify results into three categories - passed, failed, and anything else
      */
@@ -236,10 +252,17 @@ public class ExecutionToken extends AbstractToken {
     }
 
     /**
-     * @return true, if there were no step failures (but there may have been steps undefined, pending or skipped)
+     * @return true, if all features passed
      */
     public boolean isPassed() {
         return resultsSummary.isPassed();
+    }
+
+    /**
+     * @return true, if no failures occurred but one or more features had scenarios with pending steps
+     */
+    public boolean isPending() {
+        return resultsSummary.isPending();
     }
 
     /**

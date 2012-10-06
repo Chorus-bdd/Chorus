@@ -49,27 +49,46 @@ public class PlainResultsFormatter implements ResultsFormatter {
         this.out = new PrintWriter(out, true);
     }
 
-    public void printResults(ResultsSummary summary) {
-        if (summary != null) {
-            printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
-                    summary.getFeaturesPassed() + summary.getFeaturesFailed(),
-                    summary.getFeaturesPassed(),
-                    summary.getFeaturesFailed()));
+    public void printResults(ResultsSummary s) {
+        if (s != null) {
+            //only show the pending count if there were pending steps, makes the summary more legible
+            if ( s.getFeaturesPending() > 0) {
+                printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
+                    s.getTotalFeatures(),
+                    s.getFeaturesPassed(),
+                    s.getFeaturesPending(),
+                    s.getFeaturesFailed()));
+            } else {
+                printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
+                    s.getTotalFeatures(),
+                    s.getFeaturesPassed(),
+                    s.getFeaturesFailed()));
+            }
 
-            //print scenarios summary
-            printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
-                    summary.getScenariosPassed() + summary.getScenariosFailed(),
-                    summary.getScenariosPassed(),
-                    summary.getScenariosFailed()));
+            //only show the pending count if there were pending steps, makes the summary more legible
+            if ( s.getScenariosPending() > 0 ) {
+                //print scenarios summary
+                printMessage(String.format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
+                    s.getTotalScenarios(),
+                    s.getScenariosPassed(),
+                    s.getScenariosPending(),
+                    s.getScenariosFailed()));
+            } else {
+                //print scenarios summary
+                printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
+                    s.getTotalScenarios(),
+                    s.getScenariosPassed(),
+                    s.getScenariosFailed()));
+            }
 
             //print steps summary
             printMessage(String.format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
-                    summary.getStepsPassed() + summary.getStepsFailed() + summary.getStepsUndefined() + summary.getStepsPending() + summary.getStepsSkipped(),
-                    summary.getStepsPassed(),
-                    summary.getStepsFailed(),
-                    summary.getStepsUndefined(),
-                    summary.getStepsPending(),
-                    summary.getStepsSkipped()));
+                    s.getStepsPassed() + s.getStepsFailed() + s.getStepsUndefined() + s.getStepsPending() + s.getStepsSkipped(),
+                    s.getStepsPassed(),
+                    s.getStepsFailed(),
+                    s.getStepsUndefined(),
+                    s.getStepsPending(),
+                    s.getStepsSkipped()));
         }
     }
 
