@@ -35,11 +35,11 @@ import org.chorusbdd.chorus.core.interpreter.ExecutionListenerSupport;
 import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
 import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
 import java.io.File;

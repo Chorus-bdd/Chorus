@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
@@ -39,6 +37,7 @@ import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.handlers.util.config.source.PropertiesFilePropertySource;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

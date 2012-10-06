@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
-import org.chorusbdd.chorus.util.logging.ChorusOut;
-
 /**
 * Creaxted with IntelliJ IDEA.
 * User: Nick Ebbutt
