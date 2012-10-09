@@ -2,6 +2,14 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.4.12</versionNumber>
+        <comment>Minor fixes and enhancements</comment>
+        <change desc="Now possible to start the interpreter using more succinct org.chorusbdd.Chorus instead of org.chorusbdd.chorus.Main"/>
+        <bugfix desc="Pending steps should not cause interpreter to exit with fail status.
+        Where all tests either pass or are pending the exit code should be zero (success).
+        The point of marking a step as pending is to prevent that step causing failure"/>
+    </version>
+    <version>
         <versionNumber>1.4.11</versionNumber>
         <comment>Minor fixes and enhancements for handler property files</comment>
         <change desc="More logging when loading handler properties, logging when encountering an unsupported property"/>
