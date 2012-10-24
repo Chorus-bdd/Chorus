@@ -4,12 +4,11 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorusproject</artifactId>
     <packaging>pom</packaging>
-	<version>1.4.12</version>
+	<version>1.4.13-SNAPSHOT</version>
 	<name>Chorus BDD Project</name>
 	<modules>
 	  <module>chorus</module>
 	  <module>chorus-spring</module>
-	  <module>chorus-tools</module>
       <module>chorus-selftest</module>
 	</modules>
 </project>
