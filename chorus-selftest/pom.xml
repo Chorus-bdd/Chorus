@@ -168,13 +168,7 @@
             <version>1.4.13-SNAPSHOT</version>
         </dependency>
 		
-		<dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-tools</artifactId>
-            <version>1.4.13-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
+	    <dependency>
            <groupId>log4j</groupId>
            <artifactId>log4j</artifactId>
            <version>1.2.16</version>
