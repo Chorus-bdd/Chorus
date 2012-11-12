@@ -44,6 +44,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -78,8 +79,6 @@ public class ProcessesHandler {
 
     private final Map<String, Integer> processCounters = new HashMap<String, Integer>();
 
-    private static boolean haveCreatedLogDir = false;
-
     public static final String STARTING_JAVA_LOG_PREFIX = "About to run Java: ";
 
     private PropertiesFilePropertySource propertiesLoader;
@@ -87,6 +86,8 @@ public class ProcessesHandler {
     private Map<String, ProcessesConfig> configMap;
 
     private Map<String, String> aliasToConfigName = new HashMap<String,String>();
+
+    private FeatureLogFileManager featureLogFileManager = new FeatureLogFileManager();
 
     /**
      * Starts a new Java process using properties defined in a properties file alongside the feature file
@@ -111,46 +112,21 @@ public class ProcessesHandler {
         String stdoutLogPath = null;
         String stderrLogPath = null;
         String log4jProperties = "";
+        String featureBaseNameForLogFiles = getFeatureBaseNameForLogFiles();
 
-        //build a process name to use when naming log files
-        String processNameForLogFiles = featureFile.getName();
-        if (processNameForLogFiles.endsWith(".feature")) {
-            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
-        }
-        if (! featureToken.isConfiguration()) {
-            processNameForLogFiles = String.format("%s-%s", processNameForLogFiles, alias);
-        } else {
-            processNameForLogFiles = String.format("%s-%s-%s", processNameForLogFiles, featureToken.getConfigurationName(), alias);
-        }
+        //get the log output containing out and err streams for this process
+        ProcessLogOutput logOutput = featureLogFileManager.getLogOutput(
+            featureBaseNameForLogFiles, alias, featureDir, featureToken, processesConfig
+        );
 
-        //setting true for logging will turn on logging of the process std out and err to standard out and standard err log files
-        //otherwise this output will appear inline with the chorus interpreter process std out
-        if (processesConfig.isLogging()) {
-            //if a logs directory was provided in the config use that, or default to featureDir/logs
-            String defaultPath = featureDir.getAbsolutePath() + File.separatorChar + "logs";
-            String directoryPath = processesConfig.getLogDirectory() != null ? processesConfig.getLogDirectory() : defaultPath;
-            stdoutLogPath = String.format("%s%s%s-out.log",
-                    directoryPath,
-                    File.separator,
-                    processNameForLogFiles);
-
-            stderrLogPath = String.format("%s%s%s-err.log",
-                    directoryPath,
-                    File.separator,
-                    processNameForLogFiles);
-        }
-
-        //if there is a log4j configuration file within the local conf directory, set the log4j configuration sys property
-        //to point to this
-        String log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + "log4j.xml";
-        log.trace("looking for log4j config file at " + log4jConfigPath);
-        if ( new File(log4jConfigPath).exists()) {
-            log.debug("Found log4j config at " + log4jConfigPath + " will set -Dlog4j.configuration when starting process");
+        File log4jConfigFile = findLog4jConfigFile();
+        if ( log4jConfigFile != null && log4jConfigFile.exists()) {
+            log.debug("Found log4j config at " + log4jConfigFile.getPath() + " will set -Dlog4j.configuration when starting process");
             //makes the ${feature.dir} and ${feature.process.name} values available to the log4j config file
             log4jProperties = String.format("-Dlog4j.configuration=file:%s -Dfeature.dir=%s -Dfeature.process.name=%s",
-                log4jConfigPath,
+                log4jConfigFile.getPath(),
                 featureDir.getAbsolutePath(),
-                processNameForLogFiles
+                logOutput.getProcessFileNameBase()
             );
         }
 
@@ -194,7 +170,32 @@ public class ProcessesHandler {
                 processesConfig.getArgs()).trim();
 
         log.info(STARTING_JAVA_LOG_PREFIX + command);
-        startProcess(alias, command, stdoutLogPath, stderrLogPath);
+        startProcess(alias, command, logOutput);
+    }
+
+    private File findLog4jConfigFile() {
+        String log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + "log4j.xml";
+        log.trace("looking for log4j config file at " + log4jConfigPath);
+        File f = new File(log4jConfigPath);
+        if ( ! f.exists()) {
+            log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "log4j.xml";
+            log.trace("looking for log4j config file at " + log4jConfigPath);
+            f = new File(log4jConfigPath);
+        }
+
+        if ( f.exists()) {
+            log.trace("Found log4j config at " + f.getPath());
+        }
+        return f.exists() ? f : null;
+    }
+
+    private String getFeatureBaseNameForLogFiles() {
+        //build a process name to use when naming log files
+        String processNameForLogFiles = featureFile.getName();
+        if (processNameForLogFiles.endsWith(".feature")) {
+            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
+        }
+        return processNameForLogFiles;
     }
 
     @Step(".*start a process using script '(.*)'$")
@@ -217,37 +218,28 @@ public class ProcessesHandler {
         startScript(script, name, true);
     }
 
-    public void startScript(String script, String name, boolean logging) throws Exception {
-        String nameWithoutExtension = getScriptNameWithoutExtension(script);
-
+    public void startScript(String script, String name, final boolean logging) throws Exception {
         String command = String.format("%s%s%s",
-                featureDir.getAbsolutePath(),
-                File.separatorChar,
-                script);
+            featureDir.getAbsolutePath(),
+            File.separatorChar,
+            script);
 
-        String stdoutLogPath = null;
-        String stderrLogPath = null;
-        if (logging) {
-            stdoutLogPath = String.format("%s%slogs%s%s-out.log",
-                    featureDir.getAbsolutePath(),
-                    File.separatorChar,
-                    File.separatorChar,
-                    script);
-            stderrLogPath = String.format("%s%slogs%s%s-err.log",
-                    featureDir.getAbsolutePath(),
-                    File.separatorChar,
-                    File.separatorChar,
-                    script);
-        }
+        // We have a problem since many of the ProcessesConfig properties which are mandatory for java processes are
+        // not suitable for scripts. So presently we have to mock up a ProcessesConfig for scripts and it's therefore
+        // not presently possible to configure scripts via process properties, defaults will apply
+        // TODO - support process properties for scripts (validation to check the process type?)
+        ProcessesConfig c = new ProcessesConfig() {
+            public boolean isLogging() {
+                return logging;
+            }
+        };
+
+        String featureBaseNameForLogFiles = getFeatureBaseNameForLogFiles();
+        ProcessLogOutput l = featureLogFileManager.getLogOutput(featureBaseNameForLogFiles, name, featureDir, featureToken, c);
 
         log.debug("About to run script: " + command);
-        startProcess(name, command, stdoutLogPath, stderrLogPath);
+        startProcess(name, command, l);
     }
-
-    private String getScriptNameWithoutExtension(String script) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
-    }
-
 
     @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
     public void stopProcess(String alias) {
@@ -342,7 +334,17 @@ public class ProcessesHandler {
     public void destroy() {
         Set<String> processNames = new HashSet<String>(processes.keySet());
         for (String name : processNames) {
-            stopProcess(name);
+            try {
+                stopProcess(name);
+            } catch (Exception e) {
+                log.warn("Error when stopping process named " + name, e);
+            }
+        }
+
+        try {
+            featureLogFileManager.destroy();
+        } catch (Exception e) {
+            log.warn("Error when closing log file streams", e);
         }
     }
 
@@ -389,17 +391,10 @@ public class ProcessesHandler {
         return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
     }
 
-    private ProcessHandlerProcess startProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
-
-        //check the default processes' logs directory exists
-        if (stdoutLogPath != null || stderrLogPath != null && !haveCreatedLogDir) {
-            String logDirPath = String.format("%s%slogs", featureDir.getAbsolutePath(), File.separatorChar);
-            new File(logDirPath).mkdir();
-            haveCreatedLogDir = true;
-        }
+    private ProcessHandlerProcess startProcess(String name, String command, ProcessLogOutput logOutput) throws Exception {
 
         // have to redirect/consume stdout/stderr of child process to prevent it deadlocking
-        ProcessHandlerProcess child = new ProcessHandlerProcess(name, command, stdoutLogPath, stderrLogPath);
+        ProcessHandlerProcess child = new ProcessHandlerProcess(name, command, logOutput);
         processes.put(name, child);
         return child;
     }

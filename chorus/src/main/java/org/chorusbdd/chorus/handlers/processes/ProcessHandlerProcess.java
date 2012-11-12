@@ -33,9 +33,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.*;
 
 /**
 * Created with IntelliJ IDEA.
@@ -52,7 +50,7 @@ public class ProcessHandlerProcess {
     private ProcessRedirector outRedirector;
     private ProcessRedirector errRedirector;
 
-    public ProcessHandlerProcess(String name, String command, String stdoutLogPath, String stderrLogPath) throws Exception {
+    public ProcessHandlerProcess(String name, String command, ProcessLogOutput logOutput) throws Exception {
         this.process = Runtime.getRuntime().exec(command);
 
         InputStream processOutStream = process.getInputStream();
@@ -60,17 +58,15 @@ public class ProcessHandlerProcess {
         log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
 
         //if there are no log paths set, redirect the process output to appear inline with the chorus interpreter std out/err
-        if (null == stdoutLogPath) {
-            this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
-        } else {
-            PrintStream out = new PrintStream(new FileOutputStream(stdoutLogPath), true);
+        if ( logOutput.isLogging()) {
+            PrintStream out = new PrintStream(logOutput.getStdoutStream(), true);
             this.outRedirector = new ProcessRedirector(processOutStream, true, out);
-        }
-        if (null == stderrLogPath) {
-            this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
-        } else {
-            PrintStream err = new PrintStream(new FileOutputStream(stderrLogPath), true);
+
+            PrintStream err = new PrintStream(logOutput.getStderrStream(), true);
             this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
+        } else {
+            this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
+            this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
         }
 
         Thread outThread = new Thread(outRedirector, name + "-stdout");

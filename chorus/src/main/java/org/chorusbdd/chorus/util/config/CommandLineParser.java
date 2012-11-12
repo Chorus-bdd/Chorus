@@ -71,7 +71,8 @@ public class CommandLineParser extends AbstractConfigSource {
             //having checked the first char is a -, we now have to strip it
             //otherwise end up with a first "" token following the split - not sure that's correct behaviour from split
             allargs = allargs.substring(1);
-            String[] splitParameterList = allargs.split("-");
+            //hyphens may exist within paths so only split by those which have preceding empty space
+            String[] splitParameterList = allargs.split(" -");
 
             for ( String parameterList : splitParameterList) {
 

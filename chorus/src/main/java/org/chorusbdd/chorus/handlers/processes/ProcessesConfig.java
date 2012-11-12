@@ -57,6 +57,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private int debugPort = -1;
     private int terminateWaitTime = 30;
     private String logDirectory;
+    private boolean appendToLogs;
 
     public String getGroupName() {
         return name;
@@ -144,6 +145,14 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public void setLogDirectory(String logDirectory) {
         this.logDirectory = logDirectory;
+    }
+
+    public boolean isAppendToLogs() {
+        return appendToLogs;
+    }
+
+    public void setAppendToLogs(boolean appendToLogs) {
+        this.appendToLogs = appendToLogs;
     }
 
     public boolean isValid() {
