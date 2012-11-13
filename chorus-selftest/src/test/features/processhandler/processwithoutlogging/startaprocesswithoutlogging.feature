@@ -2,7 +2,9 @@ Uses: Processes
 
 Feature: Start A Process Without Logging
 
-  Test that we can use the Processes handler to start a process and if we don't specify logging property or set it to false then the standard out/err from the process appears inline with the interpreter std out and err
+  Test that we can use the Processes handler to start a process and if we don't specify logging property
+  or set it to false then the standard out/err from the process appears inline with the interpreter std
+  out and err
 
   Scenario: Start a Single Java Process
     Given Chorus is working properly
