@@ -66,7 +66,6 @@ if [ -f ./releaseScript.sh ] ; then
 fi
 fn_genReleaseScript chorus
 fn_genReleaseScript chorus-spring
-fn_genReleaseScript chorus-tools
 echo "Generated release script in ./releaseScript.sh"
 
 
@@ -99,7 +98,6 @@ fi
 
 fn_addArtifactsToTar chorus
 fn_addArtifactsToTar chorus-spring
-fn_addArtifactsToTar chorus-tools
 fn_addToTar changelist.xml
 fn_addToTar changelist.xsl
 gzip ${TARFILE}
