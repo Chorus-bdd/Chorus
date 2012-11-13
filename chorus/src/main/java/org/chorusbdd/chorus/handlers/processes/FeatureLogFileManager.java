@@ -12,18 +12,22 @@ import java.util.Map;
  * Date: 12/11/12
  * Time: 14:12
  *
- * For the lifetime of each feature, we need to maintain output streams to each process log file by log file name
- * - if a log file is reused by multiple secnario in the feature, it should not get overwritten when a new scenario starts
+ * Create log directories for features which run processes, and manage output streams to log files,
+ * according to the process configuration
  *
  * This class handles creating log directory, and creating output streams for process out and err log files.
- * It also closes the streams when the feature is complete.
- *
+ * It also closes the streams and cleans up when each scenario is complete.
  */
 public class FeatureLogFileManager {
 
     private Map<String, ProcessLogOutput> logOutputByProcessName = new HashMap<String, ProcessLogOutput>();
 
-    public ProcessLogOutput getLogOutput(String featureFileBaseName, String processAlias, File featureDir, FeatureToken featureToken, ProcessesConfig processesConfig) {
+    public ProcessLogOutput getLogOutput(File featureDir, File featureFile, FeatureToken featureToken, String processAlias, ProcessesConfig processesConfig) {
+
+       //find the feature name to use for the log files
+       String featureFileBaseName = getFeatureBaseNameForLogFiles(featureFile);
+
+       //log file base name including both feature name and process alias ( + feature config )
        String processFileNameBase;
        if (! featureToken.isConfiguration()) {
            processFileNameBase = String.format("%s-%s", featureFileBaseName, processAlias);
@@ -44,6 +48,15 @@ public class FeatureLogFileManager {
         for ( ProcessLogOutput l : logOutputByProcessName.values()) {
             l.closeStreams();
         }
+    }
+
+    private String getFeatureBaseNameForLogFiles(File featureFile) {
+        //build a process name to use when naming log files
+        String processNameForLogFiles = featureFile.getName();
+        if (processNameForLogFiles.endsWith(".feature")) {
+            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
+        }
+        return processNameForLogFiles;
     }
 
 }

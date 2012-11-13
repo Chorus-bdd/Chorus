@@ -112,11 +112,10 @@ public class ProcessesHandler {
         String stdoutLogPath = null;
         String stderrLogPath = null;
         String log4jProperties = "";
-        String featureBaseNameForLogFiles = getFeatureBaseNameForLogFiles();
 
-        //get the log output containing out and err streams for this process
+        //get the log output containing logging configuration and out and err streams for this process
         ProcessLogOutput logOutput = featureLogFileManager.getLogOutput(
-            featureBaseNameForLogFiles, alias, featureDir, featureToken, processesConfig
+            featureDir, featureFile, featureToken, alias, processesConfig
         );
 
         File log4jConfigFile = findLog4jConfigFile();
@@ -189,15 +188,6 @@ public class ProcessesHandler {
         return f.exists() ? f : null;
     }
 
-    private String getFeatureBaseNameForLogFiles() {
-        //build a process name to use when naming log files
-        String processNameForLogFiles = featureFile.getName();
-        if (processNameForLogFiles.endsWith(".feature")) {
-            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
-        }
-        return processNameForLogFiles;
-    }
-
     @Step(".*start a process using script '(.*)'$")
     public void startScript(String script) throws Exception {
         startScript(script, nextProcessName(), false);
@@ -234,8 +224,10 @@ public class ProcessesHandler {
             }
         };
 
-        String featureBaseNameForLogFiles = getFeatureBaseNameForLogFiles();
-        ProcessLogOutput l = featureLogFileManager.getLogOutput(featureBaseNameForLogFiles, name, featureDir, featureToken, c);
+        //get the log output containing logging configuration and out and err streams for this script
+        ProcessLogOutput l = featureLogFileManager.getLogOutput(
+            featureDir, featureFile, featureToken, name, c
+        );
 
         log.debug("About to run script: " + command);
         startProcess(name, command, l);

@@ -58,6 +58,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private int terminateWaitTime = 30;
     private String logDirectory;
     private boolean appendToLogs;
+    private boolean createLogDir = true; //whether to auto create
 
     public String getGroupName() {
         return name;
@@ -153,6 +154,14 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public void setAppendToLogs(boolean appendToLogs) {
         this.appendToLogs = appendToLogs;
+    }
+
+    public boolean isCreateLogDir() {
+        return createLogDir;
+    }
+
+    public void setCreateLogDir(boolean createLogDir) {
+        this.createLogDir = createLogDir;
     }
 
     public boolean isValid() {

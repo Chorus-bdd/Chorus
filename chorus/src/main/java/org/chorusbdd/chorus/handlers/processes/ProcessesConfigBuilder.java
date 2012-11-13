@@ -82,6 +82,10 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setLogging(parseBooleanProperty(value, "logging"));
             } else if ("logDirectory".equals(key)) {
                 c.setLogDirectory(value);
+            } else if ("appendToLogs".equals(key)) {
+                c.setAppendToLogs(parseBooleanProperty(value, "appendToLogs"));
+            } else if ("createLogDir".equals(key)) {
+                c.setCreateLogDir(parseBooleanProperty(value, "createLogDir"));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }

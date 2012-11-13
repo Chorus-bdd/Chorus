@@ -81,7 +81,7 @@ class ProcessLogOutput {
 
     private boolean getOrCreateLogDirectory(File logDirectory) {
         boolean logDirExists = logDirectory.exists();
-        if ( ! logDirExists) {
+        if ( ! logDirExists && processesConfig.isCreateLogDir()) {
             log.debug("Creating log directory at " + logDirectory.getPath() + " for feature " + featureToken.getName());
             logDirExists = logDirectory.mkdirs();
             if ( ! logDirExists ) {
