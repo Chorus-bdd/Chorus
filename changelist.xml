@@ -2,6 +2,16 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.4.13</versionNumber>
+        <comment>Enhancements to process logging and minor fixes and enhancements</comment>
+        <change desc="Support process property appendToLog, append to process log files instead of overwriting"/>
+        <change desc="Support process property createLogDir, turn off/on auto creation of log directory"/>
+        <change desc="log4j.xml process config can now be in local feature directory instead of in ./conf subdirectory"/>
+        <change desc="Add PolledAssertion class, a utility to remove sleeps in features by polling/waiting a limited time for an assertion to pass"/>
+        <change desc="RemotingHandler now supports steps in the form .* from componentName in addition to .* in componentName"/>
+        <change desc="Chorus Tools will now be released/maintained as a separate project"/>
+    </version>
+    <version>
         <versionNumber>1.4.12</versionNumber>
         <comment>Minor fixes and enhancements</comment>
         <change desc="Now possible to start the interpreter using more succinct org.chorusbdd.Chorus instead of org.chorusbdd.chorus.Main"/>
