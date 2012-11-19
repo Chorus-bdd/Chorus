@@ -101,7 +101,7 @@ public class RemotingHandler {
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    @Step("(.*) in ([a-zA-Z0-9_-]+)$")
+    @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
