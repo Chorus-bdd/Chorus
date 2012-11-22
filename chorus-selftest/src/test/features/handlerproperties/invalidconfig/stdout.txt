@@ -5,7 +5,7 @@ Chorus --> INFO    - No default handler found for Feature: (Invalid Handler Conf
 Chorus --> INFO    - Processing scenario: Invalid config1 Processes Properties
 Chorus --> WARN    - Invalid ProcessesConfig config1 - main class was null or empty
 Chorus --> WARN    - Removing config1 which is not a valid Processes handler config name, jre, classpath and mainclass must be set
-    I can start a config1 process                                                            FAILED  (ProcessesHandler:401)-No configuration found for process: config1
+    I can start a config1 process                                                            FAILED  (ProcessesHandler:409)-No configuration found for process: config1
     And wait for config1 to terminate                                                        SKIPPED 
   Scenario: Invalid config1 Remoting Properties
 Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties

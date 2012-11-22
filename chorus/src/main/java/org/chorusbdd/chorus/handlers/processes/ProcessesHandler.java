@@ -89,6 +89,12 @@ public class ProcessesHandler {
 
     private FeatureLogFileManager featureLogFileManager = new FeatureLogFileManager();
 
+    private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+
+    public ProcessesHandler() {
+        addShutdownHook();
+    }
+
     /**
      * Starts a new Java process using properties defined in a properties file alongside the feature file
      *
@@ -324,6 +330,8 @@ public class ProcessesHandler {
     @Destroy
     //by default stop any processes which were started during a scenario
     public void destroy() {
+        Runtime.getRuntime().removeShutdownHook(cleanupShutdownHook);
+
         Set<String> processNames = new HashSet<String>(processes.keySet());
         for (String name : processNames) {
             try {
@@ -416,5 +424,27 @@ public class ProcessesHandler {
             configMap = l.loadRemotingConfigs();
         }
         return propertiesLoader;
+    }
+
+    private void addShutdownHook() {
+        log.trace("Adding shutdown hook for ProcessHandler " + this);
+        Runtime.getRuntime().addShutdownHook(cleanupShutdownHook);
+    }
+
+    private void removeShutdownHook() {
+        log.trace("Removing shutdown hook for ProcessHandler " + this);
+        Runtime.getRuntime().removeShutdownHook(cleanupShutdownHook);
+    }
+
+    /**
+     * If shut down before a scenario completes, try as hard as we can to
+     * stop any processes under test which Chorus started, since these do not appear
+     * to die automatically with the parent in all environments
+     */
+    private class CleanupShutdownHook extends Thread {
+        public void run() {
+            log.debug("Running Cleanup on shutdown for ProcessHandler " + this);
+            ProcessesHandler.this.destroy();
+        }
     }
 }
