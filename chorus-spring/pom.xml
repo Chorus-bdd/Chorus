@@ -9,7 +9,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus-spring</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.14-SNAPSHOT</version>
+    <version>1.4.14</version>
     <name>chorus-spring</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus</artifactId>
-            <version>1.4.14-SNAPSHOT</version>
+            <version>1.4.14</version>
         </dependency>
 
         <!-- Annotations are required for @Resource, but only for jdk <= 1.6 -->

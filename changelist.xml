@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.4.14</versionNumber>
+        <comment>Minor enhancements</comment>
+        <change desc="Add shutdown hook to terminate child process under test in the event of early interpreter exit"/>
+    </version>
+    <version>
         <versionNumber>1.4.13</versionNumber>
         <comment>Enhancements to process logging and minor fixes and enhancements</comment>
         <change desc="Support process property appendToLog, append to process log files instead of overwriting"/>
