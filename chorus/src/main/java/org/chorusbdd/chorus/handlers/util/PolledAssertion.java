@@ -26,12 +26,39 @@ package org.chorusbdd.chorus.handlers.util;
  */
 public abstract class PolledAssertion {
 
+    private float timeoutSeconds = 10;     //as float to support 0.5 seconds
+    private int pollPeriodMillis = 100;
+
+    public PolledAssertion() {}
+
+    public PolledAssertion(float timeoutSeconds) {
+        this.timeoutSeconds = timeoutSeconds;
+    }
+
+    public PolledAssertion(float timeoutSeconds, int pollPeriodMillis) {
+        this.timeoutSeconds = timeoutSeconds;
+        this.pollPeriodMillis = pollPeriodMillis;
+    }
+
+    /**
+     * @return timeout period in seconds
+     */
     protected int getTimeoutSeconds() {
         return 10;
     }
 
+    /**
+     * @return millisecond period over which condition will be periodically evaluated
+     */
     protected int getPollPeriodMillis() {
         return 100;
+    }
+
+    /**
+     * @return timeout as a float which may be a fraction of a second
+     */
+    protected float getTimeout() {
+        return getTimeoutSeconds();
     }
 
     /**
@@ -46,7 +73,7 @@ public abstract class PolledAssertion {
 
     public void await() {
         int pollPeriodMillis = getPollPeriodMillis();
-        int maxAttempts = (1000 * getTimeoutSeconds()) / pollPeriodMillis;
+        int maxAttempts = (int)((1000 * getTimeout()) / pollPeriodMillis);
         boolean success = false;
         for ( int check = 1; check < maxAttempts ; check ++) {  //try maxAttempts - 1 times snaffling any errors
             try {
