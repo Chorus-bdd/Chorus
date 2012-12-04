@@ -6,39 +6,39 @@ package org.chorusbdd.chorus.handlers.util;
  * Date: 15/11/12
  * Time: 17:37
  *
- * An easy way for a Handler step method to wait for conditions to be satisfied
- * by providing Assertions which are polled until they pass or the timeout period
- * expires. This can be very useful to eliminate sleeps in features.
+ * PolledAssertion provides an easy way to wait for conditions to be satisfied, or to check
+ * conditions hold for the duration of a preset period.
  *
- * e.g.
+ * A subclass must be provided which implements the validate() method to check one or more conditions.
+ * The implementation should throw an AssertionError if conditions fail.
+ * This validate() method will be repeatedly polled
  *
- * @Step("a price was received with ID=(.*) BID=(.*) and ASK=(.*)")
- * public void checkPrices(final String id, final double bid, final double ask) {
+ * There are two main usage patterns for PolledAssertion - await() and check():
+ * polledAssertion.await(5);
+ * - wait for up to five seconds while polling for the conditions to pass
+ *
+ * polledAssertion.check(10);
+ * - check that the conditions pass for the duration of a ten second period
+ *
+ * The await feature can be very useful to eliminate sleeps in features.
+ *
+ * The check feature is useful when checking that an event does not occur within a given time frame
+ * eg. if I am not expecting to receive a message and I have a message counter which starts at
+ * zero messages. I may check for 5 seconds that my message count remains zero.
+ *
+ * e.g. wait for up to 5 seconds for a message to arrive:
+ *
+ * @Step("a message was received with ID=(.*)")
+ * public void checkMessageWasReceived(final String id) {
  *   new PolledAssertion() {
  *      protected void validate() {
- *          p = messageCache.getPrices(id);
- *          assertNotNull("The price record exists", p);
- *          assertEquals("BID is equal", bid, p.get("BID"));
- *          assertEquals("ASK is equal", ask, p.get("ASK"));
+ *          Message p = messageCache.getMessage(id);
+ *          assertNotNull("The message exists", p);
  *      }
- *   }.await();
+ *   }.await(5);
  * }
  */
 public abstract class PolledAssertion {
-
-    private float timeoutSeconds = 10;     //as float to support 0.5 seconds
-    private int pollPeriodMillis = 100;
-
-    public PolledAssertion() {}
-
-    public PolledAssertion(float timeoutSeconds) {
-        this.timeoutSeconds = timeoutSeconds;
-    }
-
-    public PolledAssertion(float timeoutSeconds, int pollPeriodMillis) {
-        this.timeoutSeconds = timeoutSeconds;
-        this.pollPeriodMillis = pollPeriodMillis;
-    }
 
     /**
      * @return timeout period in seconds
@@ -55,25 +55,31 @@ public abstract class PolledAssertion {
     }
 
     /**
-     * @return timeout as a float which may be a fraction of a second
-     */
-    protected float getTimeout() {
-        return getTimeoutSeconds();
-    }
-
-    /**
      * Subclass should implement this method to throw an AssertionError if test conditions are not satisfied
-     *
-     * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
-     * errors will be propagated and will cause test failure
      *
      * @throws AssertionError if condition is not satisfied
      */
     protected abstract void validate();
 
+    /**
+     * Wait for the assertions to pass for the duration of the timeout period
+     *
+     * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
+     * errors will be propagated and will cause test failure
+     */
     public void await() {
+        await(getTimeoutSeconds());
+    }
+
+    /**
+     * Wait for the assertions to pass for the specified time limit
+     *
+     * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
+     * errors will be propagated and will cause test failure
+     */
+    public void await(float seconds) {
         int pollPeriodMillis = getPollPeriodMillis();
-        int maxAttempts = (int)((1000 * getTimeout()) / pollPeriodMillis);
+        int maxAttempts = (int)((1000 * seconds) / pollPeriodMillis);
         boolean success = false;
         for ( int check = 1; check < maxAttempts ; check ++) {  //try maxAttempts - 1 times snaffling any errors
             try {
@@ -89,6 +95,26 @@ public abstract class PolledAssertion {
 
         if ( ! success ) {
             validate(); //this time allow any assertion errors to propagate
+        }
+    }
+
+    /**
+     * check that the assertions pass for the whole duration of the timeout period
+     */
+    public void check() {
+        check(getTimeoutSeconds());
+    }
+
+    /**
+     * check that the assertions pass for the whole duration of the period specified
+     */
+    public void check(float seconds) {
+        int pollPeriodMillis = getPollPeriodMillis();
+        int maxAttempts = (int)((1000 * seconds) / pollPeriodMillis);
+        maxAttempts = Math.max(maxAttempts, 1); //always check at least once
+        for ( int check = 0; check < maxAttempts ; check ++) {
+            validate();
+            doSleep(pollPeriodMillis);
         }
     }
 
