@@ -5,7 +5,6 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurati
 Chorus --> INFO    - Processing scenario: Config Properties Override Main Properties For Jmx Remoting
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-Exporting the handler
 Chorus --> ERROR    - Failed to connect to mBean server on (localhost:18800)
     Then I can call a step method exported by the handler in SingleHandlerExport             FAILED  Failed to connect to mBean server on (localhost:18800)
 
@@ -15,7 +14,6 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurati
 Chorus --> INFO    - Processing scenario: Config Properties Override Main Properties For Jmx Remoting
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-Exporting the handler
     Then I can call a step method exported by the handler in SingleHandlerExport             PASSED  
 
 

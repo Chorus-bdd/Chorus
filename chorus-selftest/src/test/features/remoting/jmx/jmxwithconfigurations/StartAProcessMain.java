@@ -46,7 +46,6 @@ public class StartAProcessMain {
             System.out.println(s);
         }
 
-        System.out.println("Exporting the handler");
         JmxWithConfigurationsHandler handler = new JmxWithConfigurationsHandler();
         ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
         exporter.export();
