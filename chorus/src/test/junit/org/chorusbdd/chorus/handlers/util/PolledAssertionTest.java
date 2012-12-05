@@ -46,11 +46,7 @@ public class PolledAssertionTest extends Assert {
                 protected void validate() {
                     assertTrue(condition[0]);
                 }
-
-                public int getTimeoutSeconds() {
-                    return 1;
-                }
-            }.await();
+            }.await(1);
             fail("Should have raised AssertionError");
         } catch (AssertionError e) {}
     }
