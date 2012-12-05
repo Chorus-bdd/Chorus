@@ -3,6 +3,8 @@ package org.chorusbdd.chorus.handlers.util;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nick
@@ -51,5 +53,36 @@ public class PolledAssertionTest extends Assert {
             }.await();
             fail("Should have raised AssertionError");
         } catch (AssertionError e) {}
+    }
+
+    @Test
+    public void testCheckedConditionPasses() throws Exception {
+        final boolean[] condition = {true};
+        final AtomicLong count = new AtomicLong();
+
+        new PolledAssertion() {
+            protected void validate() {
+                count.incrementAndGet();
+                assertTrue(condition[0]);
+            }
+        }.check(0.3f);
+        assertTrue("Expect count > 2", count.get() > 2);
+    }
+
+    @Test
+    public void testCheckedConditionFails() throws Exception {
+        final boolean[] condition = {false};
+        final AtomicLong count = new AtomicLong();
+
+        try {
+            new PolledAssertion() {
+                protected void validate() {
+                    count.incrementAndGet();
+                    assertTrue(condition[0]);
+                }
+            }.check(0.3f);
+        } catch (AssertionError ae) {
+        }
+        assertTrue("Expect count == 1", count.get() == 1);
     }
 }
