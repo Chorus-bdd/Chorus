@@ -39,6 +39,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.io.FileReader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,38 +58,17 @@ public class ChorusInterpreter {
     private String[] basePackages = new String[0];
     private String filterExpression;
 
-    private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
     private ExecutionListenerSupport executionListenerSupport = new ExecutionListenerSupport();
 
     private HandlerClassDiscovery handlerClassDiscovery = new HandlerClassDiscovery();
-
-    /**
-     * Defines the class which will be instantiated to perform injection of Spring context/resources
-     */
-    private final String SPRING_INJECTOR_CLASSNAME = "org.chorusbdd.chorus.spring.SpringContextInjector";
-
+    private SpringContextSupport springContextSupport = new SpringContextSupport();
 
     /**
      * Used to determine whether a scenario should be run
      */
     private final TagExpressionEvaluator tagExpressionEvaluator = new TagExpressionEvaluator();
 
-    public ChorusInterpreter() {
-        try {
-            Class c = null;
-            try {
-                c = Class.forName(SPRING_INJECTOR_CLASSNAME);
-            } catch ( ClassNotFoundException cnf ) {
-                //chorus-spring is not in classpath
-            }
-            if ( c != null) {
-                springInjector = (SpringInjector)c.newInstance();
-            }
-        } catch (Exception e) {
-            log.error("Failed to instantiate " + SPRING_INJECTOR_CLASSNAME, e);
-        }
-    }
-
+    public ChorusInterpreter() {}
 
     public List<FeatureToken> processFeatures(ExecutionToken executionToken, List<File> featureFiles) throws Exception {
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
@@ -433,27 +413,12 @@ public class ChorusInterpreter {
     private Object createAndInitHandlerInstance(Class handlerClass, File featureFile, FeatureToken featureToken) throws Exception {
         Object featureInstance = handlerClass.newInstance();
         log.trace("Created handler class " + handlerClass + " instance " + featureInstance);
-        injectSpringResources(featureInstance, featureToken);
+        springContextSupport.injectSpringResources(featureInstance, featureToken);
         injectInterpreterResources(featureInstance, featureFile, featureToken);
         return featureInstance;
     }
 
-    /**
-     * Will load a Spring context from the named @ContextConfiguration resource. Will then inject the beans
-     * into fields annotated with @Resource where the name of the bean matches the name of the field.
-     *
-     * @param handler an instance of the handler class that will be used for testing
-     */
-    private void injectSpringResources(Object handler, FeatureToken featureToken) throws Exception {
-        log.trace("Looking for SpringContext annotation on handler " + handler);
-        Class<?> handlerClass = handler.getClass();
-        SpringContext springContext = handlerClass.getAnnotation(SpringContext.class);
-        if (springContext != null) {
-            String contextFileName = springContext.value()[0];
-            log.debug("Found SpringContext annotation with value " + contextFileName  + " will inject spring context");
-            springInjector.injectSpringContext(handler, featureToken, contextFileName);
-        }
-    }
+
 
     private void injectInterpreterResources(Object handler, File featureFile, FeatureToken featureToken) {
         Class<?> featureClass = handler.getClass();
@@ -488,7 +453,7 @@ public class ChorusInterpreter {
 
     private void cleanupHandler(Object handler) throws Exception {
         log.debug("Cleaning Up Handler " + handler);
-        springInjector.disposeContext(handler);
+        springContextSupport.dispose(handler);
 
         //call any destroy methods on handler instance
         for (Method method : handler.getClass().getMethods()) {
