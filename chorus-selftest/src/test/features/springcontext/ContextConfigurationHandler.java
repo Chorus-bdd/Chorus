@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.Resource;
 
@@ -42,9 +43,9 @@ import javax.annotation.Resource;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Spring Context")
-@SpringContext("testSpringContext.xml")
-public class SpringContextHandler extends ChorusAssert {
+@Handler("Context Configuration")
+@ContextConfiguration("testSpringContext.xml")
+public class ContextConfigurationHandler extends ChorusAssert {
 
     @Resource
     private String injectedString;
@@ -52,17 +53,7 @@ public class SpringContextHandler extends ChorusAssert {
     @Resource
     private Integer injectedInteger;
 
-    @Step("Chorus is working properly")
-    public void isWorkingProperly() {
-
-    }
-
-    @Step("a spring context can be created")
-    public void canRunAFeature() {
-
-    }
-
-    @Step("resource fields are injected into springcontext handler")
+    @Step("resource fields are injected into contextconfiguration handler")
     public void resourcesAreInjected() {
         assertEquals("Resources are injected", "Hello", injectedString);
         assertEquals("Resources are injected", 999, injectedInteger.intValue());
