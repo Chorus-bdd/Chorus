@@ -6,6 +6,7 @@
         <comment>Minor enhancements</comment>
         <change desc="Support check() method which validates conditions over the whole duration of a time period in PolledAssertion"/>
         <change desc="Support setting time limit through await() parameters in PolledAssertion"/>
+        <change desc="Support for Spring's ContextConfiguration annotation is restored"/>
     </version>
     <version>
         <versionNumber>1.4.14</versionNumber>
