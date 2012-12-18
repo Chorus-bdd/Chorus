@@ -71,7 +71,7 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
             outStream = new PrintStream(new FileOutputStream(actualOutFile));
             startJmxExecutionListenerProcess(f, outStream);
             //now actually run the test, with the chorusJmxListener property set
-            super.runTest();
+            super.runTest(true, false);
         } finally {
             try {
                 outStream.flush();

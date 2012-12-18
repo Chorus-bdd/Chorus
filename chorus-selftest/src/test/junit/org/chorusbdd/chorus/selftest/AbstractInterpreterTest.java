@@ -63,7 +63,13 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     @Test
     public void runTest() throws Exception {
+        runTest(
+            AbstractInterpreterTest.runTestsInProcess,
+            AbstractInterpreterTest.runTestsForked
+        );
+    }
 
+    public void runTest(boolean runTestsInProcess, boolean runTestsForked) throws Exception {
         DefaultTestProperties sysPropsForTest = getTestSysProps(getFeaturePath());
 
         String standardOut = readToString(getStreamFromExpectedStdOutFile());

@@ -95,6 +95,6 @@ public class SystemOutExecutionListener implements ExecutionListener {
         if (showSummary) {
             formatter.printResults(testExecutionToken.getResultsSummary());
         }
-        formatter.close();
+        formatter.flush();
     }
 }

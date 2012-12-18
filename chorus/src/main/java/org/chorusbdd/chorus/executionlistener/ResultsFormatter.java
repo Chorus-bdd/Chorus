@@ -54,6 +54,6 @@ public interface ResultsFormatter {
 
     void printResults(ResultsSummary summary);
 
-    void close();
+    void flush();
 
 }
