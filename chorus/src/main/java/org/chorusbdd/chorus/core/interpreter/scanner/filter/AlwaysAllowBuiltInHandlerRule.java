@@ -38,24 +38,19 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  * Time: 18:49
  *
  * Always accept built in handler packages
- * Always deny all other org.chorusbdd.* packages, avoid scanning classes which might load optional dependencies
  */
-public class BuiltInHandlerClassFilter extends ChainableFilterRule {
+public class AlwaysAllowBuiltInHandlerRule extends ChainableFilterRule {
 
-    public BuiltInHandlerClassFilter(ClassFilter filterDelegate) {
+    public AlwaysAllowBuiltInHandlerRule(ClassFilter filterDelegate) {
         super(filterDelegate);
     }
 
-    //only look for handlers in the dedicated interpreter handler package
-    //loading other classes in the interpreter may trigger class locating of
-    //classes from optional dependencies, which we do not want to do since
-    //this would make those optional dependencies mandatory
     protected boolean shouldAccept(String className) {
         return isBuiltInHandler(className);
     }
 
     protected boolean shouldDeny(String className) {
-        return className.startsWith(ChorusConstants.CHORUS_ROOT_PACKAGE);
+        return false;
     }
 
     private boolean isBuiltInHandler(String className) {

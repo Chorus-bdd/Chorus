@@ -39,12 +39,15 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  *
  * Construct filters for handler class search
  *
- * Process for each class found on the classpath until that class is 'denied' by a rule
+ * Process for each class name found on the classpath until that class is 'accepted' or 'denied' by a rule
  *
- * 1. Deny chorus packages by package prefix, apart from special Chorus handlers package
- * 2. If the user specified package prefixes, Deny any non-chorus packages not matching those specified
- * 3. Deny handler scanning from standard jdk or library package prefixes
- * 3. Deny all classes except those with @Handler annotation
+ * 1. Accept all handlers from Chorus handlers package
+ * 2. If the user specified package prefixes, accept only those deny any others
+ * 3. Deny any other chorus packages so that we don't trigger class load of optional dependencies
+ * 4. Deny handler scanning from standard jdk or library package prefixes
+ * 5. Deny all classes except those with @Handler annotation
+ *
+ * 2 before 3 allows us to specify an extra chorus package as a handler package for chorus self testing
  */
 public class HandlerClassFilterFactory {
 
@@ -60,12 +63,15 @@ public class HandlerClassFilterFactory {
         //exclude scanning certain standard packages (e.g. core jdk packages)
         StandardPackageFilters standardPackageFilter = new StandardPackageFilters(handlerAnnotationFilter);
 
+        //deny other chorus packages from the non-standard handlers package
+        DenyOtherChorusPackagesRule denyOtherChorusPackagesRule = new DenyOtherChorusPackagesRule(standardPackageFilter);
+
         //if user has specified package prefixes, restrict to those
         String[] userPackageNames = userSpecifiedPrefixes.length == 0 ? ChorusConstants.ANY_PACKAGE : userSpecifiedPrefixes;
-        ClassFilter packagePrefixFilter = new PackagePrefixFilter(standardPackageFilter, userPackageNames);
+        ClassFilter packagePrefixFilter = new PackagePrefixFilter(denyOtherChorusPackagesRule, userPackageNames);
 
          //always permit built in handlers, deny other chorus packages
-        ClassFilter builtInHandlerClassFilter = new BuiltInHandlerClassFilter(packagePrefixFilter);
+        ClassFilter builtInHandlerClassFilter = new AlwaysAllowBuiltInHandlerRule(packagePrefixFilter);
         return builtInHandlerClassFilter;
     }
 
