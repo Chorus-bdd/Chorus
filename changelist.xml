@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.4.16</versionNumber>
+        <comment>Bugfixes</comment>
+        <bugfix desc="Fix premature closing of standard output stream which was causing some lost output when running Chorus tests as junit suites"/>
+    </version>
+    <version>
         <versionNumber>1.4.15</versionNumber>
         <comment>Minor enhancements</comment>
         <change desc="Support check() method which validates conditions over the whole duration of a time period in PolledAssertion"/>

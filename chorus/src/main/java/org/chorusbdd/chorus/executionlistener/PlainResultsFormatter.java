@@ -45,6 +45,9 @@ public class PlainResultsFormatter implements ResultsFormatter {
 
     private final PrintWriter out;
 
+    /**
+     * Create a results formatter which outputs results to the Writer provided
+     */
     public PlainResultsFormatter(Writer out) {
         this.out = new PrintWriter(out, true);
     }
@@ -116,8 +119,7 @@ public class PlainResultsFormatter implements ResultsFormatter {
         out.printf("%s%n", message);
     }
 
-    public void close() {
+    public void flush() {
         out.flush();
-        out.close();
     }
 }
