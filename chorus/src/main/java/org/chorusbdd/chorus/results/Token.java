@@ -27,37 +27,57 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.results;
+package org.chorusbdd.chorus.results;
 
-import java.util.concurrent.atomic.AtomicLong;
+import org.chorusbdd.chorus.util.DeepCopy;
+
+import java.io.Serializable;
 
 /**
- * Created by IntelliJ IDEA.
+ * Created with IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 23/05/12
- * Time: 18:20
+ * Date: 15/05/12
+ * Time: 15:12
+ *
+ * All tokens should implement DeepCopy and Serializable
  */
-public abstract class AbstractToken implements Token {
+public interface Token extends Serializable, DeepCopy {
 
-    //The token id only needs to be unique within the context of each
-    //test execution. Here it will be unique to the JVM instance which is even better
-    private static final AtomicLong lastId = new AtomicLong();
+    /**
+     * @return true if all necessary handlers and step definitions were implemented and not pending
+     */
+    boolean isFullyImplemented();
 
-    private final long tokenId;
+    /**
+     * @return true if end state passed
+     */
+    boolean isPassed();
 
-    public AbstractToken(long tokenId) {
-        this.tokenId = tokenId;
-    }
+    /**
+     * @return true if end state pending
+     */
+    boolean isPending();
 
-    public long getTokenId() {
-        return tokenId;
-    }
+    /**
+     * @return true if end state neither passed nor pending
+     */
+    boolean isFailed();
 
-    protected static long getNextId() {
-        return lastId.incrementAndGet();
-    }
+    /**
+     * It is useful for each token to supply an immutable id which logically
+     * represents this token within the context of the currently executing test suite
+     * (i.e. the current TestExecutionToken)
+     *
+     * Although other fields may be mutable (e.g. a step token once executed
+     * may be modified to represent the success/failure) the token Id should not change.
+     *
+     * This is especially helpful when during execution the token is sent by value
+     * to a remote process (e.g. the viewer), since we cannot use instance equality
+     * remotely to match two received token instances - it simplifies things greatly
+     * if the token has an id which is guaranteed not to change
+     *
+     * @return an immutable id representing this token
+     */
+    long getTokenId();
 
-    public boolean isFailed() {
-        return ! isPassed() && ! isPending();
-    }
 }

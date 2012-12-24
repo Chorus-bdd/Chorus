@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.util.config.source;
 
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

@@ -27,13 +27,37 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.results;
+package org.chorusbdd.chorus.results;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Represents the different outcomes of running a Step
- * Created by: Steve Neal
- * Date: 03/10/11
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 23/05/12
+ * Time: 18:20
  */
-public enum StepEndState {
-    PASSED, FAILED, PENDING, SKIPPED, UNDEFINED, DRYRUN
+public abstract class AbstractToken implements Token {
+
+    //The token id only needs to be unique within the context of each
+    //test execution. Here it will be unique to the JVM instance which is even better
+    private static final AtomicLong lastId = new AtomicLong();
+
+    private final long tokenId;
+
+    public AbstractToken(long tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public long getTokenId() {
+        return tokenId;
+    }
+
+    protected static long getNextId() {
+        return lastId.incrementAndGet();
+    }
+
+    public boolean isFailed() {
+        return ! isPassed() && ! isPending();
+    }
 }

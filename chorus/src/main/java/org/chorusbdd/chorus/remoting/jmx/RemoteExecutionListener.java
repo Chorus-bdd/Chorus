@@ -29,11 +29,11 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
-import org.chorusbdd.chorus.core.interpreter.results.ExecutionToken;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
-import org.chorusbdd.chorus.core.interpreter.results.StepToken;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
+import org.chorusbdd.chorus.results.ExecutionToken;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.results.StepToken;
 
 import java.util.List;
 

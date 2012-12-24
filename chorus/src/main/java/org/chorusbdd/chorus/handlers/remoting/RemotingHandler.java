@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
 import org.chorusbdd.chorus.handlers.util.config.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;

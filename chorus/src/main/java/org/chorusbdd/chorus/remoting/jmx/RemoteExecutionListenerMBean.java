@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 
 /**
  * Created with IntelliJ IDEA.

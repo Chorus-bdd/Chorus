@@ -29,13 +29,12 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.results.ScenarioToken;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 

@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.util.config.loader;
 
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfig;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.source.JdbcPropertySource;

@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.HandlerClassFilterFactory;

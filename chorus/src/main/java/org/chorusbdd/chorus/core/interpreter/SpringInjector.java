@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.results.FeatureToken;
 
 /**
  * Created with IntelliJ IDEA.

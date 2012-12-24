@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.spring;
 
 import org.chorusbdd.chorus.core.interpreter.SpringInjector;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.springframework.context.ApplicationContext;

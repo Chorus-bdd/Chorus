@@ -30,9 +30,7 @@
 package org.chorusbdd.chorus.handlers.util.config.source;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.core.interpreter.results.FeatureToken;
-import org.chorusbdd.chorus.handlers.util.config.source.PropertyGroupsSource;
-import org.chorusbdd.chorus.handlers.util.config.source.VariableReplacingPropertySource;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.junit.Test;
 
 import java.io.File;

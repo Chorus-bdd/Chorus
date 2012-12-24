@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.results;
+package org.chorusbdd.chorus.results;
 
 /**
  * Simple class that compiles a summary of a test results

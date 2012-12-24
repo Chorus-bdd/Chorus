@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ExecutionListener;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
