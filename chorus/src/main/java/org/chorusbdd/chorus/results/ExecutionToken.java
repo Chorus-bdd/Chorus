@@ -201,6 +201,10 @@ public class ExecutionToken extends AbstractToken {
         return testSuiteName;
     }
 
+    public long getExecutionStartTime() {
+        return executionStartTime;
+    }
+
     public ExecutionToken deepCopy() {
         ExecutionToken t = new ExecutionToken(
             getTokenId(), testSuiteName, executionStartTime
