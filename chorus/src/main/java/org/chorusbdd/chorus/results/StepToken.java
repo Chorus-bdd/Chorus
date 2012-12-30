@@ -35,7 +35,7 @@ package org.chorusbdd.chorus.results;
  */
 public class StepToken extends AbstractToken {
 
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
 
     private final String type;
     private final String action;
