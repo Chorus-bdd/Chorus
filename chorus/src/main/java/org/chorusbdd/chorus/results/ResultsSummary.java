@@ -42,7 +42,7 @@ package org.chorusbdd.chorus.results;
  */
 public class ResultsSummary extends AbstractToken {
 
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
 
     private int featuresPassed = 0;
     private int featuresPending = 0;
@@ -59,6 +59,8 @@ public class ResultsSummary extends AbstractToken {
     private int stepsPending = 0;
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
+
+    private long timeTaken = -1; //time taken to run the test suite in millis
 
     public ResultsSummary() {
         super(getNextId());
@@ -186,12 +188,25 @@ public class ResultsSummary extends AbstractToken {
         return unavailableHandlers + stepsUndefined + stepsPending == 0;
     }
 
-    public boolean isPassed() {
+    public EndState getEndState() {
+        return isPassed() ? EndState.PASSED :
+                isPending() ? EndState.PENDING : EndState.FAILED;
+    }
+
+    private boolean isPassed() {
         return featuresFailed == 0 && featuresPending == 0;
     }
 
-    public boolean isPending() {
+    private boolean isPending() {
         return featuresFailed == 0 && featuresPending > 0;
+    }
+
+    public long getTimeTaken() {
+        return timeTaken;
+    }
+
+    public void calculateTimeTaken(long executionStartTime) {
+        timeTaken = System.currentTimeMillis() - executionStartTime;
     }
 
     public void accept(TokenVisitor tokenVisitor) {

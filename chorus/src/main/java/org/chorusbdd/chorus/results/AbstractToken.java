@@ -56,8 +56,4 @@ public abstract class AbstractToken implements Token {
     protected static long getNextId() {
         return lastId.incrementAndGet();
     }
-
-    public boolean isFailed() {
-        return ! isPassed() && ! isPending();
-    }
 }

@@ -46,7 +46,7 @@ public class FeatureToken extends AbstractToken {
 
     public static final String BASE_CONFIGURATION = "base";
 
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
 
 
     private String name;
@@ -138,37 +138,21 @@ public class FeatureToken extends AbstractToken {
         return unavailableHandlersMessage == null;
     }
 
-    /**
-     *  @return true, if all handlers for this feature are implemented, and all scenarios/steps are fully implemented
-     */
-    public boolean isFullyImplemented() {
-        boolean result = foundAllHandlers();
-        for ( ScenarioToken s : scenarios ) {
-            result &= s.isFullyImplemented();
-        }
-        return result;
-    }
-
-    public boolean isPassed() {
-        boolean result = true;
-        for ( ScenarioToken s : scenarios ) {
-            result &= s.isPassed();
-        }
-        return result;
-    }
-
-    /**
-     * If any scenario 'failed' then the feature 'fails'
-     * otherwise feature is pending if any scenarios pending
-     */
-    public boolean isPending() {
-        boolean result = false;
+    //fail if any scenarios failed, otherwise pending if any pending, or passed
+    public EndState getEndState() {
+        EndState result = EndState.PASSED;
         for ( ScenarioToken s : scenarios) {
-            if ( s.isPending() ) {
-                result = true;
-            } else if ( ! s.isPassed()) {
-                result = false;
+            if ( s.getEndState() == EndState.FAILED) {
+                result = EndState.FAILED;
                 break;
+            }
+        }
+
+        if ( result != EndState.FAILED) {
+            for ( ScenarioToken s : scenarios) {
+                if ( s.getEndState() == EndState.PENDING) {
+                    result = EndState.PENDING;
+                }
             }
         }
         return result;

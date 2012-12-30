@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class ScenarioToken extends AbstractToken {
 
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
 
     private String name;
     private List<StepToken> steps = new ArrayList<StepToken>();
@@ -111,30 +111,14 @@ public class ScenarioToken extends AbstractToken {
         return copy;
     }
 
-    /**
-     * @return true, if all steps for the feature are fully implemented
-     */
-    public boolean isFullyImplemented() {
-        boolean result = true;
+    public EndState getEndState() {
+        EndState result = EndState.PASSED;
         for ( StepToken s : steps) {
-            result &= s.isFullyImplemented();
-        }
-        return result;
-    }
-
-    public boolean isPassed() {
-        boolean result = true;
-        for ( StepToken s : steps) {
-            result &= s.isPassed();
-        }
-        return result;
-    }
-
-    public boolean isPending() {
-        boolean result = false;
-        for ( StepToken s : steps) {
-            if ( s.isPending() ) {
-                result = true;
+            if ( s.getEndState() == StepEndState.FAILED || s.getEndState() == StepEndState.UNDEFINED ) {
+                result = EndState.FAILED;
+                break;
+            } else if ( s.getEndState() == StepEndState.PENDING  ) {
+                result = EndState.PENDING;
                 break;
             }
         }

@@ -95,8 +95,20 @@ public class TestSuite {
         return executionToken.isFullyImplemented();
     }
 
-    public boolean isPassed() {
-        return executionToken.isPassed();
+    public EndState getEndState() {
+        return executionToken.getEndState();
+    }
+
+    public long getTimeTaken() {
+        return executionToken.getTimeTaken();
+    }
+
+    public int getTotalFeatures() {
+        return executionToken.getTotalFeatures();
+    }
+
+    public int getTotalScenarios() {
+        return executionToken.getTotalScenarios();
     }
 
     public List<FeatureToken> getFeatureList() {

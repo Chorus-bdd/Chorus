@@ -44,6 +44,8 @@ public class StepToken extends AbstractToken {
     private String message = "";
     private Throwable throwable;
 
+    private long timeTaken = -1;  //time taken to run the step
+
     public StepToken(String type, String action) {
         this(getNextId(), type, action);
     }
@@ -102,16 +104,19 @@ public class StepToken extends AbstractToken {
         return endState == StepEndState.UNDEFINED || endState == StepEndState.PENDING || endState == StepEndState.SKIPPED;
     }
 
-    public boolean isFullyImplemented() {
+    public boolean isImplemented() {
         return endState != StepEndState.UNDEFINED && endState != StepEndState.PENDING;
     }
 
-    public boolean isPassed() {
-        return endState == StepEndState.PASSED || endState == StepEndState.DRYRUN;
+    /**
+     * @return time taken to run the step in milliseconds
+     */
+    public long getTimeTaken() {
+        return timeTaken;
     }
 
-    public boolean isPending() {
-        return endState == StepEndState.PENDING;
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
     }
 
     public void accept(TokenVisitor tokenVisitor) {

@@ -32,6 +32,7 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
+import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
@@ -87,7 +88,7 @@ public class Chorus {
 
     /**
      * Run interpreter using just the base configuration and the listeners provided
-     * @return true, if all tests were fully implemented and passed
+     * @return true, if all tests passed or were marked pending
      */
     public boolean run() throws Exception {
         boolean passed = false;
@@ -95,7 +96,7 @@ public class Chorus {
             ExecutionToken t = startTests();
             List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
             endTests(t, features);
-            passed = t.isPassed() || t.isPending();
+            passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
             ConfigReader.logHelp();
@@ -148,6 +149,7 @@ public class Chorus {
             List<FeatureToken> featuresThisPass = run(t, p);
             features.addAll(featuresThisPass);
         }
+        t.setTimeTaken();
         return features;
     }
 

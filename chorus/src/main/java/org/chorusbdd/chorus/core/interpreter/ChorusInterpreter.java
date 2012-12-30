@@ -146,12 +146,12 @@ public class ChorusInterpreter {
             log.debug("The following handlers will be used " + orderedHandlerClasses);
             runScenarios(executionToken, unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses);
 
-            String description = feature.isPassed() ? " passed! " : feature.isPending() ? " pending! " : " failed! ";
+            String description = feature.getEndState() == EndState.PASSED ? " passed! " : feature.getEndState() == EndState.PENDING ? " pending! " : " failed! ";
             log.trace("The feature " + description);
 
-            if ( feature.isPassed()) {
+            if ( feature.getEndState() == EndState.PASSED) {
                 executionToken.incrementFeaturesPassed();
-            } else if ( feature.isPending() ) {
+            } else if ( feature.getEndState() == EndState.PENDING ) {
                 executionToken.incrementFeaturesPending();
             } else {
                 executionToken.incrementFeaturesFailed();
@@ -202,9 +202,9 @@ public class ChorusInterpreter {
 
         runScenarioSteps(executionToken, handlerInstances, scenario);
 
-        if ( scenario.isPassed() ) {
+        if ( scenario.getEndState() == EndState.PASSED ) {
             executionToken.incrementScenariosPassed();
-        } else if ( scenario.isPending()) {
+        } else if ( scenario.getEndState() == EndState.PENDING) {
             executionToken.incrementScenariosPending();
         } else {
             executionToken.incrementScenariosFailed();
@@ -318,62 +318,7 @@ public class ChorusInterpreter {
 
             //call the method if found
             if (stepDefinitionMethodFinder.isMethodAvailable()) {
-                //setting a pending message in the step annotation implies the step is pending - we don't execute it
-                String pendingMessage = stepDefinitionMethodFinder.getMethodToCallPendingMessage();
-                if (!pendingMessage.equals(Step.NO_PENDING_MESSAGE)) {
-                    log.debug("Step has a pending message " + pendingMessage + " skipping step");
-                    step.setMessage(pendingMessage);
-                    endState = StepEndState.PENDING;
-                    executionToken.incrementStepsPending();
-                } else {
-                    if (dryRun) {
-                        log.debug("Dry Run, so not executing this step");
-                        step.setMessage("This step is OK");
-                        endState = StepEndState.DRYRUN;
-                        executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
-                    } else {
-                        log.debug("Now executing the step using method " + stepDefinitionMethodFinder.getMethodToCall());
-                        try {
-                            //call the step method using reflection
-                            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
-                                stepDefinitionMethodFinder.getInstanceToCallOn(),
-                                stepDefinitionMethodFinder.getMethodCallArgs()
-                            );
-                            log.debug("Finished executing the step, step passed, result was " + result);
-                            if (result != null) {
-                                step.setMessage(result.toString());
-                            }
-                            endState = StepEndState.PASSED;
-                            executionToken.incrementStepsPassed();
-                        } catch (InvocationTargetException e) {
-                            log.debug("Step execution failed, we hit an exception invoking the step method");
-                            //here if the method called threw an exception
-                            if (e.getTargetException() instanceof StepPendingException) {
-                                StepPendingException spe = (StepPendingException) e.getTargetException();
-                                step.setThrowable(spe);
-                                step.setMessage(spe.getMessage());
-                                endState = StepEndState.PENDING;
-                                executionToken.incrementStepsPending();
-                                log.debug("Step Pending Exception prevented execution");
-                            } else {
-                                Throwable cause = e.getCause();
-                                step.setThrowable(cause);
-                                String location = "";
-                                if ( ! (cause instanceof ChorusRemotingException) ) {
-                                    //the remoting exception contains its own location in the message
-                                    location = ExceptionHandling.getExceptionLocation(cause);
-                                }
-                                String message = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
-                                step.setMessage(location + message);
-                                endState = StepEndState.FAILED;
-                                executionToken.incrementStepsFailed();
-                                log.debug("Exception failed due to exception " + e.getMessage());
-                            }
-                        } catch (Exception e) {
-                            log.error(e);
-                        }
-                    }
-                }
+                endState = callStepMethod(executionToken, step, endState, stepDefinitionMethodFinder);
             } else {
                 log.debug("Could not find a step method definition for step " + step);
                 //no method found yet for this step
@@ -384,6 +329,69 @@ public class ChorusInterpreter {
 
         step.setEndState(endState);
         executionListenerSupport.notifyStepCompleted(executionToken, step);
+        return endState;
+    }
+
+    private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
+        //setting a pending message in the step annotation implies the step is pending - we don't execute it
+        String pendingMessage = stepDefinitionMethodFinder.getMethodToCallPendingMessage();
+        if (!pendingMessage.equals(Step.NO_PENDING_MESSAGE)) {
+            log.debug("Step has a pending message " + pendingMessage + " skipping step");
+            step.setMessage(pendingMessage);
+            endState = StepEndState.PENDING;
+            executionToken.incrementStepsPending();
+        } else {
+            if (dryRun) {
+                log.debug("Dry Run, so not executing this step");
+                step.setMessage("This step is OK");
+                endState = StepEndState.DRYRUN;
+                executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
+            } else {
+                log.debug("Now executing the step using method " + stepDefinitionMethodFinder.getMethodToCall());
+                long startTime = System.currentTimeMillis();
+                try {
+                    //call the step method using reflection
+                    Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
+                        stepDefinitionMethodFinder.getInstanceToCallOn(),
+                        stepDefinitionMethodFinder.getMethodCallArgs()
+                    );
+                    log.debug("Finished executing the step, step passed, result was " + result);
+                    if (result != null) {
+                        step.setMessage(result.toString());
+                    }
+                    endState = StepEndState.PASSED;
+                    executionToken.incrementStepsPassed();
+                } catch (InvocationTargetException e) {
+                    log.debug("Step execution failed, we hit an exception invoking the step method");
+                    //here if the method called threw an exception
+                    if (e.getTargetException() instanceof StepPendingException) {
+                        StepPendingException spe = (StepPendingException) e.getTargetException();
+                        step.setThrowable(spe);
+                        step.setMessage(spe.getMessage());
+                        endState = StepEndState.PENDING;
+                        executionToken.incrementStepsPending();
+                        log.debug("Step Pending Exception prevented execution");
+                    } else {
+                        Throwable cause = e.getCause();
+                        step.setThrowable(cause);
+                        String location = "";
+                        if ( ! (cause instanceof ChorusRemotingException) ) {
+                            //the remoting exception contains its own location in the message
+                            location = ExceptionHandling.getExceptionLocation(cause);
+                        }
+                        String message = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
+                        step.setMessage(location + message);
+                        endState = StepEndState.FAILED;
+                        executionToken.incrementStepsFailed();
+                        log.debug("Exception failed due to exception " + e.getMessage());
+                    }
+                } catch (Exception e) {
+                    log.error(e);
+                } finally {
+                    step.setTimeTaken(System.currentTimeMillis() - startTime);
+                }
+            }
+        }
         return endState;
     }
 

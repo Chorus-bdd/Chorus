@@ -64,7 +64,7 @@ import java.util.Date;
  */
 public class ExecutionToken extends AbstractToken {
 
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 3;
 
     private static final ThreadLocal<SimpleDateFormat> formatThreadLocal = new ThreadLocal<SimpleDateFormat>() {
         public SimpleDateFormat initialValue() {
@@ -205,6 +205,18 @@ public class ExecutionToken extends AbstractToken {
         return executionStartTime;
     }
 
+    public long getTimeTaken() {
+        return resultsSummary.getTimeTaken();
+    }
+
+    public int getTotalFeatures() {
+        return resultsSummary.getTotalFeatures();
+    }
+
+    public int getTotalScenarios() {
+        return resultsSummary.getTotalScenarios();
+    }
+
     public ExecutionToken deepCopy() {
         ExecutionToken t = new ExecutionToken(
             getTokenId(), testSuiteName, executionStartTime
@@ -255,18 +267,8 @@ public class ExecutionToken extends AbstractToken {
         return resultsSummary.isFullyImplemented();
     }
 
-    /**
-     * @return true, if all features passed
-     */
-    public boolean isPassed() {
-        return resultsSummary.isPassed();
-    }
-
-    /**
-     * @return true, if no failures occurred but one or more features had scenarios with pending steps
-     */
-    public boolean isPending() {
-        return resultsSummary.isPending();
+    public EndState getEndState() {
+        return resultsSummary.getEndState();
     }
 
     public void accept(TokenVisitor tokenVisitor) {
@@ -274,10 +276,7 @@ public class ExecutionToken extends AbstractToken {
         resultsSummary.accept(tokenVisitor);
     }
 
-    /**
-     * @return true, if no step failures, and no undefined or pending steps
-     */
-    public boolean isPassedAndFullyImplemented() {
-        return isPassed() && isFullyImplemented();
+    public void setTimeTaken() {
+        resultsSummary.calculateTimeTaken(executionStartTime);
     }
 }

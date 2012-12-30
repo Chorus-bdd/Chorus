@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus;
 
 import junit.framework.*;
+import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
@@ -144,7 +145,7 @@ public class ChorusJUnitRunner {
 
                 boolean success = true;
                 for ( FeatureToken f : tokens) {
-                    success &= ( f.isPassed() || f.isPending() );
+                    success &= ( f.getEndState() == EndState.PASSED || f.getEndState() == EndState.PENDING );
                 }
                 if ( ! success) {
                     testResult.addFailure(this, new AssertionFailedError("Chorus test failed"));

@@ -44,26 +44,6 @@ import java.io.Serializable;
 public interface Token extends Serializable, DeepCopy {
 
     /**
-     * @return true if all necessary handlers and step definitions were implemented and not pending
-     */
-    boolean isFullyImplemented();
-
-    /**
-     * @return true if end state passed
-     */
-    boolean isPassed();
-
-    /**
-     * @return true if end state pending
-     */
-    boolean isPending();
-
-    /**
-     * @return true if end state neither passed nor pending
-     */
-    boolean isFailed();
-
-    /**
      * It is useful for each token to supply an immutable id which logically
      * represents this token within the context of the currently executing test suite
      * (i.e. the current TestExecutionToken)
