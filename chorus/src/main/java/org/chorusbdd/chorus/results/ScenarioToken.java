@@ -141,6 +141,13 @@ public class ScenarioToken extends AbstractToken {
         return result;
     }
 
+    public void accept(TokenVisitor tokenVisitor) {
+        tokenVisitor.visit(this);
+        for ( StepToken s : steps) {
+            s.accept(tokenVisitor);
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("Scenario: %s", name);

@@ -194,6 +194,10 @@ public class ResultsSummary extends AbstractToken {
         return featuresFailed == 0 && featuresPending > 0;
     }
 
+    public void accept(TokenVisitor tokenVisitor) {
+        tokenVisitor.visit(this);
+    }
+
     public ResultsSummary deepCopy() {
         ResultsSummary s = new ResultsSummary(getTokenId());
 

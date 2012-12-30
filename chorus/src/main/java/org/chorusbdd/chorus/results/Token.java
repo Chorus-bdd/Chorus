@@ -80,4 +80,7 @@ public interface Token extends Serializable, DeepCopy {
      */
     long getTokenId();
 
+
+    public void accept(TokenVisitor tokenVisitor);
+
 }

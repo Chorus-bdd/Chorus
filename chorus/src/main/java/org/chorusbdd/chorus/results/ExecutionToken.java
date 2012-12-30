@@ -269,6 +269,11 @@ public class ExecutionToken extends AbstractToken {
         return resultsSummary.isPending();
     }
 
+    public void accept(TokenVisitor tokenVisitor) {
+        tokenVisitor.visit(this);
+        resultsSummary.accept(tokenVisitor);
+    }
+
     /**
      * @return true, if no step failures, and no undefined or pending steps
      */

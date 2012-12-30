@@ -90,11 +90,11 @@ public class TagExpressionEvaluator {
             } else if (expressionTag.startsWith("!")) {
                 String expressionTagWithoutNot = expressionTag.substring(1, expressionTag.length());
                 if (scenarioTags.contains(expressionTagWithoutNot)) {
-                    //this is a negated tag and it exsists on the scenario so don't execute
+                    //this is a negated tag and it exists on the scenario so don't execute
                     return false;
                 }
             } else {
-                throw new IllegalStateException(String.format("'%s' is not a valid tag", expressionTag));
+                throw new IllegalStateException(String.format("'%s' is not a valid tag, no @ or !@ prefix", expressionTag));
             }
         }
 

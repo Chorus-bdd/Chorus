@@ -174,6 +174,13 @@ public class FeatureToken extends AbstractToken {
         return result;
     }
 
+    public void accept(TokenVisitor tokenVisitor) {
+        tokenVisitor.visit(this);
+        for ( ScenarioToken s : scenarios) {
+            s.accept(tokenVisitor);
+        }
+    }
+
     /**
      * @return a deep copy of the feature results and all its sub tokens
      */

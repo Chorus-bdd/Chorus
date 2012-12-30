@@ -114,6 +114,10 @@ public class StepToken extends AbstractToken {
         return endState == StepEndState.PENDING;
     }
 
+    public void accept(TokenVisitor tokenVisitor) {
+        tokenVisitor.visit(this);
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s", type, action);
