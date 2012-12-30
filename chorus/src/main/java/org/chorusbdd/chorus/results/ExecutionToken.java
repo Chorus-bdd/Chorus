@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.results;
 
+import org.chorusbdd.chorus.util.NetworkUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -74,6 +76,8 @@ public class ExecutionToken extends AbstractToken {
 
     private final String testSuiteName;
     private final long executionStartTime;
+    private final String executionHost = NetworkUtils.getHostname();
+
     private ResultsSummary resultsSummary = new ResultsSummary();
 
     public ExecutionToken(String testSuiteName) {
@@ -215,6 +219,10 @@ public class ExecutionToken extends AbstractToken {
 
     public int getTotalScenarios() {
         return resultsSummary.getTotalScenarios();
+    }
+
+    public String getExecutionHost() {
+        return executionHost;
     }
 
     public ExecutionToken deepCopy() {

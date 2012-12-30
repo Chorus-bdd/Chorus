@@ -119,6 +119,10 @@ public class TestSuite {
         return executionToken;
     }
 
+    public String getExecutionHost() {
+        return executionToken.getExecutionHost();
+    }
+
     public void accept(TokenVisitor tokenVisitor) {
         executionToken.accept(tokenVisitor);
         for (FeatureToken f : featureList) {
