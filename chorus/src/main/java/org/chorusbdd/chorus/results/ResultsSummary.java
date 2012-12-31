@@ -60,7 +60,7 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
     private int stepsUndefined = 0;
     private int stepsSkipped = 0;
 
-    private long timeTaken = -1; //time taken to run the test suite in millis
+    private long timeTaken = 0; //time taken to run the test suite in millis
 
     public ResultsSummary() {
         super(getNextId());

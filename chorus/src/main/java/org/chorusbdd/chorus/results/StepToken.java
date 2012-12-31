@@ -44,7 +44,7 @@ public class StepToken extends AbstractToken {
     private String message = "";
     private Throwable throwable;
 
-    private long timeTaken = -1;  //time taken to run the step
+    private long timeTaken = 0;  //time taken to run the step
 
     public StepToken(String type, String action) {
         this(getNextId(), type, action);
