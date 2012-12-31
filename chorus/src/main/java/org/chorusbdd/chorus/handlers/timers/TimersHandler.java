@@ -50,7 +50,7 @@ public class TimersHandler {
      *
      * @param seconds the number of seconds that the thread will sleep for
      */
-    @Step(".*wait for ([0-9]*) seconds?.*")
+    @Step(".*wait (?:for )?([0-9]*) seconds?.*")
     public void waitForSeconds(int seconds) {
         try {
             Thread.sleep(seconds * 1000);
@@ -59,7 +59,7 @@ public class TimersHandler {
         }
     }
 
-    @Step(".*wait for ([0-9]*) milliseconds?.*")
+    @Step(".*wait (?:for )?([0-9]*) milliseconds?.*")
     public void waitForMilliseconds(int millis) {
         try {
             Thread.sleep(millis);
@@ -68,7 +68,7 @@ public class TimersHandler {
         }
     }
 
-    @Step(".*wait for half a second.*")
+    @Step(".*wait (?:for )?half a second.*")
     public void waitForHalfASecond() {
        try {
            Thread.sleep(500);

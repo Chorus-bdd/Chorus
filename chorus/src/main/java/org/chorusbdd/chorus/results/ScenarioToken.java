@@ -34,6 +34,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static org.chorusbdd.chorus.results.StepEndState.FAILED;
+import static org.chorusbdd.chorus.results.StepEndState.TIMEOUT;
+import static org.chorusbdd.chorus.results.StepEndState.UNDEFINED;
+
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
@@ -114,7 +118,7 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     public EndState getEndState() {
         EndState result = EndState.PASSED;
         for ( StepToken s : steps) {
-            if ( s.getEndState() == StepEndState.FAILED || s.getEndState() == StepEndState.UNDEFINED ) {
+            if ( s.inOneOf(FAILED, UNDEFINED, TIMEOUT) ) {
                 result = EndState.FAILED;
                 break;
             } else if ( s.getEndState() == StepEndState.PENDING  ) {

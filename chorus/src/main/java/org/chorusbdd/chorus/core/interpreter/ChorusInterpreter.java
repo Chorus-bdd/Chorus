@@ -56,6 +56,7 @@ public class ChorusInterpreter {
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
 
     private boolean dryRun;
+    private long scenarioTimeoutMillis = 360000;
     private String[] basePackages = new String[0];
     private String filterExpression;
 
@@ -190,7 +191,7 @@ public class ChorusInterpreter {
         }
     }
 
-    private void processScenario(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances, boolean isLastScenario, ScenarioToken scenario) throws Exception {
+    private void processScenario(final ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, File featureFile, FeatureToken feature, List<Class> orderedHandlerClasses, final List<Object> handlerInstances, boolean isLastScenario, final ScenarioToken scenario) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
 
         log.info(String.format("Processing scenario: %s", scenario.getName()));
@@ -200,7 +201,15 @@ public class ChorusInterpreter {
 
         addHandlerInstances(unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses, handlerInstances);
 
-        runScenarioSteps(executionToken, handlerInstances, scenario);
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                runScenarioSteps(executionToken, handlerInstances, scenario);
+            }
+        });
+        t.start();
+        t.join(scenarioTimeoutMillis);
+
+        timeoutIfStillRunning(scenario, t);
 
         if ( scenario.getEndState() == EndState.PASSED ) {
             executionToken.incrementScenariosPassed();
@@ -221,6 +230,33 @@ public class ChorusInterpreter {
         }
 
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
+    }
+
+    private void timeoutIfStillRunning(ScenarioToken scenario, Thread t) throws InterruptedException {
+        if ( t.isAlive()) {
+            log.warn("Scenario " + scenario.getName() + " timed out after " + scenarioTimeoutMillis + " millis, will interrupt");
+            t.interrupt(); //first try to interrupt to see if this can unblock/fail the scenario
+            Thread.sleep(1000);
+            if ( t.isAlive()) {
+                log.warn("Interrupting scenario thread failed to kill it, will stop scenario thread");
+                //no choice now but to force kill the scenario thread
+                t.stop();
+            }
+            timeoutRemainingSteps(scenario);
+        }
+    }
+
+    private void timeoutRemainingSteps(ScenarioToken scenario) {
+        Iterator<StepToken> i = scenario.getSteps().iterator();
+        while(i.hasNext()) {
+            StepToken s = i.next();
+            //set any unprocessed steps to TIMEOUT
+            //since we interrupted or killed the thread, always set the final step to TIMEOUT even if it somehow
+            //achieved a valid end state - that end state may not be reliable and we want at least one step to show timeout for visibility in results
+            if ( s == null || s.getEndState() == StepEndState.SKIPPED || ! i.hasNext() ) {
+                s.setEndState(StepEndState.TIMEOUT);
+            }
+        }
     }
 
     private boolean runScenarioSteps(ExecutionToken executionToken, List<Object> handlerInstances, ScenarioToken scenario) {
@@ -503,4 +539,7 @@ public class ChorusInterpreter {
         return executionListenerSupport.removeExecutionListener(listeners);
     }
 
+    public void setScenarioTimeoutMillis(long scenarioTimeoutMillis) {
+        this.scenarioTimeoutMillis = scenarioTimeoutMillis;
+    }
 }

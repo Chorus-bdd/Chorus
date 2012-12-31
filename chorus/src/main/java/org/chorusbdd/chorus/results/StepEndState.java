@@ -35,5 +35,33 @@ package org.chorusbdd.chorus.results;
  * Date: 03/10/11
  */
 public enum StepEndState {
-    PASSED, FAILED, PENDING, SKIPPED, UNDEFINED, DRYRUN
+    /**
+     * Step passed
+     */
+    PASSED,
+    /**
+     * Step failed
+     */
+    FAILED,
+    /**
+     * Steps which have been annotated to indicate handler implementation is not yet provided.
+     * Pending steps do not fail the tests, whereas undefined steps do
+     */
+    PENDING,
+    /**
+     * Sn error or pending of a previous step will cause subsequent steps to be skipped
+     */
+    SKIPPED,
+    /**
+     * Steps for which no handler method could be identified.
+     */
+    UNDEFINED,
+    /**
+     * In a dry run we identify the handler methods but don't actually execute them
+     */
+    DRYRUN,
+    /**
+     * If a scenario times out, any steps not completed will end with TIMEOUT state
+     */
+    TIMEOUT
 }
