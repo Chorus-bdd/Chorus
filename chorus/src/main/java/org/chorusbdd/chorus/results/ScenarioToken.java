@@ -46,7 +46,7 @@ import java.util.List;
  * A scenario fails if we reach a step which was neither passed nor pending
  * (i.e. step failed or was undefined)
  */
-public class ScenarioToken extends AbstractToken {
+public class ScenarioToken extends AbstractToken implements PassPendingFailToken {
 
     private static final long serialVersionUID = 3;
 

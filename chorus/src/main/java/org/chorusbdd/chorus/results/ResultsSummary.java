@@ -40,7 +40,7 @@ package org.chorusbdd.chorus.results;
  * Created by: Steve Neal
  * Date: 16/11/11
  */
-public class ResultsSummary extends AbstractToken {
+public class ResultsSummary extends AbstractToken implements PassPendingFailToken {
 
     private static final long serialVersionUID = 3;
 

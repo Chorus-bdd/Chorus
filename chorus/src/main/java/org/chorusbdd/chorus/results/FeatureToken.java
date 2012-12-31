@@ -42,7 +42,7 @@ import java.util.List;
  *
  * If one or more scenarios fail, then the Feature fails
  */
-public class FeatureToken extends AbstractToken {
+public class FeatureToken extends AbstractToken implements PassPendingFailToken {
 
     public static final String BASE_CONFIGURATION = "base";
 

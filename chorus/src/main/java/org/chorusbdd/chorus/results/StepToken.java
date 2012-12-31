@@ -96,12 +96,15 @@ public class StepToken extends AbstractToken {
         this.throwable = throwable;
     }
 
-    /**
-     * Useful where we show step results as one of three categories, passed, failed, and anything else in between
-     * this means that 'dry run' also counts as passed
-     */
-    public boolean isUndefinedPendingOrSkipped() {
-        return endState == StepEndState.UNDEFINED || endState == StepEndState.PENDING || endState == StepEndState.SKIPPED;
+    public boolean inOneOf(StepEndState... states) {
+        boolean result = false;
+        for ( StepEndState s : states) {
+            if ( s == getEndState()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     public boolean isImplemented() {

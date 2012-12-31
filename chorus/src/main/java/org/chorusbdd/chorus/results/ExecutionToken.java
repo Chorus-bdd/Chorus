@@ -64,7 +64,7 @@ import java.util.Date;
  * TODO - add more information, eg. classpath, params to the interpreter?
  * Might be nice to be able to check these in the results post testing
  */
-public class ExecutionToken extends AbstractToken {
+public class ExecutionToken extends AbstractToken implements PassPendingFailToken {
 
     private static final long serialVersionUID = 3;
 
@@ -225,6 +225,26 @@ public class ExecutionToken extends AbstractToken {
         return executionHost;
     }
 
+    /**
+     * @return true, if all scenarios and steps were implemented and not pending
+     */
+    public boolean isFullyImplemented() {
+        return resultsSummary.isFullyImplemented();
+    }
+
+    public EndState getEndState() {
+        return resultsSummary.getEndState();
+    }
+
+    public void accept(TokenVisitor tokenVisitor) {
+        tokenVisitor.visit(this);
+        resultsSummary.accept(tokenVisitor);
+    }
+
+    public void setTimeTaken() {
+        resultsSummary.calculateTimeTaken(executionStartTime);
+    }
+
     public ExecutionToken deepCopy() {
         ExecutionToken t = new ExecutionToken(
             getTokenId(), testSuiteName, executionStartTime
@@ -267,24 +287,4 @@ public class ExecutionToken extends AbstractToken {
         return result;
     }
 
-
-    /**
-     * @return true, if all scenarios and steps were implemented and not pending
-     */
-    public boolean isFullyImplemented() {
-        return resultsSummary.isFullyImplemented();
-    }
-
-    public EndState getEndState() {
-        return resultsSummary.getEndState();
-    }
-
-    public void accept(TokenVisitor tokenVisitor) {
-        tokenVisitor.visit(this);
-        resultsSummary.accept(tokenVisitor);
-    }
-
-    public void setTimeTaken() {
-        resultsSummary.calculateTimeTaken(executionStartTime);
-    }
 }
