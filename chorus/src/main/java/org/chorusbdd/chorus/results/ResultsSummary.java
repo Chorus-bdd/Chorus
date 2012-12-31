@@ -230,6 +230,8 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         s.stepsPending = stepsPending;
         s.stepsUndefined = stepsUndefined;
         s.stepsSkipped = stepsSkipped;
+
+        s.timeTaken = timeTaken;
         return s;
     }
 

@@ -76,22 +76,23 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
 
     private final String testSuiteName;
     private final long executionStartTime;
-    private final String executionHost = NetworkUtils.getHostname();
+    private final String executionHost;
 
     private ResultsSummary resultsSummary = new ResultsSummary();
 
     public ExecutionToken(String testSuiteName) {
-        this(getNextId(), testSuiteName, System.currentTimeMillis());
+        this(getNextId(), testSuiteName, System.currentTimeMillis(), NetworkUtils.getHostname());
     }
 
     public ExecutionToken(String testSuiteName, long executionStartTime) {
-        this(getNextId(), testSuiteName, executionStartTime);
+        this(getNextId(), testSuiteName, executionStartTime, NetworkUtils.getHostname());
     }
 
-    private ExecutionToken(long id, String testSuiteName, long executionStartTime) {
+    private ExecutionToken(long id, String testSuiteName, long executionStartTime, String executionHost) {
         super(id);
         this.testSuiteName = testSuiteName;
         this.executionStartTime = executionStartTime;
+        this.executionHost = executionHost;
     }
 
     public int getScenariosPassed() {
@@ -247,7 +248,7 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
 
     public ExecutionToken deepCopy() {
         ExecutionToken t = new ExecutionToken(
-            getTokenId(), testSuiteName, executionStartTime
+            getTokenId(), testSuiteName, executionStartTime, executionHost
         );
         t.resultsSummary = resultsSummary.deepCopy();
         return t;

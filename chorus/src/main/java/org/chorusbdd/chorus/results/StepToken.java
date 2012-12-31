@@ -56,14 +56,6 @@ public class StepToken extends AbstractToken {
         this.action = action;
     }
 
-    public StepToken deepCopy() {
-        StepToken copy = new StepToken(getTokenId(), this.type, this.action);
-        copy.endState = this.endState;
-        copy.message = this.message;
-        copy.throwable = this.throwable;
-        return copy;
-    }
-
     public String getType() {
         return type;
     }
@@ -124,6 +116,15 @@ public class StepToken extends AbstractToken {
 
     public void accept(TokenVisitor tokenVisitor) {
         tokenVisitor.visit(this);
+    }
+
+    public StepToken deepCopy() {
+        StepToken copy = new StepToken(getTokenId(), this.type, this.action);
+        copy.endState = this.endState;
+        copy.message = this.message;
+        copy.throwable = this.throwable;
+        copy.timeTaken = this.timeTaken;
+        return copy;
     }
 
     @Override
