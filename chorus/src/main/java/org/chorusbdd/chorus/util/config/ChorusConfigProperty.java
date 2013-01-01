@@ -76,8 +76,10 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     "The log level to be used by Chorus' built in log provider"),
 
     LOG_PROVIDER("-logProvider", "-p", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-p org.chorusbdd.chorus.util.logging.StandardOutLogProvider",
-    "The log provider class to be used to instantiate Chorus loggers");
+    "The log provider class to be used to instantiate Chorus loggers"),
 
+    SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
+    "Number of seconds after which a scenario will timeout");
 
 
     private String switchName;

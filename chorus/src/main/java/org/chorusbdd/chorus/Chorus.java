@@ -165,6 +165,7 @@ public class Chorus {
         }
 
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
+        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
 
         //set a filter tags expression if provided
         if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {

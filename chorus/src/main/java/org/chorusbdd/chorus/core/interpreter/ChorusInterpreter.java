@@ -36,15 +36,20 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
+import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.InterruptedIOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by: Steve Neal
@@ -54,6 +59,8 @@ import java.util.*;
 public class ChorusInterpreter {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
+
+    private static final ScheduledExecutorService timeoutExcecutor = NamedExecutors.newSingleThreadScheduledExecutor("TimeoutExecutor");
 
     private boolean dryRun;
     private long scenarioTimeoutMillis = 360000;
@@ -69,6 +76,10 @@ public class ChorusInterpreter {
      * Used to determine whether a scenario should be run
      */
     private final TagExpressionEvaluator tagExpressionEvaluator = new TagExpressionEvaluator();
+    private volatile boolean interruptingOnTimeout;
+
+    private ScheduledFuture scenarioTimeoutInterrupt;
+    private ScheduledFuture scenarioTimeoutKill;
 
     public ChorusInterpreter() {}
 
@@ -201,15 +212,11 @@ public class ChorusInterpreter {
 
         addHandlerInstances(unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses, handlerInstances);
 
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                runScenarioSteps(executionToken, handlerInstances, scenario);
-            }
-        });
-        t.start();
-        t.join(scenarioTimeoutMillis);
+        createTimeoutTasks(scenario, Thread.currentThread()); //will interrupt or eventually kill thread if blocked
 
-        timeoutIfStillRunning(scenario, t);
+        runScenarioSteps(executionToken, handlerInstances, scenario);
+
+        stopTimeoutTasks();
 
         if ( scenario.getEndState() == EndState.PASSED ) {
             executionToken.incrementScenariosPassed();
@@ -232,30 +239,38 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 
-    private void timeoutIfStillRunning(ScenarioToken scenario, Thread t) throws InterruptedException {
-        if ( t.isAlive()) {
-            log.warn("Scenario " + scenario.getName() + " timed out after " + scenarioTimeoutMillis + " millis, will interrupt");
-            t.interrupt(); //first try to interrupt to see if this can unblock/fail the scenario
-            Thread.sleep(1000);
-            if ( t.isAlive()) {
-                log.warn("Interrupting scenario thread failed to kill it, will stop scenario thread");
-                //no choice now but to force kill the scenario thread
-                t.stop();
+    private void createTimeoutTasks(final ScenarioToken scenario, final Thread t) {
+        scenarioTimeoutInterrupt = timeoutExcecutor.schedule(new Runnable() {
+            public void run() {
+                timeoutIfStillRunning(scenario, t);
             }
-            timeoutRemainingSteps(scenario);
+        }, scenarioTimeoutMillis, TimeUnit.MILLISECONDS);
+
+        scenarioTimeoutKill = timeoutExcecutor.schedule(new Runnable() {
+            public void run() {
+                killIfStillRunning(scenario, t);
+            }
+        }, scenarioTimeoutMillis * 2, TimeUnit.MILLISECONDS);
+    }
+
+    private void stopTimeoutTasks() {
+        scenarioTimeoutInterrupt.cancel(true);
+        scenarioTimeoutKill.cancel(true);
+    }
+
+    private void timeoutIfStillRunning(ScenarioToken scenario, Thread t) {
+        if ( t.isAlive()) {
+            log.warn("Scenario timed out after " + scenarioTimeoutMillis + " millis, will interrupt");
+            interruptingOnTimeout = true;
+            t.interrupt(); //first try to interrupt to see if this can unblock/fail the scenario
         }
     }
 
-    private void timeoutRemainingSteps(ScenarioToken scenario) {
-        Iterator<StepToken> i = scenario.getSteps().iterator();
-        while(i.hasNext()) {
-            StepToken s = i.next();
-            //set any unprocessed steps to TIMEOUT
-            //since we interrupted or killed the thread, always set the final step to TIMEOUT even if it somehow
-            //achieved a valid end state - that end state may not be reliable and we want at least one step to show timeout for visibility in results
-            if ( s == null || s.getEndState() == StepEndState.SKIPPED || ! i.hasNext() ) {
-                s.setEndState(StepEndState.TIMEOUT);
-            }
+    private void killIfStillRunning(ScenarioToken scenario, Thread t) {
+        if ( t.isAlive()) {
+            log.error("Scenario did not respond to interrupt after timeout, " +
+                "will stop the interpreter thread and fail the tests");
+            t.stop(); //this will trigger a ThreadDeath exception which we should allow to propagate and will terminate the interpreter
         }
     }
 
@@ -283,8 +298,15 @@ public class ChorusInterpreter {
                 case PENDING:
                     scenarioPassed = false;//skip (don't execute) the rest of the steps
                     break;
-                case SKIPPED:
+                case TIMEOUT:
+                    scenarioPassed = false;//skip (don't execute) the rest of the steps
                     break;
+                case SKIPPED:
+                case DRYRUN:
+                    break;
+                default :
+                    throw new RuntimeException("Unhandled step state " + endState);
+
             }
         }
         return scenarioPassed;
@@ -407,6 +429,22 @@ public class ChorusInterpreter {
                         endState = StepEndState.PENDING;
                         executionToken.incrementStepsPending();
                         log.debug("Step Pending Exception prevented execution");
+                    } else if (e.getTargetException() instanceof InterruptedException || e.getTargetException() instanceof InterruptedIOException) {
+                        if ( interruptingOnTimeout ) {
+                            log.warn("Interrupted during step processing, will TIMEOUT remaining steps");
+                            interruptingOnTimeout = false;
+                            endState = StepEndState.TIMEOUT;
+                        } else {
+                            log.warn("Interrupted during step processing but this was not due to TIMEOUT, will fail step");
+                            endState = StepEndState.FAILED;
+                        }
+                        executionToken.incrementStepsFailed();
+                        step.setMessage(e.getTargetException().getClass().getSimpleName());
+                        Thread.currentThread().isInterrupted(); //clear the interrupted status
+                    } else if (e.getTargetException() instanceof ThreadDeath ) {
+                        //thread has been stopped due to scenario timeout?
+                        log.error("ThreadDeath exception during step processing, tests will terminate");
+                        throw new ThreadDeath();  //we have to rethrow to actually kill the thread
                     } else {
                         Throwable cause = e.getCause();
                         step.setThrowable(cause);
