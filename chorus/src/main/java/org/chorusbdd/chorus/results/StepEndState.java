@@ -35,6 +35,11 @@ package org.chorusbdd.chorus.results;
  * Date: 03/10/11
  */
 public enum StepEndState {
+
+    /**
+     * Initial state, before feature executes
+     */
+    NOT_RUN,
     /**
      * Step passed
      */

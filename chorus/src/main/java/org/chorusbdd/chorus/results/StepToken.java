@@ -40,7 +40,7 @@ public class StepToken extends AbstractToken {
     private final String type;
     private final String action;
 
-    private StepEndState endState;
+    private StepEndState endState = StepEndState.NOT_RUN;
     private String message = "";
     private Throwable throwable;
 
@@ -97,10 +97,6 @@ public class StepToken extends AbstractToken {
             }
         }
         return result;
-    }
-
-    public boolean isImplemented() {
-        return endState != StepEndState.UNDEFINED && endState != StepEndState.PENDING;
     }
 
     /**
