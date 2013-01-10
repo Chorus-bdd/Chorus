@@ -29,6 +29,10 @@
  */
 package org.chorusbdd.chorus.results;
 
+import org.chorusbdd.chorus.util.ExceptionHandling;
+
+import java.util.Arrays;
+
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
@@ -42,7 +46,13 @@ public class StepToken extends AbstractToken {
 
     private StepEndState endState = StepEndState.NOT_RUN;
     private String message = "";
-    private Throwable throwable;
+
+    //not serializing throwable, there's a chance remote processes will not be able deserialize
+    //and non primative fields also make it difficult to reload steps from XML
+    private transient Throwable throwable;
+
+    private String stackTrace;  //exception stack trace
+    private String exception;  //toString() on throwable
 
     private long timeTaken = 0;  //time taken to run the step
 
@@ -80,12 +90,10 @@ public class StepToken extends AbstractToken {
         this.message = message;
     }
 
-    public Throwable getThrowable() {
-        return throwable;
-    }
-
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
+        this.exception = throwable.toString();
+        this.stackTrace = ExceptionHandling.getStackTraceAsString(throwable);
     }
 
     public boolean inOneOf(StepEndState... states) {
@@ -97,6 +105,14 @@ public class StepToken extends AbstractToken {
             }
         }
         return result;
+    }
+
+    public String getStackTrace() {
+        return stackTrace;
+    }
+
+    public String getException() {
+        return exception;
     }
 
     /**
@@ -119,6 +135,8 @@ public class StepToken extends AbstractToken {
         copy.endState = this.endState;
         copy.message = this.message;
         copy.throwable = this.throwable;
+        copy.exception = this.exception;
+        copy.stackTrace = this.stackTrace;
         copy.timeTaken = this.timeTaken;
         return copy;
     }

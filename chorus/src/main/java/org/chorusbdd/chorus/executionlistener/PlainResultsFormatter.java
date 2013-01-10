@@ -111,8 +111,8 @@ public class PlainResultsFormatter implements ResultsFormatter {
         out.printf("    %-89s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
     }
 
-    public void printStackTrace(Throwable t) {
-        t.printStackTrace(out);
+    public void printStackTrace(String stackTrace) {
+        out.print(stackTrace);
     }
 
     public void printMessage(String message) {

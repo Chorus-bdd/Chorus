@@ -30,6 +30,7 @@
 package failedstep;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,4 +51,8 @@ public class TestFailedStep extends AbstractInterpreterTest {
     protected String getFeaturePath() {
         return featurePath;
     }
+
+//    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+//        sysProps.put("chorusShowErrors", "true");
+//    }
 }

@@ -29,6 +29,9 @@
  */
 package org.chorusbdd.chorus.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -66,5 +69,12 @@ public class ExceptionHandling {
            element = t.getStackTrace().length > index ? t.getStackTrace()[index] : null;
        }
        return element;
+    }
+
+    public static String getStackTraceAsString(Throwable t) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        PrintStream p = new PrintStream(bos);
+        t.printStackTrace(p);
+        return bos.toString();
     }
 }

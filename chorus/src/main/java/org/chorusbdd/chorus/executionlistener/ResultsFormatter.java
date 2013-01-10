@@ -48,7 +48,7 @@ public interface ResultsFormatter {
 
     void printStep(StepToken step);
 
-    void printStackTrace(Throwable t);
+    void printStackTrace(String stackTrace);
 
     void printMessage(String message);
 

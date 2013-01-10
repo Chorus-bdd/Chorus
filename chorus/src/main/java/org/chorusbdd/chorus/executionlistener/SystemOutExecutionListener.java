@@ -85,8 +85,8 @@ public class SystemOutExecutionListener implements ExecutionListener {
 
     public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
         formatter.printStep(step);
-        if (step.getThrowable() != null && verbose) {
-            formatter.printStackTrace(step.getThrowable());
+        if (step.getException() != null && verbose) {
+            formatter.printStackTrace(step.getStackTrace());
         }
     }
 
