@@ -102,6 +102,7 @@ public class StepToken extends AbstractToken {
             if ( s == getEndState()) {
                 result = true;
                 break;
+
             }
         }
         return result;
@@ -111,8 +112,16 @@ public class StepToken extends AbstractToken {
         return stackTrace;
     }
 
+    public void setStackTrace(String stackTrace) {
+        this.stackTrace = stackTrace;
+    }
+
     public String getException() {
         return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
     }
 
     /**

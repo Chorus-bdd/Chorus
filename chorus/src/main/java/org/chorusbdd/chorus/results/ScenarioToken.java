@@ -76,6 +76,10 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
         return steps;
     }
 
+    public void setSteps(List<StepToken> steps) {
+        this.steps = steps;
+    }
+
     public void addStep(String type, String action) {
         steps.add(new StepToken(type, action));
     }
@@ -99,6 +103,10 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
 
     public List<String> getTags() {
         return Collections.unmodifiableList(tags);
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public ScenarioToken deepCopy() {
