@@ -74,12 +74,20 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         return scenariosPassed;
     }
 
+    public void setScenariosPassed(int scenariosPassed) {
+        this.scenariosPassed = scenariosPassed;
+    }
+
     public void incrementScenariosPassed() {
         scenariosPassed++;
     }
 
     public int getScenariosFailed() {
         return scenariosFailed;
+    }
+
+    public void setScenariosFailed(int scenariosFailed) {
+        this.scenariosFailed = scenariosFailed;
     }
 
     public void incrementScenariosFailed() {
@@ -94,6 +102,10 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         return scenariosPending;
     }
 
+    public void setScenariosPending(int scenariosPending) {
+        this.scenariosPending = scenariosPending;
+    }
+
     public int getTotalScenarios() {
         return scenariosPassed + scenariosPending + scenariosFailed;
     }
@@ -102,12 +114,20 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
        return featuresPassed;
     }
 
+    public void setFeaturesPassed(int featuresPassed) {
+        this.featuresPassed = featuresPassed;
+    }
+
     public void incrementFeaturesPassed() {
        featuresPassed++;
     }
 
     public int getFeaturesFailed() {
        return featuresFailed;
+    }
+
+    public void setFeaturesFailed(int featuresFailed) {
+        this.featuresFailed = featuresFailed;
     }
 
     public void incrementFeaturesFailed() {
@@ -122,12 +142,20 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         return featuresPending;
     }
 
+    public void setFeaturesPending(int featuresPending) {
+        this.featuresPending = featuresPending;
+    }
+
     public int getTotalFeatures() {
         return featuresPassed + featuresPending + featuresFailed;
     }
 
     public int getUnavailableHandlers() {
         return unavailableHandlers;
+    }
+
+    public void setUnavailableHandlers(int unavailableHandlers) {
+        this.unavailableHandlers = unavailableHandlers;
     }
 
     public void incrementUnavailableHandlers() {
@@ -138,12 +166,20 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         return stepsPassed;
     }
 
+    public void setStepsPassed(int stepsPassed) {
+        this.stepsPassed = stepsPassed;
+    }
+
     public void incrementStepsPassed() {
         stepsPassed++;
     }
 
     public int getStepsFailed() {
         return stepsFailed;
+    }
+
+    public void setStepsFailed(int stepsFailed) {
+        this.stepsFailed = stepsFailed;
     }
 
     public void incrementStepsFailed() {
@@ -154,6 +190,10 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         return stepsPending;
     }
 
+    public void setStepsPending(int stepsPending) {
+        this.stepsPending = stepsPending;
+    }
+
     public void incrementStepsPending() {
         stepsPending++;
     }
@@ -162,12 +202,20 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
         return stepsUndefined;
     }
 
+    public void setStepsUndefined(int stepsUndefined) {
+        this.stepsUndefined = stepsUndefined;
+    }
+
     public void incrementStepsUndefined() {
         stepsUndefined++;
     }
 
     public int getStepsSkipped() {
         return stepsSkipped;
+    }
+
+    public void setStepsSkipped(int stepsSkipped) {
+        this.stepsSkipped = stepsSkipped;
     }
 
     public void incrementStepsSkipped() {
@@ -203,6 +251,10 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
 
     public long getTimeTaken() {
         return timeTaken;
+    }
+
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
     }
 
     public void calculateTimeTaken(long executionStartTime) {

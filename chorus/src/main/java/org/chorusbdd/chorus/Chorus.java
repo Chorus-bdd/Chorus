@@ -149,7 +149,7 @@ public class Chorus {
             List<FeatureToken> featuresThisPass = run(t, p);
             features.addAll(featuresThisPass);
         }
-        t.setTimeTaken();
+        t.calculateTimeTaken();
         return features;
     }
 

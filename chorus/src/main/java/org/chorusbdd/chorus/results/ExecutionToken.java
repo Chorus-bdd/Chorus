@@ -76,7 +76,7 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
 
     private final String testSuiteName;
     private final long executionStartTime;
-    private final String executionHost;
+    private String executionHost;
 
     private ResultsSummary resultsSummary = new ResultsSummary();
 
@@ -202,6 +202,10 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
         return resultsSummary;
     }
 
+    public void setResultsSummary(ResultsSummary resultsSummary) {
+        this.resultsSummary = resultsSummary;
+    }
+
     public String getTestSuiteName() {
         return testSuiteName;
     }
@@ -226,6 +230,10 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
         return executionHost;
     }
 
+    public void setExecutionHost(String executionHost) {
+        this.executionHost = executionHost;
+    }
+
     /**
      * @return true, if all scenarios and steps were implemented and not pending
      */
@@ -242,7 +250,7 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
         resultsSummary.accept(tokenVisitor);
     }
 
-    public void setTimeTaken() {
+    public void calculateTimeTaken() {
         resultsSummary.calculateTimeTaken(executionStartTime);
     }
 

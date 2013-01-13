@@ -110,6 +110,10 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
         return description.toString();
     }
 
+    public void setDescription(String description) {
+        this.description = new StringBuilder(description);
+    }
+
     public List<ScenarioToken> getScenarios() {
         return scenarios;
     }
@@ -186,11 +190,13 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (String s : usesHandlers) {
-            sb.append("Using: ").append(s).append("\n");
-        }
-        if (usesHandlers.length > 0) {
-            sb.append("\n");
+        if ( usesHandlers != null) {
+            for (String s : usesHandlers) {
+                sb.append("Using: ").append(s).append("\n");
+            }
+            if (usesHandlers.length > 0) {
+                sb.append("\n");
+            }
         }
         sb.append("Feature: ").append(name).append('\n');
         String descriptionStr = "  " + description.toString().trim().replaceAll("\n", "\n  ");
