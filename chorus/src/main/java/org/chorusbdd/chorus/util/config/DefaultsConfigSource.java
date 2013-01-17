@@ -39,7 +39,7 @@ import java.util.Map;
  * Date: 12/06/12
  * Time: 11:48
  *
- * Provide default values where a property is not yet set
+ * Provide default values for config properties
  */
 public class DefaultsConfigSource extends AbstractConfigSource {
 
@@ -50,8 +50,7 @@ public class DefaultsConfigSource extends AbstractConfigSource {
 
     public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
         for ( ConfigurationProperty p : getProperties()) {
-            //if not already present, add defaults if there are default values set for the property
-            if ( ! propertyMap.containsKey(p) && ( p.getDefaults() != null && p.getDefaults().length > 0)) {
+            if (  p.getDefaults() != null && p.getDefaults().length > 0) {
                 List<String> properties = getOrCreatePropertyList(propertyMap, p);
                 Collections.addAll(properties, p.getDefaults());
             }

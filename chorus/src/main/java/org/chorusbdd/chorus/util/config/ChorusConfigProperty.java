@@ -49,10 +49,10 @@ import java.util.List;
 public enum ChorusConfigProperty implements ConfigurationProperty {
 
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
-    "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.APPEND),
+    "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.OVERRIDE),
 
     HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "-h my.package.name",
-    "Handler package names to restrict the search for handler classes - this is optional but may speed up handler searching for larger projects", PropertySourceMode.APPEND),
+    "Handler package names to restrict the search for handler classes - this is optional but may speed up handler searching for larger projects", PropertySourceMode.OVERRIDE),
 
     DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-d (false|true)",
     "Whether to actually execute steps or just detect and log the discovery of handlers and step definitions", PropertySourceMode.OVERRIDE),
