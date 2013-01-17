@@ -147,6 +147,25 @@ public class TestConfigReader extends ChorusAssert {
         fail("Must require mandatory -f property value");
     }
 
+    @Test
+    public void appendPropertyMayBeSetFromMultipleSources() throws InterpreterPropertyException {
+        ConfigurationProperty propertyWithMinValues = new TestProperty(ChorusConfigProperty.HANDLER_PACKAGES) {
+            public PropertySourceMode getPropertySourceMode() {
+                return PropertySourceMode.APPEND;
+            }
+        };
+
+        try {
+            System.setProperty("chorusHandlerPackages", "secondvalue");
+            ConfigReader c = new ConfigReader(Collections.singletonList(propertyWithMinValues), new String[] { "-h", "onevalue" });
+            c.readConfiguration();
+            List<String> values = c.getValues(propertyWithMinValues);
+            assertEquals("property value count", 3, values.size());
+        } finally {
+            System.clearProperty("chorusHandlerPackages");
+        }
+    }
+
     private class TestProperty implements ConfigurationProperty {
 
         private ConfigurationProperty delegate;
