@@ -80,8 +80,10 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
         this.steps = steps;
     }
 
-    public void addStep(String type, String action) {
-        steps.add(new StepToken(type, action));
+    public StepToken addStep(String type, String action) {
+        StepToken s = new StepToken(type, action);
+        steps.add(s);
+        return s;
     }
 
     public void addStep(String line) {
