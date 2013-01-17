@@ -48,9 +48,6 @@ public interface ConfigSource {
     /**
      * Add to the provided propertyMap any properties available from this source
      *
-     * Where the map already contains property values under a given key, extra property values should be
-     * appended to the List
-
      * @return propertyMap, with parsed properties added
      */
     Map<ConfigurationProperty, List<String>> parseProperties(

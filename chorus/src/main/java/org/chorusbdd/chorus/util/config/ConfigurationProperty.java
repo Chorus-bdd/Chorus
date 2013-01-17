@@ -60,6 +60,8 @@ public interface ConfigurationProperty {
 
     String[] getDefaults();
 
+    PropertySourceMode getPropertySourceMode();
+
     /**
      * @return true if switchName or switchShortName matches switchName
      */

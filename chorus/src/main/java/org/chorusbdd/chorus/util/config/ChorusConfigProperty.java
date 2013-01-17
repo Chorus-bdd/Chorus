@@ -49,37 +49,37 @@ import java.util.List;
 public enum ChorusConfigProperty implements ConfigurationProperty {
 
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
-    "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively"),
+    "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.APPEND),
 
     HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "-h my.package.name",
-    "Handler package names to restrict the search for handler classes - this is optional but may speed up handler searching for larger projects"),
+    "Handler package names to restrict the search for handler classes - this is optional but may speed up handler searching for larger projects", PropertySourceMode.APPEND),
 
     DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-d (false|true)",
-    "Whether to actually execute steps or just detect and log the discovery of handlers and step definitions"),
+    "Whether to actually execute steps or just detect and log the discovery of handlers and step definitions", PropertySourceMode.OVERRIDE),
 
     SHOW_SUMMARY("-showsummary", "-s", "chorusShowSummary", false, 0, 1, new String[] {"true"},  "(?i)(false|true)", "-s (false|true)",
-    "Whether to show the closing summary of pass/fail information"),
+    "Whether to show the closing summary of pass/fail information", PropertySourceMode.OVERRIDE),
 
     TAG_EXPRESSION("-tagExpression", "-t", "chorusTagExpression", false, 1, Integer.MAX_VALUE, null, "[\\w+@\\|!\\s]+", "-t @MyTagName",
-    "One or more tags which can be used to restrict features which are executed"),
+    "One or more tags which can be used to restrict features which are executed", PropertySourceMode.OVERRIDE),
 
     JMX_LISTENER("-jmxListener", "-j", "chorusJmxListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+:\\d{2,5}", "-j myhost.mydomain:1001",
-    "Network address of an agent which will receive execution events as the interpreter runs"),
+    "Network address of an agent which will receive execution events as the interpreter runs", PropertySourceMode.APPEND),
 
     SUITE_NAME("-suiteName", "-n", "chorusSuiteName", false, 1, Integer.MAX_VALUE, new String[] {ChorusConstants.DEFAULT_SUITE_NAME}, "[\\w\\s]+", "-n My Suite Name",
-    "Name for the test suite to be run"),
+    "Name for the test suite to be run", PropertySourceMode.OVERRIDE),
 
     SHOW_ERRORS("-showErrors", "-e", "chorusShowErrors", false, 0, 1, new String[] {"false"},  "(?i)(false|true)",  "-e (false|true)",
-    "Whether stack traces should be shown in the interpreter output (rather than just a message) when step implementations throws exceptions"),
+    "Whether stack traces should be shown in the interpreter output (rather than just a message) when step implementations throws exceptions", PropertySourceMode.OVERRIDE),
 
     LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "-l (trace|debug|info|warn|error|fatal)",
-    "The log level to be used by Chorus' built in log provider"),
+    "The log level to be used by Chorus' built in log provider", PropertySourceMode.OVERRIDE),
 
     LOG_PROVIDER("-logProvider", "-p", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-p org.chorusbdd.chorus.util.logging.StandardOutLogProvider",
-    "The log provider class to be used to instantiate Chorus loggers"),
+    "The log provider class to be used to instantiate Chorus loggers", PropertySourceMode.OVERRIDE),
 
     SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
-    "Number of seconds after which a scenario will timeout");
+    "Number of seconds after which a scenario will timeout", PropertySourceMode.OVERRIDE);
 
 
     private String switchName;
@@ -92,6 +92,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     private String[] defaults;              //default values for this property if not defined by user
     private String example;                 //example property values to show to user
     private String description;
+    private PropertySourceMode propertySourceMode;
 
     private ChorusConfigProperty(String switchName,
                                  String switchShortName,
@@ -102,7 +103,8 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
                                  String[] defaults, //be be null == 'not set'
                                  String validatingExpression,
                                  String example,
-                                 String description) {
+                                 String description,
+                                 PropertySourceMode propertySourceMode) {
         this.defaults = defaults;
         this.example = example;
         this.description = description;
@@ -113,6 +115,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
         this.minValueCount = minValues;
         this.maxValueCount = maxValues;
         this.validatingExpression = validatingExpression;
+        this.propertySourceMode = propertySourceMode;
     }
 
 
@@ -165,6 +168,10 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
 
     public String getDescription() {
         return description;
+    }
+
+    public PropertySourceMode getPropertySourceMode() {
+        return propertySourceMode;
     }
 
     /**

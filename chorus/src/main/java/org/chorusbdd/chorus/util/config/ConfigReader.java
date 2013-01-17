@@ -31,10 +31,7 @@ package org.chorusbdd.chorus.util.config;
 
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,13 +49,19 @@ import java.util.regex.Pattern;
  * Configuration may be provided as switches/arguments to the process, or alternatively as System properties
  * Failing this, any defaults will apply
  *
- * The available parameters are provided as a List of ConfigurationProperty
- * Chorus has an enumeration ChorusConfigProperty which provides the config options for chorus
+ * Where a property is set in multiple sources, behaviour will depend on the PropertySourceMode for the property
+ * Where APPEND, values from each source are combined to produce a merged list
+ * Where OVERRIDE, the source with the highest priority (the last source which provided a value) will determine the value
  */
 public class ConfigReader implements ConfigProperties {
 
     private List<ConfigurationProperty> properties;
     private String[] args;
+
+    //the properties provided be each source
+    private Map<ConfigSource, Map<ConfigurationProperty, List<String>>> sourceToPropertiesMap = new HashMap<ConfigSource, Map<ConfigurationProperty, List<String>>>();
+
+    //the merged set of properties, after PropertySourceMode is applied
     private Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<ConfigurationProperty, List<String>>();
 
     //ordered list of property sources
@@ -78,20 +81,65 @@ public class ConfigReader implements ConfigProperties {
         this.properties = properties;
         this.args = args;
 
+        //where a property is in PropertySourceMode.OVERRIDE the ordering of sources here is important
+        //sys props are last since it is useful to be able to use a sys prop to override command line
+        //parameters for test suites which run as part of a component build which is checked in to source control -
+        //otherwise it is necessary to commit changes to files to achieve something simple like increasing logging
+        //to debug level. Continuous integration tools such as team city let you set a sys prop easily to do this.
         propertySources = new ConfigSource[] {
+            new DefaultsConfigSource(properties),
             new CommandLineParser(properties),
-            new SystemPropertyParser(properties),
-            new DefaultsConfigSource(properties)
+            new SystemPropertyParser(properties)
         };
     }
 
     public ConfigReader readConfiguration() throws InterpreterPropertyException {
         for ( ConfigSource s : propertySources) {
-            s.parseProperties(propertyMap, args);
+            Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<ConfigurationProperty, List<String>>();
+            propertyMap = s.parseProperties(propertyMap, args);
+            sourceToPropertiesMap.put(s, propertyMap);
         }
 
+        mergeProperties(sourceToPropertiesMap);
         validateProperties(propertyMap);
         return this;
+    }
+
+    //deermine the final set of properties according to PropertySourceMode for each property
+    private void mergeProperties(Map<ConfigSource, Map<ConfigurationProperty, List<String>>> sourceToPropertiesMap) {
+        for ( ConfigSource s : propertySources) {
+            Map<ConfigurationProperty, List<String>> properties = sourceToPropertiesMap.get(s);
+            for ( ConfigurationProperty p : properties.keySet()) {
+                List<String> valuesFromSource = properties.get(p);
+                if ( valuesFromSource != null && valuesFromSource.size() > 0 ) {
+                    List<String> vals = getOrCreatePropertyValues(p);
+                    mergeValues(valuesFromSource, p, vals);
+                }
+            }
+        }
+    }
+
+    private void mergeValues(List<String> valuesFromSource, ConfigurationProperty p, List<String> vals) {
+        switch(p.getPropertySourceMode()) {
+            case APPEND:
+                vals.addAll(valuesFromSource);
+                break;
+            case OVERRIDE:
+                vals.clear();
+                vals.addAll(valuesFromSource);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown source mode " + p.getPropertySourceMode());
+        }
+    }
+
+    private List<String> getOrCreatePropertyValues(ConfigurationProperty p) {
+        List<String> vals = propertyMap.get(p);
+        if ( vals == null) {
+            vals = new LinkedList<String>();
+            propertyMap.put(p, vals);
+        }
+        return vals;
     }
 
     public void setProperty(ConfigurationProperty property, List<String> values) {

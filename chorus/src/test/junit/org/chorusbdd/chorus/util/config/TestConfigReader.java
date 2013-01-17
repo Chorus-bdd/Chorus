@@ -202,6 +202,10 @@ public class TestConfigReader extends ChorusAssert {
         public boolean matchesSwitch(String s) {
             return delegate.matchesSwitch(s);
         }
+
+        public PropertySourceMode getPropertySourceMode() {
+            return delegate.getPropertySourceMode();
+        }
     }
 
 }
