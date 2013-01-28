@@ -5,8 +5,8 @@ Some notes on Chorus Development and testing
 
 Chorus Interpreter may be run in various modes:
 
-1. As a command line tool with a list of arguments.
-2. Launched as a standard java process from within an IDE
+1. As a java process from the command line with a list of arguments.
+2. Launched as a java process within an IDE
 2. As a JUnit test suite (One JUnit test case per feature), using the supplied ChorusJUnitRunner.
    Such a test suite may be run from within an IDE or along with other JUnit tests in a custom build process or within a continuous
    integration build runner such as Team City
