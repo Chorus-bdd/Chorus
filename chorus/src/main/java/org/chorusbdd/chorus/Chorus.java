@@ -64,7 +64,7 @@ public class Chorus {
             success = chorus.run();
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
-            ConfigReader.logHelp();
+            ChorusOut.err.print(ChorusConfigProperty.getHelpText());
         }
 
         //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
@@ -99,7 +99,7 @@ public class Chorus {
             passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
-            ConfigReader.logHelp();
+            ChorusOut.err.print(ChorusConfigProperty.getHelpText());
         } catch (Throwable t) {
             ChorusOut.err.println(t.getMessage());
             t.printStackTrace(ChorusOut.err);

@@ -2,6 +2,19 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.5.0</versionNumber>
+        <comment>New milestone release of Chorus. This release provides better support for chorus tools via enhanced interpreter result Tokens. Work is underway in the chorus tools project to
+        provide a Chorus web agent which can receive results from the interpreter and allows viewing of test suite results in the browser, along with a run history, step timings and rss feed</comment>
+        <change desc="New configuration property modes to set certain interpreter properties to override value. This allows log level to be overridden as a classpath switch, for example"/>
+        <change desc="-h handlerPackages is once more a mandatory parameter. Problems with class loading during class scanning were too often a cause of issues"/>
+        <change desc="Better logging of interpreter switches"/>
+        <change desc="More interpreter state is now available in a revised set of serializable chorus Tokens which are sent to remote execution listeners"/>
+        <change desc="Each of the tokens apart from Step now has an EndState (passed, failed or pending), Step has its own more granular end states"/>
+        <change desc="Add timing information to tokens at step level and a total execution time in suite results"/>
+        <change desc="Add configurable scenario timeout which will attempt to interrupt a scenario if it takes too long. New interpreter switch to set the max time"/>
+        <change desc="Support the visitor pattern in Chorus results tokens"/>
+    </version>
+    <version>
         <versionNumber>1.4.16</versionNumber>
         <comment>Bugfixes</comment>
         <bugfix desc="Fix premature closing of standard output stream which was causing some lost output when running Chorus tests as junit suites"/>

@@ -215,10 +215,6 @@ public class ConfigReader implements ConfigProperties {
         }
     }
 
-    public static void logHelp() {
-        ChorusOut.err.println("Usage: Main -f [feature_dirs | feature_files] -h [handler base packages] [-name Test Suite Name] [-t tag_expression] [-jmxListener host:port] [-showErrors] [-dryrun] [-showsummary] ");
-    }
-
     public ConfigProperties deepCopy() {
         List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>(properties);
         ConfigReader c = new ConfigReader(l);
