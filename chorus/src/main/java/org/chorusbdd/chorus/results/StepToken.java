@@ -32,6 +32,8 @@ package org.chorusbdd.chorus.results;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by: Steve Neal
@@ -53,6 +55,10 @@ public class StepToken extends AbstractToken {
 
     private String stackTrace;  //exception stack trace
     private String exception;  //toString() on throwable
+
+    //Not yet in use but present to support future requirements
+    //- to support steps which are macros with a list of child steps
+    private List<StepToken> childSteps = Collections.emptyList();
 
     private long timeTaken = 0;  //time taken to run the step
 
