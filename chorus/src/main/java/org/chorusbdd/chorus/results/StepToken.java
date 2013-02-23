@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.results;
 
 import org.chorusbdd.chorus.util.ExceptionHandling;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -141,19 +142,36 @@ public class StepToken extends AbstractToken {
         this.timeTaken = timeTaken;
     }
 
+    public void addChildStep(StepToken childToken) {
+        childSteps.add(childToken);
+    }
+
+    public List<StepToken> getChildSteps() {
+        return childSteps;
+    }
+
     public void accept(TokenVisitor tokenVisitor) {
         tokenVisitor.visit(this);
     }
 
     public StepToken deepCopy() {
-        StepToken copy = new StepToken(getTokenId(), this.type, this.action);
+        StepToken copy = new StepToken(getNextId(), this.type, this.action);
         copy.endState = this.endState;
         copy.message = this.message;
         copy.throwable = this.throwable;
         copy.exception = this.exception;
         copy.stackTrace = this.stackTrace;
         copy.timeTaken = this.timeTaken;
+        copy.childSteps = recursiveCopy(childSteps);
         return copy;
+    }
+
+    private List<StepToken> recursiveCopy(List<StepToken> childSteps) {
+        List<StepToken> l = new ArrayList<StepToken>();
+        for ( StepToken t : childSteps) {
+            l.add(t.deepCopy());
+        }
+        return l;
     }
 
     @Override

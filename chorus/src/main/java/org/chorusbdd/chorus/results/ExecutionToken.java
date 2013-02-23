@@ -256,7 +256,7 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
 
     public ExecutionToken deepCopy() {
         ExecutionToken t = new ExecutionToken(
-            getTokenId(), testSuiteName, executionStartTime, executionHost
+            getNextId(), testSuiteName, executionStartTime, executionHost
         );
         t.resultsSummary = resultsSummary.deepCopy();
         return t;

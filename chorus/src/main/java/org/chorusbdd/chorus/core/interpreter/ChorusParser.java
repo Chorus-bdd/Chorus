@@ -155,19 +155,18 @@ public class ChorusParser {
                 continue;
             }
 
-            //if made it this far then the line is either: a step or an examples table row
             switch (parserState) {
                 case READING_FEATURE_DESCRIPTION:
                     currentFeature.appendToDescription(line);
                     break;
                 case READING_SCENARIO_BACKGROUND_STEPS:
-                    backgroundScenario.addStep(line);
+                    addStep(backgroundScenario, line);
                     break;
                 case READING_SCENARIO_OUTLINE_STEPS:
-                    outlineScenario.addStep(line);
+                    addStep(outlineScenario, line);
                     break;
                 case READING_SCENARIO_STEPS:
-                    currentScenario.addStep(line);
+                    addStep(currentScenario, line);
                     break;
                 case READING_EXAMPLES_TABLE:
                     if (examplesTableHeaders == null) {
@@ -193,8 +192,7 @@ public class ChorusParser {
                                    examplesTableHeaders,
                                    values,
                                    currentFeaturesTags,
-                                   currentScenariosTags,
-                                   examplesCounter
+                                   currentScenariosTags
                             );
                             currentFeature.addScenario(scenarioFromOutline);
                         }
@@ -241,7 +239,7 @@ public class ChorusParser {
         //add any background steps first
         if (backgroundScenario != null) {
             for (StepToken backgroundStep : backgroundScenario.getSteps()) {
-                scenario.addStep(backgroundStep.getType(), backgroundStep.getAction());
+                addStep(scenario, backgroundStep.getType(), backgroundStep.getAction());
             }
         }
 
@@ -261,7 +259,9 @@ public class ChorusParser {
         return scenario;
     }
 
-    private ScenarioToken createScenarioFromOutline(String scenarioName, ScenarioToken outlineScenario, List<String> placeholders, List<String> values,List<String> currentFeaturesTags, List<String> currentScenariosTags, int counter) {
+    private ScenarioToken createScenarioFromOutline(String scenarioName, ScenarioToken outlineScenario, List<String> placeholders,
+                                                    List<String> values,List<String> currentFeaturesTags,
+                                                    List<String> currentScenariosTags) {
         ScenarioToken scenario = new ScenarioToken();
         scenario.setName(scenarioName);
         //then the outline scenario steps
@@ -272,7 +272,7 @@ public class ChorusParser {
                 String value = values.get(i);
                 action = action.replaceAll("<" + placeholder + ">", value);
             }
-            scenario.addStep(step.getType(), action);
+            addStep(scenario, step.getType(), action);
         }
 
         //add the filter tags
@@ -326,6 +326,19 @@ public class ChorusParser {
             lastTagsLine = null;
             return list;
         }
+    }
+
+    private StepToken addStep(ScenarioToken scenarioToken, String line) {
+        int indexOfSpace = line.indexOf(' ');
+        String type = line.substring(0, indexOfSpace).trim();
+        String action = line.substring(indexOfSpace, line.length()).trim();
+        return addStep(scenarioToken, type, action);
+    }
+
+    private StepToken addStep(ScenarioToken scenarioToken, String type, String action) {
+        StepToken s = new StepToken(type, action);
+        scenarioToken.addStep(s);
+        return s;
     }
 
     public static class ParseException extends Exception {

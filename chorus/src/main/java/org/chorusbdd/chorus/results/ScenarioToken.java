@@ -80,17 +80,9 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
         this.steps = steps;
     }
 
-    public StepToken addStep(String type, String action) {
-        StepToken s = new StepToken(type, action);
-        steps.add(s);
-        return s;
-    }
-
-    public void addStep(String line) {
-        int indexOfSpace = line.indexOf(' ');
-        String type = line.substring(0, indexOfSpace).trim();
-        String action = line.substring(indexOfSpace, line.length()).trim();
-        steps.add(new StepToken(type, action));
+    public StepToken addStep(StepToken stepToken) {
+        this.steps.add(stepToken);
+        return stepToken;
     }
 
     public void addTag(String tag) {
@@ -112,7 +104,7 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     }
 
     public ScenarioToken deepCopy() {
-        ScenarioToken copy = new ScenarioToken(getTokenId());
+        ScenarioToken copy = new ScenarioToken(getNextId());
         copy.name = this.name;
         copy.steps = new ArrayList<StepToken>();
         for (StepToken step : steps) {

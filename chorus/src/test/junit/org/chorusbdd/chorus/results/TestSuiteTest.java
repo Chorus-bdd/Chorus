@@ -29,11 +29,11 @@ public class TestSuiteTest extends Assert {
     public void doBefore() {
         scenarioToken = new ScenarioToken();
         scenarioToken.setName("Test Scenario");
-        stepOne = scenarioToken.addStep("If", "I create a step");
-        stepTwo = scenarioToken.addStep("If", "I create a second step");
+        stepOne = scenarioToken.addStep(new StepToken("If", "I create a step"));
+        stepTwo = scenarioToken.addStep(new StepToken("If", "I create a second step"));
 
         scenarioTwo = new ScenarioToken();
-        stepThree = scenarioTwo.addStep("If", "I add a step to scenario 2");
+        stepThree = scenarioTwo.addStep(new StepToken("If", "I add a step to scenario 2"));
         featureToken = new FeatureToken();
         featureToken.addScenario(scenarioToken);
         featureToken.addScenario(scenarioTwo);
