@@ -45,9 +45,9 @@ import java.util.List;
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class ChorusParser {
+public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ChorusParser.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(FeatureFileParser.class);
 
     //finite state machine states
     private static final int START = 0;
@@ -56,9 +56,12 @@ public class ChorusParser {
     private static final int READING_SCENARIO_BACKGROUND_STEPS = 4;
     private static final int READING_SCENARIO_OUTLINE_STEPS = 8;
     private static final int READING_EXAMPLES_TABLE = 16;
+    private static final int READING_STEP_MACRO = 32;
 
     //the filter tags are read before a feature or scenario so when found store them here until next line is read
     private String lastTagsLine = null;
+
+    private StepMacroParser stepMacroParser = new StepMacroParser();
 
     /**
      * There is a limit of 1 feature definition per feature file, but where the 'configurations' feature is used,
@@ -66,7 +69,12 @@ public class ChorusParser {
      *
      * @return List containing single feature, or multiple features where configurations are used
      */
-    public List<FeatureToken> parse(Reader reader) throws IOException, ParseException {
+    public List<FeatureToken> parse(Reader r) throws IOException, ParseException {
+
+        BufferedReader reader = new BufferedReader(r, 32768);
+
+        //first pre-parse the step macros
+        List<StepMacro> featureLocalStepMacros = stepMacroParser.parse(reader);
 
         List<String> usingDeclarations = new ArrayList<String>();
         List<String> configurationNames = null;
@@ -84,11 +92,10 @@ public class ChorusParser {
         int examplesCounter = 0;
 
         int parserState = START;
-        BufferedReader in = new BufferedReader(reader);
         String line = null;
 
         int lineNumber = 0;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             line = line.trim();
             lineNumber++;
 
@@ -105,18 +112,18 @@ public class ChorusParser {
                 continue;
             }
 
-            if (line.startsWith("Uses:")) {
+            if (KeyWord.Uses.matchesLine(line)) {
                 checkNoCurrentFeature(currentFeature, lineNumber, "Uses: declarations must precede Feature: declarations");
                 usingDeclarations.add(line.substring(6, line.length()).trim());
                 continue;
             }
 
-            if (line.startsWith("Configurations:")) {
+            if (KeyWord.Configurations.matchesLine(line)) {
                 configurationNames = readConfigurationNames(line);
                 continue;
             }
 
-            if (line.startsWith("Feature:")) {
+            if (KeyWord.Feature.matchesLine(line)) {
                 checkNoCurrentFeature(currentFeature, lineNumber, "Cannot define more than one Feature: in a .feature file");
                 currentFeaturesTags = extractTagsAndResetLastTagsLineField();
                 currentFeature = createFeature(line, usingDeclarations);
@@ -124,13 +131,13 @@ public class ChorusParser {
                 continue;
             }
 
-            if (line.startsWith("Background:")) {
+            if (KeyWord.Background.matchesLine(line)) {
                 backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_SCENARIO_BACKGROUND_STEPS;
                 continue;
             }
 
-            if (line.startsWith("Scenario:")) {
+            if (KeyWord.Scenario.matchesLine(line)) {
                 if ( currentFeature == null) {
                     throw new ParseException("Feature: statement must precede Scenario:", lineNumber);
                 }
@@ -141,7 +148,7 @@ public class ChorusParser {
                 continue;
             }
 
-            if (line.startsWith("Scenario-Outline:")) {
+            if (KeyWord.ScenarioOutline.matchesLine(line)) {
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
                 outlineScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 examplesTableHeaders = null;//reset the examples table
@@ -149,9 +156,14 @@ public class ChorusParser {
                 continue;
             }
 
-            if (line.startsWith("Examples:")) {
+            if (KeyWord.Examples.matchesLine(line)) {
                 backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_EXAMPLES_TABLE;
+                continue;
+            }
+
+            if (KeyWord.StepMacro.matchesLine(line)) {
+                parserState = READING_STEP_MACRO;
                 continue;
             }
 
@@ -197,6 +209,9 @@ public class ChorusParser {
                             currentFeature.addScenario(scenarioFromOutline);
                         }
                     }
+                    break;
+                case READING_STEP_MACRO:
+                    //take no action since step macros are pre-parsed before we start main feature file parsing.
                     break;
                 default:
                     throw new ParseException("Parse error, unexpected text '" + line + "'", lineNumber);
@@ -245,9 +260,9 @@ public class ChorusParser {
 
         //figure out the right name for the scenario
         String scenarioName = null;
-        if (line.startsWith("Scenario:")) {
+        if (KeyWord.Scenario.matchesLine(line)) {
             scenarioName = line.substring(9, line.length()).trim();
-        } else if (line.startsWith("Scenario-Outline:")) {
+        } else if (KeyWord.ScenarioOutline.matchesLine(line)) {
             scenarioName = line.substring(17, line.length()).trim();
         }
         scenario.setName(scenarioName);
@@ -296,7 +311,7 @@ public class ChorusParser {
     }
 
     private List<String> readConfigurationNames(String line) {
-        String[] names = line.trim().substring("Configurations:".length() + 1).split(",");
+        String[] names = line.trim().substring(KeyWord.Configurations.stringVal().length() + 1).split(",");
         List<String> list = new ArrayList<String>();
         for (String name : names) {
             if (name.trim().length() > 0) {
@@ -328,22 +343,4 @@ public class ChorusParser {
         }
     }
 
-    private StepToken addStep(ScenarioToken scenarioToken, String line) {
-        int indexOfSpace = line.indexOf(' ');
-        String type = line.substring(0, indexOfSpace).trim();
-        String action = line.substring(indexOfSpace, line.length()).trim();
-        return addStep(scenarioToken, type, action);
-    }
-
-    private StepToken addStep(ScenarioToken scenarioToken, String type, String action) {
-        StepToken s = new StepToken(type, action);
-        scenarioToken.addStep(s);
-        return s;
-    }
-
-    public static class ParseException extends Exception {
-        ParseException(String message, int lineNumber) {
-            super(String.format("%s (at line:%s)", message, lineNumber));
-        }
-    }
 }

@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
@@ -55,7 +56,7 @@ public class ChorusParserTagsTest {
     public void scenarioInheritsTagsFromFeature() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
-        ChorusParser p = new ChorusParser();
+        FeatureFileParser p = new FeatureFileParser();
         List<FeatureToken> features = p.parse(new FileReader(f));
 
         assertEquals("Wrong number of features loaded", 1, features.size());
@@ -76,7 +77,7 @@ public class ChorusParserTagsTest {
     public void scenarioInheritsTagsFromFeatureAndAddsOwn() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
-        ChorusParser p = new ChorusParser();
+        FeatureFileParser p = new FeatureFileParser();
         List<FeatureToken> features = p.parse(new FileReader(f));
         FeatureToken feature = features.get(0);
 
@@ -97,7 +98,7 @@ public class ChorusParserTagsTest {
     public void outlineScenarioInheritsTagsFromFeatureAndAddsOwn() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
-        ChorusParser p = new ChorusParser();
+        FeatureFileParser p = new FeatureFileParser();
         List<FeatureToken> features = p.parse(new FileReader(f));
         FeatureToken feature = features.get(0);
 

@@ -53,7 +53,7 @@ public class TokenSerializationTest extends ChorusParserTagsTest {
     public void testTokenSerialization() throws Exception {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
-        ChorusParser p = new ChorusParser();
+        FeatureFileParser p = new FeatureFileParser();
         List<FeatureToken> features = p.parse(new FileReader(f));
 
         ExecutionToken t = new ExecutionToken("Larry");

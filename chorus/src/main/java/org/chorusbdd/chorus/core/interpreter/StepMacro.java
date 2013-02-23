@@ -133,4 +133,12 @@ public class StepMacro {
         return action;
     }
 
+    public int getMacroStepCount() {
+        return steps.size();
+    }
+
+    @Override
+    public String toString() {
+        return pattern.toString();
+    }
 }

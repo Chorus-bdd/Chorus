@@ -40,6 +40,7 @@ import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InterruptedIOException;
@@ -121,10 +122,10 @@ public class ChorusInterpreter {
 
     private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken) {
         List<FeatureToken> features = null;
-        ChorusParser parser = new ChorusParser();
+        FeatureFileParser parser = new FeatureFileParser();
         try {
             log.info(String.format("Loading feature from file: %s", featureFile));
-            features = parser.parse(new FileReader(featureFile));
+            features = parser.parse(new BufferedReader(new FileReader(featureFile)));
             //we can end up with more than one feature per file if using Chorus 'configurations'
         } catch (Throwable t) {
             log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
