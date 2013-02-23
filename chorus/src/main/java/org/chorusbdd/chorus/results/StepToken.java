@@ -59,7 +59,7 @@ public class StepToken extends AbstractToken {
 
     //Not yet in use but present to support future requirements
     //- to support steps which are macros with a list of child steps
-    private List<StepToken> childSteps = Collections.emptyList();
+    private List<StepToken> childSteps = new ArrayList<StepToken>();
 
     private long timeTaken = 0;  //time taken to run the step
 

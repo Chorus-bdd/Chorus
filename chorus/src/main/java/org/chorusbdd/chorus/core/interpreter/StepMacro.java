@@ -1,5 +1,6 @@
-package org.chorusbdd.chorus.results;
+package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -63,8 +64,8 @@ public class StepMacro {
 
     private Pattern groupPattern = Pattern.compile("<\\$\\d+>");
 
-    public StepMacro(String action) {
-        pattern = Pattern.compile(action);
+    public StepMacro(String pattern) {
+        this.pattern = Pattern.compile(pattern);
     }
 
     public void addStep(StepToken s) {
@@ -83,7 +84,7 @@ public class StepMacro {
 
     private void doProcessStep(StepToken stepToken, List<StepMacro> macros, int depth) {
         if ( depth > MAX_STEP_DEPTH ) {
-            throw new ChorusException("Maximum Step Depth (" + MAX_STEP_DEPTH + ") was reached when processing step " + stepToken.toString() +
+            throw new RecursiveStepMacroException("Maximum Step Depth (" + MAX_STEP_DEPTH + ") was reached when processing step " + stepToken.toString() +
                 " are your StepMacro: infinitely recursive?");
         }
 
@@ -119,15 +120,15 @@ public class StepMacro {
         Matcher groupMatcher = groupPattern.matcher(action);
         while(groupMatcher.find()) {
             String match = groupMatcher.group();
-            String groupString = match.substring(2, match.length());
+            String groupString = match.substring(2, match.length() - 1);
             int groupId = Integer.parseInt(groupString);
             if ( groupId > macroMatcher.groupCount() ) {
-                throw new ChorusException("Group id " + groupId + " referenced in StepMacro step " + action +
-                    " did not exist in the StepMacro Pattern " + pattern.toString());
+                throw new ChorusException("Capture group with index " + groupId + " in StepMacro step '" + action +
+                    "' did not have a matching capture group in the pattern '" + pattern.toString() + "'");
             }
             String replacement = macroMatcher.group(groupId);
             log.trace("Replacing group " + match + " with " + replacement + " in action " + action);
-            action = action.replaceFirst(match, replacement);
+            action = action.replaceFirst("<\\$" + groupId + ">", replacement);
         }
         return action;
     }
