@@ -1,7 +1,6 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.FeatureFileParser;
 import org.chorusbdd.chorus.core.interpreter.StepMacro;
 import org.chorusbdd.chorus.core.interpreter.StepMacroParser;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
