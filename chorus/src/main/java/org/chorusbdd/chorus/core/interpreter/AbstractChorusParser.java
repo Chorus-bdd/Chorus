@@ -25,15 +25,25 @@ public abstract class AbstractChorusParser<E> {
         return new StepToken(type, action);
     }
 
-    protected StepToken addStep(ScenarioToken scenarioToken, String line) {
+    protected StepToken addStep(ScenarioToken scenarioToken, String line, List<StepMacro> stepMacros) {
         StepToken s = createStepToken(line);
-        return scenarioToken.addStep(s);
+        return addStep(scenarioToken, s, stepMacros);
     }
 
-    protected StepToken addStep(ScenarioToken scenarioToken, String type, String action) {
+    protected StepToken addStep(ScenarioToken scenarioToken, String type, String action, List<StepMacro> stepMacros) {
         StepToken s = new StepToken(type, action);
-        scenarioToken.addStep(s);
-        return s;
+        return addStep(scenarioToken, s, stepMacros);
+    }
+
+    protected StepToken addStep(ScenarioToken scenarioToken, StepToken stepToken, List<StepMacro> stepMacros) {
+        //we first see if the step matches any StepMacros which were defined during pre-parsing
+        //and if so populate child steps
+        for (StepMacro s : stepMacros) {
+            s.processStep(stepToken, stepMacros);
+        }
+
+        scenarioToken.addStep(stepToken);
+        return stepToken;
     }
 
     public static class ParseException extends Exception {

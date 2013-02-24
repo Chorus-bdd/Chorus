@@ -57,8 +57,9 @@ public class StepToken extends AbstractToken {
     private String stackTrace;  //exception stack trace
     private String exception;  //toString() on throwable
 
-    //Not yet in use but present to support future requirements
-    //- to support steps which are macros with a list of child steps
+    /**
+     * Step macro are composite steps which contain child steps
+     */
     private List<StepToken> childSteps = new ArrayList<StepToken>();
 
     private long timeTaken = 0;  //time taken to run the step
@@ -152,6 +153,10 @@ public class StepToken extends AbstractToken {
 
     public void accept(TokenVisitor tokenVisitor) {
         tokenVisitor.visit(this);
+    }
+
+    public boolean isStepMacro() {
+        return childSteps.size() > 0;
     }
 
     public StepToken deepCopy() {

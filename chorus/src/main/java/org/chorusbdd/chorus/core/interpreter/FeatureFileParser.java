@@ -39,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -172,13 +173,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     currentFeature.appendToDescription(line);
                     break;
                 case READING_SCENARIO_BACKGROUND_STEPS:
-                    addStep(backgroundScenario, line);
+                    addStep(backgroundScenario, line, featureLocalStepMacros);
                     break;
                 case READING_SCENARIO_OUTLINE_STEPS:
-                    addStep(outlineScenario, line);
+                    //pass empty list of macros -
+                    //we don't want to expand macros upfront since the outline step contain placeholders which must be expanded first
+                    addStep(outlineScenario, line, Collections.<StepMacro>emptyList());
                     break;
                 case READING_SCENARIO_STEPS:
-                    addStep(currentScenario, line);
+                    addStep(currentScenario, line, featureLocalStepMacros);
                     break;
                 case READING_EXAMPLES_TABLE:
                     if (examplesTableHeaders == null) {
@@ -204,7 +207,8 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                                    examplesTableHeaders,
                                    values,
                                    currentFeaturesTags,
-                                   currentScenariosTags
+                                   currentScenariosTags,
+                                   featureLocalStepMacros
                             );
                             currentFeature.addScenario(scenarioFromOutline);
                         }
@@ -254,7 +258,10 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         //add any background steps first
         if (backgroundScenario != null) {
             for (StepToken backgroundStep : backgroundScenario.getSteps()) {
-                addStep(scenario, backgroundStep.getType(), backgroundStep.getAction());
+                //pass empty list of macros since background steps have already been matched to step macros and expanded,
+                //we add a deep copy of the background step, which will also contain copies of any macro child steps.
+                StepToken copiedStep = backgroundStep.deepCopy();
+                addStep(scenario, copiedStep, Collections.<StepMacro>emptyList());
             }
         }
 
@@ -276,7 +283,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     private ScenarioToken createScenarioFromOutline(String scenarioName, ScenarioToken outlineScenario, List<String> placeholders,
                                                     List<String> values,List<String> currentFeaturesTags,
-                                                    List<String> currentScenariosTags) {
+                                                    List<String> currentScenariosTags, List<StepMacro> stepMacros) {
         ScenarioToken scenario = new ScenarioToken();
         scenario.setName(scenarioName);
         //then the outline scenario steps
@@ -287,7 +294,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 String value = values.get(i);
                 action = action.replaceAll("<" + placeholder + ">", value);
             }
-            addStep(scenario, step.getType(), action);
+            addStep(scenario, step.getType(), action, stepMacros);
         }
 
         //add the filter tags

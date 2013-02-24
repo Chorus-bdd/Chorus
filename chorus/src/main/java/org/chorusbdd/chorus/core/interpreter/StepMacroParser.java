@@ -1,7 +1,6 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -65,8 +64,9 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
 
             if ( KeyWord.StepMacro.matchesLine(line)) {
                 readingStepMacro = true;
-                currentMacro = new StepMacro(line.substring(KeyWord.StepMacro.stringVal().length()));
+                currentMacro = new StepMacro(line.substring(KeyWord.StepMacro.stringVal().length()).trim());
                 result.add(currentMacro);
+                continue;
             }
 
             if ( readingStepMacro ) {

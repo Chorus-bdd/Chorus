@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -135,6 +136,23 @@ public class StepMacro {
 
     public int getMacroStepCount() {
         return steps.size();
+    }
+
+    /**
+     * The end state of a step macro step is derived from the child steps
+     * If all child steps are PASSED then the step macro will be PASSED,
+     * otherwise the step macro end state is taken from the first child step which was not PASSED
+     */
+    public static StepEndState calculateStepMacroEndState(List<StepToken> executedSteps) {
+        assert(executedSteps.size() > 0);
+        StepEndState stepMacroEndState = StepEndState.PASSED;
+        for ( StepToken s : executedSteps) {
+            if ( s.getEndState() != StepEndState.PASSED) {
+                stepMacroEndState = s.getEndState();
+                break;
+            }
+        }
+        return stepMacroEndState;
     }
 
     @Override
