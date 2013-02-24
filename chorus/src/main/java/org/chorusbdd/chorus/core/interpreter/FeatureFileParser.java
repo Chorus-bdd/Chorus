@@ -63,6 +63,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
     private String lastTagsLine = null;
 
     private StepMacroParser stepMacroParser = new StepMacroParser();
+    private List<StepMacro> globalStepMacro;
+
+    public FeatureFileParser() {
+        this(Collections.<StepMacro>emptyList());
+    }
+
+    public FeatureFileParser(List<StepMacro> globalStepMacro) {
+        this.globalStepMacro = globalStepMacro;
+    }
 
     /**
      * There is a limit of 1 feature definition per feature file, but where the 'configurations' feature is used,
@@ -75,7 +84,12 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         BufferedReader reader = new BufferedReader(r, 32768);
 
         //first pre-parse the step macros
-        List<StepMacro> featureLocalStepMacros = stepMacroParser.parse(reader);
+        List<StepMacro> featureLocalStepMacro = stepMacroParser.parse(reader);
+
+        //we need to run the feature using combined list of both global and feature local step macros
+        List<StepMacro> allStepMacro = new ArrayList<StepMacro>();
+        allStepMacro.addAll(globalStepMacro);
+        allStepMacro.addAll(featureLocalStepMacro);
 
         List<String> usingDeclarations = new ArrayList<String>();
         List<String> configurationNames = null;
@@ -173,7 +187,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     currentFeature.appendToDescription(line);
                     break;
                 case READING_SCENARIO_BACKGROUND_STEPS:
-                    addStep(backgroundScenario, line, featureLocalStepMacros);
+                    addStep(backgroundScenario, line, allStepMacro);
                     break;
                 case READING_SCENARIO_OUTLINE_STEPS:
                     //pass empty list of macros -
@@ -181,7 +195,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     addStep(outlineScenario, line, Collections.<StepMacro>emptyList());
                     break;
                 case READING_SCENARIO_STEPS:
-                    addStep(currentScenario, line, featureLocalStepMacros);
+                    addStep(currentScenario, line, allStepMacro);
                     break;
                 case READING_EXAMPLES_TABLE:
                     if (examplesTableHeaders == null) {
@@ -208,7 +222,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                                    values,
                                    currentFeaturesTags,
                                    currentScenariosTags,
-                                   featureLocalStepMacros
+                                   allStepMacro
                             );
                             currentFeature.addScenario(scenarioFromOutline);
                         }

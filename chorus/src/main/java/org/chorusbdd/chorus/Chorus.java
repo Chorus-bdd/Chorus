@@ -52,7 +52,7 @@ import java.util.List;
 public class Chorus {
 
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
-    private final InterpreterRunner interpreterRunner = new InterpreterRunner(listenerSupport);
+    private InterpreterRunner interpreterRunner;
 
     private final ConfigReader configReader;
 
@@ -78,6 +78,8 @@ public class Chorus {
         configReader.readConfiguration();
 
         setLoggingProvider();
+
+        interpreterRunner = new InterpreterRunner(listenerSupport); //configure logging first
 
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
             configReader

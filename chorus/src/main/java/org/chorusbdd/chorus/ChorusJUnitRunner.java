@@ -178,6 +178,17 @@ public class ChorusJUnitRunner {
 
             public ConfigProperties getNewConfig(ConfigProperties baseConfig) {
                 ConfigProperties p = baseConfig.deepCopy();
+
+                //we always want to explicitly set the stepmacro paths if not set, since although we are tweaking the
+                //feature paths to run one feature at a time, the features may still reference step macro definitions
+                //from anywhere on the original feature path
+                if ( ! p.isSet(ChorusConfigProperty.STEPMACRO_PATHS)) {
+                    p.setProperty(
+                        ChorusConfigProperty.STEPMACRO_PATHS,
+                        p.getValues(ChorusConfigProperty.FEATURE_PATHS)
+                    );
+                }
+
                 p.setProperty(
                     ChorusConfigProperty.FEATURE_PATHS,
                     Collections.singletonList(featureFile.getPath())

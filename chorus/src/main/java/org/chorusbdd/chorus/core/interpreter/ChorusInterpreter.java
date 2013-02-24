@@ -80,7 +80,7 @@ public class ChorusInterpreter {
 
     public ChorusInterpreter() {}
 
-    public List<FeatureToken> processFeatures(ExecutionToken executionToken, List<File> featureFiles) throws Exception {
+    public List<FeatureToken> processFeatures(ExecutionToken executionToken, List<File> featureFiles, List<StepMacro> globalStepMacro) throws Exception {
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //load all available feature classes
@@ -91,7 +91,7 @@ public class ChorusInterpreter {
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
 
-            List<FeatureToken> features = parseFeatures(featureFile, executionToken);
+            List<FeatureToken> features = parseFeatures(featureFile, executionToken, globalStepMacro);
             if ( features != null ) {
                 filterFeaturesByScenarioTags(features);
 
@@ -116,9 +116,9 @@ public class ChorusInterpreter {
         return allFeatures;
     }
 
-    private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken) {
+    private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken, List<StepMacro> globalStepMacro) {
         List<FeatureToken> features = null;
-        FeatureFileParser parser = new FeatureFileParser();
+        FeatureFileParser parser = new FeatureFileParser(globalStepMacro);
         try {
             log.info(String.format("Loading feature from file: %s", featureFile));
             features = parser.parse(new BufferedReader(new FileReader(featureFile)));
