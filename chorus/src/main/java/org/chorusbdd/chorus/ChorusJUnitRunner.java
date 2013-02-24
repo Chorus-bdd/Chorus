@@ -30,10 +30,10 @@
 package org.chorusbdd.chorus;
 
 import junit.framework.*;
+import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
@@ -105,8 +105,8 @@ public class ChorusJUnitRunner {
 
     private static Test[] findAllTestCasesRuntime(Chorus chorus, Map<String, Object> executionEnvironment) {
         //scan for all feature files specified in base config
-        FeatureScanner featureScanner = new FeatureScanner();
-        List<File> featureFiles = featureScanner.getFeatureFiles(chorus.getFeatureFilePaths());
+        FilePathScanner filePathScanner = new FilePathScanner();
+        List<File> featureFiles = filePathScanner.getFeatureFiles(chorus.getFeatureFilePaths(), FilePathScanner.FEATURE_FILTER);
 
         //generate a junit test to execute the interpreter for each feature file
         Test[] tests = new Test[featureFiles.size()];

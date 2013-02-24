@@ -55,6 +55,9 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", true, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "-h my.package.name",
     "Handler package names to restrict search for handler classes, speeds up handler class searching and avoids unnecessary class scanning. Subpackages will also be scanned", PropertySourceMode.OVERRIDE),
 
+    STEPMACRO_PATHS("-stepMacroPaths", "-m", "chorusStepMacroPaths", false, 0, Integer.MAX_VALUE, null, ".*", "-m c:\\my\\path ..\\my\\path  ..\\my\\path\\mymacros.stepmacro",
+    "Relative or absolute paths to the directories containing your stepmacro files or paths to specific stepmacro files. If not specified featurePaths will be used", PropertySourceMode.OVERRIDE),
+
     DRY_RUN("-dryrun", "-d", "chorusDryRun", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-d (false|true)",
     "Whether to actually execute steps or just detect and log the discovery of handlers and step definitions", PropertySourceMode.OVERRIDE),
 

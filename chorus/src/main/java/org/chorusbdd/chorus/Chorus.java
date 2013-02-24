@@ -29,13 +29,11 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.scanner.FeatureScanner;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.ConfigReader;
@@ -43,7 +41,6 @@ import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -55,6 +52,8 @@ import java.util.List;
 public class Chorus {
 
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
+    private final InterpreterRunner interpreterRunner = new InterpreterRunner(listenerSupport);
+
     private final ConfigReader configReader;
 
     public static void main(String[] args) throws Exception {
@@ -146,44 +145,10 @@ public class Chorus {
             String logLevel = p.getValue(ChorusConfigProperty.LOG_LEVEL);
             setLogLevel(logLevel);
 
-            List<FeatureToken> featuresThisPass = run(t, p);
+            List<FeatureToken> featuresThisPass = interpreterRunner.run(t, p);
             features.addAll(featuresThisPass);
         }
         t.calculateTimeTaken();
-        return features;
-    }
-
-    /**
-     * Run the interpreter, collating results into the executionToken and notifying
-     */
-    private List<FeatureToken> run(ExecutionToken executionToken, ConfigProperties config) throws Exception {
-        //prepare the interpreter
-        ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
-        if (handlerPackages != null) {
-            chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
-        }
-
-        chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
-        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
-
-        //set a filter tags expression if provided
-        if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
-            List<String> tagExpressionParts = config.getValues(ChorusConfigProperty.TAG_EXPRESSION);
-            StringBuilder builder = new StringBuilder();
-            for (String tagExpressionPart : tagExpressionParts) {
-                builder.append(tagExpressionPart);
-                builder.append(" ");
-            }
-            chorusInterpreter.setFilterExpression(builder.toString());
-        }
-
-        //identify the feature files
-        List<String> featureFileNames = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
-        List<File> featureFiles = new FeatureScanner().getFeatureFiles(featureFileNames);
-
-        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
-        List<FeatureToken> features = chorusInterpreter.processFeatures(executionToken, featureFiles);
         return features;
     }
 
