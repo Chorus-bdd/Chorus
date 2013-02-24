@@ -144,7 +144,6 @@ public class StepMacro {
      * otherwise the step macro end state is taken from the first child step which was not PASSED
      */
     public static StepEndState calculateStepMacroEndState(List<StepToken> executedSteps) {
-        assert(executedSteps.size() > 0);
         StepEndState stepMacroEndState = StepEndState.PASSED;
         for ( StepToken s : executedSteps) {
             if ( s.getEndState() != StepEndState.PASSED) {

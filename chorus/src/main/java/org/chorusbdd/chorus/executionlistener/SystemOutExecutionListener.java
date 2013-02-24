@@ -29,73 +29,97 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
 /**
  * Created by: Steve Neal
  * Date: 11/01/12
+ *
+ * This execution listener is responsible for generating the console standard output for Chorus
  */
 public class SystemOutExecutionListener implements ExecutionListener {
 
-    private ResultsFormatter formatter;
+    private final ByteArrayOutputStream stepMacroOutputStream  = new ByteArrayOutputStream(1024);
+
+    private ResultsFormatter chorusOutFormatter = new PlainResultsFormatter(new PrintWriter(ChorusOut.out, true));
 
     private boolean showSummary = true;
     private boolean verbose = false;
 
+    private int stepMacroDepth = 0;
+
     public SystemOutExecutionListener(boolean showSummary, boolean verbose) {
-        this.formatter = new PlainResultsFormatter(new PrintWriter(ChorusOut.out, true));
         this.showSummary = showSummary;
         this.verbose = verbose;
     }
 
     public void setFormatter(ResultsFormatter formatter) {
-        this.formatter = formatter;
+        this.chorusOutFormatter = formatter;
     }
 
     public void testsStarted(ExecutionToken testExecutionToken) {
     }
 
     public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
-        formatter.printFeature(feature);
+        chorusOutFormatter.printFeature(feature);
     }
 
     public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         if (! feature.foundAllHandlers()) {
-            formatter.printMessage(feature.getUnavailableHandlersMessage());
+            chorusOutFormatter.printMessage(feature.getUnavailableHandlersMessage());
         }
-        formatter.printMessage(""); //just a blank line between features
+        chorusOutFormatter.printMessage(""); //just a blank line between features
     }
 
     public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
-        formatter.printScenario(scenario);
+        chorusOutFormatter.printScenario(scenario);
     }
 
     public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
     public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
+        stepMacroDepth ++;  //are we processing a top level scenario step (depth == 1) or a step macro step ( depth > 1 )
     }
 
     public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
-        if ( ! step.isStepMacro()) {
-            formatter.printStep(step);
-            if (step.getException() != null && verbose) {
-                formatter.printStackTrace(step.getStackTrace());
+        if ( stepMacroDepth == 1) {
+            printSteps(step, stepMacroDepth);
+        }
+        stepMacroDepth --;
+    }
+
+    private void printSteps(StepToken step, int depth) {
+        printStep(step, depth);
+
+        //if the completed step was a step macro, sometimes we need to show the child steps
+        if ( step.isStepMacro() && shouldShowChildSteps(step)) {
+            for ( StepToken s : step.getChildSteps()) {
+                printSteps(s, depth + 1);
             }
+        }
+    }
+
+    private boolean shouldShowChildSteps(StepToken stepMacro) {
+        return stepMacro.inOneOf(StepEndState.FAILED, StepEndState.TIMEOUT, StepEndState.UNDEFINED, StepEndState.PENDING);
+    }
+
+    private void printStep(StepToken step, int depth) {
+        chorusOutFormatter.printStep(step, depth);
+        if (step.getException() != null && verbose) {
+            chorusOutFormatter.printStackTrace(step.getStackTrace());
         }
     }
 
     public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         if (showSummary) {
-            formatter.printResults(testExecutionToken.getResultsSummary());
+            chorusOutFormatter.printResults(testExecutionToken.getResultsSummary());
         }
-        formatter.flush();
+        chorusOutFormatter.flush();
     }
 }

@@ -31,6 +31,7 @@ package stepmacro.featurelocal;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +40,7 @@ import org.chorusbdd.chorus.annotations.Step;
  * Time: 09:21
  */
 @Handler("Feature Local Step Macro")
-public class FeatureLocalStepMacroHandler {
+public class FeatureLocalStepMacroHandler extends ChorusAssert {
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {

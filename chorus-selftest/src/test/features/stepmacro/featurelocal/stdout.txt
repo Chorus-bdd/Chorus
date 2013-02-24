@@ -1,11 +1,11 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/simplefeature/simplefeature.feature
-Feature: Simple Feature                                                                              
+Chorus --> INFO    - Loading feature from file: src/test/features/stepmacro/featurelocal/featurelocalstepmacro.feature
+Feature: Feature Local Step Macro                                                                    
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
     Given Chorus is working properly                                                         PASSED  
-    Then I can run a feature with a single scenario                                          PASSED  
+    Then I can call a step macro with two capture groups 1234 and mytestgroup                PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

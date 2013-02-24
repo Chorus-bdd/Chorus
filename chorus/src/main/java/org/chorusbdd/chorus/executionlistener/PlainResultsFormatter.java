@@ -107,8 +107,18 @@ public class PlainResultsFormatter implements ResultsFormatter {
         out.printf("  Scenario: %s%n", scenario.getName());
     }
 
-    public void printStep(StepToken step) {
-        out.printf("    %-89s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+    public void printStep(StepToken step, int depth) {
+        StringBuilder depthPadding = getDepthPadding(depth);
+        int maxStepTextChars = Math.max(89 - depthPadding.length(), 50);  //always show at least 50 chars of step text
+        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+    }
+
+    private StringBuilder getDepthPadding(int depth) {
+        StringBuilder sb = new StringBuilder();
+        for ( int loop=1; loop < depth; loop++ ) {
+            sb.append(".. ");
+        }
+        return sb;
     }
 
     public void printStackTrace(String stackTrace) {

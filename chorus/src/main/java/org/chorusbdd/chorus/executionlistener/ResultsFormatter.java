@@ -46,7 +46,7 @@ public interface ResultsFormatter {
 
     void printScenario(ScenarioToken scenario);
 
-    void printStep(StepToken step);
+    void printStep(StepToken step, int depth);
 
     void printStackTrace(String stackTrace);
 
