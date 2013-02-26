@@ -1,11 +1,19 @@
 Chorus --> INFO    - Loading feature from file: src/test/features/stepmacro/featurelocal/featurelocalstepmacro.feature
 Feature: Feature Local Step Macro                                                                    
-  Scenario: Simple Scenario
-Chorus --> INFO    - Processing scenario: Simple Scenario
+  Scenario: Simple Step Macro Scenario
+Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
     Given Chorus is working properly                                                         PASSED  
-    Then I can call a step macro with two capture groups 1234 and mytestgroup                PASSED  
+    Then I can call a step macro with two capture groups 1234 and mytestgroup                PASSED  (2)
+  Scenario: Step Macro With Outline [1]
+Chorus --> INFO    - Processing scenario: Step Macro With Outline [1]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can call a step macro with two capture groups 123 and test1                       PASSED  (2)
+  Scenario: Step Macro With Outline [2]
+Chorus --> INFO    - Processing scenario: Step Macro With Outline [2]
+    Given Chorus is working properly                                                         PASSED  
+    Then I can call a step macro with two capture groups 456 and test2                       PASSED  (2)
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:3) (passed:3) (failed:0)
+Steps     (total:9) (passed:9) (failed:0) (undefined:0) (pending:0) (skipped:0)

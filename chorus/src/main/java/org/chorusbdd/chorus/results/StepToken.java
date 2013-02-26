@@ -32,8 +32,6 @@ package org.chorusbdd.chorus.results;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -149,6 +147,20 @@ public class StepToken extends AbstractToken {
 
     public List<StepToken> getChildSteps() {
         return childSteps;
+    }
+
+    /**
+     * If this is a leaf step, total count will be 1
+     * If this step is a step macro, total count will equal the number of (direct or indirect) leaf step descendants
+     *
+     * @return the total number of steps represented by this StepToken
+     */
+    public int getTotalStepCountWithDescendants() {
+        int descendantCount = isStepMacro() ? 0 : 1;
+        for ( StepToken c : childSteps) {
+            descendantCount += c.getTotalStepCountWithDescendants();
+        }
+        return descendantCount;
     }
 
     public void accept(TokenVisitor tokenVisitor) {
