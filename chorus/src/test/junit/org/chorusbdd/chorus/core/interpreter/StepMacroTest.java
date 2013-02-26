@@ -79,5 +79,13 @@ public class StepMacroTest extends Assert {
         }
     }
 
+    @Test
+    public void testReplaceGroupVariables() {
+        StepMacro s = new StepMacro("My stepmacro with variable <myvar> and variable <mysecondvar>");
+        assertEquals("My stepmacro with variable (.+) and variable (.+)", s.getPattern().toString());
+        assertEquals(1, s.getGroupVariable("<myvar>"));
+        assertEquals(2, s.getGroupVariable("<mysecondvar>"));
+    }
+
 
 }

@@ -7,7 +7,9 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,10 +65,26 @@ public class StepMacro {
     private Pattern pattern;
     private List<StepToken> steps = new ArrayList<StepToken>();
 
+    private Pattern variablePattern = Pattern.compile("<\\w+>");
     private Pattern groupPattern = Pattern.compile("<\\$\\d+>");
 
+    private Map<String, Integer> variableToGroupNumber = new HashMap<String, Integer>();
+
     public StepMacro(String pattern) {
+        pattern = replaceVariablesWithPatterns(pattern);
         this.pattern = Pattern.compile(pattern);
+    }
+
+    //find and replace any variables in the form
+    private String replaceVariablesWithPatterns(String pattern) {
+        int group = 0;
+        Matcher findVariablesMatcher = variablePattern.matcher(pattern);
+        while(findVariablesMatcher.find()) {
+            String variable = findVariablesMatcher.group(0);
+            pattern = pattern.replaceFirst(variable, "(.+)");
+            variableToGroupNumber.put(variable, ++group);
+        }
+        return pattern;
     }
 
     public void addStep(StepToken s) {
@@ -101,6 +119,7 @@ public class StepMacro {
             String action = s.getAction();
             String type = s.getType();
 
+            action = replaceVariablesInMacroStep(macroMatcher, action);
             action = replaceGroupsInMacroStep(macroMatcher, action);
 
             //having replaced any capture groups, create the child step
@@ -113,6 +132,14 @@ public class StepMacro {
 
             parentToken.addChildStep(childToken);
         }
+    }
+
+    //replace the variables using regular expresson group syntax
+    private String replaceVariablesInMacroStep(Matcher macroMatcher, String action) {
+        for (Map.Entry<String, Integer> e : variableToGroupNumber.entrySet()) {
+            action = action.replace(e.getKey(), "<$" + e.getValue() + ">");
+        }
+        return action;
     }
 
     //if the macro step has any replacement groups in the form <$n> then replace them with the respective
@@ -157,5 +184,14 @@ public class StepMacro {
     @Override
     public String toString() {
         return pattern.toString();
+    }
+
+    //testing hook
+    Pattern getPattern() {
+        return pattern;
+    }
+
+    public int getGroupVariable(String variable) {
+        return variableToGroupNumber.get(variable);
     }
 }

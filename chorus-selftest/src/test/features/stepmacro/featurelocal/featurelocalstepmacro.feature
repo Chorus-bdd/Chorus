@@ -15,7 +15,7 @@ Feature: Feature Local Step Macro
     | 123  | test1    |
     | 456  | test2    |
 
-  StepMacro: I can call a step macro with two capture groups (\d+) and (.*)
+  StepMacro: I can call a step macro with two capture groups (\d+) and <myvar>
     Then I can call a handler step with group <$1>
-    And I can call a handler step with group <$2>
+    And I can call a handler step with group <myvar>
 
