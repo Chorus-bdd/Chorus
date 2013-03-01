@@ -52,7 +52,7 @@ public class GlobalStepMacroHandler extends ChorusAssert {
 
     }
 
-    @Step("variables are all expanded within the macro steps for example these three (.*) (.*) (.*)")
+    @Step("variables are all expanded within the macro steps for example (.*) (.*) (.*)")
     public String callWithGroup(String var1, String var2, String var3) {
         return var1 + "." + var2 + "." + var3;
     }

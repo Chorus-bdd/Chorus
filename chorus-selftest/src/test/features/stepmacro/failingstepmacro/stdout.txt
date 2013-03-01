@@ -1,0 +1,15 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/stepmacro/failingstepmacro/failingstepmacro.feature
+Feature: Failing Step Macro                                                                          
+  Scenario: Simple Step Macro Scenario
+Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can call a step macro with two variables 1234 and mytestgroup                     UNDEFINED 
+    .. Then I can call a handler step with group 1234                                           PASSED  1234
+    .. And I can call a handler step which is unimplememted and this will fail                  UNDEFINED 
+    .. And I can call a step which is unimplemented and this will be skipped                    SKIPPED 
+    And Chorus is working properly                                                           SKIPPED 
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:1) (passed:0) (failed:1)
+Steps     (total:5) (passed:2) (failed:0) (undefined:1) (pending:0) (skipped:2)

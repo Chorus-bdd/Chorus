@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package stepmacro.stepmacropaths;
+package stepmacro.failingstepmacro;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
@@ -39,27 +39,17 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Step Macro Path")
-public class StepMacroPathsHandler extends ChorusAssert {
+@Handler("Failing Step Macro")
+public class FailingStepMacroHandler extends ChorusAssert {
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
 
     }
 
-    @Step("I can call the macro from any feature file since macros are preparsed")
-    public void canRunAFeature() {
-
-    }
-
-    @Step("variables are all expanded within the macro steps for example (.*) (.*) (.*)")
-    public String callWithGroup(String var1, String var2, String var3) {
-        return var1 + "." + var2 + "." + var3;
-    }
-
-    @Step("the steps in the macro will be executed")
-    public void runTheSteps() {
-
+    @Step("I can call a handler step with group (.*)")
+    public String callWithGroup(String group) {
+        return group;
     }
 
 }

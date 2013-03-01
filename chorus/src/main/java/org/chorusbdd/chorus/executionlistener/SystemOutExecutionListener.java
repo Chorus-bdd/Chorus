@@ -98,15 +98,11 @@ public class SystemOutExecutionListener implements ExecutionListener {
         printStep(step, depth);
 
         //if the completed step was a step macro, sometimes we need to show the child steps
-        if ( step.isStepMacro() && shouldShowChildSteps(step)) {
+        if ( step.isStepMacro() ) {
             for ( StepToken s : step.getChildSteps()) {
                 printSteps(s, depth + 1);
             }
         }
-    }
-
-    private boolean shouldShowChildSteps(StepToken stepMacro) {
-        return stepMacro.inOneOf(StepEndState.FAILED, StepEndState.TIMEOUT, StepEndState.UNDEFINED, StepEndState.PENDING);
     }
 
     private void printStep(StepToken step, int depth) {

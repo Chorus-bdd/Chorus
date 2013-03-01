@@ -12,5 +12,5 @@ Feature: Global Step Macro Two
     And I can call a featurelocal step macro in addition to a global one
     And I can call a macro from a different directory so long as it is in the feature path
 
-  StepMacro: I can call a featurelocal step macro in addition to a global one
+  Step-Macro: I can call a featurelocal step macro in addition to a global one
     And I can call a global macro with three variables orange 456 and platypus

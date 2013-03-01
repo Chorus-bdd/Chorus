@@ -109,16 +109,22 @@ public class PlainResultsFormatter implements ResultsFormatter {
 
     public void printStep(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
-        int maxStepTextChars = Math.max(89 - depthPadding.length(), 50);  //always show at least 50 chars of step text
-        int totalStepCount = step.getTotalStepCountWithDescendants();
-        String stepMacroStepCount = step.isStepMacro() ? "(" + totalStepCount + ")" : "";
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%s%n", step.toString(), step.getEndState(), step.getMessage(), stepMacroStepCount);
+        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
+        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+
+        //to add a step count to parent steps, preserved for future use
+        //int totalStepCount = step.getTotalStepCountWithDescendants();
+        //String stepMacroStepCount = step.isStepMacro() ? "(" + totalStepCount + ")" : "";
+        //out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%s%n", step.toString(), step.getEndState(), step.getMessage(), stepMacroStepCount);
     }
 
     private StringBuilder getDepthPadding(int depth) {
         StringBuilder sb = new StringBuilder();
         for ( int loop=1; loop < depth; loop++ ) {
-            sb.append(".. ");
+            sb.append("..");
+        }
+        if ( depth > 1 ) {
+            sb.append(" ");
         }
         return sb;
     }

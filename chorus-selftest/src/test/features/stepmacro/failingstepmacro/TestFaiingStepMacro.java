@@ -27,39 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package stepmacro.stepmacropaths;
+package stepmacro.failingstepmacro;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 14/06/12
- * Time: 09:21
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-@Handler("Step Macro Path")
-public class StepMacroPathsHandler extends ChorusAssert {
+public class TestFaiingStepMacro extends AbstractInterpreterTest {
 
-    @Step("Chorus is working properly")
-    public void isWorkingProperly() {
+    final String featurePath = "src/test/features/stepmacro/failingstepmacro";
 
+    final int expectedExitCode = 1;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    @Step("I can call the macro from any feature file since macros are preparsed")
-    public void canRunAFeature() {
-
-    }
-
-    @Step("variables are all expanded within the macro steps for example (.*) (.*) (.*)")
-    public String callWithGroup(String var1, String var2, String var3) {
-        return var1 + "." + var2 + "." + var3;
-    }
-
-    @Step("the steps in the macro will be executed")
-    public void runTheSteps() {
-
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }

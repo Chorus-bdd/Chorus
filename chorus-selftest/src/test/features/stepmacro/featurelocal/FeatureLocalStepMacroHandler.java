@@ -47,11 +47,6 @@ public class FeatureLocalStepMacroHandler extends ChorusAssert {
 
     }
 
-    @Step("I can run a feature with a single scenario")
-    public void canRunAFeature() {
-
-    }
-
     @Step("I can call a handler step with group (.*)")
     public String callWithGroup(String group) {
         return group;

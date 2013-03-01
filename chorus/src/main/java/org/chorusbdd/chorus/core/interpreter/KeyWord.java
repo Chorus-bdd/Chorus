@@ -17,7 +17,7 @@ public enum KeyWord {
     Scenario("Scenario:"),
     ScenarioOutline("Scenario-Outline:"),
     Examples("Examples:"),
-    StepMacro("StepMacro:");
+    StepMacro("Step-Macro:");
 
     private String keyWord;
 
