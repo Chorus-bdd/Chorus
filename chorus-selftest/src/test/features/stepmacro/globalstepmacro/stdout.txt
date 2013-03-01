@@ -9,7 +9,17 @@ Chorus --> INFO    - Processing scenario: Calling a global macro
     And I can call a global macro with three variables orange 456 and platypus               PASSED  (2)
     And I can call a macro from a different directory so long as it is in the feature path   PASSED  (1)
 
+Chorus --> INFO    - Loading feature from file: src/test/features/stepmacro/globalstepmacro/subfolder/gloablstepmacrotwo.feature
+Feature: Global Step Macro Two                                                                       
+Chorus --> INFO    - No default handler found for Feature: (Global Step Macro Two), will use built-in handlers and Uses: statements
+  Scenario: Calling a global macro
+Chorus --> INFO    - Processing scenario: Calling a global macro
+    Given Chorus is working properly                                                         PASSED  
+    Then I can call a global macro with three variables lemon 123 and aardvark               PASSED  (2)
+    And I can call a global macro with three variables orange 456 and platypus               PASSED  (2)
+    And I can call a macro from a different directory so long as it is in the feature path   PASSED  (1)
 
-Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:12) (passed:12) (failed:0) (undefined:0) (pending:0) (skipped:0)
