@@ -111,7 +111,7 @@ public class PlainResultsFormatter implements ResultsFormatter {
         StringBuilder depthPadding = getDepthPadding(depth);
         int maxStepTextChars = Math.max(89 - depthPadding.length(), 50);  //always show at least 50 chars of step text
         int totalStepCount = step.getTotalStepCountWithDescendants();
-        String stepMacroStepCount = totalStepCount == 1 ? "" : "(" + totalStepCount + ")";
+        String stepMacroStepCount = step.isStepMacro() ? "(" + totalStepCount + ")" : "";
         out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%s%n", step.toString(), step.getEndState(), step.getMessage(), stepMacroStepCount);
     }
 

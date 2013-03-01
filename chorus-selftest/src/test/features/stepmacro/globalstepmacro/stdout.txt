@@ -1,0 +1,15 @@
+Chorus --> INFO    - Loading stepmacro from file: src/test/features/stepmacro/globalstepmacro/globalsteps.stepmacro
+Chorus --> INFO    - Loading stepmacro from file: src/test/features/stepmacro/globalstepmacro/subfolder/globalmacro2.stepmacro
+Chorus --> INFO    - Loading feature from file: src/test/features/stepmacro/globalstepmacro/gloablstepmacro.feature
+Feature: Global Step Macro                                                                           
+  Scenario: Calling a global macro
+Chorus --> INFO    - Processing scenario: Calling a global macro
+    Given Chorus is working properly                                                         PASSED  
+    Then I can call a global macro with three variables lemon 123 and aardvark               PASSED  (2)
+    And I can call a global macro with three variables orange 456 and platypus               PASSED  (2)
+    And I can call a macro from a different directory so long as it is in the feature path   PASSED  (1)
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)
