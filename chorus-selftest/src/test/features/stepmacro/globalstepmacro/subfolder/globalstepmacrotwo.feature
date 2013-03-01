@@ -9,5 +9,8 @@ Feature: Global Step Macro Two
   Scenario: Calling a global macro
     Given Chorus is working properly
     Then I can call a global macro with three variables lemon 123 and aardvark
-    And I can call a global macro with three variables orange 456 and platypus
+    And I can call a featurelocal step macro in addition to a global one
     And I can call a macro from a different directory so long as it is in the feature path
+
+  StepMacro: I can call a featurelocal step macro in addition to a global one
+    And I can call a global macro with three variables orange 456 and platypus
