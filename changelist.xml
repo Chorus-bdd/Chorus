@@ -2,6 +2,13 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.5.1</versionNumber>
+        <comment>Add support for Step-Macro language feature - resuable groups of steps which are preparsed and available within Scenario</comment>
+        <change desc="Support feature-local and global StepMacro"/>
+        <change desc="Steps may now have child steps (when the step matches a defined StepMacro the macro steps become child steps)"/>
+        <change desc="Support stepMacroPaths config parameter which defaults to be the same as featurePaths when not specified"/>
+    </version>
+    <version>
         <versionNumber>1.5.0</versionNumber>
         <comment>New milestone release of Chorus. This release provides better support for chorus tools via enhanced interpreter result Tokens. Work is underway in the chorus tools project to
         provide a Chorus web agent which can receive results from the interpreter and allows viewing of test suite results in the browser, along with a run history, step timings and rss feed</comment>
