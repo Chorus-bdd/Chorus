@@ -5,7 +5,7 @@ It can be used for component testing, but also provides framework support for in
 Chorus is available under the open source MIT license
 
 For more information:
- * See the Chorus Wiki on Github at: http://github.com/nickebbutt/Chorus/wiki
+ * See the Chorus Wiki on Github at: http://github.com/Chorus-bdd/Chorus/wiki
  * Or contact Nick by emailing nick (at) objectdefinitions.com
    or Steve via http://www.smartkey.co.uk/contact.html
 
