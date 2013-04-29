@@ -1,6 +1,6 @@
 Chorus is a lightweight BDD test framework written in Java
 
-It can be used for component testing, but also provides framework support for integration testing distributed systems
+It is good for component testing, but excels at integration testing for distributed systems
 
 Chorus is available under the open source MIT license
 
