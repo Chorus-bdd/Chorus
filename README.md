@@ -2,7 +2,7 @@
 
 ####It is good for component testing, but *excels* at integration testing for distributed systems####
 
-####Interested? [The Chorus Wiki](http://github.com/Chorus-bdd/Chorus/wiki)####
+####See [The Chorus Wiki](http://github.com/Chorus-bdd/Chorus/wiki) for more details####
 
 Chorus is available under the open source MIT license
 
