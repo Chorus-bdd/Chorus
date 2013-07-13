@@ -38,12 +38,6 @@ package processhandler.checkrunning;
 public class StartAProcessMain {
 
     public static void main(String[] args) throws InterruptedException {
-
-        //write out all the arguments so we can test them
-        for (String s : args) {
-            System.out.println(s);
-        }
-
         //sleep for a second during which we can check process is running
         Thread.sleep(1000);
     }
