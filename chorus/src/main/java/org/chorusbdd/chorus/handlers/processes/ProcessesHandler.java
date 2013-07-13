@@ -265,6 +265,15 @@ public class ProcessesHandler {
         ChorusAssert.assertTrue("The process " + alias + " was not stopped", p.isStopped());
     }
 
+    @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) is running")
+    public void checkProcessIsRunning(String alias) {
+        ProcessHandlerProcess p = processes.get(alias);
+        if ( p == null ) {
+            throw new ChorusException("There is no process named '" + alias + "' to check is running");
+        }
+        ChorusAssert.assertTrue("Check the process " + alias + " is running", ! p.isStopped());
+    }
+
     @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*?")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processAlias) {
         waitForProcessToTerminate(processAlias, waitSeconds);
