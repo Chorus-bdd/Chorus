@@ -59,6 +59,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private String logDirectory;
     private boolean appendToLogs;
     private boolean createLogDir = true; //whether to auto create
+    private int processCheckDelay = 500;
 
     public String getGroupName() {
         return name;
@@ -162,6 +163,14 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public void setCreateLogDir(boolean createLogDir) {
         this.createLogDir = createLogDir;
+    }
+
+    public int getProcessCheckDelay() {
+        return processCheckDelay;
+    }
+
+    public void setProcessCheckDelay(int processCheckDelay) {
+        this.processCheckDelay = processCheckDelay;
     }
 
     public boolean isValid() {

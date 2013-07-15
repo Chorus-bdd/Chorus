@@ -174,7 +174,7 @@ public class ProcessesHandler {
                 processesConfig.getArgs()).trim();
 
         log.info(STARTING_JAVA_LOG_PREFIX + command);
-        startProcess(alias, command, logOutput);
+        startProcess(alias, command, logOutput, processesConfig.getProcessCheckDelay());
     }
 
     private File findLog4jConfigFile() {
@@ -235,7 +235,7 @@ public class ProcessesHandler {
         );
 
         log.debug("About to run script: " + command);
-        startProcess(name, command, l);
+        startProcess(name, command, l, 250);
     }
 
     @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
@@ -399,14 +399,16 @@ public class ProcessesHandler {
         return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
     }
 
-    private ProcessHandlerProcess startProcess(String name, String command, ProcessLogOutput logOutput) throws Exception {
+    private ProcessHandlerProcess startProcess(String name, String command, ProcessLogOutput logOutput, int processCheckDelay) throws Exception {
 
         // have to redirect/consume stdout/stderr of child process to prevent it deadlocking
         ProcessHandlerProcess child = new ProcessHandlerProcess(name, command, logOutput);
         processes.put(name, child);
+        child.checkProcess(processCheckDelay);
         return child;
     }
 
+        
     //must be lazy created since featureToken dir and file will not be set on construction
     private ProcessesConfig getProcessProperties(String processName) {
         if ( configMap == null ) {

@@ -104,4 +104,44 @@ public class ProcessHandlerProcess {
     }
 
 
+    public boolean isExitCodeFailure() {
+        return process.exitValue() != 0;
+    }
+
+    /**
+     * Check the process for a short time after it is started, and only pass the start process step
+     * if the process has not terminated with a non-zero (error) code
+     * 
+     * @param processCheckDelay
+     * @throws Exception
+     */
+    public void checkProcess(int processCheckDelay) throws Exception {
+        //process checking can be turned off by setting delay == -1
+        if ( processCheckDelay > 0) {
+            int cumulativeSleepTime = 0;
+            boolean stopped;
+            while(cumulativeSleepTime < processCheckDelay) {
+                int sleep = Math.min(50, processCheckDelay - cumulativeSleepTime);
+                Thread.sleep(sleep);
+                cumulativeSleepTime += sleep;
+
+                stopped = isStopped();
+                if ( stopped ) {
+                    if ( isExitCodeFailure()) {
+                        throw new ProcessCheckFailedException(
+                                "Process terminated with a non-zero exit code during processCheckDelay period, step fails");
+                    } else {
+                        log.debug("Process stopped during processCheckDelay period, exit code zero, passing step");
+                        break;
+                    }
+                }
+
+                if ( ! stopped ) {
+                    log.debug("Process still running after processCheckDelay period, passing step");
+                }
+            }
+
+        }
+    }
+
 }
