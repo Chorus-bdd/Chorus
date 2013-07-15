@@ -99,6 +99,9 @@ public abstract class AbstractInterpreterTest extends Assert {
         //System.out.println("*" + expectedResults.getStandardError() + "*");
         actualResults.preProcessForTests();
         expectedResults.preProcessForTests();
+        
+        processActualResults(actualResults);
+        processExpectedResults(expectedResults);
 
         System.out.println("\n\nSummary:\n");
 
@@ -115,8 +118,8 @@ public abstract class AbstractInterpreterTest extends Assert {
 
         //now actually fail the test if appropriate
         assertEquals("wrong exit code", expectedResults.getInterpreterExitCode(), actualResults.getInterpreterExitCode());
-        assertEquals("wrong stdout", expectedResults.getStandardOutput(), actualResults.getStandardOutput());
-        assertEquals("wrong stderr", expectedResults.getStandardError(), actualResults.getStandardError());
+        assertEquals("wrong stdout", expectedResults.getStandardOutput().trim(), actualResults.getStandardOutput().trim());
+        assertEquals("wrong stderr", expectedResults.getStandardError().trim(), actualResults.getStandardError().trim());
 
         try {
             Thread.sleep(25);  //prevent output being confused by junit plugin with next test
@@ -124,6 +127,14 @@ public abstract class AbstractInterpreterTest extends Assert {
             e.printStackTrace();
         }
         return success;
+    }
+
+    //hook for subclass processing
+    protected void processExpectedResults(ChorusSelfTestResults expectedResults) {
+    }
+
+    //hook for subclass processing
+    protected void processActualResults(ChorusSelfTestResults actualResults) {
     }
 
     private DefaultTestProperties getTestSysProps(String featurePath) {

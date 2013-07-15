@@ -61,6 +61,18 @@ public class ChorusSelfTestResults {
         return standardError;
     }
 
+    public void setStandardOutput(String standardOutput) {
+        this.standardOutput = standardOutput;
+    }
+
+    public void setStandardError(String standardError) {
+        this.standardError = standardError;
+    }
+
+    public void setInterpreterReturnCode(int interpreterReturnCode) {
+        this.interpreterReturnCode = interpreterReturnCode;
+    }
+
     public int getInterpreterExitCode() {
         return interpreterReturnCode;
     }
