@@ -53,8 +53,8 @@ public class TestProcessCheckDelay extends AbstractInterpreterTest {
     }
 
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        if (! actualResults.getStandardError().contains("ClassNotFoundException")) {
-            fail("Expected standard error to contain ClassNotFoundException");
+        if (! actualResults.getStandardError().contains("NoClassDefFoundError")) {
+            fail("Expected standard error to contain NoClassDefFoundError");
         }
         
         actualResults.setStandardError(   //eliminate troublesome stack elements
