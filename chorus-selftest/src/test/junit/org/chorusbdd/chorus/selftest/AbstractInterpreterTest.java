@@ -33,6 +33,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -135,6 +137,41 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     //hook for subclass processing
     protected void processActualResults(ChorusSelfTestResults actualResults) {
+    }
+
+    /**
+     * If logging is false asynchronously logged lines may appear in std. out or error at variying points leading 
+     * to indeterminate results. This lets us strip those lines
+     */
+    protected void removeLineFromStdOut(ChorusSelfTestResults r, String line, boolean failIfMissing) {
+        String pattern = "(?m)^" + line + "\\s*$\\n";
+        String o = r.getStandardOutput();
+        String removed = removeAsynchronouslyLoggedOutput(o, pattern, failIfMissing, "standard out");
+        r.setStandardOutput(removed);
+    }
+
+    /**
+     * If logging is false asynchronously logged lines may appear in std. out or error at variying points leading 
+     * to indeterminate results. This lets us strip those lines
+     */
+    protected void removeLineFromStdErr(ChorusSelfTestResults r, String line, boolean failIfMissing) {
+        String pattern = "(?m)^" + line + "\\s*$\\n";
+        String o = r.getStandardError();
+        String removed = removeAsynchronouslyLoggedOutput(o, pattern, failIfMissing, "standard out");
+        r.setStandardError(removed);
+    }
+    
+    protected String removeAsynchronouslyLoggedOutput(String content, String pattern, boolean failIfMissing, String description) {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(content);
+        if ( m.find() ) {
+            content = m.replaceFirst("");
+        } else {
+            if (failIfMissing) {
+                fail("Could not find the pattern [" + pattern + "] in " + description);
+            }
+        }
+        return content;  
     }
 
     private DefaultTestProperties getTestSysProps(String featurePath) {

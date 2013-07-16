@@ -30,6 +30,7 @@
 package remoting.jmx.remoteexceptions;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,6 +50,12 @@ public class TestJmxRemoteExceptions extends AbstractInterpreterTest {
 
     protected String getFeaturePath() {
         return featurePath;
+    }
+
+    protected void processActualResults(ChorusSelfTestResults expectedResults) {
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
     }
 
 }

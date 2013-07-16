@@ -30,6 +30,7 @@
 package remoting.jmx.remotechoruscontext;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
@@ -56,4 +57,9 @@ public class TestJmxRemoteChorusContext extends AbstractInterpreterTest {
    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
        sysProps.put(ChorusConfigProperty.SHOW_ERRORS.getSystemProperty(), "true");
    }
+
+
+    protected void processActualResults(ChorusSelfTestResults expectedResults) {
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+    }
 }

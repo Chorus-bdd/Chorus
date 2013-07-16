@@ -30,6 +30,7 @@
 package remoting.jmx.singlehandlerexport;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,4 +52,8 @@ public class TestJmxSingleHandlerExport extends AbstractInterpreterTest {
         return featurePath;
     }
 
+    protected void processActualResults(ChorusSelfTestResults expectedResults) {
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+    }
+    
 }
