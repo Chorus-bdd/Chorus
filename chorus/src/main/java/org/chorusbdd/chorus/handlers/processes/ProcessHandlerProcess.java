@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.io.*;
+import java.util.List;
 
 /**
 * Created with IntelliJ IDEA.
@@ -42,9 +43,11 @@ import java.io.*;
 * Time: 22:22
 * To change this template use File | Settings | File Templates.
 */
-public class ProcessHandlerProcess {
+public class ProcessHandlerProcess implements ChorusProcess {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessHandlerProcess.class);
+    private FileOutputStream stdoutStream;
+    private FileOutputStream stderrStream;
 
     private Process process;
     private ProcessRedirector outRedirector;
@@ -58,11 +61,16 @@ public class ProcessHandlerProcess {
         log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
 
         //if there are no log paths set, redirect the process output to appear inline with the chorus interpreter std out/err
-        if ( logOutput.isLogging()) {
-            PrintStream out = new PrintStream(logOutput.getStdoutStream(), true);
+        boolean logToFile = logOutput.isLogToFile();
+        if ( logToFile ) {
+            logToFile = createLogOutputStreams(logOutput);
+        }
+        
+        if ( logToFile ) {
+            PrintStream out = new PrintStream(stdoutStream, true);
             this.outRedirector = new ProcessRedirector(processOutStream, true, out);
 
-            PrintStream err = new PrintStream(logOutput.getStderrStream(), true);
+            PrintStream err = new PrintStream(stderrStream, true);
             this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
         } else {
             this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
@@ -77,6 +85,28 @@ public class ProcessHandlerProcess {
         errThread.start();
     }
 
+    private boolean createLogOutputStreams(ProcessLogOutput logOutput) {
+        boolean logToFile = true;
+        File stdOutLogFile = logOutput.getStdOutLogFile();
+        try {
+            log.debug("Creating process log at " + stdOutLogFile.getPath());
+            stdoutStream = new FileOutputStream(stdOutLogFile, logOutput.isAppendToLogs());
+        } catch (Exception e) {
+            logToFile = false;
+            log.warn("Failed to create log file to output log file " + stdOutLogFile.getPath() + " will not write a log file");
+        }
+
+        File stdErrLogFile = logOutput.getStdErrLogFile();
+        try {
+            log.debug("Creating process log at " + stdErrLogFile.getPath());
+            stderrStream = new FileOutputStream(stdErrLogFile, logOutput.isAppendToLogs());
+        } catch (Exception e) {
+            logToFile = false;
+            log.warn("Failed to create log file to error log file " + stdErrLogFile.getPath() + " will not write a log file");
+        }
+        return logToFile;
+    }
+
     public boolean isStopped() {
         boolean stopped = true;
         try {
@@ -85,18 +115,6 @@ public class ProcessHandlerProcess {
             stopped = false;
         }
         return stopped;
-    }
-
-    public void destroy() {
-        // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
-        log.debug("Destroying process " + process);
-        process.destroy();
-        try {
-            //this ensures that all of the processes resources are cleaned up before proceeding
-            process.waitFor();
-        } catch (InterruptedException e) {
-            log.error("Interrupted while waiting for process to terminate",e);
-        }
     }
 
     public void waitFor() throws InterruptedException {
@@ -141,6 +159,42 @@ public class ProcessHandlerProcess {
                 }
             }
 
+        }
+    }
+
+    public void destroy() {
+        // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
+        try {
+            log.debug("Destroying process " + process);
+            process.destroy();
+            try {
+                //this ensures that all of the processes resources are cleaned up before proceeding
+                process.waitFor();
+            } catch (InterruptedException e) {
+                log.error("Interrupted while waiting for process to terminate",e);
+            }
+        } finally {
+            closeStreams();
+        }
+    }
+
+    private void closeStreams() {
+        if ( stdoutStream != null) {
+            try {
+                stdoutStream.flush();
+                stdoutStream.close();
+            } catch (IOException e) {
+                log.trace("Failed to flush and close stdout log file stream", e);
+            }
+        }
+
+        if ( stderrStream != null) {
+            try {
+                stderrStream.flush();
+                stderrStream.close();
+            } catch (IOException e) {
+                log.trace("Failed to flush and close stderr log file stream", e);
+            }
         }
     }
 

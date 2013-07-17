@@ -46,10 +46,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -74,11 +71,9 @@ public class ProcessesHandler {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
-    private final Map<String, ProcessHandlerProcess> processes = new HashMap<String, ProcessHandlerProcess>();
+    private final Map<String, ChorusProcess> processes = new HashMap<String, ChorusProcess>();
 
     private final Map<String, Integer> processCounters = new HashMap<String, Integer>();
-
-    public static final String STARTING_JAVA_LOG_PREFIX = "About to run Java: ";
 
     private PropertiesFilePropertySource propertiesLoader;
 
@@ -86,9 +81,9 @@ public class ProcessesHandler {
 
     private Map<String, String> aliasToConfigName = new HashMap<String,String>();
 
-    private FeatureLogFileManager featureLogFileManager = new FeatureLogFileManager();
-
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+    
+    private ChorusProcessFactory chorusProcessFactory = new ChorusProcessFactory();
 
     public ProcessesHandler() {
         addShutdownHook();
@@ -119,9 +114,7 @@ public class ProcessesHandler {
         String log4jProperties = "";
 
         //get the log output containing logging configuration and out and err streams for this process
-        ProcessLogOutput logOutput = featureLogFileManager.getLogOutput(
-            featureDir, featureFile, featureToken, alias, processesConfig
-        );
+        ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, processesConfig, alias);
 
         File log4jConfigFile = findLog4jConfigFile();
         if ( log4jConfigFile != null && log4jConfigFile.exists()) {
@@ -155,26 +148,57 @@ public class ProcessesHandler {
         //I'm worried those will break for linux although this will fix the classpath issue.
         //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
         boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
-        String commandTxt = isWindows ?
-            "%s%sbin%sjava %s %s %s %s -classpath \"%s\" %s %s" :
-            "%s%sbin%sjava %s %s %s %s -classpath %s %s %s";
-
-        //construct a command
-        String command = String.format(
-                commandTxt,
+        
+        String executableTxt = "%s%sbin%sjava";
+        String executable = String.format(
+                executableTxt,
                 processesConfig.getJre(),
                 File.separatorChar,
-                File.separatorChar,
-                processesConfig.getJvmargs(),
-                log4jProperties,
-                debugSystemProperties,
-                jmxSystemProperties,
-                processesConfig.getClasspath(),
-                processesConfig.getMainclass(),
-                processesConfig.getArgs()).trim();
+                File.separatorChar
+        );
+        
+        
+        
+        String commandTxt = isWindows ?
+            "%s %s %s %s %s -classpath \"%s\" %s %s" :
+            "%s %s %s %s %s -classpath %s %s %s";
 
-        log.info(STARTING_JAVA_LOG_PREFIX + command);
-        startProcess(alias, command, logOutput, processesConfig.getProcessCheckDelay());
+        List<String> tokens = new ArrayList<String>();
+        addIfSet(tokens, executable);
+        addIfSet(tokens, processesConfig.getJvmargs());
+        addIfSet(tokens, log4jProperties);
+        addIfSet(tokens, debugSystemProperties);
+        addIfSet(tokens, jmxSystemProperties);
+        tokens.add("-classpath");
+        if ( isWindows ) {
+            tokens.add("\"" + processesConfig.getClasspath() + "\"");
+        } else {
+            tokens.add(processesConfig.getClasspath());
+        }
+        addIfSet(tokens, processesConfig.getMainclass());
+        addIfSet(tokens, processesConfig.getArgs());
+
+
+        
+        //construct a command
+//        String command = String.format(
+//                commandTxt,
+//                executable,
+//                processesConfig.getJvmargs(),
+//                log4jProperties,
+//                debugSystemProperties,
+//                jmxSystemProperties,
+//                processesConfig.getClasspath(),
+//                processesConfig.getMainclass(),
+//                processesConfig.getArgs()).trim();
+
+        startProcess(alias, tokens, logOutput, processesConfig.getProcessCheckDelay());
+    }
+
+    private void addIfSet(List<String> l, String s) {
+        if ( s.length() > 0) {
+            l.add(s);
+        }
     }
 
     private File findLog4jConfigFile() {
@@ -230,17 +254,15 @@ public class ProcessesHandler {
         };
 
         //get the log output containing logging configuration and out and err streams for this script
-        ProcessLogOutput l = featureLogFileManager.getLogOutput(
-            featureDir, featureFile, featureToken, name, c
-        );
+        ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, c, name);
 
         log.debug("About to run script: " + command);
-        startProcess(name, command, l, 250);
+        startProcess(name, Collections.singletonList(command), logOutput, 250);
     }
 
     @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
     public void stopProcess(String alias) {
-        ProcessHandlerProcess p = processes.get(alias);
+        ChorusProcess p = processes.get(alias);
         if (p != null) {
             try {
                 p.destroy();
@@ -257,7 +279,7 @@ public class ProcessesHandler {
 
     @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) (?:is |has )(?:stopped|terminated).*?")
     public void checkProcessHasStopped(String alias) {
-        ProcessHandlerProcess p = processes.get(alias);
+        ChorusProcess p = processes.get(alias);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + alias + "' to check is stopped");
         }
@@ -267,7 +289,7 @@ public class ProcessesHandler {
 
     @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) is running")
     public void checkProcessIsRunning(String alias) {
-        ProcessHandlerProcess p = processes.get(alias);
+        ChorusProcess p = processes.get(alias);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + alias + "' to check is running");
         }
@@ -296,7 +318,7 @@ public class ProcessesHandler {
     }
 
     private void waitForProcessToTerminate(String processName, int waitTimeSeconds) {
-        ProcessHandlerProcess p = processes.get(processName);
+        ChorusProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait for");
         }
@@ -348,14 +370,7 @@ public class ProcessesHandler {
                 log.warn("Error when stopping process named " + name, e);
             }
         }
-
-        try {
-            featureLogFileManager.destroy();
-        } catch (Exception e) {
-            log.warn("Error when closing log file streams", e);
-        }
     }
-
 
     private void validateMainClass(String mainClassName) {
         Class mainClass;
@@ -399,10 +414,8 @@ public class ProcessesHandler {
         return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
     }
 
-    private ProcessHandlerProcess startProcess(String name, String command, ProcessLogOutput logOutput, int processCheckDelay) throws Exception {
-
-        // have to redirect/consume stdout/stderr of child process to prevent it deadlocking
-        ProcessHandlerProcess child = new ProcessHandlerProcess(name, command, logOutput);
+    private ChorusProcess startProcess(String name, List<String> command, ProcessLogOutput logOutput, int processCheckDelay) throws Exception {
+        ChorusProcess child = chorusProcessFactory.createChorusProcess(name, command, logOutput);
         processes.put(name, child);
         child.checkProcess(processCheckDelay);
         return child;

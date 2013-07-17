@@ -53,7 +53,7 @@ public abstract class AbstractInterpreterTest extends Assert {
      * Set this sys prop if you want to run the tests in process (as well as forked)
      * This is very useful when running locally, if you want to use the debugger, and also for generating coverage information
      */
-    private static final boolean runTestsInProcess = Boolean.valueOf(System.getProperty("chorusSelfTestsRunInProcess", "true"));
+    private static final boolean runTestsInProcess = Boolean.valueOf(System.getProperty("chorusSelfTestsRunInProcess", "false"));
 
     /**
      * Set this sys prop if you want to run the tests forked

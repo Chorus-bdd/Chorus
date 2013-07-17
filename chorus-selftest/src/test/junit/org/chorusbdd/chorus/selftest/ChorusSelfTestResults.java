@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest;
 
+import org.chorusbdd.chorus.handlers.processes.ChorusProcess;
 import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
 
 /**
@@ -91,7 +92,7 @@ public class ChorusSelfTestResults {
     }
 
     private String replaceSystemSpecificProcessDetails(String output) {
-        return output.replaceAll(ProcessesHandler.STARTING_JAVA_LOG_PREFIX + ".*", ProcessesHandler.STARTING_JAVA_LOG_PREFIX + " <system specific process details replaced>");
+        return output.replaceAll(ChorusProcess.STARTING_JAVA_LOG_PREFIX + ".*", ChorusProcess.STARTING_JAVA_LOG_PREFIX + " <system specific process details replaced>");
     }
 
     //ensure we have consistent paths to compare
