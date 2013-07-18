@@ -30,6 +30,7 @@
 package remoting.jmx.dualhandlerexport;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,13 +43,18 @@ public class TestJmxDualHandlerExport extends AbstractInterpreterTest {
     final String featurePath = "src/test/features/remoting/jmx/dualhandlerexport";
 
     final int expectedExitCode = 0;  //fail
-
+                                                      
     protected int getExpectedExitCode() {
         return expectedExitCode;
     }
 
     protected String getFeaturePath() {
         return featurePath;
+    }
+
+    protected void processActualResults(ChorusSelfTestResults expectedResults) {
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+        removeLineFromStdOut(expectedResults, "Exporting the handler", true);
     }
 
 }
