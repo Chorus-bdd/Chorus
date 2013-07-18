@@ -52,7 +52,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
     "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.OVERRIDE),
 
-    HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", true, 1, Integer.MAX_VALUE, ChorusConstants.ANY_PACKAGE, "[\\w\\.\\*]+", "-h my.package.name",
+    HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", true, 1, Integer.MAX_VALUE, null, "[\\w\\.\\*]+", "-h my.package.name",
     "Handler package names to restrict search for handler classes, speeds up handler class searching and avoids unnecessary class scanning. Subpackages will also be scanned", PropertySourceMode.OVERRIDE),
 
     STEPMACRO_PATHS("-stepMacroPaths", "-m", "chorusStepMacroPaths", false, 0, Integer.MAX_VALUE, null, ".*", "-m c:\\my\\path ..\\my\\path  ..\\my\\path\\mymacros.stepmacro",

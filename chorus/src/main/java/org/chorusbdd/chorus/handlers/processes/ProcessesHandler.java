@@ -164,19 +164,19 @@ public class ProcessesHandler {
             "%s %s %s %s %s -classpath %s %s %s";
 
         List<String> tokens = new ArrayList<String>();
-        addIfSet(tokens, executable);
-        addIfSet(tokens, processesConfig.getJvmargs());
-        addIfSet(tokens, log4jProperties);
-        addIfSet(tokens, debugSystemProperties);
-        addIfSet(tokens, jmxSystemProperties);
+        addSpaceSeparatedTokens(tokens, executable);
+        addSpaceSeparatedTokens(tokens, processesConfig.getJvmargs());
+        addSpaceSeparatedTokens(tokens, log4jProperties);
+        addSpaceSeparatedTokens(tokens, debugSystemProperties);
+        addSpaceSeparatedTokens(tokens, jmxSystemProperties);
         tokens.add("-classpath");
         if ( isWindows ) {
             tokens.add("\"" + processesConfig.getClasspath() + "\"");
         } else {
             tokens.add(processesConfig.getClasspath());
         }
-        addIfSet(tokens, processesConfig.getMainclass());
-        addIfSet(tokens, processesConfig.getArgs());
+        addSpaceSeparatedTokens(tokens, processesConfig.getMainclass());
+        addSpaceSeparatedTokens(tokens, processesConfig.getArgs());
 
 
         
@@ -193,6 +193,13 @@ public class ProcessesHandler {
 //                processesConfig.getArgs()).trim();
 
         startProcess(alias, tokens, logOutput, processesConfig.getProcessCheckDelay());
+    }
+
+    private void addSpaceSeparatedTokens(List<String> tokens, String spaceSeparated) {
+        String[] j = spaceSeparated.split(" ");
+        for ( String s : j ) {
+            addIfSet(tokens, s);
+        }
     }
 
     private void addIfSet(List<String> l, String s) {
