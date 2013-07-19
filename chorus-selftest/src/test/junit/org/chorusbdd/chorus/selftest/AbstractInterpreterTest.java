@@ -61,7 +61,7 @@ public abstract class AbstractInterpreterTest extends Assert {
     /**
      * Set this sys prop if you want to run the tests forked
      */
-    private static final boolean runTestsForked = Boolean.valueOf(System.getProperty("chorusSelfTestsForked", "false"));
+    private static final boolean runTestsForked = Boolean.valueOf(System.getProperty("chorusSelfTestsForked", "true"));
     private boolean inProcess;
 
     @Test
@@ -91,7 +91,7 @@ public abstract class AbstractInterpreterTest extends Assert {
         }
 
         if ( runTestsForked ) {
-            inProcess = true;
+            inProcess = false;
             ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysPropsForTest);
             checkTestResults(r, expectedResults);
         }
@@ -165,10 +165,15 @@ public abstract class AbstractInterpreterTest extends Assert {
      */
     protected void removeLineFromStdOut(ChorusSelfTestResults r, String line, boolean failIfMissing) {
         String pattern = "(?m)^" + line + "\\s*$\\n";
+        removeFromStdOut(r, pattern, failIfMissing);
+    }
+
+    protected void removeFromStdOut(ChorusSelfTestResults r, String pattern, boolean failIfMissing) {
         String o = r.getStandardOutput();
         String removed = removeAsynchronouslyLoggedOutput(o, pattern, failIfMissing, "standard out");
         r.setStandardOutput(removed);
     }
+
 
     /**
      * If logging is false asynchronously logged lines may appear in std. out or error at variying points leading 
@@ -299,6 +304,10 @@ public abstract class AbstractInterpreterTest extends Assert {
     //since the ChorusOut streams are not used.
     public boolean isInProcessAndJdk1_7() {
         return inProcess && JavaVersion.IS_1_7_OR_GREATER;
+    }
+    
+    public boolean isInProcess() {
+        return inProcess;
     }
     
 }

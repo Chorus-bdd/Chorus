@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.processcheckdelay;
 
+import org.chorusbdd.chorus.handlers.util.JavaVersion;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
@@ -54,14 +55,40 @@ public class TestProcessCheckDelay extends AbstractInterpreterTest {
     }
 
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        if ( ! isInProcessAndJdk1_7() && ! actualResults.getStandardError().contains("NoClassDefFoundError")) {
+        
+        //in the Jdk15Process we don't always capture the exception
+        //since it starts and dies before we can attach to the standard out
+        //ProcessBuilderProcess binds to the output atomically on startup
+        if ( 
+            ! isInProcess() && JavaVersion.IS_1_7_OR_GREATER && 
+               !(actualResults.getStandardError().contains("NoClassDefFoundError") ||
+               actualResults.getStandardError().contains("Could not find or load main class ThisClassDoesNotExist"))
+        ) {
             fail("Expected standard error to contain NoClassDefFoundError");
+        }
+        
+        if ( ! JavaVersion.IS_1_7_OR_GREATER) {
+            actualResults.setStandardOutput(
+                actualResults.getStandardOutput().replaceAll(
+                    "ProcessBuilderProcess", "Jdk15Process"
+                )
+            );    
         }
         
         actualResults.setStandardError(   //eliminate troublesome stack elements
                 "java.lang.NoClassDefFoundError: ThisClassDoesNotExist\n" +
                 "Caused by: java.lang.ClassNotFoundException: ThisClassDoesNotExist"
         );
+    }
+    
+    protected void processExpectedResults(ChorusSelfTestResults expectedResults) {
+        if ( ! JavaVersion.IS_1_7_OR_GREATER) {
+            expectedResults.setStandardOutput(
+                    expectedResults.getStandardOutput().replaceAll(
+                        "ProcessBuilderProcess", "Jdk15Process"
+                    )
+            );    
+        }
     }
     
 }

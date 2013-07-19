@@ -34,7 +34,6 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.io.*;
-import java.util.List;
 
 /**
 * Created with IntelliJ IDEA.
@@ -43,9 +42,9 @@ import java.util.List;
 * Time: 22:22
 * To change this template use File | Settings | File Templates.
 */
-public class ProcessHandlerProcess implements ChorusProcess {
+public class Jdk15Process implements ChorusProcess {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessHandlerProcess.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(Jdk15Process.class);
     private FileOutputStream stdoutStream;
     private FileOutputStream stderrStream;
 
@@ -53,7 +52,7 @@ public class ProcessHandlerProcess implements ChorusProcess {
     private ProcessRedirector outRedirector;
     private ProcessRedirector errRedirector;
 
-    public ProcessHandlerProcess(String name, String command, ProcessLogOutput logOutput) throws Exception {
+    public Jdk15Process(String name, String command, ProcessLogOutput logOutput) throws Exception {
         this.process = Runtime.getRuntime().exec(command);
 
         InputStream processOutStream = process.getInputStream();

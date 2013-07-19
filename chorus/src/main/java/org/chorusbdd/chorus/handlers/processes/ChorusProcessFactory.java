@@ -33,7 +33,7 @@ public class ChorusProcessFactory {
             return new ProcessBuilderProcess(commandTokens, logOutput);
         } else {
             log.debug("Using Runtime.exec() to start the process since detected java runtime < 1.7");
-            return new ProcessHandlerProcess(name, command, logOutput);
+            return new Jdk15Process(name, command, logOutput);
         }
     }
 }
