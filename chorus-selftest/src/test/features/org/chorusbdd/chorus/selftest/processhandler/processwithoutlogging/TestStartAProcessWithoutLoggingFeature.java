@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.selftest.processhandler.processwithoutlogging;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,6 +50,15 @@ public class TestStartAProcessWithoutLoggingFeature extends AbstractInterpreterT
 
     protected String getFeaturePath() {
         return featurePath;
+    }
+    
+    @Override
+    protected void processActualResults(ChorusSelfTestResults actual) {
+       if ( ! isInProcessAndJdk1_7() ) {
+           removeLineFromStdOut(actual, "1", true);
+           removeLineFromStdOut(actual, "Woohoo, we have started a process", true);
+           removeLineFromStdErr(actual, "Eeek, an error might have occurred", true);           
+       }
     }
 
 }

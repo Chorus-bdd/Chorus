@@ -56,7 +56,7 @@ public class TestRecursiveSearch extends AbstractInterpreterTest {
 
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
         //recursive search under recursivesearch package
-        sysProps.put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org/chorusbdd/chorus/selftest/recursivesearch");
+        sysProps.put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest.recursivesearch");
     }
 
 }

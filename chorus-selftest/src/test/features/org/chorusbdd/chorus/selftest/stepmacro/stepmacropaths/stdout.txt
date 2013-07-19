@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading stepmacro from file: src/test/features/stepmacro/stepmacropaths/globalsteps.stepmacro
+Chorus --> INFO    - Loading stepmacro from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/stepmacropaths/globalsteps.stepmacro
 Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/stepmacropaths/stepmacropaths.feature
 Feature: Step Macro Path                                                                             
   Scenario: Calling a global macro

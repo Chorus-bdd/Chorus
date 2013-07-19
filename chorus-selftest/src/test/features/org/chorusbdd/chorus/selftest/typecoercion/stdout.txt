@@ -22,7 +22,7 @@ Chorus --> INFO    - Processing scenario: Enum Value Coercion
     Given Chorus is working properly                                                         PASSED  
     Then I can coerce the value Genesis to a GenesisAlbum                                    PASSED  Genesis
     And I can coerce the value Trespass to a GenesisAlbum                                    PASSED  Trespass
-Chorus --> INFO    - Matched step but could not coerce Quadrophenia to type class typecoercion.GenesisAlbum
+Chorus --> INFO    - Matched step but could not coerce Quadrophenia to type class org.chorusbdd.chorus.selftest.typecoercion.GenesisAlbum
     But I can't coerce the value Quadrophenia to a GenesisAlbum                              UNDEFINED 
   Scenario: Failed int conversion
 Chorus --> INFO    - Processing scenario: Failed int conversion

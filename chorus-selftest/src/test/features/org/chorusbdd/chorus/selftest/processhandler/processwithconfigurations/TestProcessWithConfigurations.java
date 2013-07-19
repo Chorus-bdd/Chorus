@@ -54,10 +54,11 @@ public class TestProcessWithConfigurations extends AbstractInterpreterTest {
 
     @Override
     protected void processExpectedResults(ChorusSelfTestResults expected) {
-        if ( isInProcess() ) {
+        if ( isInProcessAndJdk1_7() ) {
             removeLineFromStdOut(expected, "ConfA", true);
             removeLineFromStdOut(expected, "Config", true);
             removeLineFromStdOut(expected, "Shared", true);
+            removeLineFromStdOut(expected, "Config", true);
         }
     }
 }

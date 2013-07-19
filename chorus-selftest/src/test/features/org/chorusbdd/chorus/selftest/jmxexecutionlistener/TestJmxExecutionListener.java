@@ -92,7 +92,7 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         sysPropsForTest.put("com.sun.management.jmxremote.port", "9999");
         sysPropsForTest.put("com.sun.management.jmxremote", "");
         sysPropsForTest.put("com.sun.management.jmxremote.ssl", "false");
-        f.runForked(sysPropsForTest, "jmxexecutionlistener.ExecutionListenerMain", outStream, 0);
+        f.runForked(sysPropsForTest, "org.chorusbdd.chorus.selftest.jmxexecutionlistener.ExecutionListenerMain", outStream, 0);
         Thread.sleep(2000);  //let the forked listener start up and create its MBeans
     }
 

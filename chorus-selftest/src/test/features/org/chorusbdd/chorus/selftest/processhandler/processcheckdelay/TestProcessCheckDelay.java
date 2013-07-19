@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.selftest.processhandler.processcheckdelay;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,7 +54,7 @@ public class TestProcessCheckDelay extends AbstractInterpreterTest {
     }
 
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        if ( ! isInProcess() && ! actualResults.getStandardError().contains("NoClassDefFoundError")) {
+        if ( ! isInProcessAndJdk1_7() && ! actualResults.getStandardError().contains("NoClassDefFoundError")) {
             fail("Expected standard error to contain NoClassDefFoundError");
         }
         
@@ -62,5 +63,5 @@ public class TestProcessCheckDelay extends AbstractInterpreterTest {
                 "Caused by: java.lang.ClassNotFoundException: ThisClassDoesNotExist"
         );
     }
-
+    
 }
