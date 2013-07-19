@@ -27,24 +27,23 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
-
-import java.util.Properties;
+package org.chorusbdd.chorus.selftest.handlerproperties.propertiesinfeaturedir;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class DefaultTestProperties extends Properties {
+public class StartAProcessMain {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    public static void main(String[] args) throws InterruptedException {
+
+        //write out all the arguments so we can test them
+        for (String s : args) {
+            System.out.println(s);
+        }
+        System.out.println("wibble");
     }
+
 }

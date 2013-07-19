@@ -27,24 +27,36 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.springcontext;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.springframework.test.context.ContextConfiguration;
+
+import javax.annotation.Resource;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Context Configuration")
+@ContextConfiguration("testSpringContext.xml")
+public class ContextConfigurationHandler extends ChorusAssert {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @Resource
+    private String injectedString;
+
+    @Resource
+    private Integer injectedInteger;
+
+    @Step("resource fields are injected into contextconfiguration handler")
+    public void resourcesAreInjected() {
+        assertEquals("Resources are injected", "Hello", injectedString);
+        assertEquals("Resources are injected", 999, injectedInteger.intValue());
     }
+
+
 }

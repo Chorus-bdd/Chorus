@@ -27,24 +27,21 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.handlerproperties.defaultproperties;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class DefaultTestProperties extends Properties {
+public class StartAProcessMain {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    public static void main(String[] args) throws InterruptedException {
+        new ChorusHandlerJmxExporter(new DefaultPropertiesHandler()).export();
+        Thread.sleep(30000); //don't die staight away
     }
+
 }

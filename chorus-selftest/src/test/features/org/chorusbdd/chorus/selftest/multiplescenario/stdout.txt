@@ -1,0 +1,29 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/multiplescenario/multiplescenario.feature
+Feature: Multiple Scenario                                                                           
+  Scenario: Simple Scenario One
+Chorus --> INFO    - Processing scenario: Simple Scenario One
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario one                                                    PASSED  
+    And if a step fails                                                                      FAILED  (MultipleScenarioHandler:55)-This step threw an exception to fail it
+    Then the subsequent steps are skipped                                                    SKIPPED 
+    But the next scenario still runs                                                         SKIPPED 
+  Scenario: Simple Scenario Two
+Chorus --> INFO    - Processing scenario: Simple Scenario Two
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario two                                                    PASSED  
+    And if a step is not implemented                                                         UNDEFINED 
+    Then the subsequent steps are skipped                                                    SKIPPED 
+    But the next scenario still runs                                                         SKIPPED 
+  Scenario: Simple Scenario Three
+Chorus --> INFO    - Processing scenario: Simple Scenario Three
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario three                                                  PASSED  
+  Scenario: Simple Scenario Four
+Chorus --> INFO    - Processing scenario: Simple Scenario Four
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a step in scenario four                                                   PASSED  
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:4) (passed:2) (failed:2)
+Steps     (total:14) (passed:8) (failed:1) (undefined:1) (pending:0) (skipped:4)

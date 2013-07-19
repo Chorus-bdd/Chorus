@@ -1,0 +1,17 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature
+Feature: Handler Priority No Default Handler                                                         
+Chorus --> INFO    - No default handler found for Feature: (Handler Priority No Default Handler), will use built-in handlers and Uses: statements
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandlerThree.isWorkingProperly)
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority Three) will use first method found (HandlerPriorityHandlerThree.stepsInAllThreeHandlers)
+    Then steps in all three handlers should be handled by Handler Priority Three             PASSED  
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInJustTwoAndThree) found for step (And steps in just handler two and three should be handled by Handler Priority Three) will use first method found (HandlerPriorityHandlerThree.stepsInJustTwoAndThree)
+    And steps in just handler two and three should be handled by Handler Priority Three      PASSED  
+    And steps in just handler two should be handled by Handler Priority Two                  PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -1,0 +1,59 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/typecoercion/typecoercion.feature
+Feature: Type Coercion                                                                               
+  Scenario: Successful Single Value Coercion
+Chorus --> INFO    - Processing scenario: Successful Single Value Coercion
+    Given Chorus is working properly                                                         PASSED  
+    Then I can coerce a value 1 to an int                                                    PASSED  1
+    And I can coerce a value 2 to an Integer                                                 PASSED  2
+    And I can coerce a value 3.12345 to a double                                             PASSED  3.12345
+    And I can coerce a value 4.12345 to a Double                                             PASSED  4.12345
+    And I can coerce a value Duke to a String                                                PASSED  Duke
+    And I can coerce a value Abacab to a StringBuffer                                        PASSED  Abacab
+    And I can coerce a value false to a boolean                                              PASSED  false
+    And I can coerce a value true to a Boolean                                               PASSED  true
+    And I can coerce a value FaLsE to a boolean                                              PASSED  false
+    And I can coerce a value tRuE to a Boolean                                               PASSED  true
+    And I can coerce a value 1 to a byte                                                     PASSED  1
+    And I can coerce a value 2 to a Byte                                                     PASSED  2
+    And I can coerce a value a to a char                                                     PASSED  a
+    And I can coerce a value b to a Character                                                PASSED  b
+  Scenario: Enum Value Coercion
+Chorus --> INFO    - Processing scenario: Enum Value Coercion
+    Given Chorus is working properly                                                         PASSED  
+    Then I can coerce the value Genesis to a GenesisAlbum                                    PASSED  Genesis
+    And I can coerce the value Trespass to a GenesisAlbum                                    PASSED  Trespass
+Chorus --> INFO    - Matched step but could not coerce Quadrophenia to type class typecoercion.GenesisAlbum
+    But I can't coerce the value Quadrophenia to a GenesisAlbum                              UNDEFINED 
+  Scenario: Failed int conversion
+Chorus --> INFO    - Processing scenario: Failed int conversion
+Chorus --> INFO    - Matched step but could not coerce wibble to type int
+    Ensure I can't coerce a value wibble to an int                                           UNDEFINED 
+  Scenario: Failed int conversion from float value
+Chorus --> INFO    - Processing scenario: Failed int conversion from float value
+Chorus --> INFO    - Matched step but could not coerce 1.2 to type int
+    Ensure I can't coerce a value 1.2 to an int                                              UNDEFINED 
+  Scenario: Failed boolean conversion
+Chorus --> INFO    - Processing scenario: Failed boolean conversion
+Chorus --> INFO    - Matched step but could not coerce wibble to type boolean
+    Ensure I can't coerce a value wibble to a boolean                                        UNDEFINED 
+  Scenario: Failed byte conversion
+Chorus --> INFO    - Processing scenario: Failed byte conversion
+Chorus --> INFO    - Matched step but could not coerce Z to type byte
+    Ensure I can't coerce a value Z to a byte                                                UNDEFINED 
+  Scenario: Failed char conversion
+Chorus --> INFO    - Processing scenario: Failed char conversion
+Chorus --> INFO    - Matched step but could not coerce Foxtrot to type char
+    Ensure I can't coerce a value Foxtrot to a char                                          UNDEFINED 
+  Scenario: Coercion to Object
+Chorus --> INFO    - Processing scenario: Coercion to Object
+    Given Chorus is working properly                                                         PASSED  
+    Then the value false is converted to Boolean when the method parameter type is Object    PASSED  Boolean
+    And the value true is converted to Boolean when the method parameter type is Object      PASSED  Boolean
+    And the value 1.234 is converted to Double when the method parameter type is Object      PASSED  Double
+    And the value 1 is converted to Long when the method parameter type is Object            PASSED  Long
+    And the value AndThenThereWereThree is converted to String when the method parameter type is ObjectPASSED  String
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:8) (passed:2) (failed:6)
+Steps     (total:30) (passed:24) (failed:0) (undefined:6) (pending:0) (skipped:0)

@@ -27,24 +27,44 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.processhandler.log4jconfiginfeaturedir;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Process With Log4j Config In Feature Dir")
+public class Log4jConfigInFeatureDirHandler extends ChorusAssert {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @ChorusResource("feature.dir")
+    File featureDir;
+
+    @Step("log4j has written to the (.*) file")
+    public void checkLogFile(String name) {
+        File f = new File(featureDir.getAbsolutePath(), name );
+        ChorusAssert.assertTrue("Log file does not exist", f.exists());
     }
+
+    @Step("I can delete the log file (.*)")
+    public void deleteLogFile(String name) {
+        File f = new File(featureDir.getAbsolutePath(), name );
+        ChorusAssert.assertTrue("Log file does not exist", f.exists());
+        assertTrue("Could not delete log", f.delete());
+    }
+
+    @Step("Default logs dir was not created")
+    public void checkDefaultLogsDirNotCreated() {
+        File f = new File(featureDir.getAbsolutePath(), "logs");
+        assertFalse("Default logs dir created", f.exists());
+    }
+
 }

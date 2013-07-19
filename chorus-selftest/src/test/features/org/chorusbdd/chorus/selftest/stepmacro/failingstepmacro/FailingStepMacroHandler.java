@@ -27,24 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.stepmacro.failingstepmacro;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Failing Step Macro")
+public class FailingStepMacroHandler extends ChorusAssert {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
+
     }
+
+    @Step("I can call a handler step with group (.*)")
+    public String callWithGroup(String group) {
+        return group;
+    }
+
 }

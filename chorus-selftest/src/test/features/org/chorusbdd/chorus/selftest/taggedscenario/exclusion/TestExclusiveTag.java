@@ -27,24 +27,35 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.taggedscenario.exclusion;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class DefaultTestProperties extends Properties {
+public class TestExclusiveTag extends AbstractInterpreterTest {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/exclusion";
+
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
+
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+
+
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+        sysProps.put(ChorusConfigProperty.TAG_EXPRESSION.getSystemProperty(), "!@MyTag");
+    }
+
 }

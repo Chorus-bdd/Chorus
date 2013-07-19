@@ -27,24 +27,40 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.handlerpriority;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Handler Priority Two")
+public class HandlerPriorityHandlerTwo {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
+    }
+
+    @Step("steps in all three handlers should be handled by (.*)")
+    public void stepsInAllThreeHandlers(String expectedHandler) {
+       String actualHandler = getClass().getAnnotation(Handler.class).value();
+       ChorusAssert.assertEquals(actualHandler, expectedHandler);
+    }
+
+    @Step("steps in just handler two and three should be handled by (.*)")
+    public void stepsInJustTwoAndThree(String expectedHandler) {
+       String actualHandler = getClass().getAnnotation(Handler.class).value();
+       ChorusAssert.assertEquals(actualHandler, expectedHandler);
+    }
+
+    @Step("steps in just handler two should be handled by (.*)")
+    public void stepsInJustTwo(String expectedHandler) {
+       String actualHandler = getClass().getAnnotation(Handler.class).value();
+       ChorusAssert.assertEquals(actualHandler, expectedHandler);
     }
 }

@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  * Time: 08:40
  */
 public abstract class AbstractInterpreterTest extends Assert {
-
+   
     /**
      * Set this sys property to have the actual test output overwrite expected output in the stdout.txt stderr.txt files
      * useful if you make a minor change to the output which breaks all the tests
@@ -55,12 +55,13 @@ public abstract class AbstractInterpreterTest extends Assert {
      * Set this sys prop if you want to run the tests in process (as well as forked)
      * This is very useful when running locally, if you want to use the debugger, and also for generating coverage information
      */
-    private static final boolean runTestsInProcess = Boolean.valueOf(System.getProperty("chorusSelfTestsRunInProcess", "false"));
+    private static final boolean runTestsInProcess = Boolean.valueOf(System.getProperty("chorusSelfTestsRunInProcess", "true"));
 
     /**
      * Set this sys prop if you want to run the tests forked
      */
-    private static final boolean runTestsForked = Boolean.valueOf(System.getProperty("chorusSelfTestsForked", "true"));
+    private static final boolean runTestsForked = Boolean.valueOf(System.getProperty("chorusSelfTestsForked", "false"));
+    private boolean inProcess;
 
 
     @Test
@@ -84,11 +85,13 @@ public abstract class AbstractInterpreterTest extends Assert {
         );
 
         if (runTestsInProcess) {
+            inProcess = true;
             ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysPropsForTest);
             checkTestResults(r, expectedResults);
         }
 
         if ( runTestsForked ) {
+            inProcess = true;
             ChorusSelfTestResults r = new ForkedRunner().runChorusInterpreter(sysPropsForTest);
             checkTestResults(r, expectedResults);
         }
@@ -102,8 +105,8 @@ public abstract class AbstractInterpreterTest extends Assert {
         actualResults.preProcessForTests();
         expectedResults.preProcessForTests();
         
-        processActualResults(actualResults);
-        processExpectedResults(expectedResults);
+        processActual(actualResults);
+        processExpected(expectedResults);
 
         System.out.println("\n\nSummary:\n");
 
@@ -131,12 +134,29 @@ public abstract class AbstractInterpreterTest extends Assert {
         return success;
     }
 
+    protected void processExpected(ChorusSelfTestResults expectedResults) {
+        replaceLineNumbers(expectedResults);
+        processExpectedResults(expectedResults);
+    }
+
+    //hook for subclass processing
+    protected void processActual(ChorusSelfTestResults actualResults) {
+        replaceLineNumbers(actualResults);
+        processActualResults(actualResults);
+    }
+    
     //hook for subclass processing
     protected void processExpectedResults(ChorusSelfTestResults expectedResults) {
     }
 
     //hook for subclass processing
     protected void processActualResults(ChorusSelfTestResults actualResults) {
+    }
+
+    private void replaceLineNumbers(ChorusSelfTestResults expectedResults) {
+        String stdOut = expectedResults.getStandardOutput();
+        stdOut = stdOut.replaceAll("\\((\\w+)" + ":\\d+\\)-", "($1:linenumber)-");
+        expectedResults.setStandardOutput(stdOut);
     }
 
     /**
@@ -273,4 +293,12 @@ public abstract class AbstractInterpreterTest extends Assert {
     public InputStream getStreamFromExpectedStdErrFile() {
        return getClass().getResourceAsStream(getStdErrFileName());
     }
+    
+    //for tests which start processes which write to the interpreters standard out
+    //we do not capture that output into the test results when running inline
+    //since the ChorusOut streams are not used.
+    public boolean isInProcess() {
+        return inProcess;
+    }
+    
 }

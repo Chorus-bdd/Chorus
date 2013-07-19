@@ -27,24 +27,19 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
-
-import java.util.Properties;
+package org.chorusbdd.chorus.selftest.typecoercion;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
+ * Created with IntelliJ IDEA.
+ * User: GA2EBBU
+ * Date: 28/06/12
+ * Time: 13:59
  *
- * Standard set of properties for self-testing
+ * Test coercion to enum values
  */
-public class DefaultTestProperties extends Properties {
-
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
-    }
+public enum GenesisAlbum {
+    Genesis,
+    Trespass,
+    Duke,
+    Foxtrot
 }

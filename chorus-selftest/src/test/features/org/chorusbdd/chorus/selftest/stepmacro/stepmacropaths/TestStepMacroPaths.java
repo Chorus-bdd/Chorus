@@ -27,24 +27,37 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.stepmacro.stepmacropaths;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class DefaultTestProperties extends Properties {
+public class TestStepMacroPaths extends AbstractInterpreterTest {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    //a specific featre file, so the .stepmacro file would not get found
+    //unless we set the step macro paths parameter
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/stepmacro/stepmacropaths/stepmacropaths.feature";
+
+    final String stepMacroPaths = "src/test/features/org/chorusbdd/chorus/selftest/stepmacro/stepmacropaths";
+
+    final int expectedExitCode = 0;  //success
+
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+        sysProps.put("chorusStepMacroPaths", stepMacroPaths);
     }
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
+
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+
 }

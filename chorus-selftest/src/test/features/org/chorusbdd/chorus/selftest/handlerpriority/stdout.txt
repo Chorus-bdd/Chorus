@@ -1,0 +1,18 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/handlerpriority.feature
+Feature: Handler Priority                                                                            
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerThree.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerThree.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
+    Then steps in all three handlers should be handled by Handler Priority                   PASSED  
+Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerThree.stepsInJustTwoAndThree) found for step (And steps in just handler two and three should be handled by Handler Priority Two) will use first method found (HandlerPriorityHandlerTwo.stepsInJustTwoAndThree)
+    And steps in just handler two and three should be handled by Handler Priority Two        PASSED  
+    And steps in just handler two should be handled by Handler Priority Two                  PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

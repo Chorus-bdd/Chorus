@@ -27,24 +27,39 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.remoting.jmx.remoteexceptions;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Jmx Remote Exceptions")
+public class JmxRemoteExceptionsHandler extends ChorusAssert {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @Step("I can call a step method exported by the handler")
+    public void canCallAMethod() {
+    }
+
+    @Step("I call a method which throws an exception")
+    public void throwAnException() {
+        throw new RuntimeException("This message should appear in interpreter output");
+    }
+
+    @Step("I call a method which throws an assertion exception")
+    public void throwAnAssertException() {
+        ChorusAssert.assertTrue("This assertion failed", false);
+    }
+
+    //null pointers don't have a specific message, we need to handle that
+    //so that we see NullPointerException and a line in the remote interpreter output
+    @Step("I call a method which throws a NullPointerException")
+    public void throwANullPointer() {
+        throw new NullPointerException();
     }
 }

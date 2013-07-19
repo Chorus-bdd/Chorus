@@ -27,24 +27,40 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.jmxexecutionlistener;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
+import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
+import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
+import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class DefaultTestProperties extends Properties {
+public class ExecutionListenerMain {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Starting Remote JMX execution listener");
+        startJmx();
+        Thread.sleep(10000);
     }
+
+    private static void startJmx() {
+        ExecutionListener l = new SystemOutExecutionListener(true, false);
+        RemoteExecutionListener r = new RemoteExecutionListener(l);
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try {
+            mbs.registerMBean(r, new ObjectName(RemoteExecutionListenerMBean.JMX_EXECUTION_LISTENER_NAME));
+        } catch (Exception e) {
+            System.err.println("Failed to register jmx execution listener " + e);
+        }
+    }
+
 }

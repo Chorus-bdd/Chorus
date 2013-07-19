@@ -1,0 +1,16 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotechoruscontext/remotechoruscontext.feature
+Feature: Jmx Remote Chorus Context                                                                   
+Chorus --> INFO    - No default handler found for Feature: (Jmx Remote Chorus Context), will use built-in handlers and Uses: statements
+  Scenario: View And Change A Context Variable Remotely
+Chorus --> INFO    - Processing scenario: View And Change A Context Variable Remotely
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named Casablanca                                         PASSED  
+    And I set the context variable theUsualSuspects to Nick in Casablanca                    PASSED  
+    Then I can access the context variable theUsualSuspects in Casablanca                    PASSED  Nick:String
+    And_if I set the context variable theUsualSuspects to Steve in Casablanca                PASSED  
+    Then I show variable theUsualSuspects                                                    PASSED  theUsualSuspects='Steve'
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:5) (passed:5) (failed:0) (undefined:0) (pending:0) (skipped:0)

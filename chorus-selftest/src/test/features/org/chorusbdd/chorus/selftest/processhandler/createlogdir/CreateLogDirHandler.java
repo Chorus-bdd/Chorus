@@ -27,24 +27,41 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.processhandler.createlogdir;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.SelftestUtils;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Create Process Log Directory")
+public class CreateLogDirHandler extends ChorusAssert {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
+
     }
+
+    @Step("the (.*) file contains a line (.*)")
+    public void logContainsLine(String resourcePath, String line) throws IOException {
+        String path = AbstractInterpreterTest.getPathToFile(getClass(), resourcePath);
+        SelftestUtils.checkFileContainsLine(line, path);
+    }
+
+    @Step("the (.*) dir does not exist")
+    public void logContainsLine(String resourcePath) throws IOException {
+        String path = AbstractInterpreterTest.getPathToFile(getClass(), resourcePath);
+        assertTrue("File does not exist", ! new File(path).exists());
+    }
+
 }

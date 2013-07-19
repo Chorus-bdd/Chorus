@@ -27,24 +27,39 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.selftest.pendingsteps.pendingwithfailures;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class DefaultTestProperties extends Properties {
+@Handler("Pending Steps With Failures")
+public class PendingStepsHandler {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
-        put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
+
     }
+
+    @Step("I can run a feature with (?:.*) scenario")
+    public void canRunAFeature() {
+
+    }
+
+    @Step(value = "a pending step gets a pending status",
+          pending="bonjour, mes amis, I am a pending step")
+    public void aPendingStepGetsPendingStatus() {
+    }
+
+    @Step("I throw a PendingException then that step is shown pending with the exception message")
+    public void throwAPendingException() {
+        throw new StepPendingException("Hola?");
+    }
+
 }
