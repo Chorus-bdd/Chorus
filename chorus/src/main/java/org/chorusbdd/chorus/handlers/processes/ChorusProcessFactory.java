@@ -28,7 +28,7 @@ public class ChorusProcessFactory {
         String command = commandBuilder.toString();
         log.info(ChorusProcess.STARTING_JAVA_LOG_PREFIX + command);
 
-        if (JavaVersion.isGreaterThanOrEqualTo(1.7f)) {
+        if (JavaVersion.IS_1_7_OR_GREATER) {
             log.debug("Using ProcessBuilder to start the process since detected java runtime >= 1.7");
             return new ProcessBuilderProcess(commandTokens, logOutput);
         } else {

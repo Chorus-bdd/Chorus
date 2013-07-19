@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
+import org.chorusbdd.chorus.handlers.util.JavaVersion;
 import org.junit.Test;
 
 import java.io.*;
@@ -62,7 +63,6 @@ public abstract class AbstractInterpreterTest extends Assert {
      */
     private static final boolean runTestsForked = Boolean.valueOf(System.getProperty("chorusSelfTestsForked", "false"));
     private boolean inProcess;
-
 
     @Test
     public void runTest() throws Exception {
@@ -297,8 +297,8 @@ public abstract class AbstractInterpreterTest extends Assert {
     //for tests which start processes which write to the interpreters standard out
     //we do not capture that output into the test results when running inline
     //since the ChorusOut streams are not used.
-    public boolean isInProcess() {
-        return inProcess;
+    public boolean isInProcessAndJdk1_7() {
+        return inProcess && JavaVersion.IS_1_7_OR_GREATER;
     }
     
 }

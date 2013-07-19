@@ -208,7 +208,10 @@ public class ProcessesConfig extends AbstractHandlerConfig {
                 ", jmxPort=" + jmxPort +
                 ", debugPort=" + debugPort +
                 ", terminateWaitTime=" + terminateWaitTime +
+                ", logDirectory='" + logDirectory + '\'' +
+                ", appendToLogs=" + appendToLogs +
+                ", createLogDir=" + createLogDir +
+                ", processCheckDelay=" + processCheckDelay +
                 '}';
     }
-
 }
