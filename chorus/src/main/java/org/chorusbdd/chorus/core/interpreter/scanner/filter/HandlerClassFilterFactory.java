@@ -60,11 +60,8 @@ public class HandlerClassFilterFactory {
 
         ClassFilter handlerAnnotationFilter = new HandlerAnnotationFilter();
 
-        //exclude scanning certain standard packages (e.g. core jdk packages)
-        StandardPackageFilters standardPackageFilter = new StandardPackageFilters(handlerAnnotationFilter);
-
         //deny other chorus packages from the non-standard handlers package
-        DenyOtherChorusPackagesRule denyOtherChorusPackagesRule = new DenyOtherChorusPackagesRule(standardPackageFilter);
+        DenyOtherChorusPackagesRule denyOtherChorusPackagesRule = new DenyOtherChorusPackagesRule(handlerAnnotationFilter);
 
         //if user has specified package prefixes, restrict to those
         String[] userPackageNames = userSpecifiedPrefixes.length == 0 ? ChorusConstants.ANY_PACKAGE : userSpecifiedPrefixes;
