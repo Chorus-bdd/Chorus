@@ -46,7 +46,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testBooleanSwitchWithValue() throws InterpreterPropertyException {
-        String[] switches = new String[] { "-f", "./features", "-dryrun", "true" };
+        String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-dryrun", "true" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         c.readConfiguration();
         assertTrue(c.isTrue(ChorusConfigProperty.DRY_RUN));
@@ -55,7 +55,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testBooleanSwitchCanBeSetFalse() throws InterpreterPropertyException {
-        String[] switches = new String[] { "-f", "./features", "-dryrun", "false" };
+        String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-dryrun", "false" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         c.readConfiguration();
         assertTrue(! c.isTrue(ChorusConfigProperty.DRY_RUN));
@@ -64,7 +64,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testDefaultValueGetsSetIfAvailable() throws InterpreterPropertyException {
-        String[] switches = new String[] { "-f", "./features" };
+        String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         c.readConfiguration();
         assertTrue(! c.isTrue(ChorusConfigProperty.DRY_RUN));
@@ -73,7 +73,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testADefaultValueDoesNotGetSetIfNoDefaultDefined() throws InterpreterPropertyException {
-        String[] switches = new String[] { "-f", "./features" };
+        String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         c.readConfiguration();
         assertTrue(! c.isSet(ChorusConfigProperty.TAG_EXPRESSION));
@@ -81,7 +81,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testBooleanSwitchWithoutValue() throws InterpreterPropertyException {
-        String[] switches = new String[] { "-f", "./features", "-dryrun" };
+        String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-dryrun" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         c.readConfiguration();
         assertTrue(c.isTrue(ChorusConfigProperty.DRY_RUN));
@@ -90,7 +90,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testBooleanSwitchUsingShortName() throws InterpreterPropertyException {
-        String[] switches = new String[] { "-f", "./features", "-d" };
+        String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-d" };
         ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
         c.readConfiguration();
         assertTrue(c.isTrue(ChorusConfigProperty.DRY_RUN));
@@ -160,7 +160,7 @@ public class TestConfigReader extends ChorusAssert {
             ConfigReader c = new ConfigReader(Collections.singletonList(propertyWithMinValues), new String[] { "-h", "onevalue" });
             c.readConfiguration();
             List<String> values = c.getValues(propertyWithMinValues);
-            assertEquals("property value count", 3, values.size());
+            assertEquals("property value count", 2, values.size());
         } finally {
             System.clearProperty("chorusHandlerPackages");
         }

@@ -42,7 +42,7 @@ public class AbstractHandlerConfigBuilder {
 
     protected int parseIntProperty(String value, String propertyName) {
         try {
-            return Integer.parseInt(value);
+            return Integer.parseInt(value.trim());
         } catch (NumberFormatException e) {
             throw new ChorusException("Could not parse property '" + propertyName + "' with value '" + value + "' as an integer");
         }

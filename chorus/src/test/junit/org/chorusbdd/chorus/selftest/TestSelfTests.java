@@ -44,8 +44,6 @@ public class TestSelfTests extends TestCase {
 
     public static TestSuite suite() throws InterpreterPropertyException {
 
-        System.setProperty("chorusFeaturePaths", "src/test/features");
-
-        return ChorusJUnitRunner.suite();
+        return ChorusJUnitRunner.suite("-f src/test/features -h org.chorusbdd.chorus.selftest");
     }
 }

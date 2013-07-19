@@ -76,10 +76,4 @@ public class TestHandlerClassFilterFactory extends Assert {
        assertTrue("Allow standard handlers even if users sets handler package prefixes", classFilter.acceptByName("org.chorusbdd.chorus.handlers.MyHandler"));
     }
 
-    @Test
-    public void testStandardJavaPackagesDenied() {
-        ClassFilter classFilter = filterFactory.createClassFilters(new String[] {});
-        assertFalse("Does not search for handlers in standard jdk packages", classFilter.acceptByName("java.mypackage"));
-    }
-
 }
