@@ -109,103 +109,95 @@ public class ProcessesHandler {
         aliasToConfigName.put(alias, configName);
         ProcessesConfig processesConfig = getProcessProperties(configName);
 
-        String stdoutLogPath = null;
-        String stderrLogPath = null;
-        String log4jProperties = "";
-
-        //get the log output containing logging configuration and out and err streams for this process
+        //get the log output containing logging configuration for this process
         ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, processesConfig, alias);
 
-        File log4jConfigFile = findLog4jConfigFile();
-        if ( log4jConfigFile != null && log4jConfigFile.exists()) {
-            log.debug("Found log4j config at " + log4jConfigFile.getPath() + " will set -Dlog4j.configuration when starting process");
-            //makes the ${feature.dir} and ${feature.process.name} values available to the log4j config file
-            log4jProperties = String.format("-Dlog4j.configuration=file:%s -Dfeature.dir=%s -Dfeature.process.name=%s",
-                log4jConfigFile.getPath(),
-                featureDir.getAbsolutePath(),
-                logOutput.getProcessFileNameBase()
-            );
-        }
+        String executableToken = getExecutableTokens(processesConfig);
+        List<String> jvmArgs = getSpaceSeparatedTokens(processesConfig.getJvmargs());
+        List<String> log4jTokens = getLog4jTokens(logOutput);
+        List<String> debugTokens = getDebugTokens(processesConfig);
+        List<String> jmxTokens = getJmxTokens(processesConfig);
+        List<String> classPathTokens = getClasspathTokens(processesConfig);
+        String mainClassToken = processesConfig.getMainclass();
+        List<String> argsTokens = getSpaceSeparatedTokens(processesConfig.getArgs());
 
-        String jmxSystemProperties = "";
-        if (processesConfig.getJmxPort() > -1) {
-            jmxSystemProperties = String.format("-Dcom.sun.management.jmxremote.ssl=false " +
-                    "-Dcom.sun.management.jmxremote.authenticate=false " +
-                    "-Dcom.sun.management.jmxremote.port=%s " +
-                    "-D" + ChorusHandlerJmxExporter.JMX_EXPORTER_ENABLED_PROPERTY + "=true", processesConfig.getJmxPort());
-        }
+        List<String> commandLineTokens = new ArrayList<String>();
+        commandLineTokens.add(executableToken);
+        commandLineTokens.addAll(jvmArgs);
+        commandLineTokens.addAll(log4jTokens);
+        commandLineTokens.addAll(debugTokens);
+        commandLineTokens.addAll(jmxTokens);
+        commandLineTokens.addAll(classPathTokens);
+        commandLineTokens.add(mainClassToken);
+        commandLineTokens.addAll(argsTokens);
 
-        String debugSystemProperties = "";
-        if (processesConfig.getDebugPort() > -1) {
-            debugSystemProperties = String.format("-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=%s",
-                    processesConfig.getDebugPort());
-        }
+        startProcess(alias, commandLineTokens, logOutput, processesConfig.getProcessCheckDelay());
+    }
 
+    private String getExecutableTokens(ProcessesConfig processesConfig) {
+        String executableTxt = "%s%sbin%sjava";
+        return String.format(
+                executableTxt,
+                processesConfig.getJre(),
+                File.separatorChar,
+                File.separatorChar
+        );
+    }
 
+    private List<String> getClasspathTokens(ProcessesConfig processesConfig) {
         //surrounding the classpath in quotes is currently breaking the classpath parsing for linux when launched via
         //Runtime.getRuntime().exec() (but it is ok from the shell)
         //I think we want to keep this in on windows, since we will more likely encounter directory names with spaces -
         //I'm worried those will break for linux although this will fix the classpath issue.
         //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
         boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
-        
-        String executableTxt = "%s%sbin%sjava";
-        String executable = String.format(
-                executableTxt,
-                processesConfig.getJre(),
-                File.separatorChar,
-                File.separatorChar
-        );
-        
-        
-        
-        String commandTxt = isWindows ?
-            "%s %s %s %s %s -classpath \"%s\" %s %s" :
-            "%s %s %s %s %s -classpath %s %s %s";
-
-        List<String> tokens = new ArrayList<String>();
-        addSpaceSeparatedTokens(tokens, executable);
-        addSpaceSeparatedTokens(tokens, processesConfig.getJvmargs());
-        addSpaceSeparatedTokens(tokens, log4jProperties);
-        addSpaceSeparatedTokens(tokens, debugSystemProperties);
-        addSpaceSeparatedTokens(tokens, jmxSystemProperties);
-        tokens.add("-classpath");
-        if ( isWindows ) {
-            tokens.add("\"" + processesConfig.getClasspath() + "\"");
-        } else {
-            tokens.add(processesConfig.getClasspath());
-        }
-        addSpaceSeparatedTokens(tokens, processesConfig.getMainclass());
-        addSpaceSeparatedTokens(tokens, processesConfig.getArgs());
-
-
-        
-        //construct a command
-//        String command = String.format(
-//                commandTxt,
-//                executable,
-//                processesConfig.getJvmargs(),
-//                log4jProperties,
-//                debugSystemProperties,
-//                jmxSystemProperties,
-//                processesConfig.getClasspath(),
-//                processesConfig.getMainclass(),
-//                processesConfig.getArgs()).trim();
-
-        startProcess(alias, tokens, logOutput, processesConfig.getProcessCheckDelay());
+        List<String>  classPathTokens = new ArrayList<String>();
+        classPathTokens.add("-classpath");
+        classPathTokens.add(isWindows ? "\"" + processesConfig.getClasspath() + "\"" : processesConfig.getClasspath());
+        return classPathTokens;
     }
 
-    private void addSpaceSeparatedTokens(List<String> tokens, String spaceSeparated) {
+    private List<String> getDebugTokens(ProcessesConfig processesConfig) {
+        List<String> debugTokens = new ArrayList<String>();
+        if (processesConfig.getDebugPort() > -1) {
+            debugTokens.add("-Xdebug");
+            debugTokens.add(String.format("-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=%s", processesConfig.getDebugPort()));
+        }
+        return debugTokens;
+    }
+
+    private List<String> getJmxTokens(ProcessesConfig processesConfig) {
+        List<String> jmxTokens = new ArrayList<String>();
+        if (processesConfig.getJmxPort() > -1) {
+            jmxTokens.add("-Dcom.sun.management.jmxremote.ssl=false");
+            jmxTokens.add("-Dcom.sun.management.jmxremote.authenticate=false");
+            jmxTokens.add(String.format("-Dcom.sun.management.jmxremote.port=%s", processesConfig.getJmxPort()));
+            jmxTokens.add("-D" + ChorusHandlerJmxExporter.JMX_EXPORTER_ENABLED_PROPERTY + "=true");
+        }
+        return jmxTokens;
+    }
+
+    private List<String> getLog4jTokens(ProcessLogOutput logOutput) {
+        List<String> log4jTokens = new ArrayList<String>();
+        File log4jConfigFile = findLog4jConfigFile();
+        if ( log4jConfigFile != null && log4jConfigFile.exists()) {
+            log.debug("Found log4j config at " + log4jConfigFile.getPath() + " will set -Dlog4j.configuration when starting process");
+            log4jTokens.add(String.format("-Dlog4j.configuration=file:%s", log4jConfigFile.getPath()));
+            log4jTokens.add(String.format("-Dfeature.dir=%s", featureDir.getAbsolutePath()));
+            log4jTokens.add(String.format("-Dfeature.process.name=%s", logOutput.getProcessFileNameBase()));
+        }
+        return log4jTokens;
+    }
+
+    private List<String> getSpaceSeparatedTokens(String spaceSeparated) {
+        List<String> tokens = new ArrayList<String>();
         String[] j = spaceSeparated.split(" ");
         for ( String s : j ) {
-            addIfSet(tokens, s);
+            if ( s.trim().length() > 0) {
+                tokens.add(s);
+            }
         }
-    }
-
-    private void addIfSet(List<String> l, String s) {
-        if ( s.length() > 0) {
-            l.add(s);
-        }
+        return tokens;
     }
 
     private File findLog4jConfigFile() {
@@ -421,8 +413,8 @@ public class ProcessesHandler {
         return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
     }
 
-    private ChorusProcess startProcess(String name, List<String> command, ProcessLogOutput logOutput, int processCheckDelay) throws Exception {
-        ChorusProcess child = chorusProcessFactory.createChorusProcess(name, command, logOutput);
+    private ChorusProcess startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay) throws Exception {
+        ChorusProcess child = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
         processes.put(name, child);
         child.checkProcess(processCheckDelay);
         return child;
