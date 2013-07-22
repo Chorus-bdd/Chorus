@@ -31,9 +31,11 @@ package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
@@ -79,7 +81,12 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
             } else if ("terminateWaitTime".equals(key)) {
                 c.setTerminateWaitTime(parseIntProperty(value, "terminateWaitTime"));
             } else if ("logging".equals(key)) {
-                c.setLogging(parseBooleanProperty(value, "logging"));
+                //we still support logging property as an alternative to stdOutMode and stdErrMode
+                //if true, both process std out and error go to a file, if false inline
+                Boolean b = parseBooleanProperty(value, "logging");
+                OutputMode m = b ? OutputMode.FILE : OutputMode.INLINE;
+                c.setStdErrMode(m);
+                c.setStdOutMode(m);
             } else if ("logDirectory".equals(key)) {
                 c.setLogDirectory(value);
             } else if ("appendToLogs".equals(key)) {
@@ -88,10 +95,25 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setCreateLogDir(parseBooleanProperty(value, "createLogDir"));
             } else if ( "processCheckDelay".equals(key)) {
                 c.setProcessCheckDelay(parseIntProperty(value, "processCheckDelay"));
+            } else if ( "stdErrMode".equals(key)) {
+                c.setStdErrMode(parseOutputMode(value, "stdErrMode"));
+            } else if ( "stdOutMode".equals(key)) {
+                c.setStdOutMode(parseOutputMode(value, "stdOutMode"));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }
         }
+    }
+
+    private OutputMode parseOutputMode(String value, String propertyName) {
+        OutputMode l = OutputMode.valueOf(value.toUpperCase().trim());
+        if ( l == null) {
+            throw new ChorusException(
+                "Failed to parse property " + propertyName + " with value '" + value + "', shoud be one of: " 
+                + Arrays.asList(OutputMode.values())
+            );
+        }
+        return l;
     }
 
 }

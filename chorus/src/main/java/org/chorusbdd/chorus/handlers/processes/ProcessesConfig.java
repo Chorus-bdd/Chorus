@@ -52,7 +52,8 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private String jvmargs;
     private String mainclass;
     private String args;
-    private boolean logging;
+    private OutputMode stdOutMode = OutputMode.INLINE;
+    private OutputMode stdErrMode = OutputMode.INLINE;
     private int jmxPort = -1;
     private int debugPort = -1;
     private int terminateWaitTime = 30;
@@ -109,12 +110,20 @@ public class ProcessesConfig extends AbstractHandlerConfig {
         this.args = args;
     }
 
-    public boolean isLogging() {
-        return logging;
+    public OutputMode getStdErrMode() {
+        return stdErrMode;
     }
 
-    public void setLogging(boolean logging) {
-        this.logging = logging;
+    public void setStdErrMode(OutputMode stdErrMode) {
+        this.stdErrMode = stdErrMode;
+    }
+
+    public OutputMode getStdOutMode() {
+        return stdOutMode;
+    }
+
+    public void setStdOutMode(OutputMode stdOutMode) {
+        this.stdOutMode = stdOutMode;
     }
 
     public int getJmxPort() {
@@ -204,14 +213,15 @@ public class ProcessesConfig extends AbstractHandlerConfig {
                 ", jvmargs='" + jvmargs + '\'' +
                 ", mainclass='" + mainclass + '\'' +
                 ", args='" + args + '\'' +
-                ", logging=" + logging +
-                ", jmxPort=" + jmxPort +
-                ", debugPort=" + debugPort +
-                ", terminateWaitTime=" + terminateWaitTime +
+                ", stdOutMode=" + stdOutMode  + '\'' +
+                ", stdErrMode=" + stdErrMode   + '\'' + 
+                ", jmxPort=" + jmxPort  + '\'' +
+                ", debugPort=" + debugPort  + '\'' +
+                ", terminateWaitTime=" + terminateWaitTime  + '\'' +
                 ", logDirectory='" + logDirectory + '\'' +
-                ", appendToLogs=" + appendToLogs +
-                ", createLogDir=" + createLogDir +
-                ", processCheckDelay=" + processCheckDelay +
+                ", appendToLogs=" + appendToLogs  + '\'' +
+                ", createLogDir=" + createLogDir  + '\'' +
+                ", processCheckDelay=" + processCheckDelay  + '\'' +
                 '}';
     }
 }

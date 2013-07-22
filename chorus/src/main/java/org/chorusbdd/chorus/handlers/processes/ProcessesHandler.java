@@ -75,8 +75,6 @@ public class ProcessesHandler {
 
     private final Map<String, Integer> processCounters = new HashMap<String, Integer>();
 
-    private PropertiesFilePropertySource propertiesLoader;
-
     private Map<String, ProcessesConfig> configMap;
 
     private Map<String, String> aliasToConfigName = new HashMap<String,String>();
@@ -336,7 +334,7 @@ public class ProcessesHandler {
         return c;
     }
 
-    private PropertiesFilePropertySource loadProperties() {
+    private void loadProperties() {
         if ( configMap == null ) {
             PropertiesConfigLoader<ProcessesConfig> l = new PropertiesConfigLoader<ProcessesConfig>(
                     new ProcessesConfigBuilder(),
@@ -348,7 +346,6 @@ public class ProcessesHandler {
             );
             configMap = l.loadRemotingConfigs();
         }
-        return propertiesLoader;
     }
 
     private void addShutdownHook() {

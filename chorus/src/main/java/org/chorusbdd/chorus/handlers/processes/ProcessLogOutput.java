@@ -65,7 +65,7 @@ class ProcessLogOutput {
         this.processesConfig = processesConfig;
         this.isAppendToLogs = processesConfig.isAppendToLogs();
         this.featureToken = featureToken;
-        if ( this.processesConfig.isLogging()) {
+        if ( this.processesConfig.getLogMode() == OutputMode.FILE) {
             createLogDirAndCalculateLogFiles();
         }
     }
