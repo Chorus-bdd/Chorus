@@ -29,24 +29,28 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+
+import java.io.*;
 
 /**
 * Created with IntelliJ IDEA.
 * User: nick
 * Date: 20/09/12
 * Time: 22:21
-* To change this template use File | Settings | File Templates.
+* 
+* Redirect the input stream from a process to one or more outputs
 */
 public class ProcessRedirector implements Runnable {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessRedirector.class);
+
     private InputStream in;
-    private PrintStream[] out;
+    private OutputStream[] out;
     private boolean closeOnExit;
 
-    public ProcessRedirector(InputStream in, boolean closeOnExit, PrintStream... out) {
+    public ProcessRedirector(InputStream in, boolean closeOnExit, OutputStream... out) {
         this.closeOnExit = closeOnExit;
         this.in = new BufferedInputStream(in);
         this.out = out;
@@ -58,7 +62,7 @@ public class ProcessRedirector implements Runnable {
             int x = 0;
             try {
                 while ((x = in.read(buf)) != -1) {
-                    for ( PrintStream s : out) {
+                    for ( OutputStream s : out) {
                         s.write(buf, 0, x);
                     }
                 }
@@ -67,10 +71,18 @@ public class ProcessRedirector implements Runnable {
                 //tends to be verbose on Linux when process terminates
             }
         } finally {
-            for ( PrintStream s : out) {
-                s.flush();
+            for ( OutputStream s : out) {
+                try {
+                    s.flush();
+                } catch (IOException e) {
+                    log.trace("Failed to flush output stream " + s + " cleanly", e);
+                }
                 if ( closeOnExit ) {
-                    s.close();
+                    try {
+                        s.close();
+                    } catch (IOException e) {
+                        log.trace("Failed to close output stream " + s + " cleanly", e);    
+                    }
                 }
             }
         }

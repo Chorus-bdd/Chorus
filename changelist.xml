@@ -7,8 +7,9 @@
         <change desc="When running under JDK 1.7, use ProcessBuilder to create a process - better capture of process output even for quick dying process"/>
         <change desc="add processCheckDelay config setting for Processes - check the process shortly after starting, and fail the step if it terminated with an error code"/>
         <change desc="Scenarios will now fail if processes are set to log output to files, and the log directory is not writable, rather than the output appearing inline with interpreter"/>
-        <change desc="Support a more granular mode for treatment of process std err and process std out, which can now either be either FILE, INLINE or CAPTURED, and out and err streams have
-        their own independent setting. The CAPTURED mode will cause chorus to buffer the output and allows you to make use of the handler steps which check it. 
+        <change desc="Support a more granular OutputMode for treatment of child process std err and process std out, which can now either be either FILE, INLINE or CAPTURED.
+        Out and err streams have their own independent setting. 
+        The CAPTURED mode will cause chorus to buffer the output and allows you to make use of the handler steps which check it. 
         This still supports the older 'logging' property - when logging=true, use FILE mode for both std err and out, when logging=false use INLINE for both std err and out"/>
     </version>
     <version>

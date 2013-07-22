@@ -57,26 +57,32 @@ public class ProcessBuilderProcess implements ChorusProcess {
     public ProcessBuilderProcess(List<String> command, ProcessLogOutput logOutput) throws Exception {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
 
-        if ( logOutput.getStdOutMode() == OutputMode.FILE) {
-            log.debug("Will write process std out to file at " + logOutput.getStdOutLogFile());
-            processBuilder.redirectOutput(
-                logOutput.isAppendToLogs() ? 
-                    ProcessBuilder.Redirect.appendTo(logOutput.getStdOutLogFile()) :
-                    ProcessBuilder.Redirect.to(logOutput.getStdOutLogFile())
-            );
-        } else {
-            processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        switch (logOutput.getStdOutMode()) {
+            case FILE :
+                log.debug("Will write process std out to file at " + logOutput.getStdOutLogFile());
+                processBuilder.redirectOutput(
+                    logOutput.isAppendToLogs() ? 
+                        ProcessBuilder.Redirect.appendTo(logOutput.getStdOutLogFile()) :
+                        ProcessBuilder.Redirect.to(logOutput.getStdOutLogFile())
+                );
+                break;
+            case INLINE :
+                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                break;
         }
         
-        if ( logOutput.getStdErrMode() == OutputMode.FILE ) {
-            log.debug("Will write process std err to file at " + logOutput.getStdErrLogFile());
-            processBuilder.redirectError(
-                logOutput.isAppendToLogs() ?
-                    ProcessBuilder.Redirect.appendTo(logOutput.getStdErrLogFile()) :
-                    ProcessBuilder.Redirect.to(logOutput.getStdErrLogFile())
-            );
-        } else {
-            processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        switch ( logOutput.getStdErrMode() ) {
+            case FILE :
+                log.debug("Will write process std err to file at " + logOutput.getStdErrLogFile());
+                processBuilder.redirectError(
+                    logOutput.isAppendToLogs() ?
+                        ProcessBuilder.Redirect.appendTo(logOutput.getStdErrLogFile()) :
+                        ProcessBuilder.Redirect.to(logOutput.getStdErrLogFile())
+                );
+                break;
+            case INLINE :
+                processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+                break;
         }
         
         this.process = processBuilder.start();
