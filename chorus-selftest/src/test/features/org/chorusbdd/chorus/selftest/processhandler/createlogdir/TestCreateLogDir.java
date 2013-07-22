@@ -41,7 +41,7 @@ public class TestCreateLogDir extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/processhandler/createlogdir/createlogdir.feature";
 
-    final int expectedExitCode = 0;  //fail
+    final int expectedExitCode = 1;  //fail
 
     protected int getExpectedExitCode() {
         return expectedExitCode;

@@ -57,20 +57,25 @@ public class ProcessBuilderProcess implements ChorusProcess {
     public ProcessBuilderProcess(List<String> command, ProcessLogOutput logOutput) throws Exception {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
 
-        if ( logOutput.isLogToFile()) {
+        if ( logOutput.getStdOutMode() == OutputMode.FILE) {
+            log.debug("Will write process std out to file at " + logOutput.getStdOutLogFile());
             processBuilder.redirectOutput(
                 logOutput.isAppendToLogs() ? 
                     ProcessBuilder.Redirect.appendTo(logOutput.getStdOutLogFile()) :
                     ProcessBuilder.Redirect.to(logOutput.getStdOutLogFile())
             );
-
+        } else {
+            processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        }
+        
+        if ( logOutput.getStdErrMode() == OutputMode.FILE ) {
+            log.debug("Will write process std err to file at " + logOutput.getStdErrLogFile());
             processBuilder.redirectError(
                 logOutput.isAppendToLogs() ?
                     ProcessBuilder.Redirect.appendTo(logOutput.getStdErrLogFile()) :
                     ProcessBuilder.Redirect.to(logOutput.getStdErrLogFile())
             );
         } else {
-            processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
         }
         

@@ -35,8 +35,6 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
-import org.chorusbdd.chorus.handlers.util.config.source.PropertiesFilePropertySource;
-import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -109,7 +107,7 @@ public class ProcessesHandler {
 
         //get the log output containing logging configuration for this process
         ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processesConfig, alias);
-        String logFileBaseName = logOutput.getProcessFileNameBase();
+        String logFileBaseName = logOutput.getLogFileBaseName();
 
         ProcessCommandLineBuilder b = new ProcessCommandLineBuilder(featureDir, processesConfig, logFileBaseName);
         List<String> commandLineTokens = b.buildCommandLine();

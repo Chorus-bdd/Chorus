@@ -14,15 +14,13 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
     And I start a config2 process                                                            PASSED  
     And I wait for up to 10 seconds for the process named config2 to stop                    PASSED  
     Then the config2logs/createlogdir-config2-out.log file contains a line 2                 PASSED  
-  Scenario: Log Directory Not Created And Process Output Appears In Interpreter Out
-Chorus --> INFO    - Processing scenario: Log Directory Not Created And Process Output Appears In Interpreter Out
+  Scenario: Scenario fails if could not create log directory
+Chorus --> INFO    - Processing scenario: Scenario fails if could not create log directory
     Given Chorus is working properly                                                         PASSED  
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
-    And I start a config3 process                                                            PASSED  
-    And I wait for up to 10 seconds for the process named config3 to stop                    PASSED  
-    Then the config3logs dir does not exist                                                  PASSED  
+    And I start a config3 process                                                            FAILED  (ProcessLogOutput:linenumber)-Cannot write to the logs directory at src/test/features/org/chorusbdd/chorus/selftest/processhandler/createlogdir/config3logs
+    And I wait for up to 10 seconds for the process named config3 to stop                    SKIPPED 
 
 
-Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:3) (passed:3) (failed:0)
-Steps     (total:12) (passed:12) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:3) (passed:2) (failed:1)
+Steps     (total:11) (passed:9) (failed:1) (undefined:0) (pending:0) (skipped:1)

@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -203,7 +204,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     protected ChorusLog getLog() {
         return log;
     }
-
+    
     @Override
     public String toString() {
         return "ProcessesConfig{" +

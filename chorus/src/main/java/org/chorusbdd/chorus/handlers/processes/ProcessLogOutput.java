@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -44,7 +45,11 @@ import java.io.File;
 * Calculate the standard out and standard error files for a process log output
 * based on feature file, config and alias
 * 
-* Create the log directory if configured to do so
+* A process with the same config but a different alias will have different log file names, so this cannot 
+* be done in the ProcessesConfig
+* 
+* Also here we create the log directory if configured to do so, and fail the feature
+* if it is not writable
 */
 class ProcessLogOutput {
 
@@ -52,64 +57,53 @@ class ProcessLogOutput {
 
     private FeatureToken featureToken;
     private File featureDir;
-    private String processFileNameBase;
+    private String logFileBaseName;
     private ProcessesConfig processesConfig;
-    private boolean logToFile;
-    private File stdOutLogFile;
-    private File stdErrLogFile;
+    private OutputMode stdErrMode;
+    private OutputMode stdOutMode;
+
+    private File logDirectory;  //calculated but may or may not exist
+    private File stdOutLogFile; //calculated but may or may not exist
+    private File stdErrLogFile; //calculated but may or may not exist
     private boolean isAppendToLogs;
 
     public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessesConfig processesConfig, String processAlias) {
         this.featureDir = featureDir;
-        this.processFileNameBase = calculateProcessFileBaseName(featureToken, featureFile, processAlias);
+        this.logFileBaseName = calculateLogFileBaseName(featureToken, featureFile, processAlias);
         this.processesConfig = processesConfig;
         this.isAppendToLogs = processesConfig.isAppendToLogs();
         this.featureToken = featureToken;
-        if ( this.processesConfig.getLogMode() == OutputMode.FILE) {
-            createLogDirAndCalculateLogFiles();
+
+        logDirectory = calculateLogDirectory();
+        calculateLogFiles(logDirectory);
+        
+        if ( processesConfig.getStdErrMode() == OutputMode.FILE || processesConfig.getStdOutMode() == OutputMode.FILE ) {
+            getOrCreateLogDirectory(logDirectory);
+        }
+        
+        stdOutMode = processesConfig.getStdOutMode();
+        stdErrMode = processesConfig.getStdErrMode();
+        
+        //let's fail the feature if we cannot create the log directory
+        //alternative would be to log inline but this might swamp interpreter output
+        if (  stdOutMode == OutputMode.FILE || stdErrMode == OutputMode.FILE ) {
+            ChorusAssert.assertTrue("Cannot write to the logs directory at " + logDirectory, logDirectory.canWrite());
         }
     }
 
-    private String calculateProcessFileBaseName(FeatureToken featureToken, File featureFile, String processAlias) {
-        String featureFileBaseName = getFeatureBaseNameForLogFiles(featureFile);
 
-        //log file base name including both feature name and process alias ( + feature config )
-        String processFileNameBase;
-        if (! featureToken.isConfiguration()) {
-            processFileNameBase = String.format("%s-%s", featureFileBaseName, processAlias);
-        } else {
-            processFileNameBase = String.format("%s-%s-%s", featureFileBaseName, featureToken.getConfigurationName(), processAlias);
-        }
-        return processFileNameBase;
-    }
-
-    private String getFeatureBaseNameForLogFiles(File featureFile) {
-        //build a process name to use when naming log files
-        String processNameForLogFiles = featureFile.getName();
-        if (processNameForLogFiles.endsWith(".feature")) {
-            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
-        }
-        return processNameForLogFiles;
-    }
-
-    private void createLogDirAndCalculateLogFiles() {
+    private File calculateLogDirectory() {
         //if a logs directory was provided in the config use that, or default to featureDir/logs
         String defaultPath = featureDir.getAbsolutePath() + File.separatorChar + "logs";
         String directoryPath = processesConfig.getLogDirectory() != null ?
             processesConfig.getLogDirectory() :
             defaultPath;
-        File logDirectory = new File(directoryPath);
-
-        boolean logDirExists = getOrCreateLogDirectory(logDirectory);
-        if ( logDirExists ) {
-            calculateLogFiles(logDirectory);
-        }
+        return new File(directoryPath);
     }
 
     private void calculateLogFiles(File logDirectory) {
-        stdOutLogFile = new File(logDirectory, String.format("%s-out.log", processFileNameBase));
-        stdErrLogFile = new File(logDirectory, String.format("%s-err.log", processFileNameBase));
-        logToFile = true;
+        stdOutLogFile = new File(logDirectory, String.format("%s-out.log", logFileBaseName));
+        stdErrLogFile = new File(logDirectory, String.format("%s-err.log", logFileBaseName));
     }
 
     private boolean getOrCreateLogDirectory(File logDirectory) {
@@ -124,14 +118,39 @@ class ProcessLogOutput {
         return logDirExists;
     }
 
-    public boolean isLogToFile() {
-        return logToFile;
-    }
+    private String calculateLogFileBaseName(FeatureToken featureToken, File featureFile, String processAlias) {
+        String featureFileBaseName = getFeatureName(featureFile);
 
-    public String getProcessFileNameBase() {
+        //log file base name including both feature name and process alias ( + feature config )
+        String processFileNameBase;
+        if (! featureToken.isConfiguration()) {
+            processFileNameBase = String.format("%s-%s", featureFileBaseName, processAlias);
+        } else {
+            processFileNameBase = String.format("%s-%s-%s", featureFileBaseName, featureToken.getConfigurationName(), processAlias);
+        }
         return processFileNameBase;
     }
 
+    private String getFeatureName(File featureFile) {
+        //build a process name to use when naming log files
+        String processNameForLogFiles = featureFile.getName();
+        if (processNameForLogFiles.endsWith(".feature")) {
+            processNameForLogFiles = processNameForLogFiles.substring(0, processNameForLogFiles.length() - 8);
+        }
+        return processNameForLogFiles;
+    }
+
+    OutputMode getStdErrMode() {
+        return stdErrMode;
+    }
+
+    OutputMode getStdOutMode() {
+        return stdOutMode;
+    }
+
+    public String getLogFileBaseName() {
+        return logFileBaseName;
+    }
 
     public File getStdOutLogFile() {
         return stdOutLogFile;
@@ -148,7 +167,11 @@ class ProcessLogOutput {
     @Override
     public String toString() {
         return "ProcessLogOutput{" +
-                "logToFile=" + logToFile +
+                "stdErrMode=" + stdErrMode +
+                ", stdOutMode=" + stdOutMode +
+                ", stdOutLogFile=" + stdOutLogFile +
+                ", stdErrLogFile=" + stdErrLogFile +
+                ", logFileBaseName='" + logFileBaseName + '\'' +
                 ", isAppendToLogs=" + isAppendToLogs +
                 '}';
     }

@@ -18,12 +18,12 @@ Feature: Create Process Log Directory
     And I wait for up to 10 seconds for the process named config2 to stop
     Then the config2logs/createlogdir-config2-out.log file contains a line 2
 
-  Scenario: Log Directory Not Created And Process Output Appears In Interpreter Out
+  Scenario: Scenario fails if could not create log directory
     Given Chorus is working properly
     And I start a config3 process
     And I wait for up to 10 seconds for the process named config3 to stop
     #this should fail and log dir should not be created
-    Then the config3logs dir does not exist
+
 
 
 

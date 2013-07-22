@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
@@ -60,50 +61,72 @@ public class Jdk15Process implements ChorusProcess {
         log.debug("Started process " + process + " with out stream " + processOutStream + " and err stream " + processErrorStream);
 
         //if there are no log paths set, redirect the process output to appear inline with the chorus interpreter std out/err
-        boolean logToFile = logOutput.isLogToFile();
-        if ( logToFile ) {
-            logToFile = createLogOutputStreams(logOutput);
+
+        createOutputRedirectors(logOutput, processOutStream, processErrorStream);
+        
+        if ( outRedirector != null) {
+            Thread outThread = new Thread(outRedirector, name + "-stdout");
+            outThread.setDaemon(true);
+            outThread.start();
         }
         
-        if ( logToFile ) {
-            PrintStream out = new PrintStream(stdoutStream, true);
-            this.outRedirector = new ProcessRedirector(processOutStream, true, out);
-
-            PrintStream err = new PrintStream(stderrStream, true);
-            this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
-        } else {
-            this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
-            this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
+        if ( errRedirector != null ) {
+            Thread errThread = new Thread(errRedirector, name + "-stderr");
+            errThread.setDaemon(true);
+            errThread.start();
         }
-
-        Thread outThread = new Thread(outRedirector, name + "-stdout");
-        outThread.setDaemon(true);
-        outThread.start();
-        Thread errThread = new Thread(errRedirector, name + "-stderr");
-        errThread.setDaemon(true);
-        errThread.start();
     }
 
-    private boolean createLogOutputStreams(ProcessLogOutput logOutput) {
-        boolean logToFile = true;
-        File stdOutLogFile = logOutput.getStdOutLogFile();
-        try {
-            log.debug("Creating process log at " + stdOutLogFile.getPath());
-            stdoutStream = new FileOutputStream(stdOutLogFile, logOutput.isAppendToLogs());
-        } catch (Exception e) {
-            logToFile = false;
-            log.warn("Failed to create log file to output log file " + stdOutLogFile.getPath() + " will not write a log file");
+    private void createOutputRedirectors(ProcessLogOutput logOutput, InputStream processOutStream, InputStream processErrorStream) {
+        switch ( logOutput.getStdOutMode() ) {
+            case FILE:
+                boolean success = createFileStdOutStream(logOutput);
+                ChorusAssert.assertTrue("Failed to create output stream to std out log at " + logOutput.getStdOutLogFile(), success);
+                PrintStream out = new PrintStream(stdoutStream, true);
+                this.outRedirector = new ProcessRedirector(processOutStream, true, out); 
+                break;
+            case INLINE:
+                this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
+                break;
         }
 
+        switch ( logOutput.getStdErrMode() ) {
+            case FILE:
+                boolean success = createFileStdErrStream(logOutput);
+                ChorusAssert.assertTrue("Failed to create output stream to std err log at " + logOutput.getStdErrLogFile(), success);
+                PrintStream err = new PrintStream(stderrStream, true);
+                this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
+                break;
+            case INLINE:
+                this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
+                break;
+        }
+    }
+
+    private boolean createFileStdErrStream(ProcessLogOutput logOutput) {
+        boolean result = false;
         File stdErrLogFile = logOutput.getStdErrLogFile();
         try {
             log.debug("Creating process log at " + stdErrLogFile.getPath());
             stderrStream = new FileOutputStream(stdErrLogFile, logOutput.isAppendToLogs());
+            result = true;
         } catch (Exception e) {
-            logToFile = false;
             log.warn("Failed to create log file to error log file " + stdErrLogFile.getPath() + " will not write a log file");
         }
-        return logToFile;
+        return result;
+    }
+
+    private boolean createFileStdOutStream(ProcessLogOutput logOutput) {
+        boolean result = false;
+        File stdOutLogFile = logOutput.getStdOutLogFile();
+        try {
+            log.debug("Creating process log at " + stdOutLogFile.getPath());
+            stdoutStream = new FileOutputStream(stdOutLogFile, logOutput.isAppendToLogs());
+            result = true;
+        } catch (Exception e) {
+            log.warn("Failed to create log file to output log file " + stdOutLogFile.getPath() + " will not write a log file");
+        }
+        return result;
     }
 
     public boolean isStopped() {
