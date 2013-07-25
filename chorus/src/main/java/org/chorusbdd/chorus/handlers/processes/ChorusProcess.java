@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.handlers.processes;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nick
@@ -20,4 +22,6 @@ public interface ChorusProcess {
     boolean isExitCodeFailure();
 
     void checkProcess(int processCheckDelay) throws Exception;
+
+    void waitForLineMatchInStdOut(String pattern);
 }

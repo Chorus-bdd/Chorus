@@ -42,6 +42,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -206,6 +207,19 @@ public class ProcessesHandler {
         int waitTime = c.getTerminateWaitTime();
         waitForProcessToTerminate(processAlias, waitTime);
     }
+    
+    @Step(".*read the line '(.*)' from process ([a-zA-Z0-9-_]*)")
+    public void readLineFromProcess(String pattern, String processAlias) {
+        String configName = getConfigNameForAlias(processAlias);
+        ProcessesConfig c = getProcessesConfig(configName);
+        ChorusProcess p = processes.get(processAlias);
+        if ( p == null ) {
+            ChorusAssert.fail("Could not find the process " + processAlias);
+        } else {
+             p.waitForLineMatchInStdOut(pattern);
+        }
+    }
+    
 
     private String getConfigNameForAlias(String processAlias) {
         String configName = aliasToConfigName.get(processAlias);

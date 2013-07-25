@@ -43,9 +43,10 @@ import java.io.*;
 * Time: 22:22
 * To change this template use File | Settings | File Templates.
 */
-public class Jdk15Process implements ChorusProcess {
+public class Jdk15Process extends AbstractChorusProcess {
 
     private static ChorusLog log = ChorusLogFactory.getLog(Jdk15Process.class);
+    
     private FileOutputStream stdoutStream;
     private FileOutputStream stderrStream;
 
@@ -54,6 +55,7 @@ public class Jdk15Process implements ChorusProcess {
     private ProcessRedirector errRedirector;
 
     public Jdk15Process(String name, String command, ProcessLogOutput logOutput) throws Exception {
+        super(name, logOutput);
         this.process = Runtime.getRuntime().exec(command);
 
         InputStream processOutStream = process.getInputStream();
@@ -88,17 +90,23 @@ public class Jdk15Process implements ChorusProcess {
             case INLINE:
                 this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
                 break;
+            case CAPTURED:
+                //createCapuredOutReader(logOutput, processOutStream);
+                break;
         }
 
         switch ( logOutput.getStdErrMode() ) {
             case FILE:
                 boolean success = createFileStdErrStream(logOutput);
-                ChorusAssert.assertTrue("Failed to create output stream to std err log at " + logOutput.getStdErrLogFile(), success);
+                ChorusAssert.assertTrue("Failed to create output stream to std error log at " + logOutput.getStdErrLogFile(), success);
                 PrintStream err = new PrintStream(stderrStream, true);
                 this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
                 break;
             case INLINE:
                 this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
+                break;
+            case CAPTURED:
+                //createCapturedErrReader(logOutput, processErrorStream);
                 break;
         }
     }
@@ -200,11 +208,15 @@ public class Jdk15Process implements ChorusProcess {
         }
     }
 
-    private void closeStreams() {
+    protected void closeStreams() {
+        
+        super.closeStreams();
+        
         if ( stdoutStream != null) {
             try {
                 stdoutStream.flush();
                 stdoutStream.close();
+                stderrStream = null;
             } catch (IOException e) {
                 log.trace("Failed to flush and close stdout log file stream", e);
             }
@@ -214,10 +226,14 @@ public class Jdk15Process implements ChorusProcess {
             try {
                 stderrStream.flush();
                 stderrStream.close();
+                stderrStream = null;
             } catch (IOException e) {
                 log.trace("Failed to flush and close stderr log file stream", e);
             }
         }
     }
 
+    protected ChorusLog getLog() {
+        return log;
+    }
 }

@@ -1,0 +1,14 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_capture_stdout/capturestdout.feature
+Feature: Capture Std Output                                                                          
+Chorus --> INFO    - No default handler found for Feature: (Capture Std Output), will use built-in handlers and Uses: statements
+  Scenario: I expect some output
+Chorus --> INFO    - Processing scenario: I expect some output
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named outputter                                          PASSED  
+    When I read the line 'let's match a line' from process outputter                         PASSED  
+    And I read the line 'and another .* line' from process outputter                         PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

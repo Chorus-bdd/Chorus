@@ -48,13 +48,12 @@ import java.util.List;
 * Should be used when we have a 1.7+ runtime
 * 
 */
-public class ProcessBuilderProcess implements ChorusProcess {
+public class ProcessBuilderProcess extends AbstractChorusProcess {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessBuilderProcess.class);
 
-    private Process process;
-
-    public ProcessBuilderProcess(List<String> command, ProcessLogOutput logOutput) throws Exception {
+    public ProcessBuilderProcess(String name, List<String> command, ProcessLogOutput logOutput) throws Exception {
+        super(name, logOutput);
         ProcessBuilder processBuilder = new ProcessBuilder(command);
 
         switch (logOutput.getStdOutMode()) {
@@ -69,6 +68,9 @@ public class ProcessBuilderProcess implements ChorusProcess {
             case INLINE :
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 break;
+            case CAPTURED: 
+                //createCapuredOutReader(logOutput, process.getInputStream());
+                break;
         }
         
         switch ( logOutput.getStdErrMode() ) {
@@ -82,6 +84,9 @@ public class ProcessBuilderProcess implements ChorusProcess {
                 break;
             case INLINE :
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+                break;
+            case CAPTURED:
+                //createCapuredErrReader(logOutput, process.getErrorStream());
                 break;
         }
         
@@ -157,4 +162,7 @@ public class ProcessBuilderProcess implements ChorusProcess {
         }
     }
 
+    protected ChorusLog getLog() {
+        return log;
+    }
 }

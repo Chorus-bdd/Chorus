@@ -39,18 +39,21 @@ class ReadAheadBufferedStream extends BufferedInputStream {
     public ReadAheadBufferedStream(InputStream in, int readAheadLimit) {
         super(in);
         this.readAheadLimit = readAheadLimit;
+        mark(readAheadLimit);
     }
 
     public ReadAheadBufferedStream(InputStream in, int bufferSize, int readAheadLimit) {
         super(in, bufferSize);
         this.readAheadLimit = readAheadLimit;
+        mark(readAheadLimit);
     }
     
-    public void startReadAhead() {
+    public ReadAheadBufferedStream startReadAhead() {
         if ( ! readAheadThread.isAlive()) {
             log.trace("Starting read ahead for " + in);
             readAheadThread.start();
         }
+        return this;
     }
     
     public void stopReadAhead() {
