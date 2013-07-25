@@ -2,7 +2,6 @@ package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.*;
 import java.util.regex.Matcher;
@@ -93,7 +92,6 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         long timeout = System.currentTimeMillis() + 5000;
         
         boolean matched = matchPattern(p, timeout);
-
         if ( ! matched) {
             ChorusAssert.fail("Timed out waiting for pattern '" + pattern + "'");
         }
@@ -102,12 +100,16 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     private boolean matchPattern(Pattern p, long timeout) {
         boolean matched = false;
         try {
-            while ( ! matched && System.currentTimeMillis() < timeout) {
-                boolean ok = waitForLineTerminator(timeout);
-                if ( ok ) {
-                    String line = stdOutReader.readLine();
-                    Matcher m = p.matcher(line);
-                    matched = m.matches();
+            while ( true) {
+                checkTimeout(timeout, p);
+                waitForLineTerminator(timeout, p);
+                //since we know there is a line terminator ahead and the buffer has been reset
+                //we know the next call to readLine will succeed and not block
+                String line = stdOutReader.readLine();
+                Matcher m = p.matcher(line);
+                matched = m.matches();
+                if ( matched ) {
+                    break;
                 }
             }
         } catch (IOException e) {
@@ -118,23 +120,32 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     //wait for line end by looking ahead without blocking
-    private boolean waitForLineTerminator(long timeout) throws IOException {
+    private void waitForLineTerminator(long timeout, Pattern pattern) throws IOException {
         stdOutReader.mark(8192);
-        boolean result = false;
-        while(System.currentTimeMillis() < timeout) {
-            if ( stdOutReader.ready() ) {
+        label:
+        while(true) {
+            checkTimeout(timeout, pattern);
+            while ( stdOutReader.ready() ) {
                 int c = stdOutReader.read();
                 if (c == '\n' || c == '\r' ) {
-                    result = true;
-                    break;    
+                    break label;    
                 }
-            } else {
-                try {
-                    Thread.sleep(10); //avoid a busy loop since we are using nonblocking ready() / read()
-                } catch (InterruptedException e) {}
+            } 
+
+            try {
+                Thread.sleep(10); //avoid a busy loop since we are using nonblocking ready() / read()
+            } catch (InterruptedException e) {}
+            
+            if ( isStopped() && ! stdOutReader.ready()) {
+                ChorusAssert.fail("Process stopped while waiting for match");
             }
         }
         stdOutReader.reset();
-        return result;
+    }
+
+    private void checkTimeout(long timeout, Pattern pattern) {
+        if ( System.currentTimeMillis() > timeout ) {
+            ChorusAssert.fail("Timed out waiting for pattern " + pattern + "'");
+        }
     }
 }
