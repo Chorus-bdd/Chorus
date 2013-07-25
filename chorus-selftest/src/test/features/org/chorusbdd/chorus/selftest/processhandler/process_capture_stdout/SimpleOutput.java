@@ -41,6 +41,8 @@ public class SimpleOutput {
         System.out.println("let's match a line");
         System.out.println("and write a random line");
         System.out.println("and another longer line");
+        
+        Thread.sleep(3000);
     }
 
 }
