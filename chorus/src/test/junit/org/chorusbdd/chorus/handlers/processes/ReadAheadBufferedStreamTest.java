@@ -51,7 +51,7 @@ public class ReadAheadBufferedStreamTest extends Assert {
         byte[] readBytes = new byte[30];
         is.read(readBytes, 0, 30);
         
-        assertEquals("Should reset to start and contain first line", "Beware the Jabberwock, my son!", new String(readBytes));
+        assertEquals("Should reset to start and contain first line", "Beware the Jabberwock, my son!", new String(readBytes).trim());
 
         try {
             Thread.sleep(250);
@@ -62,7 +62,7 @@ public class ReadAheadBufferedStreamTest extends Assert {
 
         readBytes = new byte[43];
         is.read(readBytes, 0, 43);
-        assertEquals("Should contain second line", "\r\nThe jaws that bite, the claws that catch!", new String(readBytes));
+        assertEquals("Should contain second line", "The jaws that bite, the claws that catch!", new String(readBytes).trim());
     }
     
     @After
