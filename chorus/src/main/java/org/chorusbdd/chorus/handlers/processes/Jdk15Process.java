@@ -50,7 +50,6 @@ public class Jdk15Process extends AbstractChorusProcess {
     private FileOutputStream stdoutStream;
     private FileOutputStream stderrStream;
 
-    private Process process;
     private ProcessRedirector outRedirector;
     private ProcessRedirector errRedirector;
 
