@@ -67,6 +67,7 @@ class ProcessLogOutput {
     private File stdErrLogFile; //calculated but may or may not exist
     private boolean isAppendToLogs;
     private int readAheadBufferSize;
+    private int readTimeoutSeconds;
 
     public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessesConfig processesConfig, String processAlias) {
         this.featureDir = featureDir;
@@ -75,6 +76,7 @@ class ProcessLogOutput {
         this.isAppendToLogs = processesConfig.isAppendToLogs();
         this.featureToken = featureToken;
         this.readAheadBufferSize = processesConfig.getReadAheadBufferSize();
+        this.readTimeoutSeconds = processesConfig.getReadTimeoutSeconds();
 
         logDirectory = calculateLogDirectory();
         calculateLogFiles(logDirectory);
@@ -168,6 +170,10 @@ class ProcessLogOutput {
 
     int getReadAheadBufferSize() {
         return readAheadBufferSize;
+    }
+
+    int getReadTimeoutSeconds() {
+        return readTimeoutSeconds;
     }
 
     @Override

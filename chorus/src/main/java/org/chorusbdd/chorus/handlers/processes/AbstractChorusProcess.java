@@ -89,16 +89,12 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         
         
         Pattern p = Pattern.compile(pattern);
-        long timeout = System.currentTimeMillis() + 60000;
         
-        boolean matched = matchPattern(p, timeout);
-        if ( ! matched) {
-            ChorusAssert.fail("Timed out waiting for pattern '" + pattern + "'");
-        }
+        long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);
+        matchPattern(p, timeout);
     }
 
-    private boolean matchPattern(Pattern p, long timeout) {
-        boolean matched = false;
+    private void matchPattern(Pattern p, long timeout) {
         try {
             while ( true) {
                 checkTimeout(timeout, p);
@@ -107,16 +103,16 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 //we know the next call to readLine will succeed and not block
                 String line = stdOutReader.readLine();
                 Matcher m = p.matcher(line);
-                matched = m.matches();
+                boolean matched = m.matches();
                 if ( matched ) {
                     break;
+                    //or we will be in the look until we timeout
                 }
             }
         } catch (IOException e) {
             getLog().warn("Failed while matching pattern " + p, e);
             ChorusAssert.fail("Failed while matching pattern");
         }
-        return matched;
     }
 
     //wait for line end by looking ahead without blocking
@@ -137,7 +133,11 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             } catch (InterruptedException e) {}
             
             if ( isStopped() && ! stdOutReader.ready()) {
-                ChorusAssert.fail("Process stopped while waiting for match");
+                ChorusAssert.fail(
+                    isExitCodeFailure() ? 
+                        "Process stopped with error code " + getExitCode() + " while waiting for match" :
+                        "Process stopped while waiting for match"
+                );
             }
         }
         stdOutReader.reset();
@@ -145,7 +145,15 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
 
     private void checkTimeout(long timeout, Pattern pattern) {
         if ( System.currentTimeMillis() > timeout ) {
-            ChorusAssert.fail("Timed out waiting for pattern " + pattern + "'");
+            ChorusAssert.fail("Timed out after " + logOutput.getReadTimeoutSeconds() + " seconds");
         }
+    }
+
+    public boolean isExitCodeFailure() {
+        return process.exitValue() != 0;
+    }
+    
+    public int getExitCode() {
+        return process.exitValue();
     }
 }

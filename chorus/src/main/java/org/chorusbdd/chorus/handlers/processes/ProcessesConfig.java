@@ -63,6 +63,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private boolean createLogDir = true; //whether to auto create
     private int processCheckDelay = 500;
     private int readAheadBufferSize = 65536; //read ahead process output in CAPTURED mode 
+    private int readTimeoutSeconds = 10;
 
     public String getGroupName() {
         return name;
@@ -190,6 +191,14 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public void setReadAheadBufferSize(int readAheadBufferSize) {
         this.readAheadBufferSize = readAheadBufferSize;
+    }
+
+    public int getReadTimeoutSeconds() {
+        return readTimeoutSeconds;
+    }
+
+    public void setReadTimeoutSeconds(int readTimeoutSeconds) {
+        this.readTimeoutSeconds = readTimeoutSeconds;
     }
 
     public boolean isValid() {

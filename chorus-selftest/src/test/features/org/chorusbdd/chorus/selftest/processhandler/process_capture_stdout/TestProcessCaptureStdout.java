@@ -42,7 +42,7 @@ public class TestProcessCaptureStdout extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_capture_stdout";
 
-    final int expectedExitCode = 0;  //success
+    final int expectedExitCode = 1;  //fail
 
     protected int getExpectedExitCode() {
         return expectedExitCode;

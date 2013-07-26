@@ -151,10 +151,6 @@ public class Jdk15Process extends AbstractChorusProcess {
     }
 
 
-    public boolean isExitCodeFailure() {
-        return process.exitValue() != 0;
-    }
-
     /**
      * Check the process for a short time after it is started, and only pass the start process step
      * if the process has not terminated with a non-zero (error) code

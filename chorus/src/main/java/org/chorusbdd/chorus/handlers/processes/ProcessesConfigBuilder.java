@@ -101,6 +101,8 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setStdOutMode(parseOutputMode(value, "stdOutMode"));
             } else if ("readAheadBufferSize".equals(key)) {
                 c.setReadAheadBufferSize(parseIntProperty(value, "readAheadBufferSize"));
+            } else if ("readTimeoutSeconds".equals(key)) {
+                c.setReadTimeoutSeconds(parseIntProperty(value,"readTimeoutSeconds"));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }
