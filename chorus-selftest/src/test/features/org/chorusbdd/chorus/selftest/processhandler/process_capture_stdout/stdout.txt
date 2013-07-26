@@ -5,10 +5,17 @@ Chorus --> INFO    - No default handler found for Feature: (Capture Std Output),
 Chorus --> INFO    - Processing scenario: I expect some output
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a config1 process named outputter                                          PASSED  
-    When I read the line 'let's match a line' from process outputter                         PASSED  
-    And I read the line 'and another .* line' from process outputter                         PASSED  
+    When I read the line 'let's match a line' from outputter process                         PASSED  
+    Then I read the line 'and another .* line' from outputter process                        PASSED  
+  Scenario: I exepect some output from noisy process
+Chorus --> INFO    - Processing scenario: I exepect some output from noisy process
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a noisy process                                                            PASSED  
+    When I read the line 'Start with this' from noisy process                                PASSED  
+    Then I read the line 'Then read this' from noisy process                                 PASSED  
+    And I read the line 'Finally a .* pattern' from noisy process                            PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)

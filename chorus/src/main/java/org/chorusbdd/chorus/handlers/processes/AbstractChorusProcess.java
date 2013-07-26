@@ -89,7 +89,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         
         
         Pattern p = Pattern.compile(pattern);
-        long timeout = System.currentTimeMillis() + 5000;
+        long timeout = System.currentTimeMillis() + 60000;
         
         boolean matched = matchPattern(p, timeout);
         if ( ! matched) {

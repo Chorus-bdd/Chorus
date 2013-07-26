@@ -128,7 +128,7 @@ class ReadAheadBufferedStream extends BufferedInputStream {
         public void run() {
             log.trace("Starting read ahead thread for input stream " + in);
             Thread.currentThread().setName("ReadAhead " + in);
-            byte[] readAheadBuffer = new byte[readAheadLimit];
+            byte[] readAheadBuffer = new byte[1024];
             bytesRead = 0;
             mark(readAheadLimit);
             try {
@@ -137,6 +137,10 @@ class ReadAheadBufferedStream extends BufferedInputStream {
                     boolean sleep = true;
                     try {
                         int shouldRead = (readAheadLimit - bytesRead);
+                        if ( shouldRead > readAheadBuffer.length) {
+                            readAheadBuffer = new byte[shouldRead];
+                        }
+                        
                         if ( shouldRead > 0) {
                             int avail = available();
                             if ( avail > 0 )  {

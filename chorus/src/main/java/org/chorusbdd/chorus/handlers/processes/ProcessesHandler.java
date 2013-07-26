@@ -208,7 +208,7 @@ public class ProcessesHandler {
         waitForProcessToTerminate(processAlias, waitTime);
     }
     
-    @Step(".*read the line '(.*)' from process ([a-zA-Z0-9-_]*)")
+    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
     public void readLineFromProcess(String pattern, String processAlias) {
         String configName = getConfigNameForAlias(processAlias);
         ProcessesConfig c = getProcessesConfig(configName);
