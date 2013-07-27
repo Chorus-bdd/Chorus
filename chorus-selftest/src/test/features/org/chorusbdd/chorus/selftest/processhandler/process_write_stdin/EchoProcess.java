@@ -29,36 +29,23 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.process_write_stdin;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
  * Date: 04/07/12
  * Time: 09:16
  */
-public class NoisyProcess {
+public class EchoProcess {
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("Start with this");
-        writeManyLinesOfNoisyGibberish();
-        System.out.println("Then read this");
-        writeManyLinesOfNoisyGibberish();
-        System.out.println("Finally a big fat pattern");
-        writeManyLinesOfNoisyGibberish();
-    }
-
-    private static void writeManyLinesOfNoisyGibberish() {
-        long stopTime = System.currentTimeMillis() + 500;
-        int written = 0;
-        while ( System.currentTimeMillis() < stopTime) {
-            StringBuilder sb = new StringBuilder();
-            int lineLength = (int)(Math.random() * 10000);
-            for ( int c = 0 ; c < lineLength ; c ++) {
-                sb.append((char)(Math.random() * 1000));
-            }
-            System.out.println(sb.toString());
-            written++;
+    public static void main(String[] args) throws Exception {
+        BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+        while( true ) {
+            String s = r.readLine();
+            System.out.println(s);
         }
-//        System.err.println("written : " + written);
     }
 
 }

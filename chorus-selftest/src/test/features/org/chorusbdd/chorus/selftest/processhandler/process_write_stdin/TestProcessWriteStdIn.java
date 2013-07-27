@@ -29,25 +29,27 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.process_write_stdin;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 04/07/12
- * Time: 09:16
- */
-public class SimpleOutput {
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("let's match a line");
-        System.out.println("and write a random line");
-        System.out.println("and another longer line");
-        
-        //on unix may otherwise die before we can open the input stream to read the ouput
-        Thread.sleep(1000);
-        
-        if (args.length > 0) {
-            System.exit(Integer.parseInt(args[0]));
-        }
+/**
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
+ */
+public class TestProcessWriteStdIn extends AbstractInterpreterTest {
+
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_write_stdin";
+
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+    
+   
 }
