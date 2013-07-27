@@ -25,6 +25,8 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     private ProcessLogOutput logOutput;
 
     protected Process process;
+    private OutputStream outputStream;
+    private BufferedWriter outputWriter;
 
     public AbstractChorusProcess(String name, ProcessLogOutput logOutput) {
         this.name = name;
@@ -80,14 +82,27 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
     }
     
+    public void writeToStdIn(String line) {
+        if ( outputStream == null) {
+            outputStream = new BufferedOutputStream(process.getOutputStream());
+            outputWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+        }
+        try {
+            outputWriter.write(line);
+            outputWriter.newLine();
+            outputWriter.flush();
+            outputStream.flush();
+        } catch (IOException e) {
+            getLog().debug("Error when writing to process in for " + this, e);
+            ChorusAssert.fail("IOException when writing line to process");
+        }
+    }
+    
     public void waitForLineMatchInStdOut(String pattern) {
-        
         if ( stdOutInputStream == null) {
             InputStream inputStream = process.getInputStream();
             createCapturedOutReader(logOutput, inputStream);
         }
-        
-        
         Pattern p = Pattern.compile(pattern);
         
         long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);

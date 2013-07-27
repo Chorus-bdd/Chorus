@@ -1,0 +1,39 @@
+Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_capture_stdout/capturestdout.feature
+Feature: Capture Std Output                                                                          
+Chorus --> INFO    - No default handler found for Feature: (Capture Std Output), will use built-in handlers and Uses: statements
+  Scenario: I expect some output
+Chorus --> INFO    - Processing scenario: I expect some output
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named outputter                                          PASSED  
+    When I read the line 'let's match a line' from outputter process                         PASSED  
+    Then I read the line 'and another .* line' from outputter process                        PASSED  
+  Scenario: I expect some output from noisy process
+Chorus --> INFO    - Processing scenario: I expect some output from noisy process
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a noisy process                                                            PASSED  
+    When I read the line 'Start with this' from noisy process                                PASSED  
+    Then I read the line 'Then read this' from noisy process                                 PASSED  
+    And I read the line 'Finally a .* pattern' from noisy process                            PASSED  
+  Scenario: Process exits before match
+Chorus --> INFO    - Processing scenario: Process exits before match
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named lemming                                            PASSED  
+    When I read the line 'it could never happen here' from the lemming process               FAILED  (AbstractChorusProcess:linenumber)-Process stopped while waiting for match
+    Then this line will be skipped and the previous line will fail since process died        SKIPPED 
+  Scenario: Process exits with error before match
+Chorus --> INFO    - Processing scenario: Process exits with error before match
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a errorcode process named lemming                                          PASSED  
+    When I read the line 'it could never happen here' from the lemming process               FAILED  (AbstractChorusProcess:linenumber)-Process stopped with error code 1 while waiting for match
+    Then this line will be skipped and the previous line will fail since process died        SKIPPED 
+  Scenario: Process exits with timeout before match
+Chorus --> INFO    - Processing scenario: Process exits with timeout before match
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a noisytimeout process named anylastorders                                 PASSED  
+    When I read the line 'it could never happen here' from the anylastorders process         FAILED  (AbstractChorusProcess:linenumber)-Timed out after 1 seconds
+    Then this line will be skipped and the previous line will fail since anylastorders timed outSKIPPED 
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:5) (passed:2) (failed:3)
+Steps     (total:16) (passed:10) (failed:3) (undefined:0) (pending:0) (skipped:3)

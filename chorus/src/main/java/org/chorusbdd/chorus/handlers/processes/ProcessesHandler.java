@@ -210,14 +210,22 @@ public class ProcessesHandler {
     
     @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
     public void readLineFromProcess(String pattern, String processAlias) {
-        String configName = getConfigNameForAlias(processAlias);
-        ProcessesConfig c = getProcessesConfig(configName);
         ChorusProcess p = processes.get(processAlias);
         if ( p == null ) {
             ChorusAssert.fail("Could not find the process " + processAlias);
         } else {
              p.waitForLineMatchInStdOut(pattern);
         }
+    }
+    
+    @Step(".*write the line '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process") 
+    public void writeLineToProcess(String line, String processAlias) {
+        ChorusProcess p = processes.get(processAlias);
+        if ( p == null ) {
+            ChorusAssert.fail("Could not find the process " + processAlias);
+        } else {
+            p.writeToStdIn(line);
+        }    
     }
     
 
