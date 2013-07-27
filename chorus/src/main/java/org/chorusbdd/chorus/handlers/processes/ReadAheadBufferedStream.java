@@ -109,6 +109,10 @@ class ReadAheadBufferedStream extends BufferedInputStream {
             lock.readLock().unlock();
         }
     }
+
+    public synchronized int available() throws IOException {
+        return markpos < pos ? pos - markpos : super.available();
+    }
     
     int getReadAheadBytesRead() {
         return readAheadRunnable.getBytesRead();    
@@ -142,7 +146,7 @@ class ReadAheadBufferedStream extends BufferedInputStream {
                         }
                         
                         if ( shouldRead > 0) {
-                            int avail = available();
+                            int avail = ReadAheadBufferedStream.super.available();
                             if ( avail > 0 )  {
                                 bytesRead += doRead(readAheadBuffer, 0, shouldRead);
                                 sleep = false;
