@@ -5,10 +5,10 @@ Chorus --> INFO    - No default handler found for Feature: (Capture Std Output),
 Chorus --> INFO    - Processing scenario: I write and read a line
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a echo process named myecho                                                PASSED  
-    When I write the line 'Donald Bradman was the greatest sportsman of all time' to the myecho processPASSED  
-    And I read the line 'Donald Bradman was the greatest sportsman of all time' from the myecho processPASSED  
-    Then I write the line 'truly he was one of the greats' to the myecho process             PASSED  
-    And I read the line 'truly .* greats' from the myecho process                            PASSED  
+    When I write the line 'Donald Bradman was the greatest of all time' to the myecho processPASSED  
+    And I read the line 'Donald Bradman was the greatest of all time' from the myecho processPASSED  
+    Then I write the line 'you speak the truth, wise one' to the myecho process              PASSED  
+    And I read the line 'you .* wise one' from the myecho process                            PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)

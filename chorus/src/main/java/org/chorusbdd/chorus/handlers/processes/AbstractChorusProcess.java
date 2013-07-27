@@ -63,24 +63,6 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         return getClass().getSimpleName() + "{" +
                 "name='" + name + '}';
     }
-
-    protected void closeStreams() {
-        if ( stdOutInputStream != null) {
-            try {
-                getLog().trace("Closing process std out reader for " + this);
-                stdOutInputStream.close();
-                stdOutInputStream = null;
-            } catch (IOException e) {}
-        }
-        
-        if ( stdErrInputStream != null) {
-            try {
-                getLog().trace("Closing process std err reader for " + this);
-                stdErrInputStream.close();
-                stdErrInputStream = null;
-            } catch (IOException e) {}
-        }
-    }
     
     public void writeToStdIn(String line) {
         if ( outputStream == null) {
@@ -170,5 +152,38 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     
     public int getExitCode() {
         return process.exitValue();
+    }
+
+
+    protected void closeStreams() {
+        if ( stdOutInputStream != null) {
+            try {
+                getLog().trace("Closing input stream for std out for process " + this);
+                stdOutInputStream.close();
+                stdOutReader.close();
+                stdOutReader = null;
+                stdOutInputStream = null;
+            } catch (IOException e) {}
+        }
+
+        if ( stdErrInputStream != null) {
+            try {
+                getLog().trace("Closing input stream for std err for process " + this);
+                stdErrInputStream.close();
+                stdErrReader.close();
+                stdErrInputStream = null;
+                stdErrReader = null;
+            } catch (IOException e) {}
+        }
+        
+        if ( outputStream != null ) {
+            try {
+                getLog().trace("Closing output stream for process " + this);
+                outputStream.close();
+                outputWriter.close();
+                outputStream = null;
+                outputWriter = null;
+            } catch (IOException e) {}
+        }
     }
 }
