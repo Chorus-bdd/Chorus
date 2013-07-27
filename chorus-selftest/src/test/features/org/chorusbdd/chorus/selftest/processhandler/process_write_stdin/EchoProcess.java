@@ -41,11 +41,8 @@ import java.io.InputStreamReader;
 public class EchoProcess {
 
     public static void main(String[] args) throws Exception {
-        
-        Thread.sleep(1000);
-        
+                
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
-        
         while( true ) {
             String s = r.readLine();
             if ( s == null ) {
@@ -53,6 +50,7 @@ public class EchoProcess {
                 break;
             }
             
+            //see the output in the err log
             System.err.println(s);
             System.err.flush();
             
