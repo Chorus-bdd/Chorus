@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.selftest.processhandler.process_write_stdin;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,6 +51,5 @@ public class TestProcessWriteStdIn extends AbstractInterpreterTest {
     protected String getFeaturePath() {
         return featurePath;
     }
-    
-   
+
 }
