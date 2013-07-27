@@ -41,9 +41,17 @@ import java.io.InputStreamReader;
 public class EchoProcess {
 
     public static void main(String[] args) throws Exception {
+        
+        Thread.sleep(1000);
+        
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+        
         while( true ) {
             String s = r.readLine();
+            if ( s == null ) {
+                System.err.println("End of stream, quitting");
+                break;
+            }
             
             System.err.println(s);
             System.err.flush();
