@@ -45,6 +45,7 @@ public class EchoProcess {
         while( true ) {
             String s = r.readLine();
             System.out.println(s);
+            System.out.flush();
         }
     }
 
