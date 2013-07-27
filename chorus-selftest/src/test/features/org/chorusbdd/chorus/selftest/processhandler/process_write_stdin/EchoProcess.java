@@ -44,6 +44,10 @@ public class EchoProcess {
         BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
         while( true ) {
             String s = r.readLine();
+            
+            System.err.println(s);
+            System.err.flush();
+            
             System.out.println(s);
             System.out.flush();
         }
