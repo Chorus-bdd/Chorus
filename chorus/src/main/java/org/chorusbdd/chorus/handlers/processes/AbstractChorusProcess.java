@@ -183,14 +183,8 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
 
         void createStreams(ProcessLogOutput logOutput, InputStream processErrorStream) {
-            int readAheadBuffer = logOutput.getReadAheadBufferSize();
-            if ( readAheadBuffer > 0 ) {
-                getLog().trace("Creating new read ahead buffered input stream " + name + " for process " + this + " in captured mode");
-                inputStream = new ReadAheadBufferedStream(processErrorStream, 8192, logOutput.getReadAheadBufferSize()).startReadAhead();
-            } else {
-                getLog().trace("Creating new simple buffered input stream " + name + " for process " + this + " in captured mode");
-                inputStream = new BufferedInputStream(processErrorStream);
-            }
+            getLog().trace("Creating new simple buffered input stream " + name + " for process " + this + " in captured mode");
+            inputStream = new BufferedInputStream(processErrorStream);
             reader = new BufferedReader(new InputStreamReader(inputStream));
         }
 
