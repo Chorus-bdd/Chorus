@@ -74,6 +74,7 @@ public class ChorusInterpreter {
     private final TagExpressionEvaluator tagExpressionEvaluator = new TagExpressionEvaluator();
 
     private ScheduledFuture scenarioTimeoutInterrupt;
+    private ScheduledFuture scenarioTimeoutStopThread;
     private ScheduledFuture scenarioTimeoutKill;
 
     private StepProcessor stepProcessor = new StepProcessor(executionListenerSupport);
@@ -209,7 +210,7 @@ public class ChorusInterpreter {
 
         addHandlerInstances(unmanagedHandlerInstances, featureFile, feature, orderedHandlerClasses, handlerInstances);
 
-        createTimeoutTasks(scenario, Thread.currentThread()); //will interrupt or eventually kill thread if blocked
+        createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
         log.debug("Running scenario steps for Scenario " + scenario);
         stepProcessor.runSteps(executionToken, handlerInstances, scenario.getSteps(), false);
@@ -237,26 +238,33 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 
-    private void createTimeoutTasks(final ScenarioToken scenario, final Thread t) {
+    private void createTimeoutTasks(final Thread t) {
         scenarioTimeoutInterrupt = timeoutExcecutor.schedule(new Runnable() {
             public void run() {
-                timeoutIfStillRunning(scenario, t);
+                timeoutIfStillRunning(t);
             }
         }, scenarioTimeoutMillis, TimeUnit.MILLISECONDS);
 
-        scenarioTimeoutKill = timeoutExcecutor.schedule(new Runnable() {
+        scenarioTimeoutStopThread = timeoutExcecutor.schedule(new Runnable() {
             public void run() {
-                killIfStillRunning(scenario, t);
+                stopThreadIfStillRunning(t);
             }
         }, scenarioTimeoutMillis * 2, TimeUnit.MILLISECONDS);
+
+        scenarioTimeoutKill = timeoutExcecutor.schedule(new Runnable() {
+            public void run() {
+                killInterpreterIfStillRunning(t);
+            }
+        }, scenarioTimeoutMillis * 3, TimeUnit.MILLISECONDS);
     }
 
     private void stopTimeoutTasks() {
         scenarioTimeoutInterrupt.cancel(true);
+        scenarioTimeoutStopThread.cancel(true);
         scenarioTimeoutKill.cancel(true);
     }
 
-    private void timeoutIfStillRunning(ScenarioToken scenario, Thread t) {
+    private void timeoutIfStillRunning(Thread t) {
         if ( t.isAlive()) {
             log.warn("Scenario timed out after " + scenarioTimeoutMillis + " millis, will interrupt");
             stepProcessor.setInterruptingOnTimeout(true);
@@ -264,11 +272,18 @@ public class ChorusInterpreter {
         }
     }
 
-    private void killIfStillRunning(ScenarioToken scenario, Thread t) {
+    private void stopThreadIfStillRunning(Thread t) {
         if ( t.isAlive()) {
             log.error("Scenario did not respond to interrupt after timeout, " +
                 "will stop the interpreter thread and fail the tests");
             t.stop(); //this will trigger a ThreadDeath exception which we should allow to propagate and will terminate the interpreter
+        }
+    }
+
+    private void killInterpreterIfStillRunning(Thread t) {
+        if ( t.isAlive()) {
+            log.error("Scenario did not respond to thread.kill() after timeout, will now kill the interpreter");
+            System.exit(1);
         }
     }
 
