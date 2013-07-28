@@ -34,7 +34,6 @@ class ReadAheadBufferedStream extends BufferedInputStream {
     private int readAheadLimit;
     private ReadAheadRunnable readAheadRunnable = new ReadAheadRunnable();
     private Thread readAheadThread = new Thread(readAheadRunnable);
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public ReadAheadBufferedStream(InputStream in, int readAheadLimit) {
         super(in);
@@ -65,49 +64,29 @@ class ReadAheadBufferedStream extends BufferedInputStream {
     }
 
     public synchronized int read(byte b[], int off, int len) throws IOException {
-        lock.readLock().lock();
-        try {
-            reset();
-            int result = doRead(b, off, len);
-            mark(readAheadLimit);
-            return result;
-        } finally {
-            lock.readLock().unlock();
-        }
+        reset();
+        int result = doRead(b, off, len);
+        mark(readAheadLimit);
+        return result;
     }
 
     public synchronized int read() throws IOException {
-        lock.readLock().lock();
-        try {
-            reset();
-            int result = super.read();
-            mark(readAheadLimit);
-            return result;
-        } finally {
-            lock.readLock().unlock();
-        }
+        reset();
+        int result = super.read();
+        mark(readAheadLimit);
+        return result;
     }
 
     public synchronized long skip(long n) throws IOException {
-        lock.readLock().lock();
-        try {
-            reset();
-            long result = super.skip(n);
-            mark(readAheadLimit);
-            return result;
-        } finally {
-            lock.readLock().unlock();
-        }    
+        reset();
+        long result = super.skip(n);
+        mark(readAheadLimit);
+        return result;
     }
 
     public synchronized void mark(int readlimit) {
-        lock.readLock().lock();
-        try {
-            readAheadRunnable.clearBytesRead();
-            super.mark(readlimit);
-        } finally {
-            lock.readLock().unlock();
-        }
+        readAheadRunnable.clearBytesRead();
+        super.mark(readlimit);
     }
 
     public synchronized int available() throws IOException {
@@ -137,9 +116,8 @@ class ReadAheadBufferedStream extends BufferedInputStream {
             mark(readAheadLimit);
             try {
                 while (!stopping) {
-                    lock.readLock().lock();
                     boolean sleep = true;
-                    try {
+                    synchronized (ReadAheadBufferedStream.this) {
                         int shouldRead = (readAheadLimit - bytesRead);
                         if ( shouldRead > readAheadBuffer.length) {
                             readAheadBuffer = new byte[shouldRead];
@@ -148,13 +126,11 @@ class ReadAheadBufferedStream extends BufferedInputStream {
                         if ( shouldRead > 0) {
                             int avail = ReadAheadBufferedStream.super.available();
                             if ( avail > 0 )  {
-                                bytesRead += doRead(readAheadBuffer, 0, shouldRead);
+                                bytesRead += doRead(readAheadBuffer, 0, Math.min(avail, shouldRead));
                                 sleep = false;
                             }
                         }
-                    } finally {
-                        lock.readLock().unlock();
-                    }
+                    } 
                     
                     //need to sleep if there were no bytes available or will be a busy loop
                     //do this while no longer holding the lock
