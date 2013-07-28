@@ -31,8 +31,12 @@ Feature: Capture Std Output
     When I read the line 'it could never happen here' from the anylastorders process
     Then this line will be skipped and the previous line will fail since anylastorders timed out
 
-
-
+  Scenario: I can read from std and std error separately
+    Given I start a outanderr process named poetical
+    When I read the line 'The time has come, the Walrus said' from the poetical process
+    Then I read the line 'To talk of many things' from the poetical process std error
+    When I read the line 'Of shoes and ships and sealing-wax' from the poetical process
+    Then I read the line 'Of cabbages and kings' from the poetical process std error
 
 
 

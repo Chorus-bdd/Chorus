@@ -32,8 +32,16 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
     Given I start a noisytimeout process named anylastorders                                 PASSED  
     When I read the line 'it could never happen here' from the anylastorders process         FAILED  (AbstractChorusProcess:linenumber)-Timed out after 1 seconds
     Then this line will be skipped and the previous line will fail since anylastorders timed outSKIPPED 
+  Scenario: I can read from std and std error separately
+Chorus --> INFO    - Processing scenario: I can read from std and std error separately
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a outanderr process named poetical                                         PASSED  
+    When I read the line 'The time has come, the Walrus said' from the poetical process      PASSED  
+    Then I read the line 'To talk of many things' from the poetical process std error        PASSED  
+    When I read the line 'Of shoes and ships and sealing-wax' from the poetical process      PASSED  
+    Then I read the line 'Of cabbages and kings' from the poetical process std error         PASSED  
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:5) (passed:2) (failed:3)
-Steps     (total:16) (passed:10) (failed:3) (undefined:0) (pending:0) (skipped:3)
+Scenarios (total:6) (passed:3) (failed:3)
+Steps     (total:21) (passed:15) (failed:3) (undefined:0) (pending:0) (skipped:3)

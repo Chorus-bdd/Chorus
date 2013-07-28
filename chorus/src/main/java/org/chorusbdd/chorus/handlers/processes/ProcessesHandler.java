@@ -217,6 +217,16 @@ public class ProcessesHandler {
              p.waitForLineMatchInStdOut(pattern);
         }
     }
+
+    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
+    public void readLineFromProcessStdError(String pattern, String processAlias) {
+        ChorusProcess p = processes.get(processAlias);
+        if ( p == null ) {
+            ChorusAssert.fail("Could not find the process " + processAlias);
+        } else {
+            p.waitForLineMatchInStdErr(pattern);
+        }
+    }
     
     @Step(".*write the line '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process") 
     public void writeLineToProcess(String line, String processAlias) {

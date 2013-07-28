@@ -25,5 +25,7 @@ public interface ChorusProcess {
 
     void waitForLineMatchInStdOut(String pattern);
 
+    void waitForLineMatchInStdErr(String pattern);
+
     void writeToStdIn(String line);
 }

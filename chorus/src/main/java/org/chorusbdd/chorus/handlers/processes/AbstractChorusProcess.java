@@ -15,18 +15,16 @@ import java.util.regex.Pattern;
 public abstract class AbstractChorusProcess implements ChorusProcess {
 
     //when we are in CAPTURED mode
-    protected BufferedInputStream stdOutInputStream;
-    private BufferedReader stdOutReader;
+    private InputStreamAndReader stdOutInputStreams;
+    private InputStreamAndReader stdErrInputStreams;
 
-    protected BufferedInputStream stdErrInputStream;
-    private BufferedReader stdErrReader;
+    private OutputStream outputStream;
+    private BufferedWriter outputWriter;
     
     protected String name;
     private ProcessLogOutput logOutput;
 
     protected Process process;
-    private OutputStream outputStream;
-    private BufferedWriter outputWriter;
 
     public AbstractChorusProcess(String name, ProcessLogOutput logOutput) {
         this.name = name;
@@ -34,30 +32,6 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
     
     protected abstract ChorusLog getLog();
-
-    protected void createCapturedErrReader(ProcessLogOutput logOutput, InputStream processErrorStream) {
-        int readAheadBuffer = logOutput.getReadAheadBufferSize();
-        if ( readAheadBuffer > 0 ) {
-            getLog().trace("Creating new read ahead buffered error stream for process " + this + " std error in captured mode");
-            this.stdErrInputStream = new ReadAheadBufferedStream(processErrorStream, 8192, logOutput.getReadAheadBufferSize()).startReadAhead();
-        } else {
-            getLog().trace("Creating new simple buffered input stream for process " + this + " std error in captured mode");
-            this.stdErrInputStream = new BufferedInputStream(processErrorStream);
-        }
-        this.stdErrReader = new BufferedReader(new InputStreamReader(stdErrInputStream));
-    }
-
-    protected void createCapturedOutReader(ProcessLogOutput logOutput, InputStream processOutStream) {
-        int readAheadBuffer = logOutput.getReadAheadBufferSize();
-        if ( readAheadBuffer > 0 ) {
-            getLog().trace("Creating new read ahead buffered input stream for process " + this + " std out in captured mode");
-            this.stdOutInputStream = new ReadAheadBufferedStream(processOutStream, 8192, logOutput.getReadAheadBufferSize()).startReadAhead();
-        } else {
-            getLog().trace("Creating new simple buffered input stream for process " + this + " std out in captured mode");
-            this.stdOutInputStream = new BufferedInputStream(processOutStream);
-        }
-        this.stdOutReader = new BufferedReader(new InputStreamReader(stdOutInputStream));
-    }
 
     public String toString() {
         return getClass().getSimpleName() + "{" +
@@ -69,6 +43,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             outputStream = new BufferedOutputStream(process.getOutputStream());
             outputWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
         }
+        
         try {
             outputWriter.write(line);
             outputWriter.newLine();
@@ -81,24 +56,37 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
     
     public void waitForLineMatchInStdOut(String pattern) {
-        if ( stdOutInputStream == null) {
+        if ( stdOutInputStreams == null) {
+            stdOutInputStreams = new InputStreamAndReader("Std Out");
             InputStream inputStream = process.getInputStream();
-            createCapturedOutReader(logOutput, inputStream);
+            stdOutInputStreams.createStreams(logOutput, inputStream);
         }
-        Pattern p = Pattern.compile(pattern);
-        
-        long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);
-        matchPattern(p, timeout);
+        waitForLine(pattern, stdOutInputStreams);
     }
 
-    private void matchPattern(Pattern p, long timeout) {
+    public void waitForLineMatchInStdErr(String pattern) {
+        if ( stdErrInputStreams == null) {
+            stdErrInputStreams = new InputStreamAndReader("Std Err");
+            InputStream inputStream = process.getErrorStream();
+            stdErrInputStreams.createStreams(logOutput, inputStream);
+        }
+        waitForLine(pattern, stdErrInputStreams);
+    }
+
+    private void waitForLine(String pattern, InputStreamAndReader i) {
+        Pattern p = Pattern.compile(pattern);
+        long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);
+        matchPattern(p, timeout, i.reader);
+    }
+
+    private void matchPattern(Pattern p, long timeout, BufferedReader reader) {
         try {
             while ( true) {
                 checkTimeout(timeout, p);
-                waitForLineTerminator(timeout, p);
+                waitForLineTerminator(timeout, p, reader);
                 //since we know there is a line terminator ahead and the buffer has been reset
                 //we know the next call to readLine will succeed and not block
-                String line = stdOutReader.readLine();
+                String line = reader.readLine();
                 Matcher m = p.matcher(line);
                 boolean matched = m.matches();
                 if ( matched ) {
@@ -113,13 +101,13 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     //wait for line end by looking ahead without blocking
-    private void waitForLineTerminator(long timeout, Pattern pattern) throws IOException {
-        stdOutReader.mark(8192);
+    private void waitForLineTerminator(long timeout, Pattern pattern, BufferedReader bufferedReader) throws IOException {
+        bufferedReader.mark(8192);
         label:
         while(true) {
             checkTimeout(timeout, pattern);
-            while ( stdOutReader.ready() ) {
-                int c = stdOutReader.read();
+            while ( bufferedReader.ready() ) {
+                int c = bufferedReader.read();
                 if (c == '\n' || c == '\r' ) {
                     break label;    
                 }
@@ -129,7 +117,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 Thread.sleep(10); //avoid a busy loop since we are using nonblocking ready() / read()
             } catch (InterruptedException e) {}
             
-            if ( isStopped() && ! stdOutReader.ready()) {
+            if ( isStopped() && ! bufferedReader.ready()) {
                 ChorusAssert.fail(
                     isExitCodeFailure() ? 
                         "Process stopped with error code " + getExitCode() + " while waiting for match" :
@@ -137,7 +125,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 );
             }
         }
-        stdOutReader.reset();
+        bufferedReader.reset();
     }
 
     private void checkTimeout(long timeout, Pattern pattern) {
@@ -154,36 +142,72 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         return process.exitValue();
     }
 
-
     protected void closeStreams() {
-        if ( stdOutInputStream != null) {
-            try {
-                getLog().trace("Closing input stream for std out for process " + this);
-                stdOutInputStream.close();
-                stdOutReader.close();
-                stdOutReader = null;
-                stdOutInputStream = null;
-            } catch (IOException e) {}
+        if ( stdOutInputStreams != null) {
+           stdOutInputStreams.close();
         }
 
-        if ( stdErrInputStream != null) {
-            try {
-                getLog().trace("Closing input stream for std err for process " + this);
-                stdErrInputStream.close();
-                stdErrReader.close();
-                stdErrInputStream = null;
-                stdErrReader = null;
-            } catch (IOException e) {}
+        if ( stdErrInputStreams != null) {
+          stdErrInputStreams.close();
         }
         
         if ( outputStream != null ) {
             try {
                 getLog().trace("Closing output stream for process " + this);
                 outputStream.close();
-                outputWriter.close();
                 outputStream = null;
+            } catch (IOException e) {}
+        }
+
+        if ( outputWriter != null ) {
+            try {
+                getLog().trace("Closing output writer for process " + this);
+                outputWriter.close();
                 outputWriter = null;
             } catch (IOException e) {}
+        }
+    }
+
+
+    /**
+     * Input stream and reader for process std out or std error
+     */
+    private class InputStreamAndReader {
+        
+        String name;
+        BufferedInputStream inputStream;
+        BufferedReader reader;
+
+        private InputStreamAndReader(String name) {
+            this.name = name;
+        }
+
+        void createStreams(ProcessLogOutput logOutput, InputStream processErrorStream) {
+            int readAheadBuffer = logOutput.getReadAheadBufferSize();
+            if ( readAheadBuffer > 0 ) {
+                getLog().trace("Creating new read ahead buffered input stream " + name + " for process " + this + " in captured mode");
+                inputStream = new ReadAheadBufferedStream(processErrorStream, 8192, logOutput.getReadAheadBufferSize()).startReadAhead();
+            } else {
+                getLog().trace("Creating new simple buffered input stream " + name + " for process " + this + " in captured mode");
+                inputStream = new BufferedInputStream(processErrorStream);
+            }
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+        }
+
+        void close() {
+            if ( inputStream != null) {
+                try {
+                    getLog().trace("Closing input stream " + name + " for process " + this);
+                    inputStream.close();
+                } catch (IOException e) {}
+            }
+            
+            if ( reader != null ) {
+                try {
+                    getLog().trace("Closing reader " + name + " for process " + this);
+                    reader.close();
+                } catch (IOException e) {}            
+            }
         }
     }
 }
