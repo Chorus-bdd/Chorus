@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.results;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     private String configurationName = BASE_CONFIGURATION;
     private StringBuilder description = new StringBuilder();
     private List<ScenarioToken> scenarios = new ArrayList<ScenarioToken>();
+    private transient File featureFile;
 
     private String unavailableHandlersMessage;
 
@@ -142,6 +144,17 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
         return unavailableHandlersMessage == null;
     }
 
+    /**
+     * @return the File from which the feature was loaded, null if the feature was loaded remotely or this is otherwise not available
+     */
+    public File getFeatureFile() {
+        return featureFile;
+    }
+
+    public void setFeatureFile(File featureFile) {
+        this.featureFile = featureFile;
+    }
+
     //fail if any scenarios failed, otherwise pending if any pending, or passed
     public EndState getEndState() {
         EndState result = EndState.PASSED;
@@ -178,6 +191,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
         copy.usesHandlers = usesHandlers.clone();
         copy.configurationName = this.configurationName;
         copy.scenarios = new ArrayList<ScenarioToken>(this.scenarios.size());
+        copy.featureFile = featureFile;
         for (ScenarioToken scenario : this.scenarios) {
             copy.scenarios.add(scenario.deepCopy());
         }
