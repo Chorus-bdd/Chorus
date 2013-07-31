@@ -1,23 +1,17 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature in config config1
-Feature: Jmx With Configurations [config1]                                                           
-Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurations), will use built-in handlers and Uses: statements
-  Scenario: Config Properties Override Main Properties For Jmx Remoting
-Chorus --> INFO    - Processing scenario: Config Properties Override Main Properties For Jmx Remoting
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
-    Given I start a config1 process named SingleHandlerExport                                PASSED  
-Chorus --> ERROR    - Failed to connect to mBean server on (localhost:18800)
-    Then I can call a step method exported by the handler in SingleHandlerExport             FAILED  Failed to connect to mBean server on (localhost:18800)
-
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature in config config2
-Feature: Jmx With Configurations [config2]                                                           
-Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurations), will use built-in handlers and Uses: statements
-  Scenario: Config Properties Override Main Properties For Jmx Remoting
-Chorus --> INFO    - Processing scenario: Config Properties Override Main Properties For Jmx Remoting
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
-    Given I start a config1 process named SingleHandlerExport                                PASSED  
-    Then I can call a step method exported by the handler in SingleHandlerExport             PASSED  
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/background/background.feature
+Feature: Test Background                                                                             
+  Scenario: Scenario With Background One
+Chorus --> INFO    - Processing scenario: Scenario With Background One
+    Given Chorus is working properly                                                         PASSED  
+    And I have some background steps                                                         PASSED  
+    Then my background steps should appear in Scenario One                                   PASSED  
+  Scenario: Scenario With Background Two
+Chorus --> INFO    - Processing scenario: Scenario With Background Two
+    Given Chorus is working properly                                                         PASSED  
+    And I have some background steps                                                         PASSED  
+    Then my background steps should appear in Scenario Two                                   PASSED  
 
 
-Features  (total:2) (passed:1) (failed:1)
-Scenarios (total:2) (passed:1) (failed:1)
-Steps     (total:4) (passed:3) (failed:1) (undefined:0) (pending:0) (skipped:0)
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)

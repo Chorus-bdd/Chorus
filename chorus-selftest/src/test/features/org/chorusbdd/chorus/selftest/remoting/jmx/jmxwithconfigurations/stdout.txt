@@ -1,4 +1,4 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature in config config1
 Feature: Jmx With Configurations [config1]                                                           
 Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurations), will use built-in handlers and Uses: statements
   Scenario: Config Properties Override Main Properties For Jmx Remoting
@@ -8,6 +8,7 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
 Chorus --> ERROR    - Failed to connect to mBean server on (localhost:18800)
     Then I can call a step method exported by the handler in SingleHandlerExport             FAILED  Failed to connect to mBean server on (localhost:18800)
 
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature in config config2
 Feature: Jmx With Configurations [config2]                                                           
 Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurations), will use built-in handlers and Uses: statements
   Scenario: Config Properties Override Main Properties For Jmx Remoting

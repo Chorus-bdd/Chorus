@@ -153,6 +153,10 @@ public class InterpreterRunner {
             for (FeatureToken f : features) {
                 f.setFeatureFile(featureFile);
             }
+            
+            if ( features.size() == 0 ) {
+                log.warn("Did not find a feature definition in file " + featureFile + ", will be skipped");
+            }
             //we can end up with more than one feature per file if using Chorus 'configurations'
         } catch (Throwable t) {
             log.warn("Failed to parse feature file " + featureFile + " will skip this feature file");
