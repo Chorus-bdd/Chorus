@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/failingstepmacro/failingstepmacro.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/failingstepmacro/failingstepmacro.feature
 Feature: Failing Step Macro                                                                          
   Scenario: Simple Step Macro Scenario
 Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature
 Feature: Handler Priority No Default Handler                                                         
 Chorus --> INFO    - No default handler found for Feature: (Handler Priority No Default Handler), will use built-in handlers and Uses: statements
   Scenario: Simple Scenario

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/or/taggedscenarioor.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/or/taggedscenarioor.feature
 Feature: Tagged Scenario Or                                                                          
   Scenario: Scenario One
 Chorus --> INFO    - Processing scenario: Scenario One

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processwithoutlogging/startaprocesswithoutlogging.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processwithoutlogging/startaprocesswithoutlogging.feature
 Feature: Start A Process Without Logging                                                             
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process

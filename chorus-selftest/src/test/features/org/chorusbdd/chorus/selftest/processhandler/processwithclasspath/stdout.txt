@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processwithclasspath/processwithclasspath.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processwithclasspath/processwithclasspath.feature
 Feature: Start A Process With Classpath                                                              
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process

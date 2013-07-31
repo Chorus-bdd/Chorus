@@ -1,4 +1,3 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/wrongvaluecount/wrongvaluecount.feature
 Chorus --> WARN    - Wrong number of values for Scenario Outline with wrong value count [1], expecting 5 but got 4
 Chorus --> WARN    - | A Long Value               | 100        | valc  | vald  |
 Chorus --> WARN    - Failed to parse feature file src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/wrongvaluecount/wrongvaluecount.feature will skip this feature file

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/choruscontext.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/choruscontext.feature
 Feature: Check Chorus Context Handler                                                                
   Scenario: Test Context Variables
 Chorus --> INFO    - Processing scenario: Test Context Variables

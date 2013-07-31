@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/springcontext/springcontext.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/springcontext/springcontext.feature
 Feature: Spring Context                                                                              
   Scenario: Spring Context Resources Injected
 Chorus --> INFO    - Processing scenario: Spring Context Resources Injected

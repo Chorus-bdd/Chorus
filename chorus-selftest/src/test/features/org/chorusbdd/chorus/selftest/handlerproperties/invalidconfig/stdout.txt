@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/invalidconfig/invalidhandlerconfig.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/invalidconfig/invalidhandlerconfig.feature
 Feature: Invalid Handler Config                                                                      
 Chorus --> INFO    - No default handler found for Feature: (Invalid Handler Config), will use built-in handlers and Uses: statements
   Scenario: Invalid config1 Processes Properties

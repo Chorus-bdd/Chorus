@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/dryrun/dryrun.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dryrun/dryrun.feature
 Feature: Dry Run                                                                                     
   Scenario: Simple Scenario One
 Chorus --> INFO    - Processing scenario: Simple Scenario One

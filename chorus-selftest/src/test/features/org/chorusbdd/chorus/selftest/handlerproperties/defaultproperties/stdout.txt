@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/defaultproperties/defaultproperties.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/defaultproperties/defaultproperties.feature
 Feature: Default Handler Properties                                                                  
 Chorus --> INFO    - No default handler found for Feature: (Default Handler Properties), will use built-in handlers and Uses: statements
   Scenario: Start a Single Java Process

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/failedstep/failedstep.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/failedstep/failedstep.feature
 Feature: Failed Step                                                                                 
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario

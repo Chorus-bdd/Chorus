@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processcheckdelay/processcheckdelay.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processcheckdelay/processcheckdelay.feature
 Feature: Process Check Delay                                                                         
   Scenario: Start a process with process check delay
 Chorus --> INFO    - Processing scenario: Start a process with process check delay

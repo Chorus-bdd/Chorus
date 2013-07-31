@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/handlerpriority.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/handlerpriority.feature
 Feature: Handler Priority                                                                            
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature
 Feature: Jmx With Configurations [config1]                                                           
 Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurations), will use built-in handlers and Uses: statements
   Scenario: Config Properties Override Main Properties For Jmx Remoting

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/undefinedstep/undefinedstep.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/undefinedstep/undefinedstep.feature
 Feature: Undefined Step                                                                              
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario

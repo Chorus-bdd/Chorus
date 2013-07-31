@@ -105,7 +105,8 @@ public class ChorusInterpreter {
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
-        log.trace("Processing feature " + feature);
+        String config = feature.isConfiguration() ? " in config " + feature.getConfigurationName() : "";
+        log.info("Running feature from file: " + feature.getFeatureFile() + config);
         executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         //check that the required handler classes are all available and list them in order of precidence

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/createlogdir/createlogdir.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/createlogdir/createlogdir.feature
 Feature: Create Process Log Directory                                                                
   Scenario: Create Default Log Directory
 Chorus --> INFO    - Processing scenario: Create Default Log Directory

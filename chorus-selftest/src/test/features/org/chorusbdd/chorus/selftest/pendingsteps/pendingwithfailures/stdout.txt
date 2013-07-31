@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/pendingsteps/pendingwithfailures/pendingstepswithfailedscenario.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/pendingsteps/pendingwithfailures/pendingstepswithfailedscenario.feature
 Feature: Pending Steps With Failures                                                                 
   Scenario: Pending Annotations
 Chorus --> INFO    - Processing scenario: Pending Annotations

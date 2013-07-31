@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/log4jconfiginfeaturedir/log4jconfiginfeaturedir.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/log4jconfiginfeaturedir/log4jconfiginfeaturedir.feature
 Feature: Process With Log4j Config In Feature Dir                                                    
   Scenario: Start a Process with log4j logging
 Chorus --> INFO    - Processing scenario: Start a Process with log4j logging

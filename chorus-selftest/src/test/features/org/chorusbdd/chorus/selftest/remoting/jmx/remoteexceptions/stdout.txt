@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remoteexceptions/jmxremoteexceptions.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remoteexceptions/jmxremoteexceptions.feature
 Feature: Jmx Single Handler Export                                                                   
 Chorus --> INFO    - No default handler found for Feature: (Jmx Single Handler Export), will use built-in handlers and Uses: statements
   Scenario: Handle Exceptions In Remote Steps

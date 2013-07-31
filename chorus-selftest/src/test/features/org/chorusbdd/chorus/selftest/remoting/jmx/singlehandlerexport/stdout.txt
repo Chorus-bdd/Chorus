@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/singlehandlerexport/jmxsinglehandlerexport.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/singlehandlerexport/jmxsinglehandlerexport.feature
 Feature: Jmx Single Handler Export                                                                   
 Chorus --> INFO    - No default handler found for Feature: (Jmx Single Handler Export), will use built-in handlers and Uses: statements
   Scenario: Call An Exported Method

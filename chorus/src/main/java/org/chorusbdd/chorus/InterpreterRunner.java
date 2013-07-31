@@ -148,7 +148,7 @@ public class InterpreterRunner {
         List<FeatureToken> features = null;
         FeatureFileParser parser = new FeatureFileParser(globalStepMacro);
         try {
-            log.info(String.format("Loading feature from file: %s", featureFile));
+            log.debug(String.format("Loading feature from file: %s", featureFile));
             features = parser.parse(new BufferedReader(new FileReader(featureFile)));
             for (FeatureToken f : features) {
                 f.setFeatureFile(featureFile);

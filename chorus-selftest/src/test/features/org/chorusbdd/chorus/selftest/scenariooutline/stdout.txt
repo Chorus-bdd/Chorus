@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/scenariooutline.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/scenariooutline.feature
 Feature: Scenario Outline                                                                            
   Scenario: Simple Scenario [1]
 Chorus --> INFO    - Processing scenario: Simple Scenario [1]

@@ -1,4 +1,4 @@
-Chorus --> INFO    - Loading feature from file: src/test/features/org/chorusbdd/chorus/selftest/mismatchedcapturegroups/mismatchedcapturegroups.feature
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/mismatchedcapturegroups/mismatchedcapturegroups.feature
 Feature: Mismatched Capture Groups                                                                   
   Scenario: Mismatched Capture Groups Params One
 Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params One
