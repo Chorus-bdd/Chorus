@@ -93,7 +93,6 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         StringBuilder sb = new StringBuilder();
         label:
         while(true) {
-            checkTimeout(timeout);
             while ( bufferedReader.ready() ) {
                 int c = bufferedReader.read();
                 if ( c == -1 ) {
@@ -125,7 +124,9 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             try {
                 Thread.sleep(10); //avoid a busy loop since we are using nonblocking ready() / read()
             } catch (InterruptedException e) {}
-            
+
+            checkTimeout(timeout);
+
             if ( isStopped() && ! bufferedReader.ready()) {
                 ChorusAssert.fail(
                     isExitCodeFailure() ? 

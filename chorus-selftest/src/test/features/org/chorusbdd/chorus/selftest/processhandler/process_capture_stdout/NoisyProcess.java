@@ -44,6 +44,9 @@ public class NoisyProcess {
         writeManyLinesOfNoisyGibberish();
         System.out.println("Finally a big fat pattern");
         writeManyLinesOfNoisyGibberish();
+        
+        //allow the timeout scenario more time to timeout when looking for a match which never arrives 
+        Thread.sleep(2000);
     }
 
     private static void writeManyLinesOfNoisyGibberish() {
