@@ -29,10 +29,10 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.chorusbdd.chorus.ChorusJUnitRunner;
-import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,9 +40,10 @@ import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
  * Date: 13/06/12
  * Time: 20:02
  */
-public class TestSelfTests extends TestCase {
+@RunWith(AllTests.class)
+public class TestSelfTests {
 
-    public static TestSuite suite() throws InterpreterPropertyException {
+    public static TestSuite suite() {
 
         return ChorusJUnitRunner.suite("-f src/test/features -h org.chorusbdd.chorus.selftest");
     }

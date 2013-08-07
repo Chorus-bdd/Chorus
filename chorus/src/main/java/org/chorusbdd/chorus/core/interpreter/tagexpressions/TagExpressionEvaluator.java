@@ -114,4 +114,14 @@ public class TagExpressionEvaluator {
         return tags;
     }
 
+    public String getFilterExpression(List<String> tagExpressionParts) {
+        //set a filter tags expression if provided
+        StringBuilder builder = new StringBuilder();
+        for (String tagExpressionPart : tagExpressionParts) {
+            builder.append(tagExpressionPart);
+            builder.append(" ");
+        }
+        String filterExpression = builder.toString();
+        return filterExpression;
+    }
 }

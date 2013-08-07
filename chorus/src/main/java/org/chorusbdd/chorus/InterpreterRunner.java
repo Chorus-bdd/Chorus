@@ -53,7 +53,6 @@ public class InterpreterRunner {
 
     private Map<List<String>, List<StepMacro>> stepMacroPathsToStepMacros = new HashMap<List<String>, List<StepMacro>>();
     
-    private String filterExpression;
     /**
      * Used to determine whether a scenario should be run
      */
@@ -77,23 +76,7 @@ public class InterpreterRunner {
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
         chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
 
-        //set a filter tags expression if provided
-        if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
-            List<String> tagExpressionParts = config.getValues(ChorusConfigProperty.TAG_EXPRESSION);
-            StringBuilder builder = new StringBuilder();
-            for (String tagExpressionPart : tagExpressionParts) {
-                builder.append(tagExpressionPart);
-                builder.append(" ");
-            }
-            this.filterExpression = builder.toString();
-        }
-
-        List<String> stepMacroPaths = config.getValues(ChorusConfigProperty.STEPMACRO_PATHS);
-        if ( stepMacroPaths == null) {
-            //if step macro paths are not separately specified, we use the feature paths
-            stepMacroPaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
-        }
-        List<StepMacro> globalStepMacros = getOrLoadStepMacros(stepMacroPaths);
+        List<StepMacro> globalStepMacros = getGlobalStepMacro(config);
 
         //identify the feature files
         List<String> featureFileNames = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
@@ -101,35 +84,48 @@ public class InterpreterRunner {
 
         chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
         
-        List<FeatureToken> features = createFeatureList(executionToken, featureFiles, globalStepMacros);
+        List<FeatureToken> features = createFeatureList(executionToken, featureFiles, globalStepMacros, config);
         chorusInterpreter.processFeatures(executionToken, features);
         return features;
     }
 
-    private List<FeatureToken> createFeatureList(ExecutionToken executionToken, List<File> featureFiles, List<StepMacro> globalStepMacro) throws Exception {
+    private List<StepMacro> getGlobalStepMacro(ConfigProperties config) {
+        List<String> stepMacroPaths = config.getValues(ChorusConfigProperty.STEPMACRO_PATHS);
+        if ( stepMacroPaths == null) {
+            //if step macro paths are not separately specified, we use the feature paths
+            stepMacroPaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
+        }
+        return getOrLoadStepMacros(stepMacroPaths);
+    }
+
+    private List<FeatureToken> createFeatureList(ExecutionToken executionToken, List<File> featureFiles, List<StepMacro> globalStepMacro, ConfigProperties configProperties) throws Exception {
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
             List<FeatureToken> features = parseFeatures(featureFile, executionToken, globalStepMacro);
             if ( features != null ) {
-                filterFeaturesByScenarioTags(features);
+                filterFeaturesByScenarioTags(features, configProperties);
                 allFeatures.addAll(features);
             }
         }
         return allFeatures;
     }
 
-    private void filterFeaturesByScenarioTags(List<FeatureToken> features) {
+    private void filterFeaturesByScenarioTags(List<FeatureToken> features, ConfigProperties config) {
         log.debug("Filtering by scenario tags");
         //FILTER THE FEATURES AND SCENARIOS
-        if (filterExpression != null) {
+        if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
+
+            List<String> tags = config.getValues(ChorusConfigProperty.TAG_EXPRESSION);
+            String filterExpression = tagExpressionEvaluator.getFilterExpression(tags);
+            
             for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
                 //remove all filtered scenarios from this feature
                 FeatureToken feature = fi.next();
                 for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
                     ScenarioToken scenario = si.next();
-                    if (!tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
+                    if (! tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
                         log.debug("Removing scenario " + scenario + " which does not match tag " + filterExpression);
                         si.remove();
                     }
