@@ -81,38 +81,47 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
 
     private void matchPattern(Pattern p, long timeout, BufferedReader reader) {
         try {
-            while ( true) {
-                checkTimeout(timeout, p);
-                waitForLineTerminator(timeout, p, reader);
-                //since we know there is a line terminator ahead and the buffer has been reset
-                //we know the next call to readLine will succeed and not block
-                String line = reader.readLine();
-                Matcher m = p.matcher(line);
-                boolean matched = m.matches();
-                if ( matched ) {
-                    break;
-                    //or we will be in the look until we timeout
-                }
-            }
+            waitForPattern(timeout, reader, p, false);
         } catch (IOException e) {
             getLog().warn("Failed while matching pattern " + p, e);
             ChorusAssert.fail("Failed while matching pattern");
         }
     }
 
-    //wait for line end by looking ahead without blocking
-    private void waitForLineTerminator(long timeout, Pattern pattern, BufferedReader bufferedReader) throws IOException {
-        bufferedReader.mark(8192);
+    //read ahead without blocking and attempt to match the pattern
+    private void waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines) throws IOException {
+        StringBuilder sb = new StringBuilder();
         label:
         while(true) {
-            checkTimeout(timeout, pattern);
+            checkTimeout(timeout);
             while ( bufferedReader.ready() ) {
                 int c = bufferedReader.read();
+                if ( c == -1 ) {
+                    ChorusAssert.fail("End of stream while waiting for match");
+                }
+                
                 if (c == '\n' || c == '\r' ) {
-                    break label;    
+                    if ( sb.length() > 0) {
+                        Matcher m = pattern.matcher(sb);
+                        if ( m.matches() ) {
+                            break label;    
+                        } else {
+                            sb.setLength(0);
+                        }
+                    }
+                } else {
+                    sb.append((char)c);                    
                 }
             } 
-
+            
+            //nothing more to read, does the current output match the pattern?
+            if ( searchWithinLines) {
+                Matcher m = pattern.matcher(sb);
+                if ( m.matches() ) {
+                    break label;
+                }
+            }
+            
             try {
                 Thread.sleep(10); //avoid a busy loop since we are using nonblocking ready() / read()
             } catch (InterruptedException e) {}
@@ -125,10 +134,9 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 );
             }
         }
-        bufferedReader.reset();
     }
 
-    private void checkTimeout(long timeout, Pattern pattern) {
+    private void checkTimeout(long timeout) {
         if ( System.currentTimeMillis() > timeout ) {
             ChorusAssert.fail("Timed out after " + logOutput.getReadTimeoutSeconds() + " seconds");
         }
