@@ -7,6 +7,12 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
     Given I start a config1 process named outputter                                          PASSED  
     When I read the line 'let's match a line' from outputter process                         PASSED  
     Then I read the line 'and another .* line' from outputter process                        PASSED  
+  Scenario: Matched pattern is stored in chorus context
+Chorus --> INFO    - Processing scenario: Matched pattern is stored in chorus context
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a config1 process named outputter                                          PASSED  
+    When I read the line 'let's .* a line' from outputter process                            PASSED  
+    Then context variable ProcessesHandler.match has the value let's match a line            PASSED  
   Scenario: I expect some output from noisy process
 Chorus --> INFO    - Processing scenario: I expect some output from noisy process
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
@@ -43,5 +49,5 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:6) (passed:3) (failed:3)
-Steps     (total:21) (passed:15) (failed:3) (undefined:0) (pending:0) (skipped:3)
+Scenarios (total:7) (passed:4) (failed:3)
+Steps     (total:24) (passed:18) (failed:3) (undefined:0) (pending:0) (skipped:3)

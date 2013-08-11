@@ -86,6 +86,8 @@ public class Jdk15Process extends AbstractChorusProcess {
                 break;
             case CAPTURED:
                 break;
+            case CAPTUREDWITHLOG:
+                break;
         }
 
         switch ( logOutput.getStdErrMode() ) {
@@ -98,6 +100,8 @@ public class Jdk15Process extends AbstractChorusProcess {
                 this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
                 break;
             case CAPTURED:
+                break;
+            case CAPTUREDWITHLOG:
                 break;
         }
     }

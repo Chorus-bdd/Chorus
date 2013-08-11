@@ -80,17 +80,14 @@ class ProcessLogOutput {
 
         logDirectory = calculateLogDirectory();
         calculateLogFiles(logDirectory);
-        
-        if ( processesConfig.getStdErrMode() == OutputMode.FILE || processesConfig.getStdOutMode() == OutputMode.FILE ) {
-            getOrCreateLogDirectory(logDirectory);
-        }
-        
+
         stdOutMode = processesConfig.getStdOutMode();
         stdErrMode = processesConfig.getStdErrMode();
-        
+       
         //let's fail the feature if we cannot create the log directory
         //alternative would be to log inline but this might swamp interpreter output
-        if (  stdOutMode == OutputMode.FILE || stdErrMode == OutputMode.FILE ) {
+        if (  OutputMode.isWriteToLogFile(stdOutMode) || OutputMode.isWriteToLogFile(stdErrMode) ) {
+            getOrCreateLogDirectory(logDirectory);
             ChorusAssert.assertTrue("Cannot write to the logs directory at " + logDirectory, logDirectory.canWrite());
         }
     }
@@ -110,7 +107,7 @@ class ProcessLogOutput {
         stdErrLogFile = new File(logDirectory, String.format("%s-err.log", logFileBaseName));
     }
 
-    private boolean getOrCreateLogDirectory(File logDirectory) {
+    private void getOrCreateLogDirectory(File logDirectory) {
         boolean logDirExists = logDirectory.exists();
         if ( ! logDirExists && processesConfig.isCreateLogDir()) {
             log.debug("Creating log directory at " + logDirectory.getPath() + " for feature " + featureToken.getName());
@@ -119,7 +116,6 @@ class ProcessLogOutput {
                 log.warn("Failed to create log directory at " + logDirectory.getPath() + " will not write logs");
             }
         }
-        return logDirExists;
     }
 
     private String calculateLogFileBaseName(FeatureToken featureToken, File featureFile, String processAlias) {

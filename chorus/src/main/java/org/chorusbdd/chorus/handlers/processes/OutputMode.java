@@ -8,7 +8,16 @@ package org.chorusbdd.chorus.handlers.processes;
  * The output mode for a process std out or std err stream
  */
 public enum OutputMode {
-    FILE,               //log to a file
-    INLINE,             //log inline with the Chorus interpreter's output stream
-    CAPTURED            //capture for examination in test steps
+    FILE,                //log to a file
+    INLINE,              //log inline with the Chorus interpreter's output stream
+    CAPTURED,            //capture for examination in test steps
+    CAPTUREDWITHLOG;      //capture for examination in test steps and log lines read to file
+    
+    public static boolean isWriteToLogFile(OutputMode m) {
+        return m == FILE || m == CAPTUREDWITHLOG;
+    }
+
+    public static boolean isCaptured(OutputMode stdOutMode) {
+        return stdOutMode == CAPTURED || stdOutMode == CAPTUREDWITHLOG;
+    }
 }

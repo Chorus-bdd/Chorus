@@ -65,7 +65,8 @@ public class ProcessBuilderProcess extends AbstractChorusProcess {
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 break;
             case CAPTURED: 
-                //createCapuredOutReader(logOutput, process.getInputStream());
+                break;
+            case CAPTUREDWITHLOG:
                 break;
         }
         
@@ -82,7 +83,8 @@ public class ProcessBuilderProcess extends AbstractChorusProcess {
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
                 break;
             case CAPTURED:
-                //createCapuredErrReader(logOutput, process.getErrorStream());
+                break;
+            case CAPTUREDWITHLOG:
                 break;
         }
         

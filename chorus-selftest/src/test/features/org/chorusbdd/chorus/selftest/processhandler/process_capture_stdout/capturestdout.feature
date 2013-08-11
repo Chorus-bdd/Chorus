@@ -1,4 +1,5 @@
 Uses: Processes
+Uses: Chorus Context
 
 Feature: Capture Std Output
 
@@ -9,6 +10,11 @@ Feature: Capture Std Output
     Given I start a config1 process named outputter
     When I read the line 'let's match a line' from outputter process 
     Then I read the line 'and another .* line' from outputter process
+
+  Scenario: Matched pattern is stored in chorus context
+    Given I start a config1 process named outputter
+    When I read the line 'let's .* a line' from outputter process
+    Then context variable ProcessesHandler.match has the value let's match a line
     
   Scenario: I expect some output from noisy process
     Given I start a noisy process

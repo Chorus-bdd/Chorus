@@ -15,10 +15,13 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractChorusProcess implements ChorusProcess {
 
-    //where we are managing writing process' output to log files ourselves (i.e. jdk 1.5 or CAPTURE_AND_LOG mode)
+    //where we are managing writing process' output to log files ourselves (i.e. jdk 1.5 or CAPTUREANDLOG mode)
     //then these are the output streams to the log files for the process.
     protected FileOutputStream stdOutLogfileStream;
+    protected BufferedOutputStream stdOutLogBufferedStream;
+    
     protected FileOutputStream stdErrLogfileStream;
+    protected BufferedOutputStream stdErrLogBufferedStream;
     
     //when we are in CAPTURED mode
     private InputStreamAndReader stdOutInputStreams;
@@ -69,28 +72,40 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
     
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines) {
+        ChorusAssert.assertTrue("Process std out mode must be captured", OutputMode.isCaptured(logOutput.getStdOutMode())); 
         if ( stdOutInputStreams == null) {
             stdOutInputStreams = new InputStreamAndReader("Std Out");
             InputStream inputStream = process.getInputStream();
             stdOutInputStreams.createStreams(logOutput, inputStream);
         }
-        waitForOutputPattern(pattern, stdOutInputStreams, false);
+        
+        if ( logOutput.getStdOutMode() == OutputMode.CAPTUREDWITHLOG && stdOutLogBufferedStream == null) {
+            createStdOutLogfileStream(logOutput);    
+        }
+        
+        waitForOutputPattern(pattern, stdOutInputStreams, false, stdOutLogBufferedStream);
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
+        ChorusAssert.assertTrue("Process std err mode must be captured", OutputMode.isCaptured(logOutput.getStdErrMode()));
         if ( stdErrInputStreams == null) {
             stdErrInputStreams = new InputStreamAndReader("Std Err");
             InputStream inputStream = process.getErrorStream();
             stdErrInputStreams.createStreams(logOutput, inputStream);
         }
-        waitForOutputPattern(pattern, stdErrInputStreams, false);
+
+        if ( logOutput.getStdErrMode() == OutputMode.CAPTUREDWITHLOG && stdErrLogBufferedStream == null) {
+            createStdErrLogfileStream(logOutput);
+        }
+        
+        waitForOutputPattern(pattern, stdErrInputStreams, false, stdErrLogBufferedStream);
     }
 
-    private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines) {
+    private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines, OutputStream logStream) {
         Pattern p = Pattern.compile(pattern);
         long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);
         try {
-            String matched = waitForPattern(timeout, i.reader, p, searchWithinLines);
+            String matched = waitForPattern(timeout, i.reader, p, searchWithinLines, logStream);
             
             //store into the ChorusContext the exact string which matched the pattern so this can be used
             //in subsequent test steps
@@ -102,7 +117,8 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     //read ahead without blocking and attempt to match the pattern
-    private String waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines) throws IOException {
+    private String waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines, OutputStream logStream) throws IOException {
+        boolean writeToLog = logStream != null;
         StringBuilder sb = new StringBuilder();
         String result = null;
         label:
@@ -111,6 +127,10 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 int c = bufferedReader.read();
                 if ( c == -1 ) {
                     ChorusAssert.fail("End of stream while waiting for match");
+                }
+                
+                if (writeToLog) {
+                    logStream.write(c);
                 }
                 
                 if (c == '\n' || c == '\r' ) {
@@ -125,6 +145,10 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                     }
                 } else {
                     sb.append((char)c);                    
+                }
+
+                if ( writeToLog) {
+                    logStream.flush();
                 }
             } 
             
@@ -150,6 +174,10 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                         "Process stopped while waiting for match"
                 );
             }
+        }
+        
+        if ( writeToLog) {
+            logStream.flush();
         }
         return result;
     }
@@ -204,6 +232,29 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
     }
 
+    protected void createStdErrLogfileStream(ProcessLogOutput logOutput) {
+        stdErrLogfileStream = createFileOutputStream(logOutput, logOutput.getStdErrLogFile());
+        ChorusAssert.assertNotNull("Failed to create output stream to std error log at " + logOutput.getStdErrLogFile(), stdErrLogfileStream);
+        stdErrLogBufferedStream = new BufferedOutputStream(stdErrLogfileStream);
+    }
+
+    protected void createStdOutLogfileStream(ProcessLogOutput logOutput) {
+        stdOutLogfileStream = createFileOutputStream(logOutput, logOutput.getStdOutLogFile());
+        ChorusAssert.assertNotNull("Failed to create output stream to std out log at " + logOutput.getStdOutLogFile(), stdOutLogfileStream);
+        stdOutLogBufferedStream = new BufferedOutputStream(stdOutLogfileStream);
+    }
+
+    private FileOutputStream createFileOutputStream(ProcessLogOutput logOutput, File logFile) {
+        FileOutputStream result = null;
+        try {
+            getLog().debug("Creating process log at " + logFile.getPath());
+            result = new FileOutputStream(logFile, logOutput.isAppendToLogs());
+        } catch (Exception e) {
+            getLog().warn("Failed to create log file  " + logFile.getPath() + " will not write this log file");
+        }
+        return result;
+    }
+
     protected void closeStreams() {
         
         if ( stdOutInputStreams != null) {
@@ -237,9 +288,10 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         if ( stdOutLogfileStream != null) {
             try {
                 getLog().trace("Closing stdout log file stream for process " + this);
-                stdOutLogfileStream.flush();
-                stdOutLogfileStream.close();
+                stdOutLogBufferedStream.flush();
+                stdOutLogBufferedStream.close();
                 stdErrLogfileStream = null;
+                stdOutLogBufferedStream = null;
             } catch (IOException e) {
                 getLog().trace("Failed to flush and close stdout log file stream", e);
             }
@@ -248,34 +300,14 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         if ( stdErrLogfileStream != null) {
             try {
                 getLog().trace("Closing stderr log file stream for process " + this);
-                stdErrLogfileStream.flush();
-                stdErrLogfileStream.close();
+                stdErrLogBufferedStream.flush();
+                stdErrLogBufferedStream.close();
+                stdErrLogfileStream = null;
                 stdErrLogfileStream = null;
             } catch (IOException e) {
                 getLog().trace("Failed to flush and close stderr log file stream", e);
             }
         }
-    }
-
-    protected void createStdErrLogfileStream(ProcessLogOutput logOutput) {
-        stdErrLogfileStream = createFileOutputStream(logOutput, logOutput.getStdErrLogFile());
-        ChorusAssert.assertNotNull("Failed to create output stream to std error log at " + logOutput.getStdErrLogFile(), stdErrLogfileStream);
-    }
-
-    protected void createStdOutLogfileStream(ProcessLogOutput logOutput) {
-        stdOutLogfileStream = createFileOutputStream(logOutput, logOutput.getStdOutLogFile());
-        ChorusAssert.assertNotNull("Failed to create output stream to std out log at " + logOutput.getStdOutLogFile(), stdOutLogfileStream);
-    }
-
-    private FileOutputStream createFileOutputStream(ProcessLogOutput logOutput, File logFile) {
-        FileOutputStream result = null;
-        try {
-            getLog().debug("Creating process log at " + logFile.getPath());
-            result = new FileOutputStream(logFile, logOutput.isAppendToLogs());
-        } catch (Exception e) {
-            getLog().warn("Failed to create log file  " + logFile.getPath() + " will not write this log file");
-        }
-        return result;
     }
 
     /**
