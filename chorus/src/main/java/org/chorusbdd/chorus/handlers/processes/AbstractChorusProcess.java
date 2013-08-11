@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlers.processes;
 
+import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 
@@ -37,16 +38,22 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         return getClass().getSimpleName() + "{" +
                 "name='" + name + '}';
     }
-    
-    public void writeToStdIn(String line) {
+
+    /**
+     * Write the text to the std in of the process
+     * @param newLine append a new line
+     */
+    public void writeToStdIn(String text, boolean newLine) {
         if ( outputStream == null) {
             outputStream = new BufferedOutputStream(process.getOutputStream());
             outputWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
         }
         
         try {
-            outputWriter.write(line);
-            outputWriter.newLine();
+            outputWriter.write(text);
+            if ( newLine ) {
+                outputWriter.newLine();
+            }
             outputWriter.flush();
             outputStream.flush();
         } catch (IOException e) {
@@ -55,33 +62,33 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
     }
     
-    public void waitForLineMatchInStdOut(String pattern) {
+    public void waitForMatchInStdOut(String pattern, boolean searchWithinLines) {
         if ( stdOutInputStreams == null) {
             stdOutInputStreams = new InputStreamAndReader("Std Out");
             InputStream inputStream = process.getInputStream();
             stdOutInputStreams.createStreams(logOutput, inputStream);
         }
-        waitForLine(pattern, stdOutInputStreams);
+        waitForOutputPattern(pattern, stdOutInputStreams, false);
     }
 
-    public void waitForLineMatchInStdErr(String pattern) {
+    public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
         if ( stdErrInputStreams == null) {
             stdErrInputStreams = new InputStreamAndReader("Std Err");
             InputStream inputStream = process.getErrorStream();
             stdErrInputStreams.createStreams(logOutput, inputStream);
         }
-        waitForLine(pattern, stdErrInputStreams);
+        waitForOutputPattern(pattern, stdErrInputStreams, false);
     }
 
-    private void waitForLine(String pattern, InputStreamAndReader i) {
+    private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines) {
         Pattern p = Pattern.compile(pattern);
         long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);
-        matchPattern(p, timeout, i.reader);
-    }
-
-    private void matchPattern(Pattern p, long timeout, BufferedReader reader) {
         try {
-            waitForPattern(timeout, reader, p, false);
+            String matched = waitForPattern(timeout, i.reader, p, searchWithinLines);
+            
+            //store into the ChorusContext the exact string which matched the pattern so this can be used
+            //in subsequent test steps
+            ChorusContext.getContext().put("ProcessesHandler.match", matched);
         } catch (IOException e) {
             getLog().warn("Failed while matching pattern " + p, e);
             ChorusAssert.fail("Failed while matching pattern");
@@ -89,8 +96,9 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     //read ahead without blocking and attempt to match the pattern
-    private void waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines) throws IOException {
+    private String waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines) throws IOException {
         StringBuilder sb = new StringBuilder();
+        String result = null;
         label:
         while(true) {
             while ( bufferedReader.ready() ) {
@@ -103,6 +111,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                     if ( sb.length() > 0) {
                         Matcher m = pattern.matcher(sb);
                         if ( m.matches() ) {
+                            result = sb.toString();
                             break label;    
                         } else {
                             sb.setLength(0);
@@ -117,6 +126,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             if ( searchWithinLines) {
                 Matcher m = pattern.matcher(sb);
                 if ( m.matches() ) {
+                    result = sb.toString();
                     break label;
                 }
             }
@@ -135,6 +145,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 );
             }
         }
+        return result;
     }
 
     private void checkTimeout(long timeout) {

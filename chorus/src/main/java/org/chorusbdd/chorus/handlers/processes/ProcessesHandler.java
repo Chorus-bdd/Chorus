@@ -42,7 +42,6 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -182,7 +181,6 @@ public class ProcessesHandler {
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + alias + "' to check is stopped");
         }
-
         ChorusAssert.assertTrue("The process " + alias + " was not stopped", p.isStopped());
     }
 
@@ -210,34 +208,47 @@ public class ProcessesHandler {
     
     @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
     public void readLineFromProcess(String pattern, String processAlias) {
-        ChorusProcess p = processes.get(processAlias);
-        if ( p == null ) {
-            ChorusAssert.fail("Could not find the process " + processAlias);
-        } else {
-             p.waitForLineMatchInStdOut(pattern);
-        }
+        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+        p.waitForMatchInStdOut(pattern, false);
     }
 
     @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
     public void readLineFromProcessStdError(String pattern, String processAlias) {
-        ChorusProcess p = processes.get(processAlias);
-        if ( p == null ) {
-            ChorusAssert.fail("Could not find the process " + processAlias);
-        } else {
-            p.waitForLineMatchInStdErr(pattern);
-        }
+        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+        p.waitForMatchInStdErr(pattern, false);
     }
-    
+
+    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
+    public void readFromProcess(String pattern, String processAlias) {
+        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+        p.waitForMatchInStdOut(pattern, true);
+    }
+
+    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
+    public void readFromProcessStdError(String pattern, String processAlias) {
+        ChorusProcess p = getAndCheckProcessByAlias(processAlias); 
+        p.waitForMatchInStdErr(pattern, true);
+    }
+
     @Step(".*write the line '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process") 
     public void writeLineToProcess(String line, String processAlias) {
+        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+        p.writeToStdIn(line, true);
+    }
+
+    @Step(".*write '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process")
+    public void writeToProcess(String line, String processAlias) {
+        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+        p.writeToStdIn(line, false);
+    }
+
+    private ChorusProcess getAndCheckProcessByAlias(String processAlias) {
         ChorusProcess p = processes.get(processAlias);
         if ( p == null ) {
             ChorusAssert.fail("Could not find the process " + processAlias);
-        } else {
-            p.writeToStdIn(line);
-        }    
-    }
-    
+        }
+        return p;
+    }    
 
     private String getConfigNameForAlias(String processAlias) {
         String configName = aliasToConfigName.get(processAlias);
