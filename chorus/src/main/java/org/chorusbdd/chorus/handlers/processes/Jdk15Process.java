@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
@@ -46,9 +45,6 @@ import java.io.*;
 public class Jdk15Process extends AbstractChorusProcess {
 
     private static ChorusLog log = ChorusLogFactory.getLog(Jdk15Process.class);
-    
-    private FileOutputStream stdoutStream;
-    private FileOutputStream stderrStream;
 
     private ProcessRedirector outRedirector;
     private ProcessRedirector errRedirector;
@@ -63,7 +59,7 @@ public class Jdk15Process extends AbstractChorusProcess {
 
         //if there are no log paths set, redirect the process output to appear inline with the chorus interpreter std out/err
 
-        createOutputRedirectors(logOutput, processOutStream, processErrorStream);
+        setupLoggingOrCapture(logOutput, processOutStream, processErrorStream);
         
         if ( outRedirector != null) {
             Thread outThread = new Thread(outRedirector, name + "-stdout");
@@ -78,62 +74,32 @@ public class Jdk15Process extends AbstractChorusProcess {
         }
     }
 
-    private void createOutputRedirectors(ProcessLogOutput logOutput, InputStream processOutStream, InputStream processErrorStream) {
+    private void setupLoggingOrCapture(ProcessLogOutput logOutput, InputStream processOutStream, InputStream processErrorStream) {
         switch ( logOutput.getStdOutMode() ) {
             case FILE:
-                boolean success = createFileStdOutStream(logOutput);
-                ChorusAssert.assertTrue("Failed to create output stream to std out log at " + logOutput.getStdOutLogFile(), success);
-                PrintStream out = new PrintStream(stdoutStream, true);
+                createStdOutLogfileStream(logOutput);
+                PrintStream out = new PrintStream(stdOutLogfileStream, true);
                 this.outRedirector = new ProcessRedirector(processOutStream, true, out); 
                 break;
             case INLINE:
                 this.outRedirector = new ProcessRedirector(processOutStream, false, ChorusOut.out);
                 break;
             case CAPTURED:
-                //createCapuredOutReader(logOutput, processOutStream);
                 break;
         }
 
         switch ( logOutput.getStdErrMode() ) {
             case FILE:
-                boolean success = createFileStdErrStream(logOutput);
-                ChorusAssert.assertTrue("Failed to create output stream to std error log at " + logOutput.getStdErrLogFile(), success);
-                PrintStream err = new PrintStream(stderrStream, true);
+                createStdErrLogfileStream(logOutput);
+                PrintStream err = new PrintStream(stdErrLogfileStream, true);
                 this.errRedirector = new ProcessRedirector(processErrorStream, true, err);
                 break;
             case INLINE:
                 this.errRedirector = new ProcessRedirector(processErrorStream, false, ChorusOut.err);
                 break;
             case CAPTURED:
-                //createCapturedErrReader(logOutput, processErrorStream);
                 break;
         }
-    }
-
-    private boolean createFileStdErrStream(ProcessLogOutput logOutput) {
-        boolean result = false;
-        File stdErrLogFile = logOutput.getStdErrLogFile();
-        try {
-            log.debug("Creating process log at " + stdErrLogFile.getPath());
-            stderrStream = new FileOutputStream(stdErrLogFile, logOutput.isAppendToLogs());
-            result = true;
-        } catch (Exception e) {
-            log.warn("Failed to create log file to error log file " + stdErrLogFile.getPath() + " will not write a log file");
-        }
-        return result;
-    }
-
-    private boolean createFileStdOutStream(ProcessLogOutput logOutput) {
-        boolean result = false;
-        File stdOutLogFile = logOutput.getStdOutLogFile();
-        try {
-            log.debug("Creating process log at " + stdOutLogFile.getPath());
-            stdoutStream = new FileOutputStream(stdOutLogFile, logOutput.isAppendToLogs());
-            result = true;
-        } catch (Exception e) {
-            log.warn("Failed to create log file to output log file " + stdOutLogFile.getPath() + " will not write a log file");
-        }
-        return result;
     }
 
     public boolean isStopped() {
@@ -150,43 +116,6 @@ public class Jdk15Process extends AbstractChorusProcess {
         process.waitFor();
     }
 
-
-    /**
-     * Check the process for a short time after it is started, and only pass the start process step
-     * if the process has not terminated with a non-zero (error) code
-     * 
-     * @param processCheckDelay
-     * @throws Exception
-     */
-    public void checkProcess(int processCheckDelay) throws Exception {
-        //process checking can be turned off by setting delay == -1
-        if ( processCheckDelay > 0) {
-            int cumulativeSleepTime = 0;
-            boolean stopped;
-            while(cumulativeSleepTime < processCheckDelay) {
-                int sleep = Math.min(50, processCheckDelay - cumulativeSleepTime);
-                Thread.sleep(sleep);
-                cumulativeSleepTime += sleep;
-
-                stopped = isStopped();
-                if ( stopped ) {
-                    if ( isExitCodeFailure()) {
-                        throw new ProcessCheckFailedException(
-                                "Process terminated with a non-zero exit code during processCheckDelay period, step fails");
-                    } else {
-                        log.debug("Process stopped during processCheckDelay period, exit code zero, passing step");
-                        break;
-                    }
-                }
-
-                if ( ! stopped ) {
-                    log.debug("Process still running after processCheckDelay period, passing step");
-                }
-            }
-
-        }
-    }
-
     public void destroy() {
         // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
         try {
@@ -200,31 +129,6 @@ public class Jdk15Process extends AbstractChorusProcess {
             }
         } finally {
             closeStreams();
-        }
-    }
-
-    protected void closeStreams() {
-        
-        super.closeStreams();
-        
-        if ( stdoutStream != null) {
-            try {
-                stdoutStream.flush();
-                stdoutStream.close();
-                stderrStream = null;
-            } catch (IOException e) {
-                log.trace("Failed to flush and close stdout log file stream", e);
-            }
-        }
-
-        if ( stderrStream != null) {
-            try {
-                stderrStream.flush();
-                stderrStream.close();
-                stderrStream = null;
-            } catch (IOException e) {
-                log.trace("Failed to flush and close stderr log file stream", e);
-            }
         }
     }
 

@@ -15,10 +15,16 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractChorusProcess implements ChorusProcess {
 
+    //where we are managing writing process' output to log files ourselves (i.e. jdk 1.5 or CAPTURE_AND_LOG mode)
+    //then these are the output streams to the log files for the process.
+    protected FileOutputStream stdOutLogfileStream;
+    protected FileOutputStream stdErrLogfileStream;
+    
     //when we are in CAPTURED mode
     private InputStreamAndReader stdOutInputStreams;
     private InputStreamAndReader stdErrInputStreams;
 
+    //output stream/writer to write to the process std in
     private OutputStream outputStream;
     private BufferedWriter outputWriter;
     
@@ -162,7 +168,44 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         return process.exitValue();
     }
 
+    /**
+     * Check the process for a short time after it is started, and only pass the start process step
+     * if the process has not terminated with a non-zero (error) code
+     *
+     * @param processCheckDelay
+     * @throws Exception
+     */
+    public void checkProcess(int processCheckDelay) throws Exception {
+        //process checking can be turned off by setting delay == -1
+        if ( processCheckDelay > 0) {
+            int cumulativeSleepTime = 0;
+            boolean stopped;
+            while(cumulativeSleepTime < processCheckDelay) {
+                int sleep = Math.min(50, processCheckDelay - cumulativeSleepTime);
+                Thread.sleep(sleep);
+                cumulativeSleepTime += sleep;
+
+                stopped = isStopped();
+                if ( stopped ) {
+                    if ( isExitCodeFailure()) {
+                        throw new ProcessCheckFailedException(
+                                "Process terminated with a non-zero exit code during processCheckDelay period, step fails");
+                    } else {
+                        getLog().debug("Process stopped during processCheckDelay period, exit code zero, passing step");
+                        break;
+                    }
+                }
+
+                if ( ! stopped ) {
+                    getLog().debug("Process still running after processCheckDelay period, passing step");
+                }
+            }
+
+        }
+    }
+
     protected void closeStreams() {
+        
         if ( stdOutInputStreams != null) {
            stdOutInputStreams.close();
         }
@@ -170,24 +213,70 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         if ( stdErrInputStreams != null) {
           stdErrInputStreams.close();
         }
-        
-        if ( outputStream != null ) {
-            try {
-                getLog().trace("Closing output stream for process " + this);
-                outputStream.close();
-                outputStream = null;
-            } catch (IOException e) {}
-        }
 
         if ( outputWriter != null ) {
             try {
                 getLog().trace("Closing output writer for process " + this);
                 outputWriter.close();
                 outputWriter = null;
-            } catch (IOException e) {}
+            } catch (IOException e) {
+                getLog().trace("Failed to flush and close output writer", e);
+            }
+        }
+        
+        if ( outputStream != null ) {
+            try {
+                getLog().trace("Closing output stream for process " + this);
+                outputStream.close();
+                outputStream = null;
+            } catch (IOException e) {
+                getLog().trace("Failed to close output stream for process", e);
+            }
+        }
+
+        if ( stdOutLogfileStream != null) {
+            try {
+                getLog().trace("Closing stdout log file stream for process " + this);
+                stdOutLogfileStream.flush();
+                stdOutLogfileStream.close();
+                stdErrLogfileStream = null;
+            } catch (IOException e) {
+                getLog().trace("Failed to flush and close stdout log file stream", e);
+            }
+        }
+
+        if ( stdErrLogfileStream != null) {
+            try {
+                getLog().trace("Closing stderr log file stream for process " + this);
+                stdErrLogfileStream.flush();
+                stdErrLogfileStream.close();
+                stdErrLogfileStream = null;
+            } catch (IOException e) {
+                getLog().trace("Failed to flush and close stderr log file stream", e);
+            }
         }
     }
 
+    protected void createStdErrLogfileStream(ProcessLogOutput logOutput) {
+        stdErrLogfileStream = createFileOutputStream(logOutput, logOutput.getStdErrLogFile());
+        ChorusAssert.assertNotNull("Failed to create output stream to std error log at " + logOutput.getStdErrLogFile(), stdErrLogfileStream);
+    }
+
+    protected void createStdOutLogfileStream(ProcessLogOutput logOutput) {
+        stdOutLogfileStream = createFileOutputStream(logOutput, logOutput.getStdOutLogFile());
+        ChorusAssert.assertNotNull("Failed to create output stream to std out log at " + logOutput.getStdOutLogFile(), stdOutLogfileStream);
+    }
+
+    private FileOutputStream createFileOutputStream(ProcessLogOutput logOutput, File logFile) {
+        FileOutputStream result = null;
+        try {
+            getLog().debug("Creating process log at " + logFile.getPath());
+            result = new FileOutputStream(logFile, logOutput.isAppendToLogs());
+        } catch (Exception e) {
+            getLog().warn("Failed to create log file  " + logFile.getPath() + " will not write this log file");
+        }
+        return result;
+    }
 
     /**
      * Input stream and reader for process std out or std error

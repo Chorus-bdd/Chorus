@@ -31,11 +31,7 @@ package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
 
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -106,55 +102,23 @@ public class ProcessBuilderProcess extends AbstractChorusProcess {
     }
 
     public void destroy() {
-        // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
-        log.debug("Destroying process " + process);
-        process.destroy();
         try {
-            //this ensures that all of the processes resources are cleaned up before proceeding
-            process.waitFor();
-        } catch (InterruptedException e) {
-            log.error("Interrupted while waiting for process to terminate",e);
+            // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
+            log.debug("Destroying process " + process);
+            process.destroy();
+            try {
+                //this ensures that all of the processes resources are cleaned up before proceeding
+                process.waitFor();
+            } catch (InterruptedException e) {
+                log.error("Interrupted while waiting for process to terminate",e);
+            }
+        } finally {
+            closeStreams();
         }
     }
 
     public void waitFor() throws InterruptedException {
         process.waitFor();
-    }
-
-    /**
-     * Check the process for a short time after it is started, and only pass the start process step
-     * if the process has not terminated with a non-zero (error) code
-     * 
-     * @param processCheckDelay
-     * @throws Exception
-     */
-    public void checkProcess(int processCheckDelay) throws Exception {
-        //process checking can be turned off by setting delay == -1
-        if ( processCheckDelay > 0) {
-            int cumulativeSleepTime = 0;
-            boolean stopped;
-            while(cumulativeSleepTime < processCheckDelay) {
-                int sleep = Math.min(50, processCheckDelay - cumulativeSleepTime);
-                Thread.sleep(sleep);
-                cumulativeSleepTime += sleep;
-
-                stopped = isStopped();
-                if ( stopped ) {
-                    if ( isExitCodeFailure()) {
-                        throw new ProcessCheckFailedException(
-                                "Process terminated with a non-zero exit code during processCheckDelay period, step fails");
-                    } else {
-                        log.debug("Process stopped during processCheckDelay period, exit code zero, passing step");
-                        break;
-                    }
-                }
-
-                if ( ! stopped ) {
-                    log.debug("Process still running after processCheckDelay period, passing step");
-                }
-            }
-
-        }
     }
 
     protected ChorusLog getLog() {
