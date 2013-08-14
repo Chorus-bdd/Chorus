@@ -43,6 +43,14 @@ Feature: Capture Std Output
     Then I read the line 'To talk of many things' from the poetical process std error
     When I read the line 'Of shoes and ships and sealing-wax' from the poetical process
     Then I read the line 'Of cabbages and kings' from the poetical process std error
+    
+  Scenario: I can match a line without a line feed
+    Given I start a nolinefeed process named nolinefeed
+    When I read 'without' from the nolinefeed process
+    Then I write the line 'wibble' to the nolinefeed process
+    And I read the line 'wibble' from the nolinefeed process
+    
+    
 
 
 

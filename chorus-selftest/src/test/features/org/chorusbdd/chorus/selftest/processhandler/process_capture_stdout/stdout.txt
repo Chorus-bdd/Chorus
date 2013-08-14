@@ -46,8 +46,15 @@ Chorus --> INFO    - About to run Java:  <system specific process details replac
     Then I read the line 'To talk of many things' from the poetical process std error        PASSED  
     When I read the line 'Of shoes and ships and sealing-wax' from the poetical process      PASSED  
     Then I read the line 'Of cabbages and kings' from the poetical process std error         PASSED  
+  Scenario: I can match a line without a line feed
+Chorus --> INFO    - Processing scenario: I can match a line without a line feed
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a nolinefeed process named nolinefeed                                      PASSED  
+    When I read 'without' from the nolinefeed process                                        PASSED  
+    Then I write the line 'wibble' to the nolinefeed process                                 PASSED  
+    And I read the line 'wibble' from the nolinefeed process                                 PASSED  
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:7) (passed:4) (failed:3)
-Steps     (total:24) (passed:18) (failed:3) (undefined:0) (pending:0) (skipped:3)
+Scenarios (total:8) (passed:5) (failed:3)
+Steps     (total:28) (passed:22) (failed:3) (undefined:0) (pending:0) (skipped:3)

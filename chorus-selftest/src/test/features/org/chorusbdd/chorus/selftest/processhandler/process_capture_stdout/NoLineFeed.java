@@ -29,33 +29,33 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.process_capture_stdout;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.chorusbdd.chorus.selftest.DefaultTestProperties;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 25/06/12
- * Time: 22:14
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class TestProcessCaptureStdout extends AbstractInterpreterTest {
+public class NoLineFeed {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_capture_stdout";
+    public static void main(String[] args) throws InterruptedException, IOException {
+        System.out.print("Question without a line feed?");
 
-    final int expectedExitCode = 1;  //fail
-
-    protected int getExpectedExitCode() {
-        return expectedExitCode;
+        BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
+        String s = r.readLine();
+        
+        System.out.print("\n");
+        System.out.println(s);      
+        
+        //on unix may otherwise die before we can open the input stream to read the ouput
+        Thread.sleep(1000);
+        
+        if (args.length > 0) {
+            System.exit(Integer.parseInt(args[0]));
+        }
     }
 
-    protected String getFeaturePath() {
-        return featurePath;
-    }
-
-//    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
-//        sysProps.put("chorusTagExpression", "@TEST");
-//    }
-    
-   
 }

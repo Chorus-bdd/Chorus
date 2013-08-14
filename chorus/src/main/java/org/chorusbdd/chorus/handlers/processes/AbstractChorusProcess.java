@@ -83,7 +83,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             createStdOutLogfileStream(logOutput);    
         }
         
-        waitForOutputPattern(pattern, stdOutInputStreams, false, stdOutLogBufferedWriter);
+        waitForOutputPattern(pattern, stdOutInputStreams, searchWithinLines, stdOutLogBufferedWriter);
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
@@ -98,7 +98,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             createStdErrLogfileStream(logOutput);
         }
         
-        waitForOutputPattern(pattern, stdErrInputStreams, false, stdErrLogBufferedWriter);
+        waitForOutputPattern(pattern, stdErrInputStreams, searchWithinLines, stdErrLogBufferedWriter);
     }
 
     private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines, Writer logStream) {
@@ -155,8 +155,8 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             //nothing more to read, does the current output match the pattern?
             if ( searchWithinLines) {
                 Matcher m = pattern.matcher(sb);
-                if ( m.matches() ) {
-                    result = sb.toString();
+                if ( m.find() ) {
+                    result = m.group(0);
                     break label;
                 }
             }
