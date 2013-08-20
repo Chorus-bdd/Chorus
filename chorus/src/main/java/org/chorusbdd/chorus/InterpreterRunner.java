@@ -66,25 +66,23 @@ public class InterpreterRunner {
      * Run the interpreter, collating results into the executionToken
      */
     List<FeatureToken> run(ExecutionToken executionToken, ConfigProperties config) throws Exception {
+        List<StepMacro> globalStepMacros = getGlobalStepMacro(config);
+
+        //identify the feature files
+        List<String> featurePaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
+        List<File> featureFiles = new FilePathScanner().getFeatureFiles(featurePaths, FilePathScanner.FEATURE_FILTER);
+        
+        List<FeatureToken> features = createFeatureList(executionToken, featureFiles, globalStepMacros, config);
+
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
+        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
         List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
         if (handlerPackages != null) {
             chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
         }
-
+        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);        
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
-        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
-
-        List<StepMacro> globalStepMacros = getGlobalStepMacro(config);
-
-        //identify the feature files
-        List<String> featureFileNames = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
-        List<File> featureFiles = new FilePathScanner().getFeatureFiles(featureFileNames, FilePathScanner.FEATURE_FILTER);
-
-        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
-        
-        List<FeatureToken> features = createFeatureList(executionToken, featureFiles, globalStepMacros, config);
         chorusInterpreter.processFeatures(executionToken, features);
         return features;
     }

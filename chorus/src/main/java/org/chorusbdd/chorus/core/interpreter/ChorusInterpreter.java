@@ -333,14 +333,18 @@ public class ChorusInterpreter {
         springContextSupport.dispose(handler);
 
         //call any destroy methods on handler instance
-        for (Method method : handler.getClass().getMethods()) {
-            if (method.getParameterTypes().length == 0) {
-                if (method.getAnnotation(Destroy.class) != null) {
-                    log.trace("Found Destroy annotation on handler method " + method + " will invoke");
-                    try {
-                        method.invoke(handler);
-                    } catch ( Throwable t) {
-                        log.warn("Exception when calling @Destroy method [" + method + "] on handler " + handler.getClass(), t);
+        Class<?> handlerClass = handler.getClass();
+        Handler handlerAnnotation = handlerClass.getAnnotation(Handler.class);
+        if ( handlerAnnotation.scope() != HandlerScope.UNMANAGED ) {
+            for (Method method : handlerClass.getMethods()) {
+                if (method.getParameterTypes().length == 0) {
+                    if (method.getAnnotation(Destroy.class) != null) {
+                        log.trace("Found Destroy annotation on handler method " + method + " will invoke");
+                        try {
+                            method.invoke(handler);
+                        } catch ( Throwable t) {
+                            log.warn("Exception when calling @Destroy method [" + method + "] on handler " + handlerClass, t);
+                        }
                     }
                 }
             }
