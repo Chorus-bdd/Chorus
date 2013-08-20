@@ -147,7 +147,8 @@ public class Chorus {
             String logLevel = p.getValue(ChorusConfigProperty.LOG_LEVEL);
             setLogLevel(logLevel);
 
-            List<FeatureToken> featuresThisPass = interpreterRunner.run(t, p);
+            List<FeatureToken> featuresThisPass = interpreterRunner.getFeatureList(t, p);
+            interpreterRunner.run(t, p, featuresThisPass);
             features.addAll(featuresThisPass);
         }
         t.calculateTimeTaken();

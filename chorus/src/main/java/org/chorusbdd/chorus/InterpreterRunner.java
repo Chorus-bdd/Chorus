@@ -65,15 +65,7 @@ public class InterpreterRunner {
     /**
      * Run the interpreter, collating results into the executionToken
      */
-    List<FeatureToken> run(ExecutionToken executionToken, ConfigProperties config) throws Exception {
-        List<StepMacro> globalStepMacros = getGlobalStepMacro(config);
-
-        //identify the feature files
-        List<String> featurePaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
-        List<File> featureFiles = new FilePathScanner().getFeatureFiles(featurePaths, FilePathScanner.FEATURE_FILTER);
-        
-        List<FeatureToken> features = createFeatureList(executionToken, featureFiles, globalStepMacros, config);
-
+    List<FeatureToken> run(ExecutionToken executionToken, ConfigProperties config, List<FeatureToken> features) throws Exception {
         //prepare the interpreter
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
         chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
@@ -85,6 +77,16 @@ public class InterpreterRunner {
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
         chorusInterpreter.processFeatures(executionToken, features);
         return features;
+    }
+
+    List<FeatureToken> getFeatureList(ExecutionToken executionToken, ConfigProperties config) throws Exception {
+        List<StepMacro> globalStepMacros = getGlobalStepMacro(config);
+
+        //identify the feature files
+        List<String> featurePaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
+        List<File> featureFiles = new FilePathScanner().getFeatureFiles(featurePaths, FilePathScanner.FEATURE_FILTER);
+
+        return createFeatureList(executionToken, featureFiles, globalStepMacros, config);
     }
 
     private List<StepMacro> getGlobalStepMacro(ConfigProperties config) {
