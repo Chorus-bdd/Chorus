@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus;
 
+import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -52,9 +53,10 @@ import java.util.List;
 public class Chorus {
 
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
-    private InterpreterRunner interpreterRunner;
+    private InterpreterBuilder interpreterBuilder;
 
     private final ConfigReader configReader;
+    private final FeatureListBuilder featureListBuilder;
 
     public static void main(String[] args) throws Exception {
         boolean success = false;
@@ -79,7 +81,9 @@ public class Chorus {
 
         setLoggingProvider();
 
-        interpreterRunner = new InterpreterRunner(listenerSupport); //configure logging first
+        //configure logging first
+        interpreterBuilder = new InterpreterBuilder(listenerSupport); 
+        featureListBuilder = new FeatureListBuilder();
 
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
             configReader
@@ -131,6 +135,7 @@ public class Chorus {
      * @param features the features which were run during this test run
      */
     public void endTests(ExecutionToken t, List<FeatureToken> features) {
+        t.calculateTimeTaken();
         listenerSupport.notifyTestsCompleted(t, features);
     }
 
@@ -138,20 +143,18 @@ public class Chorus {
      * Run the interpreter once for each configMutator, adding executed features to the list of features
      * and collating results within the executionToken
      */
-    public List<FeatureToken> run(ExecutionToken t, ConfigMutator... configMutators) throws Exception {
+    public List<FeatureToken> run(ExecutionToken t, ConfigMutator configMutator) throws Exception {
         List<FeatureToken> features = new ArrayList<FeatureToken>();
-        for ( ConfigMutator c : configMutators) {
-            ConfigProperties p = c.getNewConfig(configReader);
+        ConfigProperties p = configMutator.getNewConfig(configReader);
 
-            //set log level here in case log level was a mutated property
-            String logLevel = p.getValue(ChorusConfigProperty.LOG_LEVEL);
-            setLogLevel(logLevel);
+        //set log level here in case log level was a mutated property
+        String logLevel = p.getValue(ChorusConfigProperty.LOG_LEVEL);
+        setLogLevel(logLevel);
 
-            List<FeatureToken> featuresThisPass = interpreterRunner.getFeatureList(t, p);
-            interpreterRunner.run(t, p, featuresThisPass);
-            features.addAll(featuresThisPass);
-        }
-        t.calculateTimeTaken();
+        List<FeatureToken> featuresThisPass = featureListBuilder.getFeatureList(t, p);
+        ChorusInterpreter interpreter = interpreterBuilder.buildAndConfigure(p);
+        interpreter.processFeatures(t, featuresThisPass);
+        features.addAll(featuresThisPass);
         return features;
     }
 

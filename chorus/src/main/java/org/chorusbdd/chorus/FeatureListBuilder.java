@@ -26,76 +26,27 @@ import java.util.*;
  * Date: 24/02/13
  * Time: 16:16
  *
- * Configure and run ChorusInterpreter sessions
- *
- * Perform pre-parsing of StepMacro and cache and reuse parsed StepMacro instances where possible
- *
- * When ChorusJUnitRunner runs features, we use a ConfigMutator to mutate the feature paths property passed to the test
- * suite. In this way we run multiple interpreter sessions, one for each feature file found in the feature paths, although on
- * each pass the rest of the config properties stay unchanged - only the feature file path is mutated to point to a specific feature.
- *
- * This is because we want a one to one mapping between junit tests and features - each feature being executed as a single
- * junit test.
- *
- * However only the feature paths are mutated while we do this - stepmacro paths stay the same. All the stepmacro
- * on the original feature path must stay in scope for each feature/each pass of the interpreter.
- * To achieve this, the ChorusJUnitRunner always sets an explicit stepMacroPaths (to the original featureFilePaths value)
- * if it is not already set.
- *
- * We don't want to repeat the stepmacro file parsing for every feature of a junit test suite, and so there is logic
- * here to attempt to cache and reuse the parsed list of StepMacro where step macro paths are unchanged.
+ * Build a feature list from the supplied configuration 
  */
-public class InterpreterRunner {
+public class FeatureListBuilder {
 
-    private ChorusLog log = ChorusLogFactory.getLog(InterpreterRunner.class);
-
-    private ExecutionListenerSupport listenerSupport;
-
-    private Map<List<String>, List<StepMacro>> stepMacroPathsToStepMacros = new HashMap<List<String>, List<StepMacro>>();
+    private ChorusLog log = ChorusLogFactory.getLog(FeatureListBuilder.class);
+   
+    private StepMacroBuilder stepMacroBuilder = new StepMacroBuilder();
     
     /**
      * Used to determine whether a scenario should be run
      */
     private final TagExpressionEvaluator tagExpressionEvaluator = new TagExpressionEvaluator();
 
-    public InterpreterRunner(ExecutionListenerSupport listenerSupport) {
-        this.listenerSupport = listenerSupport;
-    }
-
-    /**
-     * Run the interpreter, collating results into the executionToken
-     */
-    List<FeatureToken> run(ExecutionToken executionToken, ConfigProperties config, List<FeatureToken> features) throws Exception {
-        //prepare the interpreter
-        ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
-        List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
-        if (handlerPackages != null) {
-            chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
-        }
-        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);        
-        chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
-        chorusInterpreter.processFeatures(executionToken, features);
-        return features;
-    }
-
     List<FeatureToken> getFeatureList(ExecutionToken executionToken, ConfigProperties config) throws Exception {
-        List<StepMacro> globalStepMacros = getGlobalStepMacro(config);
+        List<StepMacro> globalStepMacros = stepMacroBuilder.getGlobalStepMacro(config);
 
         //identify the feature files
         List<String> featurePaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
         List<File> featureFiles = new FilePathScanner().getFeatureFiles(featurePaths, FilePathScanner.FEATURE_FILTER);
 
         return createFeatureList(executionToken, featureFiles, globalStepMacros, config);
-    }
-
-    private List<StepMacro> getGlobalStepMacro(ConfigProperties config) {
-        List<String> stepMacroPaths = config.getValues(ChorusConfigProperty.STEPMACRO_PATHS);
-        if ( stepMacroPaths == null) {
-            //if step macro paths are not separately specified, we use the feature paths
-            stepMacroPaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
-        }
-        return getOrLoadStepMacros(stepMacroPaths);
     }
 
     private List<FeatureToken> createFeatureList(ExecutionToken executionToken, List<File> featureFiles, List<StepMacro> globalStepMacro, ConfigProperties configProperties) throws Exception {
@@ -159,47 +110,11 @@ public class InterpreterRunner {
             if ( t.getMessage() != null ) {
                 log.warn(t.getMessage());
             }
-            //in fact the feature file might contain more than one feature although this is probably a bad practice-
-            // we can't know if parsing failed, best we can do is increment failed by one
+            
+            //failure to parse is considered a failed feature
             executionToken.incrementFeaturesFailed();
         }
         return features;
-    }
-
-    private List<StepMacro> getOrLoadStepMacros(List<String> stepMacroPaths) {
-        List<StepMacro> result = stepMacroPathsToStepMacros.get(stepMacroPaths);
-        if ( result == null) {
-            log.trace("Loading step macro definitions for step macro paths " + stepMacroPaths);
-            List<File> stepMacroFiles = new FilePathScanner().getFeatureFiles(stepMacroPaths, FilePathScanner.STEP_MACRO_FILTER);
-            result = loadStepMacros(stepMacroFiles);
-            stepMacroPathsToStepMacros.put(stepMacroPaths, result);
-        } else {
-            log.trace("Reusing " + result.size() + " cached step macro definitions for step macro paths " + stepMacroPaths);
-        }
-        return result;
-    }
-
-    private List<StepMacro> loadStepMacros(List<File> stepMacroFiles) {
-        List<StepMacro> macros = new ArrayList<StepMacro>();
-        for ( File f : stepMacroFiles) {
-            macros.addAll(parseStepMacro(f));
-        }
-        return macros;
-    }
-
-    private List<StepMacro> parseStepMacro(File stepMacroFile) {
-        List<StepMacro> stepMacro = null;
-        StepMacroParser parser = new StepMacroParser();
-        try {
-            log.info(String.format("Loading stepmacro from file: %s", stepMacroFile));
-            stepMacro = parser.parse(new BufferedReader(new FileReader(stepMacroFile)));
-        } catch (Throwable t) {
-            log.warn("Failed to parse stepmacro file " + stepMacroFile + " will skip this stepmacro file");
-            if ( t.getMessage() != null ) {
-                log.warn(t.getMessage());
-            }
-        }
-        return stepMacro;
     }
 
 }
