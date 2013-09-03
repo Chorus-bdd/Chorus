@@ -85,15 +85,15 @@ public class Chorus {
         String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
         setLogLevel(logLevel);
 
-        //configure logging first
-        interpreterBuilder = new InterpreterBuilder(listenerSupport);
-        interpreter = interpreterBuilder.buildAndConfigure(configReader);
-        featureListBuilder = new FeatureListBuilder();
-
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
             configReader
         );
         listenerSupport.addExecutionListener(listeners);
+
+        //configure logging first
+        interpreterBuilder = new InterpreterBuilder(listenerSupport);
+        interpreter = interpreterBuilder.buildAndConfigure(configReader);
+        featureListBuilder = new FeatureListBuilder();
     }
     
     /**
