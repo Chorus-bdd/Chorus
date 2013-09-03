@@ -6,6 +6,7 @@ import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
 import java.util.*;
 
@@ -30,8 +31,8 @@ public class InterpreterBuilder {
     /**
      * Run the interpreter, collating results into the executionToken
      */
-    ChorusInterpreter buildAndConfigure(ConfigProperties config) throws Exception {
-        //prepare the interpreter
+    ChorusInterpreter buildAndConfigure(ConfigProperties config) {
+       
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
         chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
         List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);

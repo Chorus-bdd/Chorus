@@ -58,11 +58,6 @@ import java.util.*;
 @RunWith(AllTests.class)
 public class ChorusJUnitRunner {
 
-    private static final String FEATURE_TOKEN_LIST = "FEATURE_TOKEN_LIST";
-    private static final String EXECUTION_TOKEN = "EXECUTION_TOKEN";
-
-    //all tokens executed during the suite
-
     public static TestSuite suite() {
         return suite(new String[0]);
     }
@@ -74,59 +69,42 @@ public class ChorusJUnitRunner {
     public static TestSuite suite(String[] args) {
         TestSuite suite = null;
         try {
-            //a map which holds state for this suite execution
-            final Map<String, Object> executionEnvironment = new HashMap<String, Object>();
-
             final Chorus chorus = new Chorus(args);
 
             final List<FeatureToken> featureTokens = new ArrayList<FeatureToken>();
-            executionEnvironment.put(FEATURE_TOKEN_LIST, featureTokens);
+
+            final ExecutionToken executionToken = chorus.startTests();
 
             suite = new TestSuite() {
                 public void run(TestResult result) {
-                    ExecutionToken executionToken = chorus.startTests();
-                    executionEnvironment.put(EXECUTION_TOKEN, executionToken);
                     super.run(result);
                     chorus.endTests(executionToken, featureTokens);
                 }
             };
 
-            for (Test test : findAllTestCasesRuntime(chorus, executionEnvironment)) {
-                suite.addTest(test);
+            List<FeatureToken> l = chorus.getFeatureList(executionToken);
+            
+            for (FeatureToken f : l) {
+                suite.addTest(new ChorusTest(chorus, executionToken, f));
             }
 
             suite.setName(chorus.getSuiteName());
             return suite;
-        } catch (InterpreterPropertyException e) {
-          e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return suite;
     }
 
-    private static Test[] findAllTestCasesRuntime(Chorus chorus, Map<String, Object> executionEnvironment) {
-        //scan for all feature files specified in base config
-        FilePathScanner filePathScanner = new FilePathScanner();
-        List<File> featureFiles = filePathScanner.getFeatureFiles(chorus.getFeatureFilePaths(), FilePathScanner.FEATURE_FILTER);
-
-        //generate a junit test to execute the interpreter for each feature file
-        Test[] tests = new Test[featureFiles.size()];
-        int index=0;
-        for ( File f : featureFiles) {
-            tests[index++] = new ChorusTest(f, chorus, executionEnvironment);
-        }
-        return tests;
-    }
-
     private static class ChorusTest extends TestCase {
-        private File featureFile;
         private Chorus chorus;
-        private Map<String, Object> executionEnvironment;
+        private ExecutionToken executionToken;
+        private FeatureToken featureToken;
 
-        public ChorusTest(File featureFile, Chorus chorus, Map<String, Object> executionEnvironment) {
-            //To change body of created methods use File | Settings | File Templates.
-            this.featureFile = featureFile;
+        public ChorusTest(Chorus chorus, ExecutionToken executionToken, FeatureToken featureToken) {
             this.chorus = chorus;
-            this.executionEnvironment = executionEnvironment;
+            this.executionToken = executionToken;
+            this.featureToken = featureToken;
         }
 
         public int countTestCases() {
@@ -136,31 +114,18 @@ public class ChorusJUnitRunner {
         public void run(TestResult testResult) {
             testResult.startTest(this);
             try {
-                //run using the base config filtered through a mutator which replaces the
-                //feature file paths property with the specific path for this feature file
-                List<FeatureToken> tokens = chorus.run(
-                    (ExecutionToken)executionEnvironment.get(EXECUTION_TOKEN),
-                    new SingleFeatureConfigMutator()
-                );
+                chorus.processFeatures(executionToken, Collections.singletonList(featureToken));
 
-                boolean success = true;
-                for ( FeatureToken f : tokens) {
-                    success &= ( f.getEndState() == EndState.PASSED || f.getEndState() == EndState.PENDING );
-                }
+                boolean success = ChorusSuite.isJUnitPass(featureToken);
                 if ( ! success) {
                     testResult.addFailure(this, new AssertionFailedError("Chorus test failed"));
                 }
-
-                List<FeatureToken> l = (List<FeatureToken>)executionEnvironment.get(FEATURE_TOKEN_LIST);
-                //add token for the feature to the list of all tokens for the suite
-                l.addAll(tokens);
-
             } catch (Throwable t) {
                 testResult.addError(this, t);
             }
 
-            //this sleep is purely superficial - so that asynchronous log4j logging output
-            //ends up under the right test in the junit viewer
+//            this sleep is purely superficial - so that asynchronous log4j logging output
+//            ends up under the right test in the junit viewer
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
@@ -170,31 +135,7 @@ public class ChorusJUnitRunner {
         }
 
         public String getName() {
-            return featureFile.getName();
-        }
-
-        //mutate the base config to replace the feature paths with the path of just one selected feature file
-        private class SingleFeatureConfigMutator implements ConfigMutator {
-
-            public ConfigProperties getNewConfig(ConfigProperties baseConfig) {
-                ConfigProperties p = baseConfig.deepCopy();
-
-                //we always want to explicitly set the stepmacro paths if not set, since although we are tweaking the
-                //feature paths to run one feature at a time, the features may still reference step macro definitions
-                //from anywhere on the original feature path
-                if ( ! p.isSet(ChorusConfigProperty.STEPMACRO_PATHS)) {
-                    p.setProperty(
-                        ChorusConfigProperty.STEPMACRO_PATHS,
-                        p.getValues(ChorusConfigProperty.FEATURE_PATHS)
-                    );
-                }
-
-                p.setProperty(
-                    ChorusConfigProperty.FEATURE_PATHS,
-                    Collections.singletonList(featureFile.getPath())
-                );
-                return p;
-            }
+            return featureToken.getNameWithConfiguration();
         }
     }
 }

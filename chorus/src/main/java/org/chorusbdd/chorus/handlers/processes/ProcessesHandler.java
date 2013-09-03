@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler {
 
-    private static ScheduledExecutorService processexHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
+    private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
 
@@ -265,7 +265,7 @@ public class ProcessesHandler {
         }
 
         InterruptWaitTask t = new InterruptWaitTask(Thread.currentThread(), processName);
-        processexHandlerExecutor.schedule(t, waitTimeSeconds, TimeUnit.SECONDS);
+        processesHandlerExecutor.schedule(t, waitTimeSeconds, TimeUnit.SECONDS);
 
         try {
             p.waitFor();

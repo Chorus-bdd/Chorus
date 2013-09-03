@@ -36,13 +36,11 @@ import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +55,7 @@ public class Chorus {
 
     private final ConfigReader configReader;
     private final FeatureListBuilder featureListBuilder;
+    private ChorusInterpreter interpreter;
 
     public static void main(String[] args) throws Exception {
         boolean success = false;
@@ -78,11 +77,17 @@ public class Chorus {
     public Chorus(String[] args) throws InterpreterPropertyException {
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
-
+       
         setLoggingProvider();
 
+        //prepare the interpreter
+        //set log level here in case log level was a mutated property
+        String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
+        setLogLevel(logLevel);
+
         //configure logging first
-        interpreterBuilder = new InterpreterBuilder(listenerSupport); 
+        interpreterBuilder = new InterpreterBuilder(listenerSupport);
+        interpreter = interpreterBuilder.buildAndConfigure(configReader);
         featureListBuilder = new FeatureListBuilder();
 
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
@@ -90,7 +95,7 @@ public class Chorus {
         );
         listenerSupport.addExecutionListener(listeners);
     }
-
+    
     /**
      * Run interpreter using just the base configuration and the listeners provided
      * @return true, if all tests passed or were marked pending
@@ -99,7 +104,8 @@ public class Chorus {
         boolean passed = false;
         try {
             ExecutionToken t = startTests();
-            List<FeatureToken> features = run(t, ConfigMutator.NULL_MUTATOR);
+            List<FeatureToken> features = getFeatureList(t);
+            processFeatures(t, features);
             endTests(t, features);
             passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
         } catch (InterpreterPropertyException e) {
@@ -110,6 +116,14 @@ public class Chorus {
             t.printStackTrace(ChorusOut.err);
         }
         return passed;
+    }
+
+    void processFeatures(ExecutionToken t, List<FeatureToken> features) throws Exception {
+        interpreter.processFeatures(t, features);
+    }
+
+    List<FeatureToken> getFeatureList(ExecutionToken t) throws Exception {
+        return featureListBuilder.getFeatureList(t, configReader);
     }
 
     /**
@@ -137,25 +151,6 @@ public class Chorus {
     public void endTests(ExecutionToken t, List<FeatureToken> features) {
         t.calculateTimeTaken();
         listenerSupport.notifyTestsCompleted(t, features);
-    }
-
-    /**
-     * Run the interpreter once for each configMutator, adding executed features to the list of features
-     * and collating results within the executionToken
-     */
-    public List<FeatureToken> run(ExecutionToken t, ConfigMutator configMutator) throws Exception {
-        List<FeatureToken> features = new ArrayList<FeatureToken>();
-        ConfigProperties p = configMutator.getNewConfig(configReader);
-
-        //set log level here in case log level was a mutated property
-        String logLevel = p.getValue(ChorusConfigProperty.LOG_LEVEL);
-        setLogLevel(logLevel);
-
-        List<FeatureToken> featuresThisPass = featureListBuilder.getFeatureList(t, p);
-        ChorusInterpreter interpreter = interpreterBuilder.buildAndConfigure(p);
-        interpreter.processFeatures(t, featuresThisPass);
-        features.addAll(featuresThisPass);
-        return features;
     }
 
     public List<String> getFeatureFilePaths() {
