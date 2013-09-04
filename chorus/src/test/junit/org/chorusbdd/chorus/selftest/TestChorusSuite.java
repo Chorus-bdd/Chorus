@@ -46,6 +46,6 @@ public class TestChorusSuite {
 
     public static String getChorusArgs() {
 
-        return "-f src/test/features -h org.chorusbdd.chorus.selftest";
+        return "-f src/test/features -h org.chorusbdd.chorus.selftest -t @ChorusSuiteTag";
     }
 }

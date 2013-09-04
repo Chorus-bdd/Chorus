@@ -9,6 +9,7 @@ Feature: Processes
   To run a script the script file should be in the same directory as the .feature file.
    Processes can be named in a step to allow them to be explicitly stopped by a later step in a scenario
 
+  @ChorusSuiteTag
   Scenario: Start and stop a Java process defined in the properties file
     Given I can start an archibald process named archie
     Then I can stop process named archie

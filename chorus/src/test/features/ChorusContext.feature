@@ -8,6 +8,7 @@ Feature: Chorus Context
     Then context variable b exists
     And context variable b has value true
 
+  @ChorusSuiteTag
   Scenario: Context propogates int state
     Given the context has no values in it
     When I create a context variable i with value 10
