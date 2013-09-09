@@ -73,7 +73,7 @@ public class ChorusJUnitRunner {
 
             final ExecutionToken executionToken = chorus.startTests();
             
-            List<FeatureToken> featureTokens = chorus.getFeatureList(executionToken);            
+            final List<FeatureToken> featureTokens = chorus.getFeatureList(executionToken);            
 
             suite = new TestSuite() {
                 public void run(TestResult result) {
