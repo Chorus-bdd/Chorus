@@ -12,6 +12,7 @@
         <change desc="Add to ProcessesHandler steps to write text to child process input stream"/>
         <change desc="New ChorusSuite runner for use with JUnit 4 @RunWith"/>
         <change desc="Chorus JUnit runners now correctly observe tags / tagged tests"/>
+        <change desc="If all else fails kill hung interpreter after timeout expires"/>
     </version>
     <version>
         <versionNumber>1.5.1</versionNumber>
