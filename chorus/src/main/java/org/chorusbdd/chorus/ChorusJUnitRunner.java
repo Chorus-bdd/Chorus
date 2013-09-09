@@ -71,9 +71,9 @@ public class ChorusJUnitRunner {
         try {
             final Chorus chorus = new Chorus(args);
 
-            final List<FeatureToken> featureTokens = new ArrayList<FeatureToken>();
-
             final ExecutionToken executionToken = chorus.startTests();
+            
+            List<FeatureToken> featureTokens = chorus.getFeatureList(executionToken);            
 
             suite = new TestSuite() {
                 public void run(TestResult result) {
@@ -82,9 +82,8 @@ public class ChorusJUnitRunner {
                 }
             };
 
-            List<FeatureToken> l = chorus.getFeatureList(executionToken);
             
-            for (FeatureToken f : l) {
+            for (FeatureToken f : featureTokens) {
                 suite.addTest(new ChorusTest(chorus, executionToken, f));
             }
 
