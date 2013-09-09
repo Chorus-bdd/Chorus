@@ -95,7 +95,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusTest> {
         try {
             child.run();
             if ( ! child.isSuccess()) {
-                notifier.fireTestFailure(new FailureWithNoException(child.getDescription()));
+                notifier.fireTestFailure(new FailureWithNoException(child.getDescription(), child.getFeatureName()));
             }
         } catch (Exception e) {
             notifier.fireTestFailure(new Failure(child.getDescription(), e));    
@@ -127,11 +127,16 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusTest> {
         public boolean isSuccess() {
             return isJUnitPass(featureToken);
         }
+
+        public String getFeatureName() {
+            return featureToken.getNameWithConfiguration();
+        }
     }
 
     private class FailureWithNoException extends Failure {
-        public FailureWithNoException(Description description) {
-            super(description, null);
+        
+        public FailureWithNoException(Description description, String featureName) {
+            super(description, new Exception("Chorus Test Failed " + featureName));
         }
         
         public String toString() {
