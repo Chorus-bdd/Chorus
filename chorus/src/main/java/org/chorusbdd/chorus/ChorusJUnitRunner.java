@@ -120,6 +120,8 @@ public class ChorusJUnitRunner {
                     testResult.addFailure(this, new AssertionFailedError("Chorus test failed"));
                 }
             } catch (Throwable t) {
+                t.printStackTrace();
+                testResult.addFailure(this, new AssertionFailedError("Chorus test failed with exception"));                
                 testResult.addError(this, t);
             }
 
