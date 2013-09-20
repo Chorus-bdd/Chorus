@@ -134,7 +134,7 @@ public class StepProcessor {
 
     private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
         //setting a pending message in the step annotation implies the step is pending - we don't execute it
-        String pendingMessage = stepDefinitionMethodFinder.getMethodToCallPendingMessage();
+        String pendingMessage = stepDefinitionMethodFinder.getPendingMessage();
         if (!pendingMessage.equals(Step.NO_PENDING_MESSAGE)) {
             log.debug("Step has a pending message " + pendingMessage + " skipping step");
             step.setMessage(pendingMessage);
@@ -147,67 +147,102 @@ public class StepProcessor {
                 endState = StepEndState.DRYRUN;
                 executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
             } else {
-                log.debug("Now executing the step using method " + stepDefinitionMethodFinder.getMethodToCall());
-                long startTime = System.currentTimeMillis();
-                try {
-                    //call the step method using reflection
-                    Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
-                            stepDefinitionMethodFinder.getInstanceToCallOn(),
-                            stepDefinitionMethodFinder.getMethodCallArgs()
-                    );
-                    log.debug("Finished executing the step, step passed, result was " + result);
-                    if (result != null) {
-                        step.setMessage(result.toString());
-                    }
-                    endState = StepEndState.PASSED;
-                    executionToken.incrementStepsPassed();
-                } catch (InvocationTargetException e) {
-                    log.debug("Step execution failed, we hit an exception invoking the step method");
-                    //here if the method called threw an exception
-                    if (e.getTargetException() instanceof StepPendingException) {
-                        StepPendingException spe = (StepPendingException) e.getTargetException();
-                        step.setThrowable(spe);
-                        step.setMessage(spe.getMessage());
-                        endState = StepEndState.PENDING;
-                        executionToken.incrementStepsPending();
-                        log.debug("Step Pending Exception prevented execution");
-                    } else if (e.getTargetException() instanceof InterruptedException || e.getTargetException() instanceof InterruptedIOException) {
-                        if ( interruptingOnTimeout ) {
-                            log.warn("Interrupted during step processing, will TIMEOUT remaining steps");
-                            interruptingOnTimeout = false;
-                            endState = StepEndState.TIMEOUT;
-                        } else {
-                            log.warn("Interrupted during step processing but this was not due to TIMEOUT, will fail step");
-                            endState = StepEndState.FAILED;
-                        }
-                        executionToken.incrementStepsFailed();
-                        step.setMessage(e.getTargetException().getClass().getSimpleName());
-                        Thread.currentThread().isInterrupted(); //clear the interrupted status
-                    } else if (e.getTargetException() instanceof ThreadDeath ) {
-                        //thread has been stopped due to scenario timeout?
-                        log.error("ThreadDeath exception during step processing, tests will terminate");
-                        throw new ThreadDeath();  //we have to rethrow to actually kill the thread
-                    } else {
-                        Throwable cause = e.getCause();
-                        step.setThrowable(cause);
-                        String location = "";
-                        if ( ! (cause instanceof ChorusRemotingException) ) {
-                            //the remoting exception contains its own location in the message
-                            location = ExceptionHandling.getExceptionLocation(cause);
-                        }
-                        String message = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
-                        step.setMessage(location + message);
-                        endState = StepEndState.FAILED;
-                        executionToken.incrementStepsFailed();
-                        log.debug("Exception failed due to exception " + e.getMessage());
-                    }
-                } catch (Exception e) {
-                    log.error(e);
-                } finally {
-                    step.setTimeTaken(System.currentTimeMillis() - startTime);
-                }
+                endState = executeStepMethod(executionToken, step, stepDefinitionMethodFinder);
             }
         }
+        return endState;
+    }
+
+    private StepEndState executeStepMethod(ExecutionToken executionToken, StepToken step, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
+        StepEndState endState;
+        log.debug("Now executing the step using method " + stepDefinitionMethodFinder.getMethodToCall());
+        long startTime = System.currentTimeMillis();
+        try {
+            //call the step method using reflection
+            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
+                    stepDefinitionMethodFinder.getHandlerInstance(),
+                    stepDefinitionMethodFinder.getMethodCallArgs()
+            );
+            log.debug("Finished executing the step, step passed, result was " + result);
+            if (result != null) {
+                step.setMessage(result.toString());
+            }
+            endState = StepEndState.PASSED;
+            executionToken.incrementStepsPassed();
+        } catch (InvocationTargetException e) {
+            log.debug("Step execution failed, we hit an exception while executing the step method");
+            //here if the method called threw an exception
+            Throwable cause = e.getCause();
+            endState = processCause(executionToken, step, cause);
+        } catch (Exception e) {
+            log.error("Step execution failed, we hit an exception trying to invoke the step method", e);
+            endState = processCause(executionToken, step, e);
+        } finally {
+            step.setTimeTaken(System.currentTimeMillis() - startTime);
+        }
+        return endState;
+    }
+
+    private StepEndState processCause(ExecutionToken executionToken, StepToken step, Throwable cause) {
+        StepEndState endState;
+        if (cause instanceof StepPendingException) {
+            endState = handleStepPendingException(executionToken, step, (StepPendingException) cause);
+        } else if (cause instanceof InterruptedException || cause instanceof InterruptedIOException) {
+            endState = handleInterruptedException(executionToken, step, cause);
+        } else if (cause instanceof ThreadDeath ) {
+            endState = handleThreadDeath();
+        } else {
+            endState = handleGenericException(executionToken, step, cause);
+        }
+        return endState;
+    }
+
+    private StepEndState handleGenericException(ExecutionToken executionToken, StepToken step, Throwable cause) {
+        StepEndState endState;
+        step.setThrowable(cause);
+        String location = "";
+        if ( ! (cause instanceof ChorusRemotingException) ) {
+            //the remoting exception contains its own location in the message
+            location = ExceptionHandling.getExceptionLocation(cause);
+        }
+        String message = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
+        step.setMessage(location + message);
+        endState = StepEndState.FAILED;
+        executionToken.incrementStepsFailed();
+        log.debug("Exception failed due to exception " + cause.getMessage());
+        return endState;
+    }
+
+    private StepEndState handleThreadDeath() {
+        //thread has been stopped due to scenario timeout?
+        log.error("ThreadDeath exception during step processing, tests will terminate");
+        throw new ThreadDeath();  //we have to rethrow to actually kill the thread
+    }
+
+    private StepEndState handleInterruptedException(ExecutionToken executionToken, StepToken step, Throwable cause) {
+        StepEndState endState;
+        if ( interruptingOnTimeout ) {
+            log.warn("Interrupted during step processing, will TIMEOUT remaining steps");
+            interruptingOnTimeout = false;
+            endState = StepEndState.TIMEOUT;
+        } else {
+            log.warn("Interrupted during step processing but this was not due to TIMEOUT, will fail step");
+            endState = StepEndState.FAILED;
+        }
+        executionToken.incrementStepsFailed();
+        step.setMessage(cause.getClass().getSimpleName());
+        Thread.currentThread().isInterrupted(); //clear the interrupted status
+        return endState;
+    }
+
+    private StepEndState handleStepPendingException(ExecutionToken executionToken, StepToken step, StepPendingException cause) {
+        StepEndState endState;
+        StepPendingException spe = (StepPendingException) cause;
+        step.setThrowable(spe);
+        step.setMessage(spe.getMessage());
+        endState = StepEndState.PENDING;
+        executionToken.incrementStepsPending();
+        log.debug("Step Pending Exception prevented execution");
         return endState;
     }
 }

@@ -50,15 +50,15 @@ class StepDefinitionMethodFinder {
 
     private static ChorusLog log = ChorusLogFactory.getLog(StepDefinitionMethodFinder.class);
 
-    private List<Object> handlerInstances;
+    private List<Object> allHandlers;
     private StepToken step;
     private Method methodToCall;
-    private Object instanceToCallOn;
+    private Object handlerInstance;
     private Object[] methodCallArgs;
-    private String methodToCallPendingMessage = "";
+    private String pendingMessage = "";
 
-    public StepDefinitionMethodFinder(List<Object> handlerInstances, StepToken step) {
-        this.handlerInstances = handlerInstances;
+    public StepDefinitionMethodFinder(List<Object> allHandlers, StepToken step) {
+        this.allHandlers = allHandlers;
         this.step = step;
     }
 
@@ -66,23 +66,23 @@ class StepDefinitionMethodFinder {
         return methodToCall;
     }
 
-    public Object getInstanceToCallOn() {
-        return instanceToCallOn;
+    public Object getHandlerInstance() {
+        return handlerInstance;
     }
 
     public Object[] getMethodCallArgs() {
         return methodCallArgs;
     }
 
-    public String getMethodToCallPendingMessage() {
-        return methodToCallPendingMessage;
+    public String getPendingMessage() {
+        return pendingMessage;
     }
 
     public StepDefinitionMethodFinder findStepMethod() {
         log.debug("Finding step method...");
 
         //find the method to call
-        for (Object instance : handlerInstances) {
+        for (Object instance : allHandlers) {
             log.debug("Looking for step method on handler instance " + instance + " class " + instance.getClass());
             for (Method method : instance.getClass().getMethods()) {
                 //only check methods with Step annotation
@@ -107,14 +107,14 @@ class StepDefinitionMethodFinder {
             if (methodToCall == null) {
                 methodToCall = method;
                 methodCallArgs = values;
-                methodToCallPendingMessage = stepAnnotationInstance.pending();
-                instanceToCallOn = instance;
+                pendingMessage = stepAnnotationInstance.pending();
+                handlerInstance = instance;
             } else {
                 log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
                         instance.getClass().getSimpleName(),
                         method.getName(),
                         step,
-                        instanceToCallOn.getClass().getSimpleName(),
+                        handlerInstance.getClass().getSimpleName(),
                         methodToCall.getName()));
             }
         }
