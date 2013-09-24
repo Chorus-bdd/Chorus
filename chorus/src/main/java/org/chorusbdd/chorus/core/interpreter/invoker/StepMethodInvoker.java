@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import java.lang.reflect.InvocationTargetException;
 

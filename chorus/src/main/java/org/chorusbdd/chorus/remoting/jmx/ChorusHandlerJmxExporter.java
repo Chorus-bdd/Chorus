@@ -32,6 +32,8 @@ package org.chorusbdd.chorus.remoting.jmx;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.InvokerFactory;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -154,22 +156,27 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             //invoke the method
             Method m = stepMethods.get(methodUid);
             Object handler = stepHandlers.get(methodUid);
-            Object result = m.invoke(handler, args);
 
+            StepMethodInvoker i = new InvokerFactory().createInvoker(m);
+            Object result = i.invoke(handler, args);
+            
             //return the updated context
             return new JmxStepResult(ChorusContext.getContext(), result);
+        } catch (Error e) { //typically AssertionError propagated by PolledInvoker
+            return throwRemotingException(e);
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
-
-
-
-            //here we are sending the exception name and the stack trace elements, but not the exception instance itself
-            //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
-            String message = "remote " + t.getClass().getSimpleName() +
-                ( t.getMessage() == null ? " " : " - " + t.getMessage() );
-            String location = ExceptionHandling.getExceptionLocation(t);
-            throw new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
+            return throwRemotingException(t);
         }
+    }
+
+    private JmxStepResult throwRemotingException(Throwable t) {
+        //here we are sending the exception name and the stack trace elements, but not the exception instance itself
+        //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
+        String message = "remote " + t.getClass().getSimpleName() +
+            ( t.getMessage() == null ? " " : " - " + t.getMessage() );
+        String location = ExceptionHandling.getExceptionLocation(t);
+        throw new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
     }
 
     public Map<String, String[]> getStepMetadata() {

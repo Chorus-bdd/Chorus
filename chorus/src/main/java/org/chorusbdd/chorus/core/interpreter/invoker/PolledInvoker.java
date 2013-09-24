@@ -1,5 +1,6 @@
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.invoker;
 
+import org.chorusbdd.chorus.core.interpreter.AbstractInvoker;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 
 import java.lang.reflect.InvocationTargetException;

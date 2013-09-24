@@ -174,7 +174,7 @@ public class StepProcessor {
             //here if the method called threw an exception
             Throwable cause = e.getCause();                      
             endState = processCause(executionToken, step, cause);
-        } catch (AssertionError ae ) {
+        } catch (AssertionError ae ) {  //when using a PolledInvoker this will re-throw AssertionErrors
             log.debug("Step execution failed, we hit an AssertionError while executing the step method");
             endState = processCause(executionToken, step, ae);
         } catch (Throwable t) {

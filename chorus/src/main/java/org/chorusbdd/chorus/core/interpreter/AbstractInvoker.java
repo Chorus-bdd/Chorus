@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
+
 import java.lang.reflect.Method;
 
 /**
