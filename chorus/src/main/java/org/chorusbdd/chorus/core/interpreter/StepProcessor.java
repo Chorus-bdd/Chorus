@@ -172,11 +172,14 @@ public class StepProcessor {
         } catch (InvocationTargetException e) {
             log.debug("Step execution failed, we hit an exception while executing the step method");
             //here if the method called threw an exception
-            Throwable cause = e.getCause();
+            Throwable cause = e.getCause();                      
             endState = processCause(executionToken, step, cause);
-        } catch (Exception e) {
-            log.error("Step execution failed, we hit an exception trying to invoke the step method", e);
-            endState = processCause(executionToken, step, e);
+        } catch (AssertionError ae ) {
+            log.debug("Step execution failed, we hit an AssertionError while executing the step method");
+            endState = processCause(executionToken, step, ae);
+        } catch (Throwable t) {
+            log.error("Step execution failed, we hit an exception trying to invoke the step method", t);
+            endState = processCause(executionToken, step, t);
         } finally {
             step.setTimeTaken(System.currentTimeMillis() - startTime);
         }

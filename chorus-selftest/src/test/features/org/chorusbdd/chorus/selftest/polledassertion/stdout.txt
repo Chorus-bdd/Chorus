@@ -1,0 +1,27 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/polledassertion/polledassertion.feature
+Feature: Polled Assertion                                                                            
+  Scenario: Passes Within Invoker Is Working
+Chorus --> INFO    - Processing scenario: Passes Within Invoker Is Working
+    Given I increment a value with a timer task                                              PASSED  
+    And the value is 1 within default period                                                 PASSED  
+    When I increment a value with a timer task                                               PASSED  
+    Then the value is 2 within 2 seconds                                                     PASSED  
+    When I increment a value with a timer task                                               PASSED  
+    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  (PolledAssertionHandler:linenumber)-Expect 3 expected:<3> but was:<2>
+  Scenario: Passes For Invoker Is Working
+Chorus --> INFO    - Processing scenario: Passes For Invoker Is Working
+    Given I increment a value                                                                PASSED  
+    And the value is 1 for half a second                                                     PASSED  
+    And the check method was polled 10 times                                                 PASSED  
+    When I increment a value                                                                 PASSED  
+    Then the value is 2 for half a second                                                    PASSED  
+    Then the value is 3 for half a second                                                    FAILED  (PolledAssertionHandler:linenumber)-Expect 3 expected:<3> but was:<2>
+  Scenario: Conflicting Annotations
+Chorus --> INFO    - Processing scenario: Conflicting Annotations
+Chorus --> WARN    - Not using PassesForInvoker:checkMultipleAnnotations since PassesWithinInvoker:checkMultipleAnnotations is already set. You can only have one invoker annotation per method
+    Given I use multiple annotations                                                         PASSED  
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:3) (passed:1) (failed:2)
+Steps     (total:13) (passed:11) (failed:2) (undefined:0) (pending:0) (skipped:0)

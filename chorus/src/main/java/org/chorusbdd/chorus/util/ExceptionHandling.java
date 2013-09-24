@@ -29,6 +29,9 @@
  */
 package org.chorusbdd.chorus.util;
 
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.junit.Assert;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -64,7 +67,12 @@ public class ExceptionHandling {
     private static StackTraceElement findStackTraceElement(Throwable t) {
        StackTraceElement element = t.getStackTrace().length > 0 ? t.getStackTrace()[0] : null;
        int index = 0;
-       while ( element != null && getSimpleClassName(element).contains("Assert")) {
+        String chorusAssertClassName = ChorusAssert.class.getName();
+        String assertClassName = Assert.class.getName();
+        while ( element != null && (
+                element.getClassName().contains(chorusAssertClassName) ||
+                element.getClassName().contains(assertClassName))
+            ) {
            index += 1;
            element = t.getStackTrace().length > index ? t.getStackTrace()[index] : null;
        }

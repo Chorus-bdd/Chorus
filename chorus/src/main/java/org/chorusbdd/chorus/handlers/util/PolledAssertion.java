@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.handlers.util;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -88,7 +90,7 @@ public abstract class PolledAssertion {
      *
      * @throws AssertionError if condition is not satisfied
      */
-    protected abstract void validate();
+    protected abstract void validate() throws Exception;
 
     /**
      * Wait for the assertions to pass for the duration of the timeout period
@@ -100,15 +102,19 @@ public abstract class PolledAssertion {
         await(getTimeoutSeconds());
     }
 
+    public void await(float seconds) {
+        await(TimeUnit.MILLISECONDS, (int)(seconds * 1000));
+    }
+        
     /**
      * Wait for the assertions to pass for the specified time limit
      *
      * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
      * errors will be propagated and will cause test failure
      */
-    public void await(float seconds) {
+    public void await(TimeUnit unit, int count) {
         int pollPeriodMillis = getPollPeriodMillis();
-        int maxAttempts = (int)((1000 * seconds) / pollPeriodMillis);
+        int maxAttempts = (int)(unit.toMillis(count) / pollPeriodMillis);
         boolean success = false;
         for ( int check = 1; check < maxAttempts ; check ++) {  //try maxAttempts - 1 times snaffling any errors
             try {
@@ -116,14 +122,18 @@ public abstract class PolledAssertion {
                 //no assertion errors? condition passes, we can continue
                 success = true;
                 break;
-            } catch (AssertionError r) {
-                //ignore assertion failures up until the last check
+            } catch (Throwable r) {
+                //ignore failures up until the last check
             }
             doSleep(pollPeriodMillis);
         }
 
         if ( ! success ) {
-            validate(); //this time allow any assertion errors to propagate
+            try {
+                validate(); //this time allow any assertion errors to propagate
+            } catch (Exception e) {
+                propagateAsError(e);
+            }
         }
     }
 
@@ -134,15 +144,23 @@ public abstract class PolledAssertion {
         check(getTimeoutSeconds());
     }
 
+    public void check(float seconds) {
+        check(TimeUnit.MILLISECONDS, (int) (seconds * 1000));    
+    }
+    
     /**
      * check that the assertions pass for the whole duration of the period specified
      */
-    public void check(float seconds) {
+    public void check(TimeUnit timeUnit, int count) {
         int pollPeriodMillis = getPollPeriodMillis();
-        int maxAttempts = (int)((1000 * seconds) / pollPeriodMillis);
+        int maxAttempts = (int)(timeUnit.toMillis(count) / pollPeriodMillis);
         maxAttempts = Math.max(maxAttempts, 1); //always check at least once
         for ( int check = 0; check < maxAttempts ; check ++) {
-            validate();
+            try {
+                validate();
+            } catch (Exception e) {
+                propagateAsError(e);
+            }
             doSleep(pollPeriodMillis);
         }
     }
@@ -153,5 +171,25 @@ public abstract class PolledAssertion {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    //Test methods will often generate AssertError which are not
+    //Exceptions and so will not be caught here
+    
+    //We still need to handle Exceptions and must do so by converting
+    //them to RuntimeException or AssertionError since the alternative
+    //would be to add a throws clause to check() and await(), which then
+    //forces all user code which calls these methods to add exception handling
+    
+    //Convert exceptions to AssertError and propagate
+    //or find an Error/AssertionError which was wrapped and rethrow
+    
+    //the latter case often occurs when an InvocationException wraps an AssertionError
+    //which is the behaviour we see when using PolledInvoker with @PassesFor and @PassesWithin
+    private void propagateAsError(Exception e) {
+        if ( e.getCause() != null && Error.class.isAssignableFrom(e.getCause().getClass())) {
+            throw (Error)e.getCause();    
+        }
+        throw new AssertionError(e.getMessage(), e.getCause());
     }
 }
