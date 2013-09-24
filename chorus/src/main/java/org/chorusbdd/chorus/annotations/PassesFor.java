@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PassesFor {
        
-    int count() default 10;
+    int length() default 10;
     
     TimeUnit timeUnit() default TimeUnit.SECONDS;
     

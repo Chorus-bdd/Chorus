@@ -43,7 +43,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
 * Created with IntelliJ IDEA.
@@ -190,7 +189,7 @@ class StepDefinitionMethodFinder {
         }
 
         protected int getCount() {
-            return passesWithin.count();
+            return passesWithin.length();
         }
 
         protected TimeUnit getTimeUnit() {
@@ -216,7 +215,7 @@ class StepDefinitionMethodFinder {
         }
 
         protected int getCount() {
-            return passesFor.count();
+            return passesFor.length();
         }
 
         protected TimeUnit getTimeUnit() {

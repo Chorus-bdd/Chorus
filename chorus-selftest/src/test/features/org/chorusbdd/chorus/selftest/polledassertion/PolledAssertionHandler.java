@@ -80,7 +80,7 @@ public class PolledAssertionHandler {
     }
 
     @Step("the value is (\\d) within 2 seconds")
-    @PassesWithin(count = 1)
+    @PassesWithin(length = 1)
     public void passesWithinOneSecond(int expectCount) {
         passesWithinPollCount++;
         assertEquals("Expect " + expectCount + " but was " + timeCount, expectCount, timeCount);
@@ -88,13 +88,13 @@ public class PolledAssertionHandler {
     }
 
     @Step("the value is not (\\d) within 0.2 seconds so this step should fail")
-    @PassesWithin(count = 200, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50)
+    @PassesWithin(length = 200, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50)
     public void passesWithinPointTwoSeconds(int expectCount) {
         assertEquals("Expect " + expectCount, expectCount, timeCount);
     }
 
     @Step("the value is (\\d) for half a second")
-    @PassesFor(count = 500, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50)
+    @PassesFor(length = 500, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50)
     public void passesForHalfASecond(int expectCount) {
         passesForPollCount++;
         assertEquals("Expect " + expectCount, expectCount, timeCount);
