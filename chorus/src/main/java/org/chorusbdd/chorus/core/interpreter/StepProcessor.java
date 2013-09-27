@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
+import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
@@ -173,20 +174,21 @@ public class StepProcessor {
             log.debug("Step execution failed, we hit an exception while executing the step method");
             //here if the method called threw an exception
             Throwable cause = e.getCause();                      
-            endState = processCause(executionToken, step, cause);
-        } catch (AssertionError ae ) {  //when using a PolledInvoker this will re-throw AssertionErrors
-            log.debug("Step execution failed, we hit an AssertionError while executing the step method");
-            endState = processCause(executionToken, step, ae);
+            endState = handleRootCause(executionToken, step, cause);
+        } catch (PolledAssertion.PolledAssertionError ae ) {  //when using a PolledInvoker this will re-throw AssertionErrors
+            endState = handleRootCause(executionToken, step, ae.getCause());
+        } catch (AssertionError ae) {
+            endState = handleRootCause(executionToken, step, ae);
         } catch (Throwable t) {
             log.error("Step execution failed, we hit an exception trying to invoke the step method", t);
-            endState = processCause(executionToken, step, t);
+            endState = handleRootCause(executionToken, step, t);
         } finally {
             step.setTimeTaken(System.currentTimeMillis() - startTime);
         }
         return endState;
     }
 
-    private StepEndState processCause(ExecutionToken executionToken, StepToken step, Throwable cause) {
+    private StepEndState handleRootCause(ExecutionToken executionToken, StepToken step, Throwable cause) {
         StepEndState endState;
         if (cause instanceof StepPendingException) {
             endState = handleStepPendingException(executionToken, step, (StepPendingException) cause);

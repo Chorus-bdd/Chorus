@@ -155,7 +155,7 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     private void replaceLineNumbers(ChorusSelfTestResults expectedResults) {
         String stdOut = expectedResults.getStandardOutput();
-        stdOut = stdOut.replaceAll("\\((\\w+)" + ":\\d+\\)-", "($1:linenumber)-");
+        stdOut = stdOut.replaceAll("\\(([\\w\\$]+)" + ":\\d+\\)-", "($1:linenumber)-");
         expectedResults.setStandardOutput(stdOut);
     }
 

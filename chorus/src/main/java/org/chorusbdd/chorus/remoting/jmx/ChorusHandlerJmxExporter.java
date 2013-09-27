@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
 import org.chorusbdd.chorus.core.interpreter.invoker.InvokerFactory;
+import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -162,21 +163,23 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             
             //return the updated context
             return new JmxStepResult(ChorusContext.getContext(), result);
-        } catch (Error e) { //typically AssertionError propagated by PolledInvoker
-            return throwRemotingException(e);
+        } catch (PolledAssertion.PolledAssertionError e) { //typically AssertionError propagated by PolledInvoker
+            throw createRemotingException(e.getCause());
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
-            return throwRemotingException(t);
+            throw createRemotingException(t);
+        } catch (Throwable t) {
+            throw createRemotingException(t);
         }
     }
 
-    private JmxStepResult throwRemotingException(Throwable t) {
+    private ChorusRemotingException createRemotingException(Throwable t) {
         //here we are sending the exception name and the stack trace elements, but not the exception instance itself
         //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
         String message = "remote " + t.getClass().getSimpleName() +
             ( t.getMessage() == null ? " " : " - " + t.getMessage() );
         String location = ExceptionHandling.getExceptionLocation(t);
-        throw new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
+        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
     }
 
     public Map<String, String[]> getStepMetadata() {

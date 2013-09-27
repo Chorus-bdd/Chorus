@@ -20,8 +20,25 @@ Chorus --> INFO    - Processing scenario: Passes For Invoker Is Working
 Chorus --> INFO    - Processing scenario: Conflicting Annotations
 Chorus --> WARN    - Not using PassesForInvoker:checkMultipleAnnotations since PassesWithinInvoker:checkMultipleAnnotations is already set. You can only have one invoker annotation per method
     Given I use multiple annotations                                                         PASSED  
+  Scenario: Remoting with Polled Assertions
+Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    When I start a timer in remotePolled                                                     PASSED  
+    Then test condition eventually passes in remotePolled                                    PASSED  
+    And another test condition fails with AssertionError in remotePolled                     FAILED  (RemoteProcessWithPolledAssertion$MyHandler:57)-remote ChorusAssertionError - Failed condition
+  Scenario: Remoting with Polled Assertions with Exception
+Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions with Exception
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    Then another test condition fails with Exception in remotePolled                         FAILED  (RemoteProcessWithPolledAssertion$MyHandler:63)-remote Exception - My Exception Message
+  Scenario: Remoting with Polled Assertions with RuntimeException
+Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions with RuntimeException
+Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:69)-remote RuntimeException - My Runtime Exception Message
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:3) (passed:1) (failed:2)
-Steps     (total:13) (passed:11) (failed:2) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:6) (passed:1) (failed:5)
+Steps     (total:21) (passed:16) (failed:5) (undefined:0) (pending:0) (skipped:0)

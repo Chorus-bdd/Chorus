@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.selftest.polledassertion;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,4 +52,7 @@ public class TestPolledAssertionFeature extends AbstractInterpreterTest {
         return featurePath;
     }
 
+//    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+//        sysProps.put("chorusTagExpression", "@CHOOSE");
+//    }
 }

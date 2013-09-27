@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -131,7 +132,7 @@ public abstract class PolledAssertion {
         if ( ! success ) {
             try {
                 validate(); //this time allow any assertion errors to propagate
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 propagateAsError(e);
             }
         }
@@ -158,8 +159,8 @@ public abstract class PolledAssertion {
         for ( int check = 0; check < maxAttempts ; check ++) {
             try {
                 validate();
-            } catch (Exception e) {
-                propagateAsError(e);
+            } catch (Throwable t) {
+                propagateAsError(t);
             }
             doSleep(pollPeriodMillis);
         }
@@ -173,23 +174,22 @@ public abstract class PolledAssertion {
         }
     }
 
-    //Test methods will often generate AssertError which are not
-    //Exceptions and so will not be caught here
-    
-    //We still need to handle Exceptions and must do so by converting
-    //them to RuntimeException or AssertionError since the alternative
-    //would be to add a throws clause to check() and await(), which then
-    //forces all user code which calls these methods to add exception handling
-    
-    //Convert exceptions to AssertError and propagate
-    //or find an Error/AssertionError which was wrapped and rethrow
-    
-    //the latter case often occurs when an InvocationException wraps an AssertionError
-    //which is the behaviour we see when using PolledInvoker with @PassesFor and @PassesWithin
-    private void propagateAsError(Exception e) {
-        if ( e.getCause() != null && Error.class.isAssignableFrom(e.getCause().getClass())) {
-            throw (Error)e.getCause();    
+    //If e is an InvocationTargetException (from a PolledInvoker) we always need to unwrap and propagate the cause
+    //if an Error propagate as is
+    //Otherwise wrap with a PolledAssertionError and throw 
+    private void propagateAsError(Throwable t) {
+        if ( t instanceof InvocationTargetException) {
+            t = t.getCause();   
         }
-        throw new AssertionError(e.getMessage(), e.getCause());
+        if ( Error.class.isAssignableFrom(t.getClass())) {
+            throw (Error)t;    
+        }
+        throw new PolledAssertionError(t.getMessage(), t);
+    }
+
+    public static class PolledAssertionError extends AssertionError {
+        public PolledAssertionError(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

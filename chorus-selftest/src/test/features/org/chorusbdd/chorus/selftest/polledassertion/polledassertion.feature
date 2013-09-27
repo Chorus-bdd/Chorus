@@ -1,3 +1,6 @@
+Uses: Remoting
+Uses: Processes
+
 Feature: Polled Assertion
 
   Test that Chorus PolledAssertion and invoker annotations work as expected
@@ -20,4 +23,17 @@ Feature: Polled Assertion
 
    Scenario: Conflicting Annotations
      Given I use multiple annotations
+     
+   Scenario: Remoting with Polled Assertions
+     Given I start a remotePolled process 
+     When I start a timer in remotePolled
+     Then test condition eventually passes in remotePolled
+     And another test condition fails with AssertionError in remotePolled
 
+    Scenario: Remoting with Polled Assertions with Exception
+      Given I start a remotePolled process
+      Then another test condition fails with Exception in remotePolled
+
+    Scenario: Remoting with Polled Assertions with RuntimeException
+      Given I start a remotePolled process
+      Then another test condition fails with RuntimeException in remotePolled
