@@ -20,9 +20,6 @@ Feature: Polled Assertion
     When I increment a value
     Then the value is 2 for half a second
     Then the value is 3 for half a second
-
-   Scenario: Conflicting Annotations
-     Given I use multiple annotations
      
    Scenario: Remoting with Polled Assertions
      Given I start a remotePolled process 

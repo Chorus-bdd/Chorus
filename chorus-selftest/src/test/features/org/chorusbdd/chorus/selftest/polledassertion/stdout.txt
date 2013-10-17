@@ -16,29 +16,25 @@ Chorus --> INFO    - Processing scenario: Passes For Invoker Is Working
     When I increment a value                                                                 PASSED  
     Then the value is 2 for half a second                                                    PASSED  
     Then the value is 3 for half a second                                                    FAILED  (PolledAssertionHandler:linenumber)-Expect 3 expected:<3> but was:<2>
-  Scenario: Conflicting Annotations
-Chorus --> INFO    - Processing scenario: Conflicting Annotations
-Chorus --> WARN    - Not using PassesForInvoker:checkMultipleAnnotations since PassesWithinInvoker:checkMultipleAnnotations is already set. You can only have one invoker annotation per method
-    Given I use multiple annotations                                                         PASSED  
   Scenario: Remoting with Polled Assertions
 Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a remotePolled process                                                     PASSED  
     When I start a timer in remotePolled                                                     PASSED  
     Then test condition eventually passes in remotePolled                                    PASSED  
-    And another test condition fails with AssertionError in remotePolled                     FAILED  (RemoteProcessWithPolledAssertion$MyHandler:57)-remote ChorusAssertionError - Failed condition
+    And another test condition fails with AssertionError in remotePolled                     FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote ChorusAssertionError - Failed condition
   Scenario: Remoting with Polled Assertions with Exception
 Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions with Exception
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a remotePolled process                                                     PASSED  
-    Then another test condition fails with Exception in remotePolled                         FAILED  (RemoteProcessWithPolledAssertion$MyHandler:63)-remote Exception - My Exception Message
+    Then another test condition fails with Exception in remotePolled                         FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote Exception - My Exception Message
   Scenario: Remoting with Polled Assertions with RuntimeException
 Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions with RuntimeException
 Chorus --> INFO    - About to run Java:  <system specific process details replaced>
     Given I start a remotePolled process                                                     PASSED  
-    Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:69)-remote RuntimeException - My Runtime Exception Message
+    Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote RuntimeException - My Runtime Exception Message
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:6) (passed:1) (failed:5)
-Steps     (total:21) (passed:16) (failed:5) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:5) (passed:0) (failed:5)
+Steps     (total:20) (passed:15) (failed:5) (undefined:0) (pending:0) (skipped:0)

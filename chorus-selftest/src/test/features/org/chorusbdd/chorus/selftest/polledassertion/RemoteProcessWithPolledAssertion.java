@@ -1,9 +1,6 @@
 package org.chorusbdd.chorus.selftest.polledassertion;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.PassesFor;
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
@@ -51,19 +48,19 @@ public class RemoteProcessWithPolledAssertion {
         }
         
         @Step(".* test condition fails with AssertionError")
-        @PassesFor(length = 200, timeUnit = TimeUnit.MILLISECONDS)
+        @PassesWithin(length = 200, timeUnit = TimeUnit.MILLISECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
         public void testFails() {
             ChorusAssert.fail("Failed condition");
         }
 
         @Step(".* test condition fails with Exception")
-        @PassesFor(length = 200, timeUnit = TimeUnit.MILLISECONDS)
+        @PassesWithin(length = 200, timeUnit = TimeUnit.MILLISECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
         public void testFailsWithException() throws Exception {
             throw new Exception("My Exception Message");
         }
 
         @Step(".* test condition fails with RuntimeException")
-        @PassesFor(length = 200, timeUnit = TimeUnit.MILLISECONDS)
+        @PassesWithin(length = 200, timeUnit = TimeUnit.MILLISECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
         public void testFailsWithRuntimeException() throws Exception {
             throw new RuntimeException("My Runtime Exception Message");
         }

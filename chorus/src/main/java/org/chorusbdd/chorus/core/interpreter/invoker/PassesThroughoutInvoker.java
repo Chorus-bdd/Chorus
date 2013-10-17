@@ -11,11 +11,11 @@ import java.util.concurrent.TimeUnit;
 * Date: 24/09/13
 * Time: 18:47
 */
-class PassesWithinInvoker extends PolledInvoker {
-
+class PassesThroughoutInvoker extends PolledInvoker {
+    
     private PassesWithin passesWithin;
 
-    public PassesWithinInvoker(PassesWithin passesWithin, Method method) {
+    public PassesThroughoutInvoker(PassesWithin passesWithin, Method method) {
         super(method);
         this.passesWithin = passesWithin;
     }
@@ -33,6 +33,6 @@ class PassesWithinInvoker extends PolledInvoker {
     }
 
     protected void doTest(PolledAssertion p, TimeUnit timeUnit, int count) {
-        p.await(timeUnit, count);
+        p.check(timeUnit, count);
     }
 }

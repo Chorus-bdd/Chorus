@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.annotations.PassesFor;
+import org.chorusbdd.chorus.annotations.PassesWithin;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 
 import java.lang.reflect.Method;
@@ -11,28 +11,28 @@ import java.util.concurrent.TimeUnit;
 * Date: 24/09/13
 * Time: 18:47
 */
-class PassesForInvoker extends PolledInvoker {
-    
-    private PassesFor passesFor;
+class UntilFirstPassInvoker extends PolledInvoker {
 
-    public PassesForInvoker(PassesFor passesFor, Method method) {
+    private PassesWithin passesWithin;
+
+    public UntilFirstPassInvoker(PassesWithin passesWithin, Method method) {
         super(method);
-        this.passesFor = passesFor;
+        this.passesWithin = passesWithin;
     }
 
     protected int getCount() {
-        return passesFor.length();
+        return passesWithin.length();
     }
 
     protected TimeUnit getTimeUnit() {
-        return passesFor.timeUnit();
+        return passesWithin.timeUnit();
     }
 
     protected int getPollFrequency() {
-        return passesFor.pollFrequencyInMilliseconds();
+        return passesWithin.pollFrequencyInMilliseconds();
     }
 
     protected void doTest(PolledAssertion p, TimeUnit timeUnit, int count) {
-        p.check(timeUnit, count);
+        p.await(timeUnit, count);
     }
 }

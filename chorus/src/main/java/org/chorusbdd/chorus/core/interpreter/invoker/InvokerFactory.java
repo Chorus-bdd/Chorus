@@ -23,25 +23,22 @@ public class InvokerFactory {
         StepMethodInvoker result = null;
         for ( Annotation a : annotations) {
             if ( a.annotationType() == PassesWithin.class) {
-                PassesWithinInvoker i = new PassesWithinInvoker((PassesWithin)a, method);
-                result = setIfFirstAnnotation(i, result);
-            } else if ( a.annotationType() == PassesFor.class) {
-                PolledInvoker i = new PassesForInvoker((PassesFor)a, method);
-                result = setIfFirstAnnotation(i, result);
+                PassesWithin passesWithin = (PassesWithin) a;
+                switch(passesWithin.pollMode()) {
+                    case UNTIL_FIRST_PASS:
+                        result = new UntilFirstPassInvoker(passesWithin, method);
+                        break;
+                    case PASS_THROUGHOUT_PERIOD:
+                        result =  new PassesThroughoutInvoker(passesWithin, method);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("Unknown mode " + passesWithin.pollMode());
+                }
             }
         }
         
         if ( result == null ) {
             result = new SimpleMethodInvoker(method);
-        }
-        return result;
-    }
-
-    private StepMethodInvoker setIfFirstAnnotation(StepMethodInvoker i, StepMethodInvoker result) {
-        if ( result == null) {
-            result = i;
-        } else {
-            log.warn("Not using " + i + " since " + result + " is already set. You can only have one invoker annotation per method");
         }
         return result;
     }

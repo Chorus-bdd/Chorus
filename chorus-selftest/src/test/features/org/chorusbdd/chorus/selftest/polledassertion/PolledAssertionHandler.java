@@ -29,10 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest.polledassertion;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.PassesFor;
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,11 +77,13 @@ public class PolledAssertionHandler {
     }
 
     @Step("the value is (\\d) within 2 seconds")
-    @PassesWithin(length = 1)
-    public void passesWithinOneSecond(int expectCount) {
+    @PassesWithin(length = 2)
+    public void passesWithinTwoSeconds(int expectCount) {
         passesWithinPollCount++;
         assertEquals("Expect " + expectCount + " but was " + timeCount, expectCount, timeCount);
-        assertTrue("Expect to have been polled at least 2 times", passesWithinPollCount >= 2 && passesWithinPollCount < 6);
+        
+        //after 300ms the timer task should set the value, first poll should fail second should pass
+        assertTrue("Expect to have been polled at least 2 times", passesWithinPollCount >= 2 && passesWithinPollCount < 5);
     }
 
     @Step("the value is not (\\d) within 0.2 seconds so this step should fail")
@@ -94,7 +93,7 @@ public class PolledAssertionHandler {
     }
 
     @Step("the value is (\\d) for half a second")
-    @PassesFor(length = 500, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50)
+    @PassesWithin(length = 500, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
     public void passesForHalfASecond(int expectCount) {
         passesForPollCount++;
         assertEquals("Expect " + expectCount, expectCount, timeCount);
@@ -105,11 +104,4 @@ public class PolledAssertionHandler {
         assertEquals("Expect to have been polled at least " + times + " times but was " + passesForPollCount, times, passesForPollCount);
     }
     
-    @Step("I use multiple annotations")
-    @PassesWithin
-    @PassesFor
-    public void checkMultipleAnnotations() {
-        
-    }
-
 }

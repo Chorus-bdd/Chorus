@@ -20,5 +20,7 @@ public @interface PassesWithin {
     TimeUnit timeUnit() default TimeUnit.SECONDS;
 
     int pollFrequencyInMilliseconds() default 200;
+    
+    PollMode pollMode() default PollMode.UNTIL_FIRST_PASS;
 
 }
