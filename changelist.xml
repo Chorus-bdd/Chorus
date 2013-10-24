@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.5.3</versionNumber>
+        <comment>Addition of @PassesWithin annotation to help eliminate waits in scenarios</comment>
+        <change desc="Add the @PassesWithin annotation as a better alternative to the direct use of PolledAssertion"/>
+    </version>
+    <version>
         <versionNumber>1.5.2</versionNumber>
         <comment>Enhancements to process handling and JUnit suite</comment>
         <change desc="When running under JDK 1.7, use ProcessBuilder to create a process. Set io redirect on std out/err atomically on process start"/>
