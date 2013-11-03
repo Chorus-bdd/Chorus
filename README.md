@@ -1,6 +1,10 @@
-###Chorus is a lightweight BDD test framework written in Java###
+###Chorus is a BDD testing framework targeted at distributed architectures###
 
-####It is good for standalone component testing, but *excels* at integration testing for distributed systems####
+The intention is to provide a good general purpose interpreter for BDD tests, with special capabilities which help to test distributed components. 
+
+Chorus is a Java framework and presently provides a solution to connect to and test Java components. We hope to add connectivity solutions for other languages in the near future
+
+In addition to its Remoting features, Chorus also provides process handling which makes it easy to stop and start processes during a scenario. 
 
 ####See [The Chorus Wiki](http://github.com/Chorus-bdd/Chorus/wiki) for documentation ####
 ####The [User Forum](http://chorusbdd.icyboards.net/index.php) for help ####
