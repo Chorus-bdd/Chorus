@@ -67,10 +67,12 @@ public class ExceptionHandling {
        StackTraceElement element = t.getStackTrace().length > 0 ? t.getStackTrace()[0] : null;
        int index = 0;
         String chorusAssertClassName = ChorusAssert.class.getName();
-        String junitAssertClassName = "org.junit.Assert";  //junit may not be in classpath
+        String junitAssertClassName = "org.junit.Assert";  //junit may not be in classpath so don't use Assert.class.getName()
+        String junitLegacyClassName = "junit.framework.Assert";  //need to support alternative (legacy?) junit 3 style Assert
         while ( element != null && (
                 element.getClassName().contains(chorusAssertClassName) ||
-                element.getClassName().contains(junitAssertClassName))
+                element.getClassName().contains(junitAssertClassName) ||
+                element.getClassName().contains(junitLegacyClassName))
             ) {
            index += 1;
            element = t.getStackTrace().length > index ? t.getStackTrace()[index] : null;
