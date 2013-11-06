@@ -7,7 +7,7 @@ Chorus is a Java framework and presently provides a solution to connect to and t
 In addition to its Remoting features, Chorus also provides process handling which makes it easy to stop and start processes during a scenario. 
 
 ####See [The Chorus Wiki](http://github.com/Chorus-bdd/Chorus/wiki) for documentation ####
-####The [User Forum](http://chorusbdd.icyboards.net/index.php) for help ####
+####The [User Forum](http://forum.chorusbdd.org/) for help ####
 ####The [Issue Tracking](https://github.com/Chorus-bdd/Chorus/issues?state=open) page, for issue tracking!####
 
 Chorus is available under the open source MIT license
