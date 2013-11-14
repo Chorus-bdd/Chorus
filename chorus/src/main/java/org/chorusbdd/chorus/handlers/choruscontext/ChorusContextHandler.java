@@ -50,11 +50,13 @@ public class ChorusContextHandler {
 
     @Step(".*create a (?:context )?variable (.*) with value (.*)")
     public void createVariable(String varName, Object value) {
+        //See type TypeCoercion.coerceObject - value will be a Boolean, Float, or Long if it can be parsed as such  
         ChorusContext.getContext().put(varName, value);
     }
 
     @Step(".*(?:context )?variable (.*) has (?:the )?value (.*)")
     public void assertVariableValue(String varName, Object expected) {
+        //See type TypeCoercion.coerceObject - expected will be a Boolean, Float, or Long if it can be parsed as such  
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertEquals(expected, actual);
     }
