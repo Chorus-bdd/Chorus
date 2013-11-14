@@ -184,12 +184,12 @@ public abstract class PolledAssertion {
         if ( Error.class.isAssignableFrom(t.getClass())) {
             throw (Error)t;    
         }
-        throw new PolledAssertionError(t.getMessage(), t);
+        throw new PolledAssertionError(t);
     }
 
     public static class PolledAssertionError extends AssertionError {
-        public PolledAssertionError(String message, Throwable cause) {
-            super(message, cause);
+        public PolledAssertionError(Throwable cause) {
+            super(cause);
         }
     }
 }
