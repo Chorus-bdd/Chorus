@@ -94,7 +94,7 @@ public class StepMacro {
     private Pattern pattern;
     private List<StepToken> steps = new ArrayList<StepToken>();
 
-    private Pattern variablePattern = Pattern.compile("<\\w+>");
+    private Pattern variablePattern = Pattern.compile("<[\\w\\-_]+>");
     private Pattern groupPattern = Pattern.compile("<\\$\\d+>");
 
     private Map<String, Integer> variableToGroupNumber = new HashMap<String, Integer>();
