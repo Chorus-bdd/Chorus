@@ -57,14 +57,14 @@ import java.util.regex.Pattern;
  * The declaration of a step macro is as follows:
  * The first line contains a pattern definition, and subsequent lines contain the steps which will be reused when the macro is referenced
  *
- * StepMacro: I fill in the login form with name (.*) and password (.*)
+ * StepMacro: I fill in the login form with name <name> and password <password>
  *   Given I click on the login button
  *   Then the login form is displayed
- *   And I enter <$1> into the name input
- *   And I enter <$2> into the password input
+ *   And I enter <name> into the name input
+ *   And I enter <password> into the password input
  *
  * The first line (starting with the StepMacro: key word) contains the pattern against which scenario steps will be matched.
- * The text following the StepMacro: keyword is interpreted as a regular expression, which may contain capturing groups.
+ * The text following the StepMacro: keyword may contain parameters in the form <parameterName>
  *
  * During subsequent parsing of scenarios, scenario steps are matched against the patterns defined for StepMacro,
  * Only the action portion of the step is matched (i.e. we strip the first word such as Given/Then/When before attempting

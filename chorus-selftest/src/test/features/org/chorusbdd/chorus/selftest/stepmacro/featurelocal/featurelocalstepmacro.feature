@@ -15,7 +15,7 @@ Feature: Feature Local Step Macro
     | 123  | test1    |
     | 456  | test2    |
 
-  Step-Macro: I can call a step macro with two variables <myvar1> and <myvar2>
-    Then I can call a handler step with group <myvar1>
-    And I can call a handler step with group <myvar2>
+  Step-Macro: I can call a step macro with two variables <my-var1> and <my_var2>
+    Then I can call a handler step with group <my-var1>
+    And I can call a handler step with group <my_var2>
 

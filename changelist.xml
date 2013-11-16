@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.5.4</versionNumber>
+        <change desc="Allow - and _ characters within step macro paramters"/>
+        <bugfix desc="Fix for @PassesWithin when used in remote process under jdk 1.5"/>
+    </version>
+    <version>
         <versionNumber>1.5.3</versionNumber>
         <comment>Addition of @PassesWithin annotation to help eliminate waits in scenarios</comment>
         <change desc="Add the @PassesWithin annotation as a better alternative to the direct use of PolledAssertion"/>
