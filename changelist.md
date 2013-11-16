@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        
+### Version 1.5.4 ###
+        
+*Support extra characters in step macro parameter names and fix an issue with @PassesWithin under jdk 1.5*
+        
+| Changes in 1.5.4 |
+| ------ |
+| Allow - and _ characters within step macro parameters |
+| BUGFIX: Fix for @PassesWithin when used in remote process under jdk 1.5 |
         
 ### Version 1.5.3 ###
         
