@@ -3,7 +3,7 @@
 <changes>
     <version>
         <versionNumber>1.5.4</versionNumber>
-        <change desc="Allow - and _ characters within step macro paramters"/>
+        <change desc="Allow - and _ characters within step macro parameters"/>
         <bugfix desc="Fix for @PassesWithin when used in remote process under jdk 1.5"/>
     </version>
     <version>
