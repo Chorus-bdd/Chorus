@@ -1,0 +1,13 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/chorusresource/chorusresource.feature
+Feature: Chorus Resource                                                                             
+  Scenario: Test Chorus Resource Annotation
+Chorus --> INFO    - Processing scenario: Test Chorus Resource Annotation
+    Given Chorus is working properly                                                         PASSED  
+    Then the feature.token resource is set correctly                                         PASSED  
+    Then the feature.dir resource is set correctly                                           PASSED  
+    Then the feature.file resource is set correctly                                          PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
