@@ -46,5 +46,5 @@ package org.chorusbdd.chorus.annotations;
  */
 public enum HandlerScope {
     SCENARIO,//A new instance of the handler will be created for each scenario
-    UNMANAGED//A single handler will be created and used for all scenarios
+    UNMANAGED//A single handler will be created and used for all scenarios, annotated lifecycle methods (destroy) will not be called
 }

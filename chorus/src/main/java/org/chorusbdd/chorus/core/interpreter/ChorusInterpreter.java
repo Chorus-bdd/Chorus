@@ -29,10 +29,6 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -43,8 +39,6 @@ import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -81,8 +75,6 @@ public class ChorusInterpreter {
 
         //load all available handler classes
         HashMap<String, Class> allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(basePackages);
-
-        HashMap<Class, Object> unmanagedHandlerInstances = new HashMap<Class, Object>();
         
         //RUN EACH FEATURE
         for (FeatureToken feature : features) {
@@ -90,7 +82,6 @@ public class ChorusInterpreter {
                 processFeature(
                         executionToken,
                         allHandlerClasses,
-                        unmanagedHandlerInstances,
                         feature
                 );
             } catch (Throwable t) {
@@ -100,7 +91,7 @@ public class ChorusInterpreter {
         }    
     }
 
-    private void processFeature(ExecutionToken executionToken, HashMap<String, Class> allHandlerClasses, HashMap<Class, Object> unmanagedHandlerInstances, FeatureToken feature) throws Exception {
+    private void processFeature(ExecutionToken executionToken, HashMap<String, Class> allHandlerClasses, FeatureToken feature) throws Exception {
 
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
@@ -117,7 +108,7 @@ public class ChorusInterpreter {
         //run the scenarios in the feature
         if (foundAllHandlerClasses) {
             log.debug("The following handlers will be used " + orderedHandlerClasses);
-            runScenarios(executionToken, unmanagedHandlerInstances, feature, orderedHandlerClasses);
+            runScenarios(executionToken, feature, orderedHandlerClasses);
 
             String description = feature.getEndState() == EndState.PASSED ? " passed! " : feature.getEndState() == EndState.PENDING ? " pending! " : " failed! ";
             log.trace("The feature " + description);
@@ -139,11 +130,10 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
     }
 
-    private void runScenarios(ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, FeatureToken feature, List<Class> orderedHandlerClasses) throws Exception {
-        //this will contain the handlers for the feature file (scenario scopes ones will be replaced for each scenario)
-        List<Object> handlerInstances = new ArrayList<Object>();
-        //FOR EACH SCENARIO
+    private void runScenarios(ExecutionToken executionToken, FeatureToken feature, List<Class> orderedHandlerClasses) throws Exception {
         List<ScenarioToken> scenarios = feature.getScenarios();
+        
+        HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport);
 
         log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
@@ -152,17 +142,14 @@ public class ChorusInterpreter {
 
             processScenario(
                 executionToken,
-                unmanagedHandlerInstances,
-                feature,
-                orderedHandlerClasses,
-                handlerInstances,
+                handlerManager,
                 isLastScenario,
                 scenario
             );
         }
     }
 
-    private void processScenario(final ExecutionToken executionToken, HashMap<Class, Object> unmanagedHandlerInstances, FeatureToken feature, List<Class> orderedHandlerClasses, final List<Object> handlerInstances, boolean isLastScenario, final ScenarioToken scenario) throws Exception {
+    private void processScenario(final ExecutionToken executionToken, HandlerManager handlerManager, boolean isLastScenario, final ScenarioToken scenario) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
 
         log.info(String.format("Processing scenario: %s", scenario.getName()));
@@ -170,7 +157,7 @@ public class ChorusInterpreter {
         //reset the ChorusContext for the scenario
         ChorusContext.destroy();
 
-        addHandlerInstances(unmanagedHandlerInstances, feature, orderedHandlerClasses, handlerInstances);
+        List<Object> handlerInstances = handlerManager.getAndCreateHandlers();
 
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
@@ -187,15 +174,7 @@ public class ChorusInterpreter {
             executionToken.incrementScenariosFailed();
         }
 
-        //CLEAN UP SCENARIO SCOPED HANDLERS
-        for (int i = 0; i < handlerInstances.size(); i++) {
-            Object handler = handlerInstances.get(i);
-            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            if (isLastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                cleanupHandler(handler);
-                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
-            }
-        }
+        handlerManager.cleanupHandlers(handlerInstances, isLastScenario);
 
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
@@ -246,108 +225,6 @@ public class ChorusInterpreter {
         if ( t.isAlive()) {
             log.error("Scenario did not respond to thread.kill() after timeout, will now kill the interpreter");
             System.exit(1);
-        }
-    }
-
-    private void addHandlerInstances(HashMap<Class, Object> unmanagedHandlerInstances, FeatureToken feature, List<Class> orderedHandlerClasses, List<Object> handlerInstances) throws Exception {
-        //CREATE THE HANDLER INSTANCES
-        if (handlerInstances.size() == 0) {
-            log.debug("Creating handler instances for feature " + feature);
-            //first scenario in file, so initialise the handler instances in order of precedence
-            for (Class handlerClass : orderedHandlerClasses) {
-                //create a new SCENARIO scoped handler
-                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
-                }
-                //or (re)use an UNMANAGED scoped handlers
-                else if (handlerAnnotation.scope() == HandlerScope.UNMANAGED) {
-                    Object handler = unmanagedHandlerInstances.get(handlerClass);
-                    if (handler == null) {
-                        handler = createAndInitHandlerInstance(handlerClass, feature);
-                        unmanagedHandlerInstances.put(handlerClass, handler);
-                        log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
-                    }
-                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-                }
-            }
-        } else {
-            //replace scenario scoped handlers if not first scenario in feature file
-            for (int i = 0; i < handlerInstances.size(); i++) {
-                Object handler = handlerInstances.get(i);
-                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                    handlerInstances.remove(i);
-                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), feature));
-                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
-                }
-            }
-        }
-    }
-
-
-    private Object createAndInitHandlerInstance(Class handlerClass, FeatureToken featureToken) throws Exception {
-        Object featureInstance = handlerClass.newInstance();
-        log.trace("Created handler class " + handlerClass + " instance " + featureInstance);
-        springContextSupport.injectSpringResources(featureInstance, featureToken);
-        injectInterpreterResources(featureInstance, featureToken);
-        return featureInstance;
-    }
-
-
-
-    private void injectInterpreterResources(Object handler, FeatureToken featureToken) {
-        Class<?> featureClass = handler.getClass();
-        Field[] fields = featureClass.getDeclaredFields();
-        log.trace("Now examining handler fields for ChorusResource annotation " + Arrays.asList(fields));
-        for (Field field : fields) {
-            ChorusResource a = field.getAnnotation(ChorusResource.class);
-            if (a != null) {
-                String resourceName = a.value();
-                log.debug("Found ChorusResource annotation " + resourceName + " on field " + field);
-                field.setAccessible(true);
-                Object o = null;
-                if ("feature.file".equals(resourceName)) {
-                    o = featureToken.getFeatureFile();
-                } else if ("feature.dir".equals(resourceName)) {
-                    o = featureToken.getFeatureFile().getParentFile();
-                } else if ("feature.token".equals(resourceName)) {
-                    o = featureToken;
-                }
-                if (o != null) {
-                    try {
-                        field.set(handler, o);
-                    } catch (IllegalAccessException e) {
-                        log.error("Failed to set @ChorusResource (" + resourceName + ") with object of type: " + o.getClass(), e);
-                    }
-                } else {
-                    log.debug("Set field to value " + o);
-                }
-            }
-        }
-    }
-
-    private void cleanupHandler(Object handler) throws Exception {
-        log.debug("Cleaning Up Handler " + handler);
-        springContextSupport.dispose(handler);
-
-        //call any destroy methods on handler instance
-        Class<?> handlerClass = handler.getClass();
-        Handler handlerAnnotation = handlerClass.getAnnotation(Handler.class);
-        if ( handlerAnnotation.scope() != HandlerScope.UNMANAGED ) {
-            for (Method method : handlerClass.getMethods()) {
-                if (method.getParameterTypes().length == 0) {
-                    if (method.getAnnotation(Destroy.class) != null) {
-                        log.trace("Found Destroy annotation on handler method " + method + " will invoke");
-                        try {
-                            method.invoke(handler);
-                        } catch ( Throwable t) {
-                            log.warn("Exception when calling @Destroy method [" + method + "] on handler " + handlerClass, t);
-                        }
-                    }
-                }
-            }
         }
     }
 
