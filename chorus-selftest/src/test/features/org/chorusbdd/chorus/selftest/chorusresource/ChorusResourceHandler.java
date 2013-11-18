@@ -44,7 +44,7 @@ import java.io.File;
  * Time: 09:21
  */
 @Handler("Chorus Resource")
-public class ChorusResourceHandler {
+public class ChorusResourceHandler extends AbstractHandler {
 
     @ChorusResource("feature.token")
     FeatureToken featureToken;
