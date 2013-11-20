@@ -64,6 +64,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     private StepMacroParser stepMacroParser = new StepMacroParser();
     private List<StepMacro> globalStepMacro;
+    private int endFeatureLineNumber = -1;
 
     public FeatureFileParser() {
         this(Collections.<StepMacro>emptyList());
@@ -147,17 +148,51 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             }
 
             if (KeyWord.Background.matchesLine(line)) {
-                backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                backgroundScenario = createScenario("Background", backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_SCENARIO_BACKGROUND_STEPS;
                 continue;
             }
 
             if (KeyWord.Scenario.matchesLine(line)) {
                 if ( currentFeature == null) {
-                    throw new ParseException("Feature: statement must precede Scenario:", lineNumber);
+                    throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.Scenario, lineNumber);
+                }
+                if ( endFeatureLineNumber > -1) {
+                    throw new ParseException(KeyWord.FeatureEnd + " statement must come after all " + KeyWord.Scenario, lineNumber);
                 }
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                currentScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                String scenarioName = line.substring(9).trim();
+                currentScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                currentFeature.addScenario(currentScenario);
+                parserState = READING_SCENARIO_STEPS;
+                continue;
+            }
+
+            //FeatureStart section is essentially just a scenario which must appear first and is not involved in tagging
+            //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
+            if (KeyWord.FeatureStart.matchesLine(line)) {
+                if ( currentFeature == null) {
+                    throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureStart, lineNumber);
+                }
+                if ( currentScenario != null ) {
+                    throw new ParseException(KeyWord.FeatureStart + " statement must precede all scenarios", lineNumber);
+                }
+                resetLastTagsLine();
+                currentScenario = createScenario(KeyWord.START_FEATURE_SCENARIO_NAME, null, null, null);
+                currentFeature.addScenario(currentScenario);
+                parserState = READING_SCENARIO_STEPS;
+                continue;
+            }
+
+            //FeatureEnd section is essentially just a scenario which must appear last and is not involved in tagging
+            //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
+            if (KeyWord.FeatureEnd.matchesLine(line)) {
+                if ( currentFeature == null) {
+                    throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureEnd, lineNumber);
+                }
+                endFeatureLineNumber = lineNumber;
+                resetLastTagsLine();
+                currentScenario = createScenario(KeyWord.FEATURE_END_SCENARIO_NAME, null, null, null);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
                 continue;
@@ -165,14 +200,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
             if (KeyWord.ScenarioOutline.matchesLine(line)) {
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                outlineScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                String scenarioName = line.substring(19).trim();
+                outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 examplesTableHeaders = null;//reset the examples table
                 parserState = READING_SCENARIO_OUTLINE_STEPS;
                 continue;
             }
 
             if (KeyWord.Examples.matchesLine(line)) {
-                backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                //backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_EXAMPLES_TABLE;
                 continue;
             }
@@ -266,7 +302,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         return feature;
     }
 
-    private ScenarioToken createScenario(String line, ScenarioToken backgroundScenario, List<String> currentFeaturesTags, List<String> currentScenariosTags) {
+    private ScenarioToken createScenario(String name, ScenarioToken backgroundScenario, List<String> currentFeaturesTags, List<String> currentScenariosTags) {
         ScenarioToken scenario = new ScenarioToken();
 
         //add any background steps first
@@ -278,15 +314,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 addStep(scenario, copiedStep, Collections.<StepMacro>emptyList());
             }
         }
-
-        //figure out the right name for the scenario
-        String scenarioName = null;
-        if (KeyWord.Scenario.matchesLine(line)) {
-            scenarioName = line.substring(9, line.length()).trim();
-        } else if (KeyWord.ScenarioOutline.matchesLine(line)) {
-            scenarioName = line.substring(17, line.length()).trim();
-        }
-        scenario.setName(scenarioName);
+        scenario.setName(name);
 
         //add the filter tags
         scenario.addTags(currentFeaturesTags);
@@ -359,9 +387,13 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     list.add(tagName);
                 }
             }
-            lastTagsLine = null;
+            resetLastTagsLine();
             return list;
         }
+    }
+
+    private void resetLastTagsLine() {
+        lastTagsLine = null;
     }
 
 }

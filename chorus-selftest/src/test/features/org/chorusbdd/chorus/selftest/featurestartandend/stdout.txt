@@ -1,0 +1,16 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startandend.feature
+Feature: Start And End                                                                               
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    Given Chorus is working properly                                                         PASSED  
+  Scenario: Scenario One
+Chorus --> INFO    - Processing scenario: Scenario One
+    Given Chorus is working properly                                                         PASSED  
+  Scenario: Feature-End
+Chorus --> INFO    - Processing scenario: Feature-End
+    Given Chorus is working properly                                                         PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

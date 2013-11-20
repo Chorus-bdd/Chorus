@@ -27,43 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.selftest.featurestartandend;
+
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
  * Created with IntelliJ IDEA.
  * User: nick
- * Date: 23/02/13
- * Time: 22:55
- *
- * Key words from Chorus' extended gherkin syntax
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public enum KeyWord {
-    
-    Uses("Uses:"),
-    Configurations("Configurations:"),
-    Feature("Feature:"),
-    Background("Background:"),
-    Scenario("Scenario:"),
-    ScenarioOutline("Scenario-Outline:"),
-    Examples("Examples:"),
-    StepMacro("Step-Macro:"),
-    FeatureStart("Feature-Start:"),
-    FeatureEnd("Feature-End:");
+public class TestStartAndEnd extends AbstractInterpreterTest {
 
-    public static final String START_FEATURE_SCENARIO_NAME = "Feature-Start";
-    public static final String FEATURE_END_SCENARIO_NAME = "Feature-End";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/featurestartandend";
 
-    private String keyWord;
+    final int expectedExitCode = 0;  //success
 
-    KeyWord(String keyWord) {
-        this.keyWord = keyWord;
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    public String stringVal() {
-        return keyWord;
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
-    public boolean matchesLine(String line) {
-        return line.startsWith(keyWord);
-    }
 }

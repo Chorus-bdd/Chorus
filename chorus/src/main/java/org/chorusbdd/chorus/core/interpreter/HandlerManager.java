@@ -128,16 +128,20 @@ public class HandlerManager {
         }
     }
 
-    public void cleanupHandlers(List<Object> handlerInstances, boolean lastScenario) throws Exception {
+    public void cleanupHandlers(List<Object> handlerInstances) throws Exception {
         //CLEAN UP SCENARIO SCOPED HANDLERS
         for (int i = 0; i < handlerInstances.size(); i++) {
             Object handler = handlerInstances.get(i);
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            if (lastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+            if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
                 cleanupHandler(handler);
                 log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
             }
         }
+    }
+    
+    public void cleanupAtFeatureEnd() {
+        //TODO here we should clean up any handlers at feature scope, when HandlerScope.FEATURE is supported
     }
 
     private void cleanupHandler(Object handler) throws Exception {
