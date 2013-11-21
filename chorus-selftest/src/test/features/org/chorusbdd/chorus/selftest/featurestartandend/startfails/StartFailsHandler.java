@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.featurestartandend;
+package org.chorusbdd.chorus.selftest.featurestartandend.startfails;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
@@ -38,11 +38,21 @@ import org.chorusbdd.chorus.annotations.Step;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Start And End")
-public class BackgroundHandler {
+@Handler("Feature Start Fails")
+public class StartFailsHandler {
 
-    @Step("Chorus is working properly")
-    public void isWorkingProperly() {
+    @Step("I run feature start")
+    public void featureStart() {
+
+    }
+
+    @Step("I run a scenario")
+    public void aScenario() {
+
+    }
+
+    @Step("I run feature end")
+    public void featureEnd() {
 
     }
 

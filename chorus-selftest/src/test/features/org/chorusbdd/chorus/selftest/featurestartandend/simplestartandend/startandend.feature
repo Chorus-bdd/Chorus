@@ -3,12 +3,12 @@ Feature: Start And End
   Test that a feature can have a start and end section
 
   Feature-Start:
-    Given Chorus is working properly
+    First I run feature start
   
   Scenario: Scenario One
-    Given Chorus is working properly
+    Then I run a scenario
 
   Feature-End:
-    Given Chorus is working properly
+    Then I run feature end
 
 
