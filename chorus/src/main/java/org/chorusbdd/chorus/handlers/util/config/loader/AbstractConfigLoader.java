@@ -69,10 +69,10 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> {
         }
     }
 
-    public Map<String, E> loadRemotingConfigs() {
-        Map<String, E> remotingConfigMap = doLoadConfigs();
-        removeInvalidConfigs(remotingConfigMap);
-        return remotingConfigMap;
+    public Map<String, E> loadConfigs() {
+        Map<String, E> configs = doLoadConfigs();
+        removeInvalidConfigs(configs);
+        return configs;
     }
 
     public abstract Map<String, E> doLoadConfigs();

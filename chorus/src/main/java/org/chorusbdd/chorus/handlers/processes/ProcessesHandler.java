@@ -385,7 +385,7 @@ public class ProcessesHandler {
                     featureDir,
                     featureFile
             );
-            configMap = l.loadRemotingConfigs();
+            configMap = l.loadConfigs();
         }
     }
 
