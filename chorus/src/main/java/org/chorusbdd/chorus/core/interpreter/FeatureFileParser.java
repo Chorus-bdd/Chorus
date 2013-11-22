@@ -161,7 +161,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     throw new ParseException(KeyWord.FeatureEnd + " statement must come after all " + KeyWord.Scenario, lineNumber);
                 }
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                String scenarioName = line.substring(9).trim();
+                String scenarioName = line.substring(KeyWord.Scenario.stringVal().length()).trim();
                 currentScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
@@ -200,7 +200,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
             if (KeyWord.ScenarioOutline.matchesLine(line)) {
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                String scenarioName = line.substring(19).trim();
+                String scenarioName = line.substring(KeyWord.ScenarioOutline.stringVal().length()).trim();
                 outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 examplesTableHeaders = null;//reset the examples table
                 parserState = READING_SCENARIO_OUTLINE_STEPS;
