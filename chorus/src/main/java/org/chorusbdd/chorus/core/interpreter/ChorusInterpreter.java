@@ -134,6 +134,7 @@ public class ChorusInterpreter {
         List<ScenarioToken> scenarios = feature.getScenarios();
         
         HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport);
+        handlerManager.createFeatureScopedHandlers();
 
         log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
@@ -168,7 +169,7 @@ public class ChorusInterpreter {
         //reset the ChorusContext for the scenario
         ChorusContext.destroy();
 
-        List<Object> handlerInstances = handlerManager.getAndCreateHandlers();
+        List<Object> handlerInstances = handlerManager.getOrCreateHandlersForScenario();
 
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
@@ -182,7 +183,7 @@ public class ChorusInterpreter {
             updateExecutionStats(executionToken, scenario);
         }
 
-        handlerManager.cleanupHandlers(handlerInstances);
+        handlerManager.cleanupAtScenarioEnd(handlerInstances);
 
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }

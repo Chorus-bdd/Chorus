@@ -31,20 +31,43 @@ package org.chorusbdd.chorus.annotations;
 
 /**
  * The scopes determine when the interpreter creates a new handler instance.
- * <p/>
- * The default is SCENARIO, which ensures that each scenario tested will have a new instance of the
- * handler to work with.
- * <p/>
- * In some special cases (e.g. the handler is stateless) the UNMANAGED scope may be more appropriate as
- * there is no advantage to creating new instances for each scenario run. This may improve performance of the
- * interpreter in cases where creating a new handler instance is an expensive operation. Use UNMANAGED with caution as
- * it as this may affect the commutativiy of the scenarios if the handlers are not stateless. Also consider the effects
- * of using an unmanaged handler in combination with SCENARIO scoped handlers.
- * <p/>
- * Created by: Steve Neal
- * Date: 27/10/11
+ * 
+ * They may also be used as parameters to the @Initialize or @Destroy annotations, 
+ * to indicate when the handler methods annotated with @Initialize or @Destroy should be run. 
+ * 
+ * It may be useful for FEATURE scoped handlers to provide SCENARIO scoped initialization and destroy methods, 
+ * if they wish to perform some kind of initialization or cleanup before or after each scenario runs. 
+ * 
+ * For a SCENARIO scoped handler, setting a @Initialize or @Destroy method to @FEATURE scope is probably not greatly useful
+ * In this case, a new handler will be created for each scenario, but the initialize method would only run on the first 
+ * instance created during the feature, and the destroy on the last.
+ * 
+ * The default scope in all cases is SCENARIO, which ensures that each scenario tested will have a new instance of the
+ * handler to work with, and hence all handler state will be cleared down between scenarios. Initialization and Destroy
+ * methods also default to SCENARIO scope if the scope is not specified.
+ * 
+ * If considering FEATURE scope for a handler, keep in mind the need to ensure that all tests/scenarios are commutative.
+ * Ideally no scenario should have any side-effects which could affect a subsequent scenario. 
+ * 
+ * Date: 22/11/11
  */
 public enum HandlerScope {
-    SCENARIO,//A new instance of the handler will be created for each scenario
-    UNMANAGED//A single handler will be created and used for all scenarios, annotated lifecycle methods (destroy) will not be called
+
+    /**
+     *  A new instance of the handler will be created for each scenario
+     */
+    SCENARIO,
+
+    /**
+     *  A new instance of the handler will be created for each feature and reused by all scenarios
+     */
+    FEATURE,
+    
+    /**
+     * A single handler will be created and used for all scenarios, annotated lifecycle methods (@Initialize, @Destroy) 
+     * will not be called. This scope is supported as a legacy feature but not recommended for future use
+     */
+    @Deprecated
+    UNMANAGED
+    
 }

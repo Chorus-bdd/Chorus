@@ -66,4 +66,8 @@ public enum KeyWord {
     public boolean matchesLine(String line) {
         return line.startsWith(keyWord);
     }
+    
+    public String toString() {
+        return keyWord;
+    }
 }

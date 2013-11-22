@@ -26,7 +26,7 @@ public class HandlerManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
     
-    private final HashMap<Class, Object> unmanagedHandlerInstances = new HashMap<Class, Object>();
+    private final HashMap<Class, Object> featureScopedHandlers = new HashMap<Class, Object>();
     private final FeatureToken feature;
     private final List<Class> orderedHandlerClasses;
     private final SpringContextSupport springContextSupport;
@@ -36,50 +36,77 @@ public class HandlerManager {
         this.orderedHandlerClasses = orderedHandlerClasses;
         this.springContextSupport = springContextSupport;
     }
-
-    public List<Object> getAndCreateHandlers() throws Exception {
-        List<Object> handlerInstances = new ArrayList<Object>();
-        //CREATE THE HANDLER INSTANCES
-        if (handlerInstances.size() == 0) {
-            log.debug("Creating handler instances for feature " + feature);
-            //first scenario in file, so initialise the handler instances in order of precedence
-            for (Class handlerClass : orderedHandlerClasses) {
-                //create a new SCENARIO scoped handler
-                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
-                }
-                //or (re)use an UNMANAGED scoped handlers
-                else if (handlerAnnotation.scope() == HandlerScope.UNMANAGED ) {
-                    Object handler = unmanagedHandlerInstances.get(handlerClass);
-                    if (handler == null) {
-                        handler = createAndInitHandlerInstance(handlerClass, feature);
-                        unmanagedHandlerInstances.put(handlerClass, handler);
-                        log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
-                    }
-                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-                }
+    
+    public void createFeatureScopedHandlers() throws Exception {
+        for (Class handlerClass : orderedHandlerClasses) {
+            //create a new SCENARIO scoped handler
+            Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
+            if (handlerAnnotation.scope() != HandlerScope.SCENARIO) { //feature or unmanaged
+                Object handler = createAndInitHandlerInstance(handlerClass, feature);
+                featureScopedHandlers.put(handlerClass, handler);
+                log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
             }
-        } else {
-            //replace scenario scoped handlers if not first scenario in feature file
-            for (int i = 0; i < handlerInstances.size(); i++) {
-                Object handler = handlerInstances.get(i);
-                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                    handlerInstances.remove(i);
-                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), feature));
-                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
-                }
+        }    
+    }
+
+    public List<Object> getOrCreateHandlersForScenario() throws Exception {
+        List<Object> handlerInstances = new ArrayList<Object>();
+        
+        for ( Class handlerClass : orderedHandlerClasses ) {
+            Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
+            if ( handlerAnnotation.scope() != HandlerScope.SCENARIO ) {
+                Object handler = featureScopedHandlers.get(handlerClass);
+                assert(handler != null); //must have been created during createFeatureScopedHandlers
+                log.debug("Adding feature scoped handler " + handler + " class " + handlerClass);
+                handlerInstances.add(handler);
+            } else {
+                log.debug("Creating scenario scoped handler " + handlerClass);
+                Object handler = createAndInitHandlerInstance(handlerClass, feature);
+                handlerInstances.add(handler);
             }
         }
         return handlerInstances;
+//        
+//        
+//        //CREATE THE HANDLER INSTANCES
+//        if (handlerInstances.size() == 0) {
+//            log.debug("Creating handler instances for feature " + feature);
+//            //first scenario in file, so initialise the handler instances in order of precedence
+//            for (Class handlerClass : orderedHandlerClasses) {
+//                //create a new SCENARIO scoped handler
+//                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
+//                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+//                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
+//                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
+//                }
+//                else { //one of UNMANAGED or FEATURE
+//                    Object handler = featureScopedHandlers.get(handlerClass);
+//                    if (handler == null) {
+//                        handler = createAndInitHandlerInstance(handlerClass, feature);
+//                        log.debug("Creating new unmanaged handler: " + handlerAnnotation.value());
+//                        featureScopedHandlers.put(handlerClass, handler);
+//                    }
+//                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
+//                }
+//            }
+//        } else {
+//            //replace scenario scoped handlers if not first scenario in feature file
+//            for (int i = 0; i < handlerInstances.size(); i++) {
+//                Object handler = handlerInstances.get(i);
+//                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
+//                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
+//                    handlerInstances.remove(i);
+//                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), feature));
+//                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
+//                }
+//            }
+//        }
     }
 
 
     private Object createAndInitHandlerInstance(Class handlerClass, FeatureToken featureToken) throws Exception {
         Object featureInstance = handlerClass.newInstance();
-        log.trace("Created handler class " + handlerClass + " instance " + featureInstance);
+        log.debug("Created handler class " + handlerClass + " instance " + featureInstance);
         springContextSupport.injectSpringResources(featureInstance, featureToken);
         injectInterpreterResources(featureInstance, featureToken);
         return featureInstance;
@@ -128,7 +155,7 @@ public class HandlerManager {
         }
     }
 
-    public void cleanupHandlers(List<Object> handlerInstances) throws Exception {
+    public void cleanupAtScenarioEnd(List<Object> handlerInstances) throws Exception {
         //CLEAN UP SCENARIO SCOPED HANDLERS
         for (int i = 0; i < handlerInstances.size(); i++) {
             Object handler = handlerInstances.get(i);
