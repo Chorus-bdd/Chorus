@@ -18,5 +18,5 @@ Chorus --> INFO    - Processing scenario: Feature-End
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:0) (failed:2)
 Steps     (total:5) (passed:2) (failed:0) (undefined:1) (pending:0) (skipped:2)

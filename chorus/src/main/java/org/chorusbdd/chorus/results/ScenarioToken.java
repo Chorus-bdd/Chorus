@@ -132,13 +132,14 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     public EndState getEndState() {
         EndState result = EndState.PASSED;
         for ( StepToken s : steps) {
-            if ( s.inOneOf(FAILED, UNDEFINED, TIMEOUT, NOT_RUN) ) {
+            //steps may all be skipped if a feature start scenario failed - the subsequent scenario should all fail
+            if ( s.inOneOf(FAILED, UNDEFINED, TIMEOUT, NOT_RUN, SKIPPED) ) {
                 result = EndState.FAILED;
                 break;
             } else if ( s.getEndState() == StepEndState.PENDING  ) {
                 result = EndState.PENDING;
                 break;
-            }
+            } 
         }
         return result;
     }
