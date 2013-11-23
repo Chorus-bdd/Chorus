@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -135,6 +136,7 @@ public class ChorusInterpreter {
         
         HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport);
         handlerManager.createFeatureScopedHandlers();
+        handlerManager.processStartOfFeature();
 
         log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
@@ -158,18 +160,18 @@ public class ChorusInterpreter {
             );
         }
 
-        handlerManager.cleanupAtFeatureEnd();
+        handlerManager.processEndOfFeature();
     }
 
     private void processScenario(ExecutionToken executionToken, HandlerManager handlerManager, ScenarioToken scenario, boolean skip) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
-
         log.info(String.format("Processing scenario: %s", scenario.getName()));
 
         //reset the ChorusContext for the scenario
         ChorusContext.destroy();
 
         List<Object> handlerInstances = handlerManager.getOrCreateHandlersForScenario();
+        handlerManager.processStartOfScope(HandlerScope.SCENARIO, handlerInstances);
 
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
@@ -183,8 +185,7 @@ public class ChorusInterpreter {
             updateExecutionStats(executionToken, scenario);
         }
 
-        handlerManager.cleanupAtScenarioEnd(handlerInstances);
-
+        handlerManager.processEndOfScope(HandlerScope.SCENARIO, handlerInstances);
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 

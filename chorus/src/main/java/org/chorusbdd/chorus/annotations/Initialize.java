@@ -35,14 +35,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate a destroy method on a feature Handler
+ * Used to annotate an initialize method on a feature Handler
  * <p/>
- * Created by: Steve Neal
- * Date: 29/09/11
+ * Created by: Nick Ebbutt
+ * Date: 23/11/13
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Destroy {
+public @interface Initialize {
     
     HandlerScope scope() default HandlerScope.SCENARIO;
 }

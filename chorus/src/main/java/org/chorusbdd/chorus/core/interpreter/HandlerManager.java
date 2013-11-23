@@ -1,26 +1,21 @@
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
- * User: nick
+ * User: Nick Ebbutt
  * Date: 18/11/13
  * Time: 22:20
- * To change this template use File | Settings | File Templates.
+ *
+ * Manage the creation of Handler instances while a feature and its scenarios are run
  */
 public class HandlerManager {
 
@@ -66,43 +61,7 @@ public class HandlerManager {
             }
         }
         return handlerInstances;
-//        
-//        
-//        //CREATE THE HANDLER INSTANCES
-//        if (handlerInstances.size() == 0) {
-//            log.debug("Creating handler instances for feature " + feature);
-//            //first scenario in file, so initialise the handler instances in order of precedence
-//            for (Class handlerClass : orderedHandlerClasses) {
-//                //create a new SCENARIO scoped handler
-//                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-//                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-//                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
-//                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-//                }
-//                else { //one of UNMANAGED or FEATURE
-//                    Object handler = featureScopedHandlers.get(handlerClass);
-//                    if (handler == null) {
-//                        handler = createAndInitHandlerInstance(handlerClass, feature);
-//                        log.debug("Creating new unmanaged handler: " + handlerAnnotation.value());
-//                        featureScopedHandlers.put(handlerClass, handler);
-//                    }
-//                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-//                }
-//            }
-//        } else {
-//            //replace scenario scoped handlers if not first scenario in feature file
-//            for (int i = 0; i < handlerInstances.size(); i++) {
-//                Object handler = handlerInstances.get(i);
-//                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-//                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-//                    handlerInstances.remove(i);
-//                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), feature));
-//                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
-//                }
-//            }
-//        }
     }
-
 
     private Object createAndInitHandlerInstance(Class handlerClass, FeatureToken featureToken) throws Exception {
         Object featureInstance = handlerClass.newInstance();
@@ -155,42 +114,89 @@ public class HandlerManager {
         }
     }
 
-    public void cleanupAtScenarioEnd(List<Object> handlerInstances) throws Exception {
-        //CLEAN UP SCENARIO SCOPED HANDLERS
-        for (int i = 0; i < handlerInstances.size(); i++) {
-            Object handler = handlerInstances.get(i);
+
+    public void processStartOfFeature() throws Exception {
+        processStartOfScope(HandlerScope.FEATURE, featureScopedHandlers.values());
+    }
+
+    /**
+     * Scope is starting, perform the required processing on the supplied handlers.
+     */
+    public void processStartOfScope(HandlerScope scopeStarting, Iterable<Object> handlerInstances) throws Exception {
+        for (Object handler : handlerInstances) {
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                cleanupHandler(handler);
-                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
+            HandlerScope handlerScope = handlerAnnotation.scope();
+
+            runLifecycleMethods(handler, handlerScope, scopeStarting, false);
+        }    
+    }
+
+    public void processEndOfFeature() throws Exception {
+        processEndOfScope( HandlerScope.FEATURE, featureScopedHandlers.values());
+    }
+    
+    /**
+     * Scope is ending, perform the required processing on the supplied handlers.
+     */
+    public void processEndOfScope(HandlerScope scopeEnding, Iterable<Object> handlerInstances) throws Exception {
+        for (Object handler : handlerInstances) {
+            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
+            HandlerScope handlerScope = handlerAnnotation.scope();
+
+            runLifecycleMethods(handler, handlerScope, scopeEnding, true);
+
+            //dispose handler instances with a scope which matches the scopeEnding
+            if (handlerScope == scopeEnding) {
+                disposeHandler(handler, scopeEnding);
             }
         }
     }
+
+    /**
+     * Run any lifecycle methods which match the targetMethodScope (.e.g at end of SCENARIO, run SCENARIO scoped methods)
+     */
+    private void runLifecycleMethods(Object handler, HandlerScope handlerScope, HandlerScope targetMethodScope, boolean isDestroy) throws Exception {
+        if ( handlerScope != HandlerScope.UNMANAGED) { 
+           //HandlerScope.UNMANAGED handlers do not run destroy or init methods
+            String description = isDestroy ? "@Destroy" : "@Initialize";
+            log.debug("Running " + description + " methods for Handler " + handler);
     
-    public void cleanupAtFeatureEnd() {
-        //TODO here we should clean up any handlers at feature scope, when HandlerScope.FEATURE is supported
-    }
-
-    private void cleanupHandler(Object handler) throws Exception {
-        log.debug("Cleaning Up Handler " + handler);
-        springContextSupport.dispose(handler);
-
-        Class<?> handlerClass = handler.getClass();
-        Handler handlerAnnotation = handlerClass.getAnnotation(Handler.class);
-        if ( handlerAnnotation.scope() != HandlerScope.UNMANAGED ) {
+            Class<?> handlerClass = handler.getClass();
             for (Method method : handlerClass.getMethods()) {
                 if (method.getParameterTypes().length == 0) {
-                    if (method.getAnnotation(Destroy.class) != null) {
-                        log.trace("Found Destroy annotation on handler method " + method + " will invoke");
+
+                    HandlerScope methodScope = getMethodScope(isDestroy, method);
+                    
+                    //if this lifecycle method is for the correct cope, then run it
+                    if (methodScope != null && methodScope == targetMethodScope) {
+                        log.trace("Found " + description + " annotation with scope " + targetMethodScope + " on handler method " + method + " and will now invoke it");
                         try {
                             method.invoke(handler);
                         } catch ( Throwable t) {
-                            log.warn("Exception when calling @Destroy method [" + method + "] on handler " + handlerClass, t);
+                            log.warn("Exception when calling " + description + " method [" + method + "] with scope " + targetMethodScope + " on handler " + handlerClass, t);
                         }
                     }
                 }
             }
         }
+    }
+
+    //return the scope of a lifecycle method, or null if the method is not a lifecycle method
+    private HandlerScope getMethodScope(boolean isDestroy, Method method) {
+        HandlerScope methodScope = null;
+        if ( isDestroy ) {
+            Destroy annotation = method.getAnnotation(Destroy.class);
+            methodScope = annotation != null ? annotation.scope() : null;
+        } else {
+            Initialize annotation = method.getAnnotation(Initialize.class);
+            methodScope = annotation != null ? annotation.scope() : null;
+        }
+        return methodScope;
+    }
+
+    private void disposeHandler(Object handler, HandlerScope scope) {
+        log.debug("Disposing handler " + handler + " class " + handler.getClass() + " with scope " + scope);
+        springContextSupport.dispose(handler);
     }
 
 }
