@@ -170,6 +170,7 @@ public class ChorusInterpreter {
         //reset the ChorusContext for the scenario
         ChorusContext.destroy();
 
+        handlerManager.setCurrentScenario(scenario);
         List<Object> handlerInstances = handlerManager.getOrCreateHandlersForScenario();
         handlerManager.processStartOfScope(HandlerScope.SCENARIO, handlerInstances);
 
