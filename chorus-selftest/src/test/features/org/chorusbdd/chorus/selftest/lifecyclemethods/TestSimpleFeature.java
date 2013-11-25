@@ -27,33 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.featurestartandend.startandfailwithtags;
+package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 14/06/12
- * Time: 09:21
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-@Handler("Feature Start With Tags")
-public class FeatureStartWithTags {
+public class TestSimpleFeature extends AbstractInterpreterTest {
 
-    @Step("I run feature start")
-    public void featureStart() {
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/simplefeature";
 
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    @Step("I run a scenario")
-    public void aScenario() {
-
-    }
-
-    @Step("I run feature end")
-    public void featureEnd() {
-
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }
