@@ -37,9 +37,9 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestSimpleFeature extends AbstractInterpreterTest {
+public class TestLifecycleMethods extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/simplefeature";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/lifecyclemethods";
 
     final int expectedExitCode = 0;  //success
 

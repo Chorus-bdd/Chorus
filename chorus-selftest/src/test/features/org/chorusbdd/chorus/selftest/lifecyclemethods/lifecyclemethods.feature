@@ -1,9 +1,17 @@
-Feature: Simple Feature
+Uses: Lifecycle Methods Scenario Scoped
+Uses: Lifecycle Methods Feature Scoped
 
-  Test that Chorus can run a very simple feature, with a single Scenario,
-  the steps pass and the exit code is zero (success)
+Feature: Lifecycle Methods
 
+  Test that lifecycle methods are called correctly on both feature and scenario scoped handlers
+  The feature start and end count as handlers and trigger scenario start and end lifecycle callbacks
+  
+  Feature-Start: 
+    Given I can run a feature start scenario
+  
   Scenario: Simple Scenario
-    Given Chorus is working properly
-    Then I can run a feature with a single scenario
+    Check Chorus is working properly
+    
+  Feature-End:
+    Given I can run a feature end scenario
 

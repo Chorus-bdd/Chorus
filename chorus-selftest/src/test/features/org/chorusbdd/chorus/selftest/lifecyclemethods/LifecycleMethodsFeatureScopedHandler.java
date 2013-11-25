@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,18 +38,20 @@ import org.chorusbdd.chorus.annotations.Step;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Lifecycle Methods Scenario Scoped")
-public class LifecycleMethodsFeatureScopedHandler {
+@Handler(value = "Lifecycle Methods Feature Scoped", scope = HandlerScope.FEATURE)
+public class LifecycleMethodsFeatureScopedHandler extends LifecycleMethodsAbstractSuperclassHandler {
+    
+    static int instanceCreationCount;
 
-    @Step("Chorus is working properly")
-    public void isWorkingProperly() {
-
+    public LifecycleMethodsFeatureScopedHandler() {
+        super("Feature Scoped Handler");
+        instanceCreationCount++;
     }
 
-    @Step("I can run a feature with a single scenario")
-    public void canRunAFeature() {
-
+    @Override
+    int getInstanceCreationCount() {
+        return instanceCreationCount;
     }
-
-
 }
+
+   

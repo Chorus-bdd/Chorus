@@ -30,6 +30,8 @@
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Initialize;
 import org.chorusbdd.chorus.annotations.Step;
 
 /**
@@ -39,17 +41,17 @@ import org.chorusbdd.chorus.annotations.Step;
  * Time: 09:21
  */
 @Handler("Lifecycle Methods Scenario Scoped")
-public class LifecycleMethodsScenarioScopedHandler {
+public class LifecycleMethodsScenarioScopedHandler extends LifecycleMethodsAbstractSuperclassHandler {
 
-    @Step("Chorus is working properly")
-    public void isWorkingProperly() {
+    static int instanceCreationCount;
 
+    public LifecycleMethodsScenarioScopedHandler() {
+        super("Scenario Scoped Handler");
+        instanceCreationCount++;
     }
 
-    @Step("I can run a feature with a single scenario")
-    public void canRunAFeature() {
-
+    @Override
+    int getInstanceCreationCount() {
+        return instanceCreationCount;
     }
-
-
 }
