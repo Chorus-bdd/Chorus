@@ -26,22 +26,26 @@ public abstract class LifecycleMethodsAbstractSuperclassHandler {
     @Initialize(scope = HandlerScope.FEATURE)
     public void initFeature() {
         initFeatureCount++;
+        ChorusOut.out.println("Feature Init for Feature scoped handler ---->");
+        ChorusOut.out.print(toString());
+    }
+
+    @Destroy(scope = HandlerScope.FEATURE)
+    public void destroyFeature() {
+        destroyFeatureCount++;
+        ChorusOut.out.println("Feature Destroy for Feature scoped handler ---->");
+        ChorusOut.out.print(toString());
     }
 
     @Initialize(scope = HandlerScope.SCENARIO)
     public void initScenario() {
         initScenarioCount++;
     }
-
-    @Destroy(scope = HandlerScope.FEATURE)
-    public void destroyFeature() {
-        destroyFeatureCount++;
-        ChorusOut.out.print(toString());
-    }
-
+    
     @Destroy(scope = HandlerScope.SCENARIO)
     public void destroyScenario() {
         destroyScenarioCount++;
+        ChorusOut.out.print(toString());
     }
 
     public String toString() {
@@ -52,7 +56,7 @@ public abstract class LifecycleMethodsAbstractSuperclassHandler {
                 ", initScenarioCount=" + initScenarioCount + "\n" +
                 ", destroyFeatureCount=" + destroyFeatureCount + "\n" +
                 ", destroyScenarioCount=" + destroyScenarioCount + "\n" +
-                '}';
+                "}\n";
     }
 
     abstract int getInstanceCreationCount();

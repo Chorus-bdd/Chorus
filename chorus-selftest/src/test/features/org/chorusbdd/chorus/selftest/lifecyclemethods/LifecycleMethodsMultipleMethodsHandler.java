@@ -29,7 +29,10 @@
  */
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.annotations.Destroy;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Initialize;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
@@ -38,14 +41,17 @@ import org.chorusbdd.chorus.util.logging.ChorusOut;
  * User: Nick Ebbutt
  * Date: 14/06/12
  * Time: 09:21
+ * 
+ * More than one init scenario and init feature method
+ * 
  */
-@Handler("Lifecycle Methods Scenario Scoped")
-public class LifecycleMethodsScenarioScopedHandler extends LifecycleMethodsAbstractSuperclassHandler {
+@Handler(value = "Lifecycle Methods Multiple Methods", scope=HandlerScope.FEATURE)
+public class LifecycleMethodsMultipleMethodsHandler extends LifecycleMethodsAbstractSuperclassHandler {
 
     static int instanceCreationCount;
 
-    public LifecycleMethodsScenarioScopedHandler() {
-        super("Scenario Scoped Handler");
+    public LifecycleMethodsMultipleMethodsHandler() {
+        super("Multiple Methods Handler");
         instanceCreationCount++;
     }
 
@@ -55,16 +61,13 @@ public class LifecycleMethodsScenarioScopedHandler extends LifecycleMethodsAbstr
     }
 
     @Initialize(scope = HandlerScope.SCENARIO)
-    public void initScenario() {
+    public void initScenarioTwo() {
         initScenarioCount ++;
-        ChorusAssert.assertEquals(1, initScenarioCount);
     }
 
-    @Destroy(scope = HandlerScope.SCENARIO)
-    public void destroyScenario() {
-        destroyScenarioCount++;
-        ChorusAssert.assertEquals(1, destroyScenarioCount);
-        
-        ChorusOut.out.print(toString());
+    @Initialize(scope = HandlerScope.FEATURE)
+    public void initFeatureTwo() {
+        initFeatureCount++;
     }
+
 }

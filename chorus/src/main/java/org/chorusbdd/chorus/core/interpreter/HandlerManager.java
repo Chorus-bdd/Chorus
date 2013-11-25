@@ -128,7 +128,7 @@ public class HandlerManager {
             log.debug("Running " + description + " methods for Handler " + handler);
     
             Class<?> handlerClass = handler.getClass();
-            for (Method method : handlerClass.getMethods()) {
+            for (Method method : handlerClass.getMethods()) {   //getMethods() includes inherited methods
                 if (method.getParameterTypes().length == 0) {
 
                     HandlerScope methodScope = getMethodScope(isDestroy, method);

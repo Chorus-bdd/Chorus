@@ -38,9 +38,8 @@ package org.chorusbdd.chorus.annotations;
  * It may be useful for FEATURE scoped handlers to provide SCENARIO scoped initialization and destroy methods, 
  * if they wish to perform some kind of initialization or cleanup before or after each scenario runs. 
  * 
- * For a SCENARIO scoped handler, setting a @Initialize or @Destroy method to @FEATURE scope is probably not greatly useful
- * In this case, a new handler will be created for each scenario, but the initialize method would only run on the first 
- * instance created during the feature, and the destroy on the last.
+ * Setting a @Initialize or @Destroy method to @FEATURE scope on a SCENARIO scoped handler is not supported presently,
+ * and methods annotated in this manner will not be called.
  * 
  * The default scope in all cases is SCENARIO, which ensures that each scenario tested will have a new instance of the
  * handler to work with, and hence all handler state will be cleared down between scenarios. Initialization and Destroy

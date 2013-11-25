@@ -1,5 +1,6 @@
 Uses: Lifecycle Methods Scenario Scoped
 Uses: Lifecycle Methods Feature Scoped
+Uses: Lifecycle Methods Multiple Methods
 
 Feature: Lifecycle Methods
 
