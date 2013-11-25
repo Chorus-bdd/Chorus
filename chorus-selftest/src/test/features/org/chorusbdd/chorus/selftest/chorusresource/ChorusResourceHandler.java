@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.File;
@@ -55,6 +56,9 @@ public class ChorusResourceHandler extends AbstractHandler {
     @ChorusResource("feature.file")
     File featureFile;
     
+    @ChorusResource("scenario.token")
+    ScenarioToken scenarioToken;
+    
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
 
@@ -76,6 +80,11 @@ public class ChorusResourceHandler extends AbstractHandler {
     public void featureFileIsSet() {
         ChorusAssert.assertNotNull(featureFile);
         ChorusAssert.assertTrue("is file", featureFile.isFile());
+    }
+    
+    @Step("the scenario.token resource is set to (.*)")
+    public void checkScenarioToken(String name) {
+        ChorusAssert.assertEquals(name, scenarioToken.getName());
     }
 
 }

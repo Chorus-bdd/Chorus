@@ -4,6 +4,7 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.File;
@@ -24,6 +25,9 @@ public class AbstractHandler {
     @ChorusResource("feature.file")
     File featureFile;
 
+    @ChorusResource("scenario.token")
+    ScenarioToken scenarioToken;
+    
     @Step("the abstract superclass feature.token resource is set correctly")
     public void abstractFeatureTokenIsSet() {
         ChorusAssert.assertNotNull(featureToken);
@@ -41,4 +45,10 @@ public class AbstractHandler {
         ChorusAssert.assertNotNull(featureFile);
         ChorusAssert.assertTrue("is file", featureFile.isFile());
     }
+
+    @Step("the abstract superclass scenario.token resource is set to (.*)")
+    public void abstractCheckScenarioToken(String name) {
+        ChorusAssert.assertEquals(name, scenarioToken.getName());
+    }
+
 }
