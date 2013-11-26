@@ -1,160 +1,147 @@
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
- * User: nick
+ * User: Nick Ebbutt
  * Date: 18/11/13
  * Time: 22:20
- * To change this template use File | Settings | File Templates.
+ *
+ * Manage the creation of Handler instances while a feature and its scenarios are run
  */
 public class HandlerManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
     
-    private final HashMap<Class, Object> unmanagedHandlerInstances = new HashMap<Class, Object>();
+    //retain ordering of handlers 
+    private final LinkedHashMap<Class, Object> featureScopedHandlers = new LinkedHashMap<Class, Object>();
+    
     private final FeatureToken feature;
     private final List<Class> orderedHandlerClasses;
     private final SpringContextSupport springContextSupport;
+    private ScenarioToken currentScenario;
 
     public HandlerManager(FeatureToken feature, List<Class> orderedHandlerClasses, SpringContextSupport springContextSupport) {
         this.feature = feature;
         this.orderedHandlerClasses = orderedHandlerClasses;
         this.springContextSupport = springContextSupport;
     }
-
-    public List<Object> getAndCreateHandlers() throws Exception {
-        List<Object> handlerInstances = new ArrayList<Object>();
-        //CREATE THE HANDLER INSTANCES
-        if (handlerInstances.size() == 0) {
-            log.debug("Creating handler instances for feature " + feature);
-            //first scenario in file, so initialise the handler instances in order of precedence
-            for (Class handlerClass : orderedHandlerClasses) {
-                //create a new SCENARIO scoped handler
-                Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-                    log.debug("Created new scenario scoped handler: " + handlerAnnotation.value());
-                }
-                //or (re)use an UNMANAGED scoped handlers
-                else if (handlerAnnotation.scope() == HandlerScope.UNMANAGED ) {
-                    Object handler = unmanagedHandlerInstances.get(handlerClass);
-                    if (handler == null) {
-                        handler = createAndInitHandlerInstance(handlerClass, feature);
-                        unmanagedHandlerInstances.put(handlerClass, handler);
-                        log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
-                    }
-                    handlerInstances.add(createAndInitHandlerInstance(handlerClass, feature));
-                }
+    
+    public void createFeatureScopedHandlers() throws Exception {
+        for (Class handlerClass : orderedHandlerClasses) {
+            //create a new SCENARIO scoped handler
+            Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
+            if (handlerAnnotation.scope() != HandlerScope.SCENARIO) { //feature or unmanaged
+                Object handler = createAndInitHandlerInstance(handlerClass);
+                featureScopedHandlers.put(handlerClass, handler);
+                log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
             }
-        } else {
-            //replace scenario scoped handlers if not first scenario in feature file
-            for (int i = 0; i < handlerInstances.size(); i++) {
-                Object handler = handlerInstances.get(i);
-                Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-                if (handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                    handlerInstances.remove(i);
-                    handlerInstances.add(i, createAndInitHandlerInstance(handler.getClass(), feature));
-                    log.debug("Replaced scenario scoped handler: " + handlerAnnotation.value());
-                }
+        }    
+    }
+
+    public void setCurrentScenario(ScenarioToken currentScenario) {
+        this.currentScenario = currentScenario;
+    }
+    
+    public List<Object> getOrCreateHandlersForScenario() throws Exception {
+        List<Object> handlerInstances = new ArrayList<Object>();
+        
+        for ( Class handlerClass : orderedHandlerClasses ) {
+            Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
+            if ( handlerAnnotation.scope() != HandlerScope.SCENARIO ) {
+                Object handler = featureScopedHandlers.get(handlerClass);
+                assert(handler != null); //must have been created during createFeatureScopedHandlers
+                log.debug("Adding feature scoped handler " + handler + " class " + handlerClass);
+                handlerInstances.add(handler);
+            } else {
+                log.debug("Creating scenario scoped handler " + handlerClass);
+                Object handler = createAndInitHandlerInstance(handlerClass);
+                handlerInstances.add(handler);
             }
         }
         return handlerInstances;
     }
 
-
-    private Object createAndInitHandlerInstance(Class handlerClass, FeatureToken featureToken) throws Exception {
-        Object featureInstance = handlerClass.newInstance();
-        log.trace("Created handler class " + handlerClass + " instance " + featureInstance);
-        springContextSupport.injectSpringResources(featureInstance, featureToken);
-        injectInterpreterResources(featureInstance, featureToken);
-        return featureInstance;
+    private Object createAndInitHandlerInstance(Class handlerClass) throws Exception {
+        Object handler = handlerClass.newInstance();
+        log.debug("Created handler class " + handlerClass + " instance " + handler);
+        injectSpringResources(handler);
+        return handler;
     }
 
-    private void injectInterpreterResources(Object handler, FeatureToken featureToken) {
-        Class<?> featureClass = handler.getClass();
-        
-       
-        List<Field> allFields = new ArrayList<Field>();
-        addAllPublicFields(featureClass, allFields);
-        log.trace("Now examining handler fields for ChorusResource annotation " + allFields);
-        for (Field field : allFields) {
-            ChorusResource a = field.getAnnotation(ChorusResource.class);
-            if (a != null) {
-                String resourceName = a.value();
-                log.debug("Found ChorusResource annotation " + resourceName + " on field " + field);
-                field.setAccessible(true);
-                Object o = null;
-                if ("feature.file".equals(resourceName)) {
-                    o = featureToken.getFeatureFile();
-                } else if ("feature.dir".equals(resourceName)) {
-                    o = featureToken.getFeatureFile().getParentFile();
-                } else if ("feature.token".equals(resourceName)) {
-                    o = featureToken;
-                }
-                if (o != null) {
-                    try {
-                        field.set(handler, o);
-                    } catch (IllegalAccessException e) {
-                        log.error("Failed to set @ChorusResource (" + resourceName + ") with object of type: " + o.getClass(), e);
-                    }
-                } else {
-                    log.debug("Set field to value " + o);
-                }
-            }
-        }
+
+    public void processStartOfFeature() throws Exception {
+        processStartOfScope(HandlerScope.FEATURE, featureScopedHandlers.values());
     }
 
-    private void addAllPublicFields(Class<?> featureClass, List<Field> allFields) {
-        allFields.addAll(Arrays.asList(featureClass.getDeclaredFields()));
-        
-        Class s = featureClass.getSuperclass();
-        if ( s != Object.class ) {
-            addAllPublicFields(s, allFields);
-        }
-    }
-
-    public void cleanupHandlers(List<Object> handlerInstances, boolean lastScenario) throws Exception {
-        //CLEAN UP SCENARIO SCOPED HANDLERS
-        for (int i = 0; i < handlerInstances.size(); i++) {
-            Object handler = handlerInstances.get(i);
+    /**
+     * Scope is starting, perform the required processing on the supplied handlers.
+     */
+    public void processStartOfScope(HandlerScope scopeStarting, Iterable<Object> handlerInstances) throws Exception {
+        for (Object handler : handlerInstances) {
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            if (lastScenario || handlerAnnotation.scope() == HandlerScope.SCENARIO) {
-                cleanupHandler(handler);
-                log.debug("Cleaned up scenario handler: " + handlerAnnotation.value());
+            HandlerScope handlerScope = handlerAnnotation.scope();
+            
+            if ( scopeStarting == HandlerScope.SCENARIO) {
+                injectResourceFields(handler);
+            }
+            
+            runLifecycleMethods(handler, handlerScope, scopeStarting, false);
+        }    
+    }
+
+    public void processEndOfFeature() throws Exception {
+        processEndOfScope( HandlerScope.FEATURE, featureScopedHandlers.values());
+    }
+    
+    /**
+     * Scope is ending, perform the required processing on the supplied handlers.
+     */
+    public void processEndOfScope(HandlerScope scopeEnding, Iterable<Object> handlerInstances) throws Exception {
+        for (Object handler : handlerInstances) {
+            Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
+            HandlerScope handlerScope = handlerAnnotation.scope();
+
+            runLifecycleMethods(handler, handlerScope, scopeEnding, true);
+
+            //dispose handler instances with a scope which matches the scopeEnding
+            if (handlerScope == scopeEnding) {
+                disposeSpringResources(handler, scopeEnding);
             }
         }
     }
 
-    private void cleanupHandler(Object handler) throws Exception {
-        log.debug("Cleaning Up Handler " + handler);
-        springContextSupport.dispose(handler);
-
-        Class<?> handlerClass = handler.getClass();
-        Handler handlerAnnotation = handlerClass.getAnnotation(Handler.class);
-        if ( handlerAnnotation.scope() != HandlerScope.UNMANAGED ) {
-            for (Method method : handlerClass.getMethods()) {
+    /**
+     * Run any lifecycle methods which match the targetMethodScope (.e.g at end of SCENARIO, run SCENARIO scoped methods)
+     */
+    private void runLifecycleMethods(Object handler, HandlerScope handlerScope, HandlerScope targetMethodScope, boolean isDestroy) throws Exception {
+        if ( handlerScope != HandlerScope.UNMANAGED) { 
+           //HandlerScope.UNMANAGED handlers do not run destroy or init methods
+            String description = isDestroy ? "@Destroy" : "@Initialize";
+            log.debug("Running " + description + " methods for Handler " + handler);
+    
+            Class<?> handlerClass = handler.getClass();
+            for (Method method : handlerClass.getMethods()) {   //getMethods() includes inherited methods
                 if (method.getParameterTypes().length == 0) {
-                    if (method.getAnnotation(Destroy.class) != null) {
-                        log.trace("Found Destroy annotation on handler method " + method + " will invoke");
+
+                    HandlerScope methodScope = getMethodScope(isDestroy, method);
+                    
+                    //if this lifecycle method is for the correct cope, then run it
+                    if (methodScope != null && methodScope == targetMethodScope) {
+                        log.trace("Found " + description + " annotation with scope " + targetMethodScope + " on handler method " + method + " and will now invoke it");
                         try {
                             method.invoke(handler);
                         } catch ( Throwable t) {
-                            log.warn("Exception when calling @Destroy method [" + method + "] on handler " + handlerClass, t);
+                            log.warn("Exception when calling " + description + " method [" + method + "] with scope " + targetMethodScope + " on handler " + handlerClass, t);
                         }
                     }
                 }
@@ -162,4 +149,81 @@ public class HandlerManager {
         }
     }
 
+    //return the scope of a lifecycle method, or null if the method is not a lifecycle method
+    private HandlerScope getMethodScope(boolean isDestroy, Method method) {
+        HandlerScope methodScope = null;
+        if ( isDestroy ) {
+            Destroy annotation = method.getAnnotation(Destroy.class);
+            methodScope = annotation != null ? annotation.scope() : null;
+        } else {
+            Initialize annotation = method.getAnnotation(Initialize.class);
+            methodScope = annotation != null ? annotation.scope() : null;
+        }
+        return methodScope;
+    }
+
+
+    private void injectSpringResources(Object handler) throws Exception {
+        log.debug("Injecting any spring resources for " + handler + " class " + handler.getClass());
+        springContextSupport.injectSpringResources(handler, feature);
+    }
+    
+    private void disposeSpringResources(Object handler, HandlerScope scope) {
+        log.debug("Disposing any spring resources for " + handler + " class " + handler.getClass() + " with scope " + scope);
+        springContextSupport.dispose(handler);
+    }
+
+
+    /**
+     * Here we set the values of any handler fields annotated with @ChorusResource
+     */
+    private void injectResourceFields(Object handler) {
+        Class<?> featureClass = handler.getClass();
+
+        List<Field> allFields = new ArrayList<Field>();
+        addAllPublicFields(featureClass, allFields);
+        log.trace("Now examining handler fields for ChorusResource annotation " + allFields);
+        for (Field field : allFields) {
+            setChrousResource(handler, field);
+        }
+    }
+
+    private void setChrousResource(Object handler, Field field) {
+        ChorusResource a = field.getAnnotation(ChorusResource.class);
+        if (a != null) {
+            String resourceName = a.value();
+            log.debug("Found ChorusResource annotation " + resourceName + " on field " + field);
+            field.setAccessible(true);
+            
+            Object o = null;
+            if ("feature.file".equals(resourceName)) {
+                o = feature.getFeatureFile();
+            } else if ("feature.dir".equals(resourceName)) {
+                o = feature.getFeatureFile().getParentFile();
+            } else if ("feature.token".equals(resourceName)) {
+                o = feature;
+            } else if ( "scenario.token".equals(resourceName)) {
+                o = currentScenario;    
+            }
+            
+            if (o != null) {
+                try {
+                    field.set(handler, o);
+                } catch (IllegalAccessException e) {
+                    log.error("Failed to set @ChorusResource (" + resourceName + ") with object of type: " + o.getClass(), e);
+                }
+            } else {
+                log.debug("Set field to value " + o);
+            }
+        }
+    }
+
+    private void addAllPublicFields(Class<?> featureClass, List<Field> allFields) {
+        allFields.addAll(Arrays.asList(featureClass.getDeclaredFields()));
+
+        Class s = featureClass.getSuperclass();
+        if ( s != Object.class ) {
+            addAllPublicFields(s, allFields);
+        }
+    }
 }

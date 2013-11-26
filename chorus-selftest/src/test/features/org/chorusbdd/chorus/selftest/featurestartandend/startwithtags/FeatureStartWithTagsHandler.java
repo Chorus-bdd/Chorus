@@ -27,55 +27,38 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.results;
+package org.chorusbdd.chorus.selftest.featurestartandend.startwithtags;
+
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
- * Represents the different outcomes of running a Step
- * Created by: Steve Neal
- * Date: 03/10/11
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public enum StepEndState {
+@Handler("Feature Start With Tags")
+public class FeatureStartWithTagsHandler {
+    
+    @Step("I run feature start")
+    public void featureStart() {
 
-    /**
-     * Initial state, before feature executes
-     * No step should be left in this state once a scenario has finished
-     */
-    NOT_RUN,
+    }
+
+    @Step("I run a background section for each scenario")
+    public void runBackground() {
+        
+    }
     
-    /**
-     * Step passed
-     */
-    PASSED,
-    
-    /**
-     * Step failed
-     */
-    FAILED,
-    
-    /**
-     * Steps which have been annotated to indicate handler implementation is not yet provided.
-     * Pending steps do not fail the tests, whereas undefined steps do
-     */
-    PENDING,
-    
-    /**
-     * An error or pending of a previous step will cause subsequent steps to be skipped
-     * All steps may be skipped (== scenario skipped) if a feature background failed
-     */
-    SKIPPED,
-    
-    /**
-     * Steps for which no handler method could be identified.
-     */
-    UNDEFINED,
-    
-    /**
-     * In a dry run we identify the handler methods but don't actually execute them
-     */
-    DRYRUN,
-    
-    /**
-     * If a scenario times out, the current step will finish with TIMEOUT state and subsequent will be SKIPPED
-     */
-    TIMEOUT
+    @Step("I run a scenario")
+    public void aScenario() {
+
+    }
+
+    @Step("I run feature end")
+    public void featureEnd() {
+
+    }
+
 }

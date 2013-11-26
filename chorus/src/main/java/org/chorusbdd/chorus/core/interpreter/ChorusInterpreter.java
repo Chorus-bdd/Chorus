@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.annotations.HandlerScope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -134,38 +135,62 @@ public class ChorusInterpreter {
         List<ScenarioToken> scenarios = feature.getScenarios();
         
         HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport);
+        handlerManager.createFeatureScopedHandlers();
+        handlerManager.processStartOfFeature();
 
         log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
             ScenarioToken scenario = iterator.next();
-            boolean isLastScenario = !iterator.hasNext();
 
+            //if the feature start scenario exists and failed we skip all but feature end scenario
+            boolean skip = 
+                    ! scenario.isFeatureStartScenario() && 
+                    ! scenario.isFeatureEndScenario() &&
+                    feature.isFeatureStartScenarioFailed();
+            
+            if ( skip ) {
+                log.warn("Skipping scenario " + scenario + " since " + KeyWord.START_FEATURE_SCENARIO_NAME + " failed");
+            }
+            
             processScenario(
                 executionToken,
                 handlerManager,
-                isLastScenario,
-                scenario
+                scenario,
+                skip
             );
         }
+
+        handlerManager.processEndOfFeature();
     }
 
-    private void processScenario(final ExecutionToken executionToken, HandlerManager handlerManager, boolean isLastScenario, final ScenarioToken scenario) throws Exception {
+    private void processScenario(ExecutionToken executionToken, HandlerManager handlerManager, ScenarioToken scenario, boolean skip) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
-
         log.info(String.format("Processing scenario: %s", scenario.getName()));
 
         //reset the ChorusContext for the scenario
         ChorusContext.destroy();
 
-        List<Object> handlerInstances = handlerManager.getAndCreateHandlers();
+        handlerManager.setCurrentScenario(scenario);
+        List<Object> handlerInstances = handlerManager.getOrCreateHandlersForScenario();
+        handlerManager.processStartOfScope(HandlerScope.SCENARIO, handlerInstances);
 
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
         log.debug("Running scenario steps for Scenario " + scenario);
-        stepProcessor.runSteps(executionToken, handlerInstances, scenario.getSteps(), false);
+        stepProcessor.runSteps(executionToken, handlerInstances, scenario.getSteps(), skip);
 
         stopTimeoutTasks();
 
+        //the special start or end scenarios don't count in the execution stats
+        if ( ! scenario.isStartOrEndScenario() ) {
+            updateExecutionStats(executionToken, scenario);
+        }
+
+        handlerManager.processEndOfScope(HandlerScope.SCENARIO, handlerInstances);
+        executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
+    }
+
+    private void updateExecutionStats(ExecutionToken executionToken, ScenarioToken scenario) {
         if ( scenario.getEndState() == EndState.PASSED ) {
             executionToken.incrementScenariosPassed();
         } else if ( scenario.getEndState() == EndState.PENDING) {
@@ -173,10 +198,6 @@ public class ChorusInterpreter {
         } else {
             executionToken.incrementScenariosFailed();
         }
-
-        handlerManager.cleanupHandlers(handlerInstances, isLastScenario);
-
-        executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 
     private void createTimeoutTasks(final Thread t) {

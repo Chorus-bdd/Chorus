@@ -38,7 +38,7 @@ package org.chorusbdd.chorus.core.interpreter;
  * Key words from Chorus' extended gherkin syntax
  */
 public enum KeyWord {
-
+    
     Uses("Uses:"),
     Configurations("Configurations:"),
     Feature("Feature:"),
@@ -46,7 +46,12 @@ public enum KeyWord {
     Scenario("Scenario:"),
     ScenarioOutline("Scenario-Outline:"),
     Examples("Examples:"),
-    StepMacro("Step-Macro:");
+    StepMacro("Step-Macro:"),
+    FeatureStart("Feature-Start:"),
+    FeatureEnd("Feature-End:");
+
+    public static final String START_FEATURE_SCENARIO_NAME = "Feature-Start";
+    public static final String FEATURE_END_SCENARIO_NAME = "Feature-End";
 
     private String keyWord;
 
@@ -60,5 +65,9 @@ public enum KeyWord {
 
     public boolean matchesLine(String line) {
         return line.startsWith(keyWord);
+    }
+    
+    public String toString() {
+        return keyWord;
     }
 }

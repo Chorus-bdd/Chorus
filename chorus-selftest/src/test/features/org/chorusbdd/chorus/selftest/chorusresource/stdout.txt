@@ -1,16 +1,22 @@
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/chorusresource/chorusresource.feature
 Feature: Chorus Resource                                                                             
-  Scenario: Test Chorus Resource Annotation
-Chorus --> INFO    - Processing scenario: Test Chorus Resource Annotation
+  Scenario: Test Chorus Resource
+Chorus --> INFO    - Processing scenario: Test Chorus Resource
     Given Chorus is working properly                                                         PASSED  
     Then the feature.token resource is set correctly                                         PASSED  
     And the feature.dir resource is set correctly                                            PASSED  
     And the feature.file resource is set correctly                                           PASSED  
+    And the scenario.token resource is set to Test Chorus Resource                           PASSED  
     And the abstract superclass feature.token resource is set correctly                      PASSED  
     And the abstract superclass feature.dir resource is set correctly                        PASSED  
     And the abstract superclass feature.file resource is set correctly                       PASSED  
+    And the abstract superclass scenario.token resource is set to Test Chorus Resource       PASSED  
+  Scenario: Test Chorus Resource scenario.token
+Chorus --> INFO    - Processing scenario: Test Chorus Resource scenario.token
+    And the scenario.token resource is set to Test Chorus Resource scenario.token            PASSED  
+    And the abstract superclass scenario.token resource is set to Test Chorus Resource scenario.tokenPASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:11) (passed:11) (failed:0) (undefined:0) (pending:0) (skipped:0)

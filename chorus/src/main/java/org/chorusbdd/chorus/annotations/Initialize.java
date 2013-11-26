@@ -27,55 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.results;
+package org.chorusbdd.chorus.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Represents the different outcomes of running a Step
- * Created by: Steve Neal
- * Date: 03/10/11
+ * Used to annotate an initialize method on a feature Handler
+ * <p/>
+ * Created by: Nick Ebbutt
+ * Date: 23/11/13
  */
-public enum StepEndState {
-
-    /**
-     * Initial state, before feature executes
-     * No step should be left in this state once a scenario has finished
-     */
-    NOT_RUN,
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Initialize {
     
-    /**
-     * Step passed
-     */
-    PASSED,
-    
-    /**
-     * Step failed
-     */
-    FAILED,
-    
-    /**
-     * Steps which have been annotated to indicate handler implementation is not yet provided.
-     * Pending steps do not fail the tests, whereas undefined steps do
-     */
-    PENDING,
-    
-    /**
-     * An error or pending of a previous step will cause subsequent steps to be skipped
-     * All steps may be skipped (== scenario skipped) if a feature background failed
-     */
-    SKIPPED,
-    
-    /**
-     * Steps for which no handler method could be identified.
-     */
-    UNDEFINED,
-    
-    /**
-     * In a dry run we identify the handler methods but don't actually execute them
-     */
-    DRYRUN,
-    
-    /**
-     * If a scenario times out, the current step will finish with TIMEOUT state and subsequent will be SKIPPED
-     */
-    TIMEOUT
+    HandlerScope scope() default HandlerScope.SCENARIO;
 }

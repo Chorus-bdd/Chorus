@@ -40,11 +40,24 @@ import java.lang.annotation.Target;
  * <tr>
  * <td>feature.dir</td>
  * <td>File</td>
- * <td>The directory of the feature file that the handler is handling</td>
+ * <td>The directory of the feature file which is currently being executed</td>
+ * </tr>
+ * <tr>
+ * <td>feature.file</td>
+ * <td>File</td>
+ * <td>The feature file which is currently being executed</td>
+ * </tr>
+ * <tr>
+ * <td>feature.token</td>
+ * <td>FeatureToken</td>
+ * <td>The FeatureToken with metadata relating to the current running feature</td>
+ * </tr>
+ *  <tr>
+ * <td>scenario.token</td>
+ * <td>ScenarioToken</td>
+ * <td>The ScenarioToken with metadata relating to the current running scenario</td>
  * </tr>
  * </table>
- * Created by: Steve Neal
- * Date: 07/11/11
  *
  * Sometimes handlers need to be provided with state from the running interpreter, so that they can locate resources relative
  * to the feature files, for example.
@@ -54,7 +67,8 @@ import java.lang.annotation.Target;
  *
  * feature.dir - annotation for a File field, interpreter will set this to the directory of the executing feature
  * feature.file - annotation for a File field, interpreter will set this to the executing feature file
- * feature.token - annotation for a FeatureToken field, interpreter will set this to the FeatureToken which contains the results and also details of the feature configuration
+ * feature.token - annotation for a FeatureToken field, interpreter will set this to the FeatureToken which contains details of the currently running Feature
+ * scenario.token - annotation for a ScenarioToken field, interpreter will set this to the ScenarioToken which contains details of the currently running Scenario
  *
  */
 @Target(ElementType.FIELD)

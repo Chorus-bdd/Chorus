@@ -29,13 +29,10 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.FeatureFileParser;
 import org.chorusbdd.chorus.core.interpreter.StepMacro;
-import org.chorusbdd.chorus.core.interpreter.StepMacroParser;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
-import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
@@ -94,29 +91,39 @@ public class FeatureListBuilder {
 
     private void filterFeaturesByScenarioTags(List<FeatureToken> features, ConfigProperties config) {
         log.debug("Filtering by scenario tags");
-        //FILTER THE FEATURES AND SCENARIOS
+        //FILTER THE FEATURES AND SCENARIOS (scenarios have also inherited any tags on the feature)
         if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
 
             List<String> tags = config.getValues(ChorusConfigProperty.TAG_EXPRESSION);
             String filterExpression = tagExpressionEvaluator.getFilterExpression(tags);
             
             for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
-                //remove all filtered scenarios from this feature
-                FeatureToken feature = fi.next();
-                for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
-                    ScenarioToken scenario = si.next();
-                    if (! tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
-                        log.debug("Removing scenario " + scenario + " which does not match tag " + filterExpression);
-                        si.remove();
-                    }
-                }
-                //if there are no scenarios left, then remove this feature from the list to run
-                if (feature.getScenarios().size() == 0) {
-                    log.debug("Will not run feature " + fi + " which does not have any scenarios which " +
-                            "passed the tag filter " + filterExpression);
-                    fi.remove();
-                }
+                removeFeatureIfNoScenariosMatchTags(filterExpression, fi);
             }
+        }
+    }
+
+    private void removeFeatureIfNoScenariosMatchTags(String filterExpression, Iterator<FeatureToken> fi) {
+        //remove all filtered scenarios from this feature
+        FeatureToken feature = fi.next();
+        int startOrEndCount = 0;
+        for (Iterator<ScenarioToken> si = feature.getScenarios().iterator(); si.hasNext(); ) {
+            ScenarioToken scenario = si.next();
+            if ( scenario.isFeatureStartScenario() || scenario.isFeatureEndScenario() ) {
+                log.trace("Not removing since this is a start or end feature scenario");
+                startOrEndCount ++;
+            } else if (! tagExpressionEvaluator.shouldRunScenarioWithTags(filterExpression, scenario.getTags())) {
+                log.debug("Removing scenario " + scenario + " which does not match tag " + filterExpression);
+                si.remove();
+            }
+        }
+
+        //if there are no scenarios left (apart from special start or end feature scenarios which are never tagged), 
+        //then remove this feature from the list to run
+        if (feature.getScenarios().size() == startOrEndCount) {
+            log.debug("Will not run feature " + fi + " which does not have any scenarios which " +
+                    "passed the tag filter " + filterExpression);
+            fi.remove();
         }
     }
 

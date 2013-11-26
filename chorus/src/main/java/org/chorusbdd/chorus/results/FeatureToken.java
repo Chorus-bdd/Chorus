@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.results;
 
+import org.chorusbdd.chorus.core.interpreter.KeyWord;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +124,16 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
 
     public void addScenario(ScenarioToken scenario) {
         scenarios.add(scenario);
+    }
+    
+    public boolean isFeatureStartScenarioFailed() {
+        boolean result = false;
+        if ( scenarios.size() > 0 ) {
+            ScenarioToken scenarioToken = scenarios.get(0);
+            result = scenarioToken.getName().equals(KeyWord.START_FEATURE_SCENARIO_NAME) && 
+                     scenarioToken.getEndState() == EndState.FAILED;
+        }
+        return result;
     }
 
     public void setUsesHandlers(String[] usesHandlers) {

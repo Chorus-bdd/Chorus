@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.results;
 
+import org.chorusbdd.chorus.core.interpreter.KeyWord;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -102,7 +104,19 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+    
+    public boolean isFeatureStartScenario() {
+        return KeyWord.START_FEATURE_SCENARIO_NAME.equals(name);
+    }
 
+    public boolean isFeatureEndScenario() {
+        return KeyWord.FEATURE_END_SCENARIO_NAME.startsWith(name);
+    }    
+    
+    public boolean isStartOrEndScenario() {
+        return isFeatureStartScenario() || isFeatureEndScenario();
+    }
+    
     public ScenarioToken deepCopy() {
         ScenarioToken copy = new ScenarioToken(getNextId());
         copy.name = this.name;
@@ -118,13 +132,14 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     public EndState getEndState() {
         EndState result = EndState.PASSED;
         for ( StepToken s : steps) {
-            if ( s.inOneOf(FAILED, UNDEFINED, TIMEOUT, NOT_RUN) ) {
+            //steps may all be skipped if a feature start scenario failed - the subsequent scenario should all fail
+            if ( s.inOneOf(FAILED, UNDEFINED, TIMEOUT, NOT_RUN, SKIPPED) ) {
                 result = EndState.FAILED;
                 break;
             } else if ( s.getEndState() == StepEndState.PENDING  ) {
                 result = EndState.PENDING;
                 break;
-            }
+            } 
         }
         return result;
     }
