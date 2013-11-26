@@ -3,18 +3,18 @@ Feature: Lifecycle Methods
 Chorus --> INFO    - No default handler found for Feature: (Lifecycle Methods), will use built-in handlers and Uses: statements
 Feature Init for Feature scoped handler ---->
 LifecycleMethodsFeatureScopedHandler{
-name='Multiple Methods Handler'
+name='Feature Scoped Handler'
 , instanceCreationCount=1
-, initFeatureCount=2
+, initFeatureCount=1
 , initScenarioCount=0
 , destroyFeatureCount=0
 , destroyScenarioCount=0
 }
 Feature Init for Feature scoped handler ---->
 LifecycleMethodsFeatureScopedHandler{
-name='Feature Scoped Handler'
+name='Multiple Methods Handler'
 , instanceCreationCount=1
-, initFeatureCount=1
+, initFeatureCount=2
 , initScenarioCount=0
 , destroyFeatureCount=0
 , destroyScenarioCount=0
@@ -108,19 +108,19 @@ name='Multiple Methods Handler'
 }
 Feature Destroy for Feature scoped handler ---->
 LifecycleMethodsFeatureScopedHandler{
-name='Multiple Methods Handler'
+name='Feature Scoped Handler'
 , instanceCreationCount=1
-, initFeatureCount=2
-, initScenarioCount=6
+, initFeatureCount=1
+, initScenarioCount=3
 , destroyFeatureCount=1
 , destroyScenarioCount=3
 }
 Feature Destroy for Feature scoped handler ---->
 LifecycleMethodsFeatureScopedHandler{
-name='Feature Scoped Handler'
+name='Multiple Methods Handler'
 , instanceCreationCount=1
-, initFeatureCount=1
-, initScenarioCount=3
+, initFeatureCount=2
+, initScenarioCount=6
 , destroyFeatureCount=1
 , destroyScenarioCount=3
 }

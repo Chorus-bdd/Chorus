@@ -22,7 +22,9 @@ public class HandlerManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
     
-    private final HashMap<Class, Object> featureScopedHandlers = new HashMap<Class, Object>();
+    //retain ordering of handlers 
+    private final LinkedHashMap<Class, Object> featureScopedHandlers = new LinkedHashMap<Class, Object>();
+    
     private final FeatureToken feature;
     private final List<Class> orderedHandlerClasses;
     private final SpringContextSupport springContextSupport;
