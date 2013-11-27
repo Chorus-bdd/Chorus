@@ -29,18 +29,42 @@
  */
 package org.chorusbdd.chorus.handlers.choruscontext;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
  * Created by: Steve Neal
  * Date: 03/11/11
  */
-@Handler("Chorus Context")
+@Handler(value = "Chorus Context", scope= HandlerScope.FEATURE)
 public class ChorusContextHandler {
+
+    @ChorusResource("scenario.token")
+    ScenarioToken scenarioToken;
+
+    //store context variables from the feature start section and use these to seed each scenario
+    private HashMap<String, Object> featureStartVariables = new HashMap<String, Object>();
+
+    //when the special Feature-Start: scenario ends we preserve the variables in the context and use them to seed
+    //the context for each of the scenarios.
+    @Destroy(scope = HandlerScope.SCENARIO)
+    public void captureFeatureStartVariablesOnFeatureStartEnd() {
+        if ( scenarioToken.isFeatureStartScenario() ) {
+            featureStartVariables.putAll(ChorusContext.getContext());
+        }
+    }
+
+    @Initialize(scope = HandlerScope.SCENARIO)
+    public void initializeWithFeatureStartVariables() {
+        ChorusContext.getContext().putAll(featureStartVariables);
+    }
 
     @Step("the context has no values in it")
     public void contextIsEmpty() {
