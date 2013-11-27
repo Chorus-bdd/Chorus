@@ -2,6 +2,16 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>1.6.0</versionNumber>
+        <comment>A major release with some significant new features. Backwards compatible with 1.5.x</comment>
+        <change desc="Add support for Feature-Start: and Feature-End: scenarios"/>
+        <change desc="Add support for @ChorusResource(scenario.token)"/>
+        <change desc="Add a HandlerScope.FEATURE for handlers which get created once per feature and are reused during scenarios"/>
+        <change desc="Introduce an @Initialize annotation for handler initialization lifecycle methods"/>
+        <change desc="@Initialize and @Destroy methods on handlers can be scoped to HandlerScope.FEATURE or HandlerScope.SCENARIO"/>
+        <change desc="ChorusContext variables set during Feature-Start: are made available to all scenarios"/>
+    </version>
+    <version>
         <versionNumber>1.5.4</versionNumber>
         <comment>Support extra characters in step macro parameter names and fix an issue with @PassesWithin under jdk 1.5</comment>
         <change desc="Allow - and _ characters within step macro parameters"/>
