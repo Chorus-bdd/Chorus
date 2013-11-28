@@ -29,10 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -52,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  * Created by: Steve Neal
  * Date: 07/11/11
  */
-@Handler("Processes")
+@Handler(value = "Processes", scope= HandlerScope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler {
 
@@ -200,12 +197,16 @@ public class ProcessesHandler {
 
     @Step(".*wait for (?:the process )?(?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*?")
     public void waitForProcessToTerminate(String processAlias) {
-        String configName = getConfigNameForAlias(processAlias);
-        ProcessesConfig c = getProcessesConfig(configName);
+        ProcessesConfig c = getConfigForAlias(processAlias);
         int waitTime = c.getTerminateWaitTime();
         waitForProcessToTerminate(processAlias, waitTime);
     }
-    
+
+    private ProcessesConfig getConfigForAlias(String processAlias) {
+        String configName = getConfigNameForAlias(processAlias);
+        return getProcessesConfig(configName);
+    }
+
     @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
     public void readLineFromProcess(String pattern, String processAlias) {
         ChorusProcess p = getAndCheckProcessByAlias(processAlias);
@@ -298,17 +299,29 @@ public class ProcessesHandler {
        }
    }
 
-    @Destroy
+    @Destroy(scope=HandlerScope.SCENARIO)
     //by default stop any processes which were started during a scenario
-    public void destroy() {
-        Runtime.getRuntime().removeShutdownHook(cleanupShutdownHook);
+    public void destroyScenario() {
+        destroyProcessesForScope(HandlerScope.SCENARIO);
+    }
 
+    @Destroy(scope=HandlerScope.FEATURE)
+    public void destroyFeature() {
+        Runtime.getRuntime().removeShutdownHook(cleanupShutdownHook);
+        destroyProcessesForScope(HandlerScope.FEATURE);
+    }
+
+    private void destroyProcessesForScope(HandlerScope scope) {
         Set<String> processNames = new HashSet<String>(processes.keySet());
         for (String name : processNames) {
-            try {
-                stopProcess(name);
-            } catch (Exception e) {
-                log.warn("Error when stopping process named " + name, e);
+            ProcessesConfig config = getConfigForAlias(name);
+            if (config.getProcessScope() == scope ) {
+                log.debug("Stopping process alias " + name + " scoped to " + scope);
+                try {
+                    stopProcess(name);
+                } catch (Exception e) {
+                    log.warn("Error when stopping process named " + name, e);
+                }
             }
         }
     }
@@ -407,7 +420,8 @@ public class ProcessesHandler {
     private class CleanupShutdownHook extends Thread {
         public void run() {
             log.debug("Running Cleanup on shutdown for ProcessHandler " + this);
-            ProcessesHandler.this.destroy();
+            ProcessesHandler.this.destroyScenario();
+            ProcessesHandler.this.destroyFeature();
         }
     }
 }
