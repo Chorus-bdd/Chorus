@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -44,6 +44,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by: Steve Neal
@@ -68,11 +69,11 @@ public class ProcessesHandler {
 
     private final Map<String, ChorusProcess> processes = new HashMap<String, ChorusProcess>();
 
-    private final Map<String, Integer> processCounters = new HashMap<String, Integer>();
+    private final HashMap<String, AtomicLong> processCounters = new HashMap<String, AtomicLong>();
 
     private Map<String, ProcessesConfig> configMap;
 
-    private Map<String, String> aliasToConfigName = new HashMap<String,String>();
+    private Map<String, String> processNameToConfigName = new HashMap<String,String>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
     
@@ -98,18 +99,20 @@ public class ProcessesHandler {
      * @throws Exception
      */
     @Step(".*start an? (.*) process named ([a-zA-Z0-9-_]*).*?")
-    public void startJavaNamed(String configName, String alias) throws Exception {
-        aliasToConfigName.put(alias, configName);
+    public void startJavaNamed(String configName, String processName) throws Exception {
+        ChorusAssert.assertFalse("There is already a process with the name " + processName, processes.containsKey(processName));
+        
+        processNameToConfigName.put(processName, configName);
         ProcessesConfig processesConfig = getProcessesConfig(configName);
 
         //get the log output containing logging configuration for this process
-        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processesConfig, alias);
+        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processesConfig, processName);
         String logFileBaseName = logOutput.getLogFileBaseName();
 
         ProcessCommandLineBuilder b = new ProcessCommandLineBuilder(featureDir, processesConfig, logFileBaseName);
         List<String> commandLineTokens = b.buildCommandLine();
 
-        startProcess(alias, commandLineTokens, logOutput, processesConfig.getProcessCheckDelay());
+        startProcess(processName, commandLineTokens, logOutput, processesConfig.getProcessCheckDelay());
     }
 
     @Step(".*start a process using script '(.*)'$")
@@ -156,105 +159,105 @@ public class ProcessesHandler {
     }
 
     @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
-    public void stopProcess(String alias) {
-        ChorusProcess p = processes.get(alias);
+    public void stopProcess(String processName) {
+        ChorusProcess p = processes.get(processName);
         if (p != null) {
             try {
                 p.destroy();
-                log.debug("Stopped process: " + alias);
+                log.debug("Stopped process: " + processName);
             } catch (Exception e) {
                 log.warn("Failed to destroy process", e);
             } finally {
-                processes.remove(alias);
+                processes.remove(processName);
             }
         } else {
-            throw new ChorusException("There is no process named '" + alias + "' to stop");
+            throw new ChorusException("There is no process named '" + processName + "' to stop");
         }
     }
 
     @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) (?:is |has )(?:stopped|terminated).*?")
-    public void checkProcessHasStopped(String alias) {
-        ChorusProcess p = processes.get(alias);
+    public void checkProcessHasStopped(String processName) {
+        ChorusProcess p = processes.get(processName);
         if ( p == null ) {
-            throw new ChorusException("There is no process named '" + alias + "' to check is stopped");
+            throw new ChorusException("There is no process named '" + processName + "' to check is stopped");
         }
-        ChorusAssert.assertTrue("The process " + alias + " was not stopped", p.isStopped());
+        ChorusAssert.assertTrue("The process " + processName + " was not stopped", p.isStopped());
     }
 
     @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) is running")
-    public void checkProcessIsRunning(String alias) {
-        ChorusProcess p = processes.get(alias);
+    public void checkProcessIsRunning(String processName) {
+        ChorusProcess p = processes.get(processName);
         if ( p == null ) {
-            throw new ChorusException("There is no process named '" + alias + "' to check is running");
+            throw new ChorusException("There is no process named '" + processName + "' to check is running");
         }
-        ChorusAssert.assertTrue("Check the process " + alias + " is running", ! p.isStopped());
+        ChorusAssert.assertTrue("Check the process " + processName + " is running", ! p.isStopped());
     }
 
     @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*?")
-    public void waitXSecondsForProcessToTerminate(int waitSeconds, String processAlias) {
-        waitForProcessToTerminate(processAlias, waitSeconds);
+    public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
+        waitForProcessToTerminate(processName, waitSeconds);
     }
 
     @Step(".*wait for (?:the process )?(?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*?")
-    public void waitForProcessToTerminate(String processAlias) {
-        ProcessesConfig c = getConfigForAlias(processAlias);
+    public void waitForProcessToTerminate(String processName) {
+        ProcessesConfig c = getConfigForProcessName(processName);
         int waitTime = c.getTerminateWaitTime();
-        waitForProcessToTerminate(processAlias, waitTime);
+        waitForProcessToTerminate(processName, waitTime);
     }
 
-    private ProcessesConfig getConfigForAlias(String processAlias) {
-        String configName = getConfigNameForAlias(processAlias);
+    private ProcessesConfig getConfigForProcessName(String processName) {
+        String configName = getConfigNameForProcess(processName);
         return getProcessesConfig(configName);
     }
 
     @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
-    public void readLineFromProcess(String pattern, String processAlias) {
-        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+    public void readLineFromProcess(String pattern, String processName) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
         p.waitForMatchInStdOut(pattern, false);
     }
 
     @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
-    public void readLineFromProcessStdError(String pattern, String processAlias) {
-        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+    public void readLineFromProcessStdError(String pattern, String processName) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
         p.waitForMatchInStdErr(pattern, false);
     }
 
     @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
-    public void readFromProcess(String pattern, String processAlias) {
-        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+    public void readFromProcess(String pattern, String processName) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
         p.waitForMatchInStdOut(pattern, true);
     }
 
     @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
-    public void readFromProcessStdError(String pattern, String processAlias) {
-        ChorusProcess p = getAndCheckProcessByAlias(processAlias); 
+    public void readFromProcessStdError(String pattern, String processName) {
+        ChorusProcess p = getAndCheckProcessByName(processName); 
         p.waitForMatchInStdErr(pattern, true);
     }
 
     @Step(".*write the line '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process") 
-    public void writeLineToProcess(String line, String processAlias) {
-        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+    public void writeLineToProcess(String line, String processName) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
         p.writeToStdIn(line, true);
     }
 
     @Step(".*write '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process")
-    public void writeToProcess(String line, String processAlias) {
-        ChorusProcess p = getAndCheckProcessByAlias(processAlias);
+    public void writeToProcess(String line, String processName) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
         p.writeToStdIn(line, false);
     }
 
-    private ChorusProcess getAndCheckProcessByAlias(String processAlias) {
-        ChorusProcess p = processes.get(processAlias);
+    private ChorusProcess getAndCheckProcessByName(String processName) {
+        ChorusProcess p = processes.get(processName);
         if ( p == null ) {
-            ChorusAssert.fail("Could not find the process " + processAlias);
+            ChorusAssert.fail("Could not find the process " + processName);
         }
         return p;
     }    
 
-    private String getConfigNameForAlias(String processAlias) {
-        String configName = aliasToConfigName.get(processAlias);
+    private String getConfigNameForProcess(String processName) {
+        String configName = processNameToConfigName.get(processName);
         if ( configName == null) {
-            throw new ChorusException("Could not find a config name for process " + processAlias);
+            throw new ChorusException("Could not find a config name for process " + processName);
         }
         return configName;
     }
@@ -303,6 +306,7 @@ public class ProcessesHandler {
     //by default stop any processes which were started during a scenario
     public void destroyScenario() {
         destroyProcessesForScope(HandlerScope.SCENARIO);
+        processCounters.clear();  //the automatic counters for process names are scenario scoped and reset for backwards compatibility
     }
 
     @Destroy(scope=HandlerScope.FEATURE)
@@ -314,9 +318,9 @@ public class ProcessesHandler {
     private void destroyProcessesForScope(HandlerScope scope) {
         Set<String> processNames = new HashSet<String>(processes.keySet());
         for (String name : processNames) {
-            ProcessesConfig config = getConfigForAlias(name);
+            ProcessesConfig config = getConfigForProcessName(name);
             if (config.getProcessScope() == scope ) {
-                log.debug("Stopping process alias " + name + " scoped to " + scope);
+                log.debug("Stopping process named " + name + " scoped to " + scope);
                 try {
                     stopProcess(name);
                 } catch (Exception e) {
@@ -355,20 +359,20 @@ public class ProcessesHandler {
     }
 
     private synchronized String nextProcessName(String prefix) {
-        Integer counter = processCounters.get(prefix);
-        if (counter == null) {
-            counter = 1;
-        } else {
-            counter++;
+        AtomicLong counter = processCounters.get(prefix);
+        if ( counter == null) {
+            counter = new AtomicLong();
+            processCounters.put(prefix, counter);
         }
-        processCounters.put(prefix, counter);
+        int count = (int)counter.incrementAndGet();
         //for first process just use the config name with no suffix
         //this is so if we just start a single myconfig process, it will be called myconfig
         //the second will be called myconfig-2
-        return counter == 1 ? prefix : String.format("%s-%d", prefix, counter);
+        return count == 1 ? prefix : String.format("%s-%d", prefix, count);
     }
 
     private ChorusProcess startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay) throws Exception {
+        ChorusAssert.assertFalse("There is already a process with the name " + name, processes.containsKey(name));
         ChorusProcess child = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
         processes.put(name, child);
         child.checkProcess(processCheckDelay);

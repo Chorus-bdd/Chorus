@@ -104,7 +104,7 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setReadAheadBufferSize(parseIntProperty(value, "readAheadBufferSize"));
             } else if ("readTimeoutSeconds".equals(key)) {
                 c.setReadTimeoutSeconds(parseIntProperty(value, "readTimeoutSeconds"));
-            } else if ("processScope".equals(key)) {
+            } else if ("scope".equals(key)) {
                 c.setProcessScope(parseProcessScope(value));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
