@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Check Running")
+@Handler("Feature Scoped Process")
 public class FeatureScopedProcessHandler extends ChorusAssert {
 
     @Step(".*say hello")
