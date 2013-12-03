@@ -63,7 +63,34 @@ public class ExecutionListenerFactory {
         }
 
         addSystemOutExecutionListener(config, result);
+
+        addUserExecutionListeners(config, result);
         return result;
+    }
+
+    private void addUserExecutionListeners(ConfigProperties config, List<ExecutionListener> result) {
+        if ( config.isSet(ChorusConfigProperty.EXECUTION_LISTENER)) {
+            List<String> listenerClasses = config.getValues(ChorusConfigProperty.EXECUTION_LISTENER);
+            for ( String className : listenerClasses) {
+                addUserExecutionListener(className, result);
+            }
+        }
+    }
+
+    private void addUserExecutionListener(String className, List<ExecutionListener> listeners) {
+        log.debug("About to create user ExecutionListener " + className);
+        try {
+            Class clazz = Class.forName(className);
+            Object o = clazz.newInstance();
+            log.info("Created user ExecutionListener of type " + className);
+            if ( o instanceof ExecutionListener) {
+                listeners.add((ExecutionListener)o);
+            } else {
+                log.error("User ExecutionListener " + className + " did not implement ExecutionListener interface and will not be used");
+            }
+        } catch (Exception e) {
+            log.error("Failed while instantiating user ExecutionListener " + className, e);
+        }
     }
 
     private void addSystemOutExecutionListener(ConfigProperties config, List<ExecutionListener> result) {
