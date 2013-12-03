@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.executionlistener;
+package org.chorusbdd.chorus.selftest.executionlistener.multiple;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
@@ -39,9 +39,9 @@ import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestUserExecutionListener extends AbstractInterpreterTest {
+public class TestMultipleUserExecutionListener extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/executionlistener/userexecutionlistener.feature";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/executionlistener/multiple/multipleuserexecutionlistener.feature";
 
     final int expectedExitCode = 0;  //success
 
@@ -57,7 +57,7 @@ public class TestUserExecutionListener extends AbstractInterpreterTest {
      * A test can override this method to modify the sys properties being used from the default set
      */
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
-        sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), "org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne");
+        sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), "org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne org.chorusbdd.chorus.selftest.executionlistener.TestListenerTwo");
     }
 
 }

@@ -27,10 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.executionlistener;
+package org.chorusbdd.chorus.selftest.executionlistener.single;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
