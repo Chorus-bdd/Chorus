@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 03/12/13
  * Time: 18:43
  */
-public class TestListenerTwo implements ExecutionListener {
+public class ExecutionListenerTwo implements ExecutionListener {
     
     public static AtomicBoolean isTestsStartedCalled = new AtomicBoolean();
     public static AtomicBoolean isFeatureStartedCalled = new AtomicBoolean();

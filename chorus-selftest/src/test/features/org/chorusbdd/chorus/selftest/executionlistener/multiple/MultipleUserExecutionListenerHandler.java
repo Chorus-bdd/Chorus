@@ -31,8 +31,8 @@ package org.chorusbdd.chorus.selftest.executionlistener.multiple;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne;
-import org.chorusbdd.chorus.selftest.executionlistener.TestListenerTwo;
+import org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne;
+import org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerTwo;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
@@ -51,11 +51,11 @@ public class MultipleUserExecutionListenerHandler {
 
     @Step("all User Execution Listener get their lifecycle methods invoked")
     public void canRunAFeature() {
-        ChorusAssert.assertTrue(TestListenerOne.isTestsStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerOne.isFeatureStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerOne.isScenarioStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerTwo.isTestsStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerTwo.isFeatureStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerTwo.isScenarioStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerOne.isTestsStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerOne.isFeatureStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerOne.isScenarioStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerTwo.isTestsStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerTwo.isFeatureStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerTwo.isScenarioStartedCalled.get());
     }
 }

@@ -58,10 +58,10 @@ public class TestMultipleUserExecutionListener extends AbstractInterpreterTest {
      */
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
         sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), 
-                "org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne" +
-                " org.chorusbdd.chorus.selftest.executionlistener.TestListenerTwo" +
+                "org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne" +
+                " org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerTwo" +
                 " org.my.NonExistentClass" +
-                " org.chorusbdd.chorus.selftest.executionlistener.TestListenerNoDefaultConstructor" + //test when no nullary constructor
+                " org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerNoNullaryConstructor" + //test when no nullary constructor
                 " java.util.Date" ); //test when class does not implement interface
     }
 

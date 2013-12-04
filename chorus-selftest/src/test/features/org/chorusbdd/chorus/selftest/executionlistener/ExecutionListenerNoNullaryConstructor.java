@@ -14,9 +14,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Date: 03/12/13
  * Time: 18:43
  */
-public class TestListenerNoDefaultConstructor implements ExecutionListener {
+public class ExecutionListenerNoNullaryConstructor implements ExecutionListener {
 
-    public TestListenerNoDefaultConstructor(String myArg) {
+    public ExecutionListenerNoNullaryConstructor(String myArg) {
         
     }
 

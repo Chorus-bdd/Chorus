@@ -57,7 +57,7 @@ public class TestUserExecutionListener extends AbstractInterpreterTest {
      * A test can override this method to modify the sys properties being used from the default set
      */
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
-        sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), "org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne");
+        sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), "org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne");
     }
 
 }

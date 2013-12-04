@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest.executionlistener.single;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne;
+import org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
@@ -50,8 +50,8 @@ public class UserExecutionListenerHandler {
 
     @Step("a User Execution Listener gets its lifecycle methods invoked")
     public void canRunAFeature() {
-        ChorusAssert.assertTrue(TestListenerOne.isTestsStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerOne.isFeatureStartedCalled.get());
-        ChorusAssert.assertTrue(TestListenerOne.isScenarioStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerOne.isTestsStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerOne.isFeatureStartedCalled.get());
+        ChorusAssert.assertTrue(ExecutionListenerOne.isScenarioStartedCalled.get());
     }
 }

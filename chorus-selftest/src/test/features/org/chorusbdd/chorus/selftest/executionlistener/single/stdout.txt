@@ -1,4 +1,4 @@
-Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne
+Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/executionlistener/single/userexecutionlistener.feature
 Feature: User Execution Listener                                                                     
   Scenario: Simple Scenario
