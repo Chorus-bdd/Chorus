@@ -83,14 +83,14 @@ public class ExecutionListenerFactory {
         try {
             Class clazz = Class.forName(className);
             if ( ! ExecutionListener.class.isAssignableFrom(clazz)) {
-                log.error("User specified ExecutionListener " + className + " does not implement ExceutionListener interface, will not be used");    
+                log.error("User specified ExecutionListener " + className + " does not implement ExecutionListener interface, will not be used");    
             } else {
                 constructUserExecutionListener(className, listeners, clazz);    
             }           
         } catch (NoSuchMethodException n) {
-            log.error("Failed while instantiating user ExecutionListener " + className + ", no nullary constructor available");    
+            log.error("Failed while instantiating user ExecutionListener " + className + ", no public nullary constructor available, this listener will not be used");    
         } catch (Exception e) {
-            log.error("Failed while instantiating user ExecutionListener " + className + "," + e.getClass()); 
+            log.error("Failed while instantiating user ExecutionListener " + className + "," + e.getClass() + ", this listener will not be used"); 
             log.trace("Failed while instantiating user ExecutionListener", e);
         }
     }
@@ -102,7 +102,7 @@ public class ExecutionListenerFactory {
         if ( o instanceof ExecutionListener) {
             listeners.add((ExecutionListener)o);
         } else {
-            log.error("User ExecutionListener " + className + " did not implement ExecutionListener interface and will not be used");
+            log.error("User ExecutionListener " + className + " did not implement ExecutionListener interface, this listener will not be used");
         }
     }
 
