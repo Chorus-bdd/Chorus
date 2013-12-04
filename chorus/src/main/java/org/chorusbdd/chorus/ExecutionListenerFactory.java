@@ -38,6 +38,7 @@ import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -81,15 +82,27 @@ public class ExecutionListenerFactory {
         log.debug("About to create user ExecutionListener " + className);
         try {
             Class clazz = Class.forName(className);
-            Object o = clazz.newInstance();
-            log.info("Created user ExecutionListener of type " + className);
-            if ( o instanceof ExecutionListener) {
-                listeners.add((ExecutionListener)o);
+            if ( ! ExecutionListener.class.isAssignableFrom(clazz)) {
+                log.error("User specified ExecutionListener " + className + " does not implement ExceutionListener interface, will not be used");    
             } else {
-                log.error("User ExecutionListener " + className + " did not implement ExecutionListener interface and will not be used");
-            }
+                constructUserExecutionListener(className, listeners, clazz);    
+            }           
+        } catch (NoSuchMethodException n) {
+            log.error("Failed while instantiating user ExecutionListener " + className + ", no nullary constructor available");    
         } catch (Exception e) {
-            log.error("Failed while instantiating user ExecutionListener " + className, e);
+            log.error("Failed while instantiating user ExecutionListener " + className + "," + e.getClass()); 
+            log.trace("Failed while instantiating user ExecutionListener", e);
+        }
+    }
+
+    private void constructUserExecutionListener(String className, List<ExecutionListener> listeners, Class clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Constructor constructor = clazz.getConstructor(); //NoSuchMethodException if no default constructor
+        Object o = clazz.newInstance();
+        log.info("Created user ExecutionListener of type " + className);
+        if ( o instanceof ExecutionListener) {
+            listeners.add((ExecutionListener)o);
+        } else {
+            log.error("User ExecutionListener " + className + " did not implement ExecutionListener interface and will not be used");
         }
     }
 

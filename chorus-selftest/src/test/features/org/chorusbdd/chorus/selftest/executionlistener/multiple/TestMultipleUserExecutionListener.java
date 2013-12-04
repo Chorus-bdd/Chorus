@@ -57,7 +57,12 @@ public class TestMultipleUserExecutionListener extends AbstractInterpreterTest {
      * A test can override this method to modify the sys properties being used from the default set
      */
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
-        sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), "org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne org.chorusbdd.chorus.selftest.executionlistener.TestListenerTwo");
+        sysProps.put(ChorusConfigProperty.EXECUTION_LISTENER.getSystemProperty(), 
+                "org.chorusbdd.chorus.selftest.executionlistener.TestListenerOne" +
+                " org.chorusbdd.chorus.selftest.executionlistener.TestListenerTwo" +
+                " org.my.NonExistentClass" +
+                " org.chorusbdd.chorus.selftest.executionlistener.TestListenerNoDefaultConstructor" + //test when no nullary constructor
+                " java.util.Date" ); //test when class does not implement interface
     }
 
 }
