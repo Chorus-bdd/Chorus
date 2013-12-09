@@ -43,5 +43,5 @@ import java.lang.annotation.Target;
 public @interface Handler {
     String value();
 
-    HandlerScope scope() default HandlerScope.SCENARIO;
+    Scope scope() default Scope.SCENARIO;
 }

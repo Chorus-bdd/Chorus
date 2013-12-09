@@ -40,7 +40,7 @@ public class HandlerManager {
         for (Class handlerClass : orderedHandlerClasses) {
             //create a new SCENARIO scoped handler
             Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-            if (handlerAnnotation.scope() != HandlerScope.SCENARIO) { //feature or unmanaged
+            if (handlerAnnotation.scope() != Scope.SCENARIO) { //feature or unmanaged
                 Object handler = createAndInitHandlerInstance(handlerClass);
                 featureScopedHandlers.put(handlerClass, handler);
                 log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
@@ -57,7 +57,7 @@ public class HandlerManager {
         
         for ( Class handlerClass : orderedHandlerClasses ) {
             Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
-            if ( handlerAnnotation.scope() != HandlerScope.SCENARIO ) {
+            if ( handlerAnnotation.scope() != Scope.SCENARIO ) {
                 Object handler = featureScopedHandlers.get(handlerClass);
                 assert(handler != null); //must have been created during createFeatureScopedHandlers
                 log.debug("Adding feature scoped handler " + handler + " class " + handlerClass);
@@ -80,41 +80,41 @@ public class HandlerManager {
 
 
     public void processStartOfFeature() throws Exception {
-        processStartOfScope(HandlerScope.FEATURE, featureScopedHandlers.values());
+        processStartOfScope(Scope.FEATURE, featureScopedHandlers.values());
     }
 
     /**
      * Scope is starting, perform the required processing on the supplied handlers.
      */
-    public void processStartOfScope(HandlerScope scopeStarting, Iterable<Object> handlerInstances) throws Exception {
+    public void processStartOfScope(Scope scopeStarting, Iterable<Object> handlerInstances) throws Exception {
         for (Object handler : handlerInstances) {
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            HandlerScope handlerScope = handlerAnnotation.scope();
+            Scope scope = handlerAnnotation.scope();
             
-            if ( scopeStarting == HandlerScope.SCENARIO) {
+            if ( scopeStarting == Scope.SCENARIO) {
                 injectResourceFields(handler);
             }
             
-            runLifecycleMethods(handler, handlerScope, scopeStarting, false);
+            runLifecycleMethods(handler, scope, scopeStarting, false);
         }    
     }
 
     public void processEndOfFeature() throws Exception {
-        processEndOfScope( HandlerScope.FEATURE, featureScopedHandlers.values());
+        processEndOfScope( Scope.FEATURE, featureScopedHandlers.values());
     }
     
     /**
      * Scope is ending, perform the required processing on the supplied handlers.
      */
-    public void processEndOfScope(HandlerScope scopeEnding, Iterable<Object> handlerInstances) throws Exception {
+    public void processEndOfScope(Scope scopeEnding, Iterable<Object> handlerInstances) throws Exception {
         for (Object handler : handlerInstances) {
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            HandlerScope handlerScope = handlerAnnotation.scope();
+            Scope scope = handlerAnnotation.scope();
 
-            runLifecycleMethods(handler, handlerScope, scopeEnding, true);
+            runLifecycleMethods(handler, scope, scopeEnding, true);
 
             //dispose handler instances with a scope which matches the scopeEnding
-            if (handlerScope == scopeEnding) {
+            if (scope == scopeEnding) {
                 disposeSpringResources(handler, scopeEnding);
             }
         }
@@ -123,8 +123,8 @@ public class HandlerManager {
     /**
      * Run any lifecycle methods which match the targetMethodScope (.e.g at end of SCENARIO, run SCENARIO scoped methods)
      */
-    private void runLifecycleMethods(Object handler, HandlerScope handlerScope, HandlerScope targetMethodScope, boolean isDestroy) throws Exception {
-        if ( handlerScope != HandlerScope.UNMANAGED) { 
+    private void runLifecycleMethods(Object handler, Scope scope, Scope targetMethodScope, boolean isDestroy) throws Exception {
+        if ( scope != Scope.UNMANAGED) { 
            //HandlerScope.UNMANAGED handlers do not run destroy or init methods
             String description = isDestroy ? "@Destroy" : "@Initialize";
             log.debug("Running " + description + " methods for Handler " + handler);
@@ -133,7 +133,7 @@ public class HandlerManager {
             for (Method method : handlerClass.getMethods()) {   //getMethods() includes inherited methods
                 if (method.getParameterTypes().length == 0) {
 
-                    HandlerScope methodScope = getMethodScope(isDestroy, method);
+                    Scope methodScope = getMethodScope(isDestroy, method);
                     
                     //if this lifecycle method is for the correct cope, then run it
                     if (methodScope != null && methodScope == targetMethodScope) {
@@ -150,8 +150,8 @@ public class HandlerManager {
     }
 
     //return the scope of a lifecycle method, or null if the method is not a lifecycle method
-    private HandlerScope getMethodScope(boolean isDestroy, Method method) {
-        HandlerScope methodScope = null;
+    private Scope getMethodScope(boolean isDestroy, Method method) {
+        Scope methodScope = null;
         if ( isDestroy ) {
             Destroy annotation = method.getAnnotation(Destroy.class);
             methodScope = annotation != null ? annotation.scope() : null;
@@ -168,7 +168,7 @@ public class HandlerManager {
         springContextSupport.injectSpringResources(handler, feature);
     }
     
-    private void disposeSpringResources(Object handler, HandlerScope scope) {
+    private void disposeSpringResources(Object handler, Scope scope) {
         log.debug("Disposing any spring resources for " + handler + " class " + handler.getClass() + " with scope " + scope);
         springContextSupport.dispose(handler);
     }

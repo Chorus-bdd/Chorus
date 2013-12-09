@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
 import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Initialize;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
@@ -23,26 +23,26 @@ public abstract class LifecycleMethodsAbstractSuperclassHandler {
         this.name = name;
     }
 
-    @Initialize(scope = HandlerScope.FEATURE)
+    @Initialize(scope = Scope.FEATURE)
     public void initFeature() {
         initFeatureCount++;
         ChorusOut.out.println("Feature Init for Feature scoped handler ---->");
         ChorusOut.out.print(toString());
     }
 
-    @Destroy(scope = HandlerScope.FEATURE)
+    @Destroy(scope = Scope.FEATURE)
     public void destroyFeature() {
         destroyFeatureCount++;
         ChorusOut.out.println("Feature Destroy for Feature scoped handler ---->");
         ChorusOut.out.print(toString());
     }
 
-    @Initialize(scope = HandlerScope.SCENARIO)
+    @Initialize(scope = Scope.SCENARIO)
     public void initScenario() {
         initScenarioCount++;
     }
     
-    @Destroy(scope = HandlerScope.SCENARIO)
+    @Destroy(scope = Scope.SCENARIO)
     public void destroyScenario() {
         destroyScenarioCount++;
         ChorusOut.out.print(toString());

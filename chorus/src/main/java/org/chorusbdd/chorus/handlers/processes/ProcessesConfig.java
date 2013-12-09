@@ -29,9 +29,8 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfig;
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -65,7 +64,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private int processCheckDelay = 500;
     private int readAheadBufferSize = 65536; //read ahead process output in CAPTURED mode 
     private int readTimeoutSeconds = 10;
-    private HandlerScope processScope = HandlerScope.SCENARIO;
+    private Scope processScope = Scope.SCENARIO;
 
     public String getGroupName() {
         return name;
@@ -203,11 +202,11 @@ public class ProcessesConfig extends AbstractHandlerConfig {
         this.readTimeoutSeconds = readTimeoutSeconds;
     }
 
-    public HandlerScope getProcessScope() {
+    public Scope getProcessScope() {
         return processScope;
     }
 
-    public void setProcessScope(HandlerScope processScope) {
+    public void setProcessScope(Scope processScope) {
         this.processScope = processScope;
     }
 

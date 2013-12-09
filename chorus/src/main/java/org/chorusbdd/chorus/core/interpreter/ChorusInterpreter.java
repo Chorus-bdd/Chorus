@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -172,7 +172,7 @@ public class ChorusInterpreter {
 
         handlerManager.setCurrentScenario(scenario);
         List<Object> handlerInstances = handlerManager.getOrCreateHandlersForScenario();
-        handlerManager.processStartOfScope(HandlerScope.SCENARIO, handlerInstances);
+        handlerManager.processStartOfScope(Scope.SCENARIO, handlerInstances);
 
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
@@ -186,7 +186,7 @@ public class ChorusInterpreter {
             updateExecutionStats(executionToken, scenario);
         }
 
-        handlerManager.processEndOfScope(HandlerScope.SCENARIO, handlerInstances);
+        handlerManager.processEndOfScope(Scope.SCENARIO, handlerInstances);
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 

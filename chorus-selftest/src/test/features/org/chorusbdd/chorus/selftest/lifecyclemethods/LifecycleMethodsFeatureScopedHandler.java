@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +37,7 @@ import org.chorusbdd.chorus.util.logging.ChorusOut;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler(value = "Lifecycle Methods Feature Scoped", scope = HandlerScope.FEATURE)
+@Handler(value = "Lifecycle Methods Feature Scoped", scope = Scope.FEATURE)
 public class LifecycleMethodsFeatureScopedHandler extends LifecycleMethodsAbstractSuperclassHandler {
     
     static int instanceCreationCount;

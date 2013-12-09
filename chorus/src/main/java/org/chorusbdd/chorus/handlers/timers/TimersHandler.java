@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.handlers.timers;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
  * Created by: Steve Neal
  * Date: 12/10/11
  */
-@Handler(value = "Timers", scope = HandlerScope.UNMANAGED)
+@Handler(value = "Timers", scope = Scope.UNMANAGED)
 @SuppressWarnings("UnusedDeclaration")
 public class TimersHandler {
 

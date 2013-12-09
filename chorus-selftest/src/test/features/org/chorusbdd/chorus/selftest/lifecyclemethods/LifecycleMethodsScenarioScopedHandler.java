@@ -54,13 +54,13 @@ public class LifecycleMethodsScenarioScopedHandler extends LifecycleMethodsAbstr
         return instanceCreationCount;
     }
 
-    @Initialize(scope = HandlerScope.SCENARIO)
+    @Initialize(scope = Scope.SCENARIO)
     public void initScenario() {
         initScenarioCount ++;
         ChorusAssert.assertEquals(1, initScenarioCount);
     }
 
-    @Destroy(scope = HandlerScope.SCENARIO)
+    @Destroy(scope = Scope.SCENARIO)
     public void destroyScenario() {
         destroyScenarioCount++;
         ChorusAssert.assertEquals(1, destroyScenarioCount);

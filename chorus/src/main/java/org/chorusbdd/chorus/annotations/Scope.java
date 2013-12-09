@@ -50,7 +50,7 @@ package org.chorusbdd.chorus.annotations;
  * 
  * Date: 22/11/11
  */
-public enum HandlerScope {
+public enum Scope {
 
     /**
      *  A new instance of the handler will be created for each scenario

@@ -29,12 +29,9 @@
  */
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Initialize;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,7 +42,7 @@ import org.chorusbdd.chorus.util.logging.ChorusOut;
  * More than one init scenario and init feature method
  * 
  */
-@Handler(value = "Lifecycle Methods Multiple Methods", scope=HandlerScope.FEATURE)
+@Handler(value = "Lifecycle Methods Multiple Methods", scope= Scope.FEATURE)
 public class LifecycleMethodsMultipleMethodsHandler extends LifecycleMethodsAbstractSuperclassHandler {
 
     static int instanceCreationCount;
@@ -60,12 +57,12 @@ public class LifecycleMethodsMultipleMethodsHandler extends LifecycleMethodsAbst
         return instanceCreationCount;
     }
 
-    @Initialize(scope = HandlerScope.SCENARIO)
+    @Initialize(scope = Scope.SCENARIO)
     public void initScenarioTwo() {
         initScenarioCount ++;
     }
 
-    @Initialize(scope = HandlerScope.FEATURE)
+    @Initialize(scope = Scope.FEATURE)
     public void initFeatureTwo() {
         initFeatureCount++;
     }

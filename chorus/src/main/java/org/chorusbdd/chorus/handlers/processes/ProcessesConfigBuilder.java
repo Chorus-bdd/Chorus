@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.HandlerScope;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlers.util.config.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlers.util.config.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -112,12 +112,12 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
         }
     }
 
-    private HandlerScope parseProcessScope(String value) {
-        HandlerScope processScope = HandlerScope.valueOf(value.toUpperCase().trim());
+    private Scope parseProcessScope(String value) {
+        Scope processScope = Scope.valueOf(value.toUpperCase().trim());
         if ( processScope == null) {
             throw new ChorusException(
                 "Failed to parse property processScope with value '" + value + "', should be one of: "
-                        + Arrays.asList(HandlerScope.values())
+                        + Arrays.asList(Scope.values())
             );  
         }
         return processScope;

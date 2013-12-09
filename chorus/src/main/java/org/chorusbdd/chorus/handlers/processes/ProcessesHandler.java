@@ -50,7 +50,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by: Steve Neal
  * Date: 07/11/11
  */
-@Handler(value = "Processes", scope= HandlerScope.FEATURE)
+@Handler(value = "Processes", scope= Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler {
 
@@ -302,20 +302,20 @@ public class ProcessesHandler {
        }
    }
 
-    @Destroy(scope=HandlerScope.SCENARIO)
+    @Destroy(scope= Scope.SCENARIO)
     //by default stop any processes which were started during a scenario
     public void destroyScenario() {
-        destroyProcessesForScope(HandlerScope.SCENARIO);
+        destroyProcessesForScope(Scope.SCENARIO);
         processCounters.clear();  //the automatic counters for process names are scenario scoped and reset for backwards compatibility
     }
 
-    @Destroy(scope=HandlerScope.FEATURE)
+    @Destroy(scope= Scope.FEATURE)
     public void destroyFeature() {
         Runtime.getRuntime().removeShutdownHook(cleanupShutdownHook);
-        destroyProcessesForScope(HandlerScope.FEATURE);
+        destroyProcessesForScope(Scope.FEATURE);
     }
 
-    private void destroyProcessesForScope(HandlerScope scope) {
+    private void destroyProcessesForScope(Scope scope) {
         Set<String> processNames = new HashSet<String>(processes.keySet());
         for (String name : processNames) {
             ProcessesConfig config = getConfigForProcessName(name);
