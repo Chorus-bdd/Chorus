@@ -3,7 +3,7 @@
 <changes>
     <version>
         <versionNumber>1.6.0</versionNumber>
-        <comment>A major release with some significant new features. Backwards compatible with 1.5.x</comment>
+        <comment>A major release with some significant new features. Backwards compatible with 1.5.x apart from renaming of the class HandlerScope to Scope</comment>
         <change desc="Add support for Feature-Start: and Feature-End: scenarios"/>
         <change desc="Add support for @ChorusResource(scenario.token)"/>
         <change desc="Add a Scope.FEATURE for handlers which get created once per feature and are reused during scenarios"/>
