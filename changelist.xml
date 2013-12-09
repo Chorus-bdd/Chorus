@@ -10,7 +10,7 @@
         <change desc="Rename HandlerScope to Scope since the concept is now more generally applicable"/>                                                  
         <change desc="Introduce an @Initialize annotation for handler initialization lifecycle methods"/>
         <change desc="@Initialize and @Destroy methods on handlers can be scoped to HandlerScope.FEATURE or HandlerScope.SCENARIO"/>
-        <change desc="ChorusContext variables set during Feature-Start: are made available to all scenarios"/>
+        <change desc="When using Chorus Context Handler, context variables set during Feature-Start: are made available to all scenarios"/>
     </version>
     <version>
         <versionNumber>1.5.4</versionNumber>
