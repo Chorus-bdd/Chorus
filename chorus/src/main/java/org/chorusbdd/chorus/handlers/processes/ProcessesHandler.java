@@ -151,6 +151,9 @@ public class ProcessesHandler {
             }
         };
 
+        processNameToConfigName.put(name, name);
+        configMap.put(name, c);
+
         //get the log output containing logging configuration and out and err streams for this script
         ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, c, name);
 
