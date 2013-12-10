@@ -11,6 +11,7 @@
         <change desc="Introduce an @Initialize annotation for handler initialization lifecycle methods"/>
         <change desc="@Initialize and @Destroy methods on handlers can be scoped to HandlerScope.FEATURE or HandlerScope.SCENARIO"/>
         <change desc="When using Chorus Context Handler, context variables set during Feature-Start: are made available to all scenarios"/>
+        <change desc="Added support for custom ExecutionListener"/>
     </version>
     <version>
         <versionNumber>1.5.4</versionNumber>
