@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.0 ###
+        
+*A major release with some significant new features. Backwards compatible with 1.5.x apart from renaming of the class HandlerScope to Scope*
+        
+| Changes in 1.6.0 |
+| ------ |
+| Add support for Feature-Start: and Feature-End: scenarios |
+| Add support for @ChorusResource(scenario.token) |
+| Add a Scope.FEATURE for handlers which get created once per feature and are reused during scenarios |
+| Rename HandlerScope to Scope since the concept is now more generally applicable |
+| Introduce an @Initialize annotation for handler initialization lifecycle methods |
+| @Initialize and @Destroy methods on handlers can be scoped to HandlerScope.FEATURE or HandlerScope.SCENARIO |
+| When using Chorus Context Handler, context variables set during Feature-Start: are made available to all scenarios |
+| Added support for custom ExecutionListener |
+        
 ### Version 1.5.4 ###
         
 *Support extra characters in step macro parameter names and fix an issue with @PassesWithin under jdk 1.5*
