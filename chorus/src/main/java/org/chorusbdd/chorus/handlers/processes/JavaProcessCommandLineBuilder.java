@@ -44,22 +44,22 @@ import java.util.List;
  * Time: 12:29
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessCommandLineBuilder {
+public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(JavaProcessCommandLineBuilder.class);
 
     private File featureDir;
     private ProcessesConfig processesConfig;
     private String logFileBaseName;
 
-    public ProcessCommandLineBuilder(File featureDir, ProcessesConfig processesConfig, String logFileBaseName) {
+    public JavaProcessCommandLineBuilder(File featureDir, ProcessesConfig processesConfig, String logFileBaseName) {
         this.featureDir = featureDir;
         this.processesConfig = processesConfig;
         this.logFileBaseName = logFileBaseName;
     }
     
     public List<String> buildCommandLine() {
-        String executableToken = getExecutableTokens(processesConfig);
+        String executableToken = getExecutableToken(processesConfig);
         List<String> jvmArgs = getSpaceSeparatedTokens(processesConfig.getJvmargs());
         List<String> log4jTokens = getLog4jTokens(logFileBaseName);
         List<String> debugTokens = getDebugTokens(processesConfig);
@@ -80,7 +80,7 @@ public class ProcessCommandLineBuilder {
         return commandLineTokens;
     }
 
-    private String getExecutableTokens(ProcessesConfig processesConfig) {
+    private String getExecutableToken(ProcessesConfig processesConfig) {
         String executableTxt = "%s%sbin%sjava";
         return String.format(
                 executableTxt,
@@ -133,17 +133,6 @@ public class ProcessCommandLineBuilder {
             log4jTokens.add(String.format("-Dfeature.process.name=%s", featureProcessName));
         }
         return log4jTokens;
-    }
-
-    private List<String> getSpaceSeparatedTokens(String spaceSeparated) {
-        List<String> tokens = new ArrayList<String>();
-        String[] j = spaceSeparated.split(" ");
-        for ( String s : j ) {
-            if ( s.trim().length() > 0) {
-                tokens.add(s);
-            }
-        }
-        return tokens;
     }
 
     private File findLog4jConfigFile() {

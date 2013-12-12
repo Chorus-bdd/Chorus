@@ -29,40 +29,45 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.handlers.util.JavaVersion;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: nick
- * Date: 17/07/13
- * Time: 22:15
+ * Date: 21/07/13
+ * Time: 12:29
  * To change this template use File | Settings | File Templates.
  */
-public class ChorusProcessFactory {
+public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessBuilderProcess.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
 
-    public ChorusProcess createChorusProcess(String name, List<String> commandTokens, ProcessLogOutput logOutput) throws Exception {
+    private ProcessesConfig processesConfig;
 
-        StringBuilder commandBuilder = new StringBuilder();
-        for ( String s : commandTokens) {
-            commandBuilder.append(s).append(" ");
-        }
-        commandBuilder.deleteCharAt(commandBuilder.length() - 1);
-        
-        String command = commandBuilder.toString();
-        log.info(ChorusProcess.STARTING_PROCESS_LOG_PREFIX + command);
-
-        if (JavaVersion.IS_1_7_OR_GREATER) {
-            log.debug("Using ProcessBuilder to start the process since detected java runtime >= 1.7");
-            return new ProcessBuilderProcess(name, commandTokens, logOutput);
-        } else {
-            log.debug("Using Runtime.exec() to start the process since detected java runtime < 1.7");
-            return new Jdk15Process(name, command, logOutput);
-        }
+    public NativeProcessCommandLineBuilder(ProcessesConfig processesConfig) {
+        this.processesConfig = processesConfig;
     }
+    
+    @Override
+    public List<String> buildCommandLine() {
+        String executableToken = getExecutableToken(processesConfig);
+        List<String> argsTokens = getSpaceSeparatedTokens(processesConfig.getArgs());
+
+        List<String> commandLineTokens = new ArrayList<String>();
+        commandLineTokens.add(executableToken);
+        commandLineTokens.addAll(argsTokens);
+        return commandLineTokens;
+    }
+
+    private String getExecutableToken(ProcessesConfig processesConfig) {
+        String executableTxt = processesConfig.getPathToExecutable();
+        return executableTxt;
+    }
+
 }

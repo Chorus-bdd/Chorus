@@ -2,16 +2,16 @@ Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/
 Feature: Process With Log4j                                                                          
   Scenario: Start a Process with log4j logging
 Chorus --> INFO    - Processing scenario: Start a Process with log4j logging
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     When I start a config1 process                                                           PASSED  
     And I wait for config1 to stop                                                           PASSED  
     Then log4j has written to the processwithlog4jconfig-config1.log file                    PASSED  
     And I can delete the log file processwithlog4jconfig-config1.log                         PASSED  
   Scenario: Start two Processes with log4j logging
 Chorus --> INFO    - Processing scenario: Start two Processes with log4j logging
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     When I start a config1 process                                                           PASSED  
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a config1 process                                                            PASSED  
     And I wait for config1 to terminate                                                      PASSED  
     And I wait for config1-2 to terminate                                                    PASSED  

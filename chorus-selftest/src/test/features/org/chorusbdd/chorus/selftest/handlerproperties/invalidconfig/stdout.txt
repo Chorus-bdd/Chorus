@@ -4,14 +4,14 @@ Chorus --> INFO    - No default handler found for Feature: (Invalid Handler Conf
   Scenario: Invalid config1 Processes Properties
 Chorus --> INFO    - Processing scenario: Invalid config1 Processes Properties
 Chorus --> WARN    - Invalid ProcessesConfig config1 - main class was null or empty
-Chorus --> WARN    - Removing config1 which is not a valid Processes handler config name, jre, classpath and mainclass must be set
-    I can start a config1 process                                                            FAILED  (ProcessesHandler:419)-No configuration found for process: config1
+Chorus --> WARN    - Removing config1 which is not a valid Processes handler config name, jre, classpath and mainclass must be set for java processes
+    I can start a config1 process                                                            FAILED  (ProcessesHandler:linenumber)-No configuration found for process: config1
     And wait for config1 to terminate                                                        SKIPPED 
   Scenario: Invalid config1 Remoting Properties
 Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
 Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol, name and port must be set
-    I can call an exported method in config1                                                 FAILED  (RemotingHandler:192)-Failed to find MBean configuration for component: config1
+    I can call an exported method in config1                                                 FAILED  (RemotingHandler:linenumber)-Failed to find MBean configuration for component: config1
 
 
 Features  (total:1) (passed:0) (failed:1)

@@ -3,7 +3,7 @@ Feature: Default Handler Properties
 Chorus --> INFO    - No default handler found for Feature: (Default Handler Properties), will use built-in handlers and Uses: statements
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     I can start a config1 process                                                            PASSED  
     And call a remote method in config1                                                      PASSED  true
     And stop process config1                                                                 PASSED  

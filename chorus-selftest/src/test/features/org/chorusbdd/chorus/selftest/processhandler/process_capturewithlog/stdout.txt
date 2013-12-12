@@ -2,7 +2,7 @@ Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/
 Feature: Capture With Log                                                                            
   Scenario: When in capturewithlog mode log files are written
 Chorus --> INFO    - Processing scenario: When in capturewithlog mode log files are written
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a capturewithlog process                                                   PASSED  
     When I read the line 'and another longer line' from the capturewithlog process           PASSED  
     And I read the line 'an error has occurred' from the capturewithlog process std error    PASSED  

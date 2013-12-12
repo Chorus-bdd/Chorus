@@ -109,9 +109,11 @@ public class ProcessesHandler {
         ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processesConfig, processName);
         String logFileBaseName = logOutput.getLogFileBaseName();
 
-        ProcessCommandLineBuilder b = new ProcessCommandLineBuilder(featureDir, processesConfig, logFileBaseName);
+        AbstractCommandLineBuilder b = processesConfig.isJavaProcess() ? 
+                new JavaProcessCommandLineBuilder(featureDir, processesConfig, logFileBaseName) : 
+                new NativeProcessCommandLineBuilder(processesConfig);
+        
         List<String> commandLineTokens = b.buildCommandLine();
-
         startProcess(processName, commandLineTokens, logOutput, processesConfig.getProcessCheckDelay());
     }
 
@@ -140,7 +142,7 @@ public class ProcessesHandler {
             featureDir.getAbsolutePath(),
             File.separatorChar,
             script);
-
+        
         // We have a problem since many of the ProcessesConfig properties which are mandatory for java processes are
         // not suitable for scripts. So presently we have to mock up a ProcessesConfig for scripts and it's therefore
         // not presently possible to configure scripts via process properties, defaults will apply

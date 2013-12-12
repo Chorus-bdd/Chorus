@@ -3,7 +3,7 @@ Feature: Capture Std Output
 Chorus --> INFO    - No default handler found for Feature: (Capture Std Output), will use built-in handlers and Uses: statements
   Scenario: I write and read a line
 Chorus --> INFO    - Processing scenario: I write and read a line
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a echo process named myecho                                                PASSED  
     When I write the line 'Donald Bradman was the greatest of all time' to the myecho processPASSED  
     And I read the line 'Donald Bradman was the greatest of all time' from the myecho processPASSED  

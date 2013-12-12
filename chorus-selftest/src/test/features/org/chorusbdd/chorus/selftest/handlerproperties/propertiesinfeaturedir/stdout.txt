@@ -3,7 +3,7 @@ Feature: Properties In Feature Directory
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
     Given Chorus is working properly                                                         PASSED  
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a config1 process                                                            PASSED  
     And I wait for config1 to terminate                                                      PASSED  
     Then there are logs in the local feature directory                                       PASSED  

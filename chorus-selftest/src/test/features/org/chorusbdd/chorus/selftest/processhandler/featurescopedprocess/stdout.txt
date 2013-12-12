@@ -2,12 +2,12 @@ Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/
 Feature: Feature Scoped Process                                                                      
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     First I start a featurescopedone process                                                 PASSED  
   Scenario: I can call the process in scenario one
 Chorus --> INFO    - Processing scenario: I can call the process in scenario one
     I say hello in featurescopedone                                                          PASSED  
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Then I start a featurescopedtwo process                                                  PASSED  
     And I stop the process named featurescopedone                                            PASSED  
   Scenario: Feature-End

@@ -3,7 +3,7 @@ Feature: Jmx Remote Chorus Context
 Chorus --> INFO    - No default handler found for Feature: (Jmx Remote Chorus Context), will use built-in handlers and Uses: statements
   Scenario: View And Change A Context Variable Remotely
 Chorus --> INFO    - Processing scenario: View And Change A Context Variable Remotely
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named Casablanca                                         PASSED  
     And I set the context variable theUsualSuspects to Nick in Casablanca                    PASSED  
     Then I can access the context variable theUsualSuspects in Casablanca                    PASSED  Nick:String

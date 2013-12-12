@@ -40,7 +40,7 @@ import java.io.IOException;
  */
 public interface ChorusProcess {
 
-    public static final String STARTING_JAVA_LOG_PREFIX = "About to run Java: ";
+    public static final String STARTING_PROCESS_LOG_PREFIX = "About to run process: ";
 
     boolean isStopped();
 

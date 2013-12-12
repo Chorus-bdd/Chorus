@@ -41,13 +41,22 @@ import java.io.File;
  * User: GA2EBBU
  * Date: 21/09/12
  * Time: 11:08
- * To change this template use File | Settings | File Templates.
+ *
+ * A Process config
+ * 
+ * The process will be a java process if pathToExecutable property is not provided.
+ * In tbis case the jre and classpath default to the interpreter's jvm and classpath
+ * These can be overridden by setting the jre and classpath properties
+ * 
+ * jvmargs and mainclass are only applicable for java processes, they should not be set
+ * if the process is a native process with pathToExecutable specified.
  */
 public class ProcessesConfig extends AbstractHandlerConfig {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfig.class);
 
     private String name;
+    private String pathToExecutable;
     private String jre = System.getProperty("java.home");
     private String classpath = System.getProperty("java.class.path");
     private String jvmargs;
@@ -104,6 +113,14 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public void setMainclass(String mainclass) {
         this.mainclass = mainclass;
+    }
+
+    public String getPathToExecutable() {
+        return pathToExecutable;
+    }
+
+    public void setPathToExecutable(String pathToExecutable) {
+        this.pathToExecutable = pathToExecutable;
     }
 
     public String getArgs() {
@@ -212,22 +229,51 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public boolean isValid() {
         boolean valid = true;
-        if ( name == null || name.trim().length() == 0) {
-            valid = logInvalidConfig("group name was null or empty");
-        } else if ( jre == null || ! new File(jre).isDirectory() ) {
-            valid = logInvalidConfig("jre property is null or jre path does not exist");
-        } else if ( classpath == null ) {
-            valid = logInvalidConfig("classpath was null");
-        } else if ( mainclass == null || mainclass.trim().length() == 0 ) {
-            valid = logInvalidConfig("main class was null or empty");
+        if ( ! isSet(name)) {
+            valid = logInvalidConfig("config name was null or empty");
+        } 
+        
+        if ( isJavaProcess() ) {
+            //some properties are mandatory for java processes
+            if ( jre == null || ! new File(jre).isDirectory() ) {
+                valid = logInvalidConfig("jre property is null or jre path does not exist");
+            } else if ( ! isSet(classpath) ) {
+                valid = logInvalidConfig("classpath was null");
+            } else if ( ! isSet(mainclass) ) {
+                valid = logInvalidConfig("main class was null or empty");
+            }
+        } else {
+            //some properties should not be used for non-java processes
+            valid = checkPropertiesForNativeProcess();
         }
         return valid;
     }
 
-    public String getValidationRuleDescription() {
-        return "name, jre, classpath and mainclass must be set";
+    private boolean checkPropertiesForNativeProcess() {
+        boolean valid = true;
+        File file = new File(pathToExecutable);
+        if ( ! file.canExecute()) {
+            valid = logInvalidConfig("The path specified by pathToExecutable does not exist or does not have execute permissions");   
+        } if (isSet(mainclass)) {
+            valid = logInvalidConfig("Cannot the mainclass property for non-java process configured with pathToExecutable");        
+        } else if (isSet(jvmargs) ) {
+            valid = logInvalidConfig("Cannot set jvmargs property for non-java process configured with pathToExecutable");
+        }
+        return valid;
     }
 
+    public boolean isJavaProcess() {
+        return ! isSet(pathToExecutable);
+    }
+    
+    private boolean isSet(String propertyValue) {
+        return propertyValue != null && propertyValue.trim().length() > 0;
+    }
+
+    public String getValidationRuleDescription() {
+        return "name, jre, classpath and mainclass must be set for java processes";
+    }
+    
     protected ChorusLog getLog() {
         return log;
     }
@@ -236,6 +282,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     public String toString() {
         return "ProcessesConfig{" +
                 "name='" + name + '\'' +
+                ", pathToExecutable='" + pathToExecutable + '\'' +
                 ", jre='" + jre + '\'' +
                 ", classpath='" + classpath + '\'' +
                 ", jvmargs='" + jvmargs + '\'' +
@@ -252,4 +299,5 @@ public class ProcessesConfig extends AbstractHandlerConfig {
                 ", processCheckDelay=" + processCheckDelay  + '\'' +
                 '}';
     }
+
 }

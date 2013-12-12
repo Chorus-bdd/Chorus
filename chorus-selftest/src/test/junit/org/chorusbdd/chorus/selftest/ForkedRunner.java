@@ -86,7 +86,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
               mainClass,
               switches).trim();
 
-        System.out.println("About to run Java: " + command);
+        System.out.println("About to run process: " + command);
 
         ByteArrayOutputStream processOut = new ByteArrayOutputStream();
         ByteArrayOutputStream processErr = new ByteArrayOutputStream();

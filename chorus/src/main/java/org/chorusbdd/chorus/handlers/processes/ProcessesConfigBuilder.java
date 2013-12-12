@@ -65,6 +65,8 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
 
             if ("name".equals(key)) {
                 c.setName(value);
+            } else if ("pathToExecutable".equals(key)) {
+                c.setPathToExecutable(value);
             } else if ("jre".equals(key)) {
                 c.setJre(value);
             } else if ("classpath".equals(key)) {

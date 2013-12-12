@@ -3,14 +3,14 @@ Feature: Create Process Log Directory
   Scenario: Create Default Log Directory
 Chorus --> INFO    - Processing scenario: Create Default Log Directory
     Given Chorus is working properly                                                         PASSED  
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a config1 process                                                            PASSED  
     And I wait for up to 10 seconds for the process named config1 to stop                    PASSED  
     Then the logs/createlogdir-config1-out.log file contains a line 1                        PASSED  
   Scenario: Create Named Log Directory
 Chorus --> INFO    - Processing scenario: Create Named Log Directory
     Given Chorus is working properly                                                         PASSED  
-Chorus --> INFO    - About to run Java:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a config2 process                                                            PASSED  
     And I wait for up to 10 seconds for the process named config2 to stop                    PASSED  
     Then the config2logs/createlogdir-config2-out.log file contains a line 2                 PASSED  
