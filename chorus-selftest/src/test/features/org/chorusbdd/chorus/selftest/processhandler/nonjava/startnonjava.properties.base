@@ -1,0 +1,7 @@
+#for testing processes with configurations
+processes.relativePathProcess.pathToExecutable:scriptdir/{scriptName}
+processes.relativePathProcess.logging=true
+
+processes.capturedOutputProcess.pathToExecutable:scriptdir/{scriptName}
+processes.capturedOutputProcess.args:Started
+processes.capturedOutputProcess.stdOutMode:captured
