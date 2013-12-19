@@ -29,16 +29,8 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.nonjava;
 
-import org.chorusbdd.chorus.handlers.util.OSUtils;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.chorusbdd.chorus.selftest.FileUtil;
-import org.junit.Test;
-
-import java.io.*;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,38 +52,12 @@ public class TestNonJavaProcesses extends AbstractInterpreterTest {
         return featurePath;
     }
 
-    @Test
-    public void runTest() throws Exception {
-        writeOsSpecificProperties();
-        super.runTest();
+    /**
+     * A test can override this method to modify the sys properties being used from the default set
+     */
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+        sysProps.setProperty("chorusExecutionListener", PropertyWritingExecutionListener.class.getName());
     }
 
-    private void writeOsSpecificProperties() throws IOException {
-        File file = new File(featurePath);
-        File parent = file.getParentFile();
 
-        File propertiesFileBase = new File(parent, "startnonjava.properties.base");
-        File propertiesFileTarget = new File(parent, "startnonjava.properties");
-        File scriptDir = new File(parent, "scriptdir");
-        InputStream is = new FileInputStream(propertiesFileBase);
-        Properties p = new Properties();
-        p.load(is);
-
-        Enumeration e = p.propertyNames();
-        while( e.hasMoreElements() ) {
-            String s = e.nextElement().toString();
-            String value = p.get(s).toString();
-
-            String osSpecificScript = OSUtils.isWindows() ? "myscript.bat" : "myscript.sh";
-            value = value.replaceAll("\\{scriptName\\}", osSpecificScript);
-            value = value.replaceAll("\\{scriptAbsolutePath\\}", new File(scriptDir, osSpecificScript).getAbsolutePath());
-            p.setProperty(s, value);
-        }
-
-        OutputStream os = new FileOutputStream(propertiesFileTarget);
-        p.store(os, "");
-
-        os.close();
-        is.close();
-    }
 }

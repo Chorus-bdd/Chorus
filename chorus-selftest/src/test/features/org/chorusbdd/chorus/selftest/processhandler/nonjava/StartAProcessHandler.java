@@ -44,7 +44,7 @@ public class StartAProcessHandler extends ChorusAssert {
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
-
+        
     }
 
 }
