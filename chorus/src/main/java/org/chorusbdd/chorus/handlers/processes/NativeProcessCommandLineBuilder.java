@@ -49,9 +49,11 @@ public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder 
     private static ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
 
     private ProcessesConfig processesConfig;
+    private File featureDir;
 
-    public NativeProcessCommandLineBuilder(ProcessesConfig processesConfig) {
+    public NativeProcessCommandLineBuilder(ProcessesConfig processesConfig, File featureDir) {
         this.processesConfig = processesConfig;
+        this.featureDir = featureDir;
     }
     
     @Override
@@ -67,7 +69,16 @@ public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder 
 
     private String getExecutableToken(ProcessesConfig processesConfig) {
         String executableTxt = processesConfig.getPathToExecutable();
+        executableTxt = getPathToExecutable(featureDir, executableTxt);
         return executableTxt;
     }
-
+    
+    public static String getPathToExecutable(File featureDir, String path) {
+        File scriptPath = new File(path);
+        if ( ! scriptPath.isAbsolute() ) {
+            scriptPath = new File(featureDir, path);
+        }
+        return scriptPath.getAbsolutePath();
+    }
+    
 }

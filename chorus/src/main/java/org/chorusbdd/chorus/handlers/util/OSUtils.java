@@ -6,4 +6,8 @@ package org.chorusbdd.chorus.handlers.util;
  * Time: 09:02
  */
 public class OSUtils {
+    
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+    }
 }

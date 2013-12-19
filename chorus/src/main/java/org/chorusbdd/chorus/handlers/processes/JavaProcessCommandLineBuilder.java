@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
+import org.chorusbdd.chorus.handlers.util.OSUtils;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -96,7 +97,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         //I think we want to keep this in on windows, since we will more likely encounter directory names with spaces -
         //I'm worried those will break for linux although this will fix the classpath issue.
         //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
-        boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+        boolean isWindows = OSUtils.isWindows();
         List<String>  classPathTokens = new ArrayList<String>();
         classPathTokens.add("-classpath");
         classPathTokens.add(isWindows ? "\"" + processesConfig.getClasspath() + "\"" : processesConfig.getClasspath());

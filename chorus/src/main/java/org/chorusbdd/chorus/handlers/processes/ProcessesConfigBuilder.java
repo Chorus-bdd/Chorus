@@ -64,7 +64,7 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
             String value = prop.getValue().toString();
 
             if ("name".equals(key)) {
-                c.setName(value);
+                c.setGroupName(value);
             } else if ("pathToExecutable".equals(key)) {
                 c.setPathToExecutable(value);
             } else if ("jre".equals(key)) {

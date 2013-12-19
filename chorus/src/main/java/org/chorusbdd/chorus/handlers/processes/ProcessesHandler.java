@@ -111,7 +111,7 @@ public class ProcessesHandler {
 
         AbstractCommandLineBuilder b = processesConfig.isJavaProcess() ? 
                 new JavaProcessCommandLineBuilder(featureDir, processesConfig, logFileBaseName) : 
-                new NativeProcessCommandLineBuilder(processesConfig);
+                new NativeProcessCommandLineBuilder(processesConfig, featureDir);
         
         List<String> commandLineTokens = b.buildCommandLine();
         startProcess(processName, commandLineTokens, logOutput, processesConfig.getProcessCheckDelay());
@@ -137,17 +137,18 @@ public class ProcessesHandler {
         startScript(script, name, true);
     }
 
-    public void startScript(String script, String name, final boolean logging) throws Exception {
-        String command = String.format("%s%s%s",
-            featureDir.getAbsolutePath(),
-            File.separatorChar,
-            script);
+    public void startScript(String script, final String name, final boolean logging) throws Exception {
+
+        String command = NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
         
-        // We have a problem since many of the ProcessesConfig properties which are mandatory for java processes are
-        // not suitable for scripts. So presently we have to mock up a ProcessesConfig for scripts and it's therefore
-        // not presently possible to configure scripts via process properties, defaults will apply
-        // TODO - support process properties for scripts (validation to check the process type?)
+        // We have a small problem since we lack a ProcessesConfig when running processes this way
+        // So presently we have to mock up a ProcessesConfig
         ProcessesConfig c = new ProcessesConfig() {
+            
+            public String getGroupName() {
+                return name;
+            }
+            
             public boolean isLogging() {
                 return logging;
             }

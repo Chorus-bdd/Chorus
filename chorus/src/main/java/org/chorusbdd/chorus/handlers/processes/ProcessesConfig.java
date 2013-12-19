@@ -55,7 +55,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfig.class);
 
-    private String name;
+    private String groupName;
     private String pathToExecutable;
     private String jre = System.getProperty("java.home");
     private String classpath = System.getProperty("java.class.path");
@@ -76,11 +76,11 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private Scope processScope = Scope.SCENARIO;
 
     public String getGroupName() {
-        return name;
+        return groupName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setGroupName(String name) {
+        this.groupName = name;
     }
 
     public String getJre() {
@@ -229,8 +229,8 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public boolean isValid() {
         boolean valid = true;
-        if ( ! isSet(name)) {
-            valid = logInvalidConfig("config name was null or empty");
+        if ( ! isSet(groupName)) {
+            valid = logInvalidConfig("config groupName was null or empty");
         } 
         
         if ( isJavaProcess() ) {
@@ -251,15 +251,12 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     private boolean checkPropertiesForNativeProcess() {
         boolean valid = true;
-        File file = new File(pathToExecutable);
-        if ( ! file.canExecute()) {
-            valid = logInvalidConfig("The path specified by pathToExecutable does not exist or does not have execute permissions");   
-        } if (isSet(mainclass)) {
+        if (isSet(mainclass)) {
             valid = logInvalidConfig("Cannot the mainclass property for non-java process configured with pathToExecutable");        
         } else if (isSet(jvmargs) ) {
             valid = logInvalidConfig("Cannot set jvmargs property for non-java process configured with pathToExecutable");
         }
-        return valid;
+        return valid;  
     }
 
     public boolean isJavaProcess() {
@@ -271,7 +268,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     }
 
     public String getValidationRuleDescription() {
-        return "name, jre, classpath and mainclass must be set for java processes";
+        return "groupName, jre, classpath and mainclass must be set for java processes";
     }
     
     protected ChorusLog getLog() {
@@ -281,7 +278,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     @Override
     public String toString() {
         return "ProcessesConfig{" +
-                "name='" + name + '\'' +
+                "groupName='" + groupName + '\'' +
                 ", pathToExecutable='" + pathToExecutable + '\'' +
                 ", jre='" + jre + '\'' +
                 ", classpath='" + classpath + '\'' +
