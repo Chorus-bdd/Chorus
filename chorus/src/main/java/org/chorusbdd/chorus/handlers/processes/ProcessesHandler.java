@@ -281,7 +281,7 @@ public class ProcessesHandler {
             p.waitFor();
         } catch (InterruptedException e) {
             log.warn("Interrupted while waiting for process " + processName + " to terminate");
-            throw new ChorusException("Process " + processName + " failed to terminate after " + waitTimeSeconds + " milliseconds");
+            throw new ChorusException("Process " + processName + " failed to terminate after " + waitTimeSeconds + " seconds");
         }
         t.setWaitFinished(); //prevent the interrupt, process finished naturally
     }

@@ -6,7 +6,7 @@ Chorus --> INFO    - Processing scenario: Start a relative path process
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a relativePathProcess process named Frodo                                    PASSED  
-    And I write 'continue' to the Frodo process                                              PASSED  
+    And I write the line 'continue' to the Frodo process                                     PASSED  
     And I wait for the process named Frodo to terminate                                      PASSED  
     Then the process named Frodo has terminated                                              PASSED  
   Scenario: Write and Read to relative path process with argument
@@ -15,7 +15,7 @@ Chorus --> INFO    - Processing scenario: Write and Read to relative path proces
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a capturedOutputProcess process named Cap                                    PASSED  
     And I read the line 'Started' from the Cap process                                       PASSED  
-    And I write 'continue' to the Cap process                                                PASSED  
+    And I write the line 'continue' to the Cap process                                       PASSED  
     And I wait for the process named Cap to terminate                                        PASSED  
     Then the process named Cap has terminated                                                PASSED  
 

@@ -9,7 +9,7 @@ Feature: Start Non Java Processes
   Scenario: Start a relative path process
     Given Chorus is working properly
     And I start a relativePathProcess process named Frodo
-    And I write 'continue' to the Frodo process
+    And I write the line 'continue' to the Frodo process
     And I wait for the process named Frodo to terminate
     Then the process named Frodo has terminated
 
@@ -17,7 +17,7 @@ Feature: Start Non Java Processes
     Given Chorus is working properly
     And I start a capturedOutputProcess process named Cap
     And I read the line 'Started' from the Cap process
-    And I write 'continue' to the Cap process
+    And I write the line 'continue' to the Cap process
     And I wait for the process named Cap to terminate
     Then the process named Cap has terminated
 
