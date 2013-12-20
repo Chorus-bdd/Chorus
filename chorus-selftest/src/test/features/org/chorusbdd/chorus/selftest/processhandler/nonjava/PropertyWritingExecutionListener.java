@@ -39,7 +39,9 @@ public class PropertyWritingExecutionListener extends ExecutionListenerAdapter {
 
             String osSpecificScript = OSUtils.isWindows() ? "myscript.bat" : "myscript.sh";
             value = value.replaceAll("\\{scriptName\\}", osSpecificScript);
-            value = value.replaceAll("\\{scriptAbsolutePath\\}", new File(scriptDir, osSpecificScript).getAbsolutePath());
+            
+            String absPath = new File(scriptDir, osSpecificScript).getAbsolutePath().replace('\\', '/');
+            value = value.replaceAll("\\{scriptAbsolutePath\\}", absPath);
             p.setProperty(s, value);
         }
 
