@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
+    
+    <version>
+        <versionNumber>1.6.1</versionNumber>
+        <comment>Better support to allow native (non-java) processes to be configured and launched.</comment>
+        <change desc="Add an executionPath property to the ProcessesHandler properties. This can be a relative path from the feature directory or an absolute path. Where set this causes Chorus to treat the process as native."/>
+    </version>    
     <version>
         <versionNumber>1.6.0</versionNumber>
         <comment>A major release with some significant new features. Backwards compatible with 1.5.x apart from renaming of the class HandlerScope to Scope</comment>
