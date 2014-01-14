@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.1 ###
+        
+*Add support to allow non-java processes or scripts to be launched and configured with properties in the same manner as java processes.*
+        
+| Changes in 1.6.1 |
+| ------ |
+| Added a pathToExecutable property for the Processes Handler. This can be a relative path from the feature directory or an absolute path. Where set this causes Chorus to treat the process as a native process instead of launching a new jvm instance. The other non-java-specific properties may be set as usual so that native processes now have first class support. |
+        
 ### Version 1.6.0 ###
         
 *A major release with some significant new features. Backwards compatible with 1.5.x apart from renaming of the class HandlerScope to Scope*

@@ -4,8 +4,8 @@
     
     <version>
         <versionNumber>1.6.1</versionNumber>
-        <comment>Better support to allow native (non-java) processes to be configured and launched.</comment>
-        <change desc="Add an executionPath property to the ProcessesHandler properties. This can be a relative path from the feature directory or an absolute path. Where set this causes Chorus to treat the process as native."/>
+        <comment>Add support to allow non-java processes or scripts to be launched and configured with properties in the same manner as java processes.</comment>
+        <change desc="Added a pathToExecutable property for the Processes Handler. This can be a relative path from the feature directory or an absolute path. Where set this causes Chorus to treat the process as a native process instead of launching a new jvm instance. The other non-java-specific properties may be set as usual so that native processes now have first class support."/>
     </version>    
     <version>
         <versionNumber>1.6.0</versionNumber>

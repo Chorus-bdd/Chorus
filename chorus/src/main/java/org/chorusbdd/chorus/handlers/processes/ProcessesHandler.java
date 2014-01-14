@@ -137,12 +137,17 @@ public class ProcessesHandler {
         startScript(script, name, true);
     }
 
+    /**
+     *  @deprecated Since 1.6.1 the preferred way to launch e a non-java process is to set the new processes handler property 'pathToExecutable' 
+     */
     public void startScript(String script, final String name, final boolean logging) throws Exception {
 
         String command = NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
         
         // We have a small problem since we lack a ProcessesConfig when running processes this way
         // So presently we have to mock up a ProcessesConfig
+        // Recommended solution is to use the process handler property pathToExecutable instead and then you can set all
+        // the other config properties appropriately
         ProcessesConfig c = new ProcessesConfig() {
             
             public String getGroupName() {
