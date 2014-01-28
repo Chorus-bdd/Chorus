@@ -35,12 +35,18 @@ Feature: Polled Assertion
      Given I start a remotePolled process
      Then another test condition fails with RuntimeException in remotePolled
 
+     
    Scenario: Long running step method overruns passes within period
+     #This scenario is to test for a defect where PolledAssertion/PassesWithin keeps polling the step method even after 
+     #the expected PassesWithin time has expired
      #We can't easily kill a running step method which has exceeded the time specified by PassesWithin annotation
      #The best we can do is make sure once it returns we do not poll it again if the passes within period has been exceeded
-     When I call a ten second step method with passes within ten seconds annotation
-     Then the next step runs ten seconds later
+     When I call a 1 second to run step method with passes within 1 second annotation
+     Then the next step runs 1 second later
 
+     
   Scenario: Long running step method overruns passes throughout period
-    When I call a ten second step method with passes throughout ten seconds annotation
-    Then the next step runs ten seconds later
+     #This scenario is to test for a defect where PolledAssertion/PassesWithin keeps polling the step method even after 
+     #the expected PassesWithin time has expired
+     When I call a 1 second to run step method with passes throughout 1 second annotation
+     Then the next step runs 1 second later

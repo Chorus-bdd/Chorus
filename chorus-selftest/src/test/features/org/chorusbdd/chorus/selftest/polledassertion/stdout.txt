@@ -35,14 +35,14 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote RuntimeException - My Runtime Exception Message
   Scenario: Long running step method overruns passes within period
 Chorus --> INFO    - Processing scenario: Long running step method overruns passes within period
-    When I call a ten second step method with passes within ten seconds annotation           PASSED  
-    Then the next step runs ten seconds later                                                PASSED  
+    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  (PolledAssertionHandler:linenumber)-Whoops
+    Then the next step runs 1 second later                                                   SKIPPED 
   Scenario: Long running step method overruns passes throughout period
 Chorus --> INFO    - Processing scenario: Long running step method overruns passes throughout period
-    When I call a ten second step method with passes throughout ten seconds annotation       PASSED  
-    Then the next step runs ten seconds later                                                PASSED  
+    When I call a 1 second to run step method with passes throughout 1 second annotation     PASSED  
+    Then the next step runs 1 second later                                                   PASSED  
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:7) (passed:2) (failed:5)
-Steps     (total:24) (passed:19) (failed:5) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:7) (passed:1) (failed:6)
+Steps     (total:24) (passed:17) (failed:6) (undefined:0) (pending:0) (skipped:1)

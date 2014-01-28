@@ -106,29 +106,36 @@ public class PolledAssertionHandler {
         assertEquals("Expect to have been polled at least " + times + " times but was " + passesForPollCount, times, passesForPollCount);
     }
     
-    @Step("I call a ten second step method with passes within ten seconds annotation")
-    @PassesWithin(length=10, timeUnit = TimeUnit.SECONDS)
+    @Step("I call a 1 second to run step method with passes within 1 second annotation")
+    @PassesWithin(length=1, timeUnit = TimeUnit.SECONDS, pollFrequencyInMilliseconds = 100)
     public void callATenSecondRunningMethod() {
         longMethodStartTime = System.currentTimeMillis();
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
+        }
+        
+        //this will cause the test to pass if the step method is polled again
+        //we actually expect it to fail and check for this failure in the output, since after the first run we will 
+        //already be over the allotted 1 second time limit and so the step should not get called again
+        if ( System.currentTimeMillis() - longMethodStartTime < 1100) {
+            throw new AssertionError("Whoops");            
         }
     }
 
-    @Step("I call a ten second step method with passes throughout ten seconds annotation")
-    @PassesWithin(length=10, timeUnit = TimeUnit.SECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
+    @Step("I call a 1 second to run step method with passes throughout 1 second annotation")
+    @PassesWithin(length=1, timeUnit = TimeUnit.SECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD, pollFrequencyInMilliseconds = 100)
     public void callATenSecondRunningMethodWithPassThroughout() {
         longMethodStartTime = System.currentTimeMillis();
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
     }
     
-    @Step("the next step runs ten seconds later")
+    @Step("the next step runs 1 second later")
     public void checkRunTimeForLongMethod() {
-        assertTrue(System.currentTimeMillis() - longMethodStartTime < 12000);  //allow up to 2 seconds
+        assertTrue(System.currentTimeMillis() - longMethodStartTime < 1500);  //allow up to 500 ms extra
     }
     
 }
