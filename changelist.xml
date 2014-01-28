@@ -4,7 +4,7 @@
 
     <version>
         <versionNumber>1.6.2</versionNumber>
-        <comment></comment>
+        <comment>Minor bugfix release</comment>
         <bugfix desc="PassesWithin / PolledAssertion will now stop polling if the polled step method execution time overruns the specified period"/>
     </version>
     <version>

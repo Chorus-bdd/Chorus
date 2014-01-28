@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.2 ###
+        
+*Minor bugfix release*
+        
+| Changes in 1.6.2 |
+| ------ |
+| BUGFIX: PassesWithin / PolledAssertion will now stop polling if the polled step method execution time overruns the specified period |
+        
 ### Version 1.6.1 ###
         
 *Add support to allow non-java processes or scripts to be launched and configured with properties in the same manner as java processes.*
