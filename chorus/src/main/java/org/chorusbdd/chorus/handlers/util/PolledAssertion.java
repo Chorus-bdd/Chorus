@@ -114,10 +114,12 @@ public abstract class PolledAssertion {
      * errors will be propagated and will cause test failure
      */
     public void await(TimeUnit unit, int count) {
+        
         int pollPeriodMillis = getPollPeriodMillis();
-        int maxAttempts = (int)(unit.toMillis(count) / pollPeriodMillis);
+        long expireTime = System.currentTimeMillis() + unit.toMillis(count);
+
         boolean success = false;
-        for ( int check = 1; check < maxAttempts ; check ++) {  //try maxAttempts - 1 times snaffling any errors
+        while(true) {
             try {
                 validate();
                 //no assertion errors? condition passes, we can continue
@@ -126,7 +128,12 @@ public abstract class PolledAssertion {
             } catch (Throwable r) {
                 //ignore failures up until the last check
             }
+            
             doSleep(pollPeriodMillis);
+
+            if ( System.currentTimeMillis() > expireTime) {
+                break;
+            }
         }
 
         if ( ! success ) {
@@ -153,16 +160,22 @@ public abstract class PolledAssertion {
      * check that the assertions pass for the whole duration of the period specified
      */
     public void check(TimeUnit timeUnit, int count) {
+        
         int pollPeriodMillis = getPollPeriodMillis();
-        int maxAttempts = (int)(timeUnit.toMillis(count) / pollPeriodMillis);
-        maxAttempts = Math.max(maxAttempts, 1); //always check at least once
-        for ( int check = 0; check < maxAttempts ; check ++) {
+        long expireTime = System.currentTimeMillis() + timeUnit.toMillis(count);
+        
+        while(true) {
             try {
                 validate();
             } catch (Throwable t) {
                 propagateAsError(t);
             }
+            
             doSleep(pollPeriodMillis);
+
+            if ( System.currentTimeMillis() > expireTime) {
+                break;
+            }
         }
     }
 

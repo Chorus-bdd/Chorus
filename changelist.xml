@@ -1,7 +1,12 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
-    
+
+    <version>
+        <versionNumber>1.6.2</versionNumber>
+        <comment></comment>
+        <bugfix desc="PassesWithin / PolledAssertion will now stop polling if the polled step method execution time overruns the specified period"/>
+    </version>
     <version>
         <versionNumber>1.6.1</versionNumber>
         <comment>Add support to allow non-java processes or scripts to be launched and configured with properties in the same manner as java processes.</comment>

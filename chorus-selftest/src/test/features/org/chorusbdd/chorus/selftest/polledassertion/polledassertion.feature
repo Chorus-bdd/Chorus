@@ -27,10 +27,20 @@ Feature: Polled Assertion
      Then test condition eventually passes in remotePolled
      And another test condition fails with AssertionError in remotePolled
 
-    Scenario: Remoting with Polled Assertions with Exception
-      Given I start a remotePolled process
-      Then another test condition fails with Exception in remotePolled
+   Scenario: Remoting with Polled Assertions with Exception
+     Given I start a remotePolled process
+     Then another test condition fails with Exception in remotePolled
 
-    Scenario: Remoting with Polled Assertions with RuntimeException
-      Given I start a remotePolled process
-      Then another test condition fails with RuntimeException in remotePolled
+   Scenario: Remoting with Polled Assertions with RuntimeException
+     Given I start a remotePolled process
+     Then another test condition fails with RuntimeException in remotePolled
+
+   Scenario: Long running step method overruns passes within period
+     #We can't easily kill a running step method which has exceeded the time specified by PassesWithin annotation
+     #The best we can do is make sure once it returns we do not poll it again if the passes within period has been exceeded
+     When I call a ten second step method with passes within ten seconds annotation
+     Then the next step runs ten seconds later
+
+  Scenario: Long running step method overruns passes throughout period
+    When I call a ten second step method with passes throughout ten seconds annotation
+    Then the next step runs ten seconds later

@@ -50,6 +50,8 @@ public class PolledAssertionHandler {
     
     private int passesWithinPollCount;
     private int passesForPollCount;
+    
+    private long longMethodStartTime;
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
@@ -102,6 +104,31 @@ public class PolledAssertionHandler {
     @Step("the check method was polled (\\d+) times")
     public void checkPolledMultipleTimes(int times) {
         assertEquals("Expect to have been polled at least " + times + " times but was " + passesForPollCount, times, passesForPollCount);
+    }
+    
+    @Step("I call a ten second step method with passes within ten seconds annotation")
+    @PassesWithin(length=10, timeUnit = TimeUnit.SECONDS)
+    public void callATenSecondRunningMethod() {
+        longMethodStartTime = System.currentTimeMillis();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    @Step("I call a ten second step method with passes throughout ten seconds annotation")
+    @PassesWithin(length=10, timeUnit = TimeUnit.SECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
+    public void callATenSecondRunningMethodWithPassThroughout() {
+        longMethodStartTime = System.currentTimeMillis();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+        }
+    }
+    
+    @Step("the next step runs ten seconds later")
+    public void checkRunTimeForLongMethod() {
+        assertTrue(System.currentTimeMillis() - longMethodStartTime < 12000);  //allow up to 2 seconds
     }
     
 }
