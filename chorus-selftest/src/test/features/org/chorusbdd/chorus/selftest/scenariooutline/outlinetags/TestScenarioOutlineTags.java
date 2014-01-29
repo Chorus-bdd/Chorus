@@ -27,9 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.scenariooutline;
+package org.chorusbdd.chorus.selftest.scenariooutline.outlinetags;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,9 +38,9 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestScenarioOutline extends AbstractInterpreterTest {
+public class TestScenarioOutlineTags extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/scenariooutline.feature";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/outlinetags/scenariooutlinetags.feature";
 
     final int expectedExitCode = 0;
 
@@ -49,6 +50,13 @@ public class TestScenarioOutline extends AbstractInterpreterTest {
 
     protected String getFeaturePath() {
         return featurePath;
+    }
+
+    /**
+     * A test can override this method to modify the sys properties being used from the default set
+     */
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+        sysProps.put("chorusTagExpression", "@ADDITIVE_FEATURE @ADDITIVE_SCENARIO @TESTTAG");
     }
 
 }

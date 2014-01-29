@@ -59,12 +59,16 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
     private static final int READING_EXAMPLES_TABLE = 16;
     private static final int READING_STEP_MACRO = 32;
 
+    private static String OUTLINE_VARIABLE_TAGS_PARAMETER = "chorusTags";
+
+
     //the filter tags are read before a feature or scenario so when found store them here until next line is read
     private String lastTagsLine = null;
 
     private StepMacroParser stepMacroParser = new StepMacroParser();
     private List<StepMacro> globalStepMacro;
     private int endFeatureLineNumber = -1;
+
 
     public FeatureFileParser() {
         this(Collections.<StepMacro>emptyList());
@@ -328,6 +332,9 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                                                     List<String> currentScenariosTags, List<StepMacro> stepMacros) {
         ScenarioToken scenario = new ScenarioToken();
         scenario.setName(scenarioName);
+
+        List<String> outlineVariableTags = findChorusTagsFromOutlineVariables(placeholders, values);
+         
         //then the outline scenario steps
         for (StepToken step : outlineScenario.getSteps()) {
             String action = step.getAction();
@@ -342,8 +349,19 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         //add the filter tags
         scenario.addTags(currentFeaturesTags);
         scenario.addTags(currentScenariosTags);
+        scenario.addTags(outlineVariableTags);
 
         return scenario;
+    }
+
+    private List<String> findChorusTagsFromOutlineVariables(List<String> placeholders, List<String> values) {
+        String extraTags = "";
+        for ( int index = 0; index < placeholders.size() ; index++) {
+            if ( OUTLINE_VARIABLE_TAGS_PARAMETER.equals(placeholders.get(index))) {
+                extraTags = values.get(index);    
+            }
+        }
+        return extractTags(extraTags);
     }
 
     private List<String> readTableRowData(String line, boolean blankValuesPermitted) {
@@ -376,10 +394,17 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
      * @return the tags or null if lastTagsLine is null.
      */
     private List<String> extractTagsAndResetLastTagsLineField() {
-        if (lastTagsLine == null) {
+        String tags = lastTagsLine;
+        List<String> result = extractTags(tags);
+        resetLastTagsLine();
+        return result;
+    }
+
+    private List<String> extractTags(String tags) {
+        if (tags == null || tags.trim().length() == 0) {
             return null;
         } else {
-            String[] names = lastTagsLine.trim().split(" ");
+            String[] names = tags.trim().split(" ");
             List<String> list = new ArrayList<String>();
             for (String name : names) {
                 String tagName = name.trim();
@@ -387,7 +412,6 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     list.add(tagName);
                 }
             }
-            resetLastTagsLine();
             return list;
         }
     }

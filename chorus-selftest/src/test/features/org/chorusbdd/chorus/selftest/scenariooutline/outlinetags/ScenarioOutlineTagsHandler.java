@@ -27,28 +27,27 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.scenariooutline;
+package org.chorusbdd.chorus.selftest.scenariooutline.outlinetags;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 25/06/12
- * Time: 22:14
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class TestScenarioOutline extends AbstractInterpreterTest {
+@Handler("Scenario Outline Tags")
+public class ScenarioOutlineTagsHandler {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/scenariooutline.feature";
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
 
-    final int expectedExitCode = 0;
-
-    protected int getExpectedExitCode() {
-        return expectedExitCode;
     }
 
-    protected String getFeaturePath() {
-        return featurePath;
+    @Step("I can run a step with value (.*)")
+    public String canRunAFeature(String value) {
+        return value;
     }
-
 }
