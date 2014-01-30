@@ -131,7 +131,7 @@ public abstract class PolledAssertion {
             
             doSleep(pollPeriodMillis);
 
-            if ( System.currentTimeMillis() > expireTime) {
+            if ( System.currentTimeMillis() >= expireTime) {
                 break;
             }
         }
@@ -173,7 +173,7 @@ public abstract class PolledAssertion {
             
             doSleep(pollPeriodMillis);
 
-            if ( System.currentTimeMillis() > expireTime) {
+            if ( System.currentTimeMillis() >= expireTime) {
                 break;
             }
         }

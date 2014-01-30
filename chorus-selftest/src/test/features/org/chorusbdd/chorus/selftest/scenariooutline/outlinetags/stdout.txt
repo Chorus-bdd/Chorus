@@ -1,11 +1,11 @@
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/outlinetags/scenariooutlinetags.feature
 Feature: Scenario Outline                                                                            
-  Scenario: Simple Scenario [1]
-Chorus --> INFO    - Processing scenario: Simple Scenario [1]
+  Scenario: Simple Scenario [1] A Long Value
+Chorus --> INFO    - Processing scenario: Simple Scenario [1] A Long Value
     Given Chorus is working properly                                                         PASSED  
     Then I can run a step with value A Long Value                                            PASSED  A Long Value
-  Scenario: Simple Scenario [2]
-Chorus --> INFO    - Processing scenario: Simple Scenario [2]
+  Scenario: Simple Scenario [2] B Long Value
+Chorus --> INFO    - Processing scenario: Simple Scenario [2] B Long Value
     Given Chorus is working properly                                                         PASSED  
     Then I can run a step with value B Long Value                                            PASSED  B Long Value
 

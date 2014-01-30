@@ -6,14 +6,14 @@ Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
     Then I can call a step macro with two variables 1234 and mytestgroup                     PASSED  
     .. Then I can call a handler step with group 1234                                           PASSED  1234
     .. And I can call a handler step with group mytestgroup                                     PASSED  mytestgroup
-  Scenario: Step Macro With Outline [1]
-Chorus --> INFO    - Processing scenario: Step Macro With Outline [1]
+  Scenario: Step Macro With Outline [1] 123
+Chorus --> INFO    - Processing scenario: Step Macro With Outline [1] 123
     Given Chorus is working properly                                                         PASSED  
     Then I can call a step macro with two variables 123 and test1                            PASSED  
     .. Then I can call a handler step with group 123                                            PASSED  123
     .. And I can call a handler step with group test1                                           PASSED  test1
-  Scenario: Step Macro With Outline [2]
-Chorus --> INFO    - Processing scenario: Step Macro With Outline [2]
+  Scenario: Step Macro With Outline [2] 456
+Chorus --> INFO    - Processing scenario: Step Macro With Outline [2] 456
     Given Chorus is working properly                                                         PASSED  
     Then I can call a step macro with two variables 456 and test2                            PASSED  
     .. Then I can call a handler step with group 456                                            PASSED  456

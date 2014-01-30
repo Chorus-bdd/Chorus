@@ -331,10 +331,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                                                     List<String> values,List<String> currentFeaturesTags,
                                                     List<String> currentScenariosTags, List<StepMacro> stepMacros) {
         ScenarioToken scenario = new ScenarioToken();
-        scenario.setName(scenarioName);
 
         List<String> outlineVariableTags = findChorusTagsFromOutlineVariables(placeholders, values);
          
+        //append the first paramter to the scenario name if there is one
+        String firstParam = " " + (values.size() > 0 ? values.get(0) : "");
+        scenarioName += firstParam.trim().length() > 0 ? firstParam : "";
+        scenario.setName(scenarioName);
+
+
         //then the outline scenario steps
         for (StepToken step : outlineScenario.getSteps()) {
             String action = step.getAction();
