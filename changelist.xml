@@ -4,8 +4,8 @@
 
     <version>
         <versionNumber>1.6.3</versionNumber>
-        <comment>Improvements for Scenario-Outline</comment>
-        <change desc="Better description for Scenario-Outline secnarios -  the first variable defined in each table row 
+        <comment>Allow tagging for Scenario-Outline scenarios</comment>
+        <change desc="Better description for Scenario-Outline scenarios -  the first variable defined in each table row 
         is appended to the scenario name, to make it easier to match scenario to example in chorus' output"/>
         <change desc="Enable tagging for Scenario-Outline examples - if the examples table defines a variable with the name 
         chorusTags then use any values in that column as chorus tags for the generated scenarios"/>
