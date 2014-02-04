@@ -99,23 +99,24 @@ public class PlainResultsFormatter implements ResultsFormatter {
         out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
     }
 
-    public void printFeature(FeatureToken feature, String status, String message) {
-        out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), status, message);
-    }
-
     public void printScenario(ScenarioToken scenario) {
         out.printf("  Scenario: %s%n", scenario.getName());
     }
 
-    public void printStep(StepToken step, int depth) {
+    public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
         int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+        String terminator = step.isStepMacro() ? "->%n" : ".\r";
+        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+    }
 
-        //to add a step count to parent steps, preserved for future use
-        //int totalStepCount = step.getTotalStepCountWithDescendants();
-        //String stepMacroStepCount = step.isStepMacro() ? "(" + totalStepCount + ")" : "";
-        //out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%s%n", step.toString(), step.getEndState(), step.getMessage(), stepMacroStepCount);
+
+    public void printStepEnd(StepToken step, int depth) {
+        if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
+            StringBuilder depthPadding = getDepthPadding(depth);
+            int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
+            out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+        }
     }
 
     private StringBuilder getDepthPadding(int depth) {

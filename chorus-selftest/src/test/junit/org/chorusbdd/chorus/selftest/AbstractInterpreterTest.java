@@ -84,11 +84,11 @@ public abstract class AbstractInterpreterTest extends Assert {
             getExpectedExitCode()
         );
 
-        if (runTestsInProcess) {
-            inProcess = true;
-            ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysPropsForTest);
-            checkTestResults(r, expectedResults);
-        }
+//        if (runTestsInProcess) {
+//            inProcess = true;
+//            ChorusSelfTestResults r = new InProcessRunner().runChorusInterpreter(sysPropsForTest);
+//            checkTestResults(r, expectedResults);
+//        }
 
         if ( runTestsForked ) {
             inProcess = false;

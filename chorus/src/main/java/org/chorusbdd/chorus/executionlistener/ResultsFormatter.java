@@ -42,11 +42,11 @@ public interface ResultsFormatter {
 
     void printFeature(FeatureToken feature);
 
-    void printFeature(FeatureToken feature, String status, String message);
-
     void printScenario(ScenarioToken scenario);
 
-    void printStep(StepToken step, int depth);
+    void printStepStart(StepToken step, int depth);
+
+    void printStepEnd(StepToken step, int depth);
 
     void printStackTrace(String stackTrace);
 

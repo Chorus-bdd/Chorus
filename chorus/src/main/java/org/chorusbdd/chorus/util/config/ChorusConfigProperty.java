@@ -85,7 +85,9 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
     "Number of seconds after which a scenario will timeout", PropertySourceMode.OVERRIDE),
     
-    EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE);
+    EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
+    
+    OUTPUT_FORMATTER("", "", "chorusOutputFormatter", false, 0, 1, new String[] {"org.chorusbdd.chorus.executionlistener.PlainResultsFormatter"}, ".*", "org.myorg.MyResultsFormatter", "A class which implements ResultsFormatter used to display Chorus interpreter output", PropertySourceMode.OVERRIDE  );
 
 
     private String switchName;

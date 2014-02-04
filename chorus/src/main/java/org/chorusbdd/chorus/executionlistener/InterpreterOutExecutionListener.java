@@ -41,10 +41,10 @@ import java.util.List;
  * Date: 11/01/12
  *
  * This execution listener is responsible for generating the console standard output for Chorus
+ * 
+ * It delegates to a ResultsFormatter for the actual output
  */
-public class SystemOutExecutionListener implements ExecutionListener {
-
-    private final ByteArrayOutputStream stepMacroOutputStream  = new ByteArrayOutputStream(1024);
+public class InterpreterOutExecutionListener implements ExecutionListener {
 
     private ResultsFormatter chorusOutFormatter = new PlainResultsFormatter(new PrintWriter(ChorusOut.out, true));
 
@@ -53,9 +53,10 @@ public class SystemOutExecutionListener implements ExecutionListener {
 
     private int stepMacroDepth = 0;
 
-    public SystemOutExecutionListener(boolean showSummary, boolean verbose) {
+    public InterpreterOutExecutionListener(boolean showSummary, boolean verbose, ResultsFormatter chorusOutFormatter) {
         this.showSummary = showSummary;
         this.verbose = verbose;
+        this.chorusOutFormatter = chorusOutFormatter;
     }
 
     public void setFormatter(ResultsFormatter formatter) {
@@ -85,28 +86,16 @@ public class SystemOutExecutionListener implements ExecutionListener {
 
     public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
         stepMacroDepth ++;  //are we processing a top level scenario step (depth == 1) or a step macro step ( depth > 1 )
+        chorusOutFormatter.printStepStart(step, stepMacroDepth);
     }
 
     public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
-        if ( stepMacroDepth == 1) {
-            printSteps(step, stepMacroDepth);
-        }
+        printStepEnd(step, stepMacroDepth);
         stepMacroDepth --;
     }
 
-    private void printSteps(StepToken step, int depth) {
-        printStep(step, depth);
-
-        //if the completed step was a step macro, sometimes we need to show the child steps
-        if ( step.isStepMacro() ) {
-            for ( StepToken s : step.getChildSteps()) {
-                printSteps(s, depth + 1);
-            }
-        }
-    }
-
-    private void printStep(StepToken step, int depth) {
-        chorusOutFormatter.printStep(step, depth);
+    private void printStepEnd(StepToken step, int depth) {
+        chorusOutFormatter.printStepEnd(step, depth);
         if (step.getException() != null && verbose) {
             chorusOutFormatter.printStackTrace(step.getStackTrace());
         }

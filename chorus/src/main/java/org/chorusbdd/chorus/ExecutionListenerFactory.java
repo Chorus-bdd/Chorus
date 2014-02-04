@@ -30,14 +30,18 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.executionlistener.SystemOutExecutionListener;
+import org.chorusbdd.chorus.executionlistener.InterpreterOutExecutionListener;
+import org.chorusbdd.chorus.executionlistener.PlainResultsFormatter;
+import org.chorusbdd.chorus.executionlistener.ResultsFormatter;
 import org.chorusbdd.chorus.remoting.jmx.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
 
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +113,27 @@ public class ExecutionListenerFactory {
     private void addSystemOutExecutionListener(ConfigProperties config, List<ExecutionListener> result) {
         boolean verbose = config.isTrue(ChorusConfigProperty.SHOW_ERRORS);
         boolean showSummary = config.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
-        result.add(new SystemOutExecutionListener(showSummary, verbose));
+
+
+        ResultsFormatter formatter = 'getResultsFormatter(config);
+        
+        InterpreterOutExecutionListener e = new InterpreterOutExecutionListener(showSummary, verbose, formatter);
+        result.add(e);
+    }
+
+    private ResultsFormatter getResultsFormatter(ConfigProperties config) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+        ResultsFormatter formatter = new PlainResultsFormatter(new PrintWriter(ChorusOut.out));
+        if ( config.isSet(ChorusConfigProperty.OUTPUT_FORMATTER)) {
+            String formatterClass = config.getValue(ChorusConfigProperty.OUTPUT_FORMATTER);           
+            Class formatterClazz = Class.forName(formatterClass);
+            Object o = formatterClazz.newInstance();
+            if ( o instanceof ResultsFormatter) {
+                log.error("The " + ChorusConfigProperty.OUTPUT_FORMATTER.getSystemProperty() + " property must be a class which implements ResultsFormatter");
+            } else {
+                formatter = (ResultsFormatter)o;
+            }
+        }
+        return formatter;
     }
 
     private void addProxyForRemoteJmxListener(List<String> remoteListenerHostAndPorts, List<ExecutionListener> result) {
