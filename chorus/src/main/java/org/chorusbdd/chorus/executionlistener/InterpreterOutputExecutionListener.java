@@ -106,6 +106,5 @@ public class InterpreterOutputExecutionListener implements ExecutionListener {
         if (showSummary) {
             chorusOutFormatter.printResults(testExecutionToken.getResultsSummary());
         }
-        chorusOutFormatter.flush();
     }
 }

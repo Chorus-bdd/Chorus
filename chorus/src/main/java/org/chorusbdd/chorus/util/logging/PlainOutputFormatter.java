@@ -100,10 +100,12 @@ public class PlainOutputFormatter implements OutputFormatter {
 
     public void printFeature(FeatureToken feature) {
         out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
+        out.flush();
     }
 
     public void printScenario(ScenarioToken scenario) {
         out.printf("  Scenario: %s%n", scenario.getName());
+        out.flush();
     }
 
     public void printStepStart(StepToken step, int depth) {
@@ -111,6 +113,8 @@ public class PlainOutputFormatter implements OutputFormatter {
 //        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
 //        String terminator = step.isStepMacro() ? "->%n" : ".\r";
 //        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+//        out.flush();
+
     }
 
 
@@ -119,6 +123,7 @@ public class PlainOutputFormatter implements OutputFormatter {
             StringBuilder depthPadding = getDepthPadding(depth);
             int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
             out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+            out.flush();
         }
     }
 
@@ -135,13 +140,11 @@ public class PlainOutputFormatter implements OutputFormatter {
 
     public void printStackTrace(String stackTrace) {
         out.print(stackTrace);
+        out.flush();
     }
 
     public void printMessage(String message) {
         out.printf("%s%n", message);
-    }
-
-    public void flush() {
         out.flush();
     }
 
@@ -157,7 +160,8 @@ public class PlainOutputFormatter implements OutputFormatter {
         if ( level == LogLevel.ERROR ) {
             t.printStackTrace(ChorusOut.err);    
         } else {
-            t.printStackTrace(ChorusOut.out);
+            t.printStackTrace(out);
+            out.flush();
         }
     }
 
@@ -165,12 +169,14 @@ public class PlainOutputFormatter implements OutputFormatter {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
         out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        out.flush();
     }
 
     protected void logErr(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
         out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        out.flush();
     }
 
 }

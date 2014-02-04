@@ -62,8 +62,6 @@ public interface OutputFormatter {
 
     void printResults(ResultsSummary summary);
 
-    void flush();
-
     void log(LogLevel type, Object message);
     
     void logThrowable(LogLevel type, Throwable t);
