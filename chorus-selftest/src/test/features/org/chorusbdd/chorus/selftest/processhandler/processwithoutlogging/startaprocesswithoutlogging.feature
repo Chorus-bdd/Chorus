@@ -9,8 +9,6 @@ Feature: Start A Process Without Logging
 
   Scenario: Start a Single Java Process
     Given Chorus is working properly
-    And I wait for 1 second
-    And I wait for 1 second
     And I start a config1 process named Frodo
     And I wait for the process named Frodo to terminate
     Then the process named Frodo has terminated

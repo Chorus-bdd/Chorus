@@ -27,18 +27,26 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.executionlistener;
+package org.chorusbdd.chorus.util.logging;
 
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.logging.LogLevel;
+
+import java.io.PrintStream;
 
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public interface ResultsFormatter {
+public interface OutputFormatter {
+
+    /**
+     * will be called before any print method, to provide a PrintStream to which the formatter can write its output
+     */
+    void setPrintStream(PrintStream out);
 
     void printFeature(FeatureToken feature);
 
@@ -56,4 +64,7 @@ public interface ResultsFormatter {
 
     void flush();
 
+    void log(LogLevel type, Object message);
+    
+    void logThrowable(LogLevel type, Throwable t);
 }

@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.selftest;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.io.ByteArrayOutputStream;
@@ -67,6 +68,7 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          try {
              ChorusOut.setStdOutStream(outStream);
              ChorusOut.setStdErrStream(errStream);
+             ChorusLogFactory.getOutputFormatter().setPrintStream(outStream);
 
              //there's a bit of jiggery pokery necessary here to get the log4j appender and
              //change it's output stream so that it writes to the buffers we created for this particular test
@@ -84,6 +86,7 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          } finally {
              ChorusOut.setStdOutStream(System.out);
              ChorusOut.setStdErrStream(System.err);
+             ChorusLogFactory.getOutputFormatter().setPrintStream(System.out);
          }
 
          return new ChorusSelfTestResults(out.toString(), err.toString(), success ? 0 : 1);

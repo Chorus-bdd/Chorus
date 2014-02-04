@@ -35,37 +35,25 @@ package org.chorusbdd.chorus.util.logging;
  * Date: 14/05/12
  * Time: 18:30
  *
- *  A logging abstraction which prevents a mandatory runtime dependency on commons logging LogFactory
- *  (so this class is a logging abstraction over a logging abstraction -- all in the name of no mandatory runtime dependencies!)
- *
- *  The actual implementation of ChorusLogProvider is derived at runtime in the following manner:
- *
- *  1) if the -DchorusLogProvider system property is set, take the value of this property as the name of the factory
- *  class to instantiate. This class must implement ChorusLogProvider
- *
- *  2) If chorusLogProvider is not set, use a StandardOutLogProvider
- *
- *  To use commons logging specify -DchorusLogProvider=org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider
- *
- *  Commons is often on the classpath, although usually we want to see chorus log output inline with the chorus test output
- *  (which always goes to std out). So we use the StandardOutLogProvider as the default, even where Chorus commons exists
+ *  A factory for ChorusLog instances.
+ *  
+ *  Also creates the OutputFormatter which used to write all Chorus' output
+ *  The OutputFormatter implementation can be changed by setting the chorusOutputFormatter system property
  *
  */
 public class ChorusLogFactory {
 
     private static final ChorusLogProvider logProvider;
-
-    public static final String LOG_PROVIDER_SYSTEM_PROPERTY = "chorusLogProvider";
+    private static final OutputFormatter outputFormatter;
 
     static {
-        ChorusLogProvider result = createSystemPropertyProvider();
-        if ( result == null ) {
-            result = createStandardErrLogProvider();
-            result.getLog(ChorusLogFactory.class).info(
-                "Could not find commons logging on the classpath will use default stdout logging"
-            );
-        }
-        logProvider = result;
+        outputFormatter = createOutputFormatter();
+        logProvider = createResultsFormatterLogProvider();
+    }
+
+    private static OutputFormatter createOutputFormatter() {
+        OutputFormatterFactory factory = new OutputFormatterFactory();
+        return factory.createOutputFormatter();
     }
 
     public static ChorusLog getLog(Class clazz) {
@@ -75,24 +63,14 @@ public class ChorusLogFactory {
     public static ChorusLogProvider getLogProvider() {
         return logProvider;
     }
-
-    private static ChorusLogProvider createStandardErrLogProvider() {
-        return new StandardOutLogProvider();
+    
+    public static OutputFormatter getOutputFormatter() {
+        return outputFormatter;
     }
 
-    private static ChorusLogProvider createSystemPropertyProvider() {
-        ChorusLogProvider result = null;
-        String provider = null;
-        try {
-            provider = System.getProperty(LOG_PROVIDER_SYSTEM_PROPERTY);
-            if ( provider != null ) {
-                Class c = Class.forName(provider);
-                result = (ChorusLogProvider)c.newInstance();
-            }
-        } catch (Throwable t) {
-            ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + " will default to Standard Out logging");
-        }
-        return result;
+    private static ChorusLogProvider createResultsFormatterLogProvider() {
+        return new OutputFormatterLogProvider(outputFormatter);
     }
+
 
 }

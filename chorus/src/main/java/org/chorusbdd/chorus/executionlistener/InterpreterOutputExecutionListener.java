@@ -30,9 +30,10 @@
 package org.chorusbdd.chorus.executionlistener;
 
 import org.chorusbdd.chorus.results.*;
+import org.chorusbdd.chorus.util.logging.OutputFormatter;
+import org.chorusbdd.chorus.util.logging.PlainOutputFormatter;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -42,24 +43,24 @@ import java.util.List;
  *
  * This execution listener is responsible for generating the console standard output for Chorus
  * 
- * It delegates to a ResultsFormatter for the actual output
+ * It delegates to a OutputFormatter for the actual output
  */
-public class InterpreterOutExecutionListener implements ExecutionListener {
+public class InterpreterOutputExecutionListener implements ExecutionListener {
 
-    private ResultsFormatter chorusOutFormatter = new PlainResultsFormatter(new PrintWriter(ChorusOut.out, true));
+    private OutputFormatter chorusOutFormatter;
 
     private boolean showSummary = true;
     private boolean verbose = false;
 
     private int stepMacroDepth = 0;
 
-    public InterpreterOutExecutionListener(boolean showSummary, boolean verbose, ResultsFormatter chorusOutFormatter) {
+    public InterpreterOutputExecutionListener(boolean showSummary, boolean verbose, OutputFormatter chorusOutFormatter) {
         this.showSummary = showSummary;
         this.verbose = verbose;
         this.chorusOutFormatter = chorusOutFormatter;
     }
 
-    public void setFormatter(ResultsFormatter formatter) {
+    public void setFormatter(OutputFormatter formatter) {
         this.chorusOutFormatter = formatter;
     }
 

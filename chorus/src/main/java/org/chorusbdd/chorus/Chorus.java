@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
-import org.chorusbdd.chorus.util.logging.StandardOutLogProvider;
+import org.chorusbdd.chorus.util.logging.OutputFormatterLogProvider;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -78,8 +78,6 @@ public class Chorus {
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
        
-        setLoggingProvider();
-
         //prepare the interpreter
         //set log level here in case log level was a mutated property
         String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
@@ -130,7 +128,7 @@ public class Chorus {
      * Set the log level of Chorus' built in logProvider to the logLevel provided
      */
     public void setLogLevel(String logLevel) {
-        StandardOutLogProvider.setLogLevel(logLevel);
+        OutputFormatterLogProvider.setLogLevel(logLevel);
     }
 
     /**
@@ -202,13 +200,4 @@ public class Chorus {
         return sb.toString();
     }
 
-    private void setLoggingProvider() {
-        //the logging factory checks the system property version chorusLogProvider when it
-        //performs static initialization - the log provider must be set as a system property
-        //even if provided as a switch
-        ChorusConfigProperty p = ChorusConfigProperty.LOG_PROVIDER;
-        if ( System.getProperty(p.getSystemProperty()) == null && configReader.isSet(p)) {
-            System.setProperty(p.getSystemProperty(), configReader.getValue(p));
-        }
-    }
 }

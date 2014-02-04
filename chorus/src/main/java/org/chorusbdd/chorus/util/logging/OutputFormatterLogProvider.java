@@ -34,18 +34,23 @@ package org.chorusbdd.chorus.util.logging;
 * User: Nick Ebbutt
 * Date: 15/05/12
 * Time: 11:50
-* To change this template use File | Settings | File Templates.
+ * 
 */
-public class StandardOutLogProvider implements ChorusLogProvider {
+public class OutputFormatterLogProvider implements ChorusLogProvider {
 
     private static int logLevel = LogLevel.WARN.getLevel();
+    private OutputFormatter outputFormatter;
+
+    public OutputFormatterLogProvider(OutputFormatter outputFormatter) {
+        this.outputFormatter = outputFormatter;
+    }
 
     public static void setLogLevel(String logLevel) {
 
        boolean found = false;
        for (LogLevel l : LogLevel.values()) {
            if ( l.name().equalsIgnoreCase(logLevel)) {
-               StandardOutLogProvider.logLevel = l.getLevel();
+               OutputFormatterLogProvider.logLevel = l.getLevel();
                found = true;
                break;
            }
@@ -56,27 +61,8 @@ public class StandardOutLogProvider implements ChorusLogProvider {
        }
     }
 
-    private static enum LogLevel {
-        FATAL(0),
-        ERROR(1),
-        WARN(2),
-        INFO(3),
-        DEBUG(4),
-        TRACE(5);
-
-        private int level;
-
-        LogLevel(int level) {
-            this.level = level;
-        }
-
-        public int getLevel() {
-            return level;
-        }
-    }
-
     public ChorusLog getLog(Class clazz) {
-        return new StandardOutLog(clazz);
+        return new StandardOutLog(clazz, outputFormatter);
     }
 
     /**
@@ -85,8 +71,10 @@ public class StandardOutLogProvider implements ChorusLogProvider {
     private static class StandardOutLog implements ChorusLog {
 
         private String className;
+        private OutputFormatter outputFormatter;
 
-        public StandardOutLog(Class clazz) {
+        public StandardOutLog(Class clazz, OutputFormatter outputFormatter) {
+            this.outputFormatter = outputFormatter;
             className = clazz.getSimpleName();
         }
 
@@ -116,104 +104,80 @@ public class StandardOutLogProvider implements ChorusLogProvider {
 
         public void info(Object message) {
             if ( logLevel >= LogLevel.INFO.getLevel() ) {
-                logOut("INFO", message);
+                outputFormatter.log(LogLevel.INFO, message);
             }
         }
 
         public void info(Object message, Throwable t) {
             if ( logLevel >= LogLevel.INFO.getLevel() ) {
-                logOut("INFO", message);
-                t.printStackTrace(ChorusOut.err);
+                outputFormatter.log(LogLevel.INFO, message);
+                outputFormatter.logThrowable(LogLevel.INFO, t);
             }
         }
 
         public void warn(Object message) {
             if ( logLevel >= LogLevel.WARN.getLevel() ) {
-                logOut("WARN", message);
+                outputFormatter.log(LogLevel.WARN, message);
             }
         }
 
         public void warn(Object message, Throwable t) {
             if ( logLevel >= LogLevel.WARN.getLevel() ) {
-                logOut("WARN", message);
-                t.printStackTrace(ChorusOut.err);
+                outputFormatter.log(LogLevel.WARN, message);
+                outputFormatter.logThrowable(LogLevel.WARN, t);
             }
         }
 
         public void error(Object message) {
             if ( logLevel >= LogLevel.ERROR.getLevel() ) {
-                logErr("ERROR", message);
+                outputFormatter.log(LogLevel.ERROR, message);
             }
         }
 
         public void error(Object message, Throwable t) {
             if ( logLevel >= LogLevel.ERROR.getLevel() ) {
-                logErr("ERROR", message);
-                t.printStackTrace(ChorusOut.err);
+                outputFormatter.log(LogLevel.ERROR, message);
+                outputFormatter.logThrowable(LogLevel.ERROR, t);
             }
         }
 
         public void fatal(Object message) {
             if ( logLevel >= LogLevel.FATAL.getLevel() ) {
-                logErr("FATAL", message);
+                outputFormatter.log(LogLevel.FATAL, message);
             }
         }
 
         public void fatal(Object message, Throwable t) {
             if ( logLevel >= LogLevel.FATAL.getLevel() ) {
-                logErr("FATAL", message);
-                t.printStackTrace(ChorusOut.err);
+                outputFormatter.log(LogLevel.FATAL, message);
+                outputFormatter.logThrowable(LogLevel.FATAL, t);
             }
         }
 
         public void trace(Object message) {
             if ( logLevel >= LogLevel.TRACE.getLevel() ) {
-                logErr("TRACE", message);
+                outputFormatter.log(LogLevel.TRACE, message);
             }
         }
 
         public void trace(Object message, Throwable t) {
             if ( logLevel >= LogLevel.TRACE.getLevel() ) {
-                logErr("TRACE", message);
-                t.printStackTrace(ChorusOut.err);
+                outputFormatter.log(LogLevel.TRACE, message);
+                outputFormatter.logThrowable(LogLevel.TRACE, t);
             }
         }
 
         public void debug(Object message) {
             if ( logLevel >= LogLevel.DEBUG.getLevel() ) {
-                logErr("DEBUG", message);
+                outputFormatter.log(LogLevel.DEBUG, message);
             }
         }
 
         public void debug(Object message, Throwable t) {
             if ( logLevel >= LogLevel.DEBUG.getLevel() ) {
-                logErr("DEBUG", message);
-                t.printStackTrace(ChorusOut.err);
+                outputFormatter.log(LogLevel.DEBUG, message);
+                outputFormatter.logThrowable(LogLevel.DEBUG, t);
             }
         }
-
-        /**
-         * At present we are logging all messages to the standard error stream rather than
-         * standard out. This is to differentiate the logging output from the results of the
-         * interpreter execution which are written to System.out
-         */
-        private void logOut(String type, Object message) {
-            //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
-            //and don't want refactoring the code to break tests if log statements move class
-            ChorusOut.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        }
-
-        private void logErr(String type, Object message) {
-            //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
-            //and don't want refactoring the code to break tests if log statements move class
-            ChorusOut.out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        }
-
-
-        /**
-        public static void main(String[] args) {
-            new StandardOutLog(StandardOutLogProvider.class).logOut("WARN", "This is a warning");
-        }
-        **/
     }
 }

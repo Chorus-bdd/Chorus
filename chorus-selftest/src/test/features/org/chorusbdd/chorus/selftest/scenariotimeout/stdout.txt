@@ -14,7 +14,7 @@ Chorus --> INFO    - Processing scenario: The scenario should continue to run
   Scenario: This scenario should trigger a ThreadDeath
 Chorus --> INFO    - Processing scenario: This scenario should trigger a ThreadDeath
 Chorus --> WARN    - Scenario timed out after 1000 millis, will interrupt
-Chorus --> ERROR    - Scenario did not respond to interrupt after timeout, will stop the interpreter thread and fail the tests
+Chorus --> ERROR   - Scenario did not respond to interrupt after timeout, will stop the interpreter thread and fail the tests
     Given I enter a perpetually blocked step                                                 PASSED  
 
 

@@ -27,29 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.executionlistener;
+package org.chorusbdd.chorus.util.logging;
 
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 /**
  * Created by: Steve Neal
  * Date: 30/09/11
  */
-public class PlainResultsFormatter implements ResultsFormatter {
+public class PlainOutputFormatter implements OutputFormatter {
 
-    private final PrintWriter out;
+    private PrintWriter out;
 
     /**
-     * Create a results formatter which outputs results to the Writer provided
+     * Create a results formatter which outputs results
+     * All OutputFormatter must have a no argument constructor
      */
-    public PlainResultsFormatter(Writer out) {
-        this.out = new PrintWriter(out, true);
+    public PlainOutputFormatter() {}
+
+    public void setPrintStream(PrintStream outStream) {
+        out = new PrintWriter(outStream);
     }
 
     public void printResults(ResultsSummary s) {
@@ -104,10 +107,10 @@ public class PlainResultsFormatter implements ResultsFormatter {
     }
 
     public void printStepStart(StepToken step, int depth) {
-        StringBuilder depthPadding = getDepthPadding(depth);
-        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-        String terminator = step.isStepMacro() ? "->%n" : ".\r";
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+//        StringBuilder depthPadding = getDepthPadding(depth);
+//        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
+//        String terminator = step.isStepMacro() ? "->%n" : ".\r";
+//        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
     }
 
 
@@ -141,4 +144,33 @@ public class PlainResultsFormatter implements ResultsFormatter {
     public void flush() {
         out.flush();
     }
+
+    public void log(LogLevel level, Object message) {
+        if ( level == LogLevel.ERROR ) {
+            logErr(level, message);    
+        } else {
+            logOut(level, message);
+        }
+    }
+
+    public void logThrowable(LogLevel level, Throwable t) {
+        if ( level == LogLevel.ERROR ) {
+            t.printStackTrace(ChorusOut.err);    
+        } else {
+            t.printStackTrace(ChorusOut.out);
+        }
+    }
+
+    private void logOut(LogLevel type, Object message) {
+        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+        //and don't want refactoring the code to break tests if log statements move class
+        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+    }
+
+    protected void logErr(LogLevel type, Object message) {
+        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+        //and don't want refactoring the code to break tests if log statements move class
+        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+    }
+
 }
