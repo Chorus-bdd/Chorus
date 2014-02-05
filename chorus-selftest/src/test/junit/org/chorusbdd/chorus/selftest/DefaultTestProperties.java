@@ -47,6 +47,7 @@ public class DefaultTestProperties extends Properties {
         //put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
         put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
         put("chorusLogLevel", "info");
+        put("chorusOutputFormatter", "org.chorusbdd.chorus.util.logging.SelfTestOutputFormatter");
 
     }
 }

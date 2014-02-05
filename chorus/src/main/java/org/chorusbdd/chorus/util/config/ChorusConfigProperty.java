@@ -84,6 +84,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     
     EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE);
 
+    public static final String chorusOutputFormatter = "chorusOutputFormatter";
 
     private String switchName;
     private String switchShortName;

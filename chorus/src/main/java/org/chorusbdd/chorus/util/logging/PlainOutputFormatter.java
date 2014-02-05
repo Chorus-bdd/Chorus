@@ -38,12 +38,11 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 /**
- * Created by: Steve Neal
- * Date: 30/09/11
+ * Nick E
  */
 public class PlainOutputFormatter implements OutputFormatter {
 
-    private PrintWriter out;
+    protected PrintWriter out;
 
     /**
      * Create a results formatter which outputs results
@@ -109,12 +108,11 @@ public class PlainOutputFormatter implements OutputFormatter {
     }
 
     public void printStepStart(StepToken step, int depth) {
-//        StringBuilder depthPadding = getDepthPadding(depth);
-//        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-//        String terminator = step.isStepMacro() ? "->%n" : ".\r";
-//        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
-//        out.flush();
-
+        StringBuilder depthPadding = getDepthPadding(depth);
+        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
+        String terminator = step.isStepMacro() ? ">>%n" : ".\r";
+        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+        out.flush();
     }
 
 
@@ -127,7 +125,7 @@ public class PlainOutputFormatter implements OutputFormatter {
         }
     }
 
-    private StringBuilder getDepthPadding(int depth) {
+    protected StringBuilder getDepthPadding(int depth) {
         StringBuilder sb = new StringBuilder();
         for ( int loop=1; loop < depth; loop++ ) {
             sb.append("..");
