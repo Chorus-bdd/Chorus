@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -48,7 +50,15 @@ public class ChorusLogFactory {
 
     static {
         outputFormatter = createOutputFormatter();
-        logProvider = createResultsFormatterLogProvider();
+        logProvider = createLogProvider(outputFormatter);
+    }
+    
+    private static ChorusLogProvider createLogProvider(OutputFormatter outputFormatter) {
+        ChorusLogProvider result = createSystemPropertyProvider(outputFormatter);
+        if ( result == null) {
+            result = createDefaultLogProvider(outputFormatter);
+        }
+        return result;
     }
 
     private static OutputFormatter createOutputFormatter() {
@@ -68,9 +78,26 @@ public class ChorusLogFactory {
         return outputFormatter;
     }
 
-    private static ChorusLogProvider createResultsFormatterLogProvider() {
-        return new OutputFormatterLogProvider(outputFormatter);
+    private static ChorusLogProvider createDefaultLogProvider(OutputFormatter outputFormatter) {
+        OutputFormatterLogProvider outputFormatterLogProvider = new OutputFormatterLogProvider();
+        outputFormatterLogProvider.setOutputFormatter(outputFormatter);
+        return outputFormatterLogProvider;
     }
 
+    private static ChorusLogProvider createSystemPropertyProvider(OutputFormatter outputFormatter) {
+        ChorusLogProvider result = null;
+        String provider = null;
+        try {
+            provider = System.getProperty(ChorusConfigProperty.CHORUS_LOG_PROVIDER_SYS_PROP);
+            if ( provider != null ) {
+                Class c = Class.forName(provider);
+                result = (ChorusLogProvider)c.newInstance();
+                result.setOutputFormatter(outputFormatter);
+            }
+        } catch (Throwable t) {
+            ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + " will use the default LogProvider");
+        }
+        return result;
+    }
 
 }

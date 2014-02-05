@@ -56,6 +56,10 @@ public class ForkedRunner implements ChorusSelfTestRunner {
     public ChorusSelfTestResults runForked(Properties sysPropsForTest, String mainClass, PrintStream stdOutStream, int timeout) throws Exception {
         String jre = System.getProperty("java.home");
 
+        //use log4j configuration
+        //this will avoid the log4j warning for tests which use Spring and hence pull in log4j
+        //this will only be used for Chorus log output if a test configures
+        //System.setProperty("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
         sysPropsForTest.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-forked.xml");
 
         //See notes also in ProcessHandler
@@ -153,6 +157,6 @@ public class ForkedRunner implements ChorusSelfTestRunner {
     }
 
     private boolean isAChorusSwitchProperty(String key) {
-        return key.toString().startsWith("chorus") && ! ChorusConfigProperty.chorusOutputFormatter.equals(key);
+        return key.toString().startsWith("chorus") && ! ChorusConfigProperty.SYS_PROP_ONLY_PROPERTIES.contains(key);
     }
 }

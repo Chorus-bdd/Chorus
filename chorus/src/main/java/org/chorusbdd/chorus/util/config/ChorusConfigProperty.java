@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.util.ChorusConstants;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +85,13 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     
     EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE);
 
-    public static final String chorusOutputFormatter = "chorusOutputFormatter";
+    public static final String CHORUS_OUTPUT_FORMATTER_SYS_PROP = "chorusOutputFormatter";
+    public static final String CHORUS_LOG_PROVIDER_SYS_PROP = "chorusLogProvider";
+    
+    //these are only ever set with a system property not a switch
+    public static final List SYS_PROP_ONLY_PROPERTIES = Arrays.asList(
+        CHORUS_OUTPUT_FORMATTER_SYS_PROP, CHORUS_LOG_PROVIDER_SYS_PROP
+    );
 
     private String switchName;
     private String switchShortName;

@@ -10,7 +10,7 @@ public class OutputFormatterFactory {
     public OutputFormatter createOutputFormatter() {
         OutputFormatter formatter = new PlainOutputFormatter();
 
-        String formatterClass = System.getProperty(ChorusConfigProperty.chorusOutputFormatter);
+        String formatterClass = System.getProperty(ChorusConfigProperty.CHORUS_OUTPUT_FORMATTER_SYS_PROP);
         if ( formatterClass != null) {
             try {
                 Class formatterClazz = Class.forName(formatterClass);
@@ -18,7 +18,8 @@ public class OutputFormatterFactory {
                 if ( o instanceof OutputFormatter) {
                     formatter = (OutputFormatter)o;
                 } else {
-                    System.out.println("The chorusOutputFormatter property must be a class which implements OutputFormatter");
+                    System.out.println("The " + ChorusConfigProperty.CHORUS_OUTPUT_FORMATTER_SYS_PROP + 
+                            " property must be a class which implements OutputFormatter");
                 }
             } catch (Exception e) {
                 System.err.println("Failed to create results formatter " + formatterClass + " " + e);

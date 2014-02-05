@@ -114,7 +114,6 @@ public class ExecutionListenerFactory {
         result.add(e);
     }
 
-
     private void addProxyForRemoteJmxListener(List<String> remoteListenerHostAndPorts, List<ExecutionListener> result) {
         for ( String hostAndPort : remoteListenerHostAndPorts ) {
             addRemoteListener(result, hostAndPort);

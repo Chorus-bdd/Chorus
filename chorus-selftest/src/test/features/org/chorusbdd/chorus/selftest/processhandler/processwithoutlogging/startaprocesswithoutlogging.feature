@@ -1,5 +1,4 @@
 Uses: Processes
-Uses: Timers
 
 Feature: Start A Process Without Logging
 

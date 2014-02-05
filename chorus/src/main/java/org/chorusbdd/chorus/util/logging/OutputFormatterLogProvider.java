@@ -34,14 +34,19 @@ package org.chorusbdd.chorus.util.logging;
 * User: Nick Ebbutt
 * Date: 15/05/12
 * Time: 11:50
- * 
+* 
+* Provides ChorusLog instances which use the configured OutputFormatter for their logging
+* The user may supply a custom OutputFormatter which changes the way Chorus output is displayed or handled
 */
 public class OutputFormatterLogProvider implements ChorusLogProvider {
 
     private static int logLevel = LogLevel.WARN.getLevel();
     private OutputFormatter outputFormatter;
 
-    public OutputFormatterLogProvider(OutputFormatter outputFormatter) {
+    public OutputFormatterLogProvider() {
+    }
+
+    public void setOutputFormatter(OutputFormatter outputFormatter) {
         this.outputFormatter = outputFormatter;
     }
 
