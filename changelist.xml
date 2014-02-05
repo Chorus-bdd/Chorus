@@ -4,11 +4,14 @@
 
     <version>
         <versionNumber>1.6.3</versionNumber>
-        <comment>Allow tagging for Scenario-Outline scenarios</comment>
+        <comment>Allow tagging for Scenario-Outline scenarios, and improvements to console output to show in progress steps</comment>
         <change desc="Better description for Scenario-Outline scenarios -  the first variable defined in each table row 
         is appended to the scenario name, to make it easier to match scenario to example in chorus' output"/>
         <change desc="Enable tagging for Scenario-Outline examples - if the examples table defines a variable with the name 
         chorusTags then use any values in that column as chorus tags for the generated scenarios"/>
+        <change desc="Add support for configurable OutputFormatter, which can be used to change both Chorus interpeter output and logging output. A custom OutputFormatter can be configured with -DchorusOutputFormatter. The formatter can change how the interpreter output and log statements are displayed, or even route them away from the console to an alternative destination."/>
+        <change desc="To indicate progress more clearly in the console, show the currently processing step in the console output and append the status only when execution is complete, rather than waiting for the step to complete to show it in the output"/>
+        <change desc="Show the parent step for a step macro in the console output up front, before the child steps are executed, rather than waiting for child steps to complete"/>
     </version>
     <version>
         <versionNumber>1.6.2</versionNumber>

@@ -27,12 +27,13 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util.logging;
+package org.chorusbdd.chorus.selftest;
 
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.logging.PlainOutputFormatter;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
-import org.chorusbdd.chorus.util.logging.SelfTestOutputFormatter;
+import org.chorusbdd.chorus.selftest.SelfTestOutputFormatter;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
