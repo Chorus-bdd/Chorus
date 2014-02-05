@@ -34,6 +34,8 @@ import org.chorusbdd.chorus.executionlistener.InterpreterOutputExecutionListener
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.util.logging.SelfTestOutputFormatter;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -54,7 +56,9 @@ public class ExecutionListenerMain {
     }
 
     private static void startJmx() {
-        ExecutionListener l = new InterpreterOutputExecutionListener(true, false, ChorusLogFactory.getOutputFormatter());
+        SelfTestOutputFormatter chorusOutFormatter = new SelfTestOutputFormatter();
+        chorusOutFormatter.setPrintStream(System.out);
+        ExecutionListener l = new InterpreterOutputExecutionListener(true, false, chorusOutFormatter);
         RemoteExecutionListener r = new RemoteExecutionListener(l);
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {

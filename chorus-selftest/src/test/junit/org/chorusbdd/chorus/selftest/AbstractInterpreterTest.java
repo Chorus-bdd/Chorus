@@ -45,6 +45,12 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractInterpreterTest extends Assert {
    
+    static {
+        //set this property up front for when we run tests in process, since the output formatter and log provider
+        //get created just once per JVM session and are singletons, and require these values
+        System.setProperty("chorusOutputFormatter", "org.chorusbdd.chorus.util.logging.SelfTestOutputFormatter");
+    }
+    
     /**
      * Set this sys property to have the actual test output overwrite expected output in the stdout.txt stderr.txt files
      * useful if you make a minor change to the output which breaks all the tests
