@@ -38,6 +38,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 import org.chorusbdd.chorus.util.logging.OutputFormatterLogProvider;
 
@@ -50,6 +51,9 @@ import java.util.List;
  */
 public class Chorus {
 
+    //there's a chicken and egg problem which means we can't use ChorusLog as a static in the main class since config properties
+    //are used to set the log implementation in use and these need to be configured first.
+    
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
     private InterpreterBuilder interpreterBuilder;
 
@@ -78,6 +82,8 @@ public class Chorus {
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
        
+        setLoggingProviderAndOutputFormatter();
+
         //prepare the interpreter
         //set log level here in case log level was a mutated property
         String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
@@ -200,4 +206,21 @@ public class Chorus {
         return sb.toString();
     }
 
+    //configure Chorus' logging and interpreter output from the config properties
+    private void setLoggingProviderAndOutputFormatter() {
+        //the logging factory checks the system property version chorusLogProvider when it
+        //performs static initialization - the log provider must be set as a system property
+        //even if provided as a switch
+        ChorusConfigProperty p = ChorusConfigProperty.LOG_PROVIDER;
+        if ( System.getProperty(p.getSystemProperty()) == null && configReader.isSet(p)) {
+            System.setProperty(p.getSystemProperty(), configReader.getValue(p));
+        }
+
+        p = ChorusConfigProperty.OUTPUT_FORMATTER;
+        if ( System.getProperty(p.getSystemProperty()) == null && configReader.isSet(p)) {
+            System.setProperty(p.getSystemProperty(), configReader.getValue(p));
+        }
+
+        ChorusLogFactory.initializeLogging(configReader);
+    }
 }

@@ -32,6 +32,8 @@ package org.chorusbdd.chorus.selftest;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
+import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.util.config.ConfigurationProperty;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
@@ -39,6 +41,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,6 +55,14 @@ import java.util.Properties;
  */
 public class InProcessRunner implements ChorusSelfTestRunner {
 
+    static {
+        //initialize the logging subsystem up front, with defaults
+        //this fixes the OutputFormatter and LogProvider instance for all the in process tests - this is important
+        //since during testing we set the formatters print stream to make it write to our test byte array buffers for 
+        //output comparison
+        ChorusLogFactory.initializeLogging(new NullConfigProperties());
+    }
+    
     public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) {
         
          //use log4j configuration
@@ -72,6 +83,7 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          try {
              ChorusOut.setStdOutStream(outStream);
              ChorusOut.setStdErrStream(errStream);
+             
              ChorusLogFactory.getOutputFormatter().setPrintStream(outStream);
 
              //there's a bit of jiggery pokery necessary here to get the log4j appender and
@@ -113,6 +125,32 @@ public class InProcessRunner implements ChorusSelfTestRunner {
         while(i.hasNext()) {
             Map.Entry<Object,Object> e = i.next();
             System.setProperty(e.getKey().toString(), e.getValue().toString());
+        }
+    }
+
+    //a null properties to use when initializing the logging subsystem for the tests, we will end up with the defaults
+    private static class NullConfigProperties implements ConfigProperties {
+        public void setProperty(ConfigurationProperty property, List<String> values) {
+        }
+
+        public List<String> getValues(ConfigurationProperty property) {
+            return null;
+        }
+
+        public String getValue(ConfigurationProperty property) {
+            return null;
+        }
+
+        public boolean isSet(ConfigurationProperty property) {
+            return false;
+        }
+
+        public boolean isTrue(ConfigurationProperty property) {
+            return false;
+        }
+
+        public ConfigProperties deepCopy() {
+            return null;
         }
     }
 }

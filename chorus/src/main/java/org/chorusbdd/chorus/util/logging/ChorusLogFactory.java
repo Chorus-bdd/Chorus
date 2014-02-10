@@ -29,7 +29,14 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ResultsSummary;
+import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.config.ConfigProperties;
+
+import java.io.PrintStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,31 +46,28 @@ import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
  *
  *  A factory for ChorusLog instances.
  *  
+ *  This is used to initialize Chorus' LogProvider (can be used to redirect logging) and Chorus' OutputFormatter
+ *  
+ *  (OutputFormatter is a newer abstraction which can be used to modify both interpreter output and logging - 
+ *  logging will only be affected if using the default LogProvider which is passed an outputFormatter)
+ *  
+ *  Both logProvider and outputFormatter can be set with system properties or Chorus' switches.
+ *  
  *  Also creates the OutputFormatter which used to write all Chorus' output
  *  The OutputFormatter implementation can be changed by setting the chorusOutputFormatter system property
  *
  */
 public class ChorusLogFactory {
 
-    private static final ChorusLogProvider logProvider;
-    private static final OutputFormatter outputFormatter;
+    private static ChorusLogProvider logProvider = new NullLogProvider();
+    private static OutputFormatter outputFormatter = new NullOutputFormatter();
+    private static AtomicBoolean initialized = new AtomicBoolean();
 
-    static {
-        outputFormatter = createOutputFormatter();
-        logProvider = createLogProvider(outputFormatter);
-    }
-    
-    private static ChorusLogProvider createLogProvider(OutputFormatter outputFormatter) {
-        ChorusLogProvider result = createSystemPropertyProvider(outputFormatter);
-        if ( result == null) {
-            result = createDefaultLogProvider(outputFormatter);
+    public static void initializeLogging(ConfigProperties configProperties) {
+        if ( ! initialized.getAndSet(true)) {
+            outputFormatter = new OutputFormatterFactory().createOutputFormatter(configProperties);
+            logProvider = new LogProviderFactory().createLogProvider(configProperties, outputFormatter);
         }
-        return result;
-    }
-
-    private static OutputFormatter createOutputFormatter() {
-        OutputFormatterFactory factory = new OutputFormatterFactory();
-        return factory.createOutputFormatter();
     }
 
     public static ChorusLog getLog(Class clazz) {
@@ -78,26 +82,128 @@ public class ChorusLogFactory {
         return outputFormatter;
     }
 
-    private static ChorusLogProvider createDefaultLogProvider(OutputFormatter outputFormatter) {
-        OutputFormatterLogProvider outputFormatterLogProvider = new OutputFormatterLogProvider();
-        outputFormatterLogProvider.setOutputFormatter(outputFormatter);
-        return outputFormatterLogProvider;
-    }
 
-    private static ChorusLogProvider createSystemPropertyProvider(OutputFormatter outputFormatter) {
-        ChorusLogProvider result = null;
-        String provider = null;
-        try {
-            provider = System.getProperty(ChorusConfigProperty.CHORUS_LOG_PROVIDER_SYS_PROP);
-            if ( provider != null ) {
-                Class c = Class.forName(provider);
-                result = (ChorusLogProvider)c.newInstance();
-                result.setOutputFormatter(outputFormatter);
-            }
-        } catch (Throwable t) {
-            ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + " will use the default LogProvider");
+    /**
+     * A null implementation of ChorusLogProvider
+     * This should never get used
+     */
+    private static class NullLogProvider implements ChorusLogProvider {
+        public void setOutputFormatter(OutputFormatter outputFormatter) {
         }
-        return result;
+
+        public ChorusLog getLog(Class clazz) {
+            return new NullLog();
+        }
+
+        private class NullLog implements ChorusLog {
+
+            public boolean isDebugEnabled() {
+                return false;
+            }
+
+            public boolean isErrorEnabled() {
+                return false;
+            }
+
+            public boolean isFatalEnabled() {
+                return false;
+            }
+
+            public boolean isInfoEnabled() {
+                return false;
+            }
+
+            public boolean isTraceEnabled() {
+                return false;
+            }
+
+            public boolean isWarnEnabled() {
+                return false;
+            }
+
+            public void trace(Object message) {
+            }
+
+            public void trace(Object message, Throwable t) {
+            }
+
+            public void debug(Object message) {
+            }
+
+            public void debug(Object message, Throwable t) {
+            }
+
+            public void info(Object message) {
+            }
+
+            public void info(Object message, Throwable t) {
+            }
+
+            public void warn(Object message) {
+            }
+
+            public void warn(Object message, Throwable t) {
+            }
+
+            public void error(Object message) {
+            }
+
+            public void error(Object message, Throwable t) {
+            }
+
+            public void fatal(Object message) {
+            }
+
+            public void fatal(Object message, Throwable t) {
+            }
+
+            private void logWarning() {
+                System.err.println("No ChorusLogProvider configured, ChorusLogFactory has not been initialized properly");
+            }
+        }
+
     }
 
+
+    /**
+     * A null implementation of OutputFormatter
+     * This should never get used
+     */
+    private static class NullOutputFormatter implements OutputFormatter {
+        public void setPrintStream(PrintStream out) {
+            logWarning();
+        }
+
+        public void printFeature(FeatureToken feature) {
+        }
+
+        public void printScenario(ScenarioToken scenario) {
+        }
+
+        public void printStepStart(StepToken step, int depth) {
+        }
+
+        public void printStepEnd(StepToken step, int depth) {
+        }
+
+        public void printStackTrace(String stackTrace) {
+        }
+
+        public void printMessage(String message) {
+        }
+
+        public void printResults(ResultsSummary summary) {
+        }
+
+        public void log(LogLevel type, Object message) {
+        }
+
+        public void logThrowable(LogLevel type, Throwable t) {
+        }
+
+        private void logWarning() {
+            System.err.println("No OutputFormatter configured, ChorusLogFactory has not been initialized properly");
+        }
+
+    }
 }

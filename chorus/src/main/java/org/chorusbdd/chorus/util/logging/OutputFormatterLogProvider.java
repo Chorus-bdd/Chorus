@@ -40,7 +40,7 @@ package org.chorusbdd.chorus.util.logging;
 */
 public class OutputFormatterLogProvider implements ChorusLogProvider {
 
-    private static int logLevel = LogLevel.WARN.getLevel();
+    private static volatile int logLevel = LogLevel.WARN.getLevel();
     private OutputFormatter outputFormatter;
 
     public OutputFormatterLogProvider() {
@@ -67,7 +67,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
     }
 
     public ChorusLog getLog(Class clazz) {
-        return new StandardOutLog(clazz, outputFormatter);
+        return new StandardOutLog(outputFormatter);
     }
 
     /**
@@ -75,12 +75,10 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
      */
     private static class StandardOutLog implements ChorusLog {
 
-        private String className;
         private OutputFormatter outputFormatter;
 
-        public StandardOutLog(Class clazz, OutputFormatter outputFormatter) {
+        public StandardOutLog(OutputFormatter outputFormatter) {
             this.outputFormatter = outputFormatter;
-            className = clazz.getSimpleName();
         }
 
         public boolean isDebugEnabled() {

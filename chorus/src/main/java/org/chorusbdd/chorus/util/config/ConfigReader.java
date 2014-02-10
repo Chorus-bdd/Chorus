@@ -55,6 +55,9 @@ import java.util.regex.Pattern;
  */
 public class ConfigReader implements ConfigProperties {
 
+    //there's a chicken and egg problem which means we can't use ChorusLog here since the config properties themselves
+    //are used to set the log implementation in use
+    
     private List<ConfigurationProperty> properties;
     private String[] args;
 
