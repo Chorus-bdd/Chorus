@@ -92,7 +92,7 @@ public class CommandLineParser extends AbstractConfigSource {
     private void addPropertyValues(Map<ConfigurationProperty, List<String>> propertyMap, StringTokenizer st, ConfigurationProperty property) {
         List<String> l = getOrCreatePropertyList(propertyMap, property);
         if ( ! st.hasMoreTokens()) {
-            l.add("true");
+            l.add("true"); //switches supplied with no value get set to the value true
         } else {
             while(st.hasMoreTokens()) {
                 l.add(st.nextToken());
