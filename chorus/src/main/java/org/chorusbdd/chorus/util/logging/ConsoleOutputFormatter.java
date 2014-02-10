@@ -48,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 public class ConsoleOutputFormatter implements OutputFormatter {
 
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private static final int ANIMATION_FRAME_RATE = 400;
 
     protected PrintWriter out;
     private ScheduledFuture progressFuture;
@@ -119,10 +120,10 @@ public class ConsoleOutputFormatter implements OutputFormatter {
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
         int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-        String terminator = step.isStepMacro() ? ">>%n" : ".\r";
+        String terminator = step.isStepMacro() ? ">>%n" : "|\r";
         printStepProgress(step, depthPadding, maxStepTextChars, terminator);
         ShowStepProgress progress = new ShowStepProgress(depthPadding, maxStepTextChars, step);
-        progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, 400, 400, TimeUnit.MILLISECONDS);
+        progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, ANIMATION_FRAME_RATE, ANIMATION_FRAME_RATE, TimeUnit.MILLISECONDS);
     }
 
     private String printStepProgress(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
