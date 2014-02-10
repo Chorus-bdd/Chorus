@@ -44,10 +44,7 @@ public class DefaultTestProperties extends Properties {
     public DefaultTestProperties() {
         //test output at log level info
         //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-//        put("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
         put("chorusHandlerPackages", "org.chorusbdd.chorus.selftest");
         put("chorusLogLevel", "info");
-        put("chorusOutputFormatter", "org.chorusbdd.chorus.selftest.SelfTestOutputFormatter");
-
     }
 }

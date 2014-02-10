@@ -120,12 +120,16 @@ public class ConsoleOutputFormatter implements OutputFormatter {
         StringBuilder depthPadding = getDepthPadding(depth);
         int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
         String terminator = step.isStepMacro() ? ">>%n" : ".\r";
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
-        out.flush();
-        ShowStepProgress progress = new ShowStepProgress(depthPadding, maxStepTextChars, terminator, step.toString());
+        printStepProgress(step, depthPadding, maxStepTextChars, terminator);
+        ShowStepProgress progress = new ShowStepProgress(depthPadding, maxStepTextChars, step);
         progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, 400, 400, TimeUnit.MILLISECONDS);
     }
 
+    private String printStepProgress(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
+        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+        out.flush();
+        return terminator;
+    }
 
     public void printStepEnd(StepToken step, int depth) {
         synchronized (printLock) {
@@ -195,19 +199,18 @@ public class ConsoleOutputFormatter implements OutputFormatter {
     private class ShowStepProgress implements Runnable {
         private StringBuilder depthPadding;
         private int maxStepTextChars;
-        private String terminator;
-        private String stepText;
+        private StepToken step;
         private int secondCount = 1;
 
-        public ShowStepProgress(StringBuilder depthPadding, int maxStepTextChars, String terminator, String stepText) {
+        public ShowStepProgress(StringBuilder depthPadding, int maxStepTextChars, StepToken step) {
             this.depthPadding = depthPadding;
             this.maxStepTextChars = maxStepTextChars;
-            this.terminator = terminator;
-            this.stepText = stepText;
+            this.step = step;
         }
 
         public void run() {
             synchronized (printLock) {
+                String terminator;
                 if ( ! progressFuture.isCancelled()) {
                     int i = secondCount++ % 3;
                     switch(i) {
@@ -215,11 +218,11 @@ public class ConsoleOutputFormatter implements OutputFormatter {
                             break;
                         case 1 : terminator = "/\r";
                             break;
-                        case 2 : terminator = "-\r";
+                        case 2 :
+                        default: terminator = "-\r";
                             break;
                     }
-                    out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, stepText);
-                    out.flush(); 
+                    printStepProgress(step, depthPadding, maxStepTextChars, terminator);
                 }
             }
         }

@@ -108,16 +108,17 @@ public class PlainOutputFormatter implements OutputFormatter {
     }
 
     public void printStepStart(StepToken step, int depth) {
-        StringBuilder depthPadding = getDepthPadding(depth);
-        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-        String terminator = step.isStepMacro() ? ">>%n" : ".\r";
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
-        out.flush();
+        if ( step.isStepMacro() ) {
+            StringBuilder depthPadding = getDepthPadding(depth);
+            int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
+            out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), ">>", step.getMessage());
+            out.flush();
+        }
     }
 
 
     public void printStepEnd(StepToken step, int depth) {
-        if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
+        if ( ! step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
             int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
             out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
