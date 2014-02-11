@@ -48,7 +48,16 @@ import java.util.concurrent.TimeUnit;
 public class ConsoleOutputFormatter implements OutputFormatter {
 
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
-    private static final int ANIMATION_FRAME_RATE = 400;
+
+    private static final int PROGRESS_CURSOR_FRAME_RATE = 400;
+
+    private static int STEP_LENGTH_CHARS;
+
+    static {
+        //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
+        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty("chorusConsoleFormatterStepLength", "120")) - 11;
+    }
+
 
     protected PrintWriter out;
     private ScheduledFuture progressFuture;
@@ -69,31 +78,31 @@ public class ConsoleOutputFormatter implements OutputFormatter {
             //only show the pending count if there were pending steps, makes the summary more legible
             if ( s.getFeaturesPending() > 0) {
                 printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
-                    s.getTotalFeatures(),
-                    s.getFeaturesPassed(),
-                    s.getFeaturesPending(),
-                    s.getFeaturesFailed()));
+                        s.getTotalFeatures(),
+                        s.getFeaturesPassed(),
+                        s.getFeaturesPending(),
+                        s.getFeaturesFailed()));
             } else {
                 printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
-                    s.getTotalFeatures(),
-                    s.getFeaturesPassed(),
-                    s.getFeaturesFailed()));
+                        s.getTotalFeatures(),
+                        s.getFeaturesPassed(),
+                        s.getFeaturesFailed()));
             }
 
             //only show the pending count if there were pending steps, makes the summary more legible
             if ( s.getScenariosPending() > 0 ) {
                 //print scenarios summary
                 printMessage(String.format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
-                    s.getTotalScenarios(),
-                    s.getScenariosPassed(),
-                    s.getScenariosPending(),
-                    s.getScenariosFailed()));
+                        s.getTotalScenarios(),
+                        s.getScenariosPassed(),
+                        s.getScenariosPending(),
+                        s.getScenariosFailed()));
             } else {
                 //print scenarios summary
                 printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
-                    s.getTotalScenarios(),
-                    s.getScenariosPassed(),
-                    s.getScenariosFailed()));
+                        s.getTotalScenarios(),
+                        s.getScenariosPassed(),
+                        s.getScenariosFailed()));
             }
 
             //print steps summary
@@ -119,11 +128,14 @@ public class ConsoleOutputFormatter implements OutputFormatter {
 
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
-        int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-        String terminator = step.isStepMacro() ? ">>%n" : "|\r";
+        int maxStepTextChars = STEP_LENGTH_CHARS - depthPadding.length();  //always show at least 50 chars of step text
+        String terminator = step.isStepMacro() ? "%n" : "|\r";
         printStepProgress(step, depthPadding, maxStepTextChars, terminator);
-        ShowStepProgress progress = new ShowStepProgress(depthPadding, maxStepTextChars, step);
-        progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, ANIMATION_FRAME_RATE, ANIMATION_FRAME_RATE, TimeUnit.MILLISECONDS);
+
+        if ( ! step.isStepMacro()) {
+            ShowStepProgress progress = new ShowStepProgress(depthPadding, maxStepTextChars, step);
+            progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, PROGRESS_CURSOR_FRAME_RATE, PROGRESS_CURSOR_FRAME_RATE, TimeUnit.MILLISECONDS);
+        }
     }
 
     private String printStepProgress(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
@@ -133,14 +145,21 @@ public class ConsoleOutputFormatter implements OutputFormatter {
     }
 
     public void printStepEnd(StepToken step, int depth) {
-        synchronized (printLock) {
-            progressFuture.cancel(false);
-        }
+        cancelStepAnimation();
         if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
             StringBuilder depthPadding = getDepthPadding(depth);
-            int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
+            int maxStepTextChars =  STEP_LENGTH_CHARS - depthPadding.length();  //always show at least 50 chars of step text
             out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
             out.flush();
+        }
+    }
+
+    private void cancelStepAnimation() {
+        synchronized (printLock) {
+            if ( progressFuture != null) {
+                progressFuture.cancel(false);
+                progressFuture = null;
+            }
         }
     }
 
@@ -167,7 +186,7 @@ public class ConsoleOutputFormatter implements OutputFormatter {
 
     public void log(LogLevel level, Object message) {
         if ( level == LogLevel.ERROR ) {
-            logErr(level, message);    
+            logErr(level, message);
         } else {
             logOut(level, message);
         }
@@ -175,7 +194,7 @@ public class ConsoleOutputFormatter implements OutputFormatter {
 
     public void logThrowable(LogLevel level, Throwable t) {
         if ( level == LogLevel.ERROR ) {
-            t.printStackTrace(ChorusOut.err);    
+            t.printStackTrace(ChorusOut.err);
         } else {
             t.printStackTrace(out);
             out.flush();
@@ -196,7 +215,7 @@ public class ConsoleOutputFormatter implements OutputFormatter {
         out.flush();
     }
 
-    
+
     private class ShowStepProgress implements Runnable {
         private StringBuilder depthPadding;
         private int maxStepTextChars;
