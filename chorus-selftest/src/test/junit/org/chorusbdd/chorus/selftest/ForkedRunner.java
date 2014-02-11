@@ -125,7 +125,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         StringBuilder sb = new StringBuilder();
         for ( Map.Entry<Object,Object> property : sysPropsForTest.entrySet()) {
             String propertyName = property.getKey().toString();
-            if ( propertyName.startsWith("chorus")) {
+            if ( isAChorusSwitchProperty(propertyName)) {
                 ConfigurationProperty c = ChorusConfigProperty.getConfigPropertyForSysProp(propertyName);
                 sb.append(" ").append(c.getHyphenatedSwitch());
                 sb.append(" ").append(property.getValue().toString());
@@ -142,9 +142,10 @@ public class ForkedRunner implements ChorusSelfTestRunner {
             //This tests the switches, but is also necessary since property values which include
             //spaces otherwise do not work - surrounding a sys prop value in quotes "" or '' does not
             //reliably work for both win and nix
-            if ( ! property.getKey().toString().startsWith("chorus")) {
+            String key = property.getKey().toString();
+            if (! isAChorusSwitchProperty(key)) {
                 jvmArgs.append("-D");
-                jvmArgs.append(property.getKey());
+                jvmArgs.append(key);
                 if ( ! property.getValue().equals("")) {
                     jvmArgs.append("=");
                     jvmArgs.append(property.getValue());
@@ -153,5 +154,9 @@ public class ForkedRunner implements ChorusSelfTestRunner {
             }
         }
         return jvmArgs;
+    }
+
+    private boolean isAChorusSwitchProperty(String key) {
+        return key.toString().startsWith("chorus") && ! ChorusConfigProperty.SYS_PROP_ONLY_PROPERTIES.contains(key);
     }
 }

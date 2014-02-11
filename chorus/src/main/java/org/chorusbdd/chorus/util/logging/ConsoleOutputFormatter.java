@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.NamedExecutors;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -55,7 +56,7 @@ public class ConsoleOutputFormatter implements OutputFormatter {
 
     static {
         //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
-        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty("chorusConsoleFormatterStepLength", "120")) - 11;
+        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
     }
 
 
@@ -128,12 +129,12 @@ public class ConsoleOutputFormatter implements OutputFormatter {
 
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
-        int maxStepTextChars = STEP_LENGTH_CHARS - depthPadding.length();  //always show at least 50 chars of step text
+        int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
         String terminator = step.isStepMacro() ? "%n" : "|\r";
-        printStepProgress(step, depthPadding, maxStepTextChars, terminator);
+        printStepProgress(step, depthPadding, stepLengthChars, terminator);
 
         if ( ! step.isStepMacro()) {
-            ShowStepProgress progress = new ShowStepProgress(depthPadding, maxStepTextChars, step);
+            ShowStepProgress progress = new ShowStepProgress(depthPadding, stepLengthChars, step);
             progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, PROGRESS_CURSOR_FRAME_RATE, PROGRESS_CURSOR_FRAME_RATE, TimeUnit.MILLISECONDS);
         }
     }
@@ -148,8 +149,8 @@ public class ConsoleOutputFormatter implements OutputFormatter {
         cancelStepAnimation();
         if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
             StringBuilder depthPadding = getDepthPadding(depth);
-            int maxStepTextChars =  STEP_LENGTH_CHARS - depthPadding.length();  //always show at least 50 chars of step text
-            out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+            int stepLengthChars =  STEP_LENGTH_CHARS - depthPadding.length(); 
+            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
             out.flush();
         }
     }

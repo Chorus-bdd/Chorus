@@ -93,6 +93,13 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     OUTPUT_FORMATTER("-outputFormatter", "-v", "chorusOutputFormatter", false, 0, 1, new String[] {PlainOutputFormatter.class.getName()}, "[\\w\\.]+", "-c org.myorg.MyFormatter", "The output formatter used to format the interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
     CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE);
+
+    public static final String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusConsoleFormatterStepLength";
+    
+    //these are only ever set with a system property not a switch
+    public static final List SYS_PROP_ONLY_PROPERTIES = Arrays.asList(
+        OUTPUT_FORMATTER_STEP_LENGTH_CHARS        
+    );
     
     
     private String switchName;

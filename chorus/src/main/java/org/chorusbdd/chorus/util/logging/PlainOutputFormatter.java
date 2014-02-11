@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -42,6 +43,13 @@ import java.io.PrintWriter;
  */
 public class PlainOutputFormatter implements OutputFormatter {
 
+    private static int STEP_LENGTH_CHARS;
+
+    static {
+        //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
+        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
+    }
+    
     protected PrintWriter out;
 
     /**
@@ -110,8 +118,8 @@ public class PlainOutputFormatter implements OutputFormatter {
     public void printStepStart(StepToken step, int depth) {
         if ( step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
-            int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-            out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), ">>", step.getMessage());
+            int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
+            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), ">>", step.getMessage());
             out.flush();
         }
     }
@@ -120,8 +128,8 @@ public class PlainOutputFormatter implements OutputFormatter {
     public void printStepEnd(StepToken step, int depth) {
         if ( ! step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
-            int maxStepTextChars = Math.max(89, 50);  //always show at least 50 chars of step text
-            out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+            int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
+            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
             out.flush();
         }
     }

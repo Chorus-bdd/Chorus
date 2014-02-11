@@ -46,6 +46,10 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractInterpreterTest extends Assert {
       
+    static {
+        System.setProperty("chorusConsoleFormatterStepLength", "100");
+    }
+    
     /**
      * Set this sys property to have the actual test output overwrite expected output in the stdout.txt stderr.txt files
      * useful if you make a minor change to the output which breaks all the tests
