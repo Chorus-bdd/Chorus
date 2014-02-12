@@ -47,9 +47,15 @@ import java.util.regex.Pattern;
 public abstract class AbstractInterpreterTest extends Assert {
       
     static {
-        System.setProperty("chorusConsoleFormatterStepLength", "100");
+        //since the tests were written the default char length for a step line has increased, set this back
+        //rather than update all the expected stdout.txt, since it is easier to read when comparing output ath this length
+        setOutputFormatterStepLengthChars();
     }
-    
+
+    public static void setOutputFormatterStepLengthChars() {
+        System.setProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
+    }
+
     /**
      * Set this sys property to have the actual test output overwrite expected output in the stdout.txt stderr.txt files
      * useful if you make a minor change to the output which breaks all the tests

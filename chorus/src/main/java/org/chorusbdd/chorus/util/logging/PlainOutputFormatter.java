@@ -119,7 +119,7 @@ public class PlainOutputFormatter implements OutputFormatter {
         if ( step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
             int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
-            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), ">>", step.getMessage());
+            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), "", step.getMessage());
             out.flush();
         }
     }

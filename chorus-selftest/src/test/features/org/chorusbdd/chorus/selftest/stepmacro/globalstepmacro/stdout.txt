@@ -5,14 +5,14 @@ Feature: Global Step Macro
   Scenario: Calling a global macro
 Chorus --> INFO    - Processing scenario: Calling a global macro
     Given Chorus is working properly                                                         PASSED  
-    Then I can call a global macro with three variables lemon 123 and aardvark               >>      
-    .. Then I can call the macro from any feature file since macros are preparsed               PASSED  
-    .. And variables are all expanded within the macro steps for example lemon 123 aardvark     PASSED  lemon.123.aardvark
-    And I can call a global macro with three variables orange 456 and platypus               >>      
-    .. Then I can call the macro from any feature file since macros are preparsed               PASSED  
-    .. And variables are all expanded within the macro steps for example orange 456 platypus    PASSED  orange.456.platypus
-    And I can call a macro from a different directory so long as it is in the feature path   >>      
-    .. Then the steps in the macro will be executed                                             PASSED  
+    Then I can call a global macro with three variables lemon 123 and aardvark                       
+    .. Then I can call the macro from any feature file since macros are preparsed            PASSED  
+    .. And variables are all expanded within the macro steps for example lemon 123 aardvark  PASSED  lemon.123.aardvark
+    And I can call a global macro with three variables orange 456 and platypus                       
+    .. Then I can call the macro from any feature file since macros are preparsed            PASSED  
+    .. And variables are all expanded within the macro steps for example orange 456 platypus PASSED  orange.456.platypus
+    And I can call a macro from a different directory so long as it is in the feature path           
+    .. Then the steps in the macro will be executed                                          PASSED  
 
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/subfolder/globalstepmacrotwo.feature
 Feature: Global Step Macro Two                                                                       
@@ -20,15 +20,15 @@ Chorus --> INFO    - No default handler found for Feature: (Global Step Macro Tw
   Scenario: Calling a global macro
 Chorus --> INFO    - Processing scenario: Calling a global macro
     Given Chorus is working properly                                                         PASSED  
-    Then I can call a global macro with three variables lemon 123 and aardvark               >>      
-    .. Then I can call the macro from any feature file since macros are preparsed               PASSED  
-    .. And variables are all expanded within the macro steps for example lemon 123 aardvark     PASSED  lemon.123.aardvark
-    And I can call a featurelocal step macro in addition to a global one                     >>      
-    .. And I can call a global macro with three variables orange 456 and platypus               >>      
-    .... Then I can call the macro from any feature file since macros are preparsed               PASSED  
-    .... And variables are all expanded within the macro steps for example orange 456 platypus    PASSED  orange.456.platypus
-    And I can call a macro from a different directory so long as it is in the feature path   >>      
-    .. Then the steps in the macro will be executed                                             PASSED  
+    Then I can call a global macro with three variables lemon 123 and aardvark                       
+    .. Then I can call the macro from any feature file since macros are preparsed            PASSED  
+    .. And variables are all expanded within the macro steps for example lemon 123 aardvark  PASSED  lemon.123.aardvark
+    And I can call a featurelocal step macro in addition to a global one                             
+    .. And I can call a global macro with three variables orange 456 and platypus                    
+    .... Then I can call the macro from any feature file since macros are preparsed          PASSED  
+    .... And variables are all expanded within the macro steps for example orange 456 platypusPASSED  orange.456.platypus
+    And I can call a macro from a different directory so long as it is in the feature path           
+    .. Then the steps in the macro will be executed                                          PASSED  
 
 
 Features  (total:2) (passed:2) (failed:0)
