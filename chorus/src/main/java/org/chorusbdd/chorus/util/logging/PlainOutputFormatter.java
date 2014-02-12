@@ -41,15 +41,10 @@ import java.io.PrintWriter;
 /**
  * Nick E
  */
-public class PlainOutputFormatter implements OutputFormatter {
+public class PlainOutputFormatter extends AbstractOutputFormatter {
 
-    private static int STEP_LENGTH_CHARS;
 
-    static {
-        //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
-        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
-    }
-    
+    private static final int PROGRESS_CURSOR_FRAME_RATE = 5000;
     protected PrintWriter out;
 
     /**
@@ -62,70 +57,20 @@ public class PlainOutputFormatter implements OutputFormatter {
         out = new PrintWriter(outStream);
     }
 
-    public void printResults(ResultsSummary s) {
-        if (s != null) {
-            //only show the pending count if there were pending steps, makes the summary more legible
-            if ( s.getFeaturesPending() > 0) {
-                printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
-                    s.getTotalFeatures(),
-                    s.getFeaturesPassed(),
-                    s.getFeaturesPending(),
-                    s.getFeaturesFailed()));
-            } else {
-                printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
-                    s.getTotalFeatures(),
-                    s.getFeaturesPassed(),
-                    s.getFeaturesFailed()));
-            }
-
-            //only show the pending count if there were pending steps, makes the summary more legible
-            if ( s.getScenariosPending() > 0 ) {
-                //print scenarios summary
-                printMessage(String.format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
-                    s.getTotalScenarios(),
-                    s.getScenariosPassed(),
-                    s.getScenariosPending(),
-                    s.getScenariosFailed()));
-            } else {
-                //print scenarios summary
-                printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
-                    s.getTotalScenarios(),
-                    s.getScenariosPassed(),
-                    s.getScenariosFailed()));
-            }
-
-            //print steps summary
-            printMessage(String.format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
-                    s.getStepsPassed() + s.getStepsFailed() + s.getStepsUndefined() + s.getStepsPending() + s.getStepsSkipped(),
-                    s.getStepsPassed(),
-                    s.getStepsFailed(),
-                    s.getStepsUndefined(),
-                    s.getStepsPending(),
-                    s.getStepsSkipped()));
-        }
-    }
-
-    public void printFeature(FeatureToken feature) {
-        out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
-        out.flush();
-    }
-
-    public void printScenario(ScenarioToken scenario) {
-        out.printf("  Scenario: %s%n", scenario.getName());
-        out.flush();
-    }
-
     public void printStepStart(StepToken step, int depth) {
+        StringBuilder depthPadding = getDepthPadding(depth);
+        int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
         if ( step.isStepMacro() ) {
-            StringBuilder depthPadding = getDepthPadding(depth);
-            int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
             out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), "", step.getMessage());
             out.flush();
+        } else {
+            ShowStepProgress progress = new ShowStepProgressLongRunningSteps(depthPadding, stepLengthChars, step);
+            startStepAnimation(progress, PROGRESS_CURSOR_FRAME_RATE);    
         }
     }
 
-
     public void printStepEnd(StepToken step, int depth) {
+        cancelStepAnimation();
         if ( ! step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
             int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
@@ -134,56 +79,15 @@ public class PlainOutputFormatter implements OutputFormatter {
         }
     }
 
-    protected StringBuilder getDepthPadding(int depth) {
-        StringBuilder sb = new StringBuilder();
-        for ( int loop=1; loop < depth; loop++ ) {
-            sb.append("..");
+    private class ShowStepProgressLongRunningSteps extends ShowStepProgress {
+        
+        public ShowStepProgressLongRunningSteps(StringBuilder depthPadding, int stepLengthChars, StepToken step) {
+            super(depthPadding, stepLengthChars, step);
         }
-        if ( depth > 1 ) {
-            sb.append(" ");
-        }
-        return sb;
-    }
 
-    public void printStackTrace(String stackTrace) {
-        out.print(stackTrace);
-        out.flush();
-    }
-
-    public void printMessage(String message) {
-        out.printf("%s%n", message);
-        out.flush();
-    }
-
-    public void log(LogLevel level, Object message) {
-        if ( level == LogLevel.ERROR ) {
-            logErr(level, message);    
-        } else {
-            logOut(level, message);
+        protected String getTerminator(int frameCount) {
+            String terminator = "(wait " + frameCount * PROGRESS_CURSOR_FRAME_RATE + " millis)\n";
+            return terminator;
         }
     }
-
-    public void logThrowable(LogLevel level, Throwable t) {
-        if ( level == LogLevel.ERROR ) {
-            t.printStackTrace(ChorusOut.err);    
-        } else {
-            t.printStackTrace(out);
-            out.flush();
-        }
-    }
-
-    private void logOut(LogLevel type, Object message) {
-        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
-        //and don't want refactoring the code to break tests if log statements move class
-        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        out.flush();
-    }
-
-    protected void logErr(LogLevel type, Object message) {
-        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
-        //and don't want refactoring the code to break tests if log statements move class
-        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        out.flush();
-    }
-
 }
