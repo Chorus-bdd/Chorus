@@ -99,7 +99,7 @@ public final class PlainOutputFormatter extends AbstractOutputFormatter {
         }
 
         protected String getTerminator(int frameCount) {
-            String terminator = " (run for " + (frameCount * PROGRESS_CURSOR_FRAME_RATE) / 1000 + "s..)%n";
+            String terminator = "(running for " + (frameCount * PROGRESS_CURSOR_FRAME_RATE) / 1000 + "s..)%n";
             return terminator;
         }
     }
