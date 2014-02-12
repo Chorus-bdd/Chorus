@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Date: 12/02/14
  * Time: 19:06
  */
-public abstract class AbstractOutputFormatter implements OutputFormatter {
+abstract class AbstractOutputFormatter implements OutputFormatter {
 
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -37,12 +37,43 @@ public abstract class AbstractOutputFormatter implements OutputFormatter {
         out = new PrintWriter(outStream);
     }
 
-    protected String printStepProgress(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+    public void printFeature(FeatureToken feature) {
+        out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
         out.flush();
-        return terminator;
     }
 
+    public void printScenario(ScenarioToken scenario) {
+        out.printf("  Scenario: %s%n", scenario.getName());
+        out.flush();
+    }
+
+    public abstract void printStepStart(StepToken step, int depth);
+
+    public abstract void printStepEnd(StepToken step, int depth);
+
+    protected void printStepProgress(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
+        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+        out.flush();
+    }
+
+    protected void printCompletedStep(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
+        out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+        out.flush();
+    }
+
+    protected void startProgressTask(Runnable progress, int frameRate) {
+        progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, frameRate, frameRate, TimeUnit.MILLISECONDS);
+    }
+
+    protected void cancelStepAnimation() {
+        synchronized (printLock) {
+            if ( progressFuture != null) {
+                progressFuture.cancel(false);
+                progressFuture = null;
+            }
+        }
+    }
+    
     protected StringBuilder getDepthPadding(int depth) {
         StringBuilder sb = new StringBuilder();
         for ( int loop=1; loop < depth; loop++ ) {
@@ -52,47 +83,6 @@ public abstract class AbstractOutputFormatter implements OutputFormatter {
             sb.append(" ");
         }
         return sb;
-    }
-
-    public void printStackTrace(String stackTrace) {
-        out.print(stackTrace);
-        out.flush();
-    }
-
-    public void printMessage(String message) {
-        out.printf("%s%n", message);
-        out.flush();
-    }
-
-    public void log(LogLevel level, Object message) {
-        if ( level == LogLevel.ERROR ) {
-            logErr(level, message);
-        } else {
-            logOut(level, message);
-        }
-    }
-
-    public void logThrowable(LogLevel level, Throwable t) {
-        if ( level == LogLevel.ERROR ) {
-            t.printStackTrace(ChorusOut.err);
-        } else {
-            t.printStackTrace(out);
-            out.flush();
-        }
-    }
-
-    protected void logOut(LogLevel type, Object message) {
-        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
-        //and don't want refactoring the code to break tests if log statements move class
-        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        out.flush();
-    }
-
-    protected void logErr(LogLevel type, Object message) {
-        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
-        //and don't want refactoring the code to break tests if log statements move class
-        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        out.flush();
     }
 
     public void printResults(ResultsSummary s) {
@@ -138,36 +128,54 @@ public abstract class AbstractOutputFormatter implements OutputFormatter {
         }
     }
 
-    public void printFeature(FeatureToken feature) {
-        out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
+    public void printStackTrace(String stackTrace) {
+        out.print(stackTrace);
         out.flush();
     }
 
-    public void printScenario(ScenarioToken scenario) {
-        out.printf("  Scenario: %s%n", scenario.getName());
+    public void printMessage(String message) {
+        out.printf("%s%n", message);
         out.flush();
     }
 
-    protected void startStepAnimation(Runnable progress, int frameRate) {
-        progressFuture = stepProgressExecutorService.scheduleWithFixedDelay(progress, frameRate, frameRate, TimeUnit.MILLISECONDS);
-    }
-    
-    protected void cancelStepAnimation() {
-        synchronized (printLock) {
-            if ( progressFuture != null) {
-                progressFuture.cancel(false);
-                progressFuture = null;
-            }
+    public void log(LogLevel level, Object message) {
+        if ( level == LogLevel.ERROR ) {
+            logErr(level, message);
+        } else {
+            logOut(level, message);
         }
     }
 
-    protected abstract class ShowStepProgress implements Runnable {
+    public void logThrowable(LogLevel level, Throwable t) {
+        if ( level == LogLevel.ERROR ) {
+            t.printStackTrace(ChorusOut.err);
+        } else {
+            t.printStackTrace(out);
+            out.flush();
+        }
+    }
+
+    protected void logOut(LogLevel type, Object message) {
+        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+        //and don't want refactoring the code to break tests if log statements move class
+        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        out.flush();
+    }
+
+    protected void logErr(LogLevel type, Object message) {
+        //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
+        //and don't want refactoring the code to break tests if log statements move class
+        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        out.flush();
+    }
+
+    protected abstract class StepProgressRunnable implements Runnable {
         private StringBuilder depthPadding;
         private int maxStepTextChars;
         private StepToken step;
-        private int frameCount = -1;
+        private int frameCount = 0;
 
-        public ShowStepProgress(StringBuilder depthPadding, int maxStepTextChars, StepToken step) {
+        public StepProgressRunnable(StringBuilder depthPadding, int maxStepTextChars, StepToken step) {
             this.depthPadding = depthPadding;
             this.maxStepTextChars = maxStepTextChars;
             this.step = step;

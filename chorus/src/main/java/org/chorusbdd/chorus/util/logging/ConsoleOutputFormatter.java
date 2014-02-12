@@ -29,28 +29,14 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.NamedExecutors;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Nick E
  */
-public class ConsoleOutputFormatter extends AbstractOutputFormatter {
-
+public final class ConsoleOutputFormatter extends AbstractOutputFormatter {
 
     private static final int PROGRESS_CURSOR_FRAME_RATE = 400;
-    
     
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
@@ -59,8 +45,8 @@ public class ConsoleOutputFormatter extends AbstractOutputFormatter {
         printStepProgress(step, depthPadding, stepLengthChars, terminator);
 
         if ( ! step.isStepMacro()) {
-            ShowStepProgress progress = new ShowStepProgressConsole(depthPadding, stepLengthChars, step);
-            startStepAnimation(progress, PROGRESS_CURSOR_FRAME_RATE);
+            StepProgressRunnable progress = new ShowStepProgressConsoleTask(depthPadding, stepLengthChars, step);
+            startProgressTask(progress, PROGRESS_CURSOR_FRAME_RATE);
         }
     }
 
@@ -77,9 +63,9 @@ public class ConsoleOutputFormatter extends AbstractOutputFormatter {
     /**
      * Show step progress with a carriage return to overwrite the previously written line and an animated cursor
      */
-    private class ShowStepProgressConsole extends ShowStepProgress {
+    private class ShowStepProgressConsoleTask extends StepProgressRunnable {
         
-        public ShowStepProgressConsole(StringBuilder depthPadding, int stepLengthChars, StepToken step) {
+        public ShowStepProgressConsoleTask(StringBuilder depthPadding, int stepLengthChars, StepToken step) {
             super(depthPadding, stepLengthChars, step);
         }
 
@@ -87,12 +73,12 @@ public class ConsoleOutputFormatter extends AbstractOutputFormatter {
             String terminator;
             int i = frameCount % 3;
             switch(i) {
-                case 0 : terminator =  "\\\r";
+                case 0 :
+                default: terminator = "\\\r";
                     break;
-                case 1 : terminator = "/\r";
+                case 1 : terminator =  "/\r";
                     break;
-                case 2 :
-                default: terminator = "-\r";
+                case 2 : terminator = "-\r";
                     break;
             }
             return terminator;

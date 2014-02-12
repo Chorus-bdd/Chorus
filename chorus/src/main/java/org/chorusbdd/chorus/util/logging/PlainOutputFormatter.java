@@ -29,23 +29,32 @@
  */
 package org.chorusbdd.chorus.util.logging;
 
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 /**
  * Nick E
+ * 
+ * A plain formatter which does not require a console and does not use carriage return to provide animated step progress
+ * 
+ * Long running steps have time logged every 10 seconds
+ * Set the system property chorusOutputFormatterStepLogRate to -1 to turn this off, or to an alternative length in milliseconds
  */
-public class PlainOutputFormatter extends AbstractOutputFormatter {
+public final class PlainOutputFormatter extends AbstractOutputFormatter {
 
-
-    private static final int PROGRESS_CURSOR_FRAME_RATE = 5000;
-    protected PrintWriter out;
+    /**
+     * Set to -1 to turn off progress step logging
+     */
+    private static int PROGRESS_CURSOR_FRAME_RATE;
+    
+    static {
+        try {
+            PROGRESS_CURSOR_FRAME_RATE = Integer.parseInt(System.getProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LOG_RATE, "2")) * 1000;
+        } catch (NumberFormatException e) {
+            System.err.println("Sys property " + ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LOG_RATE + " must be an integer number of seconds");
+            PROGRESS_CURSOR_FRAME_RATE = 10000;
+        }
+    }
 
     /**
      * Create a results formatter which outputs results
@@ -53,19 +62,20 @@ public class PlainOutputFormatter extends AbstractOutputFormatter {
      */
     public PlainOutputFormatter() {}
 
-    public void setPrintStream(PrintStream outStream) {
-        out = new PrintWriter(outStream);
-    }
-
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
         int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
         if ( step.isStepMacro() ) {
-            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), "", step.getMessage());
-            out.flush();
+            printCompletedStep(step, depthPadding, stepLengthChars);
         } else {
-            ShowStepProgress progress = new ShowStepProgressLongRunningSteps(depthPadding, stepLengthChars, step);
-            startStepAnimation(progress, PROGRESS_CURSOR_FRAME_RATE);    
+            startProgressTask(step, depthPadding, stepLengthChars);
+        }
+    }
+
+    private void startProgressTask(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
+        if ( PROGRESS_CURSOR_FRAME_RATE > 0) {
+            StepProgressRunnable progress = new ShowStepProgressPlainOutputTask(depthPadding, stepLengthChars, step);
+            startProgressTask(progress, PROGRESS_CURSOR_FRAME_RATE);
         }
     }
 
@@ -74,19 +84,22 @@ public class PlainOutputFormatter extends AbstractOutputFormatter {
         if ( ! step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
             int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
-            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
-            out.flush();
+            printCompletedStep(step, depthPadding, stepLengthChars);
         }
     }
 
-    private class ShowStepProgressLongRunningSteps extends ShowStepProgress {
+    /**
+     * Show step progress but only if a step does not complete after 5 seconds
+     * (this helps to make it clearer which step is blocked)
+     */
+    private class ShowStepProgressPlainOutputTask extends StepProgressRunnable {
         
-        public ShowStepProgressLongRunningSteps(StringBuilder depthPadding, int stepLengthChars, StepToken step) {
+        public ShowStepProgressPlainOutputTask(StringBuilder depthPadding, int stepLengthChars, StepToken step) {
             super(depthPadding, stepLengthChars, step);
         }
 
         protected String getTerminator(int frameCount) {
-            String terminator = "(wait " + frameCount * PROGRESS_CURSOR_FRAME_RATE + " millis)\n";
+            String terminator = " (run for " + (frameCount * PROGRESS_CURSOR_FRAME_RATE) / 1000 + "s..)%n";
             return terminator;
         }
     }
