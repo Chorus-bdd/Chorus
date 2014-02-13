@@ -51,7 +51,7 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
 
     public abstract void printStepEnd(StepToken step, int depth);
 
-    protected void printStepProgress(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
+    protected void printStepWithoutEndState(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
         out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
         out.flush();
     }
@@ -187,7 +187,7 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
                 if ( ! progressFuture.isCancelled()) {
                     frameCount++;
                     terminator = getTerminator(frameCount);
-                    printStepProgress(step, depthPadding, maxStepTextChars, terminator);
+                    printStepWithoutEndState(step, depthPadding, maxStepTextChars, terminator);
                 }
             }
         }

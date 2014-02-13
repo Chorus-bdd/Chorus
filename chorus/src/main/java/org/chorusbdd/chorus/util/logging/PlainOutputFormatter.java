@@ -66,7 +66,7 @@ public final class PlainOutputFormatter extends AbstractOutputFormatter {
         StringBuilder depthPadding = getDepthPadding(depth);
         int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
         if ( step.isStepMacro() ) {
-            printCompletedStep(step, depthPadding, stepLengthChars);
+            printStepWithoutEndState(step, depthPadding, stepLengthChars, "%n");
         } else {
             startProgressTask(step, depthPadding, stepLengthChars);
         }

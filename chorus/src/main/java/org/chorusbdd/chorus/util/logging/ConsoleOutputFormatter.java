@@ -42,7 +42,7 @@ public final class ConsoleOutputFormatter extends AbstractOutputFormatter {
         StringBuilder depthPadding = getDepthPadding(depth);
         int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
         String terminator = step.isStepMacro() ? "%n" : "|\r";
-        printStepProgress(step, depthPadding, stepLengthChars, terminator);
+        printStepWithoutEndState(step, depthPadding, stepLengthChars, terminator);
 
         if ( ! step.isStepMacro()) {
             StepProgressRunnable progress = new ShowStepProgressConsoleTask(depthPadding, stepLengthChars, step);
