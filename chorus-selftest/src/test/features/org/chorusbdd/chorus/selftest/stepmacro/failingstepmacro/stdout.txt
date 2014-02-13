@@ -3,7 +3,7 @@ Feature: Failing Step Macro
   Scenario: Simple Step Macro Scenario
 Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
     Given Chorus is working properly                                                         PASSED  
-    Then I can call a step macro with two variables 1234 and mytestgroup                             
+    Then I can call a step macro with two variables 1234 and mytestgroup                     
     .. Then I can call a handler step with group 1234                                        PASSED  1234
     .. And I can call a handler step which is unimplememted and this will fail               UNDEFINED 
     .. And I can call a step which is unimplemented and this will be skipped                 SKIPPED 

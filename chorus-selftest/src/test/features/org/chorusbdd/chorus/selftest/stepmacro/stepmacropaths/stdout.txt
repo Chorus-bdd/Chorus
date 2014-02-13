@@ -4,7 +4,7 @@ Feature: Step Macro Path
   Scenario: Calling a global macro
 Chorus --> INFO    - Processing scenario: Calling a global macro
     Given Chorus is working properly                                                         PASSED  
-    Then I can call a global macro with three variables lemon 123 and aardvark                       
+    Then I can call a global macro with three variables lemon 123 and aardvark               
     .. Then I can call the macro from any feature file since macros are preparsed            PASSED  
     .. And variables are all expanded within the macro steps for example lemon 123 aardvark  PASSED  lemon.123.aardvark
 
