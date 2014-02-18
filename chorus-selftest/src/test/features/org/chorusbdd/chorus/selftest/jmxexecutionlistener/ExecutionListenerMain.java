@@ -53,6 +53,7 @@ public class ExecutionListenerMain {
         System.out.println("Starting Remote JMX execution listener");
         startJmx();
         Thread.sleep(10000);
+        System.exit(0);
     }
 
     private static void startJmx() {

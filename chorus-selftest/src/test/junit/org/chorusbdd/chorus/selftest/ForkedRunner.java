@@ -29,13 +29,16 @@
  */
 package org.chorusbdd.chorus.selftest;
 
+import org.chorusbdd.chorus.handlers.processes.JavaProcessCommandLineBuilder;
 import org.chorusbdd.chorus.handlers.processes.ProcessRedirector;
+import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigurationProperty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -54,48 +57,33 @@ public class ForkedRunner implements ChorusSelfTestRunner {
     }
 
     public ChorusSelfTestResults runForked(Properties sysPropsForTest, String mainClass, PrintStream stdOutStream, int timeout) throws Exception {
-        String jre = System.getProperty("java.home");
-
         //use log4j configuration
         //this will avoid the log4j warning for tests which use Spring and hence pull in log4j
         //this will only be used for Chorus log output if a test configures
         //System.setProperty("chorusLogProvider", "org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider");
         sysPropsForTest.put("log4j.configuration", "org/chorusbdd/chorus/selftest/log4j-forked.xml");
 
-        //See notes also in ProcessHandler
-        //surrounding the classpath in quotes is currently breaking the classpath parsing for linux when launched via
-        //Runtime.getRuntime().exec() (but it is ok from the shell)
-        //I think we want to keep this in on windows, since we will more likely encounter directory names with spaces -
-        //I'm worried those will break for linux although this will fix the classpath issue.
-        //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
-        boolean isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
-        String commandTxt = isWindows ?
-              "%s%sbin%sjava %s -classpath \"%s\" %s %s" :
-              "%s%sbin%sjava %s -classpath %s %s %s";
-
-        String classPath = System.getProperty("java.class.path");
-
         String switches = getSwitches(sysPropsForTest);
 
         StringBuilder jvmArgs = getJvmArgs(sysPropsForTest);
 
-        //construct a command
-        String command = String.format(
-              commandTxt,
-              jre,
-              File.separatorChar,
-              File.separatorChar,
-              jvmArgs,
-              classPath,
-              mainClass,
-              switches).trim();
+        ProcessesConfig processesConfig = new ProcessesConfig();
+        processesConfig.setJvmargs(jvmArgs.toString());
+        processesConfig.setArgs(switches);
+        processesConfig.setMainclass(mainClass);
+        JavaProcessCommandLineBuilder javaProcessCommandLineBuilder = new JavaProcessCommandLineBuilder(
+            new File(System.getProperty("user.dir")),
+            processesConfig,
+            "forkedTests"
+        );
 
+        List<String> command = javaProcessCommandLineBuilder.buildCommandLine();
         System.out.println("About to run process: " + command);
 
         ByteArrayOutputStream processOut = new ByteArrayOutputStream();
         ByteArrayOutputStream processErr = new ByteArrayOutputStream();
 
-        Process process = Runtime.getRuntime().exec(command);
+        Process process = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
         ProcessRedirector outRedirector = new ProcessRedirector(process.getInputStream(), false, new PrintStream(processOut), stdOutStream);  //dumping both to out
         ProcessRedirector errRedirector = new ProcessRedirector(process.getErrorStream(), false, new PrintStream(processErr), stdOutStream);  //tend to get more consistent ordering
 

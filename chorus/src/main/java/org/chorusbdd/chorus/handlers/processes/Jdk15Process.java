@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.logging.ChorusOut;
 
 import java.io.*;
+import java.util.List;
 
 /**
 * Created with IntelliJ IDEA.
@@ -49,9 +50,9 @@ public class Jdk15Process extends AbstractChorusProcess {
     private ProcessRedirector outRedirector;
     private ProcessRedirector errRedirector;
 
-    public Jdk15Process(String name, String command, ProcessLogOutput logOutput) throws Exception {
+    public Jdk15Process(String name, List<String> command, ProcessLogOutput logOutput) throws Exception {
         super(name, logOutput);
-        this.process = Runtime.getRuntime().exec(command);
+        this.process = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
 
         InputStream processOutStream = process.getInputStream();
         InputStream processErrorStream = process.getErrorStream();
