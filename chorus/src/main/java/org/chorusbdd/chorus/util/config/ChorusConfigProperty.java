@@ -99,7 +99,8 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
 
     //these are only ever set with a system property not a switch
     public static final List SYS_PROP_ONLY_PROPERTIES = Arrays.asList(
-        OUTPUT_FORMATTER_STEP_LENGTH_CHARS        
+        OUTPUT_FORMATTER_STEP_LENGTH_CHARS,
+        OUTPUT_FORMATTER_STEP_LOG_RATE
     );
     
     
