@@ -12,6 +12,7 @@
         <change desc="Add support for configurable OutputFormatter, which can be used to change both Chorus interpreter output and logging output."/>
         <change desc="Add an OutputFormatter for console output, and add a -c console mode switch to turn this on. In console mode Chorus shows an animated cursor for steps in progress"/>
         <change desc="Show the parent step for a step macro in the console output up front, before the child steps are executed, rather than waiting for the child steps to complete"/>
+        <bugfix desc="Fix ProcessHandler for Mac/OS X when using JDK 1.5/1.6"/>
     </version>
     <version>
         <versionNumber>1.6.2</versionNumber>
