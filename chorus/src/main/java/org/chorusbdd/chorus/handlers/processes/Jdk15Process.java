@@ -52,7 +52,8 @@ public class Jdk15Process extends AbstractChorusProcess {
 
     public Jdk15Process(String name, List<String> command, ProcessLogOutput logOutput) throws Exception {
         super(name, logOutput);
-        this.process = Runtime.getRuntime().exec(command.toArray(new String[command.size()]));
+        String[] cmdarray = command.toArray(new String[command.size()]);
+        this.process = Runtime.getRuntime().exec(cmdarray);
 
         InputStream processOutStream = process.getInputStream();
         InputStream processErrorStream = process.getErrorStream();

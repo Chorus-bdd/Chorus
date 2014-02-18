@@ -92,15 +92,9 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
     }
 
     private List<String> getClasspathTokens(ProcessesConfig processesConfig) {
-        //surrounding the classpath in quotes is currently breaking the classpath parsing for linux when launched via
-        //Runtime.getRuntime().exec() (but it is ok from the shell)
-        //I think we want to keep this in on windows, since we will more likely encounter directory names with spaces -
-        //I'm worried those will break for linux although this will fix the classpath issue.
-        //-so this workaround at least gets things working, but may break for folders with spaces in the name on 'nix
-        boolean isWindows = OSUtils.isWindows();
         List<String>  classPathTokens = new ArrayList<String>();
         classPathTokens.add("-classpath");
-        classPathTokens.add(isWindows ? "\"" + processesConfig.getClasspath() + "\"" : processesConfig.getClasspath());
+        classPathTokens.add(processesConfig.getClasspath());
         return classPathTokens;
     }
 
