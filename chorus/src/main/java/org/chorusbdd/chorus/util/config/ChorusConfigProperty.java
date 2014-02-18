@@ -90,7 +90,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     
     EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
     
-    OUTPUT_FORMATTER("-outputFormatter", "-v", "chorusOutputFormatter", false, 0, 1, new String[] {PlainOutputFormatter.class.getName()}, "[\\w\\.]+", "-c org.myorg.MyFormatter", "The output formatter used to format the interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
+    OUTPUT_FORMATTER("-outputFormatter", "-r", "chorusOutputFormatter", false, 0, 1, new String[] {PlainOutputFormatter.class.getName()}, "[\\w\\.]+", "-c org.myorg.MyFormatter", "The output formatter used to format the interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
     CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE);
 
