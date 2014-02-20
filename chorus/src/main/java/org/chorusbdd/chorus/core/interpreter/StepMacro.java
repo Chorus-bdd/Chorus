@@ -126,11 +126,13 @@ public class StepMacro {
      * @param scenarioStep the step to match to this StepMacro's pattern
      * @param macros the dictionary of macros against which to recursively match child steps
      */
-    public void processStep(StepToken scenarioStep, List<StepMacro> macros) {
-        doProcessStep(scenarioStep, macros, 0);
+    public boolean processStep(StepToken scenarioStep, List<StepMacro> macros, boolean alreadymatched) {
+        boolean stepMacroMatched = doProcessStep(scenarioStep, macros, 0, alreadymatched);
+        return stepMacroMatched;
     }
 
-    private void doProcessStep(StepToken stepToken, List<StepMacro> macros, int depth) {
+    private boolean doProcessStep(StepToken stepToken, List<StepMacro> macros, int depth, boolean alreadyMatched) {
+        boolean result = false;
         if ( depth > MAX_STEP_DEPTH ) {
             throw new RecursiveStepMacroException("Maximum Step Depth (" + MAX_STEP_DEPTH + ") was reached when processing step " + stepToken.toString() +
                 " are your StepMacro: infinitely recursive?");
@@ -138,9 +140,16 @@ public class StepMacro {
 
         Matcher macroMatcher = pattern.matcher(stepToken.getAction());
         if ( macroMatcher.matches() ) {
-            log.debug("Step " + stepToken + " matches StepMacro: " + pattern + ", will add " + steps.size() + " child steps");
-            addChildSteps(stepToken, macroMatcher, macros, depth);
+            if (! alreadyMatched) { //sometimes we are just matching, looking for duplicate matches
+                log.debug(stepToken.getAction() + " matches StepMacro: " + pattern + ", will add " + steps.size() + " child steps");
+                addChildSteps(stepToken, macroMatcher, macros, depth);
+            } else {
+                log.debug(stepToken.getAction() + " matches StepMacro: " + pattern);
+                log.warn("Duplicate StepMacro: match for step " + stepToken.getAction() + pattern + ", Chorus will use the steps from the first match");
+            }
+            result = true;
         }
+        return result;
     }
 
     private void addChildSteps(StepToken parentToken, Matcher macroMatcher, List<StepMacro> macros, int depth) {
@@ -155,8 +164,9 @@ public class StepMacro {
             StepToken childToken = new StepToken (type, action);
 
             //match the new child step against the list of StepMacros recursively
+            boolean alreadyMatched = false;
             for ( StepMacro stepMacro : macros) {
-                stepMacro.doProcessStep(childToken, macros, depth + 1);
+                alreadyMatched = stepMacro.doProcessStep(childToken, macros, depth + 1, alreadyMatched);
             }
 
             parentToken.addChildStep(childToken);

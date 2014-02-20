@@ -55,7 +55,7 @@ public class StepMacroTest extends Assert {
         stepMacro.addStep(new StepToken("Then", "my number of groups is <$2> groups"));
 
         StepToken scenarioStepToken = new StepToken("Given", "I reference a step macro with 2 steps and 2 capture groups");
-        stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro));
+        stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro), false);
 
         assertEquals(scenarioStepToken.getChildSteps().size(), 2);
         assertEquals("my number of steps is 2 steps", scenarioStepToken.getChildSteps().get(0).getAction());
@@ -68,7 +68,7 @@ public class StepMacroTest extends Assert {
         stepMacro.addStep(new StepToken("Given", "I have a recursive match"));
 
         StepToken scenarioStepToken = new StepToken("Given", "I have a recursive match");
-        stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro));
+        stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro), false);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class StepMacroTest extends Assert {
         childStepMacro.addStep(new StepToken("", "Child Step"));
 
         StepToken scenarioStepToken = new StepToken("Given", "I have a parent step macro");
-        stepMacro.processStep(scenarioStepToken, Arrays.asList(stepMacro, childStepMacro));
+        stepMacro.processStep(scenarioStepToken, Arrays.asList(stepMacro, childStepMacro), false);
 
         assertEquals(scenarioStepToken.getChildSteps().size(), 1);
         assertEquals("With a step which matches a child step macro", scenarioStepToken.getChildSteps().get(0).getAction());
@@ -99,7 +99,7 @@ public class StepMacroTest extends Assert {
 
         StepToken scenarioStepToken = new StepToken("Given", "I reference a step macro with 1 steps and 2 capture groups");
         try {
-            stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro));
+            stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro), false);
             fail("Expecting mismatched groups exception");
         } catch (ChorusException e) {
             assertEquals("Capture group with index 3 in StepMacro step 'my number of steps is <$3> steps' did not have a " +

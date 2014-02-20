@@ -31,6 +31,8 @@ package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -44,6 +46,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractChorusParser<E> {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(AbstractChorusParser.class);
 
     public abstract List<E> parse(Reader reader) throws IOException, ParseException;
 
@@ -67,8 +71,11 @@ public abstract class AbstractChorusParser<E> {
     protected StepToken addStep(ScenarioToken scenarioToken, StepToken stepToken, List<StepMacro> stepMacros) {
         //we first see if the step matches any StepMacros which were defined during pre-parsing
         //and if so populate child steps
+
+        //only accept the first valid matching step macro we find, log warnings about any duplicate matches
+        boolean alreadyMatched = false;
         for (StepMacro s : stepMacros) {
-            s.processStep(stepToken, stepMacros);
+            alreadyMatched = s.processStep(stepToken, stepMacros, alreadyMatched);
         }
 
         scenarioToken.addStep(stepToken);

@@ -1,0 +1,14 @@
+Chorus --> WARN    - Duplicate StepMacro: match for step I can call a step macro with two variables 1234 and mytestgroupI can call a step macro with two variables 1234 and (.+), Chorus will use the steps from the first match
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/duplicatematch/stepmacroduplicate.feature
+Feature: Step Macro Duplicate Match                                                                  
+  Scenario: Simple Step Macro Scenario
+Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can call a step macro with two variables 1234 and mytestgroup                     
+    .. Then I can call a handler step with group 1234                                        PASSED  1234
+    .. And I can call a handler step with group mytestgroup                                  PASSED  mytestgroup
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)
