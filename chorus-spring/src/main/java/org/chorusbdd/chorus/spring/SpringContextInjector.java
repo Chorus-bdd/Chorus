@@ -124,26 +124,36 @@ public class SpringContextInjector implements SpringInjector {
     public static void injectResourceFields(ApplicationContext springContext, Object... handlers ) {
         for (Object handler : handlers) {
             Class handlerClass = handler.getClass();
-            //inject handler fields with the Spring beans
-            Field[] fields = handlerClass.getDeclaredFields();
-            for (Field field : fields) {
-                Resource resourceAnnotation = field.getAnnotation(Resource.class);
-                if (resourceAnnotation != null) {
-                    boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
-                    String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
-                    Object bean = springContext.getBean(name);
-                    log.trace("Found spring Resource annotation for field " + field + " will attempt to inject Spring bean " + bean);
-                    if (bean == null) {
-                        log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
-                    }
-                    try {
-                        field.setAccessible(true);
-                        field.set(handler, bean);
-                    } catch (IllegalAccessException e) {
-                        log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
-                    }
+            injectResourceFields(springContext, handler, handlerClass);
+
+        }
+    }
+
+    private static void injectResourceFields(ApplicationContext springContext, Object handler, Class handlerClass) {
+        //inject handler fields with the Spring beans
+        Field[] fields = handlerClass.getDeclaredFields();
+        for (Field field : fields) {
+            Resource resourceAnnotation = field.getAnnotation(Resource.class);
+            if (resourceAnnotation != null) {
+                boolean beanNameInAnnotation = !"".equals(resourceAnnotation.name());
+                String name = beanNameInAnnotation ? resourceAnnotation.name() : field.getName();
+                Object bean = springContext.getBean(name);
+                log.trace("Found spring Resource annotation for field " + field + " will attempt to inject Spring bean " + bean);
+                if (bean == null) {
+                    log.error("Failed to set @Resource (" + name + "). No such bean exists in application context.");
+                }
+                try {
+                    field.setAccessible(true);
+                    field.set(handler, bean);
+                } catch (IllegalAccessException e) {
+                    log.error("Failed to set @Resource (" + name + ") with bean of type: " + bean.getClass(), e);
                 }
             }
+        }
+
+        Class superclass = handlerClass.getSuperclass();
+        if ( superclass != Object.class) {
+            injectResourceFields(springContext, handler, superclass);
         }
     }
 
