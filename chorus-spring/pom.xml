@@ -32,7 +32,7 @@
         is still supported -->
         <testResources>
              <testResource>
-               <directory>src/test/handlers</directory>
+               <directory>src/test/features</directory>
                  <includes>
                    <include>**/*.xml</include>
                    <include>**/*.properties</include>

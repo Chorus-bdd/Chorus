@@ -29,7 +29,8 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.selftest.handlers.calculator.CalculatorHandler;
+
+import org.chorusbdd.chorus.spring.selftest.calculator.CalculatorHandler;
 
 /**
  * Created by: Steve Neal

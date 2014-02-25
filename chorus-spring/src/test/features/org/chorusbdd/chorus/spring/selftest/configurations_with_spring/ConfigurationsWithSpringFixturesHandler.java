@@ -27,49 +27,35 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.handlers.calculator;
+package org.chorusbdd.chorus.spring.selftest.configurations_with_spring;
 
-import java.util.Stack;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.SpringContext;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.results.FeatureToken;
+
+import javax.annotation.Resource;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by: Steve Neal
- * Date: 12/10/11
+ * Date: 19/01/12
  */
-public class Calculator {
+@Handler("Configurations With Spring Fixtures")
+@SpringContext("ConfigurationsWithSpringFixturesHandler-context.xml")
+public class ConfigurationsWithSpringFixturesHandler {
 
-    public enum Operator {
-        ADD, SUBTRACT, MULTIPLY, DIVIDE
-    }
+    @Resource
+    String injectedString;
 
-    private Stack<Double> stack = new Stack<Double>();
+    @ChorusResource("feature.token")
+    FeatureToken currentFeatureToken;
 
-    private double lastResult = 0;
-
-    public void enterNumber(Double number) {
-        stack.push(number);
-    }
-
-    public void press(Operator operator) {
-        double d2 = stack.pop();
-        double d1 = stack.pop();
-
-        switch (operator) {
-            case ADD:
-                lastResult = d1 + d2;
-                break;
-            case SUBTRACT:
-                lastResult = d1 - d2;
-                break;
-            case MULTIPLY:
-                lastResult = d1 * d2;
-                break;
-            case DIVIDE:
-                lastResult = d1 / d2;
-                break;
-        }
-    }
-
-    public double getResult() {
-        return lastResult;
+    @Step(".*the injected variable contains the name of the run configuration$")
+    public void checkInjectedValue() {
+        String expected = currentFeatureToken.getConfigurationName();
+        assertEquals(expected, injectedString);
     }
 }

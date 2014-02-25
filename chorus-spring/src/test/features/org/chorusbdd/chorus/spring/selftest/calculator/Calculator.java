@@ -27,35 +27,49 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.handlers.configurations_with_spring;
+package org.chorusbdd.chorus.spring.selftest.calculator;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.SpringContext;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.results.FeatureToken;
-
-import javax.annotation.Resource;
-
-import static org.junit.Assert.assertEquals;
+import java.util.Stack;
 
 /**
  * Created by: Steve Neal
- * Date: 19/01/12
+ * Date: 12/10/11
  */
-@Handler("Configurations With Spring Fixtures")
-@SpringContext("ConfigurationsWithSpringFixturesHandler-context.xml")
-public class ConfigurationsWithSpringFixturesHandler {
+public class Calculator {
 
-    @Resource
-    String injectedString;
+    public enum Operator {
+        ADD, SUBTRACT, MULTIPLY, DIVIDE
+    }
 
-    @ChorusResource("feature.token")
-    FeatureToken currentFeatureToken;
+    private Stack<Double> stack = new Stack<Double>();
 
-    @Step(".*the injected variable contains the name of the run configuration$")
-    public void checkInjectedValue() {
-        String expected = currentFeatureToken.getConfigurationName();
-        assertEquals(expected, injectedString);
+    private double lastResult = 0;
+
+    public void enterNumber(Double number) {
+        stack.push(number);
+    }
+
+    public void press(Operator operator) {
+        double d2 = stack.pop();
+        double d1 = stack.pop();
+
+        switch (operator) {
+            case ADD:
+                lastResult = d1 + d2;
+                break;
+            case SUBTRACT:
+                lastResult = d1 - d2;
+                break;
+            case MULTIPLY:
+                lastResult = d1 * d2;
+                break;
+            case DIVIDE:
+                lastResult = d1 / d2;
+                break;
+        }
+    }
+
+    public double getResult() {
+        return lastResult;
     }
 }
