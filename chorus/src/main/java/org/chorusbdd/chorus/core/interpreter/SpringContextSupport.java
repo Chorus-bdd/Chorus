@@ -47,23 +47,39 @@ import java.lang.reflect.Method;
 public class SpringContextSupport {
 
     private static ChorusLog log = ChorusLogFactory.getLog(SpringContextSupport.class);
+    private static final String SPRING_CONTEXT_CLASS = "org.springframework.context.ApplicationContext";
 
     private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
 
     public SpringContextSupport() {
         try {
-            Class c = null;
-            try {
-                c = Class.forName(SPRING_INJECTOR_CLASSNAME);
-            } catch ( ClassNotFoundException cnf ) {
-                //chorus-spring is not in classpath
-            }
-            if ( c != null) {
-                springInjector = (SpringInjector)c.newInstance();
+            Class springClass = checkClass(SPRING_CONTEXT_CLASS);
+            if ( springClass == null) {
+                log.info("Spring does not appear to be on the classpath will not initialize chorus-spring");
+            } else {
+                Class injectorClass = checkClass(SPRING_INJECTOR_CLASSNAME);
+                if ( injectorClass == null) {
+                    log.info("Spring Injector class not found will not initialize chorus-spring");
+                } else {
+                    springInjector = (SpringInjector)injectorClass.newInstance();
+                }
+
             }
         } catch (Exception e) {
             log.error("Failed to instantiate " + SPRING_INJECTOR_CLASSNAME, e);
         }
+    }
+
+    /**
+     * @return true if a class with the given name can be loaded from the classpath
+     */
+    private Class checkClass(String className) {
+        Class c = null;
+        try {
+            c = Class.forName(className);
+        } catch ( NoClassDefFoundError e ) {
+        } catch ( ClassNotFoundException cnf ) {}
+        return c;
     }
 
     /**
