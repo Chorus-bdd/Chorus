@@ -41,6 +41,12 @@ Feature: Type Coercion
   Scenario: Failed char conversion
     Ensure I can't coerce a value Foxtrot to a char
 
+  Scenario: Negative number conversion
+    Ensure I can coerce a value -123 to an Integer
+    And I can coerce a value -123.45 to a Float
+    And I can coerce a value -12345 to a Long
+    And I can coerce a value -12345.67 to a Double
+
   #we have some rules which define which class to coerce when the param type is Object
   #These are also used by the built in ChorusContext handler when we set a context
   #In general we try to convert to a boolean or numeric type before falling back to String

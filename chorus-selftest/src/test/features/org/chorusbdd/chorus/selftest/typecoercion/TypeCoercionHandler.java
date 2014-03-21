@@ -57,6 +57,16 @@ public class TypeCoercionHandler {
         return val;
     }
 
+    @Step("I can(?:'t)? coerce a value (.*) to a Long")
+    public long test(long val) {
+        return val;
+    }
+
+    @Step("I can(?:'t)? coerce a value (.*) to a Long")
+    public Long test(Long val) {
+        return val;
+    }
+
     @Step("I can(?:'t)? coerce a value (.*) to a double")
     public double test(double val) {
         return val;
@@ -64,6 +74,16 @@ public class TypeCoercionHandler {
 
     @Step("I can(?:'t)? coerce a value (.*) to a Double")
     public Double test(Double val) {
+        return val;
+    }
+
+    @Step("I can(?:'t)? coerce a value (.*) to a float")
+    public float test(float val) {
+        return val;
+    }
+
+    @Step("I can(?:'t)? coerce a value (.*) to a Float")
+    public Float test(Float val) {
         return val;
     }
 

@@ -44,6 +44,13 @@ Chorus --> INFO    - Matched step but could not coerce Z to type byte
 Chorus --> INFO    - Processing scenario: Failed char conversion
 Chorus --> INFO    - Matched step but could not coerce Foxtrot to type char
     Ensure I can't coerce a value Foxtrot to a char                                          UNDEFINED 
+  Scenario: Negative number conversion
+Chorus --> INFO    - Processing scenario: Negative number conversion
+    Ensure I can coerce a value -123 to an Integer                                           PASSED  -123
+    And I can coerce a value -123.45 to a Float                                              PASSED  -123.45
+Chorus --> INFO    - Ambiguous method (TypeCoercionHandler.test) found for step (And I can coerce a value -12345 to a Long) will use first method found (TypeCoercionHandler.test)
+    And I can coerce a value -12345 to a Long                                                PASSED  -12345
+    And I can coerce a value -12345.67 to a Double                                           PASSED  -12345.67
   Scenario: Coercion to Object
 Chorus --> INFO    - Processing scenario: Coercion to Object
     Given Chorus is working properly                                                         PASSED  
@@ -55,5 +62,5 @@ Chorus --> INFO    - Processing scenario: Coercion to Object
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:8) (passed:2) (failed:6)
-Steps     (total:30) (passed:24) (failed:0) (undefined:6) (pending:0) (skipped:0)
+Scenarios (total:9) (passed:3) (failed:6)
+Steps     (total:34) (passed:28) (failed:0) (undefined:6) (pending:0) (skipped:0)
