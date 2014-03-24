@@ -27,39 +27,23 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.processes;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+package org.chorusbdd.chorus.selftest.processhandler.process_capture_stdout;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 17/07/13
- * Time: 21:33
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public interface ChorusProcess {
+public class OutputWithPauses {
 
-    public static final String STARTING_PROCESS_LOG_PREFIX = "About to run process: ";
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("To be");
+        System.out.println("Or not to be");
+        Thread.sleep(1000);
+        System.err.println("That is highly questionable");
+        Thread.sleep(2000);
+        System.err.println("As is this");
+    }
 
-    boolean isStopped();
-
-    void destroy();
-
-    void waitFor() throws InterruptedException;
-
-    boolean isExitCodeFailure();
-
-    void checkProcess(int processCheckDelay) throws Exception;
-
-    void waitForMatchInStdOut(String pattern, boolean searchWithinLines);
-
-    void waitForMatchInStdErr(String pattern, boolean searchWithinLines);
-
-    void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
-
-    void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
-
-    void writeToStdIn(String line, boolean newLine);
 }

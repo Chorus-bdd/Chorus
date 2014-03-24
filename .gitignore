@@ -8,3 +8,4 @@ logs
 /.idea/
 *.iml
 *.log
+.DS_Store

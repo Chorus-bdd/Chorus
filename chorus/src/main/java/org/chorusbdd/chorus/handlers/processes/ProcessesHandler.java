@@ -233,6 +233,18 @@ public class ProcessesHandler {
         p.waitForMatchInStdErr(pattern, false);
     }
 
+    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process within (\\d+) second(?:s)?")
+    public void readLineFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
+        p.waitForMatchInStdOut(pattern, false, TimeUnit.SECONDS, seconds);
+    }
+
+    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error within (\\d+) second(?:s)?")
+    public void readLineFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
+        p.waitForMatchInStdErr(pattern, false, TimeUnit.SECONDS, seconds);
+    }
+
     @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
     public void readFromProcess(String pattern, String processName) {
         ChorusProcess p = getAndCheckProcessByName(processName);
@@ -241,8 +253,20 @@ public class ProcessesHandler {
 
     @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
     public void readFromProcessStdError(String pattern, String processName) {
-        ChorusProcess p = getAndCheckProcessByName(processName); 
+        ChorusProcess p = getAndCheckProcessByName(processName);
         p.waitForMatchInStdErr(pattern, true);
+    }
+
+    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process within (\\d+) second(?:s)?")
+    public void readFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
+        p.waitForMatchInStdOut(pattern, true, TimeUnit.SECONDS, seconds);
+    }
+
+    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error within (\\d+) second(?:s)?")
+    public void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
+        ChorusProcess p = getAndCheckProcessByName(processName);
+        p.waitForMatchInStdErr(pattern, true, TimeUnit.SECONDS, seconds);
     }
 
     @Step(".*write the line '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process") 

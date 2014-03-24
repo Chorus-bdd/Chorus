@@ -49,6 +49,14 @@ Feature: Capture Std Output
     When I read 'without' from the nolinefeed process
     Then I write the line 'wibble' to the nolinefeed process
     And I read the line 'wibble' from the nolinefeed process
+
+  Scenario: I can read with timeouts
+    Given I start a outputwithpauses process
+    And I read 'To' from the outputwithpauses process within 1 second
+    And I read the line 'Or not to be' from the outputwithpauses process within 1 second
+    When I read 'That is' from the outputwithpauses process std error within 2 seconds
+    Then I read the line 'the question' from the outputwithpauses process std error within 1 second
+    #last of these should timeout
     
     
 

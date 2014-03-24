@@ -53,8 +53,16 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     When I read 'without' from the nolinefeed process                                        PASSED  
     Then I write the line 'wibble' to the nolinefeed process                                 PASSED  
     And I read the line 'wibble' from the nolinefeed process                                 PASSED  
+  Scenario: I can read with timeouts
+Chorus --> INFO    - Processing scenario: I can read with timeouts
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a outputwithpauses process                                                 PASSED  
+    And I read 'To' from the outputwithpauses process within 1 second                        PASSED  
+    And I read the line 'Or not to be' from the outputwithpauses process within 1 second     PASSED  
+    When I read 'That is' from the outputwithpauses process std error within 2 seconds       PASSED  
+    Then I read the line 'the question' from the outputwithpauses process std error within 1 secondFAILED  (AbstractChorusProcess:linenumber)-Timed out after 1 seconds
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:8) (passed:5) (failed:3)
-Steps     (total:28) (passed:22) (failed:3) (undefined:0) (pending:0) (skipped:3)
+Scenarios (total:9) (passed:5) (failed:4)
+Steps     (total:33) (passed:26) (failed:4) (undefined:0) (pending:0) (skipped:3)

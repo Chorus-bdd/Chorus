@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -99,8 +100,12 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             ChorusAssert.fail("IOException when writing line to process");
         }
     }
-    
+
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines) {
+        waitForMatchInStdOut(pattern, searchWithinLines, TimeUnit.SECONDS, logOutput.getReadTimeoutSeconds());
+    }
+
+    public void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
         ChorusAssert.assertTrue("Process std out mode must be captured", OutputMode.isCaptured(logOutput.getStdOutMode())); 
         if ( stdOutInputStreams == null) {
             stdOutInputStreams = new InputStreamAndReader("Std Out");
@@ -109,13 +114,18 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
         
         if ( logOutput.getStdOutMode() == OutputMode.CAPTUREDWITHLOG && stdOutLogBufferedWriter == null) {
-            createStdOutLogfileStream(logOutput);    
+            createStdOutLogfileStream(logOutput);
         }
-        
-        waitForOutputPattern(pattern, stdOutInputStreams, searchWithinLines, stdOutLogBufferedWriter);
+
+        long timeoutMilliseconds = timeUnit.toMillis(length);
+        waitForOutputPattern(pattern, stdOutInputStreams, searchWithinLines, stdOutLogBufferedWriter, timeoutMilliseconds);
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
+        waitForMatchInStdErr(pattern, searchWithinLines, TimeUnit.SECONDS, logOutput.getReadTimeoutSeconds());
+    }
+
+    public void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
         ChorusAssert.assertTrue("Process std err mode must be captured", OutputMode.isCaptured(logOutput.getStdErrMode()));
         if ( stdErrInputStreams == null) {
             stdErrInputStreams = new InputStreamAndReader("Std Err");
@@ -126,15 +136,16 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         if ( logOutput.getStdErrMode() == OutputMode.CAPTUREDWITHLOG && stdErrLogBufferedWriter == null) {
             createStdErrLogfileStream(logOutput);
         }
-        
-        waitForOutputPattern(pattern, stdErrInputStreams, searchWithinLines, stdErrLogBufferedWriter);
+
+        long timeoutMilliseconds = timeUnit.toMillis(length);
+        waitForOutputPattern(pattern, stdErrInputStreams, searchWithinLines, stdErrLogBufferedWriter, timeoutMilliseconds);
     }
 
-    private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines, Writer logStream) {
+    private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines, Writer logStream, long timeoutMilliseconds) {
         Pattern p = Pattern.compile(pattern);
-        long timeout = System.currentTimeMillis() + (logOutput.getReadTimeoutSeconds() * 1000);
+        long timeout = System.currentTimeMillis() + timeoutMilliseconds;
         try {
-            String matched = waitForPattern(timeout, i.reader, p, searchWithinLines, logStream);
+            String matched = waitForPattern(timeout, i.reader, p, searchWithinLines, logStream, timeoutMilliseconds / 1000);
             
             //store into the ChorusContext the exact string which matched the pattern so this can be used
             //in subsequent test steps
@@ -146,7 +157,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     //read ahead without blocking and attempt to match the pattern
-    private String waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines, Writer logStream) throws IOException {
+    private String waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines, Writer logStream, long timeoutInSeconds) throws IOException {
         boolean writeToLog = logStream != null;
         StringBuilder sb = new StringBuilder();
         String result = null;
@@ -165,7 +176,8 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 if (c == '\n' || c == '\r' ) {
                     if ( sb.length() > 0) {
                         Matcher m = pattern.matcher(sb);
-                        if ( m.matches() ) {
+                        boolean match = searchWithinLines ? m.find() : m.matches();
+                        if ( match ) {
                             result = sb.toString();
                             break label;    
                         } else {
@@ -194,7 +206,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 Thread.sleep(10); //avoid a busy loop since we are using nonblocking ready() / read()
             } catch (InterruptedException e) {}
 
-            checkTimeout(timeout);
+            checkTimeout(timeout, timeoutInSeconds);
 
             if ( isStopped() && ! bufferedReader.ready()) {
                 ChorusAssert.fail(
@@ -211,9 +223,9 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         return result;
     }
 
-    private void checkTimeout(long timeout) {
+    private void checkTimeout(long timeout, long seconds) {
         if ( System.currentTimeMillis() > timeout ) {
-            ChorusAssert.fail("Timed out after " + logOutput.getReadTimeoutSeconds() + " seconds");
+            ChorusAssert.fail("Timed out after " + seconds + " seconds");
         }
     }
 
