@@ -1,4 +1,4 @@
-/**
+package org.chorusbdd.chorus.spring.selftest.calculator; /**
  *  Copyright (C) 2000-2013 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
@@ -27,49 +27,21 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.spring.selftest.calculator;
 
-import java.util.Stack;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.spring.selftest.calculator.CalculatorHandler;
 
 /**
+ * Used to run a simple process that can be used to test Chorus features
+ *
  * Created by: Steve Neal
- * Date: 12/10/11
+ * Date: 14/11/11
  */
-public class Calculator {
+public class ExportCalculatorHandlerMain {
 
-    public enum Operator {
-        ADD, SUBTRACT, MULTIPLY, DIVIDE
+    public static void main(String[] args) throws Exception {
+        new ChorusHandlerJmxExporter(new CalculatorHandler()).export();
+        Thread.sleep(1000 * 60 * 5); //keeps process alive for 5 mins
     }
 
-    private Stack<Double> stack = new Stack<Double>();
-
-    private double lastResult = 0;
-
-    public void enterNumber(Double number) {
-        stack.push(number);
-    }
-
-    public void press(Operator operator) {
-        double d2 = stack.pop();
-        double d1 = stack.pop();
-
-        switch (operator) {
-            case ADD:
-                lastResult = d1 + d2;
-                break;
-            case SUBTRACT:
-                lastResult = d1 - d2;
-                break;
-            case MULTIPLY:
-                lastResult = d1 * d2;
-                break;
-            case DIVIDE:
-                lastResult = d1 / d2;
-                break;
-        }
-    }
-
-    public double getResult() {
-        return lastResult;
-    }
 }

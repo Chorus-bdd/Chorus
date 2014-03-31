@@ -1,4 +1,4 @@
-/**
+package org.chorusbdd.chorus.spring.selftest.calculator; /**
  *  Copyright (C) 2000-2013 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
@@ -27,35 +27,35 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.spring.selftest.configurations_with_spring;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.results.FeatureToken;
-
-import javax.annotation.Resource;
-
-import static org.junit.Assert.assertEquals;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.spring.selftest.calculator.CalculatorHandler;
 
 /**
+ * Used to run a simple process that can be used to test Chorus features
+ *
  * Created by: Steve Neal
- * Date: 19/01/12
+ * Date: 14/11/11
  */
-@Handler("Configurations With Spring Fixtures")
-@SpringContext("ConfigurationsWithSpringFixturesHandler-context.xml")
-public class ConfigurationsWithSpringFixturesHandler {
+public class ExportCalculatorWithTwoHandlersMain {
 
-    @Resource
-    String injectedString;
+    public static void main(String[] args) throws Exception {
+        //export calculator handlers
+        new ChorusHandlerJmxExporter(
+            new EchoingHandler(),
+            new CalculatorHandler()
+        ).export();
 
-    @ChorusResource("feature.token")
-    FeatureToken currentFeatureToken;
+        Thread.sleep(1000 * 60 * 5); //keeps process alive for 5 mins
+    }
 
-    @Step(".*the injected variable contains the name of the run configuration$")
-    public void checkInjectedValue() {
-        String expected = currentFeatureToken.getConfigurationName();
-        assertEquals(expected, injectedString);
+    @Handler("Echo Values")
+    public static class EchoingHandler {
+        @Step("^.*accept a string with value '(.*)'$")
+        public void accept(String s) {
+            System.out.println(s);
+        }
     }
 }

@@ -1,4 +1,4 @@
-/**
+package org.chorusbdd.chorus.spring.selftest.calculator; /**
  *  Copyright (C) 2000-2013 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
@@ -27,8 +27,8 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.spring.selftest.calculator;
 
+import org.chorusbdd.chorus.spring.selftest.calculator.Calculator;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;

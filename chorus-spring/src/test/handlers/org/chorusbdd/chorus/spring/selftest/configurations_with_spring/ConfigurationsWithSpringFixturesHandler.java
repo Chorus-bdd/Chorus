@@ -1,4 +1,4 @@
-/**
+package org.chorusbdd.chorus.spring.selftest.configurations_with_spring; /**
  *  Copyright (C) 2000-2013 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
@@ -27,18 +27,34 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.jmx;
 
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.SpringContext;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.results.FeatureToken;
 
-import org.chorusbdd.chorus.spring.selftest.calculator.CalculatorHandler;
+import javax.annotation.Resource;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by: Steve Neal
- * Date: 14/10/11
+ * Date: 19/01/12
  */
-public class RunChorusJmxFeatureExporter {
-    public static void main(String[] args) throws Exception {
-        new ChorusHandlerJmxExporter(new CalculatorHandler()).export();
-        Thread.sleep(1000 * 60 * 30); //30 minutes
+@Handler("Configurations With Spring Fixtures")
+@SpringContext("ConfigurationsWithSpringFixturesHandler-context.xml")
+public class ConfigurationsWithSpringFixturesHandler {
+
+    @Resource
+    String injectedString;
+
+    @ChorusResource("feature.token")
+    FeatureToken currentFeatureToken;
+
+    @Step(".*the injected variable contains the name of the run configuration$")
+    public void checkInjectedValue() {
+        String expected = currentFeatureToken.getConfigurationName();
+        assertEquals(expected, injectedString);
     }
 }
