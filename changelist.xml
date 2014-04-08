@@ -3,9 +3,9 @@
 <changes>
 
     <version>
-        <versionNumber>1.6.4-SNAPSHOT</versionNumber>
+        <versionNumber>1.6.4</versionNumber>
         <comment>Warn when multiple step-macro match, Support Resource annotation on handler superclasses in chorus-spring</comment>
-        <change desc="When a step macro step is matched by multiple step macro log a warning"/>
+        <change desc="When a step is matched by multiple step macro log a warning"/>
         <change desc="Support the @Resource annotation on superclasses of handler classes in chorus-spring"/>
         <change desc="Gracefully handle the case where chorus-spring is on the classpath but Spring isn't"/>
         <bugfix desc="Fix an issue where ProcessesHandler would not always find a pattern when searching within lines"/>
