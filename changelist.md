@@ -1,3 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        
+### Version 1.6.4 ###
+        
+*Warn when multiple step-macro match, Support Resource annotation on handler superclasses in chorus-spring*
+        
+| Changes in 1.6.4 |
+| ------ |
+| When a step is matched by multiple step macro log a warning |
+| Support the @Resource annotation on superclasses of handler classes in chorus-spring |
+| Gracefully handle the case where chorus-spring is on the classpath but Spring isn't |
+| Support @ChorusResource annotation on handler superclasses |
+| BUGFIX: Fix an issue where ProcessesHandler would not always find a pattern when searching within lines |
         
 ### Version 1.6.3 ###
         
@@ -5,7 +18,7 @@
         
 | Changes in 1.6.3 |
 | ------ |
-| Better description for Scenario-Outline scenarios -  the first variable defined in each table row          is appended to the scenario name, to make it easier to match scenario to example in chorus' output |
+| Better description for Scenario-Outline scenarios -  the first variable defined in each table row         is appended to the scenario name, to make it easier to match scenario to example in chorus' output |
 | Enable tagging for Scenario-Outline examples - if the examples table defines a variable with the name          chorusTags then use any values in that column as chorus tags for the generated scenarios |
 | Add support for configurable OutputFormatter, which can be used to change both Chorus interpreter output and logging output. |
 | Add an OutputFormatter for console output, and add a -c console mode switch to turn this on. In console mode Chorus shows an animated cursor for steps in progress |
