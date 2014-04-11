@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -194,6 +195,7 @@ public class StepMacro {
                     "' did not have a matching capture group in the pattern '" + pattern.toString() + "'");
             }
             String replacement = macroMatcher.group(groupId);
+            replacement = RegexpUtils.escapeRegexReplacement(replacement);
             log.trace("Replacing group " + match + " with " + replacement + " in action " + action);
             action = action.replaceFirst("<\\$" + groupId + ">", replacement);
         }

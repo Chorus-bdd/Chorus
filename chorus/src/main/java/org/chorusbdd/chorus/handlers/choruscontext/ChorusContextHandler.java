@@ -70,7 +70,7 @@ public class ChorusContextHandler {
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
     }
 
-    @Step(".*create a (?:context )?variable (.*) with value (.*)")
+    @Step(".*create a (?:context )?variable (.*) with (?:the )?value (.*)")
     public void createVariable(String varName, Object value) {
         //See type TypeCoercion.coerceObject - value will be a Boolean, Float, or Long if it can be parsed as such  
         ChorusContext.getContext().put(varName, value);
@@ -89,7 +89,7 @@ public class ChorusContextHandler {
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
     }
 
-    @Step(".*show (?:context )?variable (.*)")
+    @Step(".*show (?:the )?(?:context )?variable (.*)")
     public Object showVariable(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);

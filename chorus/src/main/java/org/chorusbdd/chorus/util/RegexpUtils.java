@@ -99,4 +99,11 @@ public class RegexpUtils {
         }
     }
 
+    /**
+     * Replace any special characters in a regex replacement string
+     */
+    public static String escapeRegexReplacement(String replacement) {
+        return replacement.replace("$", "\\$");
+    }
+
 }

@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -346,6 +347,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             for (int i = 0; i < placeholders.size(); i++) {
                 String placeholder = placeholders.get(i);
                 String value = values.get(i);
+                value = RegexpUtils.escapeRegexReplacement(value);
                 action = action.replaceAll("<" + placeholder + ">", value);
             }
             addStep(scenario, step.getType(), action, stepMacros);
