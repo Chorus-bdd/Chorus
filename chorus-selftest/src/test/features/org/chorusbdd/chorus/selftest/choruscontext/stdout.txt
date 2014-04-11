@@ -15,8 +15,14 @@ Chorus --> INFO    - Processing scenario: Test Context Variables
   Scenario: Context Variables Are Cleared For Each Scenario
 Chorus --> INFO    - Processing scenario: Context Variables Are Cleared For Each Scenario
     Check the context has no values in it                                                    PASSED  
+  Scenario: Context Variable Expansion into Steps
+Chorus --> INFO    - Processing scenario: Context Variable Expansion into Steps
+    Given I create a variable myVar with value wibble                                        PASSED  
+    And I create a variable variable containing spaces with value value                      PASSED  
+    Then I call a step passing the value wibble and the variable gets expanded               PASSED  wibble
+    And I call a step passing the value wibble and the variables get expanded                PASSED  wibble
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:2) (passed:2) (failed:0)
-Steps     (total:11) (passed:11) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:3) (passed:3) (failed:0)
+Steps     (total:15) (passed:15) (failed:0) (undefined:0) (pending:0) (skipped:0)

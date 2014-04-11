@@ -22,8 +22,8 @@ Feature: Check Chorus Context Handler
      Check the context has no values in it
 
 
-   Scenario: Variable Expansion into Steps
+   Scenario: Context Variable Expansion into Steps
      Given I create a variable myVar with value wibble
-     And I create a variable my spaces here with value value
+     And I create a variable variable containing spaces with value value
      Then I call a step passing the value ${myVar} and the variable gets expanded
-     And I call a step passing the ${my spaces here} ${myVar} and the variable gets expanded
+     And I call a step passing the ${variable containing spaces} ${myVar} and the variables get expanded

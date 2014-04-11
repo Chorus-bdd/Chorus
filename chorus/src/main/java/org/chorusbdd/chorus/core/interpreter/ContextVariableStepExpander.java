@@ -16,7 +16,7 @@ public class ContextVariableStepExpander {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ContextVariableStepExpander.class);
 
-    private Pattern p = Pattern.compile("\\$\\{\\.*?\\}");
+    private Pattern p = Pattern.compile("\\$\\{.*?\\}");
 
     public void processStep(StepToken step) {
 
@@ -31,12 +31,12 @@ public class ContextVariableStepExpander {
         }
 
         if ( variables.size() > 0) {
-            replaceVariables(c, action, m, variables);
+            replaceVariables(c, action, m, variables, step);
         }
 
     }
 
-    private void replaceVariables(ChorusContext c, String action, Matcher m, List<String> variables) {
+    private void replaceVariables(ChorusContext c, String action, Matcher m, List<String> variables, StepToken step) {
         if ( log.isDebugEnabled() ) {
             log.debug("expanding step " + action + " with " + variables.size() + " variables");
         }
@@ -50,6 +50,7 @@ public class ContextVariableStepExpander {
                 m = p.matcher(action);
             }
         }
+        step.setAction(action);
 
         if ( log.isDebugEnabled() ) {
             log.debug("Expanded step: " + action);
