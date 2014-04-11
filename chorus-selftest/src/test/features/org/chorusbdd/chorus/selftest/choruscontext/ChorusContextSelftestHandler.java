@@ -43,6 +43,10 @@ public class ChorusContextSelftestHandler {
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
+    }
 
+    @Step(".*I call a step passing the value (.*) and the variable gets expanded")
+    public String expandStep(String value) {
+        return value;
     }
 }

@@ -43,7 +43,7 @@ public class StepToken extends AbstractToken {
     private static final long serialVersionUID = 3;
 
     private final String type;
-    private final String action;
+    private String action;
 
     private StepEndState endState = StepEndState.NOT_RUN;
     private String message = "";
@@ -78,6 +78,10 @@ public class StepToken extends AbstractToken {
 
     public String getAction() {
         return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public StepEndState getEndState() {

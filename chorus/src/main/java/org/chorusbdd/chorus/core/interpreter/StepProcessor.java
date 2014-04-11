@@ -60,6 +60,8 @@ public class StepProcessor {
     private ExecutionListenerSupport executionListenerSupport;
     private boolean dryRun;
     private volatile boolean interruptingOnTimeout;
+    private ContextVariableStepExpander contextVariableStepExpander = new ContextVariableStepExpander();
+
 
     public StepProcessor(ExecutionListenerSupport executionListenerSupport) {
         this.executionListenerSupport = executionListenerSupport;
@@ -145,6 +147,9 @@ public class StepProcessor {
             executionToken.incrementStepsSkipped();
         } else {
             log.debug("Processing step " + step);
+
+            contextVariableStepExpander.processStep(step);
+
             //identify what method should be called and its parameters
             StepDefinitionMethodFinder stepDefinitionMethodFinder = new StepDefinitionMethodFinder(handlerInstances, step);
             stepDefinitionMethodFinder.findStepMethod();
