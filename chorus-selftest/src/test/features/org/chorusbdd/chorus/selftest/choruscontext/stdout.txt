@@ -21,8 +21,13 @@ Chorus --> INFO    - Processing scenario: Context Variable Expansion into Steps
     And I create a variable variable containing spaces with value value                      PASSED  
     Then I call a step passing the value wibble and the variable gets expanded               PASSED  wibble
     And I call a step passing the value wibble and the variables get expanded                PASSED  wibble
+  Scenario: Test mathematical operations
+Chorus --> INFO    - Processing scenario: Test mathematical operations
+    Given I create a variable myVar with value 1.2                                           PASSED  
+    And I add the value 1.2 to myVar                                                         PASSED  
+    Then variable myVar has the value 2.4                                                    PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:3) (passed:3) (failed:0)
-Steps     (total:15) (passed:15) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:4) (passed:4) (failed:0)
+Steps     (total:18) (passed:18) (failed:0) (undefined:0) (pending:0) (skipped:0)

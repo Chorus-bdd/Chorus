@@ -34,7 +34,11 @@ import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -98,5 +102,138 @@ public class ChorusContextHandler {
         } else {
             return String.format("%s=%s", varName, actual);
         }
+    }
+    
+    @Step(".*add (?:the )?(?:value )?([\\d\\.]+) to (?:the )?(?:context )?(?:variable )?(.*)")
+    public void addToContextVariable(BigDecimal value, String varName) {
+        new Addition().performCalculation(value, varName);
+    }
+
+    @Step(".*subtract (?:the )?(?:value )?([\\d\\.]+) from (?:the )?(?:context )?(?:variable )?(.*)")
+    public void subtractFromContextVariable(BigDecimal value, String varName) {
+        new Subtraction().performCalculation(value, varName);
+    }
+
+    @Step(".*multiply (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
+    public void multiplyContextVariable(String varName, BigDecimal value) {
+        new Multiplication().performCalculation(value, varName);
+    }
+
+    @Step(".*divide (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
+    public void divideContextVariable(String varName, BigDecimal value) {
+        new Division().performCalculation(value, varName);
+    }
+
+    @Step(".*increment (?:the )?(?:context )?(?:variable )?(.*)")
+    public void incrementContextVariable(String varName) {
+        new Addition().performCalculation(new BigDecimal(1), varName);
+    }
+
+    @Step(".*decrement (?:the )?(?:context )?(?:variable )?(.*)")
+    public void decrementContextVariable(String varName) {
+        new Subtraction().performCalculation(new BigDecimal(-11), varName);
+    }
+
+    @Step(".*(?:the )?(?:context )?variable (.*) is a (.*)")
+    public void checkVariableType(String varName, String type) {
+        Object o = ChorusContext.getContext().get(varName);
+        ChorusAssert.assertNotNull("Check " + varName + " is not null");
+        ChorusAssert.assertTrue(
+            "Check type is a " + type,
+            o.getClass().getSimpleName().equalsIgnoreCase(type) ||
+            o.getClass().getName().equalsIgnoreCase(type)
+        );
+    }
+
+
+    private class Division extends AbstractOperation {
+        protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
+            oldValueBigDecimal = oldValueBigDecimal.divide(value);
+            return oldValueBigDecimal;
+        }
+    }
+
+    private class Multiplication extends AbstractOperation {
+        protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
+            oldValueBigDecimal = oldValueBigDecimal.multiply(value);
+            return oldValueBigDecimal;
+        }
+    }
+
+    private class Subtraction extends AbstractOperation {
+        protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
+            oldValueBigDecimal = oldValueBigDecimal.subtract(value);
+            return oldValueBigDecimal;
+        }
+    }
+
+    private class Addition extends AbstractOperation {
+        protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
+            oldValueBigDecimal = oldValueBigDecimal.add(value);
+            return oldValueBigDecimal;
+        }
+    }
+
+    private abstract class AbstractOperation {
+
+        void performCalculation(BigDecimal value, String varName) {
+            Object oldVaue = checkNumeric(varName);
+
+            Class c = oldVaue.getClass();
+            BigDecimal oldValueBigDecimal = convertToBigDecimal(c, oldVaue);
+
+            oldValueBigDecimal = doCalculation(value, oldValueBigDecimal);
+
+            Object newValue = convertTo(c, oldValueBigDecimal, oldVaue);
+            ChorusContext.getContext().put(varName, newValue);
+        }
+
+        protected abstract BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal);
+    }
+
+    private Object checkNumeric(String varName) {
+        Object oldVaue = ChorusContext.getContext().get(varName);
+        if ( ! (oldVaue instanceof Number)) {
+            ChorusAssert.fail("The context variable " + varName + " is not a Number");
+        }
+        return oldVaue;
+    }
+
+    private BigDecimal convertToBigDecimal(Class c, Object oldVaue) {
+        return new BigDecimal(oldVaue.toString());
+    }
+
+    private Number convertTo(Class<? extends Number> c, BigDecimal d, Object oldVaue) {
+        Number result = null;
+        if ( c == BigDecimal.class) {
+            result = d;
+        } else if ( c == Long.class) {
+            result = d.longValue();
+        } else if ( c == Integer.class) {
+            result = d.intValue();
+        } else if ( c == Float.class) {
+            result = d.floatValue();
+        } else if ( c == Double.class) {
+            result = d.doubleValue();
+        } else if ( c == Short.class) {
+            result = d.shortValue();
+        } else if ( c == Byte.class) {
+            result = d.byteValue();
+        } else if ( c == BigInteger.class) {
+            result = d.toBigInteger();
+        } else if ( c == AtomicLong.class) {
+            //set the new value on the old variable since not immutable
+            AtomicLong oldv = (AtomicLong) oldVaue;
+            oldv.set(d.longValue());
+            result = oldv;
+        } else if ( c == AtomicInteger.class) {
+            //set the new value on the old variable since not immutable
+            AtomicInteger oldv = (AtomicInteger)oldVaue;
+            oldv.set(d.intValue());
+            result = oldv;
+        } else {
+            ChorusAssert.fail("Unsupported Numeric Type " + c);
+        }
+        return result;
     }
 }

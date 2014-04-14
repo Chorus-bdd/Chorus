@@ -21,9 +21,13 @@ Feature: Check Chorus Context Handler
    Scenario: Context Variables Are Cleared For Each Scenario
      Check the context has no values in it
 
-
    Scenario: Context Variable Expansion into Steps
      Given I create a variable myVar with value wibble
      And I create a variable variable containing spaces with value value
      Then I call a step passing the value ${myVar} and the variable gets expanded
      And I call a step passing the ${variable containing spaces} ${myVar} and the variables get expanded
+
+   Scenario: Test mathematical operations
+     Given I create a variable myVar with value 1.2
+     And I add the value 1.2 to myVar
+     Then variable myVar has the value 2.4
