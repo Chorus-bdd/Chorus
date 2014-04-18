@@ -104,35 +104,35 @@ public class ChorusContextHandler {
         }
     }
     
-    @Step(".*add (?:the )?(?:value )?([\\d\\.]+) to (?:the )?(?:context )?(?:variable )?(.*)")
-    public void addToContextVariable(BigDecimal value, String varName) {
-        new Addition().performCalculation(value, varName);
-    }
-
-    @Step(".*subtract (?:the )?(?:value )?([\\d\\.]+) from (?:the )?(?:context )?(?:variable )?(.*)")
-    public void subtractFromContextVariable(BigDecimal value, String varName) {
-        new Subtraction().performCalculation(value, varName);
-    }
-
-    @Step(".*multiply (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
-    public void multiplyContextVariable(String varName, BigDecimal value) {
-        new Multiplication().performCalculation(value, varName);
-    }
-
-    @Step(".*divide (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
-    public void divideContextVariable(String varName, BigDecimal value) {
-        new Division().performCalculation(value, varName);
-    }
-
-    @Step(".*increment (?:the )?(?:context )?(?:variable )?(.*)")
-    public void incrementContextVariable(String varName) {
-        new Addition().performCalculation(new BigDecimal(1), varName);
-    }
-
-    @Step(".*decrement (?:the )?(?:context )?(?:variable )?(.*)")
-    public void decrementContextVariable(String varName) {
-        new Subtraction().performCalculation(new BigDecimal(-11), varName);
-    }
+//    @Step(".*add (?:the )?(?:value )?([\\d\\.]+) to (?:the )?(?:context )?(?:variable )?(.*)")
+//    public void addToContextVariable(BigDecimal value, String varName) {
+//        new Addition().performCalculation(value, varName);
+//    }
+//
+//    @Step(".*subtract (?:the )?(?:value )?([\\d\\.]+) from (?:the )?(?:context )?(?:variable )?(.*)")
+//    public void subtractFromContextVariable(BigDecimal value, String varName) {
+//        new Subtraction().performCalculation(value, varName);
+//    }
+//
+//    @Step(".*multiply (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
+//    public void multiplyContextVariable(String varName, BigDecimal value) {
+//        new Multiplication().performCalculation(value, varName);
+//    }
+//
+//    @Step(".*divide (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
+//    public void divideContextVariable(String varName, BigDecimal value) {
+//        new Division().performCalculation(value, varName);
+//    }
+//
+//    @Step(".*increment (?:the )?(?:context )?(?:variable )?(.*)")
+//    public void incrementContextVariable(String varName) {
+//        new Addition().performCalculation(new BigDecimal(1), varName);
+//    }
+//
+//    @Step(".*decrement (?:the )?(?:context )?(?:variable )?(.*)")
+//    public void decrementContextVariable(String varName) {
+//        new Subtraction().performCalculation(new BigDecimal(-11), varName);
+//    }
 
     @Step(".*(?:the )?(?:context )?variable (.*) is a (.*)")
     public void checkVariableType(String varName, String type) {

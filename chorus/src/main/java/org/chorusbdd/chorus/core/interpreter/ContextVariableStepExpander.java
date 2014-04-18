@@ -4,6 +4,7 @@ import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -45,8 +46,9 @@ public class ContextVariableStepExpander {
         for ( String variable : variables) {
             String varName = variable.substring(2, variable.length() - 1);
             if ( c.containsKey(varName)) {
-                variable = c.get(varName).toString();
-                action = m.replaceFirst(variable);
+                Object v = c.get(varName);
+                String formattedValue = getFormattedValue(v);
+                action = m.replaceFirst(formattedValue);
                 m = p.matcher(action);
             }
         }
@@ -55,5 +57,19 @@ public class ContextVariableStepExpander {
         if ( log.isDebugEnabled() ) {
             log.debug("Expanded step: " + action);
         }
+    }
+
+    private String getFormattedValue(Object v) {
+        String result;
+        if ( v instanceof Float || v instanceof Double ) {
+            BigDecimal d = BigDecimal.valueOf(((Number)v).doubleValue());
+            result = d.stripTrailingZeros().toPlainString();
+        } else if ( v instanceof BigDecimal) {
+            BigDecimal d = (BigDecimal)v;
+            result = d.stripTrailingZeros().toPlainString();
+        } else {
+            result = v.toString();
+        }
+        return result;
     }
 }

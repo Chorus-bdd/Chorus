@@ -27,7 +27,22 @@ Feature: Check Chorus Context Handler
      Then I call a step passing the value ${myVar} and the variable gets expanded
      And I call a step passing the ${variable containing spaces} ${myVar} and the variables get expanded
 
-   Scenario: Test mathematical operations
-     Given I create a variable myVar with value 1.2
-     And I add the value 1.2 to myVar
-     Then variable myVar has the value 2.4
+  Scenario: Floating point Variable Expansion into Steps
+    #Where it's possible to expand a float type as an integer and strip any redundant trailing .0 then Chorus should do this
+    #This is because many steps tend to define reg exp captures for numeric values as \d+ which doesn't match a decimal point
+    #Where possible it seems a good idea to allow these to match
+    Given I create a variable floatWithNoDecimalPlaces with value 1.0
+    Given I create a variable floatWithDecmialPlaces with value 1.2
+    Then I call a step passing the value ${floatWithNoDecimalPlaces} and the variable gets expanded
+    Then I call a step passing the value ${floatWithDecmialPlaces} and the variable gets expanded
+
+
+ #  Scenario: Test mathematical operations floating point
+ #    Given I create a variable myVar with value 1.2
+ #    And I add the value 1.2 to myVar
+ #    Then variable myVar has the value 2.4
+
+ #  Scenario: Test mathematical operations long
+ #    Given I create a variable myVar with value 1
+ #    And I add the value 1.2 to myVar
+ #    Then variable myVar has the value 2

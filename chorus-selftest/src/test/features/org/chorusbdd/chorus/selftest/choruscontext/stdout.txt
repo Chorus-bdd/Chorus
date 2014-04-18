@@ -21,13 +21,14 @@ Chorus --> INFO    - Processing scenario: Context Variable Expansion into Steps
     And I create a variable variable containing spaces with value value                      PASSED  
     Then I call a step passing the value wibble and the variable gets expanded               PASSED  wibble
     And I call a step passing the value wibble and the variables get expanded                PASSED  wibble
-  Scenario: Test mathematical operations
-Chorus --> INFO    - Processing scenario: Test mathematical operations
-    Given I create a variable myVar with value 1.2                                           PASSED  
-    And I add the value 1.2 to myVar                                                         PASSED  
-    Then variable myVar has the value 2.4                                                    PASSED  
+  Scenario: Floating point Variable Expansion into Steps
+Chorus --> INFO    - Processing scenario: Floating point Variable Expansion into Steps
+    Given I create a variable floatWithNoDecimalPlaces with value 1.0                        PASSED  
+    Given I create a variable floatWithDecmialPlaces with value 1.2                          PASSED  
+    Then I call a step passing the value 1 and the variable gets expanded                    PASSED  1
+    Then I call a step passing the value 1.2 and the variable gets expanded                  PASSED  1.2
 
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:4) (passed:4) (failed:0)
-Steps     (total:18) (passed:18) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:19) (passed:19) (failed:0) (undefined:0) (pending:0) (skipped:0)
