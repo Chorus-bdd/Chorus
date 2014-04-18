@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -71,6 +72,8 @@ public class TypeCoercion {
                 result = (T) new Double(value);
             } else if (requiredType == BigDecimal.class) {
                 result = (T) new BigDecimal(value);
+            } else if (requiredType == BigInteger.class) {
+                    result = (T) new BigInteger(value);
             } else if ((requiredType == Boolean.class || requiredType == boolean.class)
                  && "true".equalsIgnoreCase(value)      //be stricter than Boolean.parseValue
                  || "false".equalsIgnoreCase(value)) {  //do not accept 'wibble' as a boolean false value
@@ -112,11 +115,16 @@ public class TypeCoercion {
         }
         //then float numbers
         else if (floatPattern.matcher(value).matches()) {
-            result = (T) new Double(value);
+            //handle overflow by converting to BigDecimal
+            BigDecimal bd = new BigDecimal(value);
+            Double d = bd.doubleValue();
+            result = (T) ((d == Double.NEGATIVE_INFINITY || d == Double.POSITIVE_INFINITY) ? bd : d);
         }
         //then int numbers
         else if (intPattern.matcher(value).matches()) {
-            result = (T) new Long(value);
+            //handle overflow by converting to BigInteger
+            BigInteger bd = new BigInteger(value);
+            result = (T) (bd.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) == 1 ? bd : bd.longValue());
         }
         //else just pass the String value to the Object parameter
         else {
