@@ -10,8 +10,11 @@ Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucum
 Chorus is a Java framework and presently provides a solution to connect to and test Java components.
 We hope to add connectivity solutions for other languages in the near future
 
-In addition to its Remoting features, Chorus also provides process handling which makes it easy to stop and start processes during a scenario. 
+In addition to its Remoting features, Chorus also provides process handling which makes it easy to stop and start processes during a scenario.
 
+**Getting Started:**
+
+####See [The demo project](https://github.com/Chorus-bdd/Chorus-demo) ####
 ####See [The Chorus Wiki](http://github.com/Chorus-bdd/Chorus/wiki) for documentation ####
 ####The [User Forum](http://forum.chorusbdd.org/) for help ####
 ####The [Issue Tracking](https://github.com/Chorus-bdd/Chorus/issues?state=open) page, for issue tracking!####
