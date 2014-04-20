@@ -27,33 +27,73 @@ Chorus --> INFO    - Processing scenario: Floating point Variable Expansion into
     Given I create a variable floatWithDecmialPlaces with value 1.2                          PASSED  
     Then I call a step passing the value 1 and the variable gets expanded                    PASSED  1
     Then I call a step passing the value 1.2 and the variable gets expanded                  PASSED  1.2
-  Scenario: Test mathematical operations simple floating point
-Chorus --> INFO    - Processing scenario: Test mathematical operations simple floating point
+  Scenario: Mathematical operations simple floating point
+Chorus --> INFO    - Processing scenario: Mathematical operations simple floating point
     Given I create a variable myVar with value 1.2                                           PASSED  
     And the type of variable myVar is Double                                                 PASSED  
     And I add the value 1.2 to myVar                                                         PASSED  
     Then variable myVar has the value 2.4                                                    PASSED  
     And the type of variable myVar is Double                                                 PASSED  
-  Scenario: Test mathematical operations promote integer to big decimal where required
-Chorus --> INFO    - Processing scenario: Test mathematical operations promote integer to big decimal where required
+  Scenario: Mathematical operations promote integer to big decimal where required
+Chorus --> INFO    - Processing scenario: Mathematical operations promote integer to big decimal where required
     Given I create a variable myVar with value 1                                             PASSED  
     And the type of variable myVar is Long                                                   PASSED  
     And I add the value 1.2 to myVar                                                         PASSED  
     Then variable myVar has the value 2.2                                                    PASSED  
     And the type of variable myVar is BigDecimal                                             PASSED  
-  Scenario: Test the numeric type is immaterial when checking a numeric value
-Chorus --> INFO    - Processing scenario: Test the numeric type is immaterial when checking a numeric value
+  Scenario: The numeric class type is immaterial when checking a numeric value
+Chorus --> INFO    - Processing scenario: The numeric class type is immaterial when checking a numeric value
     Given I create a variable myVar with value 1                                             PASSED  
     And the type of variable myVar is Long                                                   PASSED  
     Then variable myVar has the value 1.0                                                    PASSED  
     And variable myVar has the value 1                                                       PASSED  
-  Scenario: Test BigInteger values
-Chorus --> INFO    - Processing scenario: Test BigInteger values
+  Scenario: Values which don't fit into Long are paresed as BigInteger
+Chorus --> INFO    - Processing scenario: Values which don't fit into Long are paresed as BigInteger
     Given I create a variable myVar with value 1000000000000000000000                        PASSED  
     And the type of variable myVar is BigInteger                                             PASSED  
     Then the variable myVar has the value 1000000000000000000000.0                           PASSED  
+  Scenario: Adding values
+Chorus --> INFO    - Processing scenario: Adding values
+    Given I create a variable myVar with value 1                                             PASSED  
+    And I add 1000 to myVar                                                                  PASSED  
+    Then the variable myVar has the value 1001                                               PASSED  
+  Scenario: Subtracting values
+Chorus --> INFO    - Processing scenario: Subtracting values
+    Given I create a variable myVar with value 1000                                          PASSED  
+    And I subtract 50 from myVar                                                             PASSED  
+    Then the variable myVar has the value 950                                                PASSED  
+  Scenario: Multiplying values
+Chorus --> INFO    - Processing scenario: Multiplying values
+    Given I create a variable myVar with value 1000                                          PASSED  
+    And I multiply myVar by 5                                                                PASSED  
+    Then the variable myVar has the value 5000                                               PASSED  
+  Scenario: Multiplying values
+Chorus --> INFO    - Processing scenario: Multiplying values
+    Given I create a variable myVar with value 10                                            PASSED  
+    And I divide myVar by 5                                                                  PASSED  
+    Then the variable myVar has the value 2                                                  PASSED  
+  Scenario: Check maths context DECIMAL64 for divide
+Chorus --> INFO    - Processing scenario: Check maths context DECIMAL64 for divide
+    Given I create a variable myVar with value 10                                            PASSED  
+    And I divide myVar by 6                                                                  PASSED  
+    Then the variable myVar has the value 1.666666666666667                                  PASSED  
+  Scenario: Remainder
+Chorus --> INFO    - Processing scenario: Remainder
+    Given I create a variable myVar with value 10                                            PASSED  
+    And I divide myVar by 3 and take the remainder                                           PASSED  
+    Then the variable myVar has the value 1                                                  PASSED  
+  Scenario: Increment variable
+Chorus --> INFO    - Processing scenario: Increment variable
+    Given I create a variable myVar with value 10                                            PASSED  
+    And I increment myVar                                                                    PASSED  
+    Then the variable myVar has the value 11                                                 PASSED  
+  Scenario: Decrement variable
+Chorus --> INFO    - Processing scenario: Decrement variable
+    Given I create a variable myVar with value 10                                            PASSED  
+    And I decrement myVar                                                                    PASSED  
+    Then the variable myVar has the value 9                                                  PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:8) (passed:8) (failed:0)
-Steps     (total:36) (passed:36) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:16) (passed:16) (failed:0)
+Steps     (total:60) (passed:60) (failed:0) (undefined:0) (pending:0) (skipped:0)

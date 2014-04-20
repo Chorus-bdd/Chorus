@@ -38,29 +38,69 @@ Feature: Check Chorus Context Handler
     Then I call a step passing the value ${floatWithNoDecimalPlaces} and the variable gets expanded
     Then I call a step passing the value ${floatWithDecmialPlaces} and the variable gets expanded
 
-   Scenario: Test mathematical operations simple floating point
+   Scenario: Mathematical operations simple floating point
      Given I create a variable myVar with value 1.2
      And the type of variable myVar is Double
      And I add the value 1.2 to myVar
      Then variable myVar has the value 2.4
      And the type of variable myVar is Double
 
-   Scenario: Test mathematical operations promote integer to big decimal where required
+   Scenario: Mathematical operations promote integer to big decimal where required
      Given I create a variable myVar with value 1
      And the type of variable myVar is Long
      And I add the value 1.2 to myVar
      Then variable myVar has the value 2.2
      And the type of variable myVar is BigDecimal
 
-   Scenario: Test the numeric type is immaterial when checking a numeric value
+   Scenario: The numeric class type is immaterial when checking a numeric value
      Given I create a variable myVar with value 1
      And the type of variable myVar is Long
      Then variable myVar has the value 1.0
      And variable myVar has the value 1
 
-   Scenario: Test BigInteger values
+   Scenario: Values which don't fit into Long are paresed as BigInteger
      Given I create a variable myVar with value 1000000000000000000000
      And the type of variable myVar is BigInteger
      Then the variable myVar has the value 1000000000000000000000.0
 
+   Scenario: Adding values
+     Given I create a variable myVar with value 1
+     And I add 1000 to myVar
+     Then the variable myVar has the value 1001
+
+   Scenario: Subtracting values
+     Given I create a variable myVar with value 1000
+     And I subtract 50 from myVar
+     Then the variable myVar has the value 950
+
+   Scenario: Multiplying values
+     Given I create a variable myVar with value 1000
+     And I multiply myVar by 5
+     Then the variable myVar has the value 5000
+
+  Scenario: Multiplying values
+     Given I create a variable myVar with value 10
+     And I divide myVar by 5
+     Then the variable myVar has the value 2
+
+  #If we don't set maths context then any fractions which can't be represented perfectly in base 2 result in an error instead of rounding behaviour
+  Scenario: Check maths context DECIMAL64 for divide
+     Given I create a variable myVar with value 10
+     And I divide myVar by 6
+     Then the variable myVar has the value 1.666666666666667
+
+  Scenario: Remainder
+    Given I create a variable myVar with value 10
+    And I divide myVar by 3 and take the remainder
+    Then the variable myVar has the value 1
+
+  Scenario: Increment variable
+    Given I create a variable myVar with value 10
+    And I increment myVar
+    Then the variable myVar has the value 11
+
+  Scenario: Decrement variable
+    Given I create a variable myVar with value 10
+    And I decrement myVar
+    Then the variable myVar has the value 9
 

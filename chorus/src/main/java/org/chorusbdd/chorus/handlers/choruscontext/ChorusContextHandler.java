@@ -36,6 +36,7 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -155,7 +156,12 @@ public class ChorusContextHandler {
 
     @Step(".*decrement (?:the )?(?:context )?(?:variable )?(.*)")
     public void decrementContextVariable(String varName) {
-        new Subtraction().performCalculation(new BigDecimal(-11), varName);
+        new Subtraction().performCalculation(new BigDecimal(1), varName);
+    }
+
+    @Step(".*I divide (?:the )?(?:context )?(?:variable )?(.*) by (.*) and take the remainder")
+    public void remainder(String varName, BigDecimal value) {
+        new Remainder().performCalculation(value, varName);
     }
 
     @Step(".*(?:the )?(?:context )?variable (.*) is a (.*)")
@@ -169,31 +175,37 @@ public class ChorusContextHandler {
         );
     }
 
+    private class Remainder extends AbstractOperation {
+        protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
+            oldValueBigDecimal = oldValueBigDecimal.remainder(value, MathContext.DECIMAL64);
+            return oldValueBigDecimal;
+        }
+    }
 
     private class Division extends AbstractOperation {
         protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
-            oldValueBigDecimal = oldValueBigDecimal.divide(value);
+            oldValueBigDecimal = oldValueBigDecimal.divide(value, MathContext.DECIMAL64);
             return oldValueBigDecimal;
         }
     }
 
     private class Multiplication extends AbstractOperation {
         protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
-            oldValueBigDecimal = oldValueBigDecimal.multiply(value);
+            oldValueBigDecimal = oldValueBigDecimal.multiply(value, MathContext.DECIMAL64);
             return oldValueBigDecimal;
         }
     }
 
     private class Subtraction extends AbstractOperation {
         protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
-            oldValueBigDecimal = oldValueBigDecimal.subtract(value);
+            oldValueBigDecimal = oldValueBigDecimal.subtract(value, MathContext.DECIMAL64);
             return oldValueBigDecimal;
         }
     }
 
     private class Addition extends AbstractOperation {
         protected BigDecimal doCalculation(BigDecimal value, BigDecimal oldValueBigDecimal) {
-            oldValueBigDecimal = oldValueBigDecimal.add(value);
+            oldValueBigDecimal = oldValueBigDecimal.add(value, MathContext.DECIMAL64);
             return oldValueBigDecimal;
         }
     }
