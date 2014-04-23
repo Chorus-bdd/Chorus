@@ -14,7 +14,7 @@ In addition to its Remoting features, Chorus also provides process handling whic
 
 **Getting Started:**
 
-####See [The demo project](https://github.com/Chorus-bdd/Chorus-demo) ####
+####See [Chorus Demo Project](https://github.com/Chorus-bdd/Chorus-demo) ####
 ####See [The Chorus Wiki](http://github.com/Chorus-bdd/Chorus/wiki) for documentation ####
 ####The [User Forum](http://forum.chorusbdd.org/) for help ####
 ####The [Issue Tracking](https://github.com/Chorus-bdd/Chorus/issues?state=open) page, for issue tracking!####
