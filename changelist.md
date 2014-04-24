@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.5 ###
+        
+*Expand chorus context variables in steps prior to execution, improve ChorusContextHandler*
+        
+| Changes in 1.6.5 |
+| ------ |
+| Where a step contains a variable in the form ${variableName} replace this with the value of the         variable from the chorus context if available |
+| Support some basic mathematical operations in the Chorus Context Handler |
+        
 ### Version 1.6.4 ###
         
 *Warn when multiple step-macro match, Support Resource annotation on handler superclasses in chorus-spring*
