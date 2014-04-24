@@ -3,8 +3,8 @@
 <changes>
 
     <version>
-        <versionNumber>1.6.5-SNAPSHOT</versionNumber>
-        <comment>Expand chorus context variables in steps prior to execution</comment>
+        <versionNumber>1.6.5</versionNumber>
+        <comment>Expand chorus context variables in steps prior to execution, improve ChorusContextHandler</comment>
         <change desc="Where a step contains a variable in the form ${variableName} replace this with the value of the
         variable from the chorus context if available"/>
         <change desc="Support some basic mathematical operations in the Chorus Context Handler"/>
