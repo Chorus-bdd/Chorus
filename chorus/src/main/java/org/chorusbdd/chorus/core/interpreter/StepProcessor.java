@@ -244,11 +244,23 @@ public class StepProcessor {
             //the remoting exception contains its own location in the message
             location = ExceptionHandling.getExceptionLocation(cause);
         }
-        String message = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getSimpleName();
+        String exceptionSimpleName = cause.getClass().getSimpleName();
+        String exceptionMessage = cause.getMessage();
+        String message;
+        if( exceptionMessage == null ) {
+            message = exceptionSimpleName;
+        } else {
+            message = exceptionMessage;
+            //ensure we have the name of the exception included
+            if ( ! message.contains(exceptionSimpleName)) {
+                message = exceptionSimpleName + " " + message;
+            }
+        }
         step.setMessage(location + message);
+
         endState = StepEndState.FAILED;
         executionToken.incrementStepsFailed();
-        log.debug("Exception failed due to exception " + cause.getMessage());
+        log.debug("Exception failed due to exception " + exceptionMessage);
         return endState;
     }
 
