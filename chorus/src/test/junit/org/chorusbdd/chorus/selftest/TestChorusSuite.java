@@ -29,11 +29,8 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import junit.framework.TestSuite;
-import org.chorusbdd.chorus.ChorusJUnitRunner;
 import org.chorusbdd.chorus.ChorusSuite;
 import org.junit.runner.RunWith;
-import org.junit.runners.AllTests;
 
 /**
  * Created by IntelliJ IDEA.

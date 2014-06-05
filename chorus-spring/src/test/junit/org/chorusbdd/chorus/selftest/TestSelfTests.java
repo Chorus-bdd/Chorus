@@ -30,10 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import org.chorusbdd.chorus.ChorusJUnitRunner;
 import org.chorusbdd.chorus.ChorusSuite;
-import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
 import org.junit.runner.RunWith;
 
 /**

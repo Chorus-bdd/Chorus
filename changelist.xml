@@ -3,6 +3,10 @@
 <changes>
 
     <version>
+        <versionNumber>1.6.6</versionNumber>
+        <comment>Remove the legacy JUnitSuiteRunner (use @Uses(ChorusSuite.class) instead)</comment>
+    </version>
+    <version>
         <versionNumber>1.6.5</versionNumber>
         <comment>Expand chorus context variables in steps prior to execution, improve ChorusContextHandler</comment>
         <change desc="Where a step contains a variable in the form ${variableName} replace this with the value of the

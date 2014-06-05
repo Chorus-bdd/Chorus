@@ -64,7 +64,7 @@ public class CommandLineParser extends AbstractConfigSource {
             }
 
             String allargs = allArgs.toString();
-            if ( ! allargs.startsWith("-")) {
+            if ( allargs.trim().length() > 0 && ! allargs.startsWith("-")) {
                 throw new InterpreterPropertyException("arguments must start with a switch, e.g. -f");
             }
 
