@@ -4,7 +4,7 @@ Feature: Multiple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario One
     Given Chorus is working properly                                                         PASSED  
     Then I can run a step in scenario one                                                    PASSED  
-    And if a step fails                                                                      FAILED  (MultipleScenarioHandler:55)-This step threw an exception to fail it
+    And if a step fails                                                                      FAILED  (MultipleScenarioHandler:linenumber)-ChorusAssertionError This step threw an exception to fail it
     Then the subsequent steps are skipped                                                    SKIPPED 
     But the next scenario still runs                                                         SKIPPED 
   Scenario: Simple Scenario Two

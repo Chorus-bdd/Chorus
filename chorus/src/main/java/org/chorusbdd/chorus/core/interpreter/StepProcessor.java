@@ -239,29 +239,37 @@ public class StepProcessor {
     private StepEndState handleGenericException(ExecutionToken executionToken, StepToken step, Throwable cause) {
         StepEndState endState;
         step.setThrowable(cause);
+
+        String exceptionMessage = cause.getMessage();
+        log.debug("Step failed due to exception " + exceptionMessage);
+
+        String stepMessage = getStepMessage(cause, exceptionMessage);
+        step.setMessage(stepMessage);
+
+        endState = StepEndState.FAILED;
+        executionToken.incrementStepsFailed();
+        return endState;
+    }
+
+    private String getStepMessage(Throwable cause, String exceptionMessage) {
         String location = "";
-        if ( ! (cause instanceof ChorusRemotingException) ) {
+        boolean isRemotingException = cause instanceof ChorusRemotingException;
+        if ( ! isRemotingException) {
             //the remoting exception contains its own location in the message
             location = ExceptionHandling.getExceptionLocation(cause);
         }
         String exceptionSimpleName = cause.getClass().getSimpleName();
-        String exceptionMessage = cause.getMessage();
         String message;
         if( exceptionMessage == null ) {
             message = exceptionSimpleName;
         } else {
             message = exceptionMessage;
             //ensure we have the name of the exception included
-            if ( ! message.contains(exceptionSimpleName)) {
+            if ( ! message.contains(exceptionSimpleName) && ! isRemotingException) {
                 message = exceptionSimpleName + " " + message;
             }
         }
-        step.setMessage(location + message);
-
-        endState = StepEndState.FAILED;
-        executionToken.incrementStepsFailed();
-        log.debug("Exception failed due to exception " + exceptionMessage);
-        return endState;
+        return location + message;
     }
 
     private StepEndState handleThreadDeath() {

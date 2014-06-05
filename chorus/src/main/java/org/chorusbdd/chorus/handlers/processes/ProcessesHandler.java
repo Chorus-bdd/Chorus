@@ -422,7 +422,7 @@ public class ProcessesHandler {
         }
         ProcessesConfig c = configMap.get(processName);
         if (c == null) {
-            throw new RuntimeException("No configuration found for process: " + processName);
+            throw new ChorusException("No configuration found for process: " + processName);
         }
         return c;
     }

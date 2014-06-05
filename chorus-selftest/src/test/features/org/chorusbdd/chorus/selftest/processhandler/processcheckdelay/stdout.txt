@@ -4,7 +4,7 @@ Feature: Process Check Delay
 Chorus --> INFO    - Processing scenario: Start a process with process check delay
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    And I start a withchecking process named Frodo                                           FAILED  (AbstractChorusProcess:linenumber)-Process terminated with a non-zero exit code during processCheckDelay period, step fails
+    And I start a withchecking process named Frodo                                           FAILED  (AbstractChorusProcess:linenumber)-ProcessCheckFailedException Process terminated with a non-zero exit code during processCheckDelay period, step fails
   Scenario: Start a process without process check delay
 Chorus --> INFO    - Processing scenario: Start a process without process check delay
     Given Chorus is working properly                                                         PASSED  

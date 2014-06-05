@@ -9,7 +9,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Remoting handler property
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
 Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol, name and port must be set
-    And then call a remote method in config1                                                 FAILED  (RemotingHandler:192)-Failed to find MBean configuration for component: config1
+    And then call a remote method in config1                                                 FAILED  (RemotingHandler:linenumber)-ChorusException Failed to find MBean configuration for component: config1
 
 
 Features  (total:1) (passed:0) (failed:1)

@@ -24,19 +24,19 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 Chorus --> INFO    - Processing scenario: Process exits before match
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named lemming                                            PASSED  
-    When I read the line 'it could never happen here' from the lemming process               FAILED  (AbstractChorusProcess:linenumber)-Process stopped while waiting for match
+    When I read the line 'it could never happen here' from the lemming process               FAILED  (AbstractChorusProcess:linenumber)-ChorusAssertionError Process stopped while waiting for match
     Then this line will be skipped and the previous line will fail since process died        SKIPPED 
   Scenario: Process exits with error before match
 Chorus --> INFO    - Processing scenario: Process exits with error before match
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a errorcode process named lemming                                          PASSED  
-    When I read the line 'it could never happen here' from the lemming process               FAILED  (AbstractChorusProcess:linenumber)-Process stopped with error code 1 while waiting for match
+    When I read the line 'it could never happen here' from the lemming process               FAILED  (AbstractChorusProcess:linenumber)-ChorusAssertionError Process stopped with error code 1 while waiting for match
     Then this line will be skipped and the previous line will fail since process died        SKIPPED 
   Scenario: Process exits with timeout before match
 Chorus --> INFO    - Processing scenario: Process exits with timeout before match
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a noisytimeout process named anylastorders                                 PASSED  
-    When I read the line 'it could never happen here' from the anylastorders process         FAILED  (AbstractChorusProcess:linenumber)-Timed out after 1 seconds
+    When I read the line 'it could never happen here' from the anylastorders process         FAILED  (AbstractChorusProcess:linenumber)-ChorusAssertionError Timed out after 1 seconds
     Then this line will be skipped and the previous line will fail since anylastorders timed outSKIPPED 
   Scenario: I can read from std and std error separately
 Chorus --> INFO    - Processing scenario: I can read from std and std error separately
@@ -60,7 +60,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     And I read 'To' from the outputwithpauses process within 1 second                        PASSED  
     And I read the line 'Or not to be' from the outputwithpauses process within 1 second     PASSED  
     When I read 'That is' from the outputwithpauses process std error within 2 seconds       PASSED  
-    Then I read the line 'the question' from the outputwithpauses process std error within 1 secondFAILED  (AbstractChorusProcess:linenumber)-Timed out after 1 seconds
+    Then I read the line 'the question' from the outputwithpauses process std error within 1 secondFAILED  (AbstractChorusProcess:linenumber)-ChorusAssertionError Timed out after 1 seconds
 
 
 Features  (total:1) (passed:0) (failed:1)

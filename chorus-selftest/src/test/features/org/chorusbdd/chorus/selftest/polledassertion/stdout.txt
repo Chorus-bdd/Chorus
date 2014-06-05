@@ -7,7 +7,7 @@ Chorus --> INFO    - Processing scenario: Passes Within Invoker Is Working
     When I increment a value with a timer task                                               PASSED  
     Then the value is 2 within 2 seconds                                                     PASSED  
     When I increment a value with a timer task                                               PASSED  
-    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  (PolledAssertionHandler:linenumber)-Expect 3 expected:<3> but was:<2>
+    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  (PolledAssertionHandler:linenumber)-AssertionError Expect 3 expected:<3> but was:<2>
   Scenario: Passes For Invoker Is Working
 Chorus --> INFO    - Processing scenario: Passes For Invoker Is Working
     Given I increment a value                                                                PASSED  
@@ -15,7 +15,7 @@ Chorus --> INFO    - Processing scenario: Passes For Invoker Is Working
     And the check method was polled 10 times                                                 PASSED  
     When I increment a value                                                                 PASSED  
     Then the value is 2 for half a second                                                    PASSED  
-    Then the value is 3 for half a second                                                    FAILED  (PolledAssertionHandler:linenumber)-Expect 3 expected:<3> but was:<2>
+    Then the value is 3 for half a second                                                    FAILED  (PolledAssertionHandler:linenumber)-AssertionError Expect 3 expected:<3> but was:<2>
   Scenario: Remoting with Polled Assertions
 Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
@@ -35,7 +35,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote RuntimeException - My Runtime Exception Message
   Scenario: Long running step method overruns passes within period
 Chorus --> INFO    - Processing scenario: Long running step method overruns passes within period
-    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  (PolledAssertionHandler:linenumber)-Whoops
+    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  (PolledAssertionHandler:linenumber)-AssertionError Whoops
     Then the next step runs 1 second later                                                   SKIPPED 
   Scenario: Long running step method overruns passes throughout period
 Chorus --> INFO    - Processing scenario: Long running step method overruns passes throughout period
