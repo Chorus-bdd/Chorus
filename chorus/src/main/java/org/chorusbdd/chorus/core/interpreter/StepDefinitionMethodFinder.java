@@ -54,7 +54,7 @@ class StepDefinitionMethodFinder {
 
     private List<Object> allHandlers;
     private StepToken step;
-    private StepMethodInvoker methodToCall;
+    private StepMethodInvoker stepMethodInvoker;
     private Object handlerInstance;
     private Object[] methodCallArgs;
     private String pendingMessage = "";
@@ -64,8 +64,8 @@ class StepDefinitionMethodFinder {
         this.step = step;
     }
 
-    public StepMethodInvoker getMethodToCall() {
-        return methodToCall;
+    public StepMethodInvoker getStepMethodInvoker() {
+        return stepMethodInvoker;
     }
 
     public Object getHandlerInstance() {
@@ -111,8 +111,8 @@ class StepDefinitionMethodFinder {
 
     private void foundStepMethod(Object instance, Method method, Step stepAnnotationInstance, Object[] values) {
         log.trace("Matched!");
-        if (methodToCall == null) {
-            methodToCall = new InvokerFactory().createInvoker(method);
+        if (stepMethodInvoker == null) {
+            stepMethodInvoker = new InvokerFactory().createInvoker(method);
             methodCallArgs = values;
             pendingMessage = stepAnnotationInstance.pending();
             handlerInstance = instance;
@@ -122,12 +122,12 @@ class StepDefinitionMethodFinder {
                     method.getName(),
                     step,
                     handlerInstance.getClass().getSimpleName(),
-                    methodToCall.getName()));
+                    stepMethodInvoker.getMethodName()));
         }
     }
 
     public boolean isMethodAvailable() {
-        return methodToCall != null;
+        return stepMethodInvoker != null;
     }
 
 }

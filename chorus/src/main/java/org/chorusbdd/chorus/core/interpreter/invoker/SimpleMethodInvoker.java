@@ -47,7 +47,9 @@ class SimpleMethodInvoker extends AbstractInvoker {
     }
 
     public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        return method.invoke(obj, args);
+        Object result =  method.invoke(obj, args);
+        result = handleResultIfReturnTypeVoid(method, result);
+        return result;
     }
 
 }

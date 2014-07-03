@@ -96,6 +96,9 @@ public class StepToken extends AbstractToken {
         return message;
     }
 
+    /**
+     * This is a String representation of any value returned by the step method
+     */
     public void setMessage(String message) {
         this.message = message;
     }

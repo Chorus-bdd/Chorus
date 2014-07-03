@@ -27,31 +27,36 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.invoker;
+package org.chorusbdd.chorus.selftest.choruscontext.lastresult;
 
-import java.lang.reflect.InvocationTargetException;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
- * User: nick
- * Date: 20/09/13
- * Time: 09:09
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public interface StepMethodInvoker {
+@Handler("Store Last Result")
+public class StoreLastResultHandler {
 
-    /**
-     * A special String which represents the result of calling a method which had a void return type
-     */
-    public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
+    }
 
-    /**
-     * Invoke the method
-     *
-     * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
-     */
-    Object invoke(Object obj, Object... args) throws IllegalAccessException, InvocationTargetException;
+    @Step(".*I call a step which returns a String (\\w+)")
+    public String returnAString(String myVal) {
+        return myVal;
+    }
 
-    /**
-     * @return the name of the method to invoke
-     */
-    String getMethodName();
+    @Step("I call a step with a void return type")
+    public void callAStepWithAVoidReturnType() {
+    }
+
+    @Step("I call a step which returns a null value")
+    public Object callAStepWhichReturnsNull() {
+        return null;
+    }
+
 }

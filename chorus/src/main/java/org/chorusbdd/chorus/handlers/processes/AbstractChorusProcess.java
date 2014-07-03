@@ -45,6 +45,8 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractChorusProcess implements ChorusProcess {
 
+    public static final String LAST_MATCH = "ProcessesHandler.match";
+
     //where we are managing writing process' output to log files ourselves (i.e. jdk 1.5 or CAPTUREANDLOG mode)
     //then these are the output streams to the log files for the process.
     protected FileOutputStream stdOutLogfileStream;
@@ -149,7 +151,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             
             //store into the ChorusContext the exact string which matched the pattern so this can be used
             //in subsequent test steps
-            ChorusContext.getContext().put("ProcessesHandler.match", matched);
+            ChorusContext.getContext().put(LAST_MATCH, matched);
         } catch (IOException e) {
             getLog().warn("Failed while matching pattern " + p, e);
             ChorusAssert.fail("Failed while matching pattern");

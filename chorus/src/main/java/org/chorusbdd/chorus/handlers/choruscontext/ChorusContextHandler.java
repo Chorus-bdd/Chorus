@@ -83,7 +83,11 @@ public class ChorusContextHandler {
 
     @Step(".*(?:context )?variable (.*) has (?:the )?value (.*)")
     public void assertVariableValue(String varName, Object expected) {
-        //See type TypeCoercion.coerceObject - expected will be a Boolean, Float, or Long if it can be parsed as such  
+        //See type TypeCoercion.coerceObject - expected will be a Boolean, Float, or Long if it can be parsed as such
+
+        //distinguish exists with a null value from doesn't exist
+        assertVariableExists(varName);
+
         Object actual = ChorusContext.getContext().get(varName);
 
         if ( actual instanceof  Number && expected instanceof Number) {
@@ -103,8 +107,8 @@ public class ChorusContextHandler {
 
     @Step(".*(?:context )?variable (.*) exists")
     public void assertVariableExists(String varName) {
-        Object actual = ChorusContext.getContext().get(varName);
-        ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
+        boolean exists = ChorusContext.getContext().containsKey(varName);
+        ChorusAssert.assertTrue("Variable " + varName + " should exist", exists);
     }
 
     @Step(".*show (?:the )?(?:context )?variable (.*)")

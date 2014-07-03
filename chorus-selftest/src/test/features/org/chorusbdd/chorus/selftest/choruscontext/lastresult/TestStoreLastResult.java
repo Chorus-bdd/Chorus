@@ -27,31 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.invoker;
+package org.chorusbdd.chorus.selftest.choruscontext.lastresult;
 
-import java.lang.reflect.InvocationTargetException;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
+ * Created with IntelliJ IDEA.
  * User: nick
- * Date: 20/09/13
- * Time: 09:09
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public interface StepMethodInvoker {
+public class TestStoreLastResult extends AbstractInterpreterTest {
 
-    /**
-     * A special String which represents the result of calling a method which had a void return type
-     */
-    public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/choruscontext/lastresult/storelastresult.feature";
 
-    /**
-     * Invoke the method
-     *
-     * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
-     */
-    Object invoke(Object obj, Object... args) throws IllegalAccessException, InvocationTargetException;
+    final int expectedExitCode = 0;  //success
 
-    /**
-     * @return the name of the method to invoke
-     */
-    String getMethodName();
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
+
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+
 }

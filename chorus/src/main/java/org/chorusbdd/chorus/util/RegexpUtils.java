@@ -77,7 +77,7 @@ public class RegexpUtils {
                 String valueStr = regexGroupValues[i];
                 Class type = types[i];
                 Object coercedValue = TypeCoercion.coerceType(valueStr, type);
-                if (coercedValue != null) {
+                if (("null".equals(valueStr) && coercedValue == null ) || coercedValue != null) {
                     values[i] = coercedValue;
                 } else {
                     //the type coercion failed for this method parameter

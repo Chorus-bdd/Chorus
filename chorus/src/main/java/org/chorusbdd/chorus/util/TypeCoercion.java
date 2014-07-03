@@ -56,9 +56,12 @@ public class TypeCoercion {
      * @return the coerced value, or null if the value cannot be converted to the required type
      */
     public static <T> T coerceType(String value, Class<T> requiredType) {
+
         T result = null;
         try {
-            if (requiredType == String.class) {
+            if ( "null".equals(value)) {
+                result = null;
+            } else if (requiredType == String.class) {
                 result = (T) value;
             } else if (requiredType == StringBuffer.class) {
                 result = (T) new StringBuffer(value);

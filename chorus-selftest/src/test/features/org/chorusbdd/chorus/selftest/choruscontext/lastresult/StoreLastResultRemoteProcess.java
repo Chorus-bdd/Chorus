@@ -27,31 +27,24 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.invoker;
+package org.chorusbdd.chorus.selftest.choruscontext.lastresult;
 
-import java.lang.reflect.InvocationTargetException;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 /**
- * User: nick
- * Date: 20/09/13
- * Time: 09:09
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public interface StepMethodInvoker {
+public class StoreLastResultRemoteProcess {
 
-    /**
-     * A special String which represents the result of calling a method which had a void return type
-     */
-    public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
+    public static void main(String[] args) throws InterruptedException {
+        StoreLastResultHandler handler = new StoreLastResultHandler();
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
+        exporter.export();
 
-    /**
-     * Invoke the method
-     *
-     * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
-     */
-    Object invoke(Object obj, Object... args) throws IllegalAccessException, InvocationTargetException;
+        Thread.sleep(60000);
+    }
 
-    /**
-     * @return the name of the method to invoke
-     */
-    String getMethodName();
 }

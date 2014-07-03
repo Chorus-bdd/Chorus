@@ -51,12 +51,12 @@ public abstract class PolledInvoker extends AbstractInvoker {
      * Invoke the method
      */
     public Object invoke(final Object obj, final Object... args) throws IllegalAccessException, InvocationTargetException {
-        final AtomicReference result = new AtomicReference();
+        final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
             protected void validate() throws Exception {
                 Object r = method.invoke(obj, args);
-                result.set(r);
+                resultRef.set(r);
             }
 
             protected int getPollPeriodMillis() {
@@ -67,7 +67,9 @@ public abstract class PolledInvoker extends AbstractInvoker {
         TimeUnit timeUnit = getTimeUnit();
         int count = getCount();
         doTest(p, timeUnit, count);
-        return result.get();       
+
+        Object result = handleResultIfReturnTypeVoid(method, resultRef.get());
+        return result;
     }
 
     protected abstract int getCount();

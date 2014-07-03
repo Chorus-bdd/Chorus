@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  */
 public class TestChorusContext extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/choruscontext";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/choruscontext/choruscontext.feature";
 
     final int expectedExitCode = 0;  //success
 

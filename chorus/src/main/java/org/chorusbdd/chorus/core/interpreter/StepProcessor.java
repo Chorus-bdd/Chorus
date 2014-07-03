@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -190,18 +191,23 @@ public class StepProcessor {
 
     private StepEndState executeStepMethod(ExecutionToken executionToken, StepToken step, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
         StepEndState endState;
-        log.debug("Now executing the step using method " + stepDefinitionMethodFinder.getMethodToCall());
+        log.debug("Now executing the step using method " + stepDefinitionMethodFinder);
         long startTime = System.currentTimeMillis();
         try {
             //call the step method using reflection
-            Object result = stepDefinitionMethodFinder.getMethodToCall().invoke(
+            Object result = stepDefinitionMethodFinder.getStepMethodInvoker().invoke(
                     stepDefinitionMethodFinder.getHandlerInstance(),
                     stepDefinitionMethodFinder.getMethodCallArgs()
             );
             log.debug("Finished executing the step, step passed, result was " + result);
-            if (result != null) {
-                step.setMessage(result.toString());
+
+            if ( ! StepMethodInvoker.VOID_RESULT.equals(result) ) {
+                //void results don't get put into the context, but null results do
+                ChorusContext.getContext().put(ChorusContext.LAST_RESULT, result);
+                step.setMessage(result == null ? "null" : result.toString());
+                log.debug("Stored lastResult into ChorusContext with the value " + step.getMessage());
             }
+
             endState = StepEndState.PASSED;
             executionToken.incrementStepsPassed();
         } catch (InvocationTargetException e) {
