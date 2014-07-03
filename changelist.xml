@@ -4,8 +4,12 @@
 
     <version>
         <versionNumber>1.6.6</versionNumber>
-        <comment>Remove the legacy JUnitSuiteRunner (use @Uses(ChorusSuite.class) instead)</comment>
-        <comment>Improve exception output when step fails to ensure exception type is included</comment>
+        <comment>Set the lastResult variable into ChorusContext following each step</comment>
+        <change desc="Remove the legacy JUnitSuiteRunner (use @Uses(ChorusSuite.class) instead)"/>
+        <change desc="Improve exception output when step fails to ensure exception type is included"/>
+        <change desc="Set the lastResult variable into ChorusContext following each step"/>
+        <change desc="Coerce the String null to java null when captured as a step method parameter"/>
+        <change desc="Distinguish variable exists with a null value from variable doesn't exist in ChrousContextHandler"/>
     </version>
     <version>
         <versionNumber>1.6.5</versionNumber>
