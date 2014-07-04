@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.6 ###
+        
+*Set the lastResult variable into ChorusContext following each step*
+        
+| Changes in 1.6.6 |
+| ------ |
+| Remove the legacy JUnitSuiteRunner (use @Uses(ChorusSuite.class) instead) |
+| Improve exception output when step fails to ensure exception type is included |
+| Set the lastResult variable into ChorusContext following each step |
+| Coerce the String null to java null when captured as a step method parameter |
+| Distinguish variable exists with a null value from variable doesn't exist in ChrousContextHandler |
+        
 ### Version 1.6.5 ###
         
 *Expand chorus context variables in steps prior to execution, improve ChorusContextHandler*
