@@ -43,40 +43,13 @@ import java.util.Map;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Remote Chorus Context Handler")
-public class JmxRemoteChorusContextHandler extends ChorusAssert {
+@Handler("Local Chorus Context Handler")
+public class LocalChorusContextHandler extends ChorusAssert {
 
-    @Step("I can call a step method exported by the handler")
-    public void canCallAMethod() {
-    }
-
-    @Step("I can access the context variable (.*)")
-    public Object canSeeAContextVariableRemotely(String variableName) {
+       @Step("the size of map (.*) is (\\d+)")
+    public void checkMapSize(String mapName, int size) {
         ChorusContext c = ChorusContext.getContext();
-        Object o = c.get(variableName);
-        return o.toString() + ":" + o.getClass().getSimpleName();
-    }
-
-    @Step("the value of variable (.*) is (.*)")
-    public void checkValueOfVar(String variableName, String value) {
-        ChorusContext c = ChorusContext.getContext();
-        Object o = c.get(variableName);
-        assertEquals("Value should be " + value + " was " + o, value, o);
-    }
-
-    @Step("I set the context variable (.*) to (.*)")
-    public void setAContextVariable(String variableName, Object value) {
-        ChorusContext c = ChorusContext.getContext();
-        c.put(variableName, value);
-    }
-
-    @Step("I create a context map (.*)")
-    public void createContextMap(String variableName) {
-        ChorusContext c = ChorusContext.getContext();
-        HashMap myMap = new HashMap();
-        myMap.put("one", "one");
-        myMap.put("two", "two");
-        myMap.put("three", "three");
-        c.put(variableName, myMap);
+        Map m = (Map)c.get(mapName);
+        assertEquals("size should be " + size + " but is " + m.size(), m.size(), size);
     }
 }
