@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.7 ###
+        
+*A minor fix to remove some unnecessary null results from the console output when connecting to components using chorus version before 1.6.6*
+        
+| Changes in 1.6.7 |
+| ------ |
+| BUGFIX: Fix handling of null results in console output with earlier verisons of the chorus remoting api |
+        
 ### Version 1.6.6 ###
         
 *Set the lastResult variable into ChorusContext following each step*
