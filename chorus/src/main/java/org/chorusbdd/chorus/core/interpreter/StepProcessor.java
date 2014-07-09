@@ -201,10 +201,15 @@ public class StepProcessor {
             );
             log.debug("Finished executing the step, step passed, result was " + result);
 
+            //n.b. for remote components using old versions of chorus to export steps we will not receive VOID_RESULT
+            //so we will have to live with a slightly different/degraded behaviour, in particular storing a null lastResult
+            //into the context for remote step methods which actually had a void return type.
             if ( ! StepMethodInvoker.VOID_RESULT.equals(result) ) {
                 //void results don't get put into the context, but null results do
                 ChorusContext.getContext().put(ChorusContext.LAST_RESULT, result);
-                step.setMessage(result == null ? "null" : result.toString());
+                if ( result != null) {
+                    step.setMessage(result.toString());
+                }
                 log.debug("Stored lastResult into ChorusContext with the value " + step.getMessage());
             }
 

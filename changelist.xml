@@ -3,6 +3,11 @@
 <changes>
 
     <version>
+        <versionNumber>1.6.7</versionNumber>
+        <comment>A minor fix to remove some unnecessary null results from the console output when connecting to components using chorus version before 1.6.6</comment>
+        <bugfix desc="Fix handling of null results in console output with earlier verisons of the chorus remoting api"/>
+    </version>
+    <version>
         <versionNumber>1.6.6</versionNumber>
         <comment>Set the lastResult variable into ChorusContext following each step</comment>
         <change desc="Remove the legacy JUnitSuiteRunner (use @Uses(ChorusSuite.class) instead)"/>
