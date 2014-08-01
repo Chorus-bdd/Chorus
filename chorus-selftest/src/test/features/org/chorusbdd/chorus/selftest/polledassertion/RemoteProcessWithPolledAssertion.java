@@ -30,12 +30,14 @@
 package org.chorusbdd.chorus.selftest.polledassertion;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.handlers.util.FailImmediatelyException;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
 
@@ -49,7 +51,7 @@ public class RemoteProcessWithPolledAssertion {
     
     public static void main(String[] args) throws InterruptedException {
         new ChorusHandlerJmxExporter(new MyHandler()).export();
-        Thread.sleep(10000);
+        Thread.sleep(100000);
     }
     
     @Handler("My Handler")
@@ -92,6 +94,16 @@ public class RemoteProcessWithPolledAssertion {
         @PassesWithin(length = 200, timeUnit = TimeUnit.MILLISECONDS, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
         public void testFailsWithRuntimeException() throws Exception {
             throw new RuntimeException("My Runtime Exception Message");
+        }
+
+        private AtomicLong passesWithinStartTime = new AtomicLong();
+
+        @Step(".*call a passes within step method it can be terminated immediately by FailImmediatelyException")
+        @PassesWithin(length=360, timeUnit = TimeUnit.SECONDS)
+        public void testFailImmediately() {
+            passesWithinStartTime.compareAndSet(0, System.currentTimeMillis());
+            long zeroWhenFailingImmediately = (System.currentTimeMillis() - passesWithinStartTime.get()) / 1000;
+            throw new FailImmediatelyException("Fail this step immediately - time elapsed " + zeroWhenFailingImmediately + " seconds");
         }
         
         

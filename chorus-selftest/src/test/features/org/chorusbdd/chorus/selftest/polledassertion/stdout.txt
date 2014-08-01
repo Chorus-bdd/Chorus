@@ -41,8 +41,16 @@ Chorus --> INFO    - Processing scenario: Long running step method overruns pass
 Chorus --> INFO    - Processing scenario: Long running step method overruns passes throughout period
     When I call a 1 second to run step method with passes throughout 1 second annotation     PASSED  
     Then the next step runs 1 second later                                                   PASSED  
+  Scenario: I can immediately break out of a passes within by throwing FailImmediatelyException
+Chorus --> INFO    - Processing scenario: I can immediately break out of a passes within by throwing FailImmediatelyException
+    When call a passes within step method it can be terminated immediately by FailImmediatelyExceptionFAILED  (PolledAssertionHandler:linenumber)-FailImmediatelyException Fail this step immediately - time elapsed 0 seconds
+  Scenario: I can immediately break out of a remote passes within by throwing FailImmediatelyException
+Chorus --> INFO    - Processing scenario: I can immediately break out of a remote passes within by throwing FailImmediatelyException
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolledFAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:7) (passed:1) (failed:6)
-Steps     (total:24) (passed:17) (failed:6) (undefined:0) (pending:0) (skipped:1)
+Scenarios (total:9) (passed:1) (failed:8)
+Steps     (total:27) (passed:18) (failed:8) (undefined:0) (pending:0) (skipped:1)

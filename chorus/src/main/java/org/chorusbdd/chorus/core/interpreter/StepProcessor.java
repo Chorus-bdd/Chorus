@@ -216,16 +216,12 @@ public class StepProcessor {
             endState = StepEndState.PASSED;
             executionToken.incrementStepsPassed();
         } catch (InvocationTargetException e) {
-            log.debug("Step execution failed, we hit an exception while executing the step method");
-            //here if the method called threw an exception
             Throwable cause = e.getCause();                      
             endState = handleRootCause(executionToken, step, cause);
         } catch (PolledAssertion.PolledAssertionError ae ) {  //when using a PolledInvoker this will re-throw AssertionErrors
-            endState = handleRootCause(executionToken, step, ae.getCause());
-        } catch (AssertionError ae) {
-            endState = handleRootCause(executionToken, step, ae);
+            Throwable cause = ae.getCause();
+            endState = handleRootCause(executionToken, step, cause);
         } catch (Throwable t) {
-            log.error("Step execution failed, we hit an exception trying to invoke the step method", t);
             endState = handleRootCause(executionToken, step, t);
         } finally {
             step.setTimeTaken(System.currentTimeMillis() - startTime);
@@ -234,6 +230,9 @@ public class StepProcessor {
     }
 
     private StepEndState handleRootCause(ExecutionToken executionToken, StepToken step, Throwable cause) {
+        log.debug("Step execution failed, we hit an exception " + cause.getClass().getSimpleName() + " while executing the step method", cause);
+        //here if the method called threw an exception
+
         StepEndState endState;
         if (cause instanceof StepPendingException) {
             endState = handleStepPendingException(executionToken, step, (StepPendingException) cause);

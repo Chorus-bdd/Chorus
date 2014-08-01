@@ -30,10 +30,12 @@
 package org.chorusbdd.chorus.selftest.polledassertion;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.handlers.util.FailImmediatelyException;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.*;
 
@@ -52,6 +54,7 @@ public class PolledAssertionHandler {
     private int passesForPollCount;
     
     private long longMethodStartTime;
+
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
@@ -136,6 +139,17 @@ public class PolledAssertionHandler {
     @Step("the next step runs 1 second later")
     public void checkRunTimeForLongMethod() {
         assertTrue(System.currentTimeMillis() - longMethodStartTime < 1500);  //allow up to 500 ms extra
+    }
+
+
+    private AtomicLong passesWithinStartTime = new AtomicLong();
+
+    @Step(".*call a passes within step method it can be terminated immediately by FailImmediatelyException")
+    @PassesWithin(length=360, timeUnit = TimeUnit.SECONDS)
+    public void testFailImmediately() {
+        passesWithinStartTime.compareAndSet(0, System.currentTimeMillis());
+        long zeroWhenFailingImmediately = (System.currentTimeMillis() - passesWithinStartTime.get()) / 1000;
+        throw new FailImmediatelyException("Fail this step immediately - time elapsed " + zeroWhenFailingImmediately + " seconds");
     }
     
 }

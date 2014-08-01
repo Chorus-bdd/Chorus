@@ -126,6 +126,11 @@ public abstract class PolledAssertion {
                 success = true;
                 break;
             } catch (Throwable r) {
+                if ( r instanceof FailImmediatelyException) {
+                    throw (FailImmediatelyException)r;
+                } else if ( r.getCause() instanceof FailImmediatelyException) {
+                    throw (FailImmediatelyException)r.getCause();
+                }
                 //ignore failures up until the last check
             }
             

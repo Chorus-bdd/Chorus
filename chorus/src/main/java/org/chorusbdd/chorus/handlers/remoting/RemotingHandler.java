@@ -167,7 +167,7 @@ public class RemotingHandler {
         } else {
             String message = String.format("There is no handler available for action (%s) on MBean (%s)", action, componentName);
             log.error(message);
-            throw new RuntimeException(message);
+            throw new ChorusException(message);
         }
     }
 

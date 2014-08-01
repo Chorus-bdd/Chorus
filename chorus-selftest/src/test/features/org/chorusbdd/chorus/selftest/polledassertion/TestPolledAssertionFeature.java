@@ -52,7 +52,7 @@ public class TestPolledAssertionFeature extends AbstractInterpreterTest {
         return featurePath;
     }
 
-//    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
 //        sysProps.put("chorusTagExpression", "@CHOOSE");
-//    }
+    }
 }

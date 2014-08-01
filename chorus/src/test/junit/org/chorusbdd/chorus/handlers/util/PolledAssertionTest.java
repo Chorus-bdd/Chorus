@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlers.util;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -109,5 +110,34 @@ public class PolledAssertionTest extends Assert {
         } catch (AssertionError ae) {
         }
         assertTrue("Expect count == 1", count.get() == 1);
+    }
+
+    @Test
+    public void testICanFailImmediatelyWhileAwaiting() throws Exception {
+        long timeStart = System.currentTimeMillis();
+        try {
+            new PolledAssertion() {
+                protected void validate() {
+                   throw new FailImmediatelyException("Fail Immediately");
+                }
+            }.check(10);
+        } catch (AssertionError ae) {
+        }
+        assertTrue("Expect time < 1s", ((System.currentTimeMillis() - timeStart) / 1000) < 1);
+    }
+
+    @Test
+    public void testICanFailImmediatelyIfFailImmediatelyIsCause() throws Exception {
+        long timeStart = System.currentTimeMillis();
+        try {
+            new PolledAssertion() {
+                protected void validate() throws InvocationTargetException {
+                    FailImmediatelyException f = new FailImmediatelyException("Fail Immediately");
+                    throw new InvocationTargetException(f);
+                }
+            }.check(10);
+        } catch (AssertionError ae) {
+        }
+        assertTrue("Expect time < 1s", ((System.currentTimeMillis() - timeStart) / 1000) < 1);
     }
 }
