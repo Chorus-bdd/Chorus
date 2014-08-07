@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.8 ###
+        
+*Add FailImmediatelyException to break out of a @PassesWithin or PolledAssertion*
+        
+| Changes in 1.6.8 |
+| ------ |
+| Add FailImmediatelyException which can be used to fail a @PassesWithin step method immediately |
+        
 ### Version 1.6.7 ###
         
 *A minor fix to remove some unnecessary null results from the console output when connecting to components using chorus version before 1.6.6*
