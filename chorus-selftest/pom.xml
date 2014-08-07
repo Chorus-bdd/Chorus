@@ -9,7 +9,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus-selftest</artifactId>
     <packaging>jar</packaging>
-    <version>1.6.8</version>
+    <version>1.6.9-SNAPSHOT</version>
     <name>chorus-selftest</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
@@ -159,13 +159,13 @@
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus</artifactId>
-            <version>1.6.8</version>
+            <version>1.6.9-SNAPSHOT</version>
         </dependency>
 		
 		<dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-spring</artifactId>
-            <version>1.6.8</version>
+            <version>1.6.9-SNAPSHOT</version>
         </dependency>
 		
 	    <dependency>
