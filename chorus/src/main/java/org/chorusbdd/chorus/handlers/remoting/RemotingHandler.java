@@ -34,11 +34,13 @@ import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
-import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.handlers.processes.ProcessManager;
+import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
 import org.chorusbdd.chorus.handlers.util.config.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.RegexpUtils;
@@ -104,10 +106,14 @@ public class RemotingHandler {
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName);
+        return doActionOnProxy(action, componentName, proxy);
+    }
+
+    private Object doActionOnProxy(final String action, final String componentName, final ChorusHandlerJmxProxy proxy) {
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
 
         //details of the selected method
-        String methodUidToCall = null;        
+        String methodUidToCall = null;
         Object[] methodArgsToPass = null;
         String methodUidToCallPendingMessage = null;
 
@@ -189,7 +195,7 @@ public class RemotingHandler {
         if (proxy == null) {
             RemotingConfig remotingConfig = getRemotingConfigs(name);
             if (remotingConfig == null) {
-                throw new ChorusException("Failed to find MBean configuration for component: " + name);
+                return getProxyForDynamicProcess(name);
             } else {
                 proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
                 proxies.put(name, proxy);
@@ -197,6 +203,15 @@ public class RemotingHandler {
             }
         }
         return proxy;
+    }
+
+    private ChorusHandlerJmxProxy getProxyForDynamicProcess(String processName) throws Exception {
+        final ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
+        final RemotingConfig remotingConfig = getRemotingConfigs(processConfig.getPropertyTemplateName());
+        if (remotingConfig == null) {
+            throw new ChorusException("Failed to find MBean configuration for component: " + processName);
+        }
+        return new ChorusHandlerJmxProxy(remotingConfig.getHost(), processConfig.getJmxPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
     }
 
     private RemotingConfig getRemotingConfigs(String componentName) throws Exception {

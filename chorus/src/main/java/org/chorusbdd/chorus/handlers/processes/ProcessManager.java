@@ -9,7 +9,11 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -150,6 +154,16 @@ public class ProcessManager  {
         for (final String name : processNames) {
             stopProcess(name);
         }
+    }
+
+    // ----------------------------------------------------- Process Properties
+
+    public synchronized ProcessesConfig getProcessConfig(final String processName) {
+        final ProcessInfo processInfo = processes.get(processName);
+        if (processInfo == null) {
+            throw new IllegalArgumentException("Unable to retrieve configuration for process '" + processName + "' as it does not exist");
+        }
+        return processInfo.getConfig();
     }
 
     // --------------------------------------------------------- Process Status
