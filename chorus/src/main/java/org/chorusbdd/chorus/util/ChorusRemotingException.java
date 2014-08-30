@@ -33,7 +33,7 @@ package org.chorusbdd.chorus.util;
  *  When exceptions occur remotely, we throw a ChorusRemotingException and this should be received by the
  *  remote chorus interpreter
  *
- *  If we include the remote application's exception as a cause, this might result in a deserialization exception
+ *  If we include the remote application's exception as a cause, this might result in a deserialization error
  *  if the interpreter doesn't have the exception class in its classpath.
  *  The remote application may have any number of application-specific library exceptions which the interpreter will most
  *  likely not know about - so this scenario is likely.
@@ -66,12 +66,14 @@ public class ChorusRemotingException extends RuntimeException {
     }
 
     /**
-     * Do not use this constructor for Exceptions which might be sent over the wire
-     * to the interpreter, unless it is guaranteed that the interpreter will recognise the cause exception class
-     * (i.e don't do this for user generated exceptions which we don't have control of,
-     * instead call the constructor passing in stack trace elements)
-     *
+     * Use this constructor to safely send exception details back to the chorus interpreter
+     * 
+     * Instead of passing the actual cause into the constructor, we instead pass the StackTraceElement which are guaranteed
+     * to deserialize correctly in the interpreter
+     * 
      * @param message
+     * @param nameOfCauseExceptionClass 
+     * @param traceOfCauseException 
      */
     public ChorusRemotingException(String message, String nameOfCauseExceptionClass, StackTraceElement[] traceOfCauseException) {
         super(message);

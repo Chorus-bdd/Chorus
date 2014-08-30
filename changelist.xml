@@ -3,6 +3,10 @@
 <changes>
 
     <version>
+        <versionNumber>1.6.9-SNAPSHOT</versionNumber>
+        <comment>Add support for http remoting, add ProcessManager and RemotingManager and delegate to these from Processes and Remoting handlers</comment>
+    </version>
+    <version>
         <versionNumber>1.6.8</versionNumber>
         <comment>Add FailImmediatelyException to break out of a @PassesWithin or PolledAssertion</comment>
         <change desc="Add FailImmediatelyException which can be used to fail a @PassesWithin step method immediately"/>

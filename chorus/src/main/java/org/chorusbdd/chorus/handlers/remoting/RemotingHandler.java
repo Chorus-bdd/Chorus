@@ -54,19 +54,23 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * This handler can be used to make calls over RMI to JMX MBeans.
+ * This handler can be used to invoke steps on components running remotely across the network.
  * <p/>
- * The single Step method will match any regexp that ends with "on [mbean name]". In order to work, this handler must
- * have metadata available for the mbean names that it will be connecting to. This metadata will be loaded, by default
- * from a standard feature configuration file, each line formatted:mbean-name=host:port.
- * </p>
- * Alternatively, the properties file can be specified using a system property: -D org.chorusbdd.chorus.jmxexporter.mbean.properties
- * </p>
- * It is also possible to load the data from a database. The database connection properties and the SQL used to load
+ * The single Step method will match any regexp that ends with "(in|from) [mbean name]". 
+ * 
+ * In order to work, this handler must have metadata available for the mbean names that it will be connecting to. 
+ * 
+ * This metadata usually will be loaded from a chorus properties file see the Chorus wiki for more details of property file 
+ * configuration and the various remoting properties.
+ * 
+ * An example configuration to connect to a component called 'MyRemoteComponent' using the jmx protocol is given below
+ * This component is running on myserver.mydomain on port 18800 
+ * 
+ * remoting.MyRemoteComponent.connection=jmx:myserver.mydomain:18800
+ *
+ * It is also possible to load remoting config properties from the database. The database connection properties and the SQL used to load
  * the metadata are loaded from a properties file named in system property: -D org.chorusbdd.chorus.jmxexporter.db.properties=[file].
- * <p/>
- * Created by: Steve Neal
- * Date: 12/10/11
+
  */
 @Handler("Remoting")
 @SuppressWarnings("UnusedDeclaration")
@@ -83,92 +87,48 @@ public class RemotingHandler {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
-    /**
-     * Map: mBeanName -> proxy
-     */
-    private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
+    //A remoting protocol is defined by each remoting configuration and so it's possible to have 
+    //more than one type of remoting used in a scenario, if different remote connections use different protocols.
+    //We need a RemotingManager to run the remote steps for each protocol supported
+    private Map<String, RemotingManager> remotingManagerByProtocol = new HashMap<String, RemotingManager>();
 
     private Map<String, RemotingConfig> remotingConfigMap;
 
-    // System property values to override default properties loading behaviour
-
-    // If set, will cause the mBean metadata to be loaded from properties in the named properties file
-    public static final String REMOTING_HANDLER_MBEANS_PROPERTIES = "org.chorusbdd.chorus.remoting.properties";
-
     // If set, will cause the mBean metadata to be loaded using JDBC properties in the named properties file
     public static final String REMOTING_HANDLER_DB_PROPERTIES = "org.chorusbdd.chorus.remoting.db";
+
+    public RemotingHandler() {
+        createRemotingManagers();
+    }
+
+    //This is done on creation, which is fine since at present RemotingHandler is scenario scoped and we do want
+    //to create new remoting managers on the start of each scenario
+    //Since none of the remoting handlers so far are heavyweight to create, there's no need for a lazy create here
+    private void createRemotingManagers() {
+        remotingManagerByProtocol.put("jmx", new JmxRemotingManager());
+    }
 
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {
-        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName);
-        Map<String, String[]> stepMetaData = proxy.getStepMetadata();
-
-        //details of the selected method
-        String methodUidToCall = null;        
-        Object[] methodArgsToPass = null;
-        String methodUidToCallPendingMessage = null;
-
-        for (Map.Entry<String, String[]> entry : stepMetaData.entrySet()) {
-            String methodUid = entry.getKey();
-            String regex = entry.getValue()[0];
-            String pending = entry.getValue()[1];
-
-            //identify the types in the methodUid
-            String[] methodUidParts = methodUid.split("::");
-            Class[] types = new Class[methodUidParts.length - 1];
-            for (int i = 0; i < types.length; i++) {
-                String typeName = methodUidParts[i + 1];
-                try {
-                    types[i] = HandlerUtils.forName(typeName);
-                } catch (ClassNotFoundException e) {
-                    log.error("Could not locate class for: " + typeName, e);
-                }
-            }
-
-            //see if this method will do
-            Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, types);
-            if (args != null) {
-                if (methodUidToCall == null) {
-                    methodUidToCall = methodUid;
-                    methodUidToCallPendingMessage = pending;
-                    methodArgsToPass = args;
-                } else {
-                    log.info(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
-                            methodUid,
-                            action,
-                            componentName,
-                            methodUidToCall));
-                }
-            }
+        RemotingConfig remotingConfig = getRemotingConfigs(componentName);
+        if (remotingConfig == null) {
+            throw new ChorusException("Failed to find MBean configuration for component: " + componentName);
         }
+        
+        RemotingManager remotingManager = getRemotingManager(remotingConfig.getProtocol());
+        Object stepResult = remotingManager.performActionInRemoteComponent(action, componentName, remotingConfig);
+        return stepResult;
+    }
 
-        if (methodUidToCall != null) {
-            Object result;
-            if (methodUidToCallPendingMessage != null) {
-                throw new StepPendingException(methodUidToCallPendingMessage);
-            }
-            try {
-                result = proxy.invokeStep(methodUidToCall, methodArgsToPass);
-            } catch (RuntimeMBeanException mbe) {
-                //here if an exception was thrown from the remote Step method
-                RuntimeException targetException = mbe.getTargetException();
-                if (targetException instanceof ChorusRemotingException) {
-                    throw targetException;
-                } else {
-                    throw new ChorusRemotingException(targetException);
-                }
-            } catch (Exception e) {
-                throw new ChorusRemotingException(e);
-            }
-            return result;
-        } else {
-            String message = String.format("There is no handler available for action (%s) on MBean (%s)", action, componentName);
-            log.error(message);
-            throw new ChorusException(message);
+    private RemotingManager getRemotingManager(String protocol) {
+        RemotingManager remotingManager = remotingManagerByProtocol.get(protocol);
+        if ( remotingManager == null) {
+            throw new ChorusException("Cannot process remote step for unsupported remoting protocol " + protocol);
         }
+        return remotingManager;
     }
 
     /**
@@ -176,27 +136,13 @@ public class RemotingHandler {
      */
     @Destroy
     public void destroy() {
-        for (Map.Entry<String, ChorusHandlerJmxProxy> entry : proxies.entrySet()) {
-            String name = entry.getKey();
-            ChorusHandlerJmxProxy jmxProxy = entry.getValue();
-            jmxProxy.destroy();
-            log.debug("Closed JMX connection to: " + name);
-        }
-    }
-
-    private ChorusHandlerJmxProxy getProxyForComponent(String name) throws Exception {
-        ChorusHandlerJmxProxy proxy = proxies.get(name);
-        if (proxy == null) {
-            RemotingConfig remotingConfig = getRemotingConfigs(name);
-            if (remotingConfig == null) {
-                throw new ChorusException("Failed to find MBean configuration for component: " + name);
-            } else {
-                proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
-                proxies.put(name, proxy);
-                log.debug("Opened JMX connection to: " + name);
+        for ( Map.Entry<String,RemotingManager> m : remotingManagerByProtocol.entrySet()) {
+            try {
+                m.getValue().destroy();
+            } catch (Throwable t) {
+                log.error("Failed while destroying remoting manager for protocol " + m.getKey(), t);    
             }
         }
-        return proxy;
     }
 
     private RemotingConfig getRemotingConfigs(String componentName) throws Exception {
