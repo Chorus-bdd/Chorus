@@ -27,47 +27,46 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.invoker;
+package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.annotations.PassesFor;
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
-* User: nick
-* Date: 24/09/13
-* Time: 18:46
-*/
-public class InvokerFactory {
+ * User: nick
+ * Date: 20/09/13
+ * Time: 18:10
+ */
+public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(InvokerFactory.class);
+    private Object classInstance;
+    protected Method method;
 
-    public StepMethodInvoker createInvoker(Method method) {
-        Annotation[] annotations = method.getDeclaredAnnotations();
-        
-        StepMethodInvoker result = null;
-        for ( Annotation a : annotations) {
-            if ( a.annotationType() == PassesWithin.class) {
-                PassesWithin passesWithin = (PassesWithin) a;
-                switch(passesWithin.pollMode()) {
-                    case UNTIL_FIRST_PASS:
-                        result = new UntilFirstPassInvoker(passesWithin, method);
-                        break;
-                    case PASS_THROUGHOUT_PERIOD:
-                        result =  new PassesThroughoutInvoker(passesWithin, method);
-                        break;
-                    default:
-                        throw new UnsupportedOperationException("Unknown mode " + passesWithin.pollMode());
-                }
-            }
-        }
-        
-        if ( result == null ) {
-            result = new SimpleMethodInvoker(method);
+    public AbstractStepMethodInvoker(Object classInstance, Method method) {
+        this.classInstance = classInstance;
+        this.method = method;
+    }
+
+    /**
+     * Returns the name of the method represented by this {@code Method}
+     * object, as a {@code String}.
+     */
+    public String getMethodName() {
+        return method.getName();
+    }
+
+    public Object getClassInstance() {
+        return classInstance;
+    }
+
+    public String toString() {
+        return getClass().getSimpleName() + ":" + getMethodName();
+    }
+
+    protected Object handleResultIfReturnTypeVoid(Method method, Object result) {
+        if ( method.getReturnType() == Void.TYPE) {
+            result = VOID_RESULT;
         }
         return result;
     }

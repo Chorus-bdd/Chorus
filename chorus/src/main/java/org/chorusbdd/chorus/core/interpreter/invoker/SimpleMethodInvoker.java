@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.AbstractInvoker;
+import org.chorusbdd.chorus.core.interpreter.AbstractStepMethodInvoker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -39,15 +39,15 @@ import java.lang.reflect.Method;
 * Date: 24/09/13
 * Time: 18:46
 */
-class SimpleMethodInvoker extends AbstractInvoker {
+class SimpleMethodInvoker extends AbstractStepMethodInvoker {
     
-    public SimpleMethodInvoker(Method method) {
-        super(method);
+    public SimpleMethodInvoker(Object classInstance, Method method) {
+        super(classInstance, method);
         this.method = method;
     }
 
-    public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Object result =  method.invoke(obj, args);
+    public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Object result =  method.invoke(getClassInstance(), args);
         result = handleResultIfReturnTypeVoid(method, result);
         return result;
     }

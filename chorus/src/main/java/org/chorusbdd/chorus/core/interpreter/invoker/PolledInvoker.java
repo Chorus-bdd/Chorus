@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.AbstractInvoker;
+import org.chorusbdd.chorus.core.interpreter.AbstractStepMethodInvoker;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,20 +42,20 @@ import java.util.concurrent.atomic.AtomicReference;
  * Date: 20/09/13
  * Time: 18:37
  */
-public abstract class PolledInvoker extends AbstractInvoker {
-    public PolledInvoker(Method method) {
-        super(method);
+public abstract class PolledInvoker extends AbstractStepMethodInvoker {
+    public PolledInvoker(Object classInstance, Method method) {
+        super(classInstance, method);
     }
 
     /**
      * Invoke the method
      */
-    public Object invoke(final Object obj, final Object... args) throws IllegalAccessException, InvocationTargetException {
+    public Object invoke(final Object... args) throws IllegalAccessException, InvocationTargetException {
         final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
             protected void validate() throws Exception {
-                Object r = method.invoke(obj, args);
+                Object r = method.invoke(getClassInstance(), args);
                 resultRef.set(r);
             }
 

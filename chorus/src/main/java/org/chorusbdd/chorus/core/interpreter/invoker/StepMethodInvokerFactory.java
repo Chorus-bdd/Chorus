@@ -29,29 +29,45 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import java.lang.reflect.InvocationTargetException;
+import org.chorusbdd.chorus.annotations.PassesWithin;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
- * User: nick
- * Date: 20/09/13
- * Time: 09:09
- */
-public interface StepMethodInvoker {
+* User: nick
+* Date: 24/09/13
+* Time: 18:46
+*/
+public class StepMethodInvokerFactory {
 
-    /**
-     * A special String which represents the result of calling a method which had a void return type
-     */
-    public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
+    private static ChorusLog log = ChorusLogFactory.getLog(StepMethodInvokerFactory.class);
 
-    /**
-     * Invoke the method
-     *
-     * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
-     */
-    Object invoke(Object obj, Object... args) throws IllegalAccessException, InvocationTargetException;
-
-    /**
-     * @return the name of the method to invoke
-     */
-    String getMethodName();
+    public StepInvoker createInvoker(Object classInstance, Method method) {
+        Annotation[] annotations = method.getDeclaredAnnotations();
+        
+        StepInvoker result = null;
+        for ( Annotation a : annotations) {
+            if ( a.annotationType() == PassesWithin.class) {
+                PassesWithin passesWithin = (PassesWithin) a;
+                switch(passesWithin.pollMode()) {
+                    case UNTIL_FIRST_PASS:
+                        result = new UntilFirstPassInvoker(classInstance, method, passesWithin);
+                        break;
+                    case PASS_THROUGHOUT_PERIOD:
+                        result =  new PassesThroughoutInvoker(classInstance, method, passesWithin);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("Unknown mode " + passesWithin.pollMode());
+                }
+            }
+        }
+        
+        if ( result == null ) {
+            result = new SimpleMethodInvoker(classInstance, method);
+        }
+        return result;
+    }
 }

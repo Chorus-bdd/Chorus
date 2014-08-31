@@ -44,8 +44,8 @@ class UntilFirstPassInvoker extends PolledInvoker {
 
     private PassesWithin passesWithin;
 
-    public UntilFirstPassInvoker(PassesWithin passesWithin, Method method) {
-        super(method);
+    public UntilFirstPassInvoker(Object classInstance, Method method, PassesWithin passesWithin) {
+        super(classInstance, method);
         this.passesWithin = passesWithin;
     }
 

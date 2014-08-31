@@ -27,41 +27,31 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
-
-import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * User: nick
  * Date: 20/09/13
- * Time: 18:10
+ * Time: 09:09
  */
-public abstract class AbstractInvoker implements StepMethodInvoker {
-
-    protected Method method;
-
-    public AbstractInvoker(Method method) {
-        this.method = method;
-    }
+public interface StepInvoker {
 
     /**
-     * Returns the name of the method represented by this {@code Method}
-     * object, as a {@code String}.
+     * A special String which represents the result of calling a method which had a void return type
      */
-    public String getMethodName() {
-        return method.getName();
-    }
+    public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
 
-    public String toString() {
-        return getClass().getSimpleName() + ":" + getMethodName();
-    }
+    /**
+     * Invoke the method
+     *
+     * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
+     */
+    Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException;
 
-    protected Object handleResultIfReturnTypeVoid(Method method, Object result) {
-        if ( method.getReturnType() == Void.TYPE) {
-            result = VOID_RESULT;
-        }
-        return result;
-    }
+    /**
+     * @return the name of the method to invoke
+     */
+    String getMethodName();
 }

@@ -44,8 +44,8 @@ class PassesThroughoutInvoker extends PolledInvoker {
     
     private PassesWithin passesWithin;
 
-    public PassesThroughoutInvoker(PassesWithin passesWithin, Method method) {
-        super(method);
+    public PassesThroughoutInvoker(Object classInstance, Method method, PassesWithin passesWithin) {
+        super(classInstance, method);
         this.passesWithin = passesWithin;
     }
 

@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -196,7 +196,6 @@ public class StepProcessor {
         try {
             //call the step method using reflection
             Object result = stepDefinitionMethodFinder.getStepMethodInvoker().invoke(
-                    stepDefinitionMethodFinder.getHandlerInstance(),
                     stepDefinitionMethodFinder.getMethodCallArgs()
             );
             log.debug("Finished executing the step, step passed, result was " + result);
@@ -204,7 +203,7 @@ public class StepProcessor {
             //n.b. for remote components using old versions of chorus to export steps we will not receive VOID_RESULT
             //so we will have to live with a slightly different/degraded behaviour, in particular storing a null lastResult
             //into the context for remote step methods which actually had a void return type.
-            if ( ! StepMethodInvoker.VOID_RESULT.equals(result) ) {
+            if ( ! StepInvoker.VOID_RESULT.equals(result) ) {
                 //void results don't get put into the context, but null results do
                 ChorusContext.getContext().put(ChorusContext.LAST_RESULT, result);
                 if ( result != null) {

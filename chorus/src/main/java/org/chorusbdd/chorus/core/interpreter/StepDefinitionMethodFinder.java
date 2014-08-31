@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.invoker.InvokerFactory;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvokerFactory;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -54,7 +54,7 @@ class StepDefinitionMethodFinder {
 
     private List<Object> allHandlers;
     private StepToken step;
-    private StepMethodInvoker stepMethodInvoker;
+    private StepInvoker stepMethodInvoker;
     private Object handlerInstance;
     private Object[] methodCallArgs;
     private String pendingMessage = "";
@@ -64,7 +64,7 @@ class StepDefinitionMethodFinder {
         this.step = step;
     }
 
-    public StepMethodInvoker getStepMethodInvoker() {
+    public StepInvoker getStepMethodInvoker() {
         return stepMethodInvoker;
     }
 
@@ -109,19 +109,19 @@ class StepDefinitionMethodFinder {
         }
     }
 
-    private void foundStepMethod(Object instance, Method method, Step stepAnnotationInstance, Object[] values) {
+    private void foundStepMethod(Object handlerInstance, Method method, Step stepAnnotationInstance, Object[] values) {
         log.trace("Matched!");
         if (stepMethodInvoker == null) {
-            stepMethodInvoker = new InvokerFactory().createInvoker(method);
+            stepMethodInvoker = new StepMethodInvokerFactory().createInvoker(handlerInstance, method);
             methodCallArgs = values;
             pendingMessage = stepAnnotationInstance.pending();
-            handlerInstance = instance;
+            this.handlerInstance = handlerInstance;
         } else {
             log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
-                    instance.getClass().getSimpleName(),
+                    handlerInstance.getClass().getSimpleName(),
                     method.getName(),
                     step,
-                    handlerInstance.getClass().getSimpleName(),
+                    this.handlerInstance.getClass().getSimpleName(),
                     stepMethodInvoker.getMethodName()));
         }
     }
