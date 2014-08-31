@@ -55,7 +55,7 @@ class StepDefinitionMethodFinder {
     private List<Object> allHandlers;
     private StepToken step;
     private StepInvoker stepMethodInvoker;
-    private Object handlerInstance;
+    private Object foundHandler;
     private Object[] methodCallArgs;
     private String pendingMessage = "";
 
@@ -68,8 +68,8 @@ class StepDefinitionMethodFinder {
         return stepMethodInvoker;
     }
 
-    public Object getHandlerInstance() {
-        return handlerInstance;
+    public Object getFoundHandler() {
+        return foundHandler;
     }
 
     public Object[] getMethodCallArgs() {
@@ -109,20 +109,20 @@ class StepDefinitionMethodFinder {
         }
     }
 
-    private void foundStepMethod(Object handlerInstance, Method method, Step stepAnnotationInstance, Object[] values) {
+    private void foundStepMethod(Object currentHandler, Method method, Step stepAnnotationInstance, Object[] values) {
         log.trace("Matched!");
         if (stepMethodInvoker == null) {
-            stepMethodInvoker = new StepMethodInvokerFactory().createInvoker(handlerInstance, method);
+            stepMethodInvoker = new StepMethodInvokerFactory().createInvoker(currentHandler, method);
             methodCallArgs = values;
             pendingMessage = stepAnnotationInstance.pending();
-            this.handlerInstance = handlerInstance;
+            this.foundHandler = currentHandler;
         } else {
             log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
-                    handlerInstance.getClass().getSimpleName(),
+                    currentHandler.getClass().getSimpleName(),
                     method.getName(),
                     step,
-                    this.handlerInstance.getClass().getSimpleName(),
-                    stepMethodInvoker.getMethodName()));
+                    foundHandler.getClass().getSimpleName(),
+                    stepMethodInvoker.getName()));
         }
     }
 

@@ -51,7 +51,7 @@ public interface StepInvoker {
     Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException;
 
     /**
-     * @return the name of the method to invoke
+     * @return a descriptive name for this step invoker
      */
-    String getMethodName();
+    String getName();
 }

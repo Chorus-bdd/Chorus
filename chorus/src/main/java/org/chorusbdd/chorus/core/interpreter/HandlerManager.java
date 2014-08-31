@@ -213,11 +213,11 @@ public class HandlerManager {
         addAllPublicFields(featureClass, allFields);
         log.trace("Now examining handler fields for ChorusResource annotation " + allFields);
         for (Field field : allFields) {
-            setChrousResource(handler, field);
+            setChorusResource(handler, field);
         }
     }
 
-    private void setChrousResource(Object handler, Field field) {
+    private void setChorusResource(Object handler, Field field) {
         ChorusResource a = field.getAnnotation(ChorusResource.class);
         if (a != null) {
             String resourceName = a.value();

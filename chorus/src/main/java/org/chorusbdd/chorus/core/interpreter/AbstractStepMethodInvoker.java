@@ -52,8 +52,8 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
      * Returns the name of the method represented by this {@code Method}
      * object, as a {@code String}.
      */
-    public String getMethodName() {
-        return method.getName();
+    public String getName() {
+        return classInstance.getClass().getSimpleName() + ":" + getName();
     }
 
     public Object getClassInstance() {
@@ -61,7 +61,7 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
     }
 
     public String toString() {
-        return getClass().getSimpleName() + ":" + getMethodName();
+        return getName();
     }
 
     protected Object handleResultIfReturnTypeVoid(Method method, Object result) {
