@@ -46,7 +46,8 @@ import java.util.List;
 * Date: 16/05/12
 * Time: 22:07
 *
-* Refactor the logic to find a step method from interpreter
+* Find a matching step method to call from a List of handler classes and create a StepInvoker to call it
+*
 */
 class StepDefinitionMethodFinder {
 
@@ -56,6 +57,7 @@ class StepDefinitionMethodFinder {
     private StepToken step;
     private StepInvoker stepMethodInvoker;
     private Object foundHandler;
+    private Method foundMethod;
     private Object[] methodCallArgs;
     private String pendingMessage = "";
 
@@ -109,20 +111,21 @@ class StepDefinitionMethodFinder {
         }
     }
 
-    private void foundStepMethod(Object currentHandler, Method method, Step stepAnnotationInstance, Object[] values) {
+    private void foundStepMethod(Object currentHandler, Method currentMethod, Step stepAnnotationInstance, Object[] values) {
         log.trace("Matched!");
         if (stepMethodInvoker == null) {
-            stepMethodInvoker = new StepMethodInvokerFactory().createInvoker(currentHandler, method);
-            methodCallArgs = values;
-            pendingMessage = stepAnnotationInstance.pending();
+            this.methodCallArgs = values;
+            this.pendingMessage = stepAnnotationInstance.pending();
+            this.stepMethodInvoker = new StepMethodInvokerFactory().createInvoker(currentHandler, currentMethod);
             this.foundHandler = currentHandler;
+            this.foundMethod = currentMethod;
         } else {
             log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
-                    currentHandler.getClass().getSimpleName(),
-                    method.getName(),
-                    step,
-                    foundHandler.getClass().getSimpleName(),
-                    stepMethodInvoker.getName()));
+            currentHandler.getClass().getSimpleName(),
+            currentMethod.getName(),
+            step,
+            this.foundHandler.getClass().getSimpleName(),
+            this.foundMethod.getName()));
         }
     }
 

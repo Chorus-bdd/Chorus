@@ -53,7 +53,7 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
      * object, as a {@code String}.
      */
     public String getName() {
-        return classInstance.getClass().getSimpleName() + ":" + getName();
+        return classInstance.getClass().getSimpleName() + ":" + method.getName();
     }
 
     public Object getClassInstance() {
