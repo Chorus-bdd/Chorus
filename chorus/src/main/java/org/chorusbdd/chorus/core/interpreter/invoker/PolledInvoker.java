@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.AbstractStepMethodInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.AbstractStepMethodInvoker;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,10 +41,19 @@ import java.util.concurrent.atomic.AtomicReference;
  * User: nick
  * Date: 20/09/13
  * Time: 18:37
+ *
+ * Wrap another StepInvoker so that we can poll it repeatedly either
+ * - until the step passes
+ * - to check the step passes for a preset duration
+ *
+ * This implements the requirements for @PassesWithin annotated handler steps
  */
-public abstract class PolledInvoker extends AbstractStepMethodInvoker {
-    public PolledInvoker(Object classInstance, Method method) {
-        super(classInstance, method);
+public abstract class PolledInvoker implements StepInvoker {
+
+    private StepInvoker wrappedInvoker;
+
+    public PolledInvoker(StepInvoker wrappedInvoker) {
+        this.wrappedInvoker = wrappedInvoker;
     }
 
     /**
@@ -55,7 +64,7 @@ public abstract class PolledInvoker extends AbstractStepMethodInvoker {
 
         PolledAssertion p = new PolledAssertion() {
             protected void validate() throws Exception {
-                Object r = method.invoke(getClassInstance(), args);
+                Object r = wrappedInvoker.invoke(args);
                 resultRef.set(r);
             }
 
@@ -68,8 +77,12 @@ public abstract class PolledInvoker extends AbstractStepMethodInvoker {
         int count = getCount();
         doTest(p, timeUnit, count);
 
-        Object result = handleResultIfReturnTypeVoid(method, resultRef.get());
+        Object result = resultRef.get();
         return result;
+    }
+
+    public String getId() {
+        return wrappedInvoker.getId();
     }
 
     protected abstract int getCount();
@@ -79,4 +92,5 @@ public abstract class PolledInvoker extends AbstractStepMethodInvoker {
     protected abstract int getPollFrequency();
 
     protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, int count);
+
 }

@@ -27,9 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
-
-import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
+package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import java.lang.reflect.Method;
 
@@ -37,6 +35,8 @@ import java.lang.reflect.Method;
  * User: nick
  * Date: 20/09/13
  * Time: 18:10
+ *
+ * Invoke a method on a handler class using reflection to run a step
  */
 public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
@@ -52,8 +52,8 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
      * Returns the name of the method represented by this {@code Method}
      * object, as a {@code String}.
      */
-    public String getName() {
-        return classInstance.getClass().getSimpleName() + ":" + method.getName();
+    public String getId() {
+        return classInstance.getClass().getName() + ":" + method.getName();
     }
 
     public Object getClassInstance() {
@@ -61,7 +61,7 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
     }
 
     public String toString() {
-        return getName();
+        return getId();
     }
 
     protected Object handleResultIfReturnTypeVoid(Method method, Object result) {

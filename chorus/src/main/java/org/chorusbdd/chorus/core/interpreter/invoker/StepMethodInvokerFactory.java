@@ -48,26 +48,25 @@ public class StepMethodInvokerFactory {
     public StepInvoker createInvoker(Object classInstance, Method method) {
         Annotation[] annotations = method.getDeclaredAnnotations();
         
-        StepInvoker result = null;
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(classInstance, method);
+
+        //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
+        //PolledInvoker
         for ( Annotation a : annotations) {
             if ( a.annotationType() == PassesWithin.class) {
                 PassesWithin passesWithin = (PassesWithin) a;
                 switch(passesWithin.pollMode()) {
                     case UNTIL_FIRST_PASS:
-                        result = new UntilFirstPassInvoker(classInstance, method, passesWithin);
+                        simpleMethodInvoker = new UntilFirstPassInvoker(simpleMethodInvoker, passesWithin);
                         break;
                     case PASS_THROUGHOUT_PERIOD:
-                        result =  new PassesThroughoutInvoker(classInstance, method, passesWithin);
+                        simpleMethodInvoker =  new PassesThroughoutInvoker(simpleMethodInvoker, passesWithin);
                         break;
                     default:
                         throw new UnsupportedOperationException("Unknown mode " + passesWithin.pollMode());
                 }
             }
         }
-        
-        if ( result == null ) {
-            result = new SimpleMethodInvoker(classInstance, method);
-        }
-        return result;
+        return simpleMethodInvoker;
     }
 }
