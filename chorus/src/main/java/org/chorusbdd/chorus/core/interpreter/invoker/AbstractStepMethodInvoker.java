@@ -41,7 +41,7 @@ import java.lang.reflect.Method;
 public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
     private Object classInstance;
-    protected Method method;
+    private Method method;
 
     public AbstractStepMethodInvoker(Object classInstance, Method method) {
         this.classInstance = classInstance;
@@ -62,6 +62,10 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
     public String toString() {
         return getId();
+    }
+
+    protected Method getMethod() {
+        return method;
     }
 
     protected Object handleResultIfReturnTypeVoid(Method method, Object result) {

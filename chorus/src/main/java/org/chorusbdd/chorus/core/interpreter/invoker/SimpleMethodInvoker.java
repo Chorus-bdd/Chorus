@@ -29,10 +29,12 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.invoker.AbstractStepMethodInvoker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 /**
 * User: nick
@@ -40,15 +42,43 @@ import java.lang.reflect.Method;
 * Time: 18:46
 */
 class SimpleMethodInvoker extends AbstractStepMethodInvoker {
-    
-    public SimpleMethodInvoker(Object classInstance, Method method) {
+
+    private final String pendingMessage;
+    private final boolean isPending;
+    private final Pattern stepPattern;
+
+    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern) {
+        this(classInstance, method, stepPattern, null);
+    }
+
+    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern, String pendingMessage) {
         super(classInstance, method);
-        this.method = method;
+        this.stepPattern = stepPattern;
+        this.pendingMessage = pendingMessage;
+        this.isPending = pendingMessage != null;
+    }
+
+    /**
+     * @return a Pattern which is matched against step text/action to determine whether this invoker matches a scenario step
+     */
+    public Pattern getStepPattern() {
+        return stepPattern;
+    }
+
+    /**
+     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
+     */
+    public boolean isPending() {
+        return isPending;
+    }
+
+    public String getPendingMessage() {
+        return pendingMessage;
     }
 
     public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Object result =  method.invoke(getClassInstance(), args);
-        result = handleResultIfReturnTypeVoid(method, result);
+        Object result =  getMethod().invoke(getClassInstance(), args);
+        result = handleResultIfReturnTypeVoid(getMethod(), result);
         return result;
     }
 

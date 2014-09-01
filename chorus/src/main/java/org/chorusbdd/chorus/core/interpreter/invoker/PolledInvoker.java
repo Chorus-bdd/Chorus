@@ -36,6 +36,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 /**
  * User: nick
@@ -81,6 +82,21 @@ public abstract class PolledInvoker implements StepInvoker {
         return result;
     }
 
+    public Pattern getStepPattern() {
+        return wrappedInvoker.getStepPattern();
+    }
+
+    /**
+     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
+     */
+    public boolean isPending() {
+        return wrappedInvoker.isPending();
+    }
+
+    public String getPendingMessage() {
+        return wrappedInvoker.getPendingMessage();
+    }
+
     public String getId() {
         return wrappedInvoker.getId();
     }
@@ -92,5 +108,7 @@ public abstract class PolledInvoker implements StepInvoker {
     protected abstract int getPollFrequency();
 
     protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, int count);
+
+
 
 }

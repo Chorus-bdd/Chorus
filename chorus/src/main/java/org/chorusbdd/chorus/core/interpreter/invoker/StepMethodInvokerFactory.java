@@ -30,11 +30,13 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import org.chorusbdd.chorus.annotations.PassesWithin;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 /**
 * User: nick
@@ -47,8 +49,12 @@ public class StepMethodInvokerFactory {
 
     public StepInvoker createInvoker(Object classInstance, Method method) {
         Annotation[] annotations = method.getDeclaredAnnotations();
-        
-        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(classInstance, method);
+
+        //doing this here is horrible but it's a temporary refactoring step until we move this logic to be done once up front
+        Step stepAnnotation = method.getAnnotation(Step.class);
+        Pattern stepPattern = Pattern.compile(stepAnnotation.value());
+        String pendingText = stepAnnotation.pending();
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(classInstance, method, stepPattern, pendingText);
 
         //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
         //PolledInvoker
