@@ -97,6 +97,14 @@ public abstract class PolledInvoker implements StepInvoker {
         return wrappedInvoker.getPendingMessage();
     }
 
+    /**
+     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
+     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
+     */
+    public Class[] getParameterTypes() {
+        return wrappedInvoker.getParameterTypes();
+    }
+
     public String getId() {
         return wrappedInvoker.getId();
     }
@@ -109,6 +117,8 @@ public abstract class PolledInvoker implements StepInvoker {
 
     protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, int count);
 
-
+    public String toString() {
+        return "Polled:" + wrappedInvoker.toString();
+    }
 
 }

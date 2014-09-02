@@ -30,7 +30,9 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.core.interpreter.invoker.DefaultStepInvokerProvider;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -83,9 +85,10 @@ public class StepProcessor {
      *
      * @return a StepEndState is the StepMacro step's end state, if these steps are executed as part of a StepMacro rather than scenario
      */
-    public StepEndState runSteps(ExecutionToken executionToken, List<Object> handlerInstances, List<StepToken> stepList, boolean skip) {
+    public StepEndState runSteps(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, List<StepToken> stepList, boolean skip) {
+
         for (StepToken step : stepList) {
-            StepEndState endState = processStep(executionToken, handlerInstances, step, skip);
+            StepEndState endState = processStep(executionToken, stepInvokerProvider, step, skip);
             switch (endState) {
                 case PASSED:
                     break;
@@ -116,20 +119,20 @@ public class StepProcessor {
 
 
     /**
-     * @param handlerInstances the objects on which to execute the step (ordered by greatest precidence first)
+     * @param stepInvokerProvider container for StepInvoker to run the steps
      * @param step      details of the step to be executed
      * @param skip      is true the step will be skipped if found
      * @return the exit state of the executed step
      */
-    private StepEndState processStep(ExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
+    private StepEndState processStep(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, StepToken step, boolean skip) {
         log.trace("Starting to process step " + (step.isStepMacro() ? "macro " : "") + step);
         executionListenerSupport.notifyStepStarted(executionToken, step);
 
         StepEndState endState;
         if ( step.isStepMacro() ) {
-            endState = runSteps(executionToken, handlerInstances, step.getChildSteps(), skip);
+            endState = runSteps(executionToken, stepInvokerProvider, step.getChildSteps(), skip);
         } else {
-            endState = processHandlerStep(executionToken, handlerInstances, step, skip);
+            endState = processHandlerStep(executionToken, stepInvokerProvider, step, skip);
         }
 
         step.setEndState(endState);
@@ -137,7 +140,7 @@ public class StepProcessor {
         return endState;
     }
 
-    private StepEndState processHandlerStep(ExecutionToken executionToken, List<Object> handlerInstances, StepToken step, boolean skip) {
+    private StepEndState processHandlerStep(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, StepToken step, boolean skip) {
         //return this at the end
         StepEndState endState = null;
 
@@ -152,7 +155,7 @@ public class StepProcessor {
             contextVariableStepExpander.processStep(step);
 
             //identify what method should be called and its parameters
-            StepDefinitionMethodFinder stepDefinitionMethodFinder = new StepDefinitionMethodFinder(handlerInstances, step);
+            StepDefinitionMethodFinder stepDefinitionMethodFinder = new StepDefinitionMethodFinder(stepInvokerProvider, step);
             stepDefinitionMethodFinder.findStepMethod();
 
             //call the method if found
@@ -170,8 +173,9 @@ public class StepProcessor {
 
     private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
         //setting a pending message in the step annotation implies the step is pending - we don't execute it
-        String pendingMessage = stepDefinitionMethodFinder.getPendingMessage();
-        if (!pendingMessage.equals(Step.NO_PENDING_MESSAGE)) {
+        StepInvoker chosenStepInvoker = stepDefinitionMethodFinder.getChosenStepInvoker();
+        if ( chosenStepInvoker.isPending()) {
+            String pendingMessage = chosenStepInvoker.getPendingMessage();
             log.debug("Step has a pending message " + pendingMessage + " skipping step");
             step.setMessage(pendingMessage);
             endState = StepEndState.PENDING;
@@ -195,8 +199,8 @@ public class StepProcessor {
         long startTime = System.currentTimeMillis();
         try {
             //call the step method using reflection
-            Object result = stepDefinitionMethodFinder.getStepMethodInvoker().invoke(
-                    stepDefinitionMethodFinder.getMethodCallArgs()
+            Object result = stepDefinitionMethodFinder.getChosenStepInvoker().invoke(
+                    stepDefinitionMethodFinder.getInvokerArgs()
             );
             log.debug("Finished executing the step, step passed, result was " + result);
 

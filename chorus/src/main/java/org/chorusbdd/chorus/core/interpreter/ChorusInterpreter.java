@@ -30,6 +30,8 @@
 package org.chorusbdd.chorus.core.interpreter;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.core.interpreter.invoker.DefaultStepInvokerProvider;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -177,7 +179,8 @@ public class ChorusInterpreter {
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
         log.debug("Running scenario steps for Scenario " + scenario);
-        stepProcessor.runSteps(executionToken, handlerInstances, scenario.getSteps(), skip);
+        StepInvokerProvider p = createStepInvokerProvider(handlerInstances);
+        stepProcessor.runSteps(executionToken, p, scenario.getSteps(), skip);
 
         stopTimeoutTasks();
 
@@ -188,6 +191,14 @@ public class ChorusInterpreter {
 
         handlerManager.processEndOfScope(Scope.SCENARIO, handlerInstances);
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
+    }
+
+    private StepInvokerProvider createStepInvokerProvider(List<Object> handlerInstances) {
+        StepInvokerProvider stepInvokerProvider = new DefaultStepInvokerProvider();
+        for ( Object handler : handlerInstances) {
+            stepInvokerProvider.addStepInvokers(handler);
+        }
+        return stepInvokerProvider;
     }
 
     private void updateExecutionStats(ExecutionToken executionToken, ScenarioToken scenario) {

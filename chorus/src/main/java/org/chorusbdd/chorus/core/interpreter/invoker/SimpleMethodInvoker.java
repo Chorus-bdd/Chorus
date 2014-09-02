@@ -41,8 +41,9 @@ import java.util.regex.Pattern;
 * Date: 24/09/13
 * Time: 18:46
 */
-class SimpleMethodInvoker extends AbstractStepMethodInvoker {
+public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
 
+    private final Class[] parameterTypes;
     private final String pendingMessage;
     private final boolean isPending;
     private final Pattern stepPattern;
@@ -54,8 +55,9 @@ class SimpleMethodInvoker extends AbstractStepMethodInvoker {
     public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern, String pendingMessage) {
         super(classInstance, method);
         this.stepPattern = stepPattern;
+        this.parameterTypes = method.getParameterTypes();
         this.pendingMessage = pendingMessage;
-        this.isPending = pendingMessage != null;
+        this.isPending = ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
     }
 
     /**
@@ -63,6 +65,15 @@ class SimpleMethodInvoker extends AbstractStepMethodInvoker {
      */
     public Pattern getStepPattern() {
         return stepPattern;
+    }
+
+    /**
+     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
+     *
+     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
+     */
+    public Class[] getParameterTypes() {
+        return parameterTypes;
     }
 
     /**
@@ -75,6 +86,8 @@ class SimpleMethodInvoker extends AbstractStepMethodInvoker {
     public String getPendingMessage() {
         return pendingMessage;
     }
+
+
 
     public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Object result =  getMethod().invoke(getClassInstance(), args);

@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * User: nick
@@ -40,11 +41,14 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
+    private static AtomicLong idGenerator = new AtomicLong();
+
+    private Long id = idGenerator.incrementAndGet();
     private Object classInstance;
     private Method method;
 
-    public AbstractStepMethodInvoker(Object classInstance, Method method) {
-        this.classInstance = classInstance;
+    public AbstractStepMethodInvoker(Object handlerInstance, Method method) {
+        this.classInstance = handlerInstance;
         this.method = method;
     }
 
@@ -53,15 +57,14 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
      * object, as a {@code String}.
      */
     public String getId() {
-        return classInstance.getClass().getName() + ":" + method.getName();
+        //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
+        //or if the two handler instances of the same handler class are processed (in error?)
+        //plus the fully qualified class name and method name for clarity
+        return id + ":" + classInstance.getClass().getName() + ":" + method.getName();
     }
 
     public Object getClassInstance() {
         return classInstance;
-    }
-
-    public String toString() {
-        return getId();
     }
 
     protected Method getMethod() {
@@ -73,5 +76,9 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
             result = VOID_RESULT;
         }
         return result;
+    }
+
+    public String toString() {
+        return classInstance.getClass().getSimpleName() + "." + method.getName();
     }
 }

@@ -29,16 +29,12 @@
  */
 package org.chorusbdd.chorus.core.interpreter;
 
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvokerFactory;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
 * Created with IntelliJ IDEA.
@@ -53,84 +49,58 @@ class StepDefinitionMethodFinder {
 
     private static ChorusLog log = ChorusLogFactory.getLog(StepDefinitionMethodFinder.class);
 
-    private List<Object> allHandlers;
+    private StepInvokerProvider stepInvokerProvider;
     private StepToken step;
-    private StepInvoker stepMethodInvoker;
-    private Object foundHandler;
-    private Method foundMethod;
-    private Object[] methodCallArgs;
-    private String pendingMessage = "";
+    private StepInvoker chosenStepInvoker;
+    private Object[] invokerArgs;
 
-    public StepDefinitionMethodFinder(List<Object> allHandlers, StepToken step) {
-        this.allHandlers = allHandlers;
+    public StepDefinitionMethodFinder(StepInvokerProvider stepInvokerProvider, StepToken step) {
+        this.stepInvokerProvider = stepInvokerProvider;
         this.step = step;
     }
 
-    public StepInvoker getStepMethodInvoker() {
-        return stepMethodInvoker;
+    public StepInvoker getChosenStepInvoker() {
+        return chosenStepInvoker;
     }
 
-    public Object getFoundHandler() {
-        return foundHandler;
-    }
-
-    public Object[] getMethodCallArgs() {
-        return methodCallArgs;
-    }
-
-    public String getPendingMessage() {
-        return pendingMessage;
+    public Object[] getInvokerArgs() {
+        return invokerArgs;
     }
 
     public StepDefinitionMethodFinder findStepMethod() {
         log.debug("Finding step method...");
 
-        //find the method to call
-        for (Object instance : allHandlers) {
-            log.debug("Looking for step method on handler instance " + instance + " class " + instance.getClass());
-            for (Method method : instance.getClass().getMethods()) {
-                //only check methods with Step annotation
-                Step stepAnnotationInstance = method.getAnnotation(Step.class);
-                if (stepAnnotationInstance != null) {
-                    log.debug("Checking @Step annotated method " + method + " on handler " + instance);
-                    checkForMatch(instance, method, stepAnnotationInstance);
-                }
-            }
+        for ( StepInvoker i : stepInvokerProvider.getStepInvokerList()) {
+            checkForMatch(i);
         }
         return this;
     }
 
-    private void checkForMatch(Object instance, Method method, Step stepAnnotationInstance) {
-        String regex = stepAnnotationInstance.value();
+    private void checkForMatch(StepInvoker invoker) {
         String action = step.getAction();
 
-        log.debug("Regex to match is [" + regex + "] and action is [" + action + "]");
-        Object[] values = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, method.getParameterTypes());
+        log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + action + "]");
+        Object[] values = RegexpUtils.extractGroupsAndCheckMethodParams(invoker, action);
         if (values != null) { //the regexp matched the action and the method's parameters
-            foundStepMethod(instance, method, stepAnnotationInstance, values);
+            foundStepMethod(invoker, values);
         }
     }
 
-    private void foundStepMethod(Object currentHandler, Method currentMethod, Step stepAnnotationInstance, Object[] values) {
+    private void foundStepMethod(StepInvoker stepInvoker, Object[] values) {
         log.trace("Matched!");
-        if (stepMethodInvoker == null) {
-            this.methodCallArgs = values;
-            this.pendingMessage = stepAnnotationInstance.pending();
-            this.stepMethodInvoker = new StepMethodInvokerFactory().createInvoker(currentHandler, currentMethod);
-            this.foundHandler = currentHandler;
-            this.foundMethod = currentMethod;
+        if (chosenStepInvoker == null) {
+            this.invokerArgs = values;
+            this.chosenStepInvoker = stepInvoker;
         } else {
-            log.info(String.format("Ambiguous method (%s.%s) found for step (%s) will use first method found (%s.%s)",
-            currentHandler.getClass().getSimpleName(),
-            currentMethod.getName(),
+            log.info(String.format("Ambiguous method (%s) found for step (%s) will use first method found (%s)",
+            stepInvoker,
             step,
-            this.foundHandler.getClass().getSimpleName(),
-            this.foundMethod.getName()));
+            this.chosenStepInvoker));
         }
     }
 
     public boolean isMethodAvailable() {
-        return stepMethodInvoker != null;
+        return chosenStepInvoker != null;
     }
 
 }

@@ -57,6 +57,12 @@ public interface StepInvoker {
     Pattern getStepPattern();
 
     /**
+     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
+     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
+     */
+    Class[] getParameterTypes();
+
+    /**
      * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
      */
     boolean isPending();
@@ -74,7 +80,8 @@ public interface StepInvoker {
     Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException;
 
     /**
-     * @return a String id for this step invoker, which should be unique
+     * @return a String id for this step invoker, which should be unique and final
      */
     String getId();
+
 }

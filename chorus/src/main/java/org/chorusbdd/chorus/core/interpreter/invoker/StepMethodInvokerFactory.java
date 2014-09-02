@@ -47,14 +47,14 @@ public class StepMethodInvokerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(StepMethodInvokerFactory.class);
 
-    public StepInvoker createInvoker(Object classInstance, Method method) {
+    public StepInvoker createInvoker(Object handlerInstance, Method method) {
         Annotation[] annotations = method.getDeclaredAnnotations();
 
         //doing this here is horrible but it's a temporary refactoring step until we move this logic to be done once up front
         Step stepAnnotation = method.getAnnotation(Step.class);
         Pattern stepPattern = Pattern.compile(stepAnnotation.value());
         String pendingText = stepAnnotation.pending();
-        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(classInstance, method, stepPattern, pendingText);
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(handlerInstance, method, stepPattern, pendingText);
 
         //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
         //PolledInvoker
