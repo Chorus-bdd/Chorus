@@ -1,5 +1,9 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
+import org.chorusbdd.chorus.util.ChorusRemotingException;
+
+import javax.management.RuntimeMBeanException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.regex.Pattern;
 
@@ -7,15 +11,21 @@ import java.util.regex.Pattern;
  * Created by nick on 02/09/2014.
  *
  * A temporary solution to work with existing remoting code which is not yet
- * used to actually invoke the remote method TODO
+ * used to actually findRemoteStepInvoker the remote method TODO
  */
 public class RemoteStepInvoker implements StepInvoker {
 
     private Class[] parameterTypes;
+    private ChorusHandlerJmxProxy proxy;
+    private String methodUid;
+    private String pendingMessage;
     private final Pattern pattern;
 
-    public RemoteStepInvoker(String regex, Class[] parameterTypes) {
+    public RemoteStepInvoker(String regex, Class[] parameterTypes, ChorusHandlerJmxProxy proxy, String methodUid, String pendingMessage) {
         this.parameterTypes = parameterTypes;
+        this.proxy = proxy;
+        this.methodUid = methodUid;
+        this.pendingMessage = pendingMessage;
         pattern = Pattern.compile(regex);
 
     }
@@ -40,14 +50,14 @@ public class RemoteStepInvoker implements StepInvoker {
      * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
      */
     public boolean isPending() {
-        return false;
+        return pendingMessage != null;
     }
 
     /**
      * @return a pending message if the step is pending, or null if the step is not pending
      */
     public String getPendingMessage() {
-        return null;
+        return pendingMessage;
     }
 
     /**
@@ -56,8 +66,24 @@ public class RemoteStepInvoker implements StepInvoker {
      * @param args
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    public Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException {
-        return null;
+    public Object invoke(Object... args) {
+        Object result;
+        try {
+            result = proxy.invokeStep(methodUid, args);
+        } catch (RuntimeMBeanException mbe) {
+            //here if an exception was thrown by the remote Step method
+            RuntimeException targetException = mbe.getTargetException();
+            if (targetException instanceof ChorusRemotingException) {
+                //the exception thrown by the remote Step method was converted to a ChorusRemotingException by the chorus step exporter
+                //this is how we handle remote exceptions which might otherwise come from library classes we don't have locally
+                throw targetException;
+            } else {
+                throw new ChorusRemotingException(targetException);
+            }
+        } catch (Exception e) {
+            throw new ChorusRemotingException(e);
+        }
+        return result;
     }
 
     /**
@@ -65,5 +91,10 @@ public class RemoteStepInvoker implements StepInvoker {
      */
     public String getId() {
         return "RemoteStepInvoker" + System.identityHashCode(this);
+    }
+
+
+    public String toString() {
+        return methodUid;
     }
 }

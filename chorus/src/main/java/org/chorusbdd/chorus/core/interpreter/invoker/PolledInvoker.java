@@ -60,7 +60,7 @@ public abstract class PolledInvoker implements StepInvoker {
     /**
      * Invoke the method
      */
-    public Object invoke(final Object... args) throws IllegalAccessException, InvocationTargetException {
+    public Object invoke(final Object... args) {
         final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
