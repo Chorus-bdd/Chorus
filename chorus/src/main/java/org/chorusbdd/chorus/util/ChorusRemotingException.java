@@ -45,7 +45,7 @@ package org.chorusbdd.chorus.util;
  */
 public class ChorusRemotingException extends RuntimeException {
 
-    private String stackTrace = "";
+    private StackTraceElement[] remoteExceptionTrace = new StackTraceElement[0];
     private String remoteExceptionClassName = "";
 
     public ChorusRemotingException(String message) {
@@ -65,14 +65,26 @@ public class ChorusRemotingException extends RuntimeException {
         super(message, cause);
     }
 
-    public ChorusRemotingException(String nameOfCauseExceptionClass, String stackTrace) {
-        super("Remote Exception");
-        this.stackTrace = stackTrace;
+    /**
+     * Do not use this constructor for Exceptions which might be sent over the wire
+     * to the interpreter, unless it is guaranteed that the interpreter will recognise the cause exception class
+     * (i.e don't do this for user generated exceptions which we don't have control of,
+     * instead call the constructor passing in stack trace elements)
+     *
+     * @param message
+     */
+    public ChorusRemotingException(String message, String nameOfCauseExceptionClass, StackTraceElement[] traceOfCauseException) {
+        super(message);
+        this.remoteExceptionTrace = traceOfCauseException;
         this.remoteExceptionClassName = nameOfCauseExceptionClass;
     }
 
     public ChorusRemotingException(Throwable cause) {
         super(cause);
+    }
+
+    public StackTraceElement[] getRemoteExceptionTrace() {
+        return remoteExceptionTrace;
     }
 
     public String getRemoteExceptionClassName() {
@@ -82,9 +94,11 @@ public class ChorusRemotingException extends RuntimeException {
     public String toString() {
         StringBuilder sb = new StringBuilder(super.toString());
         if ( ! "".equals(remoteExceptionClassName)) {
-            sb.append(" ").append(remoteExceptionClassName).append("\n")
-                .append("Remote stack trace \n")
-                .append(stackTrace).append("\n");
+            sb.append("Caused by").append(remoteExceptionClassName).append("\n");
+            sb.append("Remote stack trace \n");
+            for ( StackTraceElement s : remoteExceptionTrace) {
+                sb.append(s.toString()).append("\n");
+            }
         }
         return sb.toString();
     }

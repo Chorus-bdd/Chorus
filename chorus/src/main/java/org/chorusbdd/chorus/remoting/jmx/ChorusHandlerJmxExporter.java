@@ -42,8 +42,6 @@ import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -176,10 +174,15 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     }
 
     private ChorusRemotingException createRemotingException(Throwable t) {
-        final StringWriter stackTraceWriter = new StringWriter();
-        t.printStackTrace(new PrintWriter(stackTraceWriter));
-        final String stackTrace = stackTraceWriter.toString();
-        return new ChorusRemotingException(t.getClass().getSimpleName(), stackTrace);
+        //here we are sending the exception name and the stack trace elements, but not the exception instance itself
+        //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
+        String message = "remote " + t.getClass().getSimpleName() +
+            ( t.getMessage() == null ? " " : " - " + t.getMessage() );
+        String location = ExceptionHandling.getExceptionLocation(t);
+
+
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), stackTrace);
     }
 
     public Map<String, String[]> getStepMetadata() {
