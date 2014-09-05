@@ -3,8 +3,11 @@ package org.chorusbdd.chorus.handlers.remoting;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.RemoteStepInvoker;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.handlers.processes.ProcessManager;
+import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
@@ -29,8 +32,8 @@ public class JmxRemotingManager implements RemotingManager {
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    public Object performActionInRemoteComponent(String action, String componentName, RemotingConfig remotingConfig) {
-        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfig);
+    public Object performActionInRemoteComponent(String action, String componentName, Map<String, RemotingConfig> remotingConfigMap) {
+        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfigMap);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
         
         RemoteStepFinder remoteStepFinder = new RemoteStepFinder(action, componentName, stepMetaData, proxy).findRemoteStepInvoker();
@@ -76,14 +79,41 @@ public class JmxRemotingManager implements RemotingManager {
         }
     }
 
-    private ChorusHandlerJmxProxy getProxyForComponent(String name, RemotingConfig remotingConfig) {
+    private ChorusHandlerJmxProxy getProxyForComponent(String name, Map<String, RemotingConfig> remotingConfigMap) {
         ChorusHandlerJmxProxy proxy = proxies.get(name);
         if (proxy == null) {
-            proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
-            proxies.put(name, proxy);
-            log.debug("Opened JMX connection to: " + name);
+            RemotingConfig remotingConfig = remotingConfigMap.get(name);
+            if (remotingConfig == null) {
+                return getProxyForDynamicProcess(name, remotingConfigMap);
+            } else {
+                proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+                proxies.put(name, proxy);
+                log.debug("Opened JMX connection to: " + name);
+            }
         }
         return proxy;
+    }
+
+    private ChorusHandlerJmxProxy getProxyForDynamicProcess(String processName, Map<String, RemotingConfig> remotingConfigMap) {
+        final ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
+        if ( processConfig == null ) {
+            //this was not process started by process manager
+            throwNoConfigFound(processName);
+        }
+
+        String propertyTemplateName = processConfig.getPropertyTemplateName();
+        final RemotingConfig remotingConfig = remotingConfigMap.get(propertyTemplateName);
+        if (remotingConfig == null) {
+            //this was a process started by process manager and we need to find a remoting config for the process config
+            //template name, but we don't have one
+            return throwNoConfigFound(propertyTemplateName);
+        }
+
+        return new ChorusHandlerJmxProxy(remotingConfig.getHost(), processConfig.getJmxPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+    }
+
+    private ChorusHandlerJmxProxy throwNoConfigFound(String propertyTemplateName) {
+        throw new ChorusException("Failed to find MBean configuration for component: " + propertyTemplateName);
     }
 
     /**

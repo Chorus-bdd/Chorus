@@ -118,14 +118,26 @@ public class HandlerManager {
     public void processStartOfScope(Scope scopeStarting, Iterable<Object> handlerInstances) throws Exception {
         for (Object handler : handlerInstances) {
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
-            Scope scope = handlerAnnotation.scope();
-            
-            if ( scopeStarting == Scope.SCENARIO) {
-                injectResourceFields(handler);
-            }
-            
-            runLifecycleMethods(handler, scope, scopeStarting, false);
+            Scope handlerScope = handlerAnnotation.scope();
+
+            injectResourceFieldsForScope(scopeStarting, handler, handlerScope);
+            runLifecycleMethods(handler, handlerScope, scopeStarting, false);
         }    
+    }
+
+    private void injectResourceFieldsForScope(Scope scopeStarting, Object handler, Scope handlerScope) {
+        if ( scopeStarting == Scope.FEATURE && handlerScope == Scope.FEATURE) {
+            //for feature scoped handlers, initialize the feature-level resources when feature starts
+            injectResourceFields(handler, Scope.FEATURE);
+        } else if ( scopeStarting == Scope.SCENARIO) {
+            if ( handlerScope == Scope.SCENARIO ) {
+                //if a handler is created scenario scope it will not have had its feature-level
+                //annotations set when the feature started
+                injectResourceFields(handler, Scope.FEATURE, Scope.SCENARIO);
+            } else {
+                injectResourceFields(handler, Scope.SCENARIO);
+            }
+        }
     }
 
     public void processEndOfFeature() throws Exception {
@@ -206,35 +218,35 @@ public class HandlerManager {
     /**
      * Here we set the values of any handler fields annotated with @ChorusResource
      */
-    private void injectResourceFields(Object handler) {
+    private void injectResourceFields(Object handler, Scope... scopes) {
         Class<?> featureClass = handler.getClass();
 
         List<Field> allFields = new ArrayList<Field>();
         addAllPublicFields(featureClass, allFields);
         log.trace("Now examining handler fields for ChorusResource annotation " + allFields);
+
+        HashSet<Scope> scopeSet = new HashSet<Scope>(Arrays.asList(scopes));
         for (Field field : allFields) {
-            setChorusResource(handler, field);
+            setChorusResource(handler, field, scopeSet);
         }
     }
 
-    private void setChorusResource(Object handler, Field field) {
+    private void setChorusResource(Object handler, Field field, Set<Scope> scopes) {
         ChorusResource a = field.getAnnotation(ChorusResource.class);
         if (a != null) {
             String resourceName = a.value();
             log.debug("Found ChorusResource annotation " + resourceName + " on field " + field);
             field.setAccessible(true);
-            
             Object o = null;
-            if ("feature.file".equals(resourceName)) {
-                o = feature.getFeatureFile();
-            } else if ("feature.dir".equals(resourceName)) {
-                o = feature.getFeatureFile().getParentFile();
-            } else if ("feature.token".equals(resourceName)) {
-                o = feature;
-            } else if ( "scenario.token".equals(resourceName)) {
-                o = currentScenario;    
+
+            if ( scopes.contains(Scope.FEATURE)) {
+                o = getFeatureResource(resourceName, o);
             }
-            
+
+            if ( scopes.contains(Scope.SCENARIO)) {
+                o = getScenarioResource(resourceName, o);
+            }
+
             if (o != null) {
                 try {
                     field.set(handler, o);
@@ -245,6 +257,24 @@ public class HandlerManager {
                 log.debug("Set field to value " + o);
             }
         }
+    }
+
+    private Object getScenarioResource(String resourceName, Object o) {
+        if ( "scenario.token".equals(resourceName)) {
+            o = currentScenario;
+        }
+        return o;
+    }
+
+    private Object getFeatureResource(String resourceName, Object o) {
+        if ("feature.file".equals(resourceName)) {
+            o = feature.getFeatureFile();
+        } else if ("feature.dir".equals(resourceName)) {
+            o = feature.getFeatureFile().getParentFile();
+        } else if ("feature.token".equals(resourceName)) {
+            o = feature;
+        }
+        return o;
     }
 
     private void addAllPublicFields(Class<?> featureClass, List<Field> allFields) {

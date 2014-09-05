@@ -179,7 +179,10 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         String message = "remote " + t.getClass().getSimpleName() +
             ( t.getMessage() == null ? " " : " - " + t.getMessage() );
         String location = ExceptionHandling.getExceptionLocation(t);
-        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
+
+
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), stackTrace);
     }
 
     public Map<String, String[]> getStepMetadata() {
