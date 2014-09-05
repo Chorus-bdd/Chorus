@@ -207,11 +207,24 @@ public class RemotingHandler {
 
     private ChorusHandlerJmxProxy getProxyForDynamicProcess(String processName) throws Exception {
         final ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
-        final RemotingConfig remotingConfig = getRemotingConfigs(processConfig.getPropertyTemplateName());
-        if (remotingConfig == null) {
-            throw new ChorusException("Failed to find MBean configuration for component: " + processName);
+        if ( processConfig == null ) {
+            //this was not process started by process manager
+            throwNoConfigFound(processName);
         }
+
+        String propertyTemplateName = processConfig.getPropertyTemplateName();
+        final RemotingConfig remotingConfig = getRemotingConfigs(propertyTemplateName);
+        if (remotingConfig == null) {
+            //this was a process started by process manager and we need to find a remoting config for the process config
+            //template name, but we don't have one
+            return throwNoConfigFound(propertyTemplateName);
+        }
+
         return new ChorusHandlerJmxProxy(remotingConfig.getHost(), processConfig.getJmxPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+    }
+
+    private ChorusHandlerJmxProxy throwNoConfigFound(String propertyTemplateName) {
+        throw new ChorusException("Failed to find MBean configuration for component: " + propertyTemplateName);
     }
 
     private RemotingConfig getRemotingConfigs(String componentName) throws Exception {

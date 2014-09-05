@@ -160,10 +160,7 @@ public class ProcessManager  {
 
     public synchronized ProcessesConfig getProcessConfig(final String processName) {
         final ProcessInfo processInfo = processes.get(processName);
-        if (processInfo == null) {
-            throw new IllegalArgumentException("Unable to retrieve configuration for process '" + processName + "' as it does not exist");
-        }
-        return processInfo.getConfig();
+        return processInfo == null ?  null : processInfo.getConfig();
     }
 
     // --------------------------------------------------------- Process Status

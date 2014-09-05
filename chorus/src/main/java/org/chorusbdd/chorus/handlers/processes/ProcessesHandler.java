@@ -90,10 +90,10 @@ public class ProcessesHandler {
 
     private ProcessesConfig getConfigTemplate(final String configName) {
         ProcessesConfig c = processConfigTemplates.get(configName);
-        c.setPropertyTemplateName(configName);
         if (c == null) {
-            throw new ChorusException("No configuration found for processName: " + configName);
+            throw new ChorusException("No configuration found for process: " + configName);
         }
+        c.setPropertyTemplateName(configName);
         return c;
     }
 
