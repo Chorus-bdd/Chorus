@@ -65,7 +65,7 @@ public class ProcessesHandler {
 
     private ProcessManager processManager = ProcessManager.getInstance();
 
-    @Initialize
+    @Initialize(scope= Scope.FEATURE)
     public void setup() {
         processManager.setFeatureDetails(featureDir, featureFile, featureToken);
         processConfigTemplates = loadProcessConfig();
