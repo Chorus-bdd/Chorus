@@ -145,31 +145,6 @@ public class AbstractJmxProxy {
     }
 
     /**
-     * Makes the call on the remote bean using reflection to determine the signature of the method to invoke
-     *
-     * @throws ChorusRemotingException if not possible to complete the call
-     */
-    /** Commented, since I don't think this is any longer in use
-     *  also it may not work if we pass in an ArrayList param, for example, but the remote MBean expects java.util.List
-     *  - I don't think jmx will support this covariance
-     *  Consider using the newer DynamicProxyMBeanCreator instead
-    public Object invoke(String methodName, Object... params) throws ChorusRemotingException {
-        try {
-            //dynamically figure out the method signature
-            String[] signature = new String[params.length];
-            for (int i = 0; i < signature.length; i++) {
-                signature[i] = params[i].getClass().getName();
-            }
-            //call the remote method
-            return mBeanServerConnection.invoke(objectName, methodName, params, signature);
-        } catch (Exception e) {
-            throw new ChorusRemotingException("Failed to call MBean method", e);
-        }
-    }
-    **/
-
-
-    /**
      * Closes the connection to the MBean server
      */
     public void destroy() {

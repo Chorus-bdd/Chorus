@@ -27,22 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
-
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
+package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * User: nick
  * Date: 20/09/13
  * Time: 18:10
+ *
+ * Invoke a method on a handler class using reflection to run a step
  */
-public abstract class AbstractInvoker implements StepMethodInvoker {
+public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
-    protected Method method;
+    private static AtomicLong idGenerator = new AtomicLong();
 
-    public AbstractInvoker(Method method) {
+    private Long id = idGenerator.incrementAndGet();
+    private Object classInstance;
+    private Method method;
+
+    public AbstractStepMethodInvoker(Object handlerInstance, Method method) {
+        this.classInstance = handlerInstance;
         this.method = method;
     }
 
@@ -50,12 +56,19 @@ public abstract class AbstractInvoker implements StepMethodInvoker {
      * Returns the name of the method represented by this {@code Method}
      * object, as a {@code String}.
      */
-    public String getMethodName() {
-        return method.getName();
+    public String getId() {
+        //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
+        //or if the two handler instances of the same handler class are processed (in error?)
+        //plus the fully qualified class name and method name for clarity
+        return id + ":" + classInstance.getClass().getName() + ":" + method.getName();
     }
 
-    public String toString() {
-        return getClass().getSimpleName() + ":" + getMethodName();
+    public Object getClassInstance() {
+        return classInstance;
+    }
+
+    protected Method getMethod() {
+        return method;
     }
 
     protected Object handleResultIfReturnTypeVoid(Method method, Object result) {
@@ -63,5 +76,9 @@ public abstract class AbstractInvoker implements StepMethodInvoker {
             result = VOID_RESULT;
         }
         return result;
+    }
+
+    public String toString() {
+        return classInstance.getClass().getSimpleName() + "." + method.getName();
     }
 }

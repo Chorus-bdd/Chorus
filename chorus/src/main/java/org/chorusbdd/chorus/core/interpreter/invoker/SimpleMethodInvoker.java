@@ -29,26 +29,69 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.AbstractInvoker;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.core.interpreter.invoker.AbstractStepMethodInvoker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 /**
 * User: nick
 * Date: 24/09/13
 * Time: 18:46
 */
-class SimpleMethodInvoker extends AbstractInvoker {
-    
-    public SimpleMethodInvoker(Method method) {
-        super(method);
-        this.method = method;
+public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
+
+    private final Class[] parameterTypes;
+    private final String pendingMessage;
+    private final boolean isPending;
+    private final Pattern stepPattern;
+
+    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern) {
+        this(classInstance, method, stepPattern, null);
     }
 
-    public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Object result =  method.invoke(obj, args);
-        result = handleResultIfReturnTypeVoid(method, result);
+    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern, String pendingMessage) {
+        super(classInstance, method);
+        this.stepPattern = stepPattern;
+        this.parameterTypes = method.getParameterTypes();
+        this.pendingMessage = pendingMessage;
+        this.isPending = ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
+    }
+
+    /**
+     * @return a Pattern which is matched against step text/action to determine whether this invoker matches a scenario step
+     */
+    public Pattern getStepPattern() {
+        return stepPattern;
+    }
+
+    /**
+     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
+     *
+     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
+     */
+    public Class[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    /**
+     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
+     */
+    public boolean isPending() {
+        return isPending;
+    }
+
+    public String getPendingMessage() {
+        return pendingMessage;
+    }
+
+
+
+    public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Object result =  getMethod().invoke(getClassInstance(), args);
+        result = handleResultIfReturnTypeVoid(getMethod(), result);
         return result;
     }
 

@@ -30,13 +30,21 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.regex.Pattern;
 
 /**
  * User: nick
  * Date: 20/09/13
  * Time: 09:09
+ *
+ * A StepInvoker represents some step logic with a Pattern which can be matched against text in a Scenario step
+ * The invoker may be used to execute the step, if the pattern matches
+ *
+ * Step handler methods annotated with @Step may be exposed as StepInvoker instances, in which case we use
+ * reflection to invoke the method on the handler, but StepInvoker instances may also represent a proxy for
+ * remote steps, or rely on some other mechanism to runs step logic.
  */
-public interface StepMethodInvoker {
+public interface StepInvoker {
 
     /**
      * A special String which represents the result of calling a method which had a void return type
@@ -44,14 +52,36 @@ public interface StepMethodInvoker {
     public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
 
     /**
+     * @return a Pattern which is matched against step text/action to determine whether this invoker matches a scenario step
+     */
+    Pattern getStepPattern();
+
+    /**
+     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
+     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
+     */
+    Class[] getParameterTypes();
+
+    /**
+     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
+     */
+    boolean isPending();
+
+    /**
+     * @return a pending message if the step is pending, or null if the step is not pending
+     */
+    String getPendingMessage();
+
+    /**
      * Invoke the method
      *
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    Object invoke(Object obj, Object... args) throws IllegalAccessException, InvocationTargetException;
+    Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException;
 
     /**
-     * @return the name of the method to invoke
+     * @return a String id for this step invoker, which should be unique and final
      */
-    String getMethodName();
+    String getId();
+
 }

@@ -29,46 +29,50 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.annotations.PassesFor;
 import org.chorusbdd.chorus.annotations.PassesWithin;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 /**
 * User: nick
 * Date: 24/09/13
 * Time: 18:46
 */
-public class InvokerFactory {
+public class StepMethodInvokerFactory {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(InvokerFactory.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(StepMethodInvokerFactory.class);
 
-    public StepMethodInvoker createInvoker(Method method) {
+    public StepInvoker createInvoker(Object handlerInstance, Method method) {
         Annotation[] annotations = method.getDeclaredAnnotations();
-        
-        StepMethodInvoker result = null;
+
+        //doing this here is horrible but it's a temporary refactoring step until we move this logic to be done once up front
+        Step stepAnnotation = method.getAnnotation(Step.class);
+        Pattern stepPattern = Pattern.compile(stepAnnotation.value());
+        String pendingText = stepAnnotation.pending();
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(handlerInstance, method, stepPattern, pendingText);
+
+        //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
+        //PolledInvoker
         for ( Annotation a : annotations) {
             if ( a.annotationType() == PassesWithin.class) {
                 PassesWithin passesWithin = (PassesWithin) a;
                 switch(passesWithin.pollMode()) {
                     case UNTIL_FIRST_PASS:
-                        result = new UntilFirstPassInvoker(passesWithin, method);
+                        simpleMethodInvoker = new UntilFirstPassInvoker(simpleMethodInvoker, passesWithin);
                         break;
                     case PASS_THROUGHOUT_PERIOD:
-                        result =  new PassesThroughoutInvoker(passesWithin, method);
+                        simpleMethodInvoker =  new PassesThroughoutInvoker(simpleMethodInvoker, passesWithin);
                         break;
                     default:
                         throw new UnsupportedOperationException("Unknown mode " + passesWithin.pollMode());
                 }
             }
         }
-        
-        if ( result == null ) {
-            result = new SimpleMethodInvoker(method);
-        }
-        return result;
+        return simpleMethodInvoker;
     }
 }

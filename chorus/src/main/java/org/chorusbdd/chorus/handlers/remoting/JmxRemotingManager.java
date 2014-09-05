@@ -1,6 +1,10 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
+import org.chorusbdd.chorus.core.interpreter.invoker.RemoteStepInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.handlers.processes.ProcessManager;
+import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -9,7 +13,7 @@ import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
-import javax.management.RuntimeMBeanException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,15 +32,15 @@ public class JmxRemotingManager implements RemotingManager {
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    public Object performActionInRemoteComponent(String action, String componentName, RemotingConfig remotingConfig) {
-        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfig);
+    public Object performActionInRemoteComponent(String action, String componentName, Map<String, RemotingConfig> remotingConfigMap) {
+        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfigMap);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
         
-        RemoteMethodFinder remoteMethodFinder = new RemoteMethodFinder(action, componentName, stepMetaData).invoke();
+        RemoteStepFinder remoteStepFinder = new RemoteStepFinder(action, componentName, stepMetaData, proxy).findRemoteStepInvoker();
 
         Object result;
-        if (remoteMethodFinder.methodWasFound()) {
-            result = processRemoteMethod(proxy, remoteMethodFinder);
+        if (remoteStepFinder.stepWasFound()) {
+            result = processRemoteMethod(remoteStepFinder.getFoundStepInvoker(), remoteStepFinder.getFoundArgs());
         } else {
             String message = String.format("There is no step handler available for action (%s) on component (%s)", action, componentName);
             log.error(message);
@@ -45,30 +49,19 @@ public class JmxRemotingManager implements RemotingManager {
         return result;
     }
 
-    private Object processRemoteMethod(ChorusHandlerJmxProxy proxy, RemoteMethodFinder remoteMethodFinder) {
+    private Object processRemoteMethod(StepInvoker remoteStepInvoker, Object[] args) {
         Object result;
-        if (remoteMethodFinder.isStepPending()) {
-            throw new StepPendingException(remoteMethodFinder.getMethodUidToCallPendingMessage());
+        if (remoteStepInvoker.isPending()) {
+            throw new StepPendingException(remoteStepInvoker.getPendingMessage());
         }
-        result = invokeRemoteStep(proxy, remoteMethodFinder);
-        return result;
-    }
 
-    private Object invokeRemoteStep(ChorusHandlerJmxProxy proxy, RemoteMethodFinder remoteMethodFinder) {
-        Object result;
         try {
-            result = proxy.invokeStep(remoteMethodFinder.getMethodUidToCall(), remoteMethodFinder.getMethodArgsToPass());
-        } catch (RuntimeMBeanException mbe) {
-            //here if an exception was thrown by the remote Step method
-            RuntimeException targetException = mbe.getTargetException();
-            if (targetException instanceof ChorusRemotingException) {
-                //the exception thrown by the remote Step method was converted to a ChorusRemotingException by the chorus step exporter 
-                //this is how we handle remote exceptions which might otherwise come from library classes we don't have locally
-                throw targetException;
-            } else {
-                throw new ChorusRemotingException(targetException);
-            }
-        } catch (Exception e) {
+            result = remoteStepInvoker.invoke(args);
+
+        //let any runtime exceptions propagate
+        } catch (IllegalAccessException e) {
+            throw new ChorusRemotingException(e);
+        } catch (InvocationTargetException e) {
             throw new ChorusRemotingException(e);
         }
         return result;
@@ -86,54 +79,74 @@ public class JmxRemotingManager implements RemotingManager {
         }
     }
 
-    private ChorusHandlerJmxProxy getProxyForComponent(String name, RemotingConfig remotingConfig) {
+    private ChorusHandlerJmxProxy getProxyForComponent(String name, Map<String, RemotingConfig> remotingConfigMap) {
         ChorusHandlerJmxProxy proxy = proxies.get(name);
         if (proxy == null) {
-            proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
-            proxies.put(name, proxy);
-            log.debug("Opened JMX connection to: " + name);
+            RemotingConfig remotingConfig = remotingConfigMap.get(name);
+            if (remotingConfig == null) {
+                return getProxyForDynamicProcess(name, remotingConfigMap);
+            } else {
+                proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+                proxies.put(name, proxy);
+                log.debug("Opened JMX connection to: " + name);
+            }
         }
         return proxy;
+    }
+
+    private ChorusHandlerJmxProxy getProxyForDynamicProcess(String processName, Map<String, RemotingConfig> remotingConfigMap) {
+        final ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
+        if ( processConfig == null ) {
+            //this was not process started by process manager
+            throwNoConfigFound(processName);
+        }
+
+        String propertyTemplateName = processConfig.getPropertyTemplateName();
+        final RemotingConfig remotingConfig = remotingConfigMap.get(propertyTemplateName);
+        if (remotingConfig == null) {
+            //this was a process started by process manager and we need to find a remoting config for the process config
+            //template name, but we don't have one
+            return throwNoConfigFound(propertyTemplateName);
+        }
+
+        return new ChorusHandlerJmxProxy(remotingConfig.getHost(), processConfig.getJmxPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+    }
+
+    private ChorusHandlerJmxProxy throwNoConfigFound(String propertyTemplateName) {
+        throw new ChorusException("Failed to find MBean configuration for component: " + propertyTemplateName);
     }
 
     /**
      * Find the correct remote method and warn if there are multiple matches
      */
-    private static class RemoteMethodFinder {
+    private static class RemoteStepFinder {
         private String action;
         private String componentName;
         private Map<String, String[]> stepMetaData;
-        private String methodUidToCall;
-        private Object[] methodArgsToPass;
-        private String methodUidToCallPendingMessage;
+        private ChorusHandlerJmxProxy proxy;
+        private StepInvoker foundStepInvoker;
+        private Object[] foundArgs;
 
-        public RemoteMethodFinder(String action, String componentName, Map<String, String[]> stepMetaData) {
+        public RemoteStepFinder(String action, String componentName, Map<String, String[]> stepMetaData, ChorusHandlerJmxProxy proxy) {
             this.action = action;
             this.componentName = componentName;
             this.stepMetaData = stepMetaData;
+            this.proxy = proxy;
         }
 
-        public String getMethodUidToCall() {
-            return methodUidToCall;
-        }
-        
-        public boolean methodWasFound() {
-            return methodUidToCall != null;
+        public boolean stepWasFound() {
+            return foundStepInvoker != null;
         }
 
-        public Object[] getMethodArgsToPass() {
-            return methodArgsToPass;
-        }
-        
-        public boolean isStepPending() {
-            return methodUidToCallPendingMessage != null;
+        public StepInvoker getFoundStepInvoker() {
+            return foundStepInvoker;
         }
 
-        public String getMethodUidToCallPendingMessage() {
-            return methodUidToCallPendingMessage;
+        public Object[] getFoundArgs() {
+            return foundArgs;
         }
 
-        public RemoteMethodFinder invoke() {
+        public RemoteStepFinder findRemoteStepInvoker() {
             for (Map.Entry<String, String[]> entry : stepMetaData.entrySet()) {
                 String methodUid = entry.getKey();
                 String regex = entry.getValue()[0];
@@ -151,19 +164,20 @@ public class JmxRemotingManager implements RemotingManager {
                     }
                 }
     
-                //see if this method will do
-                Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(regex, action, types);
+                //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
+                //to actually findRemoteStepInvoker the remote method with it
+                StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
+                Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(stepInvoker, action);
                 if (args != null) {
-                    if (methodUidToCall == null) {
-                        methodUidToCall = methodUid;
-                        methodUidToCallPendingMessage = pending;
-                        methodArgsToPass = args;
+                    if (foundStepInvoker == null) {
+                        foundStepInvoker = stepInvoker;
+                        foundArgs = args;
                     } else {
                         log.info(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
                                 methodUid,
                                 action,
                                 componentName,
-                                methodUidToCall));
+                                foundStepInvoker));
                     }
                 }
             }

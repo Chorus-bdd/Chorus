@@ -32,8 +32,8 @@ package org.chorusbdd.chorus.remoting.jmx;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvoker;
-import org.chorusbdd.chorus.core.interpreter.invoker.InvokerFactory;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvokerFactory;
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
@@ -156,10 +156,10 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
             //invoke the method
             Method m = stepMethods.get(methodUid);
-            Object handler = stepHandlers.get(methodUid);
+            Object handlerInstance = stepHandlers.get(methodUid);
 
-            StepMethodInvoker i = new InvokerFactory().createInvoker(m);
-            Object result = i.invoke(handler, args);
+            StepInvoker i = new StepMethodInvokerFactory().createInvoker(handlerInstance, m);
+            Object result = i.invoke(args);
             
             //return the updated context
             return new JmxStepResult(ChorusContext.getContext(), result);
@@ -179,7 +179,10 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         String message = "remote " + t.getClass().getSimpleName() +
             ( t.getMessage() == null ? " " : " - " + t.getMessage() );
         String location = ExceptionHandling.getExceptionLocation(t);
-        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), t.getStackTrace());
+
+
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), stackTrace);
     }
 
     public Map<String, String[]> getStepMetadata() {

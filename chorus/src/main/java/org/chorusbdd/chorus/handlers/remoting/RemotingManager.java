@@ -2,6 +2,8 @@ package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.util.ChorusException;
 
+import java.util.Map;
+
 /**
  * Created by nick on 30/08/2014.
  * 
@@ -21,10 +23,9 @@ public interface RemotingManager {
      * 
      * @param action            - the step text from the scenario which we want to match to a remote step
      * @param componentName     - the name of the component we want to connect to
-     * @param remotingConfig    - the remoting configuration for the component we want to connect to
      * @return                    the value returned by the remote component when invoking the remote step implementation
      **/
-    Object performActionInRemoteComponent(String action, String componentName, RemotingConfig remotingConfig);
+    Object performActionInRemoteComponent(String action, String componentName, Map<String, RemotingConfig> remotingConfigMap);
 
     void destroy();
 }

@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
 * User: nick
@@ -44,8 +45,8 @@ class UntilFirstPassInvoker extends PolledInvoker {
 
     private PassesWithin passesWithin;
 
-    public UntilFirstPassInvoker(PassesWithin passesWithin, Method method) {
-        super(method);
+    public UntilFirstPassInvoker(StepInvoker wrappedInvoker, PassesWithin passesWithin) {
+        super(wrappedInvoker);
         this.passesWithin = passesWithin;
     }
 
@@ -64,4 +65,5 @@ class UntilFirstPassInvoker extends PolledInvoker {
     protected void doTest(PolledAssertion p, TimeUnit timeUnit, int count) {
         p.await(timeUnit, count);
     }
+
 }

@@ -29,33 +29,43 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.AbstractInvoker;
+import org.chorusbdd.chorus.core.interpreter.invoker.AbstractStepMethodInvoker;
 import org.chorusbdd.chorus.handlers.util.PolledAssertion;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 /**
  * User: nick
  * Date: 20/09/13
  * Time: 18:37
+ *
+ * Wrap another StepInvoker so that we can poll it repeatedly either
+ * - until the step passes
+ * - to check the step passes for a preset duration
+ *
+ * This implements the requirements for @PassesWithin annotated handler steps
  */
-public abstract class PolledInvoker extends AbstractInvoker {
-    public PolledInvoker(Method method) {
-        super(method);
+public abstract class PolledInvoker implements StepInvoker {
+
+    private StepInvoker wrappedInvoker;
+
+    public PolledInvoker(StepInvoker wrappedInvoker) {
+        this.wrappedInvoker = wrappedInvoker;
     }
 
     /**
      * Invoke the method
      */
-    public Object invoke(final Object obj, final Object... args) throws IllegalAccessException, InvocationTargetException {
+    public Object invoke(final Object... args) {
         final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
             protected void validate() throws Exception {
-                Object r = method.invoke(obj, args);
+                Object r = wrappedInvoker.invoke(args);
                 resultRef.set(r);
             }
 
@@ -68,8 +78,35 @@ public abstract class PolledInvoker extends AbstractInvoker {
         int count = getCount();
         doTest(p, timeUnit, count);
 
-        Object result = handleResultIfReturnTypeVoid(method, resultRef.get());
+        Object result = resultRef.get();
         return result;
+    }
+
+    public Pattern getStepPattern() {
+        return wrappedInvoker.getStepPattern();
+    }
+
+    /**
+     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
+     */
+    public boolean isPending() {
+        return wrappedInvoker.isPending();
+    }
+
+    public String getPendingMessage() {
+        return wrappedInvoker.getPendingMessage();
+    }
+
+    /**
+     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
+     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
+     */
+    public Class[] getParameterTypes() {
+        return wrappedInvoker.getParameterTypes();
+    }
+
+    public String getId() {
+        return wrappedInvoker.getId();
     }
 
     protected abstract int getCount();
@@ -79,4 +116,9 @@ public abstract class PolledInvoker extends AbstractInvoker {
     protected abstract int getPollFrequency();
 
     protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, int count);
+
+    public String toString() {
+        return "Polled:" + wrappedInvoker.toString();
+    }
+
 }

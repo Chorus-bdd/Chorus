@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.util;
 
+import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -47,18 +48,15 @@ public class RegexpUtils {
     /**
      * Extracts the groups in a regular expression into typed data
      *
-     * @param regex the regular expression to use
-     * @param text  the text to extract the values from
-     * @param types the data types for the corresponding group's text
      * @return an array of typed data or null if regex does not match the text, or the types are not compatible
      */
-    public static Object[] extractGroupsAndCheckMethodParams(String regex, String text, Class[] types) {
-        Matcher matcher = Pattern.compile(regex).matcher(text);
+    public static Object[] extractGroupsAndCheckMethodParams(StepInvoker invoker, String stepText) {
+        Matcher matcher = invoker.getStepPattern().matcher(stepText);
         if (matcher.matches()) {
             int groupCount = matcher.groupCount();
 
             //check that there are the same number of expected values as there are regex groups
-            if (groupCount != types.length) {
+            if (groupCount != invoker.getParameterTypes().length) {
                 //I think this is always an error in the handler's step definition - group should always match param count
                 //it's worth logging it to warn level, or people may spend hours looking and may not spot the problem
                 log.warn("Number of method parameters does not match regex groups");
@@ -75,7 +73,7 @@ public class RegexpUtils {
             Object[] values = new Object[groupCount];
             for (int i = 0; i < groupCount; i++) {
                 String valueStr = regexGroupValues[i];
-                Class type = types[i];
+                Class type = invoker.getParameterTypes()[i];
                 Object coercedValue = TypeCoercion.coerceType(valueStr, type);
                 if (("null".equals(valueStr) && coercedValue == null ) || coercedValue != null) {
                     values[i] = coercedValue;

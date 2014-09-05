@@ -51,7 +51,7 @@ import java.io.File;
  * jvmargs and mainclass are only applicable for java processes, they should not be set
  * if the process is a native process with pathToExecutable specified.
  */
-public class ProcessesConfig extends AbstractHandlerConfig {
+public class ProcessesConfig extends AbstractHandlerConfig implements Cloneable {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfig.class);
 
@@ -64,6 +64,8 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private String args;
     private OutputMode stdOutMode = OutputMode.INLINE;
     private OutputMode stdErrMode = OutputMode.INLINE;
+    private int initialJmxPort = -1;
+    private int initialDebugPort = -1;
     private int jmxPort = -1;
     private int debugPort = -1;
     private int terminateWaitTime = 30;
@@ -74,6 +76,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     private int readAheadBufferSize = 65536; //read ahead process output in CAPTURED mode 
     private int readTimeoutSeconds = 10;
     private Scope processScope = Scope.SCENARIO;
+    private String propertyTemplateName;
 
     public String getGroupName() {
         return groupName;
@@ -151,16 +154,44 @@ public class ProcessesConfig extends AbstractHandlerConfig {
         return jmxPort;
     }
 
+    public void setInitialJmxPort(int initialJmxPort) {
+        this.initialJmxPort = initialJmxPort;
+    }
+    
     public void setJmxPort(int jmxPort) {
         this.jmxPort = jmxPort;
+    }
+
+    public void resetJmxPort() {
+        jmxPort = initialJmxPort;
+    }
+
+    public void incrementJmxPort() {
+        if ( jmxPort != -1) {
+            jmxPort++;
+        }
     }
 
     public int getDebugPort() {
         return debugPort;
     }
 
+    public void setInitialDebugPort(int initialDebugPort) {
+        this.initialDebugPort = initialDebugPort;
+    }
+
     public void setDebugPort(int debugPort) {
         this.debugPort = debugPort;
+    }
+
+    public void resetDebugPort() {
+        debugPort = initialDebugPort;
+    }
+
+    public void incrementDebugPort() {
+        if ( debugPort != -1 ) {
+            debugPort++;
+        }
     }
 
     public int getTerminateWaitTime() {
@@ -225,6 +256,14 @@ public class ProcessesConfig extends AbstractHandlerConfig {
 
     public void setProcessScope(Scope processScope) {
         this.processScope = processScope;
+    }
+
+    public String getPropertyTemplateName() {
+        return propertyTemplateName;
+    }
+
+    public void setPropertyTemplateName(final String propertyTemplateName) {
+        this.propertyTemplateName = propertyTemplateName;
     }
 
     public boolean isValid() {
@@ -297,4 +336,13 @@ public class ProcessesConfig extends AbstractHandlerConfig {
                 '}';
     }
 
+    public Object clone() {
+        try {
+            return super.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            // This should never happen
+            throw new RuntimeException(e);
+        }
+    }
 }
