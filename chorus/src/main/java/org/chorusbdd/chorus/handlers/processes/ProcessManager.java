@@ -113,7 +113,7 @@ public class ProcessManager  {
     }
 
     public synchronized void startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay, ProcessesConfig processesConfig) throws Exception {
-        log.info("Starting a java process: " + name);
+//        log.info("Starting a java process: " + name);
         ChorusAssert.assertFalse("There is already a process with the processName " + name, processes.containsKey(name));
         ChorusProcess child = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
         processes.put(name, new ProcessInfo(name, processesConfig, child));

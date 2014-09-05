@@ -159,9 +159,9 @@ public class ProcessesHandler {
     @Step(".*start an? (.+) process named ([a-zA-Z0-9-_]*).*?")
     public void startJavaProcessFromConfigNamed(String configName, String processName) throws Exception {
         ProcessesConfig config = getConfigTemplate(configName);
+        processManager.startJava((ProcessesConfig)config.clone(), processName);
         config.incrementJmxPort();
         config.incrementDebugPort();
-        processManager.startJava((ProcessesConfig)config.clone(), processName);
     }
 
     private ProcessesConfig newProcessConfig(final String groupName, final boolean logging) {
