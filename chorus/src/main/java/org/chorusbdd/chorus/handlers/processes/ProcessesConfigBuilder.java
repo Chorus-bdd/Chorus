@@ -78,9 +78,13 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
             } else if ("mainclass".equals(key)) {
                 c.setMainclass(value);
             } else if ("jmxport".equals(key)) {
-                c.setJmxPort(parseIntProperty(value, "jmxport"));
+                int jmxport = parseIntProperty(value, "jmxport");
+                c.setInitialJmxPort(jmxport);
+                c.setJmxPort(jmxport);
             } else if ("debugport".equals(key)) {
-                c.setDebugPort(parseIntProperty(value, "debugport"));
+                int debugport = parseIntProperty(value, "debugport");
+                c.setInitialDebugPort(debugport);
+                c.setDebugPort(debugport);
             } else if ("terminateWaitTime".equals(key)) {
                 c.setTerminateWaitTime(parseIntProperty(value, "terminateWaitTime"));
             } else if ("logging".equals(key)) {

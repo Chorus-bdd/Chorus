@@ -154,10 +154,11 @@ public class ProcessesConfig extends AbstractHandlerConfig implements Cloneable 
         return jmxPort;
     }
 
+    public void setInitialJmxPort(int initialJmxPort) {
+        this.initialJmxPort = initialJmxPort;
+    }
+    
     public void setJmxPort(int jmxPort) {
-        if (initialJmxPort == -1) {
-            initialJmxPort = jmxPort;
-        }
         this.jmxPort = jmxPort;
     }
 
@@ -166,17 +167,20 @@ public class ProcessesConfig extends AbstractHandlerConfig implements Cloneable 
     }
 
     public void incrementJmxPort() {
-        jmxPort++;
+        if ( jmxPort != -1) {
+            jmxPort++;
+        }
     }
 
     public int getDebugPort() {
         return debugPort;
     }
 
+    public void setInitialDebugPort(int initialDebugPort) {
+        this.initialDebugPort = initialDebugPort;
+    }
+
     public void setDebugPort(int debugPort) {
-        if (initialDebugPort == -1) {
-            initialDebugPort = debugPort;
-        }
         this.debugPort = debugPort;
     }
 
@@ -185,7 +189,9 @@ public class ProcessesConfig extends AbstractHandlerConfig implements Cloneable 
     }
 
     public void incrementDebugPort() {
-        debugPort++;
+        if ( debugPort != -1 ) {
+            debugPort++;
+        }
     }
 
     public int getTerminateWaitTime() {

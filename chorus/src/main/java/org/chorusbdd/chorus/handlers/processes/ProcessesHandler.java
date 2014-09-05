@@ -171,9 +171,14 @@ public class ProcessesHandler {
                 return groupName;
             }
 
-            // MBB: This method doesn't exist in super, is this a bug?
-            public boolean isLogging() {
-                return logging;
+            @Override
+            public OutputMode getStdErrMode() {
+                return logging ? OutputMode.FILE : OutputMode.INLINE;
+            }
+
+            @Override
+            public OutputMode getStdOutMode() {
+                return logging ? OutputMode.FILE : OutputMode.INLINE;
             }
         };
     }
@@ -209,7 +214,7 @@ public class ProcessesHandler {
     private void startTheScript(String script, String processName, boolean logging) throws Exception {
         final ProcessesConfig config = newProcessConfig(processName, logging);
         //setConfigForProcess(processName, config);
-        processManager.startScript(config, processName, script);
+        processManager.startScript(config, script, processName);
     }
 
 
