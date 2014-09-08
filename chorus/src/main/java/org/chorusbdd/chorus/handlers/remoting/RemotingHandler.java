@@ -87,7 +87,7 @@ public class RemotingHandler {
 
     private Map<String, RemotingConfig> remotingConfigMap;
     
-    private JmxRemotingManager jmxRemotingManager = new JmxRemotingManager();
+    private RemotingManager jmxRemotingManager = new JmxRemotingManager();
 
     // If set, will cause the mBean metadata to be loaded using JDBC properties in the named properties file
     public static final String REMOTING_HANDLER_DB_PROPERTIES = "org.chorusbdd.chorus.remoting.db";

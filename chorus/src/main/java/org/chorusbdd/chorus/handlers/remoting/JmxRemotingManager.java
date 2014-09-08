@@ -84,36 +84,51 @@ public class JmxRemotingManager implements RemotingManager {
         if (proxy == null) {
             RemotingConfig remotingConfig = remotingConfigMap.get(name);
             if (remotingConfig == null) {
-                return getProxyForDynamicProcess(name, remotingConfigMap);
-            } else {
+                //perhaps this was a process started locally by process manager
+                remotingConfig = getConfigForProcessManagerProcess(name, remotingConfigMap);
+            }
+
+            if ( remotingConfig != null) {
                 proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
                 proxies.put(name, proxy);
                 log.debug("Opened JMX connection to: " + name);
+            } else {
+                throw new ChorusException("Failed to find remoting configuration for component: " + name);
             }
         }
         return proxy;
     }
 
-    private ChorusHandlerJmxProxy getProxyForDynamicProcess(String processName, Map<String, RemotingConfig> remotingConfigMap) {
-        final ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
-        if ( processConfig == null ) {
-            //this was not process started by process manager
-            throwNoConfigFound(processName);
+    /**
+     * If processName was a process started by ProcessesHandler/ProcessManager, then we may be able to find the remoting setup
+     * from the process config
+     */
+    private RemotingConfig getConfigForProcessManagerProcess(String processName, Map<String, RemotingConfig> remotingConfigMap) {
+        RemotingConfig result = null;
+        ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
+        if ( processConfig != null && processConfig.isRemotingConfigDefined() ) {
+            result = getConfigForLocalProcess(remotingConfigMap, processConfig);
         }
-
-        String propertyTemplateName = processConfig.getPropertyTemplateName();
-        final RemotingConfig remotingConfig = remotingConfigMap.get(propertyTemplateName);
-        if (remotingConfig == null) {
-            //this was a process started by process manager and we need to find a remoting config for the process config
-            //template name, but we don't have one
-            return throwNoConfigFound(propertyTemplateName);
-        }
-
-        return new ChorusHandlerJmxProxy(remotingConfig.getHost(), processConfig.getJmxPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+        return result;
     }
 
-    private ChorusHandlerJmxProxy throwNoConfigFound(String propertyTemplateName) {
-        throw new ChorusException("Failed to find MBean configuration for component: " + propertyTemplateName);
+    /**
+     * Find the process template config name on which the process config was based
+     * (multiple processes may be started under alias names from the same template config)
+     *
+     * is there a matching remoting config? If there is, then use that
+     * otherwise take defaults by creating a new remoting config
+     */
+    private RemotingConfig getConfigForLocalProcess(Map<String, RemotingConfig> remotingConfigMap, ProcessesConfig processConfig) {
+        String propertyTemplateName = processConfig.getPropertyTemplateName();
+
+        RemotingConfig remotingConfig = remotingConfigMap.get(propertyTemplateName);
+        if (remotingConfig == null) {
+            remotingConfig = new RemotingConfig();
+            remotingConfig.setHost("localhost");
+            remotingConfig.setPort(processConfig.getJmxPort());
+        }
+        return remotingConfig;
     }
 
     /**

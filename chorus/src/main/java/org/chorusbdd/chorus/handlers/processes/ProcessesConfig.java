@@ -162,6 +162,10 @@ public class ProcessesConfig extends AbstractHandlerConfig implements Cloneable 
         this.jmxPort = jmxPort;
     }
 
+    public boolean isRemotingConfigDefined() {
+        return jmxPort != -1;
+    }
+
     public void resetJmxPort() {
         jmxPort = initialJmxPort;
     }
