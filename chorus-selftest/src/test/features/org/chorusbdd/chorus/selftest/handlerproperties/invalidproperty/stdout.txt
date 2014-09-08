@@ -9,7 +9,7 @@ Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
 Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol, name and port must be set
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     I can start a config1 process                                                            PASSED  
-    And then call a remote method in config1                                                 FAILED  (JmxRemotingManager:linenumber)-ChorusException Failed to find MBean configuration for component: config1
+    And then call a remote method in config1                                                 FAILED  (JmxRemotingManager:linenumber)-ChorusException Failed to find remoting configuration for component: config1
 
 
 Features  (total:1) (passed:0) (failed:1)

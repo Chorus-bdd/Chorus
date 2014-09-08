@@ -1,0 +1,23 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotingwithlocalprocess/remotingwithlocalprocess.feature
+Feature: Remoting With Local Process                                                                 
+  Scenario: I don't need to define a remoting config for a locally started process
+Chorus --> INFO    - Processing scenario: I don't need to define a remoting config for a locally started process
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process                                                          PASSED  
+    Then I can call a step method exported by the handler in config1                         PASSED  
+  Scenario: I can connect to multiple config1 processes and the remoting ports auto-increment
+Chorus --> INFO    - Processing scenario: I can connect to multiple config1 processes and the remoting ports auto-increment
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process named Bill                                               PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Ben                                                  PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Flowerpot                                            PASSED  
+    Then I can call a step and get the jmx port from the handler in Bill                     PASSED  18806
+    Then I can call a step and get the jmx port from the handler in Ben                      PASSED  18807
+    Then I can call a step and get the jmx port from the handler in Flowerpot                PASSED  18808
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:8) (passed:8) (failed:0) (undefined:0) (pending:0) (skipped:0)

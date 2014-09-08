@@ -27,35 +27,30 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithprocessmanager;
+package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithlocalprocess;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 25/06/12
- * Time: 22:14
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class TestJmxSingleHandlerExport extends AbstractInterpreterTest {
+public class StartAProcessMain {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/singlehandlerexport";
+    public static void main(String[] args) throws InterruptedException {
 
-    final int expectedExitCode = 0;  //success
-
-    protected int getExpectedExitCode() {
-        return expectedExitCode;
-    }
-
-    protected String getFeaturePath() {
-        return featurePath;
-    }
-
-    protected void processActualResults(ChorusSelfTestResults expectedResults) {
-        if ( ! isInProcessAndJdk1_7() ) {
-            removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+        //write out all the arguments so we can test them
+        for (String s : args) {
+            System.out.println(s);
         }
+
+        RemotingWithLocalProcessHandler handler = new RemotingWithLocalProcessHandler();
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
+        exporter.export();
+
+        Thread.sleep(60000);
     }
-    
+
 }

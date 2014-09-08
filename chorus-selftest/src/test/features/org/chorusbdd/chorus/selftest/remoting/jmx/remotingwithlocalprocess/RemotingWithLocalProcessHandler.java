@@ -27,10 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithprocessmanager;
+package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithlocalprocess;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
@@ -39,10 +40,17 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("JMX Single Handler Export")
-public class JmxSingleHandlerExportHandler extends ChorusAssert {
+@Handler("Remoting With Local Process")
+public class RemotingWithLocalProcessHandler extends ChorusAssert {
 
     @Step("I can call a step method exported by the handler")
     public void canCallAMethod() {
+    }
+
+    @Step("I can call a step and get the jmx port from the handler")
+    public int getJmxPort() {
+        String jmxProperty = System.getProperty("com.sun.management.jmxremote.port");
+        Integer port = Integer.valueOf(jmxProperty);
+        return port;
     }
 }

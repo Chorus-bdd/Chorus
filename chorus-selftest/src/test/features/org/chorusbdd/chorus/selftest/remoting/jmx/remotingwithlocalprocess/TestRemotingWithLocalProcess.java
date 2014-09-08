@@ -27,31 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithprocessmanager;
+package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithlocalprocess;
 
-import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 04/07/12
- * Time: 09:16
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class StartAProcessMain {
+public class TestRemotingWithLocalProcess extends AbstractInterpreterTest {
 
-    public static void main(String[] args) throws InterruptedException {
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotingwithlocalprocess";
 
-        //write out all the arguments so we can test them
-        for (String s : args) {
-            System.out.println(s);
-        }
+    final int expectedExitCode = 0;  //success
 
-        System.out.println("Exporting the handler");
-        JmxSingleHandlerExportHandler handler = new JmxSingleHandlerExportHandler();
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
-        exporter.export();
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-        Thread.sleep(60000);
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
 }
