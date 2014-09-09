@@ -14,6 +14,10 @@ Feature: Jmx Single Handler Export
     #stopping is not strictly necessary since all started processes
     #should be automatically stopped at end of each scenario
 
+  Scenario: Call a Pending Method
+    Given I start a config1 process named SingleHandlerExport
+    And I can declare a step pending remotely in SingleHandlerExport
+
 
 
 

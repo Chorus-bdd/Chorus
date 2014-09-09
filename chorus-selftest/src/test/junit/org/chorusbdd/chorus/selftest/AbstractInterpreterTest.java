@@ -201,7 +201,7 @@ public abstract class AbstractInterpreterTest extends Assert {
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(content);
         if ( m.find() ) {
-            content = m.replaceFirst("");
+            content = m.replaceAll("");
         } else {
             if (failIfMissing) {
                 fail("Could not find the pattern [" + pattern + "] in " + description);

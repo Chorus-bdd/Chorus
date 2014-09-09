@@ -52,9 +52,9 @@ public class TestJmxSingleHandlerExport extends AbstractInterpreterTest {
         return featurePath;
     }
 
-    protected void processActualResults(ChorusSelfTestResults expectedResults) {
+    protected void processActualResults(ChorusSelfTestResults actualResults) {
         if ( ! isInProcessAndJdk1_7() ) {
-            removeLineFromStdOut(expectedResults, "Exporting the handler", true);
+            removeLineFromStdOut(actualResults, "Exporting the handler", true);
         }
     }
     

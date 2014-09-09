@@ -45,4 +45,8 @@ public class JmxSingleHandlerExportHandler extends ChorusAssert {
     @Step("I can call a step method exported by the handler")
     public void canCallAMethod() {
     }
+
+    @Step(value = "I can declare a step pending remotely", pending = "This step is pending")
+    public void pendingStep() {
+    }
 }

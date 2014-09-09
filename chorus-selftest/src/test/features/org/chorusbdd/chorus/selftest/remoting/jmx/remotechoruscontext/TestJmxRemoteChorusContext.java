@@ -62,8 +62,6 @@ public class TestJmxRemoteChorusContext extends AbstractInterpreterTest {
     protected void processActualResults(ChorusSelfTestResults expectedResults) {
         if ( ! isInProcessAndJdk1_7()) {
             removeLineFromStdOut(expectedResults, "Exporting the handler", true);
-            removeLineFromStdOut(expectedResults, "Exporting the handler", true);
-            removeLineFromStdOut(expectedResults, "Exporting the handler", true);
         }
     }
 }

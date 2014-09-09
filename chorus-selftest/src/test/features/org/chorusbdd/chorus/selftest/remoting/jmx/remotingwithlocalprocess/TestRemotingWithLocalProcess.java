@@ -52,4 +52,8 @@ public class TestRemotingWithLocalProcess extends AbstractInterpreterTest {
         return featurePath;
     }
 
+    protected void processActualResults(ChorusSelfTestResults actualResults) {
+        removeLineFromStdOut(actualResults, "Listening for transport .*", false);
+    }
+
 }
