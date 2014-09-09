@@ -3,8 +3,11 @@
 <changes>
 
     <version>
-        <versionNumber>1.6.9-SNAPSHOT</versionNumber>
-        <comment>Add support for http remoting, add ProcessManager and RemotingManager and delegate to these from Processes and Remoting handlers</comment>
+        <versionNumber>1.6.9</versionNumber>
+        <comment>Some improvements to Remoting logic and addition of ProcessManager</comment>
+        <change desc="ProcessesHandler and RemotingHandler delegate to a ProcessManager and RemotingManager, cleaner division of responsibilities"/>
+        <change desc="When remoting to local process started with ProcessesHandler, we don't have to provide remoting config / remoting jmx port, so long as process configuration includes it"/>
+        <change desc="When starting multiple local processes with the same base config using ProcessesHandler, the jmx and debug ports are auto-incremented"/>
     </version>
     <version>
         <versionNumber>1.6.8</versionNumber>

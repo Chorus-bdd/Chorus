@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 1.6.9 ###
+        
+*Some improvements to Remoting logic and addition of ProcessManager*
+        
+| Changes in 1.6.9 |
+| ------ |
+| ProcessesHandler and RemotingHandler delegate to a ProcessManager and RemotingManager, cleaner division of responsibilities |
+| When remoting to local process started with ProcessesHandler, we don't have to provide remoting config / remoting jmx port, so long as process configuration includes it |
+| When starting multiple local processes with the same base config using ProcessesHandler, the jmx and debug ports are auto-incremented |
+        
 ### Version 1.6.8 ###
         
 *Add FailImmediatelyException to break out of a @PassesWithin or PolledAssertion*
