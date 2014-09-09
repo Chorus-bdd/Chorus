@@ -21,30 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 public class ProcessManager  {
 
-    static class ProcessInfo {
-        final String processName;
-        final ProcessesConfig config;
-        final ChorusProcess process;
-
-        ProcessInfo(String processName, ProcessesConfig config, ChorusProcess process) {
-            this.processName = processName;
-            this.config = config;
-            this.process = process;
-        }
-
-        String getName() {
-            return processName;
-        }
-
-        ProcessesConfig getConfig() {
-            return config;
-        }
-
-        ChorusProcess getProcess() {
-            return process;
-        }
-    }
-
     private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
@@ -82,42 +58,43 @@ public class ProcessManager  {
      *
      * @throws Exception
      */
-    public synchronized void startJava(ProcessesConfig processesConfig, String processName) throws Exception {
+    public synchronized void startJava(ProcessInfo processInfo, String processName) throws Exception {
         ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
 
         //get the log output containing logging configuration for this process
-        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processesConfig, processName);
+        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processInfo, processName);
         String logFileBaseName = logOutput.getLogFileBaseName();
 
-        AbstractCommandLineBuilder b = processesConfig.isJavaProcess() ?
-                new JavaProcessCommandLineBuilder(featureDir, processesConfig, logFileBaseName) :
-                new NativeProcessCommandLineBuilder(processesConfig, featureDir);
+        AbstractCommandLineBuilder b = processInfo.isJavaProcess() ?
+                new JavaProcessCommandLineBuilder(featureDir, processInfo, logFileBaseName) :
+                new NativeProcessCommandLineBuilder(processInfo, featureDir);
 
         List<String> commandLineTokens = b.buildCommandLine();
-        startProcess(processName, commandLineTokens, logOutput, processesConfig.getProcessCheckDelay(), processesConfig);
+        startProcess(processName, commandLineTokens, logOutput, processInfo.getProcessCheckDelay(), processInfo);
     }
 
     /**
      *  @deprecated Since 1.6.1 the preferred way to launch e a non-java process is to set the record processes handler property 'pathToExecutable'
      */
     @Deprecated
-    public synchronized void startScript(ProcessesConfig processesConfig, final String script, final String processName) throws Exception {
+    public synchronized void startScript(ProcessInfo processInfo, final String script, final String processName) throws Exception {
 
         String command = NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
 
         //get the log output containing logging configuration and out and err streams for this script
-        ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, processesConfig, processName);
+        ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, processInfo, processName);
 
         log.debug("About to run script: " + command);
-        startProcess(processName, Collections.singletonList(command), logOutput, 250, processesConfig);
+        startProcess(processName, Collections.singletonList(command), logOutput, 250, processInfo);
     }
 
-    public synchronized void startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay, ProcessesConfig processesConfig) throws Exception {
-//        log.info("Starting a java process: " + name);
+    public synchronized void startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay, ProcessInfo processInfo) throws Exception {
         ChorusAssert.assertFalse("There is already a process with the processName " + name, processes.containsKey(name));
-        ChorusProcess child = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
-        processes.put(name, new ProcessInfo(name, processesConfig, child));
-        child.checkProcess(processCheckDelay);
+        processes.put(name, processInfo);
+
+        ChorusProcess chorusProcess = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
+        processInfo.setProcess(chorusProcess);
+        chorusProcess.checkProcess(processCheckDelay);
     }
 
     public synchronized void stopProcess(String processName) {
@@ -138,12 +115,12 @@ public class ProcessManager  {
 
     public synchronized void stopProcessesRunningWithinScope(Scope scope) {
         for (final ProcessInfo pInfo : processes.values()) {
-            if (pInfo.getConfig().getProcessScope() == scope ) {
-                log.debug("Stopping process named " + pInfo.getName() + " scoped to " + scope);
+            if (pInfo.getProcessScope() == scope ) {
+                log.debug("Stopping process named " + pInfo.getProcessName() + " scoped to " + scope);
                 try {
-                    stopProcess(pInfo.getName());
+                    stopProcess(pInfo.getProcessName());
                 } catch (Exception e) {
-                    log.warn("Error when stopping process named " + pInfo.getName(), e);
+                    log.warn("Error when stopping process named " + pInfo.getProcessName(), e);
                 }
             }
         }
@@ -158,9 +135,9 @@ public class ProcessManager  {
 
     // ----------------------------------------------------- Process Properties
 
-    public synchronized ProcessesConfig getProcessConfig(final String processName) {
+    public synchronized ProcessInfo getProcessInfo(final String processName) {
         final ProcessInfo processInfo = processes.get(processName);
-        return processInfo == null ?  null : processInfo.getConfig();
+        return processInfo;
     }
 
     // --------------------------------------------------------- Process Status
@@ -186,8 +163,7 @@ public class ProcessManager  {
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait to terminate");
         }
-        ProcessesConfig c = p.getConfig();
-        int waitTime = c.getTerminateWaitTime();
+        int waitTime = p.getTerminateWaitTime();
         waitForProcessToTerminate(processName, waitTime);
     }
 

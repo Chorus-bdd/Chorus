@@ -58,7 +58,7 @@ class ProcessLogOutput {
     private FeatureToken featureToken;
     private File featureDir;
     private String logFileBaseName;
-    private ProcessesConfig processesConfig;
+    private ProcessInfo processesConfig;
     private OutputMode stdErrMode;
     private OutputMode stdOutMode;
 
@@ -69,7 +69,7 @@ class ProcessLogOutput {
     private int readAheadBufferSize;
     private int readTimeoutSeconds;
 
-    public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessesConfig processesConfig, String processAlias) {
+    public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessInfo processesConfig, String processAlias) {
         this.featureDir = featureDir;
         this.logFileBaseName = calculateLogFileBaseName(featureToken, featureFile, processAlias);
         this.processesConfig = processesConfig;

@@ -3,8 +3,8 @@ package org.chorusbdd.chorus.handlers.remoting;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.RemoteStepInvoker;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.handlers.processes.ProcessInfo;
 import org.chorusbdd.chorus.handlers.processes.ProcessManager;
-import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.util.HandlerUtils;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxProxy;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -105,28 +105,28 @@ public class JmxRemotingManager implements RemotingManager {
      */
     private RemotingConfig getConfigForProcessManagerProcess(String processName, Map<String, RemotingConfig> remotingConfigMap) {
         RemotingConfig result = null;
-        ProcessesConfig processConfig = ProcessManager.getInstance().getProcessConfig(processName);
-        if ( processConfig != null && processConfig.isRemotingConfigDefined() ) {
-            result = getConfigForLocalProcess(remotingConfigMap, processConfig);
+        ProcessInfo processInfo = ProcessManager.getInstance().getProcessInfo(processName);
+        if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
+            result = getConfigForLocalProcess(remotingConfigMap, processInfo);
         }
         return result;
     }
 
     /**
-     * Find the process template config name on which the process config was based
-     * (multiple processes may be started under alias names from the same template config)
+     * Find the process config name on which the running process was based
+     * (multiple processes may be started under alias names generating several ProcessInfo from the same template config)
      *
-     * is there a matching remoting config? If there is, then use that
+     * is there a matching remoting config with that config name? If there is, then use that
      * otherwise take defaults by creating a new remoting config
      */
-    private RemotingConfig getConfigForLocalProcess(Map<String, RemotingConfig> remotingConfigMap, ProcessesConfig processConfig) {
-        String propertyTemplateName = processConfig.getPropertyTemplateName();
+    private RemotingConfig getConfigForLocalProcess(Map<String, RemotingConfig> remotingConfigMap, ProcessInfo processInfo) {
+        String processConfigName = processInfo.getProcessConfigName();
 
-        RemotingConfig remotingConfig = remotingConfigMap.get(propertyTemplateName);
+        RemotingConfig remotingConfig = remotingConfigMap.get(processConfigName);
         if (remotingConfig == null) {
             remotingConfig = new RemotingConfig();
             remotingConfig.setHost("localhost");
-            remotingConfig.setPort(processConfig.getJmxPort());
+            remotingConfig.setPort(processInfo.getJmxPort());
         }
         return remotingConfig;
     }

@@ -93,7 +93,7 @@ public class ProcessesHandler {
         if (c == null) {
             throw new ChorusException("No configuration found for process: " + configName);
         }
-        c.setPropertyTemplateName(configName);
+        c.setProcessConfigName(configName);
         return c;
     }
 
@@ -131,8 +131,7 @@ public class ProcessesHandler {
     private void resetScenarioScopedPortsInConfigTemplates() {
         for (ProcessesConfig config : processConfigTemplates.values()) {
             if (Scope.SCENARIO.equals(config.getProcessScope())) {
-                config.resetJmxPort();
-                config.resetDebugPort();
+                config.reset();
             }
         }
     }
@@ -148,7 +147,8 @@ public class ProcessesHandler {
     public void startJava(String processName) throws Exception {
         String uniqueName = nextProcessName(processName);
         ProcessesConfig config = getConfigTemplate(processName);
-        processManager.startJava(config, uniqueName);
+        ProcessInfo processInfo = config.nextProcess(uniqueName);
+        processManager.startJava(processInfo, uniqueName);
     }
 
     /**
@@ -159,9 +159,8 @@ public class ProcessesHandler {
     @Step(".*start an? (.+) process named ([a-zA-Z0-9-_]*).*?")
     public void startJavaProcessFromConfigNamed(String configName, String processName) throws Exception {
         ProcessesConfig config = getConfigTemplate(configName);
-        processManager.startJava((ProcessesConfig)config.clone(), processName);
-        config.incrementJmxPort();
-        config.incrementDebugPort();
+        ProcessInfo processInfo = config.nextProcess(processName);
+        processManager.startJava(processInfo, processName);
     }
 
     private ProcessesConfig newProcessConfig(final String groupName, final boolean logging) {
@@ -213,8 +212,9 @@ public class ProcessesHandler {
 
     private void startTheScript(String script, String processName, boolean logging) throws Exception {
         final ProcessesConfig config = newProcessConfig(processName, logging);
+        ProcessInfo processInfo = config.nextProcess(processName);
         //setConfigForProcess(processName, config);
-        processManager.startScript(config, script, processName);
+        processManager.startScript(processInfo, script, processName);
     }
 
 

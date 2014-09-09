@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.handlers.util.OSUtils;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
@@ -50,24 +49,24 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
     private static ChorusLog log = ChorusLogFactory.getLog(JavaProcessCommandLineBuilder.class);
 
     private File featureDir;
-    private ProcessesConfig processesConfig;
+    private ProcessInfo processInfo;
     private String logFileBaseName;
 
-    public JavaProcessCommandLineBuilder(File featureDir, ProcessesConfig processesConfig, String logFileBaseName) {
+    public JavaProcessCommandLineBuilder(File featureDir, ProcessInfo processInfo, String logFileBaseName) {
         this.featureDir = featureDir;
-        this.processesConfig = processesConfig;
+        this.processInfo = processInfo;
         this.logFileBaseName = logFileBaseName;
     }
     
     public List<String> buildCommandLine() {
-        String executableToken = getExecutableToken(processesConfig);
-        List<String> jvmArgs = getSpaceSeparatedTokens(processesConfig.getJvmargs());
+        String executableToken = getExecutableToken(processInfo);
+        List<String> jvmArgs = getSpaceSeparatedTokens(processInfo.getJvmargs());
         List<String> log4jTokens = getLog4jTokens(logFileBaseName);
-        List<String> debugTokens = getDebugTokens(processesConfig);
-        List<String> jmxTokens = getJmxTokens(processesConfig);
-        List<String> classPathTokens = getClasspathTokens(processesConfig);
-        String mainClassToken = processesConfig.getMainclass();
-        List<String> argsTokens = getSpaceSeparatedTokens(processesConfig.getArgs());
+        List<String> debugTokens = getDebugTokens(processInfo);
+        List<String> jmxTokens = getJmxTokens(processInfo);
+        List<String> classPathTokens = getClasspathTokens(processInfo);
+        String mainClassToken = processInfo.getMainclass();
+        List<String> argsTokens = getSpaceSeparatedTokens(processInfo.getArgs());
 
         List<String> commandLineTokens = new ArrayList<String>();
         commandLineTokens.add(executableToken);
@@ -81,7 +80,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         return commandLineTokens;
     }
 
-    private String getExecutableToken(ProcessesConfig processesConfig) {
+    private String getExecutableToken(ProcessInfo processesConfig) {
         String executableTxt = "%s%sbin%sjava";
         return String.format(
                 executableTxt,
@@ -91,14 +90,14 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         );
     }
 
-    private List<String> getClasspathTokens(ProcessesConfig processesConfig) {
+    private List<String> getClasspathTokens(ProcessInfo processesConfig) {
         List<String>  classPathTokens = new ArrayList<String>();
         classPathTokens.add("-classpath");
         classPathTokens.add(processesConfig.getClasspath());
         return classPathTokens;
     }
 
-    private List<String> getDebugTokens(ProcessesConfig processesConfig) {
+    private List<String> getDebugTokens(ProcessInfo processesConfig) {
         List<String> debugTokens = new ArrayList<String>();
         if (processesConfig.getDebugPort() > -1) {
             debugTokens.add("-Xdebug");
@@ -107,7 +106,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         return debugTokens;
     }
 
-    private List<String> getJmxTokens(ProcessesConfig processesConfig) {
+    private List<String> getJmxTokens(ProcessInfo processesConfig) {
         List<String> jmxTokens = new ArrayList<String>();
         if (processesConfig.getJmxPort() > -1) {
             jmxTokens.add("-Dcom.sun.management.jmxremote.ssl=false");

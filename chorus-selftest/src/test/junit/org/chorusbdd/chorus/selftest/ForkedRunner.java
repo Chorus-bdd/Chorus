@@ -73,7 +73,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         processesConfig.setMainclass(mainClass);
         JavaProcessCommandLineBuilder javaProcessCommandLineBuilder = new JavaProcessCommandLineBuilder(
             new File(System.getProperty("user.dir")),
-            processesConfig,
+            processesConfig.nextProcess("forkedTests"),
             "forkedTests"
         );
 

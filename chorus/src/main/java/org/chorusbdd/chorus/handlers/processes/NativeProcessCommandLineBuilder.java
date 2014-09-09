@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -48,18 +47,18 @@ public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder 
 
     private static ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
 
-    private ProcessesConfig processesConfig;
+    private ProcessInfo processInfo;
     private File featureDir;
 
-    public NativeProcessCommandLineBuilder(ProcessesConfig processesConfig, File featureDir) {
-        this.processesConfig = processesConfig;
+    public NativeProcessCommandLineBuilder(ProcessInfo processInfo, File featureDir) {
+        this.processInfo = processInfo;
         this.featureDir = featureDir;
     }
     
     @Override
     public List<String> buildCommandLine() {
-        String executableToken = getExecutableToken(processesConfig);
-        List<String> argsTokens = getSpaceSeparatedTokens(processesConfig.getArgs());
+        String executableToken = getExecutableToken(processInfo);
+        List<String> argsTokens = getSpaceSeparatedTokens(processInfo.getArgs());
 
         List<String> commandLineTokens = new ArrayList<String>();
         commandLineTokens.add(executableToken);
@@ -67,7 +66,7 @@ public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder 
         return commandLineTokens;
     }
 
-    private String getExecutableToken(ProcessesConfig processesConfig) {
+    private String getExecutableToken(ProcessInfo processesConfig) {
         String executableTxt = processesConfig.getPathToExecutable();
         executableTxt = getPathToExecutable(featureDir, executableTxt);
         return executableTxt;
