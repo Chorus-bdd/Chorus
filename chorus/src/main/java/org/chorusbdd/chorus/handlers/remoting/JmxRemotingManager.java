@@ -180,7 +180,7 @@ public class JmxRemotingManager implements RemotingManager {
                 }
     
                 //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
-                //to actually findRemoteStepInvoker the remote method with it
+                //to actually invoke the remote method with it
                 StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
                 Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(stepInvoker, action);
                 if (args != null) {

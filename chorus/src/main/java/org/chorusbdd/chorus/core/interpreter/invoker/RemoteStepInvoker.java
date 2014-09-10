@@ -10,8 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Created by nick on 02/09/2014.
  *
- * A temporary solution to work with existing remoting code which is not yet
- * used to actually findRemoteStepInvoker the remote method TODO
+ * A local proxy for a remote step
  */
 public class RemoteStepInvoker implements StepInvoker {
 

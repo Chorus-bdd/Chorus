@@ -50,7 +50,6 @@ public class StepMethodInvokerFactory {
     public StepInvoker createInvoker(Object handlerInstance, Method method) {
         Annotation[] annotations = method.getDeclaredAnnotations();
 
-        //doing this here is horrible but it's a temporary refactoring step until we move this logic to be done once up front
         Step stepAnnotation = method.getAnnotation(Step.class);
         Pattern stepPattern = Pattern.compile(stepAnnotation.value());
         String pendingText = stepAnnotation.pending();
