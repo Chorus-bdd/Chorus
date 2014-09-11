@@ -29,10 +29,9 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.processcheckdelay;
 
-import org.chorusbdd.chorus.handlers.util.JavaVersion;
+import org.chorusbdd.chorus.handlerutils.JavaVersion;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.

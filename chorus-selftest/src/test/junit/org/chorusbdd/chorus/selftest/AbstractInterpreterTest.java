@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.handlers.util.JavaVersion;
+import org.chorusbdd.chorus.handlerutils.JavaVersion;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.junit.Test;
 

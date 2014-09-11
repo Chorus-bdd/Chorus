@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.selftest.processhandler.nonjava;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
-import org.chorusbdd.chorus.handlers.util.OSUtils;
+import org.chorusbdd.chorus.handlerutils.OSUtils;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 

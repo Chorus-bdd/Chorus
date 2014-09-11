@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import org.chorusbdd.chorus.handlers.processes.ChorusProcess;
+import org.chorusbdd.chorus.processes.processmanager.ChorusProcess;
 
 /**
 * Created by IntelliJ IDEA.

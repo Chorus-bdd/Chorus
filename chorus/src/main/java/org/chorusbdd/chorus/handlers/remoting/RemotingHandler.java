@@ -30,8 +30,12 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.handlers.util.config.loader.JDBCConfigLoader;
-import org.chorusbdd.chorus.handlers.util.config.loader.PropertiesConfigLoader;
+import org.chorusbdd.chorus.handlerutils.config.loader.JDBCConfigLoader;
+import org.chorusbdd.chorus.handlerutils.config.loader.PropertiesConfigLoader;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingConfig;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingConfigBuilder;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

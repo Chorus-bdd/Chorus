@@ -29,11 +29,8 @@
  */
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
-import org.chorusbdd.chorus.core.interpreter.invoker.AbstractStepMethodInvoker;
-import org.chorusbdd.chorus.handlers.util.PolledAssertion;
+import org.chorusbdd.chorus.handlerutils.PolledAssertion;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;

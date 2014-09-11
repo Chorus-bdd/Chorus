@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest.polledassertion;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.handlers.util.FailImmediatelyException;
+import org.chorusbdd.chorus.handlerutils.FailImmediatelyException;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 

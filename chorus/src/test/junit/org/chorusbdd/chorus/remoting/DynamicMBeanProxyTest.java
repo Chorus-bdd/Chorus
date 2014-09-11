@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting;
 
-import org.chorusbdd.chorus.remoting.jmx.AbstractJmxProxy;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.AbstractJmxProxy;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.junit.Test;
 
