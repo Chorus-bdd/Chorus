@@ -1,13 +1,13 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
+import org.chorusbdd.chorus.core.interpreter.StepMatcher;
 import org.chorusbdd.chorus.core.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
 import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
-import org.chorusbdd.chorus.handlerutils.HandlerUtils;
+import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
-import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -180,7 +180,7 @@ public class JmxRemotingManager implements RemotingManager {
                 //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
                 //to actually invoke the remote method with it
                 StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
-                Object[] args = RegexpUtils.extractGroupsAndCheckMethodParams(stepInvoker, action);
+                Object[] args = StepMatcher.extractGroupsAndCheckMethodParams(stepInvoker, action);
                 if (args != null) {
                     if (foundStepInvoker == null) {
                         foundStepInvoker = stepInvoker;

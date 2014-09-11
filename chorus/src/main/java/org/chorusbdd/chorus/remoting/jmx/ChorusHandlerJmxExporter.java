@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvokerFactory;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.handlerutils.PolledAssertion;
+import org.chorusbdd.chorus.util.PolledAssertion;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

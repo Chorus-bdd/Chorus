@@ -29,9 +29,6 @@
  */
 package org.chorusbdd.chorus.util;
 
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,8 +48,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedExecutors {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(NamedExecutors.class);
-
     private static class LogOnErrorThreadGroup extends ThreadGroup {
         public LogOnErrorThreadGroup() {
             super("JTimeSeriesLoggingThreadGroup");
@@ -61,7 +56,7 @@ public class NamedExecutors {
         public void uncaughtException(Thread t, Throwable e) {
             super.uncaughtException(t, e);
             if ( ! (e instanceof ThreadDeath)) {
-                log.error("An Uncaught Exception Shut Down Thread " + t.getName(), e);
+                System.err.println("An Uncaught Exception Shut Down Thread " + t.getName() + e);
             }
         }
     }

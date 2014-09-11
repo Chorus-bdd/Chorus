@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config.source;
+package org.chorusbdd.chorus.util.handlerconfig.source;
 
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.logging.ChorusLog;

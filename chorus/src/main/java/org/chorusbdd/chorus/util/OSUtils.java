@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerutils;
+package org.chorusbdd.chorus.util;
 
 /**
  * User: nick

@@ -27,13 +27,13 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config.loader;
+package org.chorusbdd.chorus.util.handlerconfig.loader;
 
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.handlerutils.config.HandlerConfig;
-import org.chorusbdd.chorus.handlerutils.config.HandlerConfigBuilder;
-import org.chorusbdd.chorus.handlerutils.config.source.JdbcPropertySource;
-import org.chorusbdd.chorus.handlerutils.config.source.VariableReplacingPropertySource;
+import org.chorusbdd.chorus.util.handlerconfig.HandlerConfig;
+import org.chorusbdd.chorus.util.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.util.handlerconfig.source.JdbcPropertySource;
+import org.chorusbdd.chorus.util.handlerconfig.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

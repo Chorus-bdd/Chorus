@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.handlerutils.config.AbstractHandlerConfigBuilder;
-import org.chorusbdd.chorus.handlerutils.config.HandlerConfigBuilder;
+import org.chorusbdd.chorus.util.handlerconfig.AbstractHandlerConfigBuilder;
+import org.chorusbdd.chorus.util.handlerconfig.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;

@@ -27,23 +27,24 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config;
-
-import org.chorusbdd.chorus.util.logging.ChorusLog;
+package org.chorusbdd.chorus.util.handlerconfig;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Nick
- * Date: 03/10/12
- * Time: 14:27
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 21/09/12
+ * Time: 08:44
+ *
+ * Interface for a handler config bean which supports validation rules
  */
-public abstract class AbstractHandlerConfig implements HandlerConfig {
+public interface HandlerConfig {
 
-    protected boolean logInvalidConfig(String message) {
-        getLog().warn("Invalid " + getClass().getSimpleName() + " " + getGroupName() + " - " + message);
-        return false;
-    }
+    boolean isValid();
 
-    protected abstract ChorusLog getLog();
+    String getValidationRuleDescription();
+
+    /**
+     * @return the group name to which this HandlerConfig relates
+     */
+    String getGroupName();
 }

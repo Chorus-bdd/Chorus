@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config;
+package org.chorusbdd.chorus.util.handlerconfig;
 
 import org.chorusbdd.chorus.util.ChorusException;
 

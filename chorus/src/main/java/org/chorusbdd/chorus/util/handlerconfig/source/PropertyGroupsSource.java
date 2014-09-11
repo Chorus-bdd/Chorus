@@ -27,26 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils;
+package org.chorusbdd.chorus.util.handlerconfig.source;
+
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
- * User: nick
- * Date: 17/07/13
- * Time: 22:17
+ * User: GA2EBBU
+ * Date: 21/09/12
+ * Time: 10:43
  * To change this template use File | Settings | File Templates.
  */
-public class JavaVersion {
-        
-    public static final boolean IS_1_7_OR_GREATER = isGreaterThanOrEqualTo(1.7f);    
-    
-    public static boolean isGreaterThanOrEqualTo(float version) {
-        String javaVersion = System.getProperty("java.specification.version");
-        boolean result = false;
-        try {
-            return Float.parseFloat(javaVersion) >= version;
-        } catch (NumberFormatException e) {
-        }
-        return result;
-    }
+public interface PropertyGroupsSource {
+
+    /**
+     * @return a Map of Properties grouped by a String groupName
+     */
+    Map<String, Properties> getPropertyGroups();
 }

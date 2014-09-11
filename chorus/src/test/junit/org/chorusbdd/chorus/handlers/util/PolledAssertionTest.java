@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.util;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.handlerutils.FailImmediatelyException;
-import org.chorusbdd.chorus.handlerutils.PolledAssertion;
+import org.chorusbdd.chorus.util.FailImmediatelyException;
+import org.chorusbdd.chorus.util.PolledAssertion;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;

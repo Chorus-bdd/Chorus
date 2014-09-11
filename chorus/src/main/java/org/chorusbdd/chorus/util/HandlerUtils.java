@@ -27,24 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config;
+package org.chorusbdd.chorus.util;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 21/09/12
- * Time: 08:44
- *
- * Interface for a handler config bean which supports validation rules
+ * Date: 19/09/12
+ * Time: 09:30
  */
-public interface HandlerConfig {
-
-    boolean isValid();
-
-    String getValidationRuleDescription();
+public class HandlerUtils {
 
     /**
-     * @return the group name to which this HandlerConfig relates
+     * Like Class.forName, but works for primitive types too
+     *
+     * @param name
+     * @return
+     * @throws ClassNotFoundException
      */
-    String getGroupName();
+    public static Class forName(String name) throws ClassNotFoundException {
+        if (name.equals("int")) return int.class;
+        if (name.equals("double")) return double.class;
+        if (name.equals("boolean")) return boolean.class;
+        if (name.equals("long")) return long.class;
+        if (name.equals("float")) return float.class;
+        if (name.equals("char")) return char.class;
+        if (name.equals("short")) return short.class;
+        if (name.equals("byte")) return byte.class;
+        return Class.forName(name);
+    }
 }

@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.handlerutils.config.AbstractHandlerConfig;
+import org.chorusbdd.chorus.util.handlerconfig.AbstractHandlerConfig;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

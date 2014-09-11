@@ -27,32 +27,26 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils;
+package org.chorusbdd.chorus.util;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 19/09/12
- * Time: 09:30
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 17/07/13
+ * Time: 22:17
+ * To change this template use File | Settings | File Templates.
  */
-public class HandlerUtils {
-
-    /**
-     * Like Class.forName, but works for primitive types too
-     *
-     * @param name
-     * @return
-     * @throws ClassNotFoundException
-     */
-    public static Class forName(String name) throws ClassNotFoundException {
-        if (name.equals("int")) return int.class;
-        if (name.equals("double")) return double.class;
-        if (name.equals("boolean")) return boolean.class;
-        if (name.equals("long")) return long.class;
-        if (name.equals("float")) return float.class;
-        if (name.equals("char")) return char.class;
-        if (name.equals("short")) return short.class;
-        if (name.equals("byte")) return byte.class;
-        return Class.forName(name);
+public class JavaVersion {
+        
+    public static final boolean IS_1_7_OR_GREATER = isGreaterThanOrEqualTo(1.7f);    
+    
+    public static boolean isGreaterThanOrEqualTo(float version) {
+        String javaVersion = System.getProperty("java.specification.version");
+        boolean result = false;
+        try {
+            return Float.parseFloat(javaVersion) >= version;
+        } catch (NumberFormatException e) {
+        }
+        return result;
     }
 }

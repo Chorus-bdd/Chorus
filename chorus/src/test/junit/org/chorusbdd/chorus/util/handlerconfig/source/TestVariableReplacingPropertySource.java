@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config.source;
+package org.chorusbdd.chorus.util.handlerconfig.source;
 
 import junit.framework.Assert;
 import org.chorusbdd.chorus.results.FeatureToken;

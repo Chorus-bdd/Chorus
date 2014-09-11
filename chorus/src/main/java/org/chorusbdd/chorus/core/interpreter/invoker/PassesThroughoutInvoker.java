@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.handlerutils.PolledAssertion;
+import org.chorusbdd.chorus.util.PolledAssertion;
 
 import java.util.concurrent.TimeUnit;
 

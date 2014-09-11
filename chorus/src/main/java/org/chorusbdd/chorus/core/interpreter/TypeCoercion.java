@@ -27,8 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.core.interpreter;
 
+import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -43,7 +44,7 @@ import java.util.regex.Pattern;
  * Date: 28/06/12
  * Time: 08:58
  */
-public class TypeCoercion {
+class TypeCoercion {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RegexpUtils.class);
 

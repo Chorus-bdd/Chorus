@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.processes.processmanager;
 
-import org.chorusbdd.chorus.handlerutils.JavaVersion;
+import org.chorusbdd.chorus.util.JavaVersion;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 

@@ -27,22 +27,20 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config.source;
+package org.chorusbdd.chorus.util.handlerconfig;
 
-import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
  * Date: 21/09/12
- * Time: 10:43
- * To change this template use File | Settings | File Templates.
+ * Time: 08:59
  */
-public interface PropertyGroupsSource {
+public interface HandlerConfigBuilder<E extends HandlerConfig> {
 
     /**
-     * @return a Map of Properties grouped by a String groupName
+     * Create a config, first initialising with the default properties, and then overriding the defaults with Properties p
      */
-    Map<String, Properties> getPropertyGroups();
+    E createConfig(Properties p, Properties defaults);
 }

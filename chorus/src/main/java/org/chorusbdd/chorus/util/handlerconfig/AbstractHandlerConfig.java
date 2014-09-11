@@ -27,20 +27,23 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config;
+package org.chorusbdd.chorus.util.handlerconfig;
 
-import java.util.Properties;
+import org.chorusbdd.chorus.util.logging.ChorusLog;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 21/09/12
- * Time: 08:59
+ * Created with IntelliJ IDEA.
+ * User: Nick
+ * Date: 03/10/12
+ * Time: 14:27
+ * To change this template use File | Settings | File Templates.
  */
-public interface HandlerConfigBuilder<E extends HandlerConfig> {
+public abstract class AbstractHandlerConfig implements HandlerConfig {
 
-    /**
-     * Create a config, first initialising with the default properties, and then overriding the defaults with Properties p
-     */
-    E createConfig(Properties p, Properties defaults);
+    protected boolean logInvalidConfig(String message) {
+        getLog().warn("Invalid " + getClass().getSimpleName() + " " + getGroupName() + " - " + message);
+        return false;
+    }
+
+    protected abstract ChorusLog getLog();
 }

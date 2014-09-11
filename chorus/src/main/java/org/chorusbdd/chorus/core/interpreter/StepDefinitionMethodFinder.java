@@ -32,7 +32,6 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.RegexpUtils;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
@@ -80,7 +79,7 @@ class StepDefinitionMethodFinder {
         String action = step.getAction();
 
         log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + action + "]");
-        Object[] values = RegexpUtils.extractGroupsAndCheckMethodParams(invoker, action);
+        Object[] values = StepMatcher.extractGroupsAndCheckMethodParams(invoker, action);
         if (values != null) { //the regexp matched the action and the method's parameters
             foundStepMethod(invoker, values);
         }

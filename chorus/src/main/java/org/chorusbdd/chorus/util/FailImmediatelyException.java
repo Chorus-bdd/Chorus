@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerutils;
+package org.chorusbdd.chorus.util;
 
 /**
  * Created by nick on 30/07/2014.

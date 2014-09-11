@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.core.interpreter;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
-import org.chorusbdd.chorus.handlerutils.PolledAssertion;
+import org.chorusbdd.chorus.util.PolledAssertion;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;

@@ -27,10 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerutils.config.loader;
+package org.chorusbdd.chorus.util.handlerconfig.loader;
 
-import org.chorusbdd.chorus.handlerutils.config.HandlerConfig;
-import org.chorusbdd.chorus.handlerutils.config.HandlerConfigBuilder;
+import org.chorusbdd.chorus.util.handlerconfig.HandlerConfig;
+import org.chorusbdd.chorus.util.handlerconfig.HandlerConfigBuilder;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
