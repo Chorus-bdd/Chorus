@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.results.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

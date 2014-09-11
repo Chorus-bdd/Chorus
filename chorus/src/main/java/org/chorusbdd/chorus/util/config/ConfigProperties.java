@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.util.config;
 
-import org.chorusbdd.chorus.util.DeepCopy;
+import org.chorusbdd.chorus.results.DeepCopy;
 
 import java.util.List;
 

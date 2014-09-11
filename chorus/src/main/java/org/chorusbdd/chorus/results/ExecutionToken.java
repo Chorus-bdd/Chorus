@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.results;
 
-import org.chorusbdd.chorus.util.NetworkUtils;
+import org.chorusbdd.chorus.results.util.NetworkUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

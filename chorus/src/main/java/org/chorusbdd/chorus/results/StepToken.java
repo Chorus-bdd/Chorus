@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.results;
 
-import org.chorusbdd.chorus.util.ExceptionHandling;
+import org.chorusbdd.chorus.results.util.StackTraceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +106,7 @@ public class StepToken extends AbstractToken {
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
         this.exception = throwable.toString();
-        this.stackTrace = ExceptionHandling.getStackTraceAsString(throwable);
+        this.stackTrace = StackTraceUtil.getStackTraceAsString(throwable);
     }
 
     public boolean inOneOf(StepEndState... states) {

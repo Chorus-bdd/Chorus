@@ -80,10 +80,4 @@ public class ExceptionHandling {
        return element;
     }
 
-    public static String getStackTraceAsString(Throwable t) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        PrintStream p = new PrintStream(bos);
-        t.printStackTrace(p);
-        return bos.toString();
-    }
 }
