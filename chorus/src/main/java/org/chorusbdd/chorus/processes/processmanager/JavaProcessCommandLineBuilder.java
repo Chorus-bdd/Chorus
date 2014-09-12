@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -30,6 +30,9 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.core.interpreter.initialization.ExecutionListenerFactory;
+import org.chorusbdd.chorus.core.interpreter.initialization.FeatureListBuilder;
+import org.chorusbdd.chorus.core.interpreter.initialization.InterpreterBuilder;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -38,9 +41,9 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.config.ConfigReader;
 import org.chorusbdd.chorus.util.config.InterpreterPropertyException;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
-import org.chorusbdd.chorus.util.logging.OutputFormatterLogProvider;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.OutputFormatterLogProvider;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.selftest.handlers.configurations_for_processes;
 
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 /**
  * Simple main class which will terminate itself after the number of seconds specified in the first

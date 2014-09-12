@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLog;
 
 import java.io.*;
 import java.util.concurrent.TimeUnit;

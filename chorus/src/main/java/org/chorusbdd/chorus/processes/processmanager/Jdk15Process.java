@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.processes.processmanager;
 
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusOut;
 
 import java.io.*;
 import java.util.List;

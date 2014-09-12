@@ -31,11 +31,10 @@ package org.chorusbdd.chorus.selftest.jmxexecutionlistener;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.InterpreterOutputExecutionListener;
-import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListener;
-import org.chorusbdd.chorus.remoting.jmx.RemoteExecutionListenerMBean;
+import org.chorusbdd.chorus.executionlistener.RemoteExecutionListener;
+import org.chorusbdd.chorus.executionlistener.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.logging.PlainOutputFormatter;
+import org.chorusbdd.chorus.logging.PlainOutputFormatter;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;

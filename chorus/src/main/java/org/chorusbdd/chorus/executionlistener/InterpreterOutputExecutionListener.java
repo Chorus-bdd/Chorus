@@ -30,11 +30,8 @@
 package org.chorusbdd.chorus.executionlistener;
 
 import org.chorusbdd.chorus.results.*;
-import org.chorusbdd.chorus.util.logging.OutputFormatter;
-import org.chorusbdd.chorus.util.logging.PlainOutputFormatter;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.OutputFormatter;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 /**

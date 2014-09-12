@@ -30,9 +30,9 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.util.handlerconfig.AbstractHandlerConfig;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.File;
 

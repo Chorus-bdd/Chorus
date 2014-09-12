@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.util.config;
 
-import org.chorusbdd.chorus.util.logging.ChorusOut;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

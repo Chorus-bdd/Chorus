@@ -8,8 +8,8 @@ import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
 import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

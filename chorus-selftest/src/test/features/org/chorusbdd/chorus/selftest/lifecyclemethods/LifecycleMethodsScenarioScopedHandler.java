@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.ChorusOut;
 
 /**
  * Created by IntelliJ IDEA.

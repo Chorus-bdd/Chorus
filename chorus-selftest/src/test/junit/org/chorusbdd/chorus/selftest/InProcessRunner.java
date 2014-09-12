@@ -34,8 +34,8 @@ import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
 import org.chorusbdd.chorus.util.config.ConfigProperties;
 import org.chorusbdd.chorus.util.config.ConfigurationProperty;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusOut;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

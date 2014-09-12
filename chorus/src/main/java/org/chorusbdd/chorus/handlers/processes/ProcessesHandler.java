@@ -35,12 +35,12 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Initialize;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.handlerconfig.loader.PropertiesConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.processes.processmanager.*;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.util.HashMap;

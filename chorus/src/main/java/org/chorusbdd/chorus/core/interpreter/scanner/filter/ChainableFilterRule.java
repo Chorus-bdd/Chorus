@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.core.interpreter.scanner.filter;
 
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 /**
  * Created by IntelliJ IDEA.

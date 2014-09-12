@@ -31,8 +31,8 @@ package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import org.chorusbdd.chorus.annotations.PassesWithin;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.logging.ChorusLog;
-import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

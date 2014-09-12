@@ -4,7 +4,7 @@ import org.chorusbdd.chorus.annotations.Destroy;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Initialize;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.ChorusOut;
 
 /**
  * User: nick

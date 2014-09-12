@@ -39,7 +39,7 @@ import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.chorusbdd.chorus.util.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.ChorusOut;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,6 +50,9 @@ import java.util.List;
  *
  * Created by: Steve Neal
  * Date: 28/10/11
+ * 
+ * TODO candidate for cleanup/deprecation or improvement 
+ * These days we use the JUnit ant task to launch chorus as a JUnit suite with @RunWith(ChorusSuite.class)
  */
 public class ChorusTask extends Task {
 
