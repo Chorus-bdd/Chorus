@@ -36,8 +36,8 @@ import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluat
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 

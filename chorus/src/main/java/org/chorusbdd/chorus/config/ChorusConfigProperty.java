@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util.config;
+package org.chorusbdd.chorus.config;
 
 import org.chorusbdd.chorus.util.ChorusConstants;
 

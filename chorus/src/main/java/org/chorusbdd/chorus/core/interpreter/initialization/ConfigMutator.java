@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter.initialization;
 
-import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.config.ConfigProperties;
 
 /**
  * Created with IntelliJ IDEA.

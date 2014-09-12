@@ -27,27 +27,43 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
-
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
-
-import java.util.Properties;
+package org.chorusbdd.chorus.config;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 06/07/12
+ * Time: 23:05
+ * To change this template use File | Settings | File Templates.
  */
-public class DefaultTestProperties extends Properties {
+public interface ConfigurationProperty {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest");
-        put(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
-        put(ChorusConfigProperty.LOG_LEVEL.getSystemProperty(), "info");
-    }
+    String getSwitchName();
+
+    String getSwitchShortName();
+
+    String getHyphenatedSwitch();
+
+    String getSystemProperty();
+
+    boolean isMandatory();
+
+    int getMinValueCount();
+
+    int getMaxValueCount();
+
+    String getValidatingExpression();
+
+    String getExample();
+
+    String getDescription();
+
+    String[] getDefaults();
+
+    PropertySourceMode getPropertySourceMode();
+
+    /**
+     * @return true if switchName or switchShortName matches switchName
+     */
+    boolean matchesSwitch(String s);
 }

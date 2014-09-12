@@ -32,8 +32,8 @@ package org.chorusbdd.chorus.selftest;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
-import org.chorusbdd.chorus.util.config.ConfigProperties;
-import org.chorusbdd.chorus.util.config.ConfigurationProperty;
+import org.chorusbdd.chorus.config.ConfigProperties;
+import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusOut;
 

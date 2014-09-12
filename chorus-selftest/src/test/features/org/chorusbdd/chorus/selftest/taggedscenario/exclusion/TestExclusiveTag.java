@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest.taggedscenario.exclusion;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 
 /**
  * Created with IntelliJ IDEA.

@@ -32,8 +32,8 @@ package org.chorusbdd.chorus.selftest;
 import org.chorusbdd.chorus.processes.processmanager.JavaProcessCommandLineBuilder;
 import org.chorusbdd.chorus.processes.processmanager.ProcessRedirector;
 import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigurationProperty;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ConfigurationProperty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

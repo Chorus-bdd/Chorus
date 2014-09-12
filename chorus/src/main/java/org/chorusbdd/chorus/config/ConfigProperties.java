@@ -27,18 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util.config;
+package org.chorusbdd.chorus.config;
+
+import org.chorusbdd.chorus.results.DeepCopy;
+
+import java.util.List;
 
 /**
- * User: nick
- * Date: 15/01/13
- * Time: 18:24
+ * Created with IntelliJ IDEA.
+ * Date: 23/07/12
+ * Time: 13:23
  *
- * Where more than one property source provide value(s) for a property, each source may either append values
- * to the list of values for that property or may override current values (in this case the eventual value will be
- * the value supplied by the highest priority source)
+ * Provide access to get and set ConfigurationProperty
  */
-public enum PropertySourceMode {
-    OVERRIDE,
-    APPEND
+public interface ConfigProperties extends DeepCopy<ConfigProperties> {
+
+    void setProperty(ConfigurationProperty property, List<String> values);
+
+    List<String> getValues(ConfigurationProperty property);
+
+    String getValue(ConfigurationProperty property);
+
+    boolean isSet(ConfigurationProperty property);
+
+    boolean isTrue(ConfigurationProperty property);
 }

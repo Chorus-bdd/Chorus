@@ -27,27 +27,34 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.config;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
-
-import java.util.Properties;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
+ * Created with IntelliJ IDEA.
+ * User: GA2EBBU
+ * Date: 12/06/12
+ * Time: 11:48
  *
- * Standard set of properties for self-testing
+ * Provide default values for config properties
  */
-public class DefaultTestProperties extends Properties {
+public class DefaultsConfigSource extends AbstractConfigSource {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest");
-        put(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
-        put(ChorusConfigProperty.LOG_LEVEL.getSystemProperty(), "info");
+
+    public DefaultsConfigSource(List<ConfigurationProperty> properties) {
+        super(properties);
+    }
+
+    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
+        for ( ConfigurationProperty p : getProperties()) {
+            if (  p.getDefaults() != null && p.getDefaults().length > 0) {
+                List<String> properties = getOrCreatePropertyList(propertyMap, p);
+                Collections.addAll(properties, p.getDefaults());
+            }
+        }
+        return propertyMap;
     }
 }

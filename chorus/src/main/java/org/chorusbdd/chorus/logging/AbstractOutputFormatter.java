@@ -4,7 +4,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

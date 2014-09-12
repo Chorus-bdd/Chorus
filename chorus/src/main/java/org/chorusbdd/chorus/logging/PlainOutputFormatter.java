@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.logging;
 
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 
 /**
  * Nick E

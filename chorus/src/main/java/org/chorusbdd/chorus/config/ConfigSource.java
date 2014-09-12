@@ -27,43 +27,30 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util.config;
+package org.chorusbdd.chorus.config;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
- * User: nick
- * Date: 06/07/12
- * Time: 23:05
- * To change this template use File | Settings | File Templates.
+ * User: GA2EBBU
+ * Date: 12/06/12
+ * Time: 10:01
+ *
+ *  A source for interpreter properties
+ *
+ *  Multiple sources may be used to set up the interpreter configuration, the two enabled by
+ *  default are command line properties and system properties
  */
-public interface ConfigurationProperty {
-
-    String getSwitchName();
-
-    String getSwitchShortName();
-
-    String getHyphenatedSwitch();
-
-    String getSystemProperty();
-
-    boolean isMandatory();
-
-    int getMinValueCount();
-
-    int getMaxValueCount();
-
-    String getValidatingExpression();
-
-    String getExample();
-
-    String getDescription();
-
-    String[] getDefaults();
-
-    PropertySourceMode getPropertySourceMode();
+public interface ConfigSource {
 
     /**
-     * @return true if switchName or switchShortName matches switchName
+     * Add to the provided propertyMap any properties available from this source
+     *
+     * @return propertyMap, with parsed properties added
      */
-    boolean matchesSwitch(String s);
+    Map<ConfigurationProperty, List<String>> parseProperties(
+            Map<ConfigurationProperty, List<String>> propertyMap,
+            String... args) throws InterpreterPropertyException;
 }

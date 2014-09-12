@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
 import org.chorusbdd.chorus.util.JavaVersion;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.junit.Test;
 
 import java.io.*;

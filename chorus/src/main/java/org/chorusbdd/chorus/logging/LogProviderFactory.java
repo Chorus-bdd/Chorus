@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.logging;
 
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ConfigProperties;
 
 /**
  * Created by nick on 10/02/14.

@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.config.ConfigProperties;
 
 import java.io.PrintStream;
 import java.util.concurrent.atomic.AtomicBoolean;

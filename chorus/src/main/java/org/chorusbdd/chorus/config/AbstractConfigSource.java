@@ -27,27 +27,47 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.config;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
-
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Created with IntelliJ IDEA.
+ * User: GA2EBBU
+ * Date: 12/06/12
+ * Time: 10:15
  */
-public class DefaultTestProperties extends Properties {
+public abstract class AbstractConfigSource implements ConfigSource {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest");
-        put(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
-        put(ChorusConfigProperty.LOG_LEVEL.getSystemProperty(), "info");
+    List<ConfigurationProperty> properties;
+
+    protected AbstractConfigSource(List<ConfigurationProperty> properties) {
+        this.properties = properties;
+    }
+
+    protected List<String> getOrCreatePropertyList(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty switchName) {
+        List<String> tokens = propertyMap.get(switchName);
+        if ( tokens == null) {
+            tokens = new ArrayList<String>();
+            propertyMap.put(switchName, tokens);
+        }
+        return tokens;
+    }
+
+    protected List<ConfigurationProperty> getProperties() {
+        return properties;
+    }
+
+    protected ConfigurationProperty getProperty(String s) {
+        ConfigurationProperty result = null;
+        for (ConfigurationProperty p : properties) {
+            if ( p.matchesSwitch(s)) {
+                result = p;
+                break;
+            }
+        }
+        return result;
     }
 }

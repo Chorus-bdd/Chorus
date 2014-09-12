@@ -33,8 +33,8 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.InterpreterOutputExecutionListener;
 import org.chorusbdd.chorus.executionlistener.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListenerMBean;
-import org.chorusbdd.chorus.util.config.ChorusConfigProperty;
-import org.chorusbdd.chorus.util.config.ConfigProperties;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 

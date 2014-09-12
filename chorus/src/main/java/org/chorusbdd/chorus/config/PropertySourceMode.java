@@ -27,27 +27,18 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
-
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
-
-import java.util.Properties;
+package org.chorusbdd.chorus.config;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
+ * User: nick
+ * Date: 15/01/13
+ * Time: 18:24
  *
- * Standard set of properties for self-testing
+ * Where more than one property source provide value(s) for a property, each source may either append values
+ * to the list of values for that property or may override current values (in this case the eventual value will be
+ * the value supplied by the highest priority source)
  */
-public class DefaultTestProperties extends Properties {
-
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest");
-        put(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
-        put(ChorusConfigProperty.LOG_LEVEL.getSystemProperty(), "info");
-    }
+public enum PropertySourceMode {
+    OVERRIDE,
+    APPEND
 }

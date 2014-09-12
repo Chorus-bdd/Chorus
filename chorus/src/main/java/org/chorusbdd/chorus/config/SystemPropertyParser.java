@@ -27,27 +27,49 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.config;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
-
-import java.util.Properties;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 26/06/12
- * Time: 08:43
- *
- * Standard set of properties for self-testing
+ * Created with IntelliJ IDEA.
+ * User: GA2EBBU
+ * Date: 12/06/12
+ * Time: 10:04
+ * To change this template use File | Settings | File Templates.
  */
-public class DefaultTestProperties extends Properties {
+public class SystemPropertyParser extends AbstractConfigSource implements ConfigSource {
 
-    public DefaultTestProperties() {
-        //test output at log level info
-        //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
-        put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest");
-        put(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
-        put(ChorusConfigProperty.LOG_LEVEL.getSystemProperty(), "info");
+    public SystemPropertyParser(List<ConfigurationProperty> properties) {
+        super(properties);
     }
+
+    /**
+     * Add to the provided propertyMap any properties available from this source
+     *
+     * Where the map already contains property values under a given key, extra property values should be
+     * appended to the List
+
+     * @return propertyMap, with parsed properties added
+     */
+    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) {
+        for ( ConfigurationProperty p : getProperties()) {
+           String value = System.getProperty(p.getSystemProperty());
+           if ( value != null ) {
+               addValues(propertyMap, p, value);
+           }
+        }
+        return propertyMap;
+    }
+
+    private void addValues(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty property, String value) {
+        StringTokenizer st = new StringTokenizer(value, " ");
+        List<String> tokens = getOrCreatePropertyList(propertyMap, property);
+        while(st.hasMoreElements()) {
+            tokens.add(st.nextToken());
+        }
+    }
+
 }
