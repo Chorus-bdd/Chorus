@@ -27,11 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.util;
+package org.chorusbdd.chorus.util;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.util.FailImmediatelyException;
-import org.chorusbdd.chorus.util.PolledAssertion;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
