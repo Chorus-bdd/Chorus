@@ -27,8 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.executionlistener;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.results.*;
 import org.chorusbdd.chorus.logging.OutputFormatter;
 

@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest.jmxexecutionlistener;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.executionlistener.InterpreterOutputExecutionListener;
+import org.chorusbdd.chorus.core.interpreter.startup.InterpreterOutputExecutionListener;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListener;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;

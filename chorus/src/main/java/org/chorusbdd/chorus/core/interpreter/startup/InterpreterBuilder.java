@@ -27,33 +27,48 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.initialization;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigProperties;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Nick
- * Date: 12/06/12
- * Time: 14:42
+ * User: nick
+ * Date: 24/02/13
+ * Time: 16:16
  *
- * Used to generate a new config based on a baseConfig
- *
- * This can be useful, for example, if we want to generate multiple configs from a single
- * base - in the case of the JUnit runner we have a base config which would run all features
- * we want to generate from this a config for each feature file, so that each feature file
- * can be executed in a separate interpreter run, as part of a junit suite
+ * Build and configurea a ChorusInterpreter
  */
-public interface ConfigMutator {
+public class InterpreterBuilder {
 
-    public static ConfigMutator NULL_MUTATOR = new ConfigMutator() {
-        public ConfigProperties getNewConfig(ConfigProperties baseConfig) {
-            return baseConfig.deepCopy();
-        }
-    };
+    private ChorusLog log = ChorusLogFactory.getLog(InterpreterBuilder.class);
+
+    private ExecutionListenerSupport listenerSupport;
+    
+    public InterpreterBuilder(ExecutionListenerSupport listenerSupport) {
+        this.listenerSupport = listenerSupport;
+    }
 
     /**
-     * @return ConfigReader - a deep clone of the baseConfig, with some altered properties
+     * Run the interpreter, collating results into the executionToken
      */
-    public ConfigProperties getNewConfig(ConfigProperties baseConfig);
+    public ChorusInterpreter buildAndConfigure(ConfigProperties config) {
+       
+        ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
+        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
+        List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
+        if (handlerPackages != null) {
+            chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
+        }
+        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);        
+        chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
+        return chorusInterpreter;
+    }
 }

@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.initialization;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.core.interpreter.StepMacro;
 import org.chorusbdd.chorus.core.interpreter.StepMacroParser;

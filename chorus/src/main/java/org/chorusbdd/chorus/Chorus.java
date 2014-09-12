@@ -30,9 +30,9 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.initialization.ExecutionListenerFactory;
-import org.chorusbdd.chorus.core.interpreter.initialization.FeatureListBuilder;
-import org.chorusbdd.chorus.core.interpreter.initialization.InterpreterBuilder;
+import org.chorusbdd.chorus.core.interpreter.startup.ExecutionListenerFactory;
+import org.chorusbdd.chorus.core.interpreter.startup.FeatureListBuilder;
+import org.chorusbdd.chorus.core.interpreter.startup.InterpreterBuilder;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;

@@ -27,11 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.initialization;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.executionlistener.InterpreterOutputExecutionListener;
-import org.chorusbdd.chorus.executionlistener.DynamicProxyMBeanCreator;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigProperties;
