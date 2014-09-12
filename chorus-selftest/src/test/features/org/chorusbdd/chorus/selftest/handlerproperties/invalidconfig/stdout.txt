@@ -13,7 +13,7 @@ Chorus --> WARN    - Removing config1 which is not a valid Remoting handler conf
 Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
 Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol, name and port must be set
-    I can call an exported method in config1                                                 FAILED  (JmxRemotingManager:linenumber)-ChorusException Failed to find remoting configuration for component: config1
+    I can call an exported method in config1                                                 FAILED  (RemotingHandler:linenumber)-ChorusException Failed to find remoting configuration for component: config1
 
 
 Features  (total:1) (passed:0) (failed:1)
