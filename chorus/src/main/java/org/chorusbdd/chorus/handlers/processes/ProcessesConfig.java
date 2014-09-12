@@ -27,12 +27,14 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.processmanager.OutputMode;
+import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
 
 import java.io.File;
 
@@ -316,7 +318,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     @Override
     public String toString() {
         return "ProcessesConfig{" +
-                  processInfo +
+                processInfo.getPropertiesAsString() +
                 '}';
     }
 }

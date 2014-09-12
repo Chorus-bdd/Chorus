@@ -27,11 +27,12 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.processes.processmanager.OutputMode;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;

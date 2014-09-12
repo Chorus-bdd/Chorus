@@ -27,13 +27,13 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
+package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Map;
 import java.util.Properties;

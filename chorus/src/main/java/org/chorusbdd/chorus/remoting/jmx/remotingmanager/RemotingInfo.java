@@ -39,9 +39,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 * Date: 18/09/12
 * Time: 08:20
 */
-public class RemotingConfig extends AbstractHandlerConfig {
-
-    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfig.class);
+public class RemotingInfo {
 
     //default protocol to jmx so we don't have to specify it if loading props from db
     private String protocol = "jmx";
@@ -99,37 +97,19 @@ public class RemotingConfig extends AbstractHandlerConfig {
         this.connectionAttemptMillis = connectionAttemptMillis;
     }
 
-    public boolean isValid() {
-        boolean valid = true;
-        if ( getHost() == null || getHost().trim().length() == 0 ) {
-            valid = logInvalidConfig("host was not set");
-        } else if ( getProtocol() == null || getProtocol().trim().length() == 0) {
-            valid = logInvalidConfig("protocol was not set");
-        } else if ( getGroupName() == null || getGroupName().trim().length() == 0 ) {
-            valid = logInvalidConfig("group name was not set");
-        } else if ( getPort() <= 0 ) {
-            valid = logInvalidConfig("port was not set");
-        }
-        return valid;
-    }
-
-    public String getValidationRuleDescription() {
-        return "host, protocol, name and port must be set";
-    }
-
-    protected ChorusLog getLog() {
-        return log;
-    }
-
     public String toString() {
-        return "RemotingConfig{" +
-                "protocol='" + protocol + '\'' +
+        return "RemotingInfo{" +
+                getPropertiesAsString() +
+                '}';
+    }
+
+    public String getPropertiesAsString() {
+        return "protocol='" + protocol + '\'' +
                 ", name='" + name + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
                 ", connectionAttempts=" + connectionAttempts +
-                ", connectionAttemptMillis=" + connectionAttemptMillis +
-                '}';
+                ", connectionAttemptMillis=" + connectionAttemptMillis;
     }
 
 }

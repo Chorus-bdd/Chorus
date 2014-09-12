@@ -32,10 +32,9 @@ package org.chorusbdd.chorus.handlers.remoting;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingConfig;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingConfigBuilder;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingManager;
+import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
+import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.*;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -96,8 +95,9 @@ public class RemotingHandler {
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
-    public Object performActionInRemoteComponent(String action, String componentName) throws Exception {       
-        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfigMap);
+    public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
+        RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
+        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.getRemotingInfo());
     }
 
     /**
@@ -110,6 +110,52 @@ public class RemotingHandler {
         } catch (Throwable t) {
             log.error("Failed while destroying jmx remoting manager");   
         }
+    }
+
+
+    private RemotingConfig getRemotingConfigForComponent(String name) {
+        RemotingConfig remotingConfig = remotingConfigMap.get(name);
+        if (remotingConfig == null) {
+            //perhaps this was a process started locally by process manager
+            remotingConfig = getConfigForProcessManagerProcess(name);
+        }
+
+        if (remotingConfig == null) {
+            throw new ChorusException("Failed to find remoting configuration for component: " + name);
+        }
+        return remotingConfig;
+    }
+
+    /**
+     * If processName was a process started by ProcessesHandler/ProcessManager, then we may be able to find the remoting setup
+     * from the process config
+     */
+    private RemotingConfig getConfigForProcessManagerProcess(String processName) {
+        RemotingConfig result = null;
+        ProcessInfo processInfo = ProcessManager.getInstance().getProcessInfo(processName);
+        if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
+            result = getConfigForLocalProcess(processInfo);
+        }
+        return result;
+    }
+
+    /**
+     * Find the process config name on which the running process was based
+     * (multiple processes may be started under alias names generating several ProcessInfo from the same template config)
+     *
+     * is there a matching remoting config with that config name? If there is, then use that
+     * otherwise take defaults by creating a new remoting config
+     */
+    private RemotingConfig getConfigForLocalProcess(ProcessInfo processInfo) {
+        String processConfigName = processInfo.getProcessConfigName();
+
+        RemotingConfig remotingConfig = remotingConfigMap.get(processConfigName);
+        if (remotingConfig == null) {
+            remotingConfig = new RemotingConfig();
+            remotingConfig.setHost("localhost");
+            remotingConfig.setPort(processInfo.getJmxPort());
+        }
+        return remotingConfig;
     }
 
     /**

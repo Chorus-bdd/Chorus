@@ -30,8 +30,8 @@ public class JmxRemotingManager implements RemotingManager {
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    public Object performActionInRemoteComponent(String action, String componentName, Map<String, RemotingConfig> remotingConfigMap) {
-        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfigMap);
+    public Object performActionInRemoteComponent(String action, String componentName, RemotingInfo remotingInfo) {
+        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingInfo);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
         
         RemoteStepFinder remoteStepFinder = new RemoteStepFinder(action, componentName, stepMetaData, proxy).findRemoteStepInvoker();
@@ -45,6 +45,16 @@ public class JmxRemotingManager implements RemotingManager {
             throw new RemoteStepNotFoundException(action, componentName);
         }
         return result;
+    }
+
+    private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingInfo remotingInfo) {
+        ChorusHandlerJmxProxy proxy = proxies.get(componentName);
+        if ( proxy == null) {
+            proxy = new ChorusHandlerJmxProxy(remotingInfo.getHost(), remotingInfo.getPort(), remotingInfo.getConnectionAttempts(), remotingInfo.getConnectionAttemptMillis());
+            proxies.put(componentName, proxy);
+            log.debug("Opened JMX connection to: " + componentName);
+        }
+        return proxy;
     }
 
     private Object processRemoteMethod(StepInvoker remoteStepInvoker, Object[] args) {
@@ -77,57 +87,6 @@ public class JmxRemotingManager implements RemotingManager {
         }
     }
 
-    private ChorusHandlerJmxProxy getProxyForComponent(String name, Map<String, RemotingConfig> remotingConfigMap) {
-        ChorusHandlerJmxProxy proxy = proxies.get(name);
-        if (proxy == null) {
-            RemotingConfig remotingConfig = remotingConfigMap.get(name);
-            if (remotingConfig == null) {
-                //perhaps this was a process started locally by process manager
-                remotingConfig = getConfigForProcessManagerProcess(name, remotingConfigMap);
-            }
-
-            if ( remotingConfig != null) {
-                proxy = new ChorusHandlerJmxProxy(remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
-                proxies.put(name, proxy);
-                log.debug("Opened JMX connection to: " + name);
-            } else {
-                throw new ChorusException("Failed to find remoting configuration for component: " + name);
-            }
-        }
-        return proxy;
-    }
-
-    /**
-     * If processName was a process started by ProcessesHandler/ProcessManager, then we may be able to find the remoting setup
-     * from the process config
-     */
-    private RemotingConfig getConfigForProcessManagerProcess(String processName, Map<String, RemotingConfig> remotingConfigMap) {
-        RemotingConfig result = null;
-        ProcessInfo processInfo = ProcessManager.getInstance().getProcessInfo(processName);
-        if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
-            result = getConfigForLocalProcess(remotingConfigMap, processInfo);
-        }
-        return result;
-    }
-
-    /**
-     * Find the process config name on which the running process was based
-     * (multiple processes may be started under alias names generating several ProcessInfo from the same template config)
-     *
-     * is there a matching remoting config with that config name? If there is, then use that
-     * otherwise take defaults by creating a new remoting config
-     */
-    private RemotingConfig getConfigForLocalProcess(Map<String, RemotingConfig> remotingConfigMap, ProcessInfo processInfo) {
-        String processConfigName = processInfo.getProcessConfigName();
-
-        RemotingConfig remotingConfig = remotingConfigMap.get(processConfigName);
-        if (remotingConfig == null) {
-            remotingConfig = new RemotingConfig();
-            remotingConfig.setHost("localhost");
-            remotingConfig.setPort(processInfo.getJmxPort());
-        }
-        return remotingConfig;
-    }
 
     /**
      * Find the correct remote method and warn if there are multiple matches

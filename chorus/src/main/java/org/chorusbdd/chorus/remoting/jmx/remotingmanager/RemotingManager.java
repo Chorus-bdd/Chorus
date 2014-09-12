@@ -23,7 +23,7 @@ public interface RemotingManager {
      * @param componentName     - the name of the component we want to connect to
      * @return                    the value returned by the remote component when invoking the remote step implementation
      **/
-    Object performActionInRemoteComponent(String action, String componentName, Map<String, RemotingConfig> remotingConfigMap);
+    Object performActionInRemoteComponent(String action, String componentName, RemotingInfo remotingInfo);
 
     void destroy();
 }

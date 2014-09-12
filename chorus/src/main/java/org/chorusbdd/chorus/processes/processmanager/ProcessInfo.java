@@ -237,24 +237,28 @@ public class ProcessInfo implements Cloneable {
 
     @Override
     public String toString() {
-        return "ProcessesConfig{" +
-                "groupName='" + groupName + '\'' +
+        return "ProcessesInfo{" +
+                getPropertiesAsString() +
+                '}';
+    }
+
+    public String getPropertiesAsString() {
+        return "groupName='" + groupName + '\'' +
                 ", pathToExecutable='" + pathToExecutable + '\'' +
                 ", jre='" + jre + '\'' +
                 ", classpath='" + classpath + '\'' +
                 ", jvmargs='" + jvmargs + '\'' +
                 ", mainclass='" + mainclass + '\'' +
                 ", args='" + args + '\'' +
-                ", stdOutMode=" + stdOutMode  + '\'' +
-                ", stdErrMode=" + stdErrMode   + '\'' +
-                ", jmxPort=" + jmxPort  + '\'' +
-                ", debugPort=" + debugPort  + '\'' +
-                ", terminateWaitTime=" + terminateWaitTime  + '\'' +
+                ", stdOutMode=" + stdOutMode + '\'' +
+                ", stdErrMode=" + stdErrMode + '\'' +
+                ", jmxPort=" + jmxPort + '\'' +
+                ", debugPort=" + debugPort + '\'' +
+                ", terminateWaitTime=" + terminateWaitTime + '\'' +
                 ", logDirectory='" + logDirectory + '\'' +
-                ", appendToLogs=" + appendToLogs  + '\'' +
-                ", createLogDir=" + createLogDir  + '\'' +
-                ", processCheckDelay=" + processCheckDelay  + '\'' +
-                '}';
+                ", appendToLogs=" + appendToLogs + '\'' +
+                ", createLogDir=" + createLogDir + '\'' +
+                ", processCheckDelay=" + processCheckDelay + '\'';
     }
 
     public Object clone() {
