@@ -215,19 +215,19 @@ public class ConfigReader implements ConfigProperties {
             );
         }
     }
-
-    public ConfigProperties deepCopy() {
-        List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>(properties);
-        ConfigReader c = new ConfigReader(l);
-
-        c.args = args;
-        c.propertyMap = new HashMap<ConfigurationProperty, List<String>>();
-        for ( Map.Entry<ConfigurationProperty, List<String>> e : propertyMap.entrySet()) {
-            List<String> cloneList = new ArrayList<String>();
-            cloneList.addAll(e.getValue());
-            c.propertyMap.put(e.getKey(), cloneList);
-        }
-        return c;
-    }
+//
+//    public ConfigProperties deepCopy() {
+//        List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>(properties);
+//        ConfigReader c = new ConfigReader(l);
+//
+//        c.args = args;
+//        c.propertyMap = new HashMap<ConfigurationProperty, List<String>>();
+//        for ( Map.Entry<ConfigurationProperty, List<String>> e : propertyMap.entrySet()) {
+//            List<String> cloneList = new ArrayList<String>();
+//            cloneList.addAll(e.getValue());
+//            c.propertyMap.put(e.getKey(), cloneList);
+//        }
+//        return c;
+//    }
 
 }

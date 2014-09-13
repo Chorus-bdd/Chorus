@@ -40,7 +40,7 @@ import java.util.List;
  *
  * Provide access to get and set ConfigurationProperty
  */
-public interface ConfigProperties extends DeepCopy<ConfigProperties> {
+public interface ConfigProperties {
 
     void setProperty(ConfigurationProperty property, List<String> values);
 
