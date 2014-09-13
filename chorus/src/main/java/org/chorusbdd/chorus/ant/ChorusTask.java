@@ -39,7 +39,6 @@ import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.chorusbdd.chorus.logging.ChorusOut;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,11 +91,11 @@ public class ChorusTask extends Task {
         //set the feature file args
         javaTask.createArg().setValue("-f");
         for (File featureFile : featureFiles) {
-            ChorusOut.out.println("Found feature " + featureFile);
+            System.out.println("Found feature " + featureFile);
             javaTask.createArg().setFile(featureFile);
         }
 
-        ChorusOut.out.println("Classpath " + classpath);
+        System.out.println("Classpath " + classpath);
 
         //set the base packges args
         javaTask.createArg().setValue("-h");
