@@ -73,10 +73,6 @@ public class ChorusLogFactory {
     public static ChorusLog getLog(Class clazz) {
         return logProvider.getLog(clazz);
     }
-
-    public static ChorusLogProvider getLogProvider() {
-        return logProvider;
-    }
     
     public static OutputFormatter getOutputFormatter() {
         return outputFormatter;
