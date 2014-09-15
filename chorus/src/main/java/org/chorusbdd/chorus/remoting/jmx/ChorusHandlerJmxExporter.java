@@ -80,7 +80,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
 
-    public ChorusHandlerJmxExporter(Object... handlers) throws ChorusRemotingException {
+    public ChorusHandlerJmxExporter(Object... handlers) {
 
         for ( Object handler : handlers) {
             //assert that this is a Handler
