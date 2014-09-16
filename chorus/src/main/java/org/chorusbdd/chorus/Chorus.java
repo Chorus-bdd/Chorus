@@ -211,19 +211,6 @@ public class Chorus {
 
     //configure Chorus' logging and interpreter output from the config properties
     private void setLoggingProviderAndOutputFormatter() {
-        //the logging factory checks the system property version chorusLogProvider when it
-        //performs static initialization - the log provider must be set as a system property
-        //even if provided as a switch
-        ChorusConfigProperty p = ChorusConfigProperty.LOG_PROVIDER;
-        if ( System.getProperty(p.getSystemProperty()) == null && configReader.isSet(p)) {
-            System.setProperty(p.getSystemProperty(), configReader.getValue(p));
-        }
-
-        p = ChorusConfigProperty.OUTPUT_FORMATTER;
-        if ( System.getProperty(p.getSystemProperty()) == null && configReader.isSet(p)) {
-            System.setProperty(p.getSystemProperty(), configReader.getValue(p));
-        }
-
         new OutputConfigurer().configureOutput(configReader);
     }
 }

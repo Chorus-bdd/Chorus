@@ -57,8 +57,9 @@ public class ChorusLogFactory {
     private static final AtomicBoolean isInitialized = new AtomicBoolean();
 
     public static void setLogProvider(ChorusLogProvider logProvider) {
-        ChorusLogFactory.logProvider = logProvider;
-        isInitialized.set(true);
+        if ( ! isInitialized.getAndSet(true)) {
+            ChorusLogFactory.logProvider = logProvider;
+        }
     }
 
     public static ChorusLog getLog(Class clazz) {

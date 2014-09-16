@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
@@ -13,11 +14,25 @@ import org.chorusbdd.chorus.output.OutputFormatter;
  */
 public class OutputConfigurer {
 
-    public void configureOutput(ConfigReader configProperties) {
-        OutputFormatter outputFormatter = new OutputFormatterFactory().createOutputFormatter(configProperties);
+    public void configureOutput(ConfigReader config) {
+
+//        //the logging factory checks the system property version chorusLogProvider when it
+//        //performs static initialization - the log provider must be set as a system property
+//        //even if provided as a switch
+//        ChorusConfigProperty p = ChorusConfigProperty.LOG_PROVIDER;
+//        if ( System.getProperty(p.getSystemProperty()) == null && config.isSet(p)) {
+//            System.setProperty(p.getSystemProperty(), config.getValue(p));
+//        }
+//
+//        p = ChorusConfigProperty.OUTPUT_FORMATTER;
+//        if ( System.getProperty(p.getSystemProperty()) == null && config.isSet(p)) {
+//            System.setProperty(p.getSystemProperty(), config.getValue(p));
+//        }
+
+        OutputFormatter outputFormatter = new OutputFormatterFactory().createOutputFormatter(config);
         OutputFactory.setOutputFormatter(outputFormatter);
 
-        ChorusLogProvider chorusLogProvider = new ChorusLogProviderFactory().createLogProvider(configProperties, outputFormatter);
+        ChorusLogProvider chorusLogProvider = new ChorusLogProviderFactory().createLogProvider(config, outputFormatter);
         ChorusLogFactory.setLogProvider(chorusLogProvider);
     }
 }

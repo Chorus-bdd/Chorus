@@ -137,30 +137,4 @@ public class InProcessRunner implements ChorusSelfTestRunner {
             System.setProperty(e.getKey().toString(), e.getValue().toString());
         }
     }
-
-    //a null properties to use when initializing the logging subsystem for the tests, we will end up with the defaults
-    private static class NullConfigProperties implements ConfigProperties {
-        public void setProperty(ConfigurationProperty property, List<String> values) {
-        }
-
-        public List<String> getValues(ConfigurationProperty property) {
-            return null;
-        }
-
-        public String getValue(ConfigurationProperty property) {
-            return null;
-        }
-
-        public boolean isSet(ConfigurationProperty property) {
-            return false;
-        }
-
-        public boolean isTrue(ConfigurationProperty property) {
-            return false;
-        }
-
-        public ConfigProperties deepCopy() {
-            return null;
-        }
-    }
 }
