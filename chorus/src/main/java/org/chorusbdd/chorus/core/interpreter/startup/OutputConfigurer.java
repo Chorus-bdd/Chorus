@@ -4,8 +4,11 @@ import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.output.OutputFactory;
 import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
 
 /**
  * Created by nick on 15/09/2014.
@@ -15,24 +18,34 @@ import org.chorusbdd.chorus.output.OutputFormatter;
 public class OutputConfigurer {
 
     public void configureOutput(ConfigReader config) {
+        OutputFormatter outputFormatter = createOutputFormatter(config);
+        createLogProvider(config, outputFormatter);
+    }
 
-//        //the logging factory checks the system property version chorusLogProvider when it
-//        //performs static initialization - the log provider must be set as a system property
-//        //even if provided as a switch
-//        ChorusConfigProperty p = ChorusConfigProperty.LOG_PROVIDER;
-//        if ( System.getProperty(p.getSystemProperty()) == null && config.isSet(p)) {
-//            System.setProperty(p.getSystemProperty(), config.getValue(p));
-//        }
-//
-//        p = ChorusConfigProperty.OUTPUT_FORMATTER;
-//        if ( System.getProperty(p.getSystemProperty()) == null && config.isSet(p)) {
-//            System.setProperty(p.getSystemProperty(), config.getValue(p));
-//        }
+    private void createLogProvider(ConfigReader config, OutputFormatter outputFormatter) {
+        ChorusLogProvider chorusLogProvider = new ChorusLogProviderFactory().createLogProvider(config, outputFormatter);
+        setLogLevel(config, chorusLogProvider);
+        ChorusLogFactory.setLogProvider(chorusLogProvider);
+    }
 
+    private OutputFormatter createOutputFormatter(ConfigReader config) {
         OutputFormatter outputFormatter = new OutputFormatterFactory().createOutputFormatter(config);
         OutputFactory.setOutputFormatter(outputFormatter);
+        return outputFormatter;
+    }
 
-        ChorusLogProvider chorusLogProvider = new ChorusLogProviderFactory().createLogProvider(config, outputFormatter);
-        ChorusLogFactory.setLogProvider(chorusLogProvider);
+    private void setLogLevel(ConfigReader config, ChorusLogProvider chorusLogProvider) {
+        String logLevel = config.getValue(ChorusConfigProperty.LOG_LEVEL);
+        LogLevel l = LogLevel.getLogLevel(logLevel);
+
+        if ( chorusLogProvider instanceof OutputFormatterLogProvider) {
+
+            //only the built in OutputFormatterLogProvider used by the interpreter supports
+            //setting the log level from the interpreter configuration
+
+            //Alternative log providers if set may use a variety of means for log level configuration
+            //e.g. a log4j.xml file, at present we rely on the user to configure them as they see fit
+            ((OutputFormatterLogProvider) chorusLogProvider).setLogLevel(l);
+        }
     }
 }

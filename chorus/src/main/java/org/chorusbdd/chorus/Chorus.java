@@ -87,11 +87,6 @@ public class Chorus {
        
         setLoggingProviderAndOutputFormatter();
 
-        //prepare the interpreter
-        //set log level here in case log level was a mutated property
-        String logLevel = configReader.getValue(ChorusConfigProperty.LOG_LEVEL);
-        setLogLevel(logLevel);
-
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
             configReader
         );
@@ -131,13 +126,6 @@ public class Chorus {
 
     List<FeatureToken> getFeatureList(ExecutionToken t) throws Exception {
         return featureListBuilder.getFeatureList(t, configReader);
-    }
-
-    /**
-     * Set the log level of Chorus' built in logProvider to the logLevel provided
-     */
-    public void setLogLevel(String logLevel) {
-        OutputFormatterLogProvider.setLogLevel(logLevel);
     }
 
     /**

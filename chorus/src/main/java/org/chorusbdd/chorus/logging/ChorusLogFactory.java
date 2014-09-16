@@ -39,20 +39,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  *  A factory for ChorusLog instances.
  *  
- *  This is used to initialize Chorus' LogProvider (can be used to redirect logging) and Chorus' OutputFormatter
- *  
- *  (OutputFormatter is a newer abstraction which can be used to modify both interpreter output and logging - 
- *  logging will only be affected if using the default LogProvider which is passed an outputFormatter)
- *  
- *  Both logProvider and outputFormatter can be set with system properties or Chorus' switches.
- *  
- *  Also creates the OutputFormatter which used to write all Chorus' output
- *  The OutputFormatter implementation can be changed by setting the chorusOutputFormatter system property
- *
+ *  Relies on a ChorusLogProvider which can be set up front, or will be created using
+ *  DefaultLogProviderFactory
  */
 public class ChorusLogFactory {
 
-    private static volatile ChorusLogProvider logProvider = new NullLogProvider();
+    private static volatile ChorusLogProvider logProvider = NullLogProvider.NULL_LOG_PROVIDER;
 
     private static final AtomicBoolean isInitialized = new AtomicBoolean();
 

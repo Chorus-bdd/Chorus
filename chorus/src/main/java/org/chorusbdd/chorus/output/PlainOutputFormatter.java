@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.output;
 
-import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.results.StepToken;
 
 /**
  * Nick E

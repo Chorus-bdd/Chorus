@@ -35,4 +35,5 @@ package org.chorusbdd.chorus.logging;
 public interface ChorusLogProvider {
 
     ChorusLog getLog(Class clazz);
+
 }

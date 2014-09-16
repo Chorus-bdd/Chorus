@@ -55,20 +55,8 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         this.outputFormatter = outputFormatter;
     }
 
-    public static void setLogLevel(String logLevel) {
-
-       boolean found = false;
-       for (LogLevel l : LogLevel.values()) {
-           if ( l.name().equalsIgnoreCase(logLevel)) {
-               OutputFormatterLogProvider.logLevel = l.getLevel();
-               found = true;
-               break;
-           }
-       }
-
-       if ( ! found) {
-           ChorusOut.out.println("Did not recognise log level sys property " + logLevel + " will default to WARN");
-       }
+    public void setLogLevel(LogLevel l) {
+        OutputFormatterLogProvider.logLevel = l.getLevel();
     }
 
     public ChorusLog getLog(Class clazz) {

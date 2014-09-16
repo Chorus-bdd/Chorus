@@ -31,7 +31,6 @@ package org.chorusbdd.chorus.logging;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.chorusbdd.chorus.output.OutputFormatter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,9 +48,6 @@ import org.chorusbdd.chorus.output.OutputFormatter;
  * dependency (and then we can make commons logging optional)
  */
 public class ChorusCommonsLogProvider implements ChorusLogProvider {
-
-    public void setOutputFormatter(OutputFormatter outputFormatter) {
-    }
 
     public ChorusLog getLog(Class clazz) {
         Log log = LogFactory.getLog(clazz);

@@ -1,14 +1,14 @@
 package org.chorusbdd.chorus.logging;
 
-import org.chorusbdd.chorus.output.OutputFormatter;
-
 /**
  * A null implementation of ChorusLogProvider
  * This should never get used
  */
 class NullLogProvider implements ChorusLogProvider {
-    public void setOutputFormatter(OutputFormatter outputFormatter) {
-    }
+
+    public static final NullLogProvider NULL_LOG_PROVIDER = new NullLogProvider();
+
+    private NullLogProvider() {}
 
     public ChorusLog getLog(Class clazz) {
         return new NullLog();

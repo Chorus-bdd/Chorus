@@ -1,12 +1,12 @@
 package org.chorusbdd.chorus.output;
 
+import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

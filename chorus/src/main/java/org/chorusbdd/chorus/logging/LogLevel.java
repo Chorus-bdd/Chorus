@@ -20,4 +20,21 @@ public enum LogLevel {
     public int getLevel() {
         return level;
     }
+
+    public static LogLevel getLogLevel(String logLevel) {
+        LogLevel result = null;
+        for (LogLevel l : LogLevel.values()) {
+            if ( l.name().equalsIgnoreCase(logLevel)) {
+                result = l;
+                break;
+            }
+        }
+
+        if ( result == null ) {
+            ChorusOut.out.println("Did not recognise log level sys property " + logLevel + " will default to WARN");
+            result = LogLevel.WARN;
+        }
+
+        return result;
+    }
 }
