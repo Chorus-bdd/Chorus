@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.output;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -28,7 +27,7 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
 
     static {
         //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
-        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
+        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
     }
     
     protected PrintWriter out;

@@ -27,8 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.config;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.config.ConfigurationProperty;
+import org.chorusbdd.chorus.config.PropertySourceMode;
+import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.util.ChorusConstants;
 
 import java.util.ArrayList;
@@ -90,15 +93,6 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     OUTPUT_FORMATTER("-outputFormatter", "-r", "chorusOutputFormatter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputFormatter"}, "[\\w\\.]+", "-c org.myorg.MyFormatter", "The output formatter used to format the interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
     CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE);
-
-    public static final String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusConsoleFormatterStepLength";
-    public static final String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
-
-    //these are only ever set with a system property not a switch
-    public static final List SYS_PROP_ONLY_PROPERTIES = Arrays.asList(
-        OUTPUT_FORMATTER_STEP_LENGTH_CHARS,
-        OUTPUT_FORMATTER_STEP_LOG_RATE
-    );
     
     
     private String switchName;

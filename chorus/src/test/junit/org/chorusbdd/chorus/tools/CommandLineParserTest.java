@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.tools;
 
 import org.chorusbdd.chorus.config.*;
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.junit.Assert;
 import org.junit.Before;

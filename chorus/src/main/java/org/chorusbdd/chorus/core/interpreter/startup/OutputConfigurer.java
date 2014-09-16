@@ -1,10 +1,8 @@
 package org.chorusbdd.chorus.core.interpreter.startup;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
-import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.output.OutputFactory;
 import org.chorusbdd.chorus.output.OutputFormatter;

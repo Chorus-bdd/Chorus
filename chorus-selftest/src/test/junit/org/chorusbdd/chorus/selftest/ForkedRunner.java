@@ -29,15 +29,17 @@
  */
 package org.chorusbdd.chorus.selftest;
 
+import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.processes.processmanager.JavaProcessCommandLineBuilder;
 import org.chorusbdd.chorus.processes.processmanager.ProcessRedirector;
 import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigurationProperty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -51,6 +53,12 @@ import java.util.Properties;
  * Fork an interpreter process and capture the std out, std err and exit code into ChorusSelfTestResults
  */
 public class ForkedRunner implements ChorusSelfTestRunner {
+
+    //these are only ever set with a system property not a switch
+    public static final List SYS_PROP_ONLY_PROPERTIES = Arrays.asList(
+            OutputFormatter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS,
+            OutputFormatter.OUTPUT_FORMATTER_STEP_LOG_RATE
+    );
 
     public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) throws Exception {
         return runForked(sysPropsForTest, "org.chorusbdd.Chorus", System.out, 30000);
@@ -145,6 +153,6 @@ public class ForkedRunner implements ChorusSelfTestRunner {
     }
 
     private boolean isAChorusSwitchProperty(String key) {
-        return key.toString().startsWith("chorus") && ! ChorusConfigProperty.SYS_PROP_ONLY_PROPERTIES.contains(key);
+        return key.toString().startsWith("chorus") && ! SYS_PROP_ONLY_PROPERTIES.contains(key);
     }
 }

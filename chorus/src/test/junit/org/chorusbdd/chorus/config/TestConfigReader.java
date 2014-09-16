@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.config;
 
+import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.junit.Test;
 

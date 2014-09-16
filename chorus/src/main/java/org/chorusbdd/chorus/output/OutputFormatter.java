@@ -43,6 +43,9 @@ import java.io.PrintStream;
  */
 public interface OutputFormatter {
 
+    String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusConsoleFormatterStepLength";
+    String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
+
     /**
      * will be called before any print method, to provide a PrintStream to which the formatter can write its output
      */

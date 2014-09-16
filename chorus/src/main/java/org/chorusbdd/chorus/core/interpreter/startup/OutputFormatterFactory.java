@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.core.interpreter.startup;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.output.ConsoleOutputFormatter;

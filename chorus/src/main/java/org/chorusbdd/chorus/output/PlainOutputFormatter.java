@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.output;
 
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.results.StepToken;
 
 /**
@@ -49,9 +48,9 @@ public final class PlainOutputFormatter extends AbstractOutputFormatter {
     
     static {
         try {
-            PROGRESS_CURSOR_FRAME_RATE = Integer.parseInt(System.getProperty(ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LOG_RATE, "10")) * 1000;
+            PROGRESS_CURSOR_FRAME_RATE = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LOG_RATE, "10")) * 1000;
         } catch (NumberFormatException e) {
-            System.err.println("Sys property " + ChorusConfigProperty.OUTPUT_FORMATTER_STEP_LOG_RATE + " must be an integer number of seconds");
+            System.err.println("Sys property " + OUTPUT_FORMATTER_STEP_LOG_RATE + " must be an integer number of seconds");
             PROGRESS_CURSOR_FRAME_RATE = 10000;
         }
     }

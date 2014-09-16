@@ -39,11 +39,10 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.config.ChorusConfigProperty;
+import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.logging.ChorusOut;
-import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
 
 import java.util.Collection;
 import java.util.Iterator;
