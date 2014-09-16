@@ -1,28 +1,36 @@
-package org.chorusbdd.chorus.logging;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigProperties;
+import org.chorusbdd.chorus.logging.ChorusLogProvider;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
 
 /**
  * Created by nick on 10/02/14.
  */
-public class LogProviderFactory {
+public class ChorusLogProviderFactory {
 
     public ChorusLogProvider createLogProvider(ConfigProperties configProperties, OutputFormatter outputFormatter) {
-        ChorusLogProvider result = createSystemPropertyProvider(configProperties, outputFormatter);
+        ChorusLogProvider result = createSystemPropertyProvider(configProperties);
         if ( result == null) {
             result = createDefaultLogProvider(outputFormatter);
         }
+
+        if ( result instanceof OutputFormatterLogProvider) {
+            ((OutputFormatterLogProvider) result).setOutputFormatter(outputFormatter);
+        }
         return result;
     }
-    
+
     private ChorusLogProvider createDefaultLogProvider(OutputFormatter outputFormatter) {
         OutputFormatterLogProvider outputFormatterLogProvider = new OutputFormatterLogProvider();
         outputFormatterLogProvider.setOutputFormatter(outputFormatter);
         return outputFormatterLogProvider;
     }
 
-    private ChorusLogProvider createSystemPropertyProvider(ConfigProperties configProperties, OutputFormatter outputFormatter) {
+    private ChorusLogProvider createSystemPropertyProvider(ConfigProperties configProperties) {
         ChorusLogProvider result = null;
         String provider = null;
         try {
@@ -30,7 +38,6 @@ public class LogProviderFactory {
             if ( provider != null ) {
                 Class c = Class.forName(provider);
                 result = (ChorusLogProvider)c.newInstance();
-                result.setOutputFormatter(outputFormatter);
             }
         } catch (Throwable t) {
             ChorusOut.err.println("Failed to instantiate ChorusLogProvider class " + provider + " will use the default LogProvider");

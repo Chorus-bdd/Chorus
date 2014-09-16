@@ -1,7 +1,11 @@
-package org.chorusbdd.chorus.logging;
+package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigProperties;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.output.ConsoleOutputFormatter;
+import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.PlainOutputFormatter;
 
 /**
  * Created by nick on 04/02/14.
@@ -31,6 +35,7 @@ public class OutputFormatterFactory {
                 System.err.println("Failed to create results formatter " + formatterClass + " " + e);
             }
         }
+
         formatter.setPrintStream(ChorusOut.out);
         return formatter;
     }

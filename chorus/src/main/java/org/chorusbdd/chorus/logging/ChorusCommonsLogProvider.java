@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.logging;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.chorusbdd.chorus.output.OutputFormatter;
 
 /**
  * Created by IntelliJ IDEA.

@@ -27,7 +27,12 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.logging;
+package org.chorusbdd.chorus.output;
+
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogProvider;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.LogLevel;
 
 /**
 * Creaxted with IntelliJ IDEA.

@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.startup.ExecutionListenerFactory;
 import org.chorusbdd.chorus.core.interpreter.startup.FeatureListBuilder;
 import org.chorusbdd.chorus.core.interpreter.startup.InterpreterBuilder;
+import org.chorusbdd.chorus.core.interpreter.startup.OutputConfigurer;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -41,9 +42,8 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusOut;
-import org.chorusbdd.chorus.logging.OutputFormatterLogProvider;
+import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -224,6 +224,6 @@ public class Chorus {
             System.setProperty(p.getSystemProperty(), configReader.getValue(p));
         }
 
-        ChorusLogFactory.initializeLogging(configReader);
+        new OutputConfigurer().configureOutput(configReader);
     }
 }

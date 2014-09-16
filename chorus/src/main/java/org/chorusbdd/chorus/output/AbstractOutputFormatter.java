@@ -1,5 +1,7 @@
-package org.chorusbdd.chorus.logging;
+package org.chorusbdd.chorus.output;
 
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;

@@ -34,7 +34,5 @@ package org.chorusbdd.chorus.logging;
  */
 public interface ChorusLogProvider {
 
-    void setOutputFormatter(OutputFormatter outputFormatter);
-
     ChorusLog getLog(Class clazz);
 }

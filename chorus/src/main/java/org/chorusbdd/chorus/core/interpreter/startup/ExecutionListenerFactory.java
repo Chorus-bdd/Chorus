@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.config.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.output.OutputFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ public class ExecutionListenerFactory {
         boolean verbose = config.isTrue(ChorusConfigProperty.SHOW_ERRORS);
         boolean showSummary = config.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
         
-        InterpreterOutputExecutionListener e = new InterpreterOutputExecutionListener(showSummary, verbose, ChorusLogFactory.getOutputFormatter());
+        InterpreterOutputExecutionListener e = new InterpreterOutputExecutionListener(showSummary, verbose, OutputFactory.getOutputFormatter());
         result.add(e);
     }
 

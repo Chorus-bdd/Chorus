@@ -79,7 +79,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "-l (trace|debug|info|warn|error|fatal)",
     "The log level to be used by Chorus' built in log provider", PropertySourceMode.OVERRIDE),
 
-    LOG_PROVIDER("-logProvider", "-p", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-p org.chorusbdd.chorus.logging.OutputFormatterLogProvider",
+    LOG_PROVIDER("-logProvider", "-p", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-p org.chorusbdd.chorus.logging.ChorusCommonsLogProvider",
     "The log provider class to be used to instantiate Chorus loggers", PropertySourceMode.OVERRIDE),
 
     SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
@@ -87,7 +87,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     
     EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
     
-    OUTPUT_FORMATTER("-outputFormatter", "-r", "chorusOutputFormatter", false, 0, 1, new String[] {"org.chorusbdd.chorus.logging.PlainOutputFormatter"}, "[\\w\\.]+", "-c org.myorg.MyFormatter", "The output formatter used to format the interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
+    OUTPUT_FORMATTER("-outputFormatter", "-r", "chorusOutputFormatter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputFormatter"}, "[\\w\\.]+", "-c org.myorg.MyFormatter", "The output formatter used to format the interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
     CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE);
 

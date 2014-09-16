@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.results.*;
-import org.chorusbdd.chorus.logging.OutputFormatter;
+import org.chorusbdd.chorus.output.OutputFormatter;
 
 import java.util.List;
 

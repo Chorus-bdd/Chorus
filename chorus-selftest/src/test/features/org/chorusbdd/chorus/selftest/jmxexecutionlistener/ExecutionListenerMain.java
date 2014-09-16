@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.core.interpreter.startup.InterpreterOutputExecutionL
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListener;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListenerMBean;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.logging.PlainOutputFormatter;
+import org.chorusbdd.chorus.output.PlainOutputFormatter;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
