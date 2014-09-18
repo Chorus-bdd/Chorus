@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.core.interpreter.startup;
 
-import org.chorusbdd.chorus.core.interpreter.StepMacro;
-import org.chorusbdd.chorus.core.interpreter.StepMacroParser;
+import org.chorusbdd.chorus.core.interpreter.interpreter.StepMacro;
+import org.chorusbdd.chorus.core.interpreter.interpreter.StepMacroParser;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;

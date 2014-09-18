@@ -27,8 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.interpreter.ChorusParserTagsTest;
+import org.chorusbdd.chorus.core.interpreter.interpreter.FeatureFileParser;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.junit.Test;

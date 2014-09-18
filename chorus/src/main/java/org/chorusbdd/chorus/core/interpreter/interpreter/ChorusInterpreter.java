@@ -27,9 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.interpreter;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.core.interpreter.invoker.DefaultStepInvokerProvider;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;

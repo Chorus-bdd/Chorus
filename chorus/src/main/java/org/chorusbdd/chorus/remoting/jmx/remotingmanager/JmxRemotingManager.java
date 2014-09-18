@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.core.interpreter.StepMatcher;
-import org.chorusbdd.chorus.core.interpreter.StepPendingException;
+import org.chorusbdd.chorus.core.interpreter.interpreter.StepMatcher;
+import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;

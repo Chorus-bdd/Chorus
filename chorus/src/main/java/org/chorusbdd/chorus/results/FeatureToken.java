@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.results;
 
-import org.chorusbdd.chorus.core.interpreter.KeyWord;
+import org.chorusbdd.chorus.core.interpreter.interpreter.KeyWord;
 
 import java.io.File;
 import java.util.ArrayList;

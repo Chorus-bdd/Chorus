@@ -27,20 +27,20 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.interpreter;
+
+import org.chorusbdd.chorus.util.ChorusException;
 
 /**
- * Thrown by a handler if it needs to indicate that the step that was invoked is pending.
- * Not generally required as the interpreter will detect this.
- *
- * For an example of use, see the JMX handler; it acts as a proxy to the remote handlers and needs
- * to be able to dynamically determine whether a step is pending independently of the interpreter.
- *
- * Created by: Steve Neal
- * Date: 11/11/11
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 23/02/13
+ * Time: 22:15
+ * To change this template use File | Settings | File Templates.
  */
-public class StepPendingException extends RuntimeException {
-    public StepPendingException(String message) {
+public class RecursiveStepMacroException extends ChorusException {
+
+    public RecursiveStepMacroException(String message) {
         super(message);
     }
 }

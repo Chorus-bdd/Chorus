@@ -1,5 +1,6 @@
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.interpreter;
 
+import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;

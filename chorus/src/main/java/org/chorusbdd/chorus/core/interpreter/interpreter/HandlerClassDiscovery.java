@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
+package org.chorusbdd.chorus.core.interpreter.interpreter;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.results.FeatureToken;

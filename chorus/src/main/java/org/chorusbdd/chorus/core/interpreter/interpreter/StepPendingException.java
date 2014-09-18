@@ -27,33 +27,20 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter;
-
-import org.chorusbdd.chorus.results.FeatureToken;
+package org.chorusbdd.chorus.core.interpreter.interpreter;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 11/05/12
- * Time: 17:30
+ * Thrown by a handler if it needs to indicate that the step that was invoked is pending.
+ * Not generally required as the interpreter will detect this.
  *
- * To avoid a dependency on Spring from core interpreter, we check for the existence of a SpringContextInjector
- * on the classpath, and if it exists, instantiate an instance of it which we address via the SpringInjector interface
+ * For an example of use, see the JMX handler; it acts as a proxy to the remote handlers and needs
+ * to be able to dynamically determine whether a step is pending independently of the interpreter.
+ *
+ * Created by: Steve Neal
+ * Date: 11/11/11
  */
-public interface SpringInjector {
-
-    SpringInjector NULL_INJECTOR = new SpringInjector() {
-
-        //if the null injector is in use, this means we failed to find and instantiate the SpringContextInjector from the chorus-spring module
-        public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) {
-            throw new UnsupportedOperationException("You need to add chorus-spring to your classpath to use the SpringContext annotation");
-        }
-
-        public void disposeContext(Object handler) {
-        }
-    };
-
-    public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) throws Exception;
-
-    void disposeContext(Object handler);
+public class StepPendingException extends RuntimeException {
+    public StepPendingException(String message) {
+        super(message);
+    }
 }

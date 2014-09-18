@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.core.interpreter.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.core.interpreter.startup.ExecutionListenerFactory;
 import org.chorusbdd.chorus.core.interpreter.startup.FeatureListBuilder;
 import org.chorusbdd.chorus.core.interpreter.startup.InterpreterBuilder;
