@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
 import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.*;
+import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;

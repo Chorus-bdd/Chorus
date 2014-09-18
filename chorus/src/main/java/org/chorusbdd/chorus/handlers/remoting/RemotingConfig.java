@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemotingInfo;
+import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
 
 /**
 * Created by IntelliJ IDEA.

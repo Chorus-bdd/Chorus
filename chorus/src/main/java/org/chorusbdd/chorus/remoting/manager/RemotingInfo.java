@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
+package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;

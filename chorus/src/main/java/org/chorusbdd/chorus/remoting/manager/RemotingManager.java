@@ -1,6 +1,4 @@
-package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
-
-import java.util.Map;
+package org.chorusbdd.chorus.remoting.manager;
 
 /**
  * Created by nick on 30/08/2014.
