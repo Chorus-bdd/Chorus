@@ -42,6 +42,7 @@ import org.chorusbdd.chorus.util.logging.ChorusLog;
 import org.chorusbdd.chorus.util.logging.ChorusLogFactory;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -52,7 +53,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProcessesHandler {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
-    private Map<String, ProcessesConfig> processConfigTemplates;
+
+    private Map<String, ProcessesConfig> processConfigTemplates = Collections.EMPTY_MAP;
+
+    //lazy loading configs to support dynamic configuration in Feature-Start: for 1.6.x,
+    //will change to load configs up front and provide dynamic config API for 2.x
+    private boolean processConfigInitialized;
 
     @ChorusResource("feature.dir")
     private File featureDir;
@@ -68,7 +74,6 @@ public class ProcessesHandler {
     @Initialize(scope= Scope.FEATURE)
     public void setup() {
         processManager.setFeatureDetails(featureDir, featureFile, featureToken);
-        processConfigTemplates = loadProcessConfig();
     }
 
     @Destroy(scope= Scope.SCENARIO)
@@ -89,12 +94,21 @@ public class ProcessesHandler {
     }
 
     private ProcessesConfig getConfigTemplate(final String configName) {
+        lazyLoadConfigs();
+
         ProcessesConfig c = processConfigTemplates.get(configName);
         if (c == null) {
             throw new ChorusException("No configuration found for process: " + configName);
         }
         c.setProcessConfigName(configName);
         return c;
+    }
+
+    private void lazyLoadConfigs() {
+        if ( ! processConfigInitialized ) {
+            processConfigTemplates = loadProcessConfig();
+            processConfigInitialized = true;
+        }
     }
 
     private Map<String, ProcessesConfig> loadProcessConfig() {
