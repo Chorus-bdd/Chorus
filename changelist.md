@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
+### Version 1.6.10 ###
+        
+*Lazy load processes configs when first process is started for 1.6.x branch*
+        
+| Changes in 1.6.10 |
+| ------ |
+| Restore the lazy loading for processes configs, to allow dynamic generation of configs during Feature-Start,         to replace with an API for dynamic configuration in 2.x release |
         
 ### Version 1.6.9 ###
         
