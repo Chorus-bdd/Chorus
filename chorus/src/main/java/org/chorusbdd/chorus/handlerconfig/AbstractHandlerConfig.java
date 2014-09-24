@@ -40,10 +40,4 @@ import org.chorusbdd.chorus.logging.ChorusLog;
  */
 public abstract class AbstractHandlerConfig implements HandlerConfig {
 
-    protected boolean logInvalidConfig(String message) {
-        getLog().warn("Invalid " + getClass().getSimpleName() + " " + getGroupName() + " - " + message);
-        return false;
-    }
-
-    protected abstract ChorusLog getLog();
 }

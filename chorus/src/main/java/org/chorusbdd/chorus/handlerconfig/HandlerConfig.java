@@ -39,9 +39,10 @@ package org.chorusbdd.chorus.handlerconfig;
  */
 public interface HandlerConfig {
 
-    boolean isValid();
-
-    String getValidationRuleDescription();
+    /**
+     * The name of the properties group which may be defined to supply default settings for other configs
+     */
+    String DEFAULT_PROPERTIES_GROUP = "default";
 
     /**
      * @return the group name to which this HandlerConfig relates

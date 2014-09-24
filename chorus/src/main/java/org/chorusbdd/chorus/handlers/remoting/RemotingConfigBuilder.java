@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -53,6 +54,10 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
         setProperties(defaults, r);
         setProperties(p, r);
         return r;
+    }
+
+    public HandlerConfigValidator<RemotingConfig> createValidator(RemotingConfig config) {
+        return new RemotingConfigValidator();
     }
 
     private void setProperties(Properties p, RemotingConfig r) {

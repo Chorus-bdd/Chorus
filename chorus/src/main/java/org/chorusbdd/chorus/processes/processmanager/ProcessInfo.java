@@ -6,115 +6,96 @@ import org.chorusbdd.chorus.annotations.Scope;
  * Represents the configuration of a running process
  * This is derived from a ProcessesConfiguration (the process config template)
  */
-public class ProcessInfo implements Cloneable {
+public class ProcessInfo {
 
-    private String groupName;
-    private String processName;
-    private String pathToExecutable;
-    private String jre = System.getProperty("java.home");
-    private String classpath = System.getProperty("java.class.path");
-    private String jvmargs;
-    private String mainclass;
-    private String args;
-    private OutputMode stdOutMode = OutputMode.INLINE;
-    private OutputMode stdErrMode = OutputMode.INLINE;
-    private int jmxPort = -1;
-    private int debugPort = -1;
-    private int terminateWaitTime = 30;
-    private String logDirectory;
-    private boolean appendToLogs;
-    private boolean createLogDir = true; //whether to auto create
-    private int processCheckDelay = 500;
-    private int readAheadBufferSize = 65536; //read ahead process output in CAPTURED mode
-    private int readTimeoutSeconds = 10;
-    private Scope processScope = Scope.SCENARIO;
-    private String processConfigName;
+    private final String groupName;
+    private final String processName;
+    private final String pathToExecutable;
+    private final String jre;
+    private final String classpath;
+    private final String jvmargs;
+    private final String mainclass;
+    private final String args;
+    private final OutputMode stdOutMode;
+    private final OutputMode stdErrMode;
+    private final int jmxPort;
+    private final int debugPort;
+    private final int terminateWaitTime;
+    private final String logDirectory;
+    private final boolean appendToLogs;
+    private final boolean createLogDir; //whether to auto create
+    private final int processCheckDelay;
+    private final int readAheadBufferSize; //read ahead process output in CAPTURED mode
+    private final int readTimeoutSeconds;
+    private final Scope processScope;
+    private final String processConfigName;
     private ChorusProcess process;
+
+    public ProcessInfo(String groupName, String processName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
+                       String args, OutputMode stdOutMode, OutputMode stdErrMode, int jmxPort, int debugPort, int terminateWaitTime,
+                       String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay, int readAheadBufferSize,
+                       int readTimeoutSeconds, Scope processScope, String processConfigName) {
+        this.groupName = groupName;
+        this.processName = processName;
+        this.pathToExecutable = pathToExecutable;
+        this.jre = jre;
+        this.classpath = classpath;
+        this.jvmargs = jvmargs;
+        this.mainclass = mainclass;
+        this.args = args;
+        this.stdOutMode = stdOutMode;
+        this.stdErrMode = stdErrMode;
+        this.jmxPort = jmxPort;
+        this.debugPort = debugPort;
+        this.terminateWaitTime = terminateWaitTime;
+        this.logDirectory = logDirectory;
+        this.appendToLogs = appendToLogs;
+        this.createLogDir = createLogDir;
+        this.processCheckDelay = processCheckDelay;
+        this.readAheadBufferSize = readAheadBufferSize;
+        this.readTimeoutSeconds = readTimeoutSeconds;
+        this.processScope = processScope;
+        this.processConfigName = processConfigName;
+    }
 
     public String getGroupName() {
         return groupName;
-    }
-
-    public void setGroupName(String name) {
-        this.groupName = name;
     }
 
     public String getJre() {
         return jre;
     }
 
-    public void setJre(String jre) {
-        this.jre = jre;
-    }
-
     public String getClasspath() {
         return classpath;
-    }
-
-    public void setClasspath(String classpath) {
-        this.classpath = classpath;
     }
 
     public String getJvmargs() {
         return jvmargs == null ? "" : jvmargs;
     }
 
-    public void setJvmargs(String jvmargs) {
-        this.jvmargs = jvmargs;
-    }
-
     public String getMainclass() {
         return mainclass;
-    }
-
-    public void setMainclass(String mainclass) {
-        this.mainclass = mainclass;
     }
 
     public String getPathToExecutable() {
         return pathToExecutable;
     }
 
-    public void setPathToExecutable(String pathToExecutable) {
-        this.pathToExecutable = pathToExecutable;
-    }
-
     public String getArgs() {
         return args == null ? "" : args;
-    }
-
-    public void setArgs(String args) {
-        this.args = args;
     }
 
     public OutputMode getStdErrMode() {
         return stdErrMode;
     }
 
-    public void setStdErrMode(OutputMode stdErrMode) {
-        this.stdErrMode = stdErrMode;
-    }
-
     public OutputMode getStdOutMode() {
         return stdOutMode;
     }
 
-    public void setStdOutMode(OutputMode stdOutMode) {
-        this.stdOutMode = stdOutMode;
-    }
-
     public int getJmxPort() {
         return jmxPort;
-    }
-
-    public void incrementJmxPort() {
-        if ( jmxPort != -1) {
-            jmxPort++;
-        }
-    }
-
-    public void setJmxPort(int jmxPort) {
-        this.jmxPort = jmxPort;
     }
 
     public boolean isRemotingConfigDefined() {
@@ -125,86 +106,40 @@ public class ProcessInfo implements Cloneable {
         return debugPort;
     }
 
-    public void setDebugPort(int debugPort) {
-        this.debugPort = debugPort;
-    }
-
-    public void incrementDebugPort() {
-        if ( debugPort != -1 ) {
-            debugPort++;
-        }
-    }
-
     public int getTerminateWaitTime() {
         return terminateWaitTime;
-    }
-
-    public void setTerminateWaitTime(int terminateWaitTime) {
-        this.terminateWaitTime = terminateWaitTime;
     }
 
     public String getLogDirectory() {
         return logDirectory;
     }
 
-    public void setLogDirectory(String logDirectory) {
-        this.logDirectory = logDirectory;
-    }
-
     public boolean isAppendToLogs() {
         return appendToLogs;
-    }
-
-    public void setAppendToLogs(boolean appendToLogs) {
-        this.appendToLogs = appendToLogs;
     }
 
     public boolean isCreateLogDir() {
         return createLogDir;
     }
 
-    public void setCreateLogDir(boolean createLogDir) {
-        this.createLogDir = createLogDir;
-    }
-
     public int getProcessCheckDelay() {
         return processCheckDelay;
-    }
-
-    public void setProcessCheckDelay(int processCheckDelay) {
-        this.processCheckDelay = processCheckDelay;
     }
 
     public int getReadAheadBufferSize() {
         return readAheadBufferSize;
     }
 
-    public void setReadAheadBufferSize(int readAheadBufferSize) {
-        this.readAheadBufferSize = readAheadBufferSize;
-    }
-
     public int getReadTimeoutSeconds() {
         return readTimeoutSeconds;
-    }
-
-    public void setReadTimeoutSeconds(int readTimeoutSeconds) {
-        this.readTimeoutSeconds = readTimeoutSeconds;
     }
 
     public Scope getProcessScope() {
         return processScope;
     }
 
-    public void setProcessScope(Scope processScope) {
-        this.processScope = processScope;
-    }
-
     public String getProcessConfigName() {
         return processConfigName;
-    }
-
-    public void setProcessConfigName(final String processConfigName) {
-        this.processConfigName = processConfigName;
     }
 
     public boolean isJavaProcess() {
@@ -223,10 +158,6 @@ public class ProcessInfo implements Cloneable {
         return processName;
     }
 
-    public void setProcessName(String processName) {
-        this.processName = processName;
-    }
-
     public void setProcess(ChorusProcess process) {
         this.process = process;
     }
@@ -237,38 +168,29 @@ public class ProcessInfo implements Cloneable {
 
     @Override
     public String toString() {
-        return "ProcessesInfo{" +
-                getPropertiesAsString() +
-                '}';
-    }
-
-    public String getPropertiesAsString() {
-        return "groupName='" + groupName + '\'' +
+        return "ProcessInfo{" +
+                "groupName='" + groupName + '\'' +
+                ", processName='" + processName + '\'' +
                 ", pathToExecutable='" + pathToExecutable + '\'' +
                 ", jre='" + jre + '\'' +
                 ", classpath='" + classpath + '\'' +
                 ", jvmargs='" + jvmargs + '\'' +
                 ", mainclass='" + mainclass + '\'' +
                 ", args='" + args + '\'' +
-                ", stdOutMode=" + stdOutMode + '\'' +
-                ", stdErrMode=" + stdErrMode + '\'' +
-                ", jmxPort=" + jmxPort + '\'' +
-                ", debugPort=" + debugPort + '\'' +
-                ", terminateWaitTime=" + terminateWaitTime + '\'' +
+                ", stdOutMode=" + stdOutMode +
+                ", stdErrMode=" + stdErrMode +
+                ", jmxPort=" + jmxPort +
+                ", debugPort=" + debugPort +
+                ", terminateWaitTime=" + terminateWaitTime +
                 ", logDirectory='" + logDirectory + '\'' +
-                ", appendToLogs=" + appendToLogs + '\'' +
-                ", createLogDir=" + createLogDir + '\'' +
-                ", processCheckDelay=" + processCheckDelay + '\'';
-    }
-
-    public Object clone() {
-        try {
-            return super.clone();
-        }
-        catch (CloneNotSupportedException e) {
-            // This should never happen
-            throw new RuntimeException(e);
-        }
+                ", appendToLogs=" + appendToLogs +
+                ", createLogDir=" + createLogDir +
+                ", processCheckDelay=" + processCheckDelay +
+                ", readAheadBufferSize=" + readAheadBufferSize +
+                ", readTimeoutSeconds=" + readTimeoutSeconds +
+                ", processScope=" + processScope +
+                ", processConfigName='" + processConfigName + '\'' +
+                '}';
     }
 
 }

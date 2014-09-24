@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlers.processes;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.processes.processmanager.OutputMode;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -59,6 +60,10 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
         return c;
     }
 
+    public HandlerConfigValidator<ProcessesConfig> createValidator(ProcessesConfig config) {
+        return new ProcessesConfigValidator();
+    }
+
     private void setProperties(Properties p, ProcessesConfig c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
@@ -80,11 +85,9 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
                 c.setMainclass(value);
             } else if ("jmxport".equals(key)) {
                 int jmxport = parseIntProperty(value, "jmxport");
-                c.setInitialJmxPort(jmxport);
                 c.setJmxPort(jmxport);
             } else if ("debugport".equals(key)) {
                 int debugport = parseIntProperty(value, "debugport");
-                c.setInitialDebugPort(debugport);
                 c.setDebugPort(debugport);
             } else if ("terminateWaitTime".equals(key)) {
                 c.setTerminateWaitTime(parseIntProperty(value, "terminateWaitTime"));

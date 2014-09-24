@@ -42,8 +42,6 @@ import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
 */
 public class RemotingConfig extends AbstractHandlerConfig {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfig.class);
-
     private RemotingInfo remotingInfo = new RemotingInfo();
 
     public String getProtocol() {
@@ -96,28 +94,6 @@ public class RemotingConfig extends AbstractHandlerConfig {
 
     public RemotingInfo getRemotingInfo() {
         return remotingInfo;
-    }
-
-    public boolean isValid() {
-        boolean valid = true;
-        if ( getHost() == null || getHost().trim().length() == 0 ) {
-            valid = logInvalidConfig("host was not set");
-        } else if ( getProtocol() == null || getProtocol().trim().length() == 0) {
-            valid = logInvalidConfig("protocol was not set");
-        } else if ( getGroupName() == null || getGroupName().trim().length() == 0 ) {
-            valid = logInvalidConfig("group name was not set");
-        } else if ( getPort() <= 0 ) {
-            valid = logInvalidConfig("port was not set");
-        }
-        return valid;
-    }
-
-    public String getValidationRuleDescription() {
-        return "host, protocol, name and port must be set";
-    }
-
-    protected ChorusLog getLog() {
-        return log;
     }
 
     public String toString() {

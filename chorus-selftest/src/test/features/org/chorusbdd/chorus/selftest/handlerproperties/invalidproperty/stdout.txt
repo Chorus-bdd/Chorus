@@ -6,7 +6,7 @@ Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Pr
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Remoting handler property
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
-Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol, name and port must be set
+Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol and port must be set
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     I can start a config1 process                                                            PASSED  
     And then call a remote method in config1                                                 FAILED  (RemotingHandler:linenumber)-ChorusException Failed to find remoting configuration for component: config1

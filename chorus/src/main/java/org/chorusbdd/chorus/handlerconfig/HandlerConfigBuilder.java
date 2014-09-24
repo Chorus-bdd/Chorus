@@ -43,4 +43,6 @@ public interface HandlerConfigBuilder<E extends HandlerConfig> {
      * Create a config, first initialising with the default properties, and then overriding the defaults with Properties p
      */
     E createConfig(Properties p, Properties defaults);
+
+    HandlerConfigValidator<E> createValidator(E config);
 }
