@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlers.processes;
+package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -9,11 +9,11 @@ import java.io.File;
 /**
  * Created by nick on 23/09/2014.
  */
-public class ProcessesConfigValidator extends AbstractConfigValidator<ProcessesConfig> {
+public class ProcessManagerConfigValidator extends AbstractConfigValidator<ProcessManagerConfig> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigValidator.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessManagerConfigValidator.class);
 
-    public boolean checkValid(ProcessesConfig processesConfig) {
+    public boolean checkValid(ProcessManagerConfig processesConfig) {
         boolean valid = true;
 
         if ( isJavaProcess(processesConfig) ) {
@@ -33,11 +33,11 @@ public class ProcessesConfigValidator extends AbstractConfigValidator<ProcessesC
         return valid;
     }
 
-    public boolean isJavaProcess(ProcessesConfig processesConfig) {
+    public boolean isJavaProcess(ProcessManagerConfig processesConfig) {
         return ! isSet(processesConfig.getPathToExecutable());
     }
 
-    private boolean checkPropertiesForNativeProcess(ProcessesConfig processesConfig) {
+    private boolean checkPropertiesForNativeProcess(ProcessManagerConfig processesConfig) {
         boolean valid = true;
         if (isSet(processesConfig.getMainclass())) {
             valid = logInvalidConfig(log, "Cannot the mainclass property for non-java process configured with pathToExecutable", processesConfig);

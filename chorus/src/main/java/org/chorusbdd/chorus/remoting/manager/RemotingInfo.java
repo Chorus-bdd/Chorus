@@ -29,17 +29,13 @@
  */
 package org.chorusbdd.chorus.remoting.manager;
 
-import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
-
 /**
 * Created by IntelliJ IDEA.
 * User: Nick Ebbutt
 * Date: 18/09/12
 * Time: 08:20
 */
-public class RemotingInfo {
+public class RemotingInfo implements RemotingManagerConfig {
 
     //default protocol to jmx so we don't have to specify it if loading props from db
     private String protocol = "jmx";

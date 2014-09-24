@@ -44,5 +44,6 @@ public interface HandlerConfigBuilder<E extends HandlerConfig> {
      */
     E createConfig(Properties p, Properties defaults);
 
-    HandlerConfigValidator<E> createValidator(E config);
+
+    HandlerConfigValidator<? super E> createValidator(E config);
 }

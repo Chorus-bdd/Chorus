@@ -29,10 +29,8 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
+import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 
 /**
 * Created by IntelliJ IDEA.
@@ -40,7 +38,7 @@ import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
 * Date: 18/09/12
 * Time: 08:20
 */
-public class RemotingConfig extends AbstractHandlerConfig {
+public class RemotingConfig implements RemotingManagerConfig {
 
     private RemotingInfo remotingInfo = new RemotingInfo();
 
@@ -92,7 +90,7 @@ public class RemotingConfig extends AbstractHandlerConfig {
         return remotingInfo.getGroupName();
     }
 
-    public RemotingInfo getRemotingInfo() {
+    public RemotingInfo buildRemotingInfo() {
         return remotingInfo;
     }
 

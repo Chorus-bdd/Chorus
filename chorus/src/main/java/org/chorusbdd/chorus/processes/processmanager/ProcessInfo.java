@@ -6,7 +6,7 @@ import org.chorusbdd.chorus.annotations.Scope;
  * Represents the configuration of a running process
  * This is derived from a ProcessesConfiguration (the process config template)
  */
-public class ProcessInfo {
+public class ProcessInfo implements ProcessManagerConfig {
 
     private final String groupName;
     private final String processName;

@@ -148,7 +148,7 @@ public class ProcessesHandler {
     public void startJava(String processName) throws Exception {
         String uniqueName = nextProcessName(processName);
         ProcessesConfig config = getConfigTemplate(processName);
-        ProcessInfo processInfo = config.nextProcess(uniqueName);
+        ProcessInfo processInfo = config.buildProcessInfo(uniqueName);
         processManager.startJava(processInfo, uniqueName);
     }
 
@@ -160,7 +160,7 @@ public class ProcessesHandler {
     @Step(".*start an? (.+) process named ([a-zA-Z0-9-_]*).*?")
     public void startJavaProcessFromConfigNamed(String configName, String processName) throws Exception {
         ProcessesConfig config = getConfigTemplate(configName);
-        ProcessInfo processInfo = config.nextProcess(processName);
+        ProcessInfo processInfo = config.buildProcessInfo(processName);
         processManager.startJava(processInfo, processName);
     }
 
@@ -213,7 +213,7 @@ public class ProcessesHandler {
 
     private void startTheScript(String script, String processName, boolean logging) throws Exception {
         final ProcessesConfig config = newProcessConfig(processName, logging);
-        ProcessInfo processInfo = config.nextProcess(processName);
+        ProcessInfo processInfo = config.buildProcessInfo(processName);
         //setConfigForProcess(processName, config);
         processManager.startScript(processInfo, script, processName);
     }

@@ -3,12 +3,14 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepMatcher;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -30,6 +32,9 @@ public class JmxRemotingManager implements RemotingManager {
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
     public Object performActionInRemoteComponent(String action, String componentName, RemotingInfo remotingInfo) {
+        
+        ChorusAssert.assertTrue("Remoting config must be valid for " + componentName, new RemotingConfigValidator().checkValid(remotingInfo));
+
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingInfo);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
         

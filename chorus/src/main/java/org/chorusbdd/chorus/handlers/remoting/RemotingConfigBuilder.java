@@ -34,6 +34,8 @@ import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
+import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Map;
@@ -56,7 +58,7 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
         return r;
     }
 
-    public HandlerConfigValidator<RemotingConfig> createValidator(RemotingConfig config) {
+    public HandlerConfigValidator<RemotingManagerConfig> createValidator(RemotingConfig config) {
         return new RemotingConfigValidator();
     }
 

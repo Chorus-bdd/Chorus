@@ -72,7 +72,7 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> {
 
            for ( Map.Entry<String, Properties> props : propertiesGroups.entrySet()) {
                E c = handlerConfigBuilder.createConfig(props.getValue(), defaultProperties);
-               HandlerConfigValidator<E> validator = handlerConfigBuilder.createValidator(c);
+               HandlerConfigValidator<? super E> validator = handlerConfigBuilder.createValidator(c);
 
                //add the new config to the configMap only if it is valid or represents default values
                addIfValid(configMap, props, c, validator);
@@ -83,7 +83,7 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> {
         }
     }
 
-    private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E c, HandlerConfigValidator<E> validator) {
+    private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E c, HandlerConfigValidator<? super E> validator) {
         //apart from the 'default' configs all configs must pass validation rules
         //the defaults specified may be an incomplete subset
         if (props.getKey().equals(HandlerConfig.DEFAULT_PROPERTIES_GROUP) || validator.isValid(c)) {

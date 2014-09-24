@@ -28,6 +28,7 @@ public class ProcessManager  {
     private final Map<String, ProcessInfo> processes = new ConcurrentHashMap<String, ProcessInfo>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+    private final ProcessManagerConfigValidator processesConfigValidator = new ProcessManagerConfigValidator();
 
     private ChorusProcessFactory chorusProcessFactory = new ChorusProcessFactory();
 
@@ -59,7 +60,7 @@ public class ProcessManager  {
      * @throws Exception
      */
     public synchronized void startJava(ProcessInfo processInfo, String processName) throws Exception {
-        ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
+        checkConfigAndNotAlreadyStarted(processInfo, processName);
 
         //get the log output containing logging configuration for this process
         ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processInfo, processName);
@@ -73,11 +74,17 @@ public class ProcessManager  {
         startProcess(processName, commandLineTokens, logOutput, processInfo.getProcessCheckDelay(), processInfo);
     }
 
+    private void checkConfigAndNotAlreadyStarted(ProcessInfo processInfo, String processName) {
+        ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
+        ChorusAssert.assertTrue("The config for " + processName + " must be valid", processesConfigValidator.checkValid(processInfo));
+    }
+
     /**
      *  @deprecated Since 1.6.1 the preferred way to launch e a non-java process is to set the record processes handler property 'pathToExecutable'
      */
     @Deprecated
     public synchronized void startScript(ProcessInfo processInfo, final String script, final String processName) throws Exception {
+        checkConfigAndNotAlreadyStarted(processInfo, processName);
 
         String command = NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
 
@@ -88,7 +95,8 @@ public class ProcessManager  {
         startProcess(processName, Collections.singletonList(command), logOutput, 250, processInfo);
     }
 
-    public synchronized void startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay, ProcessInfo processInfo) throws Exception {
+
+    private void startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay, ProcessInfo processInfo) throws Exception {
         ChorusAssert.assertFalse("There is already a process with the processName " + name, processes.containsKey(name));
         processes.put(name, processInfo);
 

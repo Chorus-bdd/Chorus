@@ -98,7 +98,7 @@ public class RemotingHandler {
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
-        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.getRemotingInfo());
+        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingInfo());
     }
 
     /**

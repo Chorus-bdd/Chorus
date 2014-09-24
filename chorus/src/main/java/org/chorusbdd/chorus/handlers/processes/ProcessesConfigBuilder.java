@@ -34,6 +34,8 @@ import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.processes.processmanager.OutputMode;
+import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfigValidator;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -60,8 +62,8 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
         return c;
     }
 
-    public HandlerConfigValidator<ProcessesConfig> createValidator(ProcessesConfig config) {
-        return new ProcessesConfigValidator();
+    public HandlerConfigValidator<ProcessManagerConfig> createValidator(ProcessesConfig config) {
+        return new ProcessManagerConfigValidator();
     }
 
     private void setProperties(Properties p, ProcessesConfig c) {

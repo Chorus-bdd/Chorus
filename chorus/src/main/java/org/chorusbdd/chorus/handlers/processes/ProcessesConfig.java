@@ -30,13 +30,9 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfig;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.processmanager.OutputMode;
 import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
-
-import java.io.File;
+import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfig;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,7 +55,7 @@ import java.io.File;
  * Where multiple processes are launched from the same ProcessesConfig we derive a new jmx port
  * or debug port for each ProcessInfo by auto-incrementing the ports
  */
-public class ProcessesConfig extends AbstractHandlerConfig {
+public class ProcessesConfig implements ProcessManagerConfig {
 
     private String groupName;
     private String pathToExecutable;
@@ -86,7 +82,7 @@ public class ProcessesConfig extends AbstractHandlerConfig {
     //debug and jmx ports for any other similar processes started under different names/aliases
     private int instancesStarted = 0;
 
-    public ProcessInfo nextProcess(String processName) {
+    public ProcessInfo buildProcessInfo(String processName) {
         int nextJmxPort = jmxPort != -1 ? jmxPort + instancesStarted : -1;
         int nextDebugPort = debugPort != -1 ? debugPort + instancesStarted : -1;
 
