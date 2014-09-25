@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigFactory;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.processes.processmanager.OutputMode;
 import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfig;
@@ -51,9 +51,9 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder implements HandlerConfigBuilder<ProcessesConfig> {
+public class ProcessesConfigFactory extends AbstractHandlerConfigFactory implements HandlerConfigFactory<ProcessesConfig> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBuilder.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigFactory.class);
 
     public ProcessesConfig createConfig(Properties p, Properties defaults) {
         ProcessesConfig c = new ProcessesConfig();

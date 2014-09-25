@@ -38,7 +38,7 @@ import org.chorusbdd.chorus.util.ChorusException;
  * Time: 11:09
  * To change this template use File | Settings | File Templates.
  */
-public class AbstractHandlerConfigBuilder {
+public class AbstractHandlerConfigFactory {
 
     protected int parseIntProperty(String value, String propertyName) {
         try {

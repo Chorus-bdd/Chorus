@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.source.PropertiesFilePropertySource;
 import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -52,7 +52,7 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
 
     private static ChorusLog log = ChorusLogFactory.getLog(PropertiesConfigLoader.class);
 
-    private HandlerConfigBuilder<E> configBuilder;
+    private HandlerConfigFactory<E> configBuilder;
     private String handlerDescription;
     private String propertiesFileSuffix;
     private final FeatureToken featureToken;
@@ -60,7 +60,7 @@ public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractCon
     private final File featureFile;
 
     //"Remoting", "-remoting"
-    public PropertiesConfigLoader(HandlerConfigBuilder<E> configBuilder, String handlerDescription, String propertiesFileSuffix, FeatureToken featureToken, File featureDir, File featureFile) {
+    public PropertiesConfigLoader(HandlerConfigFactory<E> configBuilder, String handlerDescription, String propertiesFileSuffix, FeatureToken featureToken, File featureDir, File featureFile) {
         super(handlerDescription);
         this.configBuilder = configBuilder;
         this.handlerDescription = handlerDescription;

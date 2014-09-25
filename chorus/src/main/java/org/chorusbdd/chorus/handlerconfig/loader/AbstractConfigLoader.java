@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.handlerconfig.loader;
 
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -62,7 +62,7 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> {
 
     public abstract Map<String, E> doLoadConfigs();
 
-    protected void addConfigsFromPropertyGroups(Map<String, Properties> propertiesGroups, Map<String, E> configMap, HandlerConfigBuilder<E> handlerConfigBuilder) {
+    protected void addConfigsFromPropertyGroups(Map<String, Properties> propertiesGroups, Map<String, E> configMap, HandlerConfigFactory<E> handlerConfigBuilder) {
         try {
            //get any default properties for this handler type
            Properties defaultProperties = propertiesGroups.get(HandlerConfig.DEFAULT_PROPERTIES_GROUP);

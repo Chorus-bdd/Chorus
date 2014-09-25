@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigBuilder;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigFactory;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -47,9 +47,9 @@ import java.util.Properties;
  * Date: 21/09/12
  * Time: 08:51
  */
-public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implements HandlerConfigBuilder<RemotingConfig> {
+public class RemotingConfigFactory extends AbstractHandlerConfigFactory implements HandlerConfigFactory<RemotingConfig> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBuilder.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigFactory.class);
 
     public RemotingConfig createConfig(Properties p, Properties defaults) {
         RemotingConfig r = new RemotingConfig();

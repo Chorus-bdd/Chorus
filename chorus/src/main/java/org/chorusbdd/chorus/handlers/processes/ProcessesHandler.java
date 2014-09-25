@@ -99,7 +99,7 @@ public class ProcessesHandler {
 
     private Map<String, ProcessesConfig> loadProcessConfig() {
         PropertiesConfigLoader<ProcessesConfig> l = new PropertiesConfigLoader<ProcessesConfig>(
-                new ProcessesConfigBuilder(),
+                new ProcessesConfigFactory(),
                 "Processes",
                 "processes",
                 featureToken,

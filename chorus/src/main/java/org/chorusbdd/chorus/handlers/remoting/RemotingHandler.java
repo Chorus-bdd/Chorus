@@ -171,7 +171,7 @@ public class RemotingHandler {
             loadRemotingConfigsFromDb(mBeansDb);
         } else {
             PropertiesConfigLoader<RemotingConfig> l = new PropertiesConfigLoader<RemotingConfig>(
-                new RemotingConfigBuilder(),
+                new RemotingConfigFactory(),
                 "Remoting",
                 "remoting",
                 featureToken,
@@ -218,6 +218,6 @@ public class RemotingHandler {
      * </ul>
      */
     protected void loadRemotingConfigsFromDb(Properties p) {
-        remotingConfigMap = new JDBCConfigLoader(p, "Remoting", new RemotingConfigBuilder(), featureToken, featureDir, featureFile).loadConfigs();
+        remotingConfigMap = new JDBCConfigLoader(p, "Remoting", new RemotingConfigFactory(), featureToken, featureDir, featureFile).loadConfigs();
     }
 }

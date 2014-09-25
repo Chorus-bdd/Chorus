@@ -37,7 +37,7 @@ import java.util.Properties;
  * Date: 21/09/12
  * Time: 08:59
  */
-public interface HandlerConfigBuilder<E extends HandlerConfig> {
+public interface HandlerConfigFactory<E extends HandlerConfig> {
 
     /**
      * Create a config, first initialising with the default properties, and then overriding the defaults with Properties p
@@ -45,5 +45,8 @@ public interface HandlerConfigBuilder<E extends HandlerConfig> {
     E createConfig(Properties p, Properties defaults);
 
 
+    /**
+     * @return a validator for the HandlerConfig
+     */
     HandlerConfigValidator<? super E> createValidator(E config);
 }

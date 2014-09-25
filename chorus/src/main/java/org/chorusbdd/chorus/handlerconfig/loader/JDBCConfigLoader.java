@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.handlerconfig.loader;
 
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.source.JdbcPropertySource;
 import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -53,12 +53,12 @@ public class JDBCConfigLoader<E extends HandlerConfig> extends AbstractConfigLoa
     private static ChorusLog log = ChorusLogFactory.getLog(JDBCConfigLoader.class);
 
     private Properties dbProperties;
-    private HandlerConfigBuilder<E> configBuilder;
+    private HandlerConfigFactory<E> configBuilder;
     private final FeatureToken featureToken;
     private final File featureDir;
     private final File featureFile;
 
-    public JDBCConfigLoader(Properties dbProperties, String handlerDescription, HandlerConfigBuilder<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
+    public JDBCConfigLoader(Properties dbProperties, String handlerDescription, HandlerConfigFactory<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
         super(handlerDescription);
         this.dbProperties = dbProperties;
         this.configBuilder = configBuilder;
