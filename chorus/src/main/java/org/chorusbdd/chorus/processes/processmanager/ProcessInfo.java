@@ -58,7 +58,7 @@ public class ProcessInfo implements ProcessManagerConfig {
         this.processConfigName = processConfigName;
     }
 
-    public String getGroupName() {
+    public String getConfigName() {
         return groupName;
     }
 

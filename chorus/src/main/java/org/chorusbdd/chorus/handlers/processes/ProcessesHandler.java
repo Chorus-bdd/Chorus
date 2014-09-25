@@ -131,7 +131,7 @@ public class ProcessesHandler {
     private void resetScenarioScopedPortsInConfigTemplates() {
         for (ProcessesConfig config : processConfigTemplates.values()) {
             if (Scope.SCENARIO.equals(config.getProcessScope())) {
-                config.reset();
+                config.resetInstancesStarted();
             }
         }
     }
@@ -201,7 +201,7 @@ public class ProcessesHandler {
     private ProcessesConfig getScriptConfig(final String groupName, final boolean logging, final String script) {
         return new ProcessesConfig() {
             @Override
-            public String getGroupName() {
+            public String getConfigName() {
                 return groupName;
             }
 

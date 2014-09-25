@@ -9,7 +9,7 @@ public interface RemotingManagerConfig extends HandlerConfig {
 
     String getProtocol();
 
-    String getGroupName();
+    String getConfigName();
 
     String getHost();
 

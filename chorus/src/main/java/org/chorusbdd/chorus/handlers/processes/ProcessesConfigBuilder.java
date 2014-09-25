@@ -70,9 +70,8 @@ public class ProcessesConfigBuilder extends AbstractHandlerConfigBuilder impleme
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-
-            if ("name".equals(key)) {
-                c.setGroupName(value);
+            if ( "configName".equals(key)) {
+                c.setConfigName(value);
             } else if ("pathToExecutable".equals(key)) {
                 c.setPathToExecutable(value);
             } else if ("jre".equals(key)) {

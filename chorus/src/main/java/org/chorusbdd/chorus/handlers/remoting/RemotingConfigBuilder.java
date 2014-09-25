@@ -67,8 +67,8 @@ public class RemotingConfigBuilder extends AbstractHandlerConfigBuilder implemen
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
 
-            if ("name".equals(key)) {
-                r.setName(value);
+            if ( "configName".equals(key)) {
+                r.setConfigName(value);
             } else if ("protocol".equals(key)) {
                 r.setProtocol(value);
             } else if ("host".equals(key)) {

@@ -49,15 +49,13 @@ import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfig;
  * jvmargs and mainclass are only applicable for java processes, they should not be set
  * if the process is a native process with pathToExecutable specified.
  *
- * ProcessesConfig represents a template config from which one or more ProcessInfo, representing a runtime
- * process, can be built
- *
- * Where multiple processes are launched from the same ProcessesConfig we derive a new jmx port
+ * ProcessesConfig represents a template config / builder from which one or more ProcessInfo, representing a runtime
+ * process, can be built. Where multiple processes are launched from the same ProcessesConfig we derive a new jmx port
  * or debug port for each ProcessInfo by auto-incrementing the ports
  */
 public class ProcessesConfig implements ProcessManagerConfig {
 
-    private String groupName;
+    private String configName;
     private String pathToExecutable;
     private String jre = System.getProperty("java.home");
     private String classpath = System.getProperty("java.class.path");
@@ -90,7 +88,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
         int nextDebugPort = getDebugPort() != -1 ? getDebugPort() + instancesStarted : -1;
 
         ProcessInfo nextProcess = new ProcessInfo(
-            getGroupName(),
+            getConfigName(),
             processName,
             getPathToExecutable(),
             getJre(),
@@ -116,88 +114,98 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return nextProcess;
     }
 
-    public void reset() {
+    public void resetInstancesStarted() {
         instancesStarted = 0;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getConfigName() {
+        return configName;
     }
 
-    public void setGroupName(String name) {
-        this.groupName = name;
+    public ProcessesConfig setConfigName(String name) {
+        this.configName = name;
+        return this;
     }
 
     public String getJre() {
         return jre;
     }
 
-    public void setJre(String jre) {
+    public ProcessesConfig setJre(String jre) {
         this.jre = jre;
+        return this;
     }
 
     public String getClasspath() {
         return classpath;
     }
 
-    public void setClasspath(String classpath) {
-        this.classpath = classpath;
+    public ProcessesConfig setClasspath(String classpath) {
+        this.classpath = classpath;;
+        return this;
     }
 
     public String getJvmargs() {
         return jvmargs == null ? "" : jvmargs;
     }
 
-    public void setJvmargs(String jvmargs) {
+    public ProcessesConfig setJvmargs(String jvmargs) {
         this.jvmargs = jvmargs;
+        return this;
     }
 
     public String getMainclass() {
         return mainclass;
     }
 
-    public void setMainclass(String mainclass) {
+    public ProcessesConfig setMainclass(String mainclass) {
         this.mainclass = mainclass;
+        return this;
     }
 
     public String getPathToExecutable() {
         return pathToExecutable;
     }
 
-    public void setPathToExecutable(String pathToExecutable) {
+    public ProcessesConfig setPathToExecutable(String pathToExecutable) {
         this.pathToExecutable = pathToExecutable;
+        return this;
     }
 
     public String getArgs() {
         return args == null ? "" : args;
     }
 
-    public void setArgs(String args) {
+    public ProcessesConfig setArgs(String args) {
         this.args = args;
+        return this;
     }
 
     public OutputMode getStdErrMode() {
         return stdErrMode;
     }
 
-    public void setStdErrMode(OutputMode stdErrMode) {
+    public ProcessesConfig setStdErrMode(OutputMode stdErrMode) {
         this.stdErrMode = stdErrMode;
+        return this;
     }
 
     public OutputMode getStdOutMode() {
         return stdOutMode;
     }
 
-    public void setStdOutMode(OutputMode stdOutMode) {
+    public ProcessesConfig setStdOutMode(OutputMode stdOutMode) {
         this.stdOutMode = stdOutMode;
+        return this;
     }
 
     public int getJmxPort() {
         return jmxPort;
     }
 
-    public void setJmxPort(int jmxPort) {
+    public ProcessesConfig setJmxPort(int jmxPort) {
         this.jmxPort = jmxPort;
+        return this;
     }
 
     public boolean isRemotingConfigDefined() {
@@ -208,86 +216,96 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return debugPort;
     }
 
-    public void setDebugPort(int debugPort) {
+    public ProcessesConfig setDebugPort(int debugPort) {
         this.debugPort = debugPort;
+        return this;
     }
 
     public int getTerminateWaitTime() {
         return terminateWaitTime;
     }
 
-    public void setTerminateWaitTime(int terminateWaitTime) {
+    public ProcessesConfig setTerminateWaitTime(int terminateWaitTime) {
         this.terminateWaitTime = terminateWaitTime;
+        return this;
     }
 
     public String getLogDirectory() {
         return logDirectory;
     }
 
-    public void setLogDirectory(String logDirectory) {
+    public ProcessesConfig setLogDirectory(String logDirectory) {
         this.logDirectory = logDirectory;
+        return this;
     }
 
     public boolean isAppendToLogs() {
         return appendToLogs;
     }
 
-    public void setAppendToLogs(boolean appendToLogs) {
+    public ProcessesConfig setAppendToLogs(boolean appendToLogs) {
         this.appendToLogs = appendToLogs;
+        return this;
     }
 
     public boolean isCreateLogDir() {
         return createLogDir;
     }
 
-    public void setCreateLogDir(boolean createLogDir) {
+    public ProcessesConfig setCreateLogDir(boolean createLogDir) {
         this.createLogDir = createLogDir;
+        return this;
     }
 
     public int getProcessCheckDelay() {
         return processCheckDelay;
     }
 
-    public void setProcessCheckDelay(int processCheckDelay) {
+    public ProcessesConfig setProcessCheckDelay(int processCheckDelay) {
         this.processCheckDelay = processCheckDelay;
+        return this;
     }
 
     public int getReadAheadBufferSize() {
         return readAheadBufferSize;
     }
 
-    public void setReadAheadBufferSize(int readAheadBufferSize) {
+    public ProcessesConfig setReadAheadBufferSize(int readAheadBufferSize) {
         this.readAheadBufferSize = readAheadBufferSize;
+        return this;
     }
 
     public int getReadTimeoutSeconds() {
         return readTimeoutSeconds;
     }
 
-    public void setReadTimeoutSeconds(int readTimeoutSeconds) {
+    public ProcessesConfig setReadTimeoutSeconds(int readTimeoutSeconds) {
         this.readTimeoutSeconds = readTimeoutSeconds;
+        return this;
     }
 
     public Scope getProcessScope() {
         return processScope;
     }
 
-    public void setProcessScope(Scope processScope) {
+    public ProcessesConfig setProcessScope(Scope processScope) {
         this.processScope = processScope;
+        return this;
     }
 
     public String getProcessConfigName() {
         return processConfigName;
     }
 
-    public void setProcessConfigName(final String processConfigName) {
+    public ProcessesConfig setProcessConfigName(final String processConfigName) {
         this.processConfigName = processConfigName;
+        return this;
     }
 
     @Override
     public String toString() {
         return "ProcessesConfig{" +
-                "groupName='" + groupName + '\'' +
+                "configName='" + configName + '\'' +
                 ", pathToExecutable='" + pathToExecutable + '\'' +
                 ", jre='" + jre + '\'' +
                 ", classpath='" + classpath + '\'' +

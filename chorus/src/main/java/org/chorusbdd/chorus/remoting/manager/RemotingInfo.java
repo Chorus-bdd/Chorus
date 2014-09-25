@@ -37,75 +37,54 @@ package org.chorusbdd.chorus.remoting.manager;
 */
 public class RemotingInfo implements RemotingManagerConfig {
 
-    //default protocol to jmx so we don't have to specify it if loading props from db
-    private String protocol = "jmx";
-    private String name;
-    private String host;
-    private int port;
-    private int connectionAttempts = 40;
-    private int connectionAttemptMillis = 250;
+    private final String protocol;
+    private final String configName;
+    private final String host;
+    private final int port;
+    private final int connectionAttempts;
+    private final int connectionAttemptMillis;
+
+    public RemotingInfo(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis) {
+        this.protocol = protocol;
+        this.configName = configName;
+        this.host = host;
+        this.port = port;
+        this.connectionAttempts = connectionAttempts;
+        this.connectionAttemptMillis = connectionAttemptMillis;
+    }
 
     public String getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getGroupName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getConfigName() {
+        return configName;
     }
 
     public String getHost() {
         return host;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
     public int getPort() {
         return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 
     public int getConnectionAttempts() {
         return connectionAttempts;
     }
 
-    public void setConnnectionAttempts(int connectionAttempts) {
-        this.connectionAttempts = connectionAttempts;
-    }
-
     public int getConnectionAttemptMillis() {
         return connectionAttemptMillis;
     }
 
-    public void setConnectionAttemptMillis(int connectionAttemptMillis) {
-        this.connectionAttemptMillis = connectionAttemptMillis;
-    }
-
     public String toString() {
         return "RemotingInfo{" +
-                getPropertiesAsString() +
-                '}';
-    }
-
-    public String getPropertiesAsString() {
-        return "protocol='" + protocol + '\'' +
-                ", name='" + name + '\'' +
+                "protocol='" + protocol + '\'' +
+                ", configName='" + configName + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
                 ", connectionAttempts=" + connectionAttempts +
-                ", connectionAttemptMillis=" + connectionAttemptMillis;
+                ", connectionAttemptMillis=" + connectionAttemptMillis +
+                '}';
     }
-
 }

@@ -68,7 +68,14 @@ public class JdbcPropertySource implements PropertyGroupsSource {
 
             while (rs.next()) {
                 Properties p = new Properties();
-                String groupName = rs.getString("name");
+                String configName = null;
+                try {
+                    configName = rs.getString("configName");
+                } catch (SQLException e) {
+                    //handle change between 1.6.x and 2.x
+                    configName = rs.getString("name");
+                }
+
                 for ( int loop=1; loop <= rs.getMetaData().getColumnCount(); loop ++) {
                     String columnName = rs.getMetaData().getColumnLabel(loop);
                     Object o = rs.getObject(loop);
@@ -76,7 +83,7 @@ public class JdbcPropertySource implements PropertyGroupsSource {
                         p.put(columnName, o.toString());
                     }
                 }
-                propertiesByGroupName.put(groupName, p);
+                propertiesByGroupName.put(configName, p);
             }
             rs.close();
             stmt.close();

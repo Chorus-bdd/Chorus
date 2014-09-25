@@ -8,7 +8,7 @@ import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
  */
 public interface ProcessManagerConfig extends HandlerConfig {
 
-    String getGroupName();
+    String getConfigName();
 
     String getJre();
 

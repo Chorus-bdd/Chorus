@@ -45,7 +45,7 @@ public interface HandlerConfig {
     String DEFAULT_PROPERTIES_GROUP = "default";
 
     /**
-     * @return the group name to which this HandlerConfig relates
+     * @return the config name to which this HandlerConfig relates
      */
-    String getGroupName();
+    String getConfigName();
 }

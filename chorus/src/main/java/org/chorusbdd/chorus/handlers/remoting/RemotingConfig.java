@@ -37,67 +37,94 @@ import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 * User: Nick Ebbutt
 * Date: 18/09/12
 * Time: 08:20
+*
+* Configuration for a remote component used by the RemotingHandler
+* A builder for RemotingInfo used by the RemotingManager to control remoting
 */
 public class RemotingConfig implements RemotingManagerConfig {
 
-    private RemotingInfo remotingInfo = new RemotingInfo();
+    //default protocol to jmx so we don't have to specify it if loading props from db
+    private String protocol = "jmx";
+    private String configName;
+    private String host;
+    private int port;
+    private int connectionAttempts = 40;
+    private int connectionAttemptMillis = 250;
+
+    public RemotingInfo buildRemotingInfo() {
+        return new RemotingInfo(
+            protocol,
+            configName,
+            host,
+            port,
+            connectionAttempts,
+            connectionAttemptMillis
+        );
+    }
 
     public String getProtocol() {
-        return remotingInfo.getProtocol();
+        return protocol;
     }
 
-    public void setName(String name) {
-        remotingInfo.setName(name);
+    public RemotingConfig setProtocol(String protocol) {
+        this.protocol = protocol;
+        return this;
     }
 
-    public int getConnectionAttempts() {
-        return remotingInfo.getConnectionAttempts();
+    public String getConfigName() {
+        return configName;
     }
 
-    public String getHost() {
-        return remotingInfo.getHost();
+    public RemotingConfig setConfigName(String configName) {
+        this.configName = configName;
+        return this;
     }
 
     public int getConnectionAttemptMillis() {
-        return remotingInfo.getConnectionAttemptMillis();
+        return connectionAttemptMillis;
     }
 
-    public void setProtocol(String protocol) {
-        remotingInfo.setProtocol(protocol);
+    public RemotingConfig setConnectionAttemptMillis(int connectionAttemptMillis) {
+        this.connectionAttemptMillis = connectionAttemptMillis;
+        return this;
     }
 
-    public void setPort(int port) {
-        remotingInfo.setPort(port);
+    public int getConnectionAttempts() {
+        return connectionAttempts;
     }
 
-    public void setHost(String host) {
-        remotingInfo.setHost(host);
+    public RemotingConfig setConnnectionAttempts(int connectionAttempts) {
+        this.connectionAttempts = connectionAttempts;
+        return this;
     }
 
-    public void setConnnectionAttempts(int connectionAttempts) {
-        remotingInfo.setConnnectionAttempts(connectionAttempts);
+    public String getHost() {
+        return host;
     }
 
-    public void setConnectionAttemptMillis(int connectionAttemptMillis) {
-        remotingInfo.setConnectionAttemptMillis(connectionAttemptMillis);
+    public RemotingConfig setHost(String host) {
+        this.host = host;
+        return this;
     }
 
     public int getPort() {
-        return remotingInfo.getPort();
+        return port;
     }
 
-    public String getGroupName() {
-        return remotingInfo.getGroupName();
+    public RemotingConfig setPort(int port) {
+        this.port = port;
+        return this;
     }
 
-    public RemotingInfo buildRemotingInfo() {
-        return remotingInfo;
-    }
-
+    @Override
     public String toString() {
         return "RemotingConfig{" +
-                remotingInfo.getPropertiesAsString() +
+                "protocol='" + protocol + '\'' +
+                ", configName='" + configName + '\'' +
+                ", host='" + host + '\'' +
+                ", port=" + port +
+                ", connectionAttempts=" + connectionAttempts +
+                ", connectionAttemptMillis=" + connectionAttemptMillis +
                 '}';
     }
-
 }

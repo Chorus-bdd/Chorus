@@ -315,8 +315,8 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         Properties g = propertiesByGroup.get(groupName);
         if ( g == null ) {
             g = new Properties();
-            //always set the group name as a property
-            g.setProperty("name", groupName);
+            //always set the config name as a property
+            g.setProperty("configName", groupName);
             propertiesByGroup.put(groupName, g);
         }
         return g;

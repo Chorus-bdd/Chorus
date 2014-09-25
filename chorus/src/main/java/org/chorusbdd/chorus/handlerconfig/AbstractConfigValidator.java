@@ -12,7 +12,7 @@ public abstract class AbstractConfigValidator<E extends HandlerConfig> implement
 
     public boolean isValid(E config) {
         boolean valid = true;
-        if ( ! isSet(config.getGroupName())) {
+        if ( ! isSet(config.getConfigName())) {
             valid = logInvalidConfig(log, "config groupName was null or empty", config);
         }
 
@@ -25,7 +25,7 @@ public abstract class AbstractConfigValidator<E extends HandlerConfig> implement
     protected abstract boolean checkValid(E config);
 
     protected boolean logInvalidConfig(ChorusLog log, String message, E config) {
-        log.warn("Invalid " + config.getClass().getSimpleName() + " " + config.getGroupName() + " - " + message);
+        log.warn("Invalid " + config.getClass().getSimpleName() + " " + config.getConfigName() + " - " + message);
         return false;
     }
 
