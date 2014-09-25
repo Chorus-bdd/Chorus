@@ -69,9 +69,9 @@ class ProcessLogOutput {
     private int readAheadBufferSize;
     private int readTimeoutSeconds;
 
-    public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessInfo processesConfig, String processAlias) {
+    public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessInfo processesConfig) {
         this.featureDir = featureDir;
-        this.logFileBaseName = calculateLogFileBaseName(featureToken, featureFile, processAlias);
+        this.logFileBaseName = calculateLogFileBaseName(featureToken, featureFile, processesConfig.getProcessName());
         this.processesConfig = processesConfig;
         this.isAppendToLogs = processesConfig.isAppendToLogs();
         this.featureToken = featureToken;

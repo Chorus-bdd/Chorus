@@ -83,13 +83,34 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private int instancesStarted = 0;
 
     public ProcessInfo buildProcessInfo(String processName) {
-        int nextJmxPort = jmxPort != -1 ? jmxPort + instancesStarted : -1;
-        int nextDebugPort = debugPort != -1 ? debugPort + instancesStarted : -1;
+
+        //using the getter methods to allow subclasses to override
+
+        int nextJmxPort = getJmxPort() != -1 ? getJmxPort() + instancesStarted : -1;
+        int nextDebugPort = getDebugPort() != -1 ? getDebugPort() + instancesStarted : -1;
 
         ProcessInfo nextProcess = new ProcessInfo(
-            groupName, processName, pathToExecutable, jre, classpath, jvmargs, mainclass, args, stdOutMode,
-            stdErrMode, nextJmxPort, nextDebugPort, terminateWaitTime, logDirectory, appendToLogs, createLogDir,
-            processCheckDelay, readAheadBufferSize, readTimeoutSeconds, processScope, processConfigName
+            getGroupName(),
+            processName,
+            getPathToExecutable(),
+            getJre(),
+            getClasspath(),
+            getJvmargs(),
+            getMainclass(),
+            getArgs(),
+            getStdOutMode(),
+            getStdErrMode(),
+            nextJmxPort,
+            nextDebugPort,
+            getTerminateWaitTime(),
+            getLogDirectory(),
+            isAppendToLogs(),
+            isCreateLogDir(),
+            getProcessCheckDelay(),
+            getReadAheadBufferSize(),
+            getReadTimeoutSeconds(),
+            getProcessScope(),
+            getProcessConfigName()
         );
         instancesStarted++;
         return nextProcess;

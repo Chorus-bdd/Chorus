@@ -68,7 +68,6 @@ public class ProcessesHandler {
 
     @Initialize(scope= Scope.FEATURE)
     public void setup() {
-        processManager.setFeatureDetails(featureDir, featureFile, featureToken);
         processConfigTemplates = loadProcessConfig();
     }
 
@@ -149,7 +148,7 @@ public class ProcessesHandler {
         String uniqueName = nextProcessName(processName);
         ProcessesConfig config = getConfigTemplate(processName);
         ProcessInfo processInfo = config.buildProcessInfo(uniqueName);
-        processManager.startJava(processInfo, uniqueName);
+        processManager.startProcess(processInfo);
     }
 
     /**
@@ -161,27 +160,9 @@ public class ProcessesHandler {
     public void startJavaProcessFromConfigNamed(String configName, String processName) throws Exception {
         ProcessesConfig config = getConfigTemplate(configName);
         ProcessInfo processInfo = config.buildProcessInfo(processName);
-        processManager.startJava(processInfo, processName);
+        processManager.startProcess(processInfo);
     }
 
-    private ProcessesConfig newProcessConfig(final String groupName, final boolean logging) {
-        return new ProcessesConfig() {
-            @Override
-            public String getGroupName() {
-                return groupName;
-            }
-
-            @Override
-            public OutputMode getStdErrMode() {
-                return logging ? OutputMode.FILE : OutputMode.INLINE;
-            }
-
-            @Override
-            public OutputMode getStdOutMode() {
-                return logging ? OutputMode.FILE : OutputMode.INLINE;
-            }
-        };
-    }
 
     @Step(".*start a process using script '(.*)'$")
     public void startScript(final String script) throws Exception {
@@ -203,19 +184,45 @@ public class ProcessesHandler {
         startTheScript(script, processName, true);
     }
 
-    // We have a small problem since we lack a ProcessesConfig when running processes this way
-    // So presently we have to mock up a ProcessesConfig
-    // Recommended solution is to use the process handler property pathToExecutable instead and then you can set all
-    // the other config properties appropriately
     private void startTheScript(String script, boolean logging) throws Exception {
         startTheScript(script, nextProcessName(), logging);
     }
 
     private void startTheScript(String script, String processName, boolean logging) throws Exception {
-        final ProcessesConfig config = newProcessConfig(processName, logging);
+        final ProcessesConfig config = getScriptConfig(processName, logging, script);
         ProcessInfo processInfo = config.buildProcessInfo(processName);
-        //setConfigForProcess(processName, config);
-        processManager.startScript(processInfo, script, processName);
+        processManager.startProcess(processInfo);
+    }
+
+    // We have a small problem since we lack a ProcessesConfig when running processes this way
+    // So presently we have to mock up a ProcessesConfig
+    // Recommended solution is to use the process handler property pathToExecutable instead and then you can set all
+    // the other config properties appropriately
+    private ProcessesConfig getScriptConfig(final String groupName, final boolean logging, final String script) {
+        return new ProcessesConfig() {
+            @Override
+            public String getGroupName() {
+                return groupName;
+            }
+
+            @Override
+            public OutputMode getStdErrMode() {
+                return logging ? OutputMode.FILE : OutputMode.INLINE;
+            }
+
+            @Override
+            public OutputMode getStdOutMode() {
+                return logging ? OutputMode.FILE : OutputMode.INLINE;
+            }
+
+            @Override
+            public int getProcessCheckDelay() { return 250; }
+
+            @Override
+            public String getPathToExecutable() {
+                return NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
+            }
+        };
     }
 
 

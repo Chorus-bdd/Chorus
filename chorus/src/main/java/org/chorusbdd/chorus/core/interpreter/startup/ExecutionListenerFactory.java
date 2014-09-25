@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.output.OutputFactory;
+import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -63,8 +64,14 @@ public class ExecutionListenerFactory {
 
         addInterpreterOutputExecutionListener(config, result);
 
+        addProcessManagerExecutionListener(result);
+
         addUserExecutionListeners(config, result);
         return result;
+    }
+
+    private void addProcessManagerExecutionListener(List<ExecutionListener> result) {
+        result.add(ProcessManager.getInstance().getProcessManagerExecutionListener());
     }
 
     private void addUserExecutionListeners(ConfigProperties config, List<ExecutionListener> result) {

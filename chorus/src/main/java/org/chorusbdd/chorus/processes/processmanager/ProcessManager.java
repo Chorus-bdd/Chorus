@@ -1,6 +1,9 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
+import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.NamedExecutors;
@@ -30,6 +33,7 @@ public class ProcessManager  {
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
     private final ProcessManagerConfigValidator processesConfigValidator = new ProcessManagerConfigValidator();
 
+    private ExecutionListener processManagerExecutionListener = new ProcessManagerExecutionListener();
     private ChorusProcessFactory chorusProcessFactory = new ChorusProcessFactory();
 
     private volatile File featureDir;
@@ -46,12 +50,6 @@ public class ProcessManager  {
         return INSTANCE;
     }
 
-    public void setFeatureDetails(final File featureDir, final File featureFile, final FeatureToken featureToken) {
-        this.featureDir = featureDir;
-        this.featureFile = featureFile;
-        this.featureToken = featureToken;
-    }
-
     // ----------------------------------------------------- Start/Stop Process
 
     /**
@@ -59,11 +57,11 @@ public class ProcessManager  {
      *
      * @throws Exception
      */
-    public synchronized void startJava(ProcessInfo processInfo, String processName) throws Exception {
-        checkConfigAndNotAlreadyStarted(processInfo, processName);
+    public synchronized void startProcess(ProcessInfo processInfo) throws Exception {
+        checkConfigAndNotAlreadyStarted(processInfo);
 
         //get the log output containing logging configuration for this process
-        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processInfo, processName);
+        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processInfo);
         String logFileBaseName = logOutput.getLogFileBaseName();
 
         AbstractCommandLineBuilder b = processInfo.isJavaProcess() ?
@@ -71,38 +69,24 @@ public class ProcessManager  {
                 new NativeProcessCommandLineBuilder(processInfo, featureDir);
 
         List<String> commandLineTokens = b.buildCommandLine();
-        startProcess(processName, commandLineTokens, logOutput, processInfo.getProcessCheckDelay(), processInfo);
+        startProcess(commandLineTokens, logOutput, processInfo);
     }
 
-    private void checkConfigAndNotAlreadyStarted(ProcessInfo processInfo, String processName) {
+    private void checkConfigAndNotAlreadyStarted(ProcessInfo processInfo) {
+        String processName = processInfo.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
         ChorusAssert.assertTrue("The config for " + processName + " must be valid", processesConfigValidator.checkValid(processInfo));
     }
 
-    /**
-     *  @deprecated Since 1.6.1 the preferred way to launch e a non-java process is to set the record processes handler property 'pathToExecutable'
-     */
-    @Deprecated
-    public synchronized void startScript(ProcessInfo processInfo, final String script, final String processName) throws Exception {
-        checkConfigAndNotAlreadyStarted(processInfo, processName);
 
-        String command = NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
-
-        //get the log output containing logging configuration and out and err streams for this script
-        ProcessLogOutput logOutput = new ProcessLogOutput( featureToken, featureDir, featureFile, processInfo, processName);
-
-        log.debug("About to run script: " + command);
-        startProcess(processName, Collections.singletonList(command), logOutput, 250, processInfo);
-    }
-
-
-    private void startProcess(String name, List<String> commandLineTokens, ProcessLogOutput logOutput, int processCheckDelay, ProcessInfo processInfo) throws Exception {
+    private void startProcess(List<String> commandLineTokens, ProcessLogOutput logOutput, ProcessInfo processInfo) throws Exception {
+        String name = processInfo.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + name, processes.containsKey(name));
         processes.put(name, processInfo);
 
         ChorusProcess chorusProcess = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
         processInfo.setProcess(chorusProcess);
-        chorusProcess.checkProcess(processCheckDelay);
+        chorusProcess.checkProcess(processInfo.getProcessCheckDelay());
     }
 
     public synchronized void stopProcess(String processName) {
@@ -269,4 +253,15 @@ public class ProcessManager  {
             stopAllProcesses();
         }
     }
-}
+
+    public ExecutionListener getProcessManagerExecutionListener() {
+        return processManagerExecutionListener;
+    }
+
+    private class ProcessManagerExecutionListener extends ExecutionListenerAdapter {
+        public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            ProcessManager.this.featureToken = feature;
+            ProcessManager.this.featureFile = feature.getFeatureFile();
+            ProcessManager.this.featureDir = featureToken.getFeatureFile().getParentFile();
+        }
+    }}

@@ -34,7 +34,7 @@ public class ProcessManagerConfigValidator extends AbstractConfigValidator<Proce
     }
 
     public boolean isJavaProcess(ProcessManagerConfig processesConfig) {
-        return ! isSet(processesConfig.getPathToExecutable());
+        return !isSet(processesConfig.getPathToExecutable());
     }
 
     private boolean checkPropertiesForNativeProcess(ProcessManagerConfig processesConfig) {
