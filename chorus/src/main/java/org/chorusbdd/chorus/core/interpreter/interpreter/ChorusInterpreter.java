@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.core.interpreter.invoker.DefaultStepInvokerProvider;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
+import org.chorusbdd.chorus.core.interpreter.startup.SubsystemManager;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
@@ -72,6 +73,8 @@ public class ChorusInterpreter {
     private ScheduledFuture scenarioTimeoutKill;
 
     private StepProcessor stepProcessor = new StepProcessor(executionListenerSupport);
+
+    private SubsystemManager subsystemManager;
 
     public ChorusInterpreter() {}
 
@@ -137,7 +140,7 @@ public class ChorusInterpreter {
     private void runScenarios(ExecutionToken executionToken, FeatureToken feature, List<Class> orderedHandlerClasses) throws Exception {
         List<ScenarioToken> scenarios = feature.getScenarios();
         
-        HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport);
+        HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager);
         handlerManager.createFeatureScopedHandlers();
         handlerManager.processStartOfFeature();
 
@@ -283,5 +286,9 @@ public class ChorusInterpreter {
 
     public void setScenarioTimeoutMillis(long scenarioTimeoutMillis) {
         this.scenarioTimeoutMillis = scenarioTimeoutMillis;
+    }
+
+    public void setSubsystemManager(SubsystemManager subsystemManager) {
+        this.subsystemManager = subsystemManager;
     }
 }

@@ -33,9 +33,9 @@ import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
-import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.*;
-import org.chorusbdd.chorus.remoting.manager.RemotingManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -79,6 +79,9 @@ public class RemotingHandler {
 
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
+
+    @ChorusResource("process.manager")
+    private ProcessManager processManager;
 
     private Map<String, RemotingConfig> remotingConfigMap;
     
@@ -133,7 +136,7 @@ public class RemotingHandler {
      */
     private RemotingConfig getConfigForProcessManagerProcess(String processName) {
         RemotingConfig result = null;
-        ProcessInfo processInfo = ProcessManager.getInstance().getProcessInfo(processName);
+        ProcessInfo processInfo = processManager.getProcessInfo(processName);
         if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
             result = getConfigForLocalProcess(processInfo);
         }

@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Initialize;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
 import org.chorusbdd.chorus.processes.processmanager.*;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -64,7 +65,8 @@ public class ProcessesHandler {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
-    private ProcessManager processManager = ProcessManager.getInstance();
+    @ChorusResource("process.manager")
+    private ProcessManager processManager;
 
     @Initialize(scope= Scope.FEATURE)
     public void setup() {

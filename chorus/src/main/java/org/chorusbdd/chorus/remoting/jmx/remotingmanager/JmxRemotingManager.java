@@ -5,7 +5,7 @@ import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
-import org.chorusbdd.chorus.remoting.manager.RemotingManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.RemotingManager;
 import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.logging.ChorusLog;

@@ -30,16 +30,12 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.core.interpreter.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.startup.ExecutionListenerFactory;
-import org.chorusbdd.chorus.core.interpreter.startup.FeatureListBuilder;
-import org.chorusbdd.chorus.core.interpreter.startup.InterpreterBuilder;
-import org.chorusbdd.chorus.core.interpreter.startup.OutputConfigurer;
+import org.chorusbdd.chorus.core.interpreter.startup.*;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.logging.ChorusOut;
@@ -86,17 +82,25 @@ public class Chorus {
        
         setLoggingProviderAndOutputFormatter();
 
-        List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListener(
-            configReader
-        );
-        listenerSupport.addExecutionListener(listeners);
+        SubsystemManager subsystemManager = new SubsystemManager();
+
+        addExecutionListeners(subsystemManager);
 
         //configure logging first
         interpreterBuilder = new InterpreterBuilder(listenerSupport);
         interpreter = interpreterBuilder.buildAndConfigure(configReader);
+        interpreter.setSubsystemManager(subsystemManager);
         featureListBuilder = new FeatureListBuilder();
     }
-    
+
+    private void addExecutionListeners(SubsystemManager subsystemManager) {
+        List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListeners(
+            configReader,
+            subsystemManager.getExecutionListeners()
+        );
+        listenerSupport.addExecutionListener(listeners);
+    }
+
     /**
      * Run interpreter using just the base configuration and the listeners provided
      * @return true, if all tests passed or were marked pending

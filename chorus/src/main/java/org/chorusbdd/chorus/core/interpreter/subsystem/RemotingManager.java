@@ -1,4 +1,6 @@
-package org.chorusbdd.chorus.remoting.manager;
+package org.chorusbdd.chorus.core.interpreter.subsystem;
+
+import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
 
 /**
  * Created by nick on 30/08/2014.

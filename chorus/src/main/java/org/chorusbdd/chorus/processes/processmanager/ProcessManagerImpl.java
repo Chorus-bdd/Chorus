@@ -1,6 +1,7 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -12,7 +13,6 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class ProcessManager  {
+public class ProcessManagerImpl implements ProcessManager {
 
     private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
@@ -40,15 +40,10 @@ public class ProcessManager  {
     private volatile File featureFile;
     private volatile FeatureToken featureToken;
 
-    private ProcessManager() {
+    public ProcessManagerImpl() {
         addShutdownHook();
     }
 
-    private static final ProcessManager INSTANCE = new ProcessManager();
-
-    public static ProcessManager getInstance() {
-        return INSTANCE;
-    }
 
     // ----------------------------------------------------- Start/Stop Process
 
@@ -260,8 +255,8 @@ public class ProcessManager  {
 
     private class ProcessManagerExecutionListener extends ExecutionListenerAdapter {
         public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
-            ProcessManager.this.featureToken = feature;
-            ProcessManager.this.featureFile = feature.getFeatureFile();
-            ProcessManager.this.featureDir = featureToken.getFeatureFile().getParentFile();
+            ProcessManagerImpl.this.featureToken = feature;
+            ProcessManagerImpl.this.featureFile = feature.getFeatureFile();
+            ProcessManagerImpl.this.featureDir = featureToken.getFeatureFile().getParentFile();
         }
     }}

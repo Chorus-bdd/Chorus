@@ -35,10 +35,11 @@ import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.output.OutputFactory;
-import org.chorusbdd.chorus.processes.processmanager.ProcessManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -55,7 +56,7 @@ public class ExecutionListenerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ExecutionListenerFactory.class);
 
-    public List<ExecutionListener> createExecutionListener(ConfigProperties config) {
+    public List<ExecutionListener> createExecutionListeners(ConfigProperties config, List<ExecutionListener> listeners) {
         List<ExecutionListener> result = new ArrayList<ExecutionListener>();
         if ( config.isSet(ChorusConfigProperty.JMX_LISTENER)) {
             //we can have zero to many remote jmx execution listeners available
@@ -64,14 +65,10 @@ public class ExecutionListenerFactory {
 
         addInterpreterOutputExecutionListener(config, result);
 
-        addProcessManagerExecutionListener(result);
+        result.addAll(listeners);
 
         addUserExecutionListeners(config, result);
         return result;
-    }
-
-    private void addProcessManagerExecutionListener(List<ExecutionListener> result) {
-        result.add(ProcessManager.getInstance().getProcessManagerExecutionListener());
     }
 
     private void addUserExecutionListeners(ConfigProperties config, List<ExecutionListener> result) {

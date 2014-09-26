@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.core.interpreter.interpreter;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.core.interpreter.startup.SubsystemManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -57,12 +58,14 @@ public class HandlerManager {
     private final FeatureToken feature;
     private final List<Class> orderedHandlerClasses;
     private final SpringContextSupport springContextSupport;
+    private SubsystemManager subsystemManager;
     private ScenarioToken currentScenario;
 
-    public HandlerManager(FeatureToken feature, List<Class> orderedHandlerClasses, SpringContextSupport springContextSupport) {
+    public HandlerManager(FeatureToken feature, List<Class> orderedHandlerClasses, SpringContextSupport springContextSupport, SubsystemManager subsystemManager) {
         this.feature = feature;
         this.orderedHandlerClasses = orderedHandlerClasses;
         this.springContextSupport = springContextSupport;
+        this.subsystemManager = subsystemManager;
     }
     
     public void createFeatureScopedHandlers() throws Exception {
@@ -267,12 +270,16 @@ public class HandlerManager {
     }
 
     private Object getFeatureResource(String resourceName, Object o) {
-        if ("feature.file".equals(resourceName)) {
+        if (ChorusResource.featureFile.equals(resourceName)) {
             o = feature.getFeatureFile();
-        } else if ("feature.dir".equals(resourceName)) {
+        } else if (ChorusResource.featureDir.equals(resourceName)) {
             o = feature.getFeatureFile().getParentFile();
-        } else if ("feature.token".equals(resourceName)) {
+        } else if (ChorusResource.featureToken.equals(resourceName)) {
             o = feature;
+        } else if (ChorusResource.processManager.equals(resourceName)) {
+            o = subsystemManager.getProcessManager();
+        } else if (ChorusResource.remotingManager.equals(resourceName)) {
+            o = subsystemManager.getRemotingManager();
         }
         return o;
     }

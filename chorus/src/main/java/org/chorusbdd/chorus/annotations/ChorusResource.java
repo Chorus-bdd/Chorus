@@ -57,6 +57,16 @@ import java.lang.annotation.Target;
  * <td>ScenarioToken</td>
  * <td>The ScenarioToken with metadata relating to the current running scenario</td>
  * </tr>
+ * <tr>
+ * <td>process.manager</td>
+ * <td>ProcessManager</td>
+ * <td>Chorus' ProcessManager subsystem</td>
+ * </tr> 
+ * <tr>
+ * <td>remoting.manager</td>
+ * <td>RemotingManager</td>
+ * <td>Chorus' RemotingManager subsystem</td>
+ * </tr>
  * </table>
  *
  * Sometimes handlers need to be provided with state from the running interpreter, so that they can locate resources relative
@@ -69,10 +79,17 @@ import java.lang.annotation.Target;
  * feature.file - annotation for a File field, interpreter will set this to the executing feature file
  * feature.token - annotation for a FeatureToken field, interpreter will set this to the FeatureToken which contains details of the currently running Feature
  * scenario.token - annotation for a ScenarioToken field, interpreter will set this to the ScenarioToken which contains details of the currently running Scenario
- *
+ * process.manager - interpreter will set this to ProcessMaanger subsystem in use
+ * remoting.manager - interpreter will set this to RemotingManager subsystem in use
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ChorusResource {
+    public static final String featureFile = "feature.file";
+    public static final String featureDir = "feature.dir";
+    public static final String featureToken = "feature.token";
+    public static final String processManager = "process.manager";
+    public static final String remotingManager = "remoting.manager";
+
     public String value() default "";
 }
