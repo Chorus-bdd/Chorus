@@ -1,5 +1,5 @@
-package org.chorusbdd.chorus.spring.selftest.calculator; /**
- *  Copyright (C) 2000-2013 The Software Conservancy and Original Authors.
+/**
+ *  Copyright (C) 2000-2014 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,6 +27,7 @@ package org.chorusbdd.chorus.spring.selftest.calculator; /**
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
+package org.chorusbdd.chorus.spring.selftest.calculator;
 
 import java.util.Stack;
 
