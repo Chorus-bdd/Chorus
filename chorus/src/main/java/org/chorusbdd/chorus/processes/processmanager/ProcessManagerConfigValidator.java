@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;

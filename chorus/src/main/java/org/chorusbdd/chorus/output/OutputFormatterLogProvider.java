@@ -31,7 +31,6 @@ package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
-import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.logging.LogLevel;
 
 /**

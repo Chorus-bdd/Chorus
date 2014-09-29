@@ -30,9 +30,9 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.processes.processmanager.OutputMode;
-import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
-import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfig;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 
 /**
  * Created with IntelliJ IDEA.
@@ -80,16 +80,15 @@ public class ProcessesConfig implements ProcessManagerConfig {
     //debug and jmx ports for any other similar processes started under different names/aliases
     private int instancesStarted = 0;
 
-    public ProcessInfo buildProcessInfo(String processName) {
+    public ProcessManagerConfig buildProcessConfig() {
 
         //using the getter methods to allow subclasses to override
 
         int nextJmxPort = getJmxPort() != -1 ? getJmxPort() + instancesStarted : -1;
         int nextDebugPort = getDebugPort() != -1 ? getDebugPort() + instancesStarted : -1;
 
-        ProcessInfo nextProcess = new ProcessInfo(
+        RuntimeProcessConfig nextProcess = new RuntimeProcessConfig(
             getConfigName(),
-            processName,
             getPathToExecutable(),
             getJre(),
             getClasspath(),
@@ -302,6 +301,14 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return this;
     }
 
+    public boolean isJavaProcess() {
+        return ! isSet(pathToExecutable);
+    }
+
+    private boolean isSet(String propertyValue) {
+        return propertyValue != null && propertyValue.trim().length() > 0;
+    }
+
     @Override
     public String toString() {
         return "ProcessesConfig{" +
@@ -327,5 +334,173 @@ public class ProcessesConfig implements ProcessManagerConfig {
                 ", processConfigName='" + processConfigName + '\'' +
                 ", instancesStarted=" + instancesStarted +
                 '}';
+    }
+
+    /**
+     * An immutable runtime config for a process
+     */
+    private class RuntimeProcessConfig implements ProcessManagerConfig {
+
+        private final String groupName;
+        private final String pathToExecutable;
+        private final String jre;
+        private final String classpath;
+        private final String jvmargs;
+        private final String mainclass;
+        private final String args;
+        private final OutputMode stdOutMode;
+        private final OutputMode stdErrMode;
+        private final int jmxPort;
+        private final int debugPort;
+        private final int terminateWaitTime;
+        private final String logDirectory;
+        private final boolean appendToLogs;
+        private final boolean createLogDir; //whether to auto create
+        private final int processCheckDelay;
+        private final int readAheadBufferSize; //read ahead process output in CAPTURED mode
+        private final int readTimeoutSeconds;
+        private final Scope processScope;
+        private final String processConfigName;
+
+        RuntimeProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
+                    String args, OutputMode stdOutMode, OutputMode stdErrMode, int jmxPort, int debugPort, int terminateWaitTime,
+                    String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay, int readAheadBufferSize,
+                    int readTimeoutSeconds, Scope processScope, String processConfigName) {
+            this.groupName = groupName;
+            this.pathToExecutable = pathToExecutable;
+            this.jre = jre;
+            this.classpath = classpath;
+            this.jvmargs = jvmargs;
+            this.mainclass = mainclass;
+            this.args = args;
+            this.stdOutMode = stdOutMode;
+            this.stdErrMode = stdErrMode;
+            this.jmxPort = jmxPort;
+            this.debugPort = debugPort;
+            this.terminateWaitTime = terminateWaitTime;
+            this.logDirectory = logDirectory;
+            this.appendToLogs = appendToLogs;
+            this.createLogDir = createLogDir;
+            this.processCheckDelay = processCheckDelay;
+            this.readAheadBufferSize = readAheadBufferSize;
+            this.readTimeoutSeconds = readTimeoutSeconds;
+            this.processScope = processScope;
+            this.processConfigName = processConfigName;
+        }
+
+        public String getConfigName() {
+            return groupName;
+        }
+
+        public String getJre() {
+            return jre;
+        }
+
+        public String getClasspath() {
+            return classpath;
+        }
+
+        public String getJvmargs() {
+            return jvmargs == null ? "" : jvmargs;
+        }
+
+        public String getMainclass() {
+            return mainclass;
+        }
+
+        public String getPathToExecutable() {
+            return pathToExecutable;
+        }
+
+        public String getArgs() {
+            return args == null ? "" : args;
+        }
+
+        public OutputMode getStdErrMode() {
+            return stdErrMode;
+        }
+
+        public OutputMode getStdOutMode() {
+            return stdOutMode;
+        }
+
+        public int getJmxPort() {
+            return jmxPort;
+        }
+
+        public boolean isRemotingConfigDefined() {
+            return jmxPort != -1;
+        }
+
+        public int getDebugPort() {
+            return debugPort;
+        }
+
+        public int getTerminateWaitTime() {
+            return terminateWaitTime;
+        }
+
+        public String getLogDirectory() {
+            return logDirectory;
+        }
+
+        public boolean isAppendToLogs() {
+            return appendToLogs;
+        }
+
+        public boolean isCreateLogDir() {
+            return createLogDir;
+        }
+
+        public int getProcessCheckDelay() {
+            return processCheckDelay;
+        }
+
+        public int getReadAheadBufferSize() {
+            return readAheadBufferSize;
+        }
+
+        public int getReadTimeoutSeconds() {
+            return readTimeoutSeconds;
+        }
+
+        public Scope getProcessScope() {
+            return processScope;
+        }
+
+        public String getProcessConfigName() {
+            return processConfigName;
+        }
+
+        public boolean isJavaProcess() {
+            return ! isSet(pathToExecutable);
+        }
+
+        @Override
+        public String toString() {
+            return "RuntimeProcessConfig{" +
+                    "groupName='" + groupName + '\'' +
+                    ", pathToExecutable='" + pathToExecutable + '\'' +
+                    ", jre='" + jre + '\'' +
+                    ", classpath='" + classpath + '\'' +
+                    ", jvmargs='" + jvmargs + '\'' +
+                    ", mainclass='" + mainclass + '\'' +
+                    ", args='" + args + '\'' +
+                    ", stdOutMode=" + stdOutMode +
+                    ", stdErrMode=" + stdErrMode +
+                    ", jmxPort=" + jmxPort +
+                    ", debugPort=" + debugPort +
+                    ", terminateWaitTime=" + terminateWaitTime +
+                    ", logDirectory='" + logDirectory + '\'' +
+                    ", appendToLogs=" + appendToLogs +
+                    ", createLogDir=" + createLogDir +
+                    ", processCheckDelay=" + processCheckDelay +
+                    ", readAheadBufferSize=" + readAheadBufferSize +
+                    ", readTimeoutSeconds=" + readTimeoutSeconds +
+                    ", processScope=" + processScope +
+                    ", processConfigName='" + processConfigName + '\'' +
+                    '}';
+        }
+
     }
 }

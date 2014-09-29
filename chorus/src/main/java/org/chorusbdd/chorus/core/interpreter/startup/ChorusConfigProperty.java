@@ -31,11 +31,9 @@ package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.chorusbdd.chorus.config.PropertySourceMode;
-import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.util.ChorusConstants;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

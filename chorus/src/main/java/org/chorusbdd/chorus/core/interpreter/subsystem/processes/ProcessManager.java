@@ -1,14 +1,14 @@
-package org.chorusbdd.chorus.core.interpreter.subsystem;
+package org.chorusbdd.chorus.core.interpreter.subsystem.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
 
 /**
  * Created by nick on 26/09/2014.
  */
 public interface ProcessManager {
-    void startProcess(ProcessInfo processInfo) throws Exception;
+
+    void startProcess(String processName, ProcessManagerConfig processInfo) throws Exception;
 
     void stopProcess(String processName);
 
@@ -16,7 +16,7 @@ public interface ProcessManager {
 
     void stopAllProcesses();
 
-    ProcessInfo getProcessInfo(String processName);
+    ProcessManagerConfig getProcessConfig(String processName);
 
     void checkProcessHasStopped(String processName);
 

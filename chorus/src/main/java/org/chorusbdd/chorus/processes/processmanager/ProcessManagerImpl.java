@@ -1,16 +1,17 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.File;
 import java.util.HashSet;
@@ -52,7 +53,9 @@ public class ProcessManagerImpl implements ProcessManager {
      *
      * @throws Exception
      */
-    public synchronized void startProcess(ProcessInfo processInfo) throws Exception {
+    public synchronized void startProcess(String processName, ProcessManagerConfig processManagerConfig) throws Exception {
+
+        ProcessInfo processInfo = new ProcessInfo(processName, processManagerConfig);
         checkConfigAndNotAlreadyStarted(processInfo);
 
         //get the log output containing logging configuration for this process
@@ -74,7 +77,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
 
-    private void startProcess(List<String> commandLineTokens, ProcessLogOutput logOutput, ProcessInfo processInfo) throws Exception {
+    private void startProcess(List<String> commandLineTokens, ProcessLogOutput logOutput,  ProcessInfo processInfo) throws Exception {
         String name = processInfo.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + name, processes.containsKey(name));
         processes.put(name, processInfo);
@@ -122,7 +125,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
     // ----------------------------------------------------- Process Properties
 
-    public synchronized ProcessInfo getProcessInfo(final String processName) {
+    public synchronized ProcessManagerConfig getProcessConfig(final String processName) {
         final ProcessInfo processInfo = processes.get(processName);
         return processInfo;
     }

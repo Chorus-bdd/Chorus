@@ -29,13 +29,13 @@
  */
 package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.core.interpreter.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
-import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

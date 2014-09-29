@@ -29,10 +29,10 @@
  */
 package org.chorusbdd.chorus;
 
+import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;

@@ -1,6 +1,4 @@
-package org.chorusbdd.chorus.core.interpreter.subsystem;
-
-import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
+package org.chorusbdd.chorus.core.interpreter.subsystem.remoting;
 
 /**
  * Created by nick on 30/08/2014.
@@ -23,7 +21,7 @@ public interface RemotingManager {
      * @param componentName     - the name of the component we want to connect to
      * @return                    the value returned by the remote component when invoking the remote step implementation
      **/
-    Object performActionInRemoteComponent(String action, String componentName, RemotingInfo remotingInfo);
+    Object performActionInRemoteComponent(String action, String componentName, RemotingManagerConfig remotingInfo);
 
     void destroy();
 }

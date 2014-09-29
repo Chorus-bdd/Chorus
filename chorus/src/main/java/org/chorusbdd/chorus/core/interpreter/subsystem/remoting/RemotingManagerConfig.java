@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.remoting.manager;
+package org.chorusbdd.chorus.core.interpreter.subsystem.remoting;
 
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 

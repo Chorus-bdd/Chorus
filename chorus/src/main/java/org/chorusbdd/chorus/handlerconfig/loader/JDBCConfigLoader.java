@@ -29,13 +29,13 @@
  */
 package org.chorusbdd.chorus.handlerconfig.loader;
 
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.source.JdbcPropertySource;
 import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
 import java.util.HashMap;

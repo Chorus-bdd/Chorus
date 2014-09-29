@@ -29,8 +29,8 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
-import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
+import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 
 /**
 * Created by IntelliJ IDEA.
@@ -51,8 +51,8 @@ public class RemotingConfig implements RemotingManagerConfig {
     private int connectionAttempts = 40;
     private int connectionAttemptMillis = 250;
 
-    public RemotingInfo buildRemotingInfo() {
-        return new RemotingInfo(
+    public RemotingManagerConfig buildRemotingInfo() {
+        return new RuntimeRemotingConfig(
             protocol,
             configName,
             host,
@@ -127,4 +127,63 @@ public class RemotingConfig implements RemotingManagerConfig {
                 ", connectionAttemptMillis=" + connectionAttemptMillis +
                 '}';
     }
+
+
+    /**
+     * An immutable remoting config
+     */
+    class RuntimeRemotingConfig implements RemotingManagerConfig {
+
+        private final String protocol;
+        private final String configName;
+        private final String host;
+        private final int port;
+        private final int connectionAttempts;
+        private final int connectionAttemptMillis;
+
+        public RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis) {
+            this.protocol = protocol;
+            this.configName = configName;
+            this.host = host;
+            this.port = port;
+            this.connectionAttempts = connectionAttempts;
+            this.connectionAttemptMillis = connectionAttemptMillis;
+        }
+
+        public String getProtocol() {
+            return protocol;
+        }
+
+        public String getConfigName() {
+            return configName;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public int getConnectionAttempts() {
+            return connectionAttempts;
+        }
+
+        public int getConnectionAttemptMillis() {
+            return connectionAttemptMillis;
+        }
+
+        public String toString() {
+            return "RuntimeRemotingConfig{" +
+                    "protocol='" + protocol + '\'' +
+                    ", configName='" + configName + '\'' +
+                    ", host='" + host + '\'' +
+                    ", port=" + port +
+                    ", connectionAttempts=" + connectionAttempts +
+                    ", connectionAttemptMillis=" + connectionAttemptMillis +
+                    '}';
+        }
+    }
+
 }

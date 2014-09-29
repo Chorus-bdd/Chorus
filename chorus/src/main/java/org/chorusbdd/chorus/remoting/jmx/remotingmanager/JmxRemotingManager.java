@@ -3,13 +3,13 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepMatcher;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
-import org.chorusbdd.chorus.remoting.manager.RemotingInfo;
-import org.chorusbdd.chorus.core.interpreter.subsystem.RemotingManager;
-import org.chorusbdd.chorus.util.HandlerUtils;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
+import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
+import org.chorusbdd.chorus.util.ChorusRemotingException;
+import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,8 +31,8 @@ public class JmxRemotingManager implements RemotingManager {
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    public Object performActionInRemoteComponent(String action, String componentName, RemotingInfo remotingInfo) {
-        
+    public Object performActionInRemoteComponent(String action, String componentName, RemotingManagerConfig remotingInfo) {
+
         ChorusAssert.assertTrue("Remoting config must be valid for " + componentName, new RemotingConfigValidator().checkValid(remotingInfo));
 
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingInfo);
@@ -51,7 +51,7 @@ public class JmxRemotingManager implements RemotingManager {
         return result;
     }
 
-    private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingInfo remotingInfo) {
+    private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingManagerConfig remotingInfo) {
         ChorusHandlerJmxProxy proxy = proxies.get(componentName);
         if ( proxy == null) {
             proxy = new ChorusHandlerJmxProxy(remotingInfo.getHost(), remotingInfo.getPort(), remotingInfo.getConnectionAttempts(), remotingInfo.getConnectionAttemptMillis());

@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.remoting.manager;
 
+import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
-import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 

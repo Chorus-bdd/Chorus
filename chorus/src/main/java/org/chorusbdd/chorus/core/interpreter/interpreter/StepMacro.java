@@ -29,12 +29,12 @@
  */
 package org.chorusbdd.chorus.core.interpreter.interpreter;
 
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.RegexpUtils;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

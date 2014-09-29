@@ -29,19 +29,16 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Initialize;
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
+import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
-import org.chorusbdd.chorus.processes.processmanager.*;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.processmanager.NativeProcessCommandLineBuilder;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -149,8 +146,8 @@ public class ProcessesHandler {
     public void startJava(String processName) throws Exception {
         String uniqueName = nextProcessName(processName);
         ProcessesConfig config = getConfigTemplate(processName);
-        ProcessInfo processInfo = config.buildProcessInfo(uniqueName);
-        processManager.startProcess(processInfo);
+        ProcessManagerConfig processInfo = config.buildProcessConfig();
+        processManager.startProcess(uniqueName, processInfo);
     }
 
     /**
@@ -161,8 +158,8 @@ public class ProcessesHandler {
     @Step(".*start an? (.+) process named ([a-zA-Z0-9-_]*).*?")
     public void startJavaProcessFromConfigNamed(String configName, String processName) throws Exception {
         ProcessesConfig config = getConfigTemplate(configName);
-        ProcessInfo processInfo = config.buildProcessInfo(processName);
-        processManager.startProcess(processInfo);
+        ProcessManagerConfig processInfo = config.buildProcessConfig();
+        processManager.startProcess(processName, processInfo);
     }
 
 
@@ -192,8 +189,8 @@ public class ProcessesHandler {
 
     private void startTheScript(String script, String processName, boolean logging) throws Exception {
         final ProcessesConfig config = getScriptConfig(processName, logging, script);
-        ProcessInfo processInfo = config.buildProcessInfo(processName);
-        processManager.startProcess(processInfo);
+        ProcessManagerConfig processInfo = config.buildProcessConfig();
+        processManager.startProcess(processName, processInfo);
     }
 
     // We have a small problem since we lack a ProcessesConfig when running processes this way

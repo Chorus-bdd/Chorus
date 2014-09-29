@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.handlerconfig.source;
 
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.sql.*;
 import java.util.HashMap;

@@ -33,7 +33,8 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusOut;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 /**

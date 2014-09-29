@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.invoker.AbstractStepMethodInvoker;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

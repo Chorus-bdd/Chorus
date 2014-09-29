@@ -31,9 +31,6 @@ package org.chorusbdd.chorus.util;
 
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt

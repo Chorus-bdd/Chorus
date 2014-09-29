@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.core.interpreter.subsystem.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
@@ -49,4 +49,6 @@ public interface ProcessManagerConfig extends HandlerConfig {
     Scope getProcessScope();
 
     String getProcessConfigName();
+
+    boolean isJavaProcess();
 }

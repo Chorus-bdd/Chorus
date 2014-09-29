@@ -30,8 +30,9 @@
 package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
 import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.*;
 import java.util.concurrent.TimeUnit;
@@ -108,7 +109,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
-        ChorusAssert.assertTrue("Process std out mode must be captured", OutputMode.isCaptured(logOutput.getStdOutMode())); 
+        ChorusAssert.assertTrue("Process std out mode must be captured", OutputMode.isCaptured(logOutput.getStdOutMode()));
         if ( stdOutInputStreams == null) {
             stdOutInputStreams = new InputStreamAndReader("Std Out");
             InputStream inputStream = process.getInputStream();

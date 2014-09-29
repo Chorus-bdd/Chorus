@@ -29,10 +29,11 @@
  */
 package org.chorusbdd.chorus.processes.processmanager;
 
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.File;
 

@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.core.interpreter.startup;
 
-import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;

@@ -29,17 +29,20 @@
  */
 package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepMacro;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepMacroParser;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
-import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

@@ -30,16 +30,16 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
 import org.chorusbdd.chorus.handlerconfig.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
-import org.chorusbdd.chorus.processes.processmanager.ProcessInfo;
-import org.chorusbdd.chorus.core.interpreter.subsystem.ProcessManager;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.*;
-import org.chorusbdd.chorus.core.interpreter.subsystem.RemotingManager;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -136,7 +136,7 @@ public class RemotingHandler {
      */
     private RemotingConfig getConfigForProcessManagerProcess(String processName) {
         RemotingConfig result = null;
-        ProcessInfo processInfo = processManager.getProcessInfo(processName);
+        ProcessManagerConfig processInfo = processManager.getProcessConfig(processName);
         if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
             result = getConfigForLocalProcess(processInfo);
         }
@@ -150,7 +150,7 @@ public class RemotingHandler {
      * is there a matching remoting config with that config name? If there is, then use that
      * otherwise take defaults by creating a new remoting config
      */
-    private RemotingConfig getConfigForLocalProcess(ProcessInfo processInfo) {
+    private RemotingConfig getConfigForLocalProcess(ProcessManagerConfig processInfo) {
         String processConfigName = processInfo.getProcessConfigName();
 
         RemotingConfig remotingConfig = remotingConfigMap.get(processConfigName);

@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.handlerconfig.source;
 
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
 import java.util.Map;

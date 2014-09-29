@@ -29,9 +29,10 @@
  */
 package org.chorusbdd.chorus.processes.processmanager;
 
-import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,10 +50,10 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
     private static ChorusLog log = ChorusLogFactory.getLog(JavaProcessCommandLineBuilder.class);
 
     private File featureDir;
-    private ProcessInfo processInfo;
+    private ProcessManagerConfig processInfo;
     private String logFileBaseName;
 
-    public JavaProcessCommandLineBuilder(File featureDir, ProcessInfo processInfo, String logFileBaseName) {
+    public JavaProcessCommandLineBuilder(File featureDir, ProcessManagerConfig processInfo, String logFileBaseName) {
         this.featureDir = featureDir;
         this.processInfo = processInfo;
         this.logFileBaseName = logFileBaseName;
@@ -80,7 +81,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         return commandLineTokens;
     }
 
-    private String getExecutableToken(ProcessInfo processesConfig) {
+    private String getExecutableToken(ProcessManagerConfig processesConfig) {
         String executableTxt = "%s%sbin%sjava";
         return String.format(
                 executableTxt,
@@ -90,14 +91,14 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         );
     }
 
-    private List<String> getClasspathTokens(ProcessInfo processesConfig) {
+    private List<String> getClasspathTokens(ProcessManagerConfig processesConfig) {
         List<String>  classPathTokens = new ArrayList<String>();
         classPathTokens.add("-classpath");
         classPathTokens.add(processesConfig.getClasspath());
         return classPathTokens;
     }
 
-    private List<String> getDebugTokens(ProcessInfo processesConfig) {
+    private List<String> getDebugTokens(ProcessManagerConfig processesConfig) {
         List<String> debugTokens = new ArrayList<String>();
         if (processesConfig.getDebugPort() > -1) {
             debugTokens.add("-Xdebug");
@@ -106,7 +107,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         return debugTokens;
     }
 
-    private List<String> getJmxTokens(ProcessInfo processesConfig) {
+    private List<String> getJmxTokens(ProcessManagerConfig processesConfig) {
         List<String> jmxTokens = new ArrayList<String>();
         if (processesConfig.getJmxPort() > -1) {
             jmxTokens.add("-Dcom.sun.management.jmxremote.ssl=false");

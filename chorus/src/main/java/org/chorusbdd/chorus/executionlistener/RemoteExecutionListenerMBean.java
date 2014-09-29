@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-
 /**
  * Created with IntelliJ IDEA.
  * User: nick

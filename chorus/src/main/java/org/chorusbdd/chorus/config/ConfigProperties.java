@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.config;
 
-import org.chorusbdd.chorus.results.DeepCopy;
-
 import java.util.List;
 
 /**

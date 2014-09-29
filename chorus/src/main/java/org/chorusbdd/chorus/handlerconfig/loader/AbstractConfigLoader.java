@@ -32,9 +32,9 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Map;
 import java.util.Properties;

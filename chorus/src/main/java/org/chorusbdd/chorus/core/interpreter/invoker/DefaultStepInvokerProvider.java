@@ -1,9 +1,9 @@
 package org.chorusbdd.chorus.core.interpreter.invoker;
 
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.lang.reflect.Method;
 import java.util.*;

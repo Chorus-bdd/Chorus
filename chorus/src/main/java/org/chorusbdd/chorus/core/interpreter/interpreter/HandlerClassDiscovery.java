@@ -30,12 +30,12 @@
 package org.chorusbdd.chorus.core.interpreter.interpreter;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.core.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.ClassFilter;
 import org.chorusbdd.chorus.core.interpreter.scanner.filter.HandlerClassFilterFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.util.HashMap;
 import java.util.List;
