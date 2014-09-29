@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.source.JdbcPropertySource;
+import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
 import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -52,30 +53,30 @@ public class JDBCConfigLoader<E extends HandlerConfig> extends AbstractConfigLoa
 
     private static ChorusLog log = ChorusLogFactory.getLog(JDBCConfigLoader.class);
 
+    private final JdbcPropertySource jdbcPropertiesLoader;
     private Properties dbProperties;
-    private HandlerConfigFactory<E> configBuilder;
-    private final FeatureToken featureToken;
-    private final File featureDir;
-    private final File featureFile;
 
-    public JDBCConfigLoader(Properties dbProperties, String handlerDescription, HandlerConfigFactory<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
-        super(handlerDescription);
+    public JDBCConfigLoader(
+            Properties dbProperties, 
+            String handlerDescription, 
+            HandlerConfigFactory<E> configFactory, 
+            FeatureToken featureToken, 
+            File featureDir, 
+            File featureFile) {
+        
+        super(handlerDescription, configFactory, featureToken, featureDir, featureFile);
         this.dbProperties = dbProperties;
-        this.configBuilder = configBuilder;
-        this.featureToken = featureToken;
-        this.featureDir = featureDir;
-        this.featureFile = featureFile;
+        jdbcPropertiesLoader = new JdbcPropertySource(dbProperties);
+    }
+    
+    public PropertyGroupsSource getPropertySource() {
+        return jdbcPropertiesLoader;
     }
 
-    public Map<String, E> doLoadConfigs() {
-        JdbcPropertySource jdbcPropertiesLoader = new JdbcPropertySource(dbProperties);
-
-        VariableReplacingPropertySource v = new VariableReplacingPropertySource(jdbcPropertiesLoader, featureToken, featureDir, featureFile);
-        Map<String,Properties> propertiesGroups = v.getPropertyGroups();
-
-        Map<String, E> map = new HashMap<String, E>();
-        addConfigsFromPropertyGroups(propertiesGroups, map, configBuilder);
-        return map;
+    @Override
+    public String toString() {
+        return "JDBCConfigLoader{" +
+                "dbProperties=" + dbProperties +
+                '}';
     }
-
 }

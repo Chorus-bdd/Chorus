@@ -2,11 +2,11 @@ Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/
 Feature: Invalid Properties                                                                          
 Chorus --> INFO    - No default handler found for Feature: (Invalid Properties), will use built-in handlers and Uses: statements
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Processes handler property
-  Scenario: Start a Single Java Process
-Chorus --> INFO    - Processing scenario: Start a Single Java Process
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Remoting handler property
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
 Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol and port must be set
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     I can start a config1 process                                                            PASSED  
     And then call a remote method in config1                                                 FAILED  (RemotingHandler:linenumber)-ChorusException Failed to find remoting configuration for component: config1

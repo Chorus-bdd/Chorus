@@ -52,6 +52,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
+/**
+ * The default implementation of Chorus' ProcessManager subsystem
+ * 
+ * Accessible by annotating a Handler field with 
+ * @ChrousResource("process.manager")
+ * ProcessManager processManager;
+ */
 public class ProcessManagerImpl implements ProcessManager {
 
     private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
@@ -123,7 +130,7 @@ public class ProcessManagerImpl implements ProcessManager {
                 p.destroy();
                 log.debug("Stopped process: " + processName);
             } catch (Exception e) {
-                log.warn("Failed to destroy process", e);
+                log.warn("Failed to closeAllConnections process", e);
             } finally {
                 processes.remove(processName);
             }

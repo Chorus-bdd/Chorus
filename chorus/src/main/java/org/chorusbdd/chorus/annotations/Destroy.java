@@ -35,7 +35,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to annotate a destroy method on a feature Handler
+ * Used to annotate a closeAllConnections method on a feature Handler
  * <p/>
  * Created by: Steve Neal
  * Date: 29/09/11

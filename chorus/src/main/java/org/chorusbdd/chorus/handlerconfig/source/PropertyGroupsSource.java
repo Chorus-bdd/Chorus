@@ -37,12 +37,13 @@ import java.util.Properties;
  * User: GA2EBBU
  * Date: 21/09/12
  * Time: 10:43
- * To change this template use File | Settings | File Templates.
+ *
+ * A source for Properties which are grouped by configName
  */
 public interface PropertyGroupsSource {
 
     /**
-     * @return a Map of Properties grouped by a String groupName
+     * @return Properties grouped by a String configName
      */
-    Map<String, Properties> getPropertyGroups();
+    Map<String, Properties> getPropertiesByConfigName();
 }

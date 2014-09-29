@@ -140,10 +140,6 @@ class ProcessInfo implements ProcessManagerConfig {
         return processManagerConfig.getProcessScope();
     }
 
-    public String getProcessConfigName() {
-        return processManagerConfig.getProcessConfigName();
-    }
-
     public boolean isJavaProcess() {
         return processManagerConfig.isJavaProcess();
     }

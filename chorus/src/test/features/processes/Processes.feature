@@ -15,13 +15,14 @@ Feature: Processes
     Then I can stop process named archie
 
   Scenario: Start a named process using a script
-    Given I start a process using script 'processes-test.bat' named p1
-    And I start a process using script 'processes-test.bat' named p2
+    Given I start a processBatchFile process named p1
+    And I start a processBatchFile process named p2
     Then I can stop process named p1
     And I can stop process named p2
 
   Scenario: Start an anonymous process using a script
-    Assert I start a process using script 'processes-test.bat'
+    First I start a processBatchFile process
+    Then I wait for the process named processBatchFile to terminate
 
   Scenario: Process termination should not cause a test to fail
     Given I start a lemming process named lemmingA

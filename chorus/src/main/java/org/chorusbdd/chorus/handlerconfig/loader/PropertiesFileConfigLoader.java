@@ -32,15 +32,12 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.source.PropertiesFilePropertySource;
-import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
+import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,37 +45,39 @@ import java.util.Properties;
  * Date: 18/09/12
  * Time: 08:23
  */
-public class PropertiesConfigLoader<E extends HandlerConfig> extends AbstractConfigLoader<E> {
+public class PropertiesFileConfigLoader<E extends HandlerConfig> extends AbstractConfigLoader<E> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(PropertiesConfigLoader.class);
-
-    private HandlerConfigFactory<E> configBuilder;
-    private String handlerDescription;
-    private String propertiesFileSuffix;
-    private final FeatureToken featureToken;
-    private final File featureDir;
-    private final File featureFile;
+    private static ChorusLog log = ChorusLogFactory.getLog(PropertiesFileConfigLoader.class);
+    
+    private final PropertiesFilePropertySource propertiesFileSource;
 
     //"Remoting", "-remoting"
-    public PropertiesConfigLoader(HandlerConfigFactory<E> configBuilder, String handlerDescription, String propertiesFileSuffix, FeatureToken featureToken, File featureDir, File featureFile) {
-        super(handlerDescription);
-        this.configBuilder = configBuilder;
-        this.handlerDescription = handlerDescription;
-        this.propertiesFileSuffix = propertiesFileSuffix;
-        this.featureToken = featureToken;
-        this.featureDir = featureDir;
-        this.featureFile = featureFile;
+    public PropertiesFileConfigLoader(
+            HandlerConfigFactory<E> configBuilder, 
+            String handlerDescription, 
+            String propertiesFileSuffix, 
+            FeatureToken featureToken, 
+            File featureDir, 
+            File featureFile) {
+        
+        super(handlerDescription, configBuilder, featureToken, featureDir, featureFile);
+        
+        this.propertiesFileSource = new PropertiesFilePropertySource(
+                handlerDescription, 
+                propertiesFileSuffix, 
+                featureToken, 
+                featureDir, 
+                featureFile
+        );
     }
 
-    public Map<String, E> doLoadConfigs() {
-        PropertiesFilePropertySource handlerPropertiesLoader = new PropertiesFilePropertySource(handlerDescription, propertiesFileSuffix, featureToken, featureDir, featureFile);
-
-        VariableReplacingPropertySource v = new VariableReplacingPropertySource(handlerPropertiesLoader, featureToken, featureDir, featureFile);
-        Map<String,Properties> propertiesGroups = v.getPropertyGroups();
-
-        Map<String, E> result = new HashMap<String, E>();
-        addConfigsFromPropertyGroups(propertiesGroups, result, configBuilder);
-        return result;
+    @Override
+    protected PropertyGroupsSource getPropertySource() {
+        return propertiesFileSource;
     }
 
+    @Override
+    public String toString() {
+        return "PropertiesFileConfigLoader{}";
+    }
 }

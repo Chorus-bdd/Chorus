@@ -32,10 +32,15 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
+import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
+import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -44,23 +49,42 @@ import java.util.Properties;
  * User: Nick Ebbutt
  * Date: 18/09/12
  * Time: 08:39
+ * 
+ * Load properties from a PropertyGroupsSource
  */
 public abstract class AbstractConfigLoader<E extends HandlerConfig> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigLoader.class);
     private static final Properties EMPTY_PROPERTIES = new Properties();
     private String handlerDescription;
+    private HandlerConfigFactory<E> configBuilder;
+    private FeatureToken featureToken;
+    private File featureDir;
+    private File featureFile;
 
-    public AbstractConfigLoader(String handlerDescription) {
+    public AbstractConfigLoader(String handlerDescription, HandlerConfigFactory<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
         this.handlerDescription = handlerDescription;
+        this.configBuilder = configBuilder;
+        this.featureToken = featureToken;
+        this.featureDir = featureDir;
+        this.featureFile = featureFile;
     }
 
     public Map<String, E> loadConfigs() {
-        Map<String, E> configs = doLoadConfigs();
-        return configs;
+        PropertyGroupsSource propertyGroupsSource = getPropertySource();
+        return loadProperties(propertyGroupsSource);
     }
 
-    public abstract Map<String, E> doLoadConfigs();
+    protected abstract PropertyGroupsSource getPropertySource();
+
+    private Map<String, E> loadProperties(PropertyGroupsSource propertySource) {
+        VariableReplacingPropertySource v = new VariableReplacingPropertySource(propertySource, featureToken, featureDir, featureFile);
+        Map<String,Properties> propertiesGroups = v.getPropertiesByConfigName();
+
+        Map<String, E> map = new HashMap<String, E>();
+        addConfigsFromPropertyGroups(propertiesGroups, map, configBuilder);
+        return map;
+    }
 
     protected void addConfigsFromPropertyGroups(Map<String, Properties> propertiesGroups, Map<String, E> configMap, HandlerConfigFactory<E> handlerConfigBuilder) {
         try {

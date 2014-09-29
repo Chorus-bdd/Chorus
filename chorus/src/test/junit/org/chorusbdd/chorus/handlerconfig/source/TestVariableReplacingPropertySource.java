@@ -70,7 +70,7 @@ public class TestVariableReplacingPropertySource extends Assert {
     @Test
     public void testSysPropertyExpansion() {
         VariableReplacingPropertySource v = createVariableReplacingSource();
-        Map<String, Properties> m = v.getPropertyGroups();
+        Map<String, Properties> m = v.getPropertiesByConfigName();
         String propValue1 = m.get(TEST_GROUP).getProperty(TEST_PROPERTY_3);
         assertFalse("${user.dir} was not expanded correctly", propValue1.contains("${user.dir}"));
     }
@@ -81,7 +81,7 @@ public class TestVariableReplacingPropertySource extends Assert {
      */
     public void testMultipleVariableExpansion() {
         VariableReplacingPropertySource v = createVariableReplacingSource();
-        Map<String, Properties> m = v.getPropertyGroups();
+        Map<String, Properties> m = v.getPropertiesByConfigName();
         String propValue2 = m.get(TEST_GROUP).getProperty(TEST_PROPERTY_2);
         assertEquals(
             "${file.separator} was not replaced or only one instance was replaced",
@@ -93,7 +93,7 @@ public class TestVariableReplacingPropertySource extends Assert {
     @Test
     public void testChorusVariableExpansion() throws IOException {
        VariableReplacingPropertySource v = createVariableReplacingSource();
-       Map<String, Properties> m = v.getPropertyGroups();
+       Map<String, Properties> m = v.getPropertiesByConfigName();
 
        String propValue3 = m.get(TEST_GROUP).getProperty(TEST_PROPERTY_3);
        assertTrue("${chorus.feature.dir} was not expanded correctly", propValue3.contains(new File(TEST_FEATURE_DIR).getPath()));
@@ -121,7 +121,7 @@ public class TestVariableReplacingPropertySource extends Assert {
 
     private static class MockPropertyGroupsSource implements PropertyGroupsSource {
 
-        public Map<String, Properties> getPropertyGroups() {
+        public Map<String, Properties> getPropertiesByConfigName() {
             Map<String, Properties> m = new HashMap<String, Properties>();
             Properties p = new Properties();
             p.put(TEST_PROPERTY, TEST_SYS_PROP + File.separator + "test");

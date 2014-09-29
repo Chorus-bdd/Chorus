@@ -50,7 +50,7 @@ import java.util.Map;
  * Time: 17:34
  *
  * Instantiate a SpringContext and associate it with a handler class
- * Clean up and destroy the context on scenario completion
+ * Clean up and closeAllConnections the context on scenario completion
  */
 public class SpringContextInjector implements SpringInjector {
 

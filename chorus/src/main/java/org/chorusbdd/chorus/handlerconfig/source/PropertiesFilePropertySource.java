@@ -118,7 +118,7 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         this.featureFile = featureFile;
     }
 
-    public Map<String, Properties> getPropertyGroups() {
+    public Map<String, Properties> getPropertiesByConfigName() {
         Properties p = loadProperties();
 
         Map<String, Properties> propertiesByGroup = new HashMap<String, Properties>();

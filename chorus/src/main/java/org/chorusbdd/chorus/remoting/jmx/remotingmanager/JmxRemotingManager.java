@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepMatcher;
 import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
@@ -111,13 +112,14 @@ public class JmxRemotingManager implements RemotingManager {
     /**
      * Called at end of scenario - closes all MBean connections
      */
-    public void destroy() {
+    public void closeAllConnections(Scope handlerScope) {
         for (Map.Entry<String, ChorusHandlerJmxProxy> entry : proxies.entrySet()) {
             String name = entry.getKey();
             ChorusHandlerJmxProxy jmxProxy = entry.getValue();
             jmxProxy.destroy();
             log.debug("Closed JMX connection to: " + name);
         }
+        proxies.clear();
     }
 
 

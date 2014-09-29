@@ -34,10 +34,9 @@ import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
 import org.chorusbdd.chorus.handlerconfig.loader.JDBCConfigLoader;
-import org.chorusbdd.chorus.handlerconfig.loader.PropertiesConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -65,7 +64,7 @@ import java.util.Properties;
  * It is also possible to load remoting config properties from the database. The database connection properties and the SQL used to load
  * the metadata are loaded from a properties file named in system property: -D org.chorusbdd.chorus.jmxexporter.db.properties=[file].
  */
-@Handler("Remoting")
+@Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
 public class RemotingHandler {
 
@@ -83,14 +82,15 @@ public class RemotingHandler {
     @ChorusResource("process.manager")
     private ProcessManager processManager;
 
-    private Map<String, RemotingConfig> remotingConfigMap;
+    @ChorusResource("remoting.manager")
+    private RemotingManager jmxRemotingManager;
     
-    private RemotingManager jmxRemotingManager = new JmxRemotingManager();
+    private Map<String, RemotingConfig> remotingConfigMap;
 
     // If set, will cause the mBean metadata to be loaded using JDBC properties in the named properties file
     public static final String REMOTING_HANDLER_DB_PROPERTIES = "org.chorusbdd.chorus.remoting.db";
 
-    @Initialize(scope = Scope.SCENARIO)
+    @Initialize(scope = Scope.FEATURE)
     public void initialize() {
         loadRemotingConfigs();    
     }
@@ -101,21 +101,22 @@ public class RemotingHandler {
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
-        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingInfo());
+        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingManagerConfig());
     }
 
     /**
      * Called at end of scenario - closes all MBean connections
+     * 
+     * n.b. it is not (yet) possible to scope a remote connection to feature, so connections will all be closed on scenario end
      */
-    @Destroy
+    @Destroy(scope = Scope.SCENARIO)
     public void destroy() {
         try {
-            jmxRemotingManager.destroy();
+            jmxRemotingManager.closeAllConnections(Scope.SCENARIO);
         } catch (Throwable t) {
             log.error("Failed while destroying jmx remoting manager");   
         }
     }
-
 
     private RemotingConfig getRemotingConfigForComponent(String name) {
         RemotingConfig remotingConfig = remotingConfigMap.get(name);
@@ -151,7 +152,7 @@ public class RemotingHandler {
      * otherwise take defaults by creating a new remoting config
      */
     private RemotingConfig getConfigForLocalProcess(ProcessManagerConfig processInfo) {
-        String processConfigName = processInfo.getProcessConfigName();
+        String processConfigName = processInfo.getConfigName();
 
         RemotingConfig remotingConfig = remotingConfigMap.get(processConfigName);
         if (remotingConfig == null) {
@@ -162,9 +163,6 @@ public class RemotingHandler {
         return remotingConfig;
     }
 
-    /**
-     * @throws Exception
-     */
     protected void loadRemotingConfigs() {
         //check to see if the system property has been set to specify a DB to load the configuration from
         String mBeansDb = System.getProperty(REMOTING_HANDLER_DB_PROPERTIES);
@@ -173,7 +171,7 @@ public class RemotingHandler {
         if (mBeansDb != null) {
             loadRemotingConfigsFromDb(mBeansDb);
         } else {
-            PropertiesConfigLoader<RemotingConfig> l = new PropertiesConfigLoader<RemotingConfig>(
+            PropertiesFileConfigLoader<RemotingConfig> l = new PropertiesFileConfigLoader<RemotingConfig>(
                 new RemotingConfigFactory(),
                 "Remoting",
                 "remoting",

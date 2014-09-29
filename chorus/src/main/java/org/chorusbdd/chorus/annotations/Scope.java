@@ -35,7 +35,7 @@ package org.chorusbdd.chorus.annotations;
  * They may also be used as parameters to the @Initialize or @Destroy annotations, 
  * to indicate when the handler methods annotated with @Initialize or @Destroy should be run. 
  * 
- * It may be useful for FEATURE scoped handlers to provide SCENARIO scoped initialization and destroy methods, 
+ * It may be useful for FEATURE scoped handlers to provide SCENARIO scoped initialization and closeAllConnections methods, 
  * if they wish to perform some kind of initialization or cleanup before or after each scenario runs. 
  * 
  * Setting a @Initialize or @Destroy method to @FEATURE scope on a SCENARIO scoped handler is not supported presently,

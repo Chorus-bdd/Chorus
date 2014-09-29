@@ -74,8 +74,8 @@ public class VariableReplacingPropertySource implements PropertyGroupsSource {
         this.featureFile = featureFile;
     }
 
-    public Map<String, Properties> getPropertyGroups() {
-        Map<String, Properties> m = wrappedSource.getPropertyGroups();
+    public Map<String, Properties> getPropertiesByConfigName() {
+        Map<String, Properties> m = wrappedSource.getPropertiesByConfigName();
 
         for ( Map.Entry<String, Properties> e : m.entrySet()) {
             expandVariables(e);

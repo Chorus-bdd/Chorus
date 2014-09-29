@@ -74,13 +74,21 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private int readAheadBufferSize = 65536; //read ahead process output in CAPTURED mode
     private int readTimeoutSeconds = 10;
     private Scope processScope = Scope.SCENARIO;
-    private String processConfigName;
 
     //when we start a process based on this config we keep count of this so we can auto increment
     //debug and jmx ports for any other similar processes started under different names/aliases
     private int instancesStarted = 0;
 
-    public ProcessManagerConfig buildProcessConfig() {
+    /**
+     * If multiple ProcessManagerConfig are built from the same ProcessesConfig the jmxPort and debugPort
+     * will be auto-incremented / increase by one each time.
+     * 
+     * This allows the user to start several instances of a process with the same config under different 
+     * process names/aliases. For scenario scoped processes, the ports are reset at the end of each scenario
+     * 
+     * @return an immutable config to use to start a process with ProcessManager subsystem
+     */
+    public ProcessManagerConfig buildProcessManagerConfig() {
 
         //using the getter methods to allow subclasses to override
 
@@ -106,14 +114,13 @@ public class ProcessesConfig implements ProcessManagerConfig {
             getProcessCheckDelay(),
             getReadAheadBufferSize(),
             getReadTimeoutSeconds(),
-            getProcessScope(),
-            getProcessConfigName()
+            getProcessScope()
         );
         instancesStarted++;
         return nextProcess;
     }
 
-    public void resetInstancesStarted() {
+    public void resetPorts() {
         instancesStarted = 0;
     }
 
@@ -292,17 +299,12 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return this;
     }
 
-    public String getProcessConfigName() {
-        return processConfigName;
-    }
-
-    public ProcessesConfig setProcessConfigName(final String processConfigName) {
-        this.processConfigName = processConfigName;
-        return this;
-    }
-
     public boolean isJavaProcess() {
         return ! isSet(pathToExecutable);
+    }
+
+    public int getInstancesStarted() {
+        return instancesStarted;
     }
 
     private boolean isSet(String propertyValue) {
@@ -331,7 +333,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
                 ", readAheadBufferSize=" + readAheadBufferSize +
                 ", readTimeoutSeconds=" + readTimeoutSeconds +
                 ", processScope=" + processScope +
-                ", processConfigName='" + processConfigName + '\'' +
                 ", instancesStarted=" + instancesStarted +
                 '}';
     }
@@ -360,12 +361,11 @@ public class ProcessesConfig implements ProcessManagerConfig {
         private final int readAheadBufferSize; //read ahead process output in CAPTURED mode
         private final int readTimeoutSeconds;
         private final Scope processScope;
-        private final String processConfigName;
 
         RuntimeProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
                     String args, OutputMode stdOutMode, OutputMode stdErrMode, int jmxPort, int debugPort, int terminateWaitTime,
                     String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay, int readAheadBufferSize,
-                    int readTimeoutSeconds, Scope processScope, String processConfigName) {
+                    int readTimeoutSeconds, Scope processScope) {
             this.groupName = groupName;
             this.pathToExecutable = pathToExecutable;
             this.jre = jre;
@@ -385,7 +385,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
             this.readAheadBufferSize = readAheadBufferSize;
             this.readTimeoutSeconds = readTimeoutSeconds;
             this.processScope = processScope;
-            this.processConfigName = processConfigName;
         }
 
         public String getConfigName() {
@@ -468,10 +467,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
             return processScope;
         }
 
-        public String getProcessConfigName() {
-            return processConfigName;
-        }
-
         public boolean isJavaProcess() {
             return ! isSet(pathToExecutable);
         }
@@ -498,7 +493,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
                     ", readAheadBufferSize=" + readAheadBufferSize +
                     ", readTimeoutSeconds=" + readTimeoutSeconds +
                     ", processScope=" + processScope +
-                    ", processConfigName='" + processConfigName + '\'' +
                     '}';
         }
 

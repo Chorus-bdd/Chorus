@@ -169,7 +169,7 @@ public class HandlerManager {
      */
     private void runLifecycleMethods(Object handler, Scope scope, Scope targetMethodScope, boolean isDestroy) throws Exception {
         if ( scope != Scope.UNMANAGED) { 
-           //HandlerScope.UNMANAGED handlers do not run destroy or init methods
+           //HandlerScope.UNMANAGED handlers do not run closeAllConnections or init methods
             String description = isDestroy ? "@Destroy" : "@Initialize";
             log.debug("Running " + description + " methods for Handler " + handler);
     

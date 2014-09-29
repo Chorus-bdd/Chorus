@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.core.interpreter.subsystem.remoting;
 
+import org.chorusbdd.chorus.annotations.Scope;
+
 /**
  * Created by nick on 30/08/2014.
  * 
@@ -52,5 +54,5 @@ public interface RemotingManager {
      **/
     Object performActionInRemoteComponent(String action, String componentName, RemotingManagerConfig remotingInfo);
 
-    void destroy();
+    void closeAllConnections(Scope handlerScope);
 }

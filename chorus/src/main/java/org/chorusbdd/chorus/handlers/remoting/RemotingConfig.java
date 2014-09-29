@@ -51,7 +51,7 @@ public class RemotingConfig implements RemotingManagerConfig {
     private int connectionAttempts = 40;
     private int connectionAttemptMillis = 250;
 
-    public RemotingManagerConfig buildRemotingInfo() {
+    public RemotingManagerConfig buildRemotingManagerConfig() {
         return new RuntimeRemotingConfig(
             protocol,
             configName,
@@ -141,7 +141,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         private final int connectionAttempts;
         private final int connectionAttemptMillis;
 
-        public RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis) {
+        RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis) {
             this.protocol = protocol;
             this.configName = configName;
             this.host = host;
