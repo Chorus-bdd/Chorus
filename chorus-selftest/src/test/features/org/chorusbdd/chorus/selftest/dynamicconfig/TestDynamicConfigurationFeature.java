@@ -15,7 +15,7 @@
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR oANY CLAIM, DAMAGES OR OTHER
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  *  IN THE SOFTWARE.
@@ -27,49 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.spring.selftest.calculator;
+package org.chorusbdd.chorus.selftest.dynamicconfig;
 
-import java.util.Stack;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by: Steve Neal
- * Date: 12/10/11
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class Calculator {
+public class TestDynamicConfigurationFeature extends AbstractInterpreterTest {
 
-    public enum Operator {
-        ADD, SUBTRACT, MULTIPLY, DIVIDE
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/dynamicconfig/dynamicconfig.feature";
+
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    private Stack<Double> stack = new Stack<Double>();
-
-    private double lastResult = 0;
-
-    public void enterNumber(Double number) {
-        stack.push(number);
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
-    public void press(Operator operator) {
-        double d2 = stack.pop();
-        double d1 = stack.pop();
-
-        switch (operator) {
-            case ADD:
-                lastResult = d1 + d2;
-                break;
-            case SUBTRACT:
-                lastResult = d1 - d2;
-                break;
-            case MULTIPLY:
-                lastResult = d1 * d2;
-                break;
-            case DIVIDE:
-                lastResult = d1 / d2;
-                break;
-        }
-    }
-
-    public double getResult() {
-        return lastResult;
-    }
 }

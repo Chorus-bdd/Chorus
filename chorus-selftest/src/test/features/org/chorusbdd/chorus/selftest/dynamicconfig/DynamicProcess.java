@@ -15,7 +15,7 @@
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR oANY CLAIM, DAMAGES OR OTHER
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  *  IN THE SOFTWARE.
@@ -27,49 +27,19 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.spring.selftest.calculator;
-
-import java.util.Stack;
+package org.chorusbdd.chorus.selftest.dynamicconfig;
 
 /**
- * Created by: Steve Neal
- * Date: 12/10/11
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class Calculator {
+public class DynamicProcess {
 
-    public enum Operator {
-        ADD, SUBTRACT, MULTIPLY, DIVIDE
+    public static void main(String[] args) throws InterruptedException {
+        //most exciting process ever
+        Thread.sleep(5000);
     }
 
-    private Stack<Double> stack = new Stack<Double>();
-
-    private double lastResult = 0;
-
-    public void enterNumber(Double number) {
-        stack.push(number);
-    }
-
-    public void press(Operator operator) {
-        double d2 = stack.pop();
-        double d1 = stack.pop();
-
-        switch (operator) {
-            case ADD:
-                lastResult = d1 + d2;
-                break;
-            case SUBTRACT:
-                lastResult = d1 - d2;
-                break;
-            case MULTIPLY:
-                lastResult = d1 * d2;
-                break;
-            case DIVIDE:
-                lastResult = d1 / d2;
-                break;
-        }
-    }
-
-    public double getResult() {
-        return lastResult;
-    }
 }

@@ -88,8 +88,12 @@ public @interface ChorusResource {
     public static final String featureFile = "feature.file";
     public static final String featureDir = "feature.dir";
     public static final String featureToken = "feature.token";
+    public static final String scenarioToken = "scenario.token";
     public static final String processManager = "process.manager";
     public static final String remotingManager = "remoting.manager";
+
+    //append Handler name to inject a handler instance
+    public static final String handlerPrefix = "handler.";
 
     public String value() default "";
 }

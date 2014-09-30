@@ -123,22 +123,22 @@ public class HandlerManager {
             Handler handlerAnnotation = handler.getClass().getAnnotation(Handler.class);
             Scope handlerScope = handlerAnnotation.scope();
 
-            injectResourceFieldsForScope(scopeStarting, handler, handlerScope);
+            injectResourceFieldsForScope(scopeStarting, handler, handlerScope, handlerInstances);
             runLifecycleMethods(handler, handlerScope, scopeStarting, false);
         }    
     }
 
-    private void injectResourceFieldsForScope(Scope scopeStarting, Object handler, Scope handlerScope) {
+    private void injectResourceFieldsForScope(Scope scopeStarting, Object handler, Scope handlerScope, Iterable<Object> handlerInstances) {
         if ( scopeStarting == Scope.FEATURE && handlerScope == Scope.FEATURE) {
             //for feature scoped handlers, initialize the feature-level resources when feature starts
-            injectResourceFields(handler, Scope.FEATURE);
+            injectResourceFields(handler, handlerInstances, Scope.FEATURE);
         } else if ( scopeStarting == Scope.SCENARIO) {
             if ( handlerScope == Scope.SCENARIO ) {
                 //if a handler is created scenario scope it will not have had its feature-level
                 //annotations set when the feature started
-                injectResourceFields(handler, Scope.FEATURE, Scope.SCENARIO);
+                injectResourceFields(handler, handlerInstances, Scope.FEATURE, Scope.SCENARIO);
             } else {
-                injectResourceFields(handler, Scope.SCENARIO);
+                injectResourceFields(handler, handlerInstances, Scope.SCENARIO);
             }
         }
     }
@@ -221,7 +221,7 @@ public class HandlerManager {
     /**
      * Here we set the values of any handler fields annotated with @ChorusResource
      */
-    private void injectResourceFields(Object handler, Scope... scopes) {
+    private void injectResourceFields(Object handler, Iterable<Object> handlerInstances, Scope... scopes) {
         Class<?> featureClass = handler.getClass();
 
         List<Field> allFields = new ArrayList<Field>();
@@ -230,11 +230,11 @@ public class HandlerManager {
 
         HashSet<Scope> scopeSet = new HashSet<Scope>(Arrays.asList(scopes));
         for (Field field : allFields) {
-            setChorusResource(handler, field, scopeSet);
+            setChorusResource(handler, handlerInstances, field, scopeSet);
         }
     }
 
-    private void setChorusResource(Object handler, Field field, Set<Scope> scopes) {
+    private void setChorusResource(Object handler, Iterable<Object> handlerInstances, Field field, Set<Scope> scopes) {
         ChorusResource a = field.getAnnotation(ChorusResource.class);
         if (a != null) {
             String resourceName = a.value();
@@ -243,11 +243,11 @@ public class HandlerManager {
             Object o = null;
 
             if ( scopes.contains(Scope.FEATURE)) {
-                o = getFeatureResource(resourceName, o);
+                o = getFeatureResource(resourceName, handlerInstances);
             }
 
-            if ( scopes.contains(Scope.SCENARIO)) {
-                o = getScenarioResource(resourceName, o);
+            if ( o == null && scopes.contains(Scope.SCENARIO)) {
+                o = getScenarioResource(resourceName);
             }
 
             if (o != null) {
@@ -262,14 +262,16 @@ public class HandlerManager {
         }
     }
 
-    private Object getScenarioResource(String resourceName, Object o) {
-        if ( "scenario.token".equals(resourceName)) {
+    private Object getScenarioResource(String resourceName) {
+        Object o = null;
+        if ( ChorusResource.scenarioToken.equals(resourceName)) {
             o = currentScenario;
         }
         return o;
     }
 
-    private Object getFeatureResource(String resourceName, Object o) {
+    private Object getFeatureResource(String resourceName, Iterable<Object> handlerInstances) {
+        Object o = null;
         if (ChorusResource.featureFile.equals(resourceName)) {
             o = feature.getFeatureFile();
         } else if (ChorusResource.featureDir.equals(resourceName)) {
@@ -280,6 +282,21 @@ public class HandlerManager {
             o = subsystemManager.getProcessManager();
         } else if (ChorusResource.remotingManager.equals(resourceName)) {
             o = subsystemManager.getRemotingManager();
+        } else if ( resourceName.startsWith(ChorusResource.handlerPrefix)) {
+            o = getHandlerResource(resourceName, handlerInstances);
+        }
+        return o;
+    }
+
+    private Object getHandlerResource(String resourceName, Iterable<Object> handlerInstances) {
+        Object o = null;
+        String handlerName = resourceName.substring(ChorusResource.handlerPrefix.length());
+        for ( Object handlerInstance : handlerInstances) {
+            Handler h = handlerInstance.getClass().getAnnotation(Handler.class);
+            if ( handlerName.trim().toLowerCase().equals(h.value().trim().toLowerCase())) {
+                o = handlerInstance;
+                break;
+            }
         }
         return o;
     }

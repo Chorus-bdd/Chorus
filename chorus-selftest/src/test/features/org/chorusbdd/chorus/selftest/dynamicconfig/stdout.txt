@@ -1,0 +1,17 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dynamicconfig/dynamicconfig.feature
+Feature: Dynamic Configuration                                                                       
+  Scenario: Configure and start a process dynamically
+Chorus --> INFO    - Processing scenario: Configure and start a process dynamically
+    Given I add a process config called dynamicOne                                           PASSED  
+    And I add a process config called dynamicTwo                                             PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    When I start a dynamicOne process named Ebeneezer                                        PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a dynamicTwo process named Scrooge                                           PASSED  
+    Then the process named Ebeneezer is running                                              PASSED  
+    And the process named Scrooge is running                                                 PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)

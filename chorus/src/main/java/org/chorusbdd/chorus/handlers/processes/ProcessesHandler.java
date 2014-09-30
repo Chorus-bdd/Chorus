@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlers.processes;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -44,7 +45,7 @@ import java.util.Map;
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class ProcessesHandler {
+public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
     
@@ -222,7 +223,9 @@ public class ProcessesHandler {
         return l.loadConfigs();
     }
 
-
+    public void addConfiguration(ProcessesConfig handlerConfig) {
+        processConfigTemplates.put(handlerConfig.getConfigName(), handlerConfig);
+    }
 
 
 //    Removed 'start a script' steps

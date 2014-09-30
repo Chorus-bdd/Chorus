@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -66,7 +67,7 @@ import java.util.Properties;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class RemotingHandler {
+public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
@@ -220,5 +221,9 @@ public class RemotingHandler {
      */
     protected void loadRemotingConfigsFromDb(Properties p) {
         remotingConfigMap = new JDBCConfigLoader(p, "Remoting", new RemotingConfigFactory(), featureToken, featureDir, featureFile).loadConfigs();
+    }
+
+    public void addConfiguration(RemotingConfig handlerConfig) {
+        remotingConfigMap.put(handlerConfig.getConfigName(), handlerConfig);
     }
 }
