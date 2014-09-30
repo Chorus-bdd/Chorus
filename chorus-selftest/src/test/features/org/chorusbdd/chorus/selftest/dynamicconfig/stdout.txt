@@ -10,8 +10,15 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     And I start a dynamicTwo process named Scrooge                                           PASSED  
     Then the process named Ebeneezer is running                                              PASSED  
     And the process named Scrooge is running                                                 PASSED  
+  Scenario: Configure remoting dynamically
+Chorus --> INFO    - Processing scenario: Configure remoting dynamically
+    Given I add a process config called hagrid                                               PASSED  
+    And I add a remoting config called harryPotter                                           PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a hagrid process                                                             PASSED  
+    Then I can call an exported method in harryPotter                                        PASSED  dumbledore
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:10) (passed:10) (failed:0) (undefined:0) (pending:0) (skipped:0)

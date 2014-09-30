@@ -298,6 +298,11 @@ public class HandlerManager {
                 break;
             }
         }
+
+        if ( o == null) {
+            log.warn("Could not find a handler named " + handlerName +
+                    " to inject field annotated @ChorusResource(\"handler." + handlerName + "\", missing Uses: statement?");
+        }
         return o;
     }
 

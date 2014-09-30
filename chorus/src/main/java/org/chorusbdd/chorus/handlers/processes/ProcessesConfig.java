@@ -205,6 +205,15 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return this;
     }
 
+    /**
+     * Convenience method to set both the std out and std error mode to the same value
+     */
+    public ProcessesConfig setStdOutAndErrMode(OutputMode stdOutAndErrMode) {
+        setStdOutMode(stdOutAndErrMode);
+        setStdErrMode(stdOutAndErrMode);
+        return this;
+    }
+
     public int getJmxPort() {
         return jmxPort;
     }

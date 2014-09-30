@@ -29,6 +29,10 @@
  */
 package org.chorusbdd.chorus.selftest.dynamicconfig;
 
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -38,8 +42,19 @@ package org.chorusbdd.chorus.selftest.dynamicconfig;
 public class DynamicProcess {
 
     public static void main(String[] args) throws InterruptedException {
+
+        new ChorusHandlerJmxExporter(new DynamicProcessHandler()).export();
         //most exciting process ever
         Thread.sleep(5000);
+    }
+
+    @Handler("DynamicProcessHandler")
+    public static class DynamicProcessHandler {
+
+        @Step(".*call an exported method")
+        public String callMethod() {
+            return "dumbledore";
+        }
     }
 
 }

@@ -35,6 +35,8 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
 import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
+import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;
+import org.chorusbdd.chorus.handlers.remoting.RemotingHandler;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.SelftestUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -53,15 +55,25 @@ public class DynamicConfigurationHandler {
     @ChorusResource("handler.Processes")
     ProcessesHandler processesHandler;
 
-    @Step(".*add a process config called (.*)")
-    public void logContainsLine(String processConfigName)  {
-        String mainclass = "org.chorusbdd.chorus.selftest.dynamicconfig.DynamicProcess";
+    @ChorusResource("handler.Remoting")
+    RemotingHandler remotingHandler;
 
+    @Step(".*add a process config called (.*)")
+    public void addProcessConfig(String processConfigName)  {
+        String mainclass = "org.chorusbdd.chorus.selftest.dynamicconfig.DynamicProcess";
         ProcessesConfig c = new ProcessesConfig().
                 setConfigName(processConfigName).
-                setMainclass(mainclass);
-
+                setMainclass(mainclass).
+                setJmxPort(12345).
+                setStdOutAndErrMode(OutputMode.FILE);
         processesHandler.addConfiguration(c);
+    }
+
+    @Step(".*add a remoting config called (.*)")
+    public void addRemotingConfig(String configName)  {
+        RemotingConfig c = new RemotingConfig();
+        c.setConfigName(configName).setProtocol("jmx").setHost("localhost").setPort(12345);
+        remotingHandler.addConfiguration(c);
     }
 
 }
