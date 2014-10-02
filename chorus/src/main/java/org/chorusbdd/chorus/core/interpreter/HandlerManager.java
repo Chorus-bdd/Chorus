@@ -240,11 +240,11 @@ public class HandlerManager {
             Object o = null;
 
             if ( scopes.contains(Scope.FEATURE)) {
-                o = getFeatureResource(resourceName, o);
+                o = getFeatureResource(resourceName);
             }
 
-            if ( scopes.contains(Scope.SCENARIO)) {
-                o = getScenarioResource(resourceName, o);
+            if ( o == null && scopes.contains(Scope.SCENARIO)) {
+                o = getScenarioResource(resourceName);
             }
 
             if (o != null) {
@@ -259,14 +259,16 @@ public class HandlerManager {
         }
     }
 
-    private Object getScenarioResource(String resourceName, Object o) {
+    private Object getScenarioResource(String resourceName) {
+        Object o = null;
         if ( "scenario.token".equals(resourceName)) {
             o = currentScenario;
         }
         return o;
     }
 
-    private Object getFeatureResource(String resourceName, Object o) {
+    private Object getFeatureResource(String resourceName) {
+        Object o = null;
         if ("feature.file".equals(resourceName)) {
             o = feature.getFeatureFile();
         } else if ("feature.dir".equals(resourceName)) {
