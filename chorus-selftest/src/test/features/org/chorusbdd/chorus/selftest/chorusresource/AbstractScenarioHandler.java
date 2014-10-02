@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.selftest.chorusresource;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlers.timers.TimersHandler;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -43,7 +44,7 @@ import java.io.File;
  * Date: 18/11/13
  * Time: 19:01
  */
-public class AbstractHandler {
+public class AbstractScenarioHandler {
 
     @ChorusResource("feature.token")
     FeatureToken featureToken;
@@ -56,28 +57,35 @@ public class AbstractHandler {
 
     @ChorusResource("scenario.token")
     ScenarioToken scenarioToken;
+
+    @ChorusResource("handler.Timers")
+    TimersHandler timersHandler;
     
-    @Step("the abstract superclass feature.token resource is set correctly")
+    @Step("the abstract superclass feature.token resource is set correctly in a scenario scoped handler")
     public void abstractFeatureTokenIsSet() {
         ChorusAssert.assertNotNull(featureToken);
         ChorusAssert.assertEquals("Chorus Resource", featureToken.getName());
     }
 
-    @Step("the abstract superclass feature.dir resource is set correctly")
+    @Step("the abstract superclass feature.dir resource is set correctly in a scenario scoped handler")
     public void abstractFeatureDirIsSet() {
         ChorusAssert.assertNotNull(featureDir);
         ChorusAssert.assertTrue("is dir", featureDir.isDirectory());
     }
 
-    @Step("the abstract superclass feature.file resource is set correctly")
+    @Step("the abstract superclass feature.file resource is set correctly in a scenario scoped handler")
     public void abstractFeatureFileIsSet() {
         ChorusAssert.assertNotNull(featureFile);
         ChorusAssert.assertTrue("is file", featureFile.isFile());
     }
 
-    @Step("the abstract superclass scenario.token resource is set to (.*)")
+    @Step("the abstract superclass scenario.token resource is set to (.*) in a scenario scoped handler")
     public void abstractCheckScenarioToken(String name) {
         ChorusAssert.assertEquals(name, scenarioToken.getName());
     }
 
+    @Step("the abstract superclass timers handler is injected in a scenario scoped handler")
+    public void abstractTimersHandlerIsSet() {
+        ChorusAssert.assertNotNull(timersHandler);
+    }
 }
