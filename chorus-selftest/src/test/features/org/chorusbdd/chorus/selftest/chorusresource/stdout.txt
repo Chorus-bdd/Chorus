@@ -1,38 +1,40 @@
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/chorusresource/chorusresource.feature
 Feature: Chorus Resource                                                                             
 Chorus --> INFO    - No default handler found for Feature: (Chorus Resource), will use built-in handlers and Uses: statements
-  Scenario: Test Chorus Resource
-Chorus --> INFO    - Processing scenario: Test Chorus Resource
-Chorus --> INFO    - Ambiguous method (ChorusResourceHandlerFeatureScoped.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (ChorusResourceHandlerScenarioScoped.isWorkingProperly)
-    Given Chorus is working properly                                                         PASSED  
-    Then the feature.token resource is set correctly in a feature scoped handler             PASSED  
-    And the feature.token resource is set correctly in a scenario scoped handler             PASSED  
-    And the feature.dir resource is set correctly in a feature scoped handler                PASSED  
-    And the feature.dir resource is set correctly in a scenario scoped handler               PASSED  
-    And the feature.file resource is set correctly in a feature scoped handler               PASSED  
-    And the feature.file resource is set correctly in a scenario scoped handler              PASSED  
-    And the scenario.token resource is set to Test Chorus Resource in a feature scoped handlerPASSED  
-    And the scenario.token resource is set to Test Chorus Resource in a scenario scoped handlerPASSED  
-    And the timers handler is injected in a feature scoped handler                           PASSED  
-    And the timers handler is injected in a scenario scoped handler                          PASSED  
-    And the abstract superclass feature.token resource is set correctly in a feature scoped handlerPASSED  
-    And the abstract superclass feature.token resource is set correctly in a scenario scoped handlerPASSED  
-    And the abstract superclass feature.dir resource is set correctly in a feature scoped handlerPASSED  
-    And the abstract superclass feature.dir resource is set correctly in a scenario scoped handlerPASSED  
-    And the abstract superclass feature.file resource is set correctly in a feature scoped handlerPASSED  
-    And the abstract superclass feature.file resource is set correctly in a scenario scoped handlerPASSED  
-    And the abstract superclass scenario.token resource is set to Test Chorus Resource in a feature scoped handlerPASSED  
-    And the abstract superclass scenario.token resource is set to Test Chorus Resource in a scenario scoped handlerPASSED  
-    And the abstract superclass timers handler is injected in a feature scoped handler       PASSED  
-    And the abstract superclass timers handler is injected in a scenario scoped handler      PASSED  
-  Scenario: Test Chorus Resource scenario.token
-Chorus --> INFO    - Processing scenario: Test Chorus Resource scenario.token
-    And the scenario.token resource is set to Test Chorus Resource scenario.token in a feature scoped handlerPASSED  
-    And the scenario.token resource is set to Test Chorus Resource scenario.token in a scenario scoped handlerPASSED  
-    And the abstract superclass scenario.token resource is set to Test Chorus Resource scenario.token in a feature scoped handlerPASSED  
-    And the abstract superclass scenario.token resource is set to Test Chorus Resource scenario.token in a scenario scoped handlerPASSED  
+  Scenario: Test Chorus Resource [1] feature
+Chorus --> INFO    - Processing scenario: Test Chorus Resource [1] feature
+    Check the feature.token resource is set correctly in a feature scoped handler            PASSED  
+    Check the feature.dir resource is set correctly in a feature scoped handler              PASSED  
+    Check the feature.file resource is set correctly in a feature scoped handler             PASSED  
+    Check the scenario.token resource is set to Test Chorus Resource [1] feature in a feature scoped handlerPASSED  
+    Check the timers handler is injected in a feature scoped handler                         PASSED  
+    Check the abstract superclass feature.token resource is set correctly in a feature scoped handlerPASSED  
+    Check the abstract superclass feature.dir resource is set correctly in a feature scoped handlerPASSED  
+    Check the abstract superclass feature.file resource is set correctly in a feature scoped handlerPASSED  
+    Check the abstract superclass scenario.token resource is set to Test Chorus Resource [1] feature in a feature scoped handlerPASSED  
+    Check the abstract superclass timers handler is injected in a feature scoped handler     PASSED  
+  Scenario: Test Chorus Resource [2] scenario
+Chorus --> INFO    - Processing scenario: Test Chorus Resource [2] scenario
+    Check the feature.token resource is set correctly in a scenario scoped handler           PASSED  
+    Check the feature.dir resource is set correctly in a scenario scoped handler             PASSED  
+    Check the feature.file resource is set correctly in a scenario scoped handler            PASSED  
+    Check the scenario.token resource is set to Test Chorus Resource [2] scenario in a scenario scoped handlerPASSED  
+    Check the timers handler is injected in a scenario scoped handler                        PASSED  
+    Check the abstract superclass feature.token resource is set correctly in a scenario scoped handlerPASSED  
+    Check the abstract superclass feature.dir resource is set correctly in a scenario scoped handlerPASSED  
+    Check the abstract superclass feature.file resource is set correctly in a scenario scoped handlerPASSED  
+    Check the abstract superclass scenario.token resource is set to Test Chorus Resource [2] scenario in a scenario scoped handlerPASSED  
+    Check the abstract superclass timers handler is injected in a scenario scoped handler    PASSED  
+  Scenario: Test Chorus Resource scenario scoped resources [1] feature
+Chorus --> INFO    - Processing scenario: Test Chorus Resource scenario scoped resources [1] feature
+    Check the scenario.token resource is set to Test Chorus Resource scenario scoped resources [1] feature in a feature scoped handlerPASSED  
+    Check the abstract superclass scenario.token resource is set to Test Chorus Resource scenario scoped resources [1] feature in a feature scoped handlerPASSED  
+  Scenario: Test Chorus Resource scenario scoped resources [2] scenario
+Chorus --> INFO    - Processing scenario: Test Chorus Resource scenario scoped resources [2] scenario
+    Check the scenario.token resource is set to Test Chorus Resource scenario scoped resources [2] scenario in a scenario scoped handlerPASSED  
+    Check the abstract superclass scenario.token resource is set to Test Chorus Resource scenario scoped resources [2] scenario in a scenario scoped handlerPASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:2) (passed:2) (failed:0)
-Steps     (total:25) (passed:25) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:4) (passed:4) (failed:0)
+Steps     (total:24) (passed:24) (failed:0) (undefined:0) (pending:0) (skipped:0)
