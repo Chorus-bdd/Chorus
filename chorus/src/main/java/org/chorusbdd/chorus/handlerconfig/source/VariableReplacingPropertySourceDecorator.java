@@ -45,15 +45,16 @@ import java.util.regex.Pattern;
  * Date: 24/09/12
  * Time: 08:45
  *
- * Replace variables in the form ${variableName} in chorus property files
+ * Replace variables in the form ${variableName} in properties received from a decorated
+ * PropertyGroupsSource
+ *
  * - support system properties
  * - support a set of chorus specific properties:
  *
- *
  */
-public class VariableReplacingPropertySource implements PropertyGroupsSource {
+public class VariableReplacingPropertySourceDecorator implements PropertyGroupsSource {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(VariableReplacingPropertySource.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(VariableReplacingPropertySourceDecorator.class);
 
     private PropertyGroupsSource wrappedSource;
     private FeatureToken featureToken;
@@ -67,7 +68,7 @@ public class VariableReplacingPropertySource implements PropertyGroupsSource {
     public static final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.feature.config";
     public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
-    public VariableReplacingPropertySource(PropertyGroupsSource wrappedSource, FeatureToken featureToken, File featureDir, File featureFile) {
+    public VariableReplacingPropertySourceDecorator(PropertyGroupsSource wrappedSource, FeatureToken featureToken, File featureDir, File featureFile) {
         this.wrappedSource = wrappedSource;
         this.featureToken = featureToken;
         this.featureDir = featureDir;

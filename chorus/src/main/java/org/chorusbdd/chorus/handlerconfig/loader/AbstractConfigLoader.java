@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
-import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
+import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySourceDecorator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -50,7 +50,8 @@ import java.util.Properties;
  * Date: 18/09/12
  * Time: 08:39
  * 
- * Load properties from a PropertyGroupsSource
+ * Load properties from a PropertiesSource and convert them to
+ * Handler specific configs using a HandlerConfigFactory
  */
 public abstract class AbstractConfigLoader<E extends HandlerConfig> implements ConfigLoader<E> {
 
@@ -62,7 +63,12 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> implements C
     private File featureDir;
     private File featureFile;
 
-    public AbstractConfigLoader(String handlerDescription, HandlerConfigFactory<E> configBuilder, FeatureToken featureToken, File featureDir, File featureFile) {
+    public AbstractConfigLoader(
+            String handlerDescription,
+            HandlerConfigFactory<E> configBuilder,
+            FeatureToken featureToken,
+            File featureDir,
+            File featureFile) {
         this.handlerDescription = handlerDescription;
         this.configBuilder = configBuilder;
         this.featureToken = featureToken;
@@ -78,7 +84,7 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> implements C
     protected abstract PropertyGroupsSource getPropertySource();
 
     private Map<String, E> loadProperties(PropertyGroupsSource propertySource) {
-        VariableReplacingPropertySource v = new VariableReplacingPropertySource(propertySource, featureToken, featureDir, featureFile);
+        VariableReplacingPropertySourceDecorator v = new VariableReplacingPropertySourceDecorator(propertySource, featureToken, featureDir, featureFile);
         Map<String,Properties> propertiesGroups = v.getPropertiesByConfigName();
 
         Map<String, E> map = new HashMap<String, E>();
