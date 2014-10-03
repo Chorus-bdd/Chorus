@@ -158,6 +158,8 @@
         The basic Chorus interpreter and the JMX remoting feature should run just fine with the
         main chorus.jar and the JDK -->
 
+        <!-- Optional Dependencies -->
+
         <!-- Ant is not required unless you make use of ChorusTask, so it is an optional dependency -->
         <!-- There should be no requirement for ant dependencies outside ChorusTask -->
         <dependency>
@@ -185,14 +187,24 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- junit is now an optional dependency -
+        <!-- junit is now an optional dependency, but not a test dependency since used in ChorusSuite -
+
         We are using ChorusAssert to avoid a mandatory dependency on junit from the core interpreter
-        although client application can use and throw JUnit assertion errors if they perfer to do so -->
+        although client application can use and throw JUnit assertion errors if they prefer to do so -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Test dependencies -->
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

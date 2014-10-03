@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.loader.JDBCConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -91,10 +92,6 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     // If set, will cause the mBean metadata to be loaded using JDBC properties in the named properties file
     public static final String REMOTING_HANDLER_DB_PROPERTIES = "org.chorusbdd.chorus.remoting.db";
 
-    @Initialize(scope = Scope.FEATURE)
-    public void initialize() {
-        loadRemotingConfigs();    
-    }
     
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
@@ -103,6 +100,21 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
         return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingManagerConfig());
+    }
+
+
+    @Initialize(scope = Scope.FEATURE)
+    public void initialize() {
+        HandlerConfigLoader<RemotingConfig> configLoader = new HandlerConfigLoader<RemotingConfig>(
+            new RemotingConfigFactory(),
+            "Remoting",
+            "remoting",
+            REMOTING_HANDLER_DB_PROPERTIES,
+            featureToken,
+            featureDir,
+            featureFile
+        );
+        remotingConfigMap = configLoader.loadConfigs();
     }
 
     /**
@@ -164,64 +176,6 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
         return remotingConfig;
     }
 
-    protected void loadRemotingConfigs() {
-        //check to see if the system property has been set to specify a DB to load the configuration from
-        String mBeansDb = System.getProperty(REMOTING_HANDLER_DB_PROPERTIES);
-
-        //if the db system property has been set then use it
-        if (mBeansDb != null) {
-            loadRemotingConfigsFromDb(mBeansDb);
-        } else {
-            PropertiesFileConfigLoader<RemotingConfig> l = new PropertiesFileConfigLoader<RemotingConfig>(
-                new RemotingConfigFactory(),
-                "Remoting",
-                "remoting",
-                featureToken,
-                featureDir,
-                featureFile
-            );
-            remotingConfigMap = l.loadConfigs();
-        }
-    }
-
-    private void loadRemotingConfigsFromDb(String jdbcPropertiesFilePath) {
-        //use the file path to load the jdbc connection properties
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(jdbcPropertiesFilePath);
-            Properties p = new Properties();
-            p.load(fis);
-            loadRemotingConfigsFromDb(p);
-        } catch (IOException ioe) {
-            throw new ChorusException("Failed to load remoting db properties", ioe);
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    throw new ChorusException("Failed to close file input stream while loading remoting db properties",e);    
-                }
-            }
-        }
-    }
-
-    /**
-     * Can be used by subclasses to load the MBean configuration from a database. Properties are passed to perform a
-     * query on a database, the results of which must return a row for each MBean with columns titled: mBeanName, host
-     * and port.
-     *
-     * @param p the database connection properties, must include:
-     * <ul>
-     *     <li>jdbc.driver</li>
-     *     <li>jdbc.url</li>
-     *     <li>jdbc.user</li>
-     *     <li>jdbc.password</li>
-     *     <li>jdbc.sql</li>
-     * </ul>
-     */
-    protected void loadRemotingConfigsFromDb(Properties p) {
-        remotingConfigMap = new JDBCConfigLoader(p, "Remoting", new RemotingConfigFactory(), featureToken, featureDir, featureFile).loadConfigs();
-    }
 
     public void addConfiguration(RemotingConfig handlerConfig) {
         remotingConfigMap.put(handlerConfig.getConfigName(), handlerConfig);

@@ -52,7 +52,7 @@ import java.util.Properties;
  * 
  * Load properties from a PropertyGroupsSource
  */
-public abstract class AbstractConfigLoader<E extends HandlerConfig> {
+public abstract class AbstractConfigLoader<E extends HandlerConfig> implements ConfigLoader<E> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigLoader.class);
     private static final Properties EMPTY_PROPERTIES = new Properties();
