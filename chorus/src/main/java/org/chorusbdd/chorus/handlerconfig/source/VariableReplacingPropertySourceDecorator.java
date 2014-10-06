@@ -58,8 +58,6 @@ public class VariableReplacingPropertySourceDecorator implements PropertyGroupsS
 
     private PropertyGroupsSource wrappedSource;
     private FeatureToken featureToken;
-    private File featureDir;
-    private File featureFile;
 
     private Pattern p = Pattern.compile("\\$\\{.+?\\}");
 
@@ -68,11 +66,9 @@ public class VariableReplacingPropertySourceDecorator implements PropertyGroupsS
     public static final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.feature.config";
     public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
-    public VariableReplacingPropertySourceDecorator(PropertyGroupsSource wrappedSource, FeatureToken featureToken, File featureDir, File featureFile) {
+    public VariableReplacingPropertySourceDecorator(PropertyGroupsSource wrappedSource, FeatureToken featureToken) {
         this.wrappedSource = wrappedSource;
         this.featureToken = featureToken;
-        this.featureDir = featureDir;
-        this.featureFile = featureFile;
     }
 
     public Map<String, Properties> getPropertiesByConfigName() {
@@ -116,12 +112,12 @@ public class VariableReplacingPropertySourceDecorator implements PropertyGroupsS
         boolean replaced = false;
         int start = sb.indexOf(variable);
         if ( CHORUS_FEATURE_DIR_VARIABLE.equals(property)) {
-            sb.replace(start, start + variable.length(), featureDir.getPath());
-            log.debug("Replaced variable " + variable + " with value " + featureDir.getPath() + " for property " + fullPropertyName);
+            sb.replace(start, start + variable.length(), featureToken.getFeatureDir().getPath());
+            log.debug("Replaced variable " + variable + " with value " + featureToken.getFeatureDir().getPath() + " for property " + fullPropertyName);
             replaced = true;
         } else if ( CHORUS_FEATURE_FILE_VARIABLE.equals(property)) {
-            sb.replace(start, start + variable.length(), featureFile.getPath());
-            log.debug("Replaced variable " + variable + " with value " + featureFile.getPath() + " for property " + fullPropertyName);
+            sb.replace(start, start + variable.length(), featureToken.getFeatureFile().getPath());
+            log.debug("Replaced variable " + variable + " with value " + featureToken.getFeatureFile().getPath() + " for property " + fullPropertyName);
             replaced = true;
         } else if ( CHORUS_FEATURE_CONFIGURATION_VARIABLE.equals(property)) {
             sb.replace(start, start + variable.length(), featureToken.getConfigurationName());

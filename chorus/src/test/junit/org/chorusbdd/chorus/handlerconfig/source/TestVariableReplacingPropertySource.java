@@ -113,10 +113,8 @@ public class TestVariableReplacingPropertySource extends Assert {
         token.setConfigurationName(TEST_CONFIGURATION_NAME);
         token.setName(TEST_FEATURE_NAME);
 
-        File featureDir = new File(TEST_FEATURE_DIR);
-        File feature = new File(TEST_FEATURE_FILE);
         PropertyGroupsSource mockSource = new MockPropertyGroupsSource();
-        return new VariableReplacingPropertySourceDecorator(mockSource, token, featureDir, feature);
+        return new VariableReplacingPropertySourceDecorator(mockSource, token);
     }
 
     private static class MockPropertyGroupsSource implements PropertyGroupsSource {

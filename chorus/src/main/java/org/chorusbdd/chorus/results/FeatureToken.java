@@ -167,6 +167,10 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
         this.featureFile = featureFile;
     }
 
+    public File getFeatureDir() {
+        return featureFile.getParentFile();
+    }
+
     //fail if any scenarios failed, otherwise pending if any pending, or passed
     public EndState getEndState() {
         EndState result = EndState.PASSED;

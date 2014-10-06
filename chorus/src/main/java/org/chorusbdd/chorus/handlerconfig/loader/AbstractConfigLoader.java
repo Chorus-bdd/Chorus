@@ -57,23 +57,17 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> implements C
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigLoader.class);
     private static final Properties EMPTY_PROPERTIES = new Properties();
-    private String handlerDescription;
+    private String handlerName;
     private HandlerConfigFactory<E> configBuilder;
     private FeatureToken featureToken;
-    private File featureDir;
-    private File featureFile;
 
     public AbstractConfigLoader(
-            String handlerDescription,
+            String handlerName,
             HandlerConfigFactory<E> configBuilder,
-            FeatureToken featureToken,
-            File featureDir,
-            File featureFile) {
-        this.handlerDescription = handlerDescription;
+            FeatureToken featureToken) {
+        this.handlerName = handlerName;
         this.configBuilder = configBuilder;
         this.featureToken = featureToken;
-        this.featureDir = featureDir;
-        this.featureFile = featureFile;
     }
 
     public Map<String, E> loadConfigs() {
@@ -84,7 +78,7 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> implements C
     protected abstract PropertyGroupsSource getPropertySource();
 
     private Map<String, E> loadProperties(PropertyGroupsSource propertySource) {
-        VariableReplacingPropertySourceDecorator v = new VariableReplacingPropertySourceDecorator(propertySource, featureToken, featureDir, featureFile);
+        VariableReplacingPropertySourceDecorator v = new VariableReplacingPropertySourceDecorator(propertySource, featureToken);
         Map<String,Properties> propertiesGroups = v.getPropertiesByConfigName();
 
         Map<String, E> map = new HashMap<String, E>();
@@ -119,7 +113,7 @@ public abstract class AbstractConfigLoader<E extends HandlerConfig> implements C
         if (props.getKey().equals(HandlerConfig.DEFAULT_PROPERTIES_GROUP) || validator.isValid(c)) {
             configMap.put(props.getKey(), c);
         } else {
-            log.warn("Removing " + props.getKey() + " which is not a valid " + handlerDescription + " handler config " + validator.getValidationRuleDescription());
+            log.warn("Removing " + props.getKey() + " which is not a valid " + handlerName + " handler config " + validator.getValidationRuleDescription());
             log.debug(c);
         }
     }

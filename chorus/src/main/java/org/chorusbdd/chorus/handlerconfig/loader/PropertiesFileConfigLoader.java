@@ -54,20 +54,16 @@ public class PropertiesFileConfigLoader<E extends HandlerConfig> extends Abstrac
     //"Remoting", "-remoting"
     public PropertiesFileConfigLoader(
             HandlerConfigFactory<E> configBuilder, 
-            String handlerDescription, 
+            String handlerName,
             String propertiesFileSuffix, 
-            FeatureToken featureToken, 
-            File featureDir, 
-            File featureFile) {
+            FeatureToken featureToken) {
         
-        super(handlerDescription, configBuilder, featureToken, featureDir, featureFile);
+        super(handlerName, configBuilder, featureToken);
         
         this.propertiesFileSource = new PropertiesFilePropertySource(
-                handlerDescription, 
+                handlerName,
                 propertiesFileSuffix, 
-                featureToken, 
-                featureDir, 
-                featureFile
+                featureToken
         );
     }
 

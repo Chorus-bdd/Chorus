@@ -32,12 +32,15 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.source.JdbcPropertySource;
+import org.chorusbdd.chorus.handlerconfig.source.PropertiesFilePropertySource;
 import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -50,30 +53,36 @@ public class JDBCConfigLoader<E extends HandlerConfig> extends AbstractConfigLoa
 
     private static ChorusLog log = ChorusLogFactory.getLog(JDBCConfigLoader.class);
 
-    private final JdbcPropertySource jdbcPropertiesLoader;
-    private Properties dbProperties;
+    private String handlerName;
+    private FeatureToken featureToken;
 
     public JDBCConfigLoader(
-            Properties dbProperties, 
-            String handlerDescription, 
+            String handlerName,
             HandlerConfigFactory<E> configFactory, 
-            FeatureToken featureToken, 
-            File featureDir, 
-            File featureFile) {
+            FeatureToken featureToken) {
         
-        super(handlerDescription, configFactory, featureToken, featureDir, featureFile);
-        this.dbProperties = dbProperties;
-        jdbcPropertiesLoader = new JdbcPropertySource(dbProperties);
+        super(handlerName, configFactory, featureToken);
+        this.handlerName = handlerName;
+        this.featureToken = featureToken;
     }
     
     public PropertyGroupsSource getPropertySource() {
+        PropertiesFilePropertySource propertiesFilePropertySource = new PropertiesFilePropertySource(
+            "db",
+            "db",
+            featureToken
+        );
+        Map<String, Properties> p = propertiesFilePropertySource.getPropertiesByConfigName();
+        Properties props = p.get(handlerName);
+        if ( props == null) {
+            throw new ChorusException("Could not find db properties for db. " + handlerName);
+        }
+
+        JdbcPropertySource jdbcPropertiesLoader = new JdbcPropertySource(props);
         return jdbcPropertiesLoader;
     }
 
-    @Override
     public String toString() {
-        return "JDBCConfigLoader{" +
-                "dbProperties=" + dbProperties +
-                '}';
+        return "JDBCConfigLoader{}";
     }
 }

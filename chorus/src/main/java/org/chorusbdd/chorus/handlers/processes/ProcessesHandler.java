@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.PropertiesFileOrDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -62,6 +62,9 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
     @ChorusResource("process.manager")
     private ProcessManager processManager;
+
+    // If set, will cause the mBean metadata to be loaded
+    public static final String PROCESSES_HANDLER_USE_DB_PROPERTIES = "handler.processes.use_database_properties";
 
 
     // -------------------------------------------------------------- Steps
@@ -212,13 +215,12 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     }
 
     private Map<String, ProcessesConfig> loadProcessConfig() {
-        PropertiesFileConfigLoader<ProcessesConfig> l = new PropertiesFileConfigLoader<ProcessesConfig>(
-                new ProcessesConfigFactory(),
-                "Processes",
-                "processes",
-                featureToken,
-                featureDir,
-                featureFile
+        PropertiesFileOrDbConfigLoader<ProcessesConfig> l = new PropertiesFileOrDbConfigLoader<ProcessesConfig>(
+            new ProcessesConfigFactory(),
+            "Processes",
+            "processes",
+            Boolean.valueOf(PROCESSES_HANDLER_USE_DB_PROPERTIES),
+            featureToken
         );
         return l.loadConfigs();
     }
@@ -226,69 +228,4 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     public void addConfiguration(ProcessesConfig handlerConfig) {
         processConfigTemplates.put(handlerConfig.getConfigName(), handlerConfig);
     }
-
-
-//    Removed 'start a script' steps
-//    These have been replaced by the 'pathToExecutable' property on the process config.
-    
-//    @Step(".*start a process using script '(.*)'$")
-//    public void startScript(final String script) throws Exception {
-//        startTheScript(script, false);
-//    }
-//
-//    @Step(".*start a process using script '(.*)' named (.*)$")
-//    public void startScript(String script, String processName) throws Exception {
-//        startTheScript(script, processName, false);
-//    }
-//
-//    @Step(".*start a process using script '(.*)' with logging$")
-//    public void startScriptWithLogging(String script) throws Exception {
-//        startTheScript(script, true);
-//    }
-//
-//    @Step(".*start a process using script '(.*)' named (.*) with logging$")
-//    public void startScriptWithLogging(String script, String processName) throws Exception {
-//        startTheScript(script, processName, true);
-//    }
-//
-//    private void startTheScript(String script, boolean logging) throws Exception {
-//        startTheScript(script, nextProcessName(), logging);
-//    }
-//
-//    private void startTheScript(String script, String processName, boolean logging) throws Exception {
-//        final ProcessesConfig config = getScriptConfig(processName, logging, script);
-//        ProcessManagerConfig processInfo = config.buildProcessManagerConfig();
-//        processManager.startProcess(processName, processInfo);
-//    }
-//
-//    // We have a small problem since we lack a ProcessesConfig when running processes this way
-//    // So presently we have to mock up a ProcessesConfig
-//    // Recommended solution is to use the process handler property pathToExecutable instead and then you can set all
-//    // the other config properties appropriately
-//    private ProcessesConfig getScriptConfig(final String groupName, final boolean logging, final String script) {
-//        return new ProcessesConfig() {
-//            @Override
-//            public String getConfigName() {
-//                return groupName;
-//            }
-//
-//            @Override
-//            public OutputMode getStdErrMode() {
-//                return logging ? OutputMode.FILE : OutputMode.INLINE;
-//            }
-//
-//            @Override
-//            public OutputMode getStdOutMode() {
-//                return logging ? OutputMode.FILE : OutputMode.INLINE;
-//            }
-//
-//            @Override
-//            public int getProcessCheckDelay() { return 250; }
-//
-//            @Override
-//            public String getPathToExecutable() {
-//                return NativeProcessCommandLineBuilder.getPathToExecutable(featureDir, script);
-//            }
-//        };
-//    }
 }
