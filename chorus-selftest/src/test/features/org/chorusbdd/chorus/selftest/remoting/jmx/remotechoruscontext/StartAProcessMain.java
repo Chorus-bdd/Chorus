@@ -45,7 +45,6 @@ public class StartAProcessMain {
             System.out.println(s);
         }
 
-        System.out.println("Exporting the handler");
         JmxRemoteChorusContextHandler handler = new JmxRemoteChorusContextHandler();
         ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
         exporter.export();

@@ -58,10 +58,4 @@ public class TestJmxRemoteChorusContext extends AbstractInterpreterTest {
        sysProps.put(ChorusConfigProperty.SHOW_ERRORS.getSystemProperty(), "true");
    }
 
-
-    protected void processActualResults(ChorusSelfTestResults expectedResults) {
-        if ( ! isInProcessAndJdk1_7()) {
-            removeLineFromStdOut(expectedResults, "Exporting the handler", true);
-        }
-    }
 }
