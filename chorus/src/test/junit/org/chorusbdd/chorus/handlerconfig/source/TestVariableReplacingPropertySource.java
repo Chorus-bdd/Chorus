@@ -110,6 +110,7 @@ public class TestVariableReplacingPropertySource extends Assert {
 
     private VariableReplacingPropertySourceDecorator createVariableReplacingSource() {
         FeatureToken token = new FeatureToken();
+        token.setFeatureFile(new File(TEST_FEATURE_FILE));
         token.setConfigurationName(TEST_CONFIGURATION_NAME);
         token.setName(TEST_FEATURE_NAME);
 
