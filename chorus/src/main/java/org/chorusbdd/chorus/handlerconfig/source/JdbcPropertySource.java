@@ -63,7 +63,7 @@ public class JdbcPropertySource implements PropertyGroupsSource {
 
     public Map<String, Properties> loadProperties() {
         Connection conn = null;
-        Map<String, Properties> propertiesByGroupName = new HashMap<String, Properties>();
+        Map<String, Properties> propertiesByConfigName = new HashMap<String, Properties>();
         try {
             //load MBean config from DB
             Class.forName(jdbcProperties.getProperty(JDBC_DRIVER));
@@ -78,28 +78,23 @@ public class JdbcPropertySource implements PropertyGroupsSource {
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                Properties p = new Properties();
-                String configName = null;
-                try {
-                    configName = rs.getString("configName");
-                } catch (SQLException e) {
-                    //handle change between 1.6.x and 2.x
-                    configName = rs.getString("name");
-                }
-                p.put("configName", configName);
+                String configName = rs.getString("configName");
+                String propertyKey = rs.getString("property");
+                String value = rs.getString("value");
 
-                for ( int loop=1; loop <= rs.getMetaData().getColumnCount(); loop ++) {
-                    String columnName = rs.getMetaData().getColumnLabel(loop);
-                    Object o = rs.getObject(loop);
-                    if ( o != null ) {
-                        p.put(columnName, o.toString());
-                    }
-                }
-                propertiesByGroupName.put(configName, p);
+                addProperty(propertiesByConfigName, configName, propertyKey, value);
+
+//                for ( int loop=1; loop <= rs.getMetaData().getColumnCount(); loop ++) {
+//                    String columnName = rs.getMetaData().getColumnLabel(loop);
+//                    Object o = rs.getObject(loop);
+//                    if ( o != null ) {
+//                        p.put(columnName, o.toString());
+//                    }
+//                }
             }
             rs.close();
             stmt.close();
-            log.debug("Loaded " + propertiesByGroupName.size() + " property group configurations from database");
+            log.debug("Loaded " + propertiesByConfigName.size() + " property group configurations from database");
         } catch (Exception e) {
             log.error("Failed to load property group configurations from database", e);
             throw new ChorusException("Failed to load property group configurations from database");
@@ -112,6 +107,16 @@ public class JdbcPropertySource implements PropertyGroupsSource {
                 }
             }
         }
-        return propertiesByGroupName;
+        return propertiesByConfigName;
+    }
+
+    private void addProperty(Map<String, Properties> propertiesByConfigName, String configName, String propertyKey, String value) {
+        Properties p = propertiesByConfigName.get(configName);
+        if ( p == null) {
+            p = new Properties();
+            p.put("configName", configName);
+            propertiesByConfigName.put(configName, p);
+        }
+        p.put(propertyKey, value);
     }
 }

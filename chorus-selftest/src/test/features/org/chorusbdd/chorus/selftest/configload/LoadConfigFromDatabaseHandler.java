@@ -64,9 +64,10 @@ public class LoadConfigFromDatabaseHandler {
         Connection connection = DriverManager.getConnection(url);
 
         Statement s = connection.createStatement();
-        s.executeUpdate("create table ProcessProperties ( \"name\" varchar(32), \"mainclass\" varchar(256), \"jmxport\" int)");
+        s.executeUpdate("create table ProcessProperties ( \"configName\" varchar(64), \"property\" varchar(64), \"value\" varchar(256))");
+        s.executeUpdate("insert into ProcessProperties values('myProcess', 'mainclass','" + ConfigLoadMain.class.getName() + "')");
+        s.executeUpdate("insert into ProcessProperties values('myProcess', 'jmxport','" + 12345 + "')");
 
-        s.executeUpdate("insert into ProcessProperties values('myProcess','" + ConfigLoadMain.class.getName() + "', 12345 )");
         s.close();
         connection.close();
     }
