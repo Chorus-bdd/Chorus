@@ -33,7 +33,6 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 
-import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -52,9 +51,9 @@ import java.util.regex.Pattern;
  * - support a set of chorus specific properties:
  *
  */
-public class VariableReplacingPropertySourceDecorator implements PropertyGroupsSource {
+public class VariableReplacingPropertySource implements PropertyGroupsSource {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(VariableReplacingPropertySourceDecorator.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(VariableReplacingPropertySource.class);
 
     private PropertyGroupsSource wrappedSource;
     private FeatureToken featureToken;
@@ -66,13 +65,13 @@ public class VariableReplacingPropertySourceDecorator implements PropertyGroupsS
     public static final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.feature.config";
     public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
-    public VariableReplacingPropertySourceDecorator(PropertyGroupsSource wrappedSource, FeatureToken featureToken) {
+    public VariableReplacingPropertySource(PropertyGroupsSource wrappedSource, FeatureToken featureToken) {
         this.wrappedSource = wrappedSource;
         this.featureToken = featureToken;
     }
 
-    public Map<String, Properties> getPropertiesByConfigName() {
-        Map<String, Properties> m = wrappedSource.getPropertiesByConfigName();
+    public Map<String, Properties> loadProperties() {
+        Map<String, Properties> m = wrappedSource.loadProperties();
 
         for ( Map.Entry<String, Properties> e : m.entrySet()) {
             expandVariables(e);

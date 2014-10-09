@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.PropertiesFileOrDbConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -62,10 +62,6 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
     @ChorusResource("process.manager")
     private ProcessManager processManager;
-
-    // If set, will cause the mBean metadata to be loaded
-    public static final String PROCESSES_HANDLER_USE_DB_PROPERTIES = "handler.processes.use_database_properties";
-
 
     // -------------------------------------------------------------- Steps
 
@@ -215,11 +211,10 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     }
 
     private Map<String, ProcessesConfig> loadProcessConfig() {
-        PropertiesFileOrDbConfigLoader<ProcessesConfig> l = new PropertiesFileOrDbConfigLoader<ProcessesConfig>(
+        PropertiesFileAndDbConfigLoader<ProcessesConfig> l = new PropertiesFileAndDbConfigLoader<ProcessesConfig>(
             new ProcessesConfigFactory(),
             "Processes",
             "processes",
-            Boolean.getBoolean(PROCESSES_HANDLER_USE_DB_PROPERTIES),
             featureToken
         );
         return l.loadConfigs();

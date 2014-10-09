@@ -45,5 +45,5 @@ public interface PropertyGroupsSource {
     /**
      * @return Properties grouped by a String configName
      */
-    Map<String, Properties> getPropertiesByConfigName();
+    Map<String, Properties> loadProperties();
 }

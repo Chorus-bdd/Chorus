@@ -29,9 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest.configload;
 
-import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,10 +51,10 @@ public class TestLoadConfigFromDatabase extends AbstractInterpreterTest {
         return featurePath;
     }
 
-    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
-
-//        System.setProperty(ProcessesHandler.PROCESSES_HANDLER_USE_DB_PROPERTIES, "true");
-        sysProps.put(ProcessesHandler.PROCESSES_HANDLER_USE_DB_PROPERTIES, "true");
+    public void runTest(boolean runTestsInProcess, boolean runTestsForked) throws Exception {
+        //we get problems with Derby locking the file if we try to run the test
+        //as a subprocess in addition to within jvm
+        super.runTest(false, runTestsForked);
     }
 
 }

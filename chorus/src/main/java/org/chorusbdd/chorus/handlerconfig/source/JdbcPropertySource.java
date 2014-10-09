@@ -61,7 +61,7 @@ public class JdbcPropertySource implements PropertyGroupsSource {
         this.jdbcProperties = jdbcProperties;
     }
 
-    public Map<String, Properties> getPropertiesByConfigName() {
+    public Map<String, Properties> loadProperties() {
         Connection conn = null;
         Map<String, Properties> propertiesByGroupName = new HashMap<String, Properties>();
         try {

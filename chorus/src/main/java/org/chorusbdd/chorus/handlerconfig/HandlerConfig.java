@@ -45,6 +45,12 @@ public interface HandlerConfig {
     String DEFAULT_PROPERTIES_GROUP = "default";
 
     /**
+     * A special property group which is used to define database connection properties to
+     * load configs from the database
+     */
+    String DATABASE_CONFIGS_PROPERTY_GROUP  = "dbconfigs";
+
+    /**
      * @return the config name to which this HandlerConfig relates
      */
     String getConfigName();

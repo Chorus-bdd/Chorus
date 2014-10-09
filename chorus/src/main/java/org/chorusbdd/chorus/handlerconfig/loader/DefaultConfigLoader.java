@@ -32,14 +32,10 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
-import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
-import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySourceDecorator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -53,64 +49,53 @@ import java.util.Properties;
  * Load properties from a PropertiesSource and convert them to
  * Handler specific configs using a HandlerConfigFactory
  */
-public abstract class AbstractConfigLoader<E extends HandlerConfig> implements ConfigLoader<E> {
+public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoader<E> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigLoader.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(DefaultConfigLoader.class);
     private static final Properties EMPTY_PROPERTIES = new Properties();
     private String handlerName;
     private HandlerConfigFactory<E> configBuilder;
-    private FeatureToken featureToken;
+    private Map<String, Properties> propertiesByConfigName;
 
-    public AbstractConfigLoader(
+    public DefaultConfigLoader(
             String handlerName,
             HandlerConfigFactory<E> configBuilder,
-            FeatureToken featureToken) {
+            Map<String, Properties> propertiesByConfigName) {
         this.handlerName = handlerName;
         this.configBuilder = configBuilder;
-        this.featureToken = featureToken;
+        this.propertiesByConfigName = propertiesByConfigName;
     }
 
     public Map<String, E> loadConfigs() {
-        PropertyGroupsSource propertyGroupsSource = getPropertySource();
-        return loadProperties(propertyGroupsSource);
-    }
-
-    protected abstract PropertyGroupsSource getPropertySource();
-
-    private Map<String, E> loadProperties(PropertyGroupsSource propertySource) {
-        VariableReplacingPropertySourceDecorator v = new VariableReplacingPropertySourceDecorator(propertySource, featureToken);
-        Map<String,Properties> propertiesGroups = v.getPropertiesByConfigName();
-
         Map<String, E> map = new HashMap<String, E>();
-        addConfigsFromPropertyGroups(propertiesGroups, map, configBuilder);
-        return map;
-    }
-
-    protected void addConfigsFromPropertyGroups(Map<String, Properties> propertiesGroups, Map<String, E> configMap, HandlerConfigFactory<E> handlerConfigBuilder) {
         try {
            //get any default properties for this handler type
-           Properties defaultProperties = propertiesGroups.get(HandlerConfig.DEFAULT_PROPERTIES_GROUP);
+           Properties defaultProperties = propertiesByConfigName.get(HandlerConfig.DEFAULT_PROPERTIES_GROUP);
            if ( defaultProperties == null) {
                defaultProperties = EMPTY_PROPERTIES;
            }
 
-           for ( Map.Entry<String, Properties> props : propertiesGroups.entrySet()) {
-               E c = handlerConfigBuilder.createConfig(props.getValue(), defaultProperties);
-               HandlerConfigValidator<? super E> validator = handlerConfigBuilder.createValidator(c);
+           for ( Map.Entry<String, Properties> props : propertiesByConfigName.entrySet()) {
+               E c = configBuilder.createConfig(props.getValue(), defaultProperties);
+               HandlerConfigValidator<? super E> validator = configBuilder.createValidator(c);
 
-               //add the new config to the configMap only if it is valid or represents default values
-               addIfValid(configMap, props, c, validator);
+               if ( HandlerConfig.DEFAULT_PROPERTIES_GROUP.equals(props.getKey())) {
+                   map.put(props.getKey(), c);
+               } else {
+                   //apart from the 'default' configs all configs must pass validation rules
+                   //we still include the default configs in results so that we can see what the defaults were
+                   addIfValid(map, props, c, validator);
+               }
            }
         } catch (Exception e) {
            log.error("Failed to load handler configuration",e);
            throw new ChorusException("Failed to load handler configuration");
         }
+        return map;
     }
 
     private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E c, HandlerConfigValidator<? super E> validator) {
-        //apart from the 'default' configs all configs must pass validation rules
-        //the defaults specified may be an incomplete subset
-        if (props.getKey().equals(HandlerConfig.DEFAULT_PROPERTIES_GROUP) || validator.isValid(c)) {
+        if (validator.isValid(c)) {
             configMap.put(props.getKey(), c);
         } else {
             log.warn("Removing " + props.getKey() + " which is not a valid " + handlerName + " handler config " + validator.getValidationRuleDescription());

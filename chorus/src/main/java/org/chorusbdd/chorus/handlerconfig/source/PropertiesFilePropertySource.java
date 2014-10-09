@@ -114,8 +114,8 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         this.featureToken = featureToken;
     }
 
-    public Map<String, Properties> getPropertiesByConfigName() {
-        Properties p = loadProperties();
+    public Map<String, Properties> loadProperties() {
+        Properties p = loadFromPropertyFiles();
 
         Map<String, Properties> propertiesByGroup = new HashMap<String, Properties>();
         for ( Map.Entry e : p.entrySet()) {
@@ -149,7 +149,7 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         propertiesForThisConfigName.setProperty(property, value);
     }
 
-    private Properties loadProperties() {
+    private Properties loadFromPropertyFiles() {
         Properties p = new Properties();
         log.trace("Reading properties for handler " + handlerName +
                 ", feature: " + featureToken +

@@ -47,6 +47,9 @@ import java.sql.Statement;
 @Handler(value = "Load Config From Database", scope = Scope.FEATURE)
 public class LoadConfigFromDatabaseHandler {
 
+    @ChorusResource("feature.dir")
+    File featureDir;
+
     @Initialize(scope= Scope.FEATURE)
     public void setup() throws Exception {
         File file = new File(featureDir, "derby");
@@ -58,18 +61,16 @@ public class LoadConfigFromDatabaseHandler {
         String driver = "org.apache.derby.jdbc.EmbeddedDriver";
         Class.forName(driver);
         String url = "jdbc:derby:" + featureDir.getPath() + "/derby/sampleDB;create=true";
-        connection = DriverManager.getConnection(url);
+        Connection connection = DriverManager.getConnection(url);
 
         Statement s = connection.createStatement();
         s.executeUpdate("create table ProcessProperties ( \"name\" varchar(32), \"mainclass\" varchar(256), \"jmxport\" int)");
 
         s.executeUpdate("insert into ProcessProperties values('myProcess','" + ConfigLoadMain.class.getName() + "', 12345 )");
         s.close();
+        connection.close();
     }
 
-    @ChorusResource("feature.dir")
-    File featureDir;
-    private Connection connection;
 
     @Step("I create a javadb database and insert processes config")
     public void featureStart() throws Exception {

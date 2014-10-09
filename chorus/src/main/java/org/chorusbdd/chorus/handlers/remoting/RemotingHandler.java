@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.PropertiesFileOrDbConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -83,9 +83,6 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     
     private Map<String, RemotingConfig> remotingConfigMap;
 
-    // If set, will cause the mBean metadata to be loaded
-    public static final String REMOTING_HANDLER_USE_DB_PROPERTIES = "handler.remoting.use_database_properties";
-
     private LocalProcessRemotingConfigs localProcessRemotingConfigs;
 
     /**
@@ -99,11 +96,10 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
 
     @Initialize(scope = Scope.FEATURE)
     public void initialize() {
-        PropertiesFileOrDbConfigLoader<RemotingConfig> configLoader = new PropertiesFileOrDbConfigLoader<RemotingConfig>(
+        PropertiesFileAndDbConfigLoader<RemotingConfig> configLoader = new PropertiesFileAndDbConfigLoader<RemotingConfig>(
             new RemotingConfigFactory(),
             "Remoting",
             "remoting",
-            Boolean.getBoolean(REMOTING_HANDLER_USE_DB_PROPERTIES),
             featureToken
         );
         remotingConfigMap = configLoader.loadConfigs();

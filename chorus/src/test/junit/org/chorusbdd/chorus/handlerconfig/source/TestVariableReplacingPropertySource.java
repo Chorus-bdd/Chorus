@@ -53,13 +53,13 @@ public class TestVariableReplacingPropertySource extends Assert {
     private static String TEST_PROPERTY_2 = "property2";
     private static String TEST_SYS_PROP_2 = "${file.separator}";
     private static String TEST_PROPERTY_3 = "property3";
-    private static String TEST_SYS_PROP_3 =  "${" + VariableReplacingPropertySourceDecorator.CHORUS_FEATURE_DIR_VARIABLE + "}";
+    private static String TEST_SYS_PROP_3 =  "${" + VariableReplacingPropertySource.CHORUS_FEATURE_DIR_VARIABLE + "}";
     private static String TEST_PROPERTY_4 = "property4";
-    private static String TEST_SYS_PROP_4 = "${" + VariableReplacingPropertySourceDecorator.CHORUS_FEATURE_FILE_VARIABLE + "}";
+    private static String TEST_SYS_PROP_4 = "${" + VariableReplacingPropertySource.CHORUS_FEATURE_FILE_VARIABLE + "}";
     private static String TEST_PROPERTY_5 = "property5";
-    private static String TEST_SYS_PROP_5 = "${" + VariableReplacingPropertySourceDecorator.CHORUS_FEATURE_CONFIGURATION_VARIABLE + "}";
+    private static String TEST_SYS_PROP_5 = "${" + VariableReplacingPropertySource.CHORUS_FEATURE_CONFIGURATION_VARIABLE + "}";
     private static String TEST_PROPERTY_6 = "property6";
-    private static String TEST_SYS_PROP_6 = "${" + VariableReplacingPropertySourceDecorator.CHORUS_FEATURE_NAME_VARIABLE + "}";
+    private static String TEST_SYS_PROP_6 = "${" + VariableReplacingPropertySource.CHORUS_FEATURE_NAME_VARIABLE + "}";
     
     private static String TEST_FEATURE_DIR = "/test/path";
     private static String TEST_FEATURE_FILE = "/test/path/feature.feature";
@@ -69,8 +69,8 @@ public class TestVariableReplacingPropertySource extends Assert {
 
     @Test
     public void testSysPropertyExpansion() {
-        VariableReplacingPropertySourceDecorator v = createVariableReplacingSource();
-        Map<String, Properties> m = v.getPropertiesByConfigName();
+        VariableReplacingPropertySource v = createVariableReplacingSource();
+        Map<String, Properties> m = v.loadProperties();
         String propValue1 = m.get(TEST_GROUP).getProperty(TEST_PROPERTY_3);
         assertFalse("${user.dir} was not expanded correctly", propValue1.contains("${user.dir}"));
     }
@@ -80,8 +80,8 @@ public class TestVariableReplacingPropertySource extends Assert {
      * test we can expand multiple variables in the same property value
      */
     public void testMultipleVariableExpansion() {
-        VariableReplacingPropertySourceDecorator v = createVariableReplacingSource();
-        Map<String, Properties> m = v.getPropertiesByConfigName();
+        VariableReplacingPropertySource v = createVariableReplacingSource();
+        Map<String, Properties> m = v.loadProperties();
         String propValue2 = m.get(TEST_GROUP).getProperty(TEST_PROPERTY_2);
         assertEquals(
             "${file.separator} was not replaced or only one instance was replaced",
@@ -92,8 +92,8 @@ public class TestVariableReplacingPropertySource extends Assert {
 
     @Test
     public void testChorusVariableExpansion() throws IOException {
-       VariableReplacingPropertySourceDecorator v = createVariableReplacingSource();
-       Map<String, Properties> m = v.getPropertiesByConfigName();
+       VariableReplacingPropertySource v = createVariableReplacingSource();
+       Map<String, Properties> m = v.loadProperties();
 
        String propValue3 = m.get(TEST_GROUP).getProperty(TEST_PROPERTY_3);
        assertTrue("${chorus.feature.dir} was not expanded correctly", propValue3.contains(new File(TEST_FEATURE_DIR).getPath()));
@@ -108,19 +108,19 @@ public class TestVariableReplacingPropertySource extends Assert {
        assertTrue("${chorus.feature.name} was not expanded correctly", propValue6.contains(TEST_FEATURE_NAME));
     }
 
-    private VariableReplacingPropertySourceDecorator createVariableReplacingSource() {
+    private VariableReplacingPropertySource createVariableReplacingSource() {
         FeatureToken token = new FeatureToken();
         token.setFeatureFile(new File(TEST_FEATURE_FILE));
         token.setConfigurationName(TEST_CONFIGURATION_NAME);
         token.setName(TEST_FEATURE_NAME);
 
         PropertyGroupsSource mockSource = new MockPropertyGroupsSource();
-        return new VariableReplacingPropertySourceDecorator(mockSource, token);
+        return new VariableReplacingPropertySource(mockSource, token);
     }
 
     private static class MockPropertyGroupsSource implements PropertyGroupsSource {
 
-        public Map<String, Properties> getPropertiesByConfigName() {
+        public Map<String, Properties> loadProperties() {
             Map<String, Properties> m = new HashMap<String, Properties>();
             Properties p = new Properties();
             p.put(TEST_PROPERTY, TEST_SYS_PROP + File.separator + "test");
