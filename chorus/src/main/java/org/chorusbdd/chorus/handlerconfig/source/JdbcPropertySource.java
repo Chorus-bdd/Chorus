@@ -49,6 +49,12 @@ public class JdbcPropertySource implements PropertyGroupsSource {
 
     private static ChorusLog log = ChorusLogFactory.getLog(JdbcPropertySource.class);
 
+    private final String JDBC_DRIVER = "jdbc_driver";
+    private final String JDBC_URL = "jdbc_url";
+    private final String JDBC_USER = "jdbc_user";
+    private final String JDBC_PASSWORD = "jdbc_password";
+    private final String JDBC_SQL = "jdbc_sql";
+
     private Properties jdbcProperties;
 
     public JdbcPropertySource(Properties jdbcProperties) {
@@ -60,10 +66,15 @@ public class JdbcPropertySource implements PropertyGroupsSource {
         Map<String, Properties> propertiesByGroupName = new HashMap<String, Properties>();
         try {
             //load MBean config from DB
-            Class.forName(jdbcProperties.getProperty("jdbc.driver"));
-            conn = DriverManager.getConnection(jdbcProperties.getProperty("jdbc.url"), jdbcProperties.getProperty("jdbc.user"), jdbcProperties.getProperty("jdbc.password"));
+            Class.forName(jdbcProperties.getProperty(JDBC_DRIVER));
+
+            conn = DriverManager.getConnection(
+                jdbcProperties.getProperty(JDBC_URL),
+                jdbcProperties.getProperty(JDBC_USER),
+                jdbcProperties.getProperty(JDBC_PASSWORD)
+            );
             Statement stmt = conn.createStatement();
-            String query = jdbcProperties.getProperty("jdbc.sql");
+            String query = jdbcProperties.getProperty(JDBC_SQL);
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
@@ -75,6 +86,7 @@ public class JdbcPropertySource implements PropertyGroupsSource {
                     //handle change between 1.6.x and 2.x
                     configName = rs.getString("name");
                 }
+                p.put("configName", configName);
 
                 for ( int loop=1; loop <= rs.getMetaData().getColumnCount(); loop ++) {
                     String columnName = rs.getMetaData().getColumnLabel(loop);

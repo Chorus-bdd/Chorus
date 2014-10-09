@@ -219,7 +219,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
             new ProcessesConfigFactory(),
             "Processes",
             "processes",
-            Boolean.valueOf(PROCESSES_HANDLER_USE_DB_PROPERTIES),
+            Boolean.getBoolean(PROCESSES_HANDLER_USE_DB_PROPERTIES),
             featureToken
         );
         return l.loadConfigs();

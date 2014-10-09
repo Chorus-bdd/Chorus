@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.source.JdbcPropertySource;
 import org.chorusbdd.chorus.handlerconfig.source.PropertiesFilePropertySource;
 import org.chorusbdd.chorus.handlerconfig.source.PropertyGroupsSource;
+import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySourceDecorator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -67,15 +68,20 @@ public class JDBCConfigLoader<E extends HandlerConfig> extends AbstractConfigLoa
     }
     
     public PropertyGroupsSource getPropertySource() {
-        PropertiesFilePropertySource propertiesFilePropertySource = new PropertiesFilePropertySource(
+        PropertiesFilePropertySource pfs = new PropertiesFilePropertySource(
             "db",
             "db",
             featureToken
         );
-        Map<String, Properties> p = propertiesFilePropertySource.getPropertiesByConfigName();
-        Properties props = p.get(handlerName);
+
+        VariableReplacingPropertySourceDecorator v = new VariableReplacingPropertySourceDecorator(pfs, featureToken);
+
+        Map<String, Properties> p = v.getPropertiesByConfigName();
+
+        String configNameForProperties = handlerName.toLowerCase() + "-properties";
+        Properties props = p.get(configNameForProperties);
         if ( props == null) {
-            throw new ChorusException("Could not find db properties for db. " + handlerName);
+            throw new ChorusException("Could not find db properties for db." + configNameForProperties);
         }
 
         JdbcPropertySource jdbcPropertiesLoader = new JdbcPropertySource(props);

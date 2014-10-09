@@ -27,38 +27,36 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerconfig;
+package org.chorusbdd.chorus.selftest.configload;
 
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
- * Created by nick on 23/09/2014.
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public abstract class AbstractConfigValidator<E extends HandlerConfig> implements HandlerConfigValidator<E> {
+public class TestLoadConfigFromDatabase extends AbstractInterpreterTest {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigValidator.class);
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/configload";
 
-    public boolean isValid(E config) {
-        boolean valid = true;
-        if ( ! isSet(config.getConfigName())) {
-            valid = logInvalidConfig(log, "configName was null or empty", config);
-        }
+    final int expectedExitCode = 0;  //success
 
-        if ( valid ) {
-            valid = checkValid(config);
-        }
-        return valid;
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    protected abstract boolean checkValid(E config);
-
-    protected boolean logInvalidConfig(ChorusLog log, String message, E config) {
-        log.warn("Invalid " + config.getClass().getSimpleName() + " " + config.getConfigName() + " - " + message);
-        return false;
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
-    protected boolean isSet(String propertyValue) {
-        return propertyValue != null && propertyValue.trim().length() > 0;
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+
+//        System.setProperty(ProcessesHandler.PROCESSES_HANDLER_USE_DB_PROPERTIES, "true");
+        sysProps.put(ProcessesHandler.PROCESSES_HANDLER_USE_DB_PROPERTIES, "true");
     }
+
 }

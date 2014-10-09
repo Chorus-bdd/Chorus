@@ -78,6 +78,6 @@ public class ProcessManagerConfigValidator extends AbstractConfigValidator<Proce
     }
 
     public String getValidationRuleDescription() {
-        return "groupName, jre, classpath and mainclass must be set for java processes";
+        return "configName, jre, classpath and mainclass must be set for java processes";
     }
 }

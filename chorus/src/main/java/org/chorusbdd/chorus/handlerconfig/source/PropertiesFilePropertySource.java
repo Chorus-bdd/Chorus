@@ -53,19 +53,19 @@ import java.util.*;
  * as well as general properties files which may contain properties for any handler
  *
  * In handler-specific files, the form of each property key should be:
- * groupName.property
- * e.g. myfirstprocess.jmxport=1234 - the groupName is myfirstprocess and the property is jmxport
- * When the properties are parsed, we return a separate Properties instance for each groupName we encounter
+ * configName.property
+ * e.g. myfirstprocess.jmxport=1234 - the configName is myfirstprocess and the property is jmxport
+ * When the properties are parsed, we return a separate Properties instance for each configName we encounter
  *
  * In non-handler-specific property files, e.g. chorus.properties, or featurename.properties we expect to find an
  * additional prefix token which identifies the handler type:
- * handlerType.groupName.property
+ * handlerType.configName.property
  * e.g. processes.myfirstprocess.jmxport=1234
  *
  * In general the user can choose whether to use the general form of the properties files (all
  * properties in one place), or to opt for the handler-specific format (shorter property keys but more files!)
  *
- * We also support setting defaults for each handler type using the special groupName 'default'
+ * We also support setting defaults for each handler type using the special configName 'default'
  * Any default values specified will be used to initialize handler configurations, before values for specific group names are applied.
  * e.g. remoting.default.port could be used to set the default port to use for all remoting configs, unless overridden
  * for a specific group name
@@ -123,14 +123,14 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
             String value = e.getValue().toString();
 
             //on loading we should have stripped any handlerToken prefix for property keys in the long
-            //form handlerToken.groupName.property, and should also have removed any properties where the handlerToken
+            //form handlerToken.configName.property, and should also have removed any properties where the handlerToken
             //did not match this PropertySource's handlerToken
             // .
             //We should be left with keys in the form groupName.property which are all relevant for this handler type
             int tokenCount = getTokenCount(key);
-            if ( tokenCount == 2 ) {
+            if ( tokenCount >= 2 ) {
                 //some properties files mix properties for different handlers, in this case the property names we want start with the handler prefix token
-                findGroupAndSetProperty(propertiesByGroup, key, value);
+                findConfigNameAndSetProperty(propertiesByGroup, key, value);
             } else {
                 log.warn("Unrecognised property key format " + key + " will ignore this property");
             }
@@ -138,15 +138,15 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         return propertiesByGroup;
     }
 
-    private void findGroupAndSetProperty(Map<String, Properties> propertiesByGroup, String key, String value) {
-        //find the groupName which should now be the first token in key, and get or create the Properties group for it
-        //the property to set in the groupName propertyGroup is the second token in key - set that property to value
+    private void findConfigNameAndSetProperty(Map<String, Properties> propertiesByGroup, String key, String value) {
+        //find the configName which should now be the first token in key, and get or create the Properties group for it
+        //the property to set in the configName propertyGroup is the second token in key - set that property to value
         int i = key.indexOf('.');
-        String groupName = key.substring(0, i);
+        String configName = key.substring(0, i);
         String property = key.substring(i + 1, key.length());
 
-        Properties propertiesForThisGroup = getOrCreateProperties(propertiesByGroup, groupName);
-        propertiesForThisGroup.setProperty(property, value);
+        Properties propertiesForThisConfigName = getOrCreateProperties(propertiesByGroup, configName);
+        propertiesForThisConfigName.setProperty(property, value);
     }
 
     private Properties loadProperties() {
@@ -273,7 +273,7 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
             String value = e.getValue().toString();
             int tokenCount = getTokenCount(property);
             if ( tokenCount == 3) {
-                //this is a key in the form handlerToken.groupName.property, we need to check the handlerToken and
+                //this is a key in the form handlerToken.configName.property, we need to check the handlerToken and
                 //if it does not match our handler, skip the property, or else strip the first token from the key and add it
                 checkHandlerTypeAndStripHandlerPrefix(p, property, value);
             } else {
@@ -294,9 +294,9 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
     }
 
     //remove all properties for which the number of tokens in the key does not match the expected number of tokens
-    //we expect two tokens groupName.property in a handler-specific config file (e.g. in a -remoting.properties file)
-    //we three tokens, in which the handler type is the first token, e.g. 'remoting.' in a non-handler-specific file,
-    //eg. remoting.groupName.properties in a chorus.properties file
+    //we expect two tokens configName.property in a handler-specific config file (e.g. in a -remoting.properties file)
+    //or three tokens, in which the handler type is the first token, e.g. 'remoting.' in a non-handler-specific file,
+    //eg. remoting.configName.properties in a chorus.properties file
     private void filterByTokenCount(Properties props, int minTokenCount, int maxTokenCount) {
         Iterator<Map.Entry<Object,Object>> i = props.entrySet().iterator();
         while (i.hasNext()) {
@@ -310,13 +310,13 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         }
     }
 
-    private Properties getOrCreateProperties(Map<String, Properties> propertiesByGroup, String groupName) {
-        Properties g = propertiesByGroup.get(groupName);
+    private Properties getOrCreateProperties(Map<String, Properties> propertiesByConfigName, String configName) {
+        Properties g = propertiesByConfigName.get(configName);
         if ( g == null ) {
             g = new Properties();
             //always set the config name as a property
-            g.setProperty("configName", groupName);
-            propertiesByGroup.put(groupName, g);
+            g.setProperty("configName", configName);
+            propertiesByConfigName.put(configName, g);
         }
         return g;
     }
