@@ -81,16 +81,13 @@ public class JdbcPropertySource implements PropertyGroupsSource {
                 String configName = rs.getString("configName");
                 String propertyKey = rs.getString("property");
                 String value = rs.getString("value");
-
-                addProperty(propertiesByConfigName, configName, propertyKey, value);
-
-//                for ( int loop=1; loop <= rs.getMetaData().getColumnCount(); loop ++) {
-//                    String columnName = rs.getMetaData().getColumnLabel(loop);
-//                    Object o = rs.getObject(loop);
-//                    if ( o != null ) {
-//                        p.put(columnName, o.toString());
-//                    }
-//                }
+                if ( configName == null || propertyKey == null || value == null ) {
+                    String message = String.format("Not adding partially defined database property " +
+                            "%s, %s, %s", configName, propertyKey, value);
+                    log.debug(message);
+                } else {
+                    addProperty(propertiesByConfigName, configName, propertyKey, value);
+                }
             }
             rs.close();
             stmt.close();
@@ -120,3 +117,4 @@ public class JdbcPropertySource implements PropertyGroupsSource {
         p.put(propertyKey, value);
     }
 }
+
