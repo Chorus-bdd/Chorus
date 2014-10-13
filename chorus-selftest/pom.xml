@@ -26,21 +26,11 @@
     </scm>
     <build>
 
-        <!-- Copy chorus resources from the test/handlers and test/junit subtree, so resource files
+        <!-- Copy chorus resources from the test/features and test/junit subtree, so resource files
         required by a handlers can be local to the .java, rather than residing in
         a separate tree under test/resources, although the default test/resources location
         is still supported -->
         <testResources>
-             <testResource>
-               <directory>src/test/handlers</directory>
-                 <includes>
-                   <include>**/*.xml</include>
-                   <include>**/*.properties</include>
-                   <include>**/*.feature</include>
-                   <include>**/*.txt</include>
-                 </includes>
-             </testResource>
-
             <testResource>
                <directory>src/test/junit</directory>
                  <includes>
@@ -118,7 +108,6 @@
                      <sources>
                        <!-- I don't think wildcards work here, would would be ideal -->
                        <source>src/test/junit</source>
-                       <source>src/test/handlers</source>
                        <source>src/test/features</source>
                      </sources>
                    </configuration>

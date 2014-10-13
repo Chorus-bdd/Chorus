@@ -27,35 +27,36 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.dev;
+package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import java.io.FileReader;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
- * Created by: Steve Neal
- * Date: 16/11/11
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class TryStuff {
-    public static void main(String[] args) throws Exception {
-        Pattern p = Pattern.compile("the '(.*)' portfolio has (spread|quantity) multiplier of ([0-9]+\\.[0-9]{1})");
-        Matcher m = p.matcher("the '< 4 yrs' portfolio has spread multiplier of 0.5");
-        System.out.println(m.matches());
-        System.out.println(m.group(1));
-        System.out.println(m.group(2));
-        System.out.println(m.group(3));
-    }
+@Handler("LoadMyPropertiesHandler")
+public class LoadMyPropertiesHandler {
 
-    public static List<String> getTableRowData(String line) {
-        String[] headers = line.trim().split("\\|");
-        List<String> results = new ArrayList<String>();
-        for (String header : headers) {
-            if (header.trim().length() > 0) {
-                results.add(header.trim());
-            }
-        }
-        return results;
+    private Properties myProperties = new Properties();
+
+    //use the following annotation on a field in your handler
+    @ChorusResource("feature.dir")
+    File featureDir;
+
+    //when the handler is initialized, load the properties
+    @Initialize
+    public void readConfig() throws IOException {
+        myProperties.load(new FileInputStream(new File(featureDir, "myProperties.properties")));
     }
 }

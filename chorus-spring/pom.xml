@@ -105,7 +105,7 @@
                    <configuration>
                      <sources>
                        <source>src/test/junit</source>
-                       <source>src/test/handlers</source>
+                       <source>src/test/features</source>
                      </sources>
                    </configuration>
                  </execution>
@@ -121,7 +121,7 @@
                     <includes>
                         <include>src/main/java/**/*.java</include>
                         <include>src/test/junit/**/*.java</include>
-                        <include>src/test/handlers/**/*.java</include>
+                        <include>src/test/features/**/*.java</include>
                     </includes>
                     <properties>
                         <year>2014</year>
