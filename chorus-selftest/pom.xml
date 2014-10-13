@@ -145,6 +145,9 @@
     </reporting>
 
     <dependencies>
+
+        <!-- chorus internal dependencies -->
+
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus</artifactId>
@@ -156,12 +159,16 @@
             <artifactId>chorus-spring</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
-		
+
+        <!-- logging -->
+
 	    <dependency>
            <groupId>log4j</groupId>
            <artifactId>log4j</artifactId>
            <version>1.2.16</version>
         </dependency>
+
+        <!-- test dependencies -->
 
         <dependency>
             <groupId>junit</groupId>

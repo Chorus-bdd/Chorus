@@ -32,10 +32,7 @@ package org.chorusbdd.chorus.selftest;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
-import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.logging.ChorusLogProvider;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.output.OutputFactory;
 import org.chorusbdd.chorus.output.OutputFormatter;
@@ -46,7 +43,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 

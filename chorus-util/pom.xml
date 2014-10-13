@@ -7,10 +7,10 @@
         <version>7</version>
     </parent>
     <groupId>org.chorusbdd</groupId>
-    <artifactId>chorus-spring</artifactId>
+    <artifactId>chorus-util</artifactId>
     <packaging>jar</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    <name>chorus-spring</name>
+    <name>chorus-util</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
         <license>
@@ -144,57 +144,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- Annotations are required for @Resource, but only for jdk <= 1.6 -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <!-- Spring is required, but dependees may exclude to supply their preferred version -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>3.0.7.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>3.0.7.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>3.0.7.RELEASE</version>
-        </dependency>
-
-        <!-- These logging dependencies are optional, Spring has commons-logging dependency already, but possibly no log4j, but
-         we want to use it for our own self-testing -->
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- test dependencies -->
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
