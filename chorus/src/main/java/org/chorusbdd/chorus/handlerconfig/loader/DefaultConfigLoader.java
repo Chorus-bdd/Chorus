@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.handlerconfig.loader;
 
+import org.chorusbdd.chorus.handlerconfig.ConfigValidator;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -77,7 +77,7 @@ public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoade
 
            for ( Map.Entry<String, Properties> props : propertiesByConfigName.entrySet()) {
                E c = configBuilder.createConfig(props.getValue(), defaultProperties);
-               HandlerConfigValidator<? super E> validator = configBuilder.createValidator(c);
+               ConfigValidator<? super E> validator = configBuilder.createValidator(c);
 
                if ( HandlerConfig.DEFAULT_PROPERTIES_GROUP.equals(props.getKey())) {
                    map.put(props.getKey(), c);
@@ -94,11 +94,12 @@ public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoade
         return map;
     }
 
-    private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E c, HandlerConfigValidator<? super E> validator) {
+    private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E c, ConfigValidator<? super E> validator) {
         if (validator.isValid(c)) {
             configMap.put(props.getKey(), c);
         } else {
-            log.warn("Removing " + props.getKey() + " which is not a valid " + handlerName + " handler config " + validator.getValidationRuleDescription());
+            log.warn(validator.getErrorDescription());
+            log.warn("Removing " + props.getKey() + " which is not a valid " + handlerName + " handler config");
             log.debug(c);
         }
     }

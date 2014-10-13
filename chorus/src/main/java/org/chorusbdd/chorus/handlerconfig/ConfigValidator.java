@@ -31,10 +31,18 @@ package org.chorusbdd.chorus.handlerconfig;
 
 /**
  * Created by nick on 23/09/2014.
+ *
+ * Validate a config for a handler
  */
-public interface HandlerConfigValidator<E extends HandlerConfig> {
+public interface ConfigValidator<E extends HandlerConfig> {
 
+    /**
+     *  @return true if the supplied handler config is va;id
+     */
     boolean isValid(E handlerConfig);
 
-    String getValidationRuleDescription();
+    /**
+     * @return a description of the config error which caused the last validation check to fail
+     */
+    String getErrorDescription();
 }

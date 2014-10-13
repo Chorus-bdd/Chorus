@@ -36,6 +36,8 @@ import java.util.Properties;
  * User: Nick Ebbutt
  * Date: 21/09/12
  * Time: 08:59
+ *
+ * Create a handler configuration and a validator from the supplied properties
  */
 public interface HandlerConfigFactory<E extends HandlerConfig> {
 
@@ -48,5 +50,5 @@ public interface HandlerConfigFactory<E extends HandlerConfig> {
     /**
      * @return a validator for the HandlerConfig
      */
-    HandlerConfigValidator<? super E> createValidator(E config);
+    ConfigValidator<? super E> createValidator(E config);
 }

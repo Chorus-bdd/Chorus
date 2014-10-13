@@ -4,7 +4,7 @@ Chorus --> INFO    - No default handler found for Feature: (Invalid Properties),
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Processes handler property
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Remoting handler property
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
-Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config host, protocol and port must be set
+Chorus --> WARN    - Removing config1 which is not a valid Remoting handler config
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
 Chorus --> INFO    - About to run process:  <system specific process details replaced>

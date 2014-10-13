@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
+import org.chorusbdd.chorus.handlerconfig.ConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfigValidator;
@@ -62,7 +62,7 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
         return c;
     }
 
-    public HandlerConfigValidator<ProcessManagerConfig> createValidator(ProcessesConfig config) {
+    public ConfigValidator<ProcessManagerConfig> createValidator(ProcessesConfig config) {
         return new ProcessManagerConfigValidator();
     }
 

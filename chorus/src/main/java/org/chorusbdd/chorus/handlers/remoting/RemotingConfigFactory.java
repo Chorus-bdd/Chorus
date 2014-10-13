@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigValidator;
+import org.chorusbdd.chorus.handlerconfig.ConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
@@ -58,7 +58,7 @@ public class RemotingConfigFactory extends AbstractHandlerConfigFactory implemen
         return r;
     }
 
-    public HandlerConfigValidator<RemotingManagerConfig> createValidator(RemotingConfig config) {
+    public ConfigValidator<RemotingManagerConfig> createValidator(RemotingConfig config) {
         return new RemotingConfigValidator();
     }
 

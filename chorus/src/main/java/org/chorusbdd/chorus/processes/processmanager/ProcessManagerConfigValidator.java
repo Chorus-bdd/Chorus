@@ -31,8 +31,6 @@ package org.chorusbdd.chorus.processes.processmanager;
 
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.io.File;
 
@@ -41,8 +39,6 @@ import java.io.File;
  */
 public class ProcessManagerConfigValidator extends AbstractConfigValidator<ProcessManagerConfig> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessManagerConfigValidator.class);
-
     public boolean checkValid(ProcessManagerConfig processesConfig) {
         boolean valid = true;
 
@@ -50,11 +46,14 @@ public class ProcessManagerConfigValidator extends AbstractConfigValidator<Proce
             //some properties are mandatory for java processes
             String jre = processesConfig.getJre();
             if ( jre == null || ! new File(jre).isDirectory() ) {
-                valid = logInvalidConfig(log, "jre property is null or jre path does not exist", processesConfig);
+                logInvalidConfig("jre property is null or jre path does not exist", processesConfig);
+                valid = false;
             } else if ( ! isSet(processesConfig.getClasspath()) ) {
-                valid = logInvalidConfig(log, "classpath was null", processesConfig);
+                logInvalidConfig("classpath was null", processesConfig);
+                valid = false;
             } else if ( ! isSet(processesConfig.getMainclass()) ) {
-                valid = logInvalidConfig(log, "main class was null or empty", processesConfig);
+                logInvalidConfig("main class was null or empty", processesConfig);
+                valid = false;
             }
         } else {
             //some properties should not be used for non-java processes
@@ -70,14 +69,12 @@ public class ProcessManagerConfigValidator extends AbstractConfigValidator<Proce
     private boolean checkPropertiesForNativeProcess(ProcessManagerConfig processesConfig) {
         boolean valid = true;
         if (isSet(processesConfig.getMainclass())) {
-            valid = logInvalidConfig(log, "Cannot the mainclass property for non-java process configured with pathToExecutable", processesConfig);
+            logInvalidConfig("Cannot the mainclass property for non-java process configured with pathToExecutable", processesConfig);
+            valid = false;
         } else if (isSet(processesConfig.getJvmargs()) ) {
-            valid = logInvalidConfig(log, "Cannot set jvmargs property for non-java process configured with pathToExecutable", processesConfig);
+            logInvalidConfig("Cannot set jvmargs property for non-java process configured with pathToExecutable", processesConfig);
+            valid = false;
         }
         return valid;
-    }
-
-    public String getValidationRuleDescription() {
-        return "configName, jre, classpath and mainclass must be set for java processes";
     }
 }

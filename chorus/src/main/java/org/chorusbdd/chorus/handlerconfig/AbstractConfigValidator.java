@@ -35,14 +35,16 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 /**
  * Created by nick on 23/09/2014.
  */
-public abstract class AbstractConfigValidator<E extends HandlerConfig> implements HandlerConfigValidator<E> {
+public abstract class AbstractConfigValidator<E extends HandlerConfig> implements ConfigValidator<E> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(AbstractConfigValidator.class);
+    private static StringBuilder validationErrors = new StringBuilder();
 
     public boolean isValid(E config) {
+        validationErrors.setLength(0);
         boolean valid = true;
         if ( ! isSet(config.getConfigName())) {
-            valid = logInvalidConfig(log, "configName was null or empty", config);
+            logInvalidConfig("configName was null or empty", config);
+            valid = false;
         }
 
         if ( valid ) {
@@ -53,12 +55,16 @@ public abstract class AbstractConfigValidator<E extends HandlerConfig> implement
 
     protected abstract boolean checkValid(E config);
 
-    protected boolean logInvalidConfig(ChorusLog log, String message, E config) {
-        log.warn("Invalid " + config.getClass().getSimpleName() + " " + config.getConfigName() + " - " + message);
-        return false;
+    protected void logInvalidConfig(String message, E config) {
+        validationErrors.append("Invalid " + config.getClass().getSimpleName() + " " + config.getConfigName() + " - " + message);
     }
 
     protected boolean isSet(String propertyValue) {
         return propertyValue != null && propertyValue.trim().length() > 0;
+    }
+
+
+    public String getErrorDescription() {
+        return validationErrors.toString();
     }
 }
