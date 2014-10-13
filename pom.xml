@@ -11,6 +11,7 @@
         <module>chorus-logging</module>
         <module>chorus-parser</module>
         <module>chorus-results</module>
+        <module>chorus-config</module>
         <module>chorus</module>
 	    <module>chorus-spring</module>
         <module>chorus-selftest</module>
