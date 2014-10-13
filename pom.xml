@@ -12,6 +12,7 @@
         <module>chorus-parser</module>
         <module>chorus-results</module>
         <module>chorus-config</module>
+        <module>chorus-executionlistener</module>
         <module>chorus</module>
 	    <module>chorus-spring</module>
         <module>chorus-selftest</module>
