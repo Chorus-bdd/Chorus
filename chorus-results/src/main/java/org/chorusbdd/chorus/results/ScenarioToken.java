@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.results;
 
-import org.chorusbdd.chorus.core.interpreter.interpreter.KeyWord;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -106,11 +104,11 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     }
     
     public boolean isFeatureStartScenario() {
-        return KeyWord.START_FEATURE_SCENARIO_NAME.equals(name);
+        return "Feature-Start".equals(name);
     }
 
     public boolean isFeatureEndScenario() {
-        return KeyWord.FEATURE_END_SCENARIO_NAME.startsWith(name);
+        return "Feature-End".startsWith(name);
     }    
     
     public boolean isStartOrEndScenario() {

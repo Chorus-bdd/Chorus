@@ -7,10 +7,12 @@
 	<version>2.0.0-SNAPSHOT</version>
 	<name>Chorus BDD Project</name>
 	<modules>
-      <module>chorus-util</module>
-      <module>chorus-logging</module>
-      <module>chorus</module>
-	  <module>chorus-spring</module>
-      <module>chorus-selftest</module>
+        <module>chorus-util</module>
+        <module>chorus-logging</module>
+        <module>chorus-parser</module>
+        <module>chorus-results</module>
+        <module>chorus</module>
+	    <module>chorus-spring</module>
+        <module>chorus-selftest</module>
 	</modules>
 </project>
