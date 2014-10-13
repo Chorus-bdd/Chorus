@@ -8,6 +8,7 @@
 	<name>Chorus BDD Project</name>
 	<modules>
       <module>chorus-util</module>
+      <module>chorus-logging</module>
       <module>chorus</module>
 	  <module>chorus-spring</module>
       <module>chorus-selftest</module>
