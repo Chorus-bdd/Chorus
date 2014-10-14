@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.core.interpreter.interpreter.FeatureFileParser;
-import org.chorusbdd.chorus.core.interpreter.interpreter.StepMacro;
+import org.chorusbdd.chorus.parser.FeatureFileParser;
+import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.logging.ChorusLog;

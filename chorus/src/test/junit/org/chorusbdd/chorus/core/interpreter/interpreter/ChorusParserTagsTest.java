@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter.interpreter;
 
-import org.chorusbdd.chorus.core.interpreter.interpreter.FeatureFileParser;
+import org.chorusbdd.chorus.parser.FeatureFileParser;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.junit.Test;

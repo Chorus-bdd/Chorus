@@ -27,11 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.interpreter;
+package org.chorusbdd.chorus.parser;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.core.interpreter.interpreter.RecursiveStepMacroException;
-import org.chorusbdd.chorus.core.interpreter.interpreter.StepMacro;
+import org.chorusbdd.chorus.parser.RecursiveStepMacroException;
+import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.junit.Test;

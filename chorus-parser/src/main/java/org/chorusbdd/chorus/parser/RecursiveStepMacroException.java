@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.core.interpreter.interpreter;
+package org.chorusbdd.chorus.parser;
 
 import org.chorusbdd.chorus.util.ChorusException;
 

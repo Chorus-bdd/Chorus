@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
