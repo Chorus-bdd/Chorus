@@ -27,57 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.processes.manager;
 
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
  * User: nick
- * Date: 21/07/13
- * Time: 12:29
- * To change this template use File | Settings | File Templates.
+ * Date: 12/12/13
+ * Time: 09:08
  */
-public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder {
-
-    private static ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
-
-    private ProcessInfo processInfo;
-    private File featureDir;
-
-    public NativeProcessCommandLineBuilder(ProcessInfo processInfo, File featureDir) {
-        this.processInfo = processInfo;
-        this.featureDir = featureDir;
-    }
+public abstract class AbstractCommandLineBuilder {
     
-    @Override
-    public List<String> buildCommandLine() {
-        String executableToken = getExecutableToken(processInfo);
-        List<String> argsTokens = getSpaceSeparatedTokens(processInfo.getArgs());
+    public abstract List<String> buildCommandLine();
 
-        List<String> commandLineTokens = new ArrayList<String>();
-        commandLineTokens.add(executableToken);
-        commandLineTokens.addAll(argsTokens);
-        return commandLineTokens;
-    }
-
-    private String getExecutableToken(ProcessInfo processesConfig) {
-        String executableTxt = processesConfig.getPathToExecutable();
-        executableTxt = getPathToExecutable(featureDir, executableTxt);
-        return executableTxt;
-    }
-    
-    public static String getPathToExecutable(File featureDir, String path) {
-        File scriptPath = new File(path);
-        if ( ! scriptPath.isAbsolute() ) {
-            scriptPath = new File(featureDir, path);
+    protected List<String> getSpaceSeparatedTokens(String spaceSeparated) {
+        List<String> tokens = new ArrayList<String>();
+        String[] j = spaceSeparated.split(" ");
+        for ( String s : j ) {
+            if ( s.trim().length() > 0) {
+                tokens.add(s);
+            }
         }
-        return scriptPath.getAbsolutePath();
+        return tokens;
     }
-    
+
 }

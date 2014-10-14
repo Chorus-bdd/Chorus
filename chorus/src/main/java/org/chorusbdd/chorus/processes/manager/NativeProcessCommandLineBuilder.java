@@ -27,38 +27,57 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.processes.manager;
 
-import java.util.concurrent.TimeUnit;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
  * User: nick
- * Date: 17/07/13
- * Time: 21:33
+ * Date: 21/07/13
+ * Time: 12:29
  * To change this template use File | Settings | File Templates.
  */
-public interface ChorusProcess {
+public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
-    public static final String STARTING_PROCESS_LOG_PREFIX = "About to run process: ";
+    private static ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
 
-    boolean isStopped();
+    private ProcessInfo processInfo;
+    private File featureDir;
 
-    void destroy();
+    public NativeProcessCommandLineBuilder(ProcessInfo processInfo, File featureDir) {
+        this.processInfo = processInfo;
+        this.featureDir = featureDir;
+    }
+    
+    @Override
+    public List<String> buildCommandLine() {
+        String executableToken = getExecutableToken(processInfo);
+        List<String> argsTokens = getSpaceSeparatedTokens(processInfo.getArgs());
 
-    void waitFor() throws InterruptedException;
+        List<String> commandLineTokens = new ArrayList<String>();
+        commandLineTokens.add(executableToken);
+        commandLineTokens.addAll(argsTokens);
+        return commandLineTokens;
+    }
 
-    boolean isExitCodeFailure();
-
-    void checkProcess(int processCheckDelay) throws Exception;
-
-    void waitForMatchInStdOut(String pattern, boolean searchWithinLines);
-
-    void waitForMatchInStdErr(String pattern, boolean searchWithinLines);
-
-    void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
-
-    void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
-
-    void writeToStdIn(String line, boolean newLine);
+    private String getExecutableToken(ProcessInfo processesConfig) {
+        String executableTxt = processesConfig.getPathToExecutable();
+        executableTxt = getPathToExecutable(featureDir, executableTxt);
+        return executableTxt;
+    }
+    
+    public static String getPathToExecutable(File featureDir, String path) {
+        File scriptPath = new File(path);
+        if ( ! scriptPath.isAbsolute() ) {
+            scriptPath = new File(featureDir, path);
+        }
+        return scriptPath.getAbsolutePath();
+    }
+    
 }

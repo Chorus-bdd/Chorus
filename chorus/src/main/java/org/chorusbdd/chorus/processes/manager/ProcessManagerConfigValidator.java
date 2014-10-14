@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;

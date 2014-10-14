@@ -37,7 +37,7 @@ import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.ConfigValidator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.processmanager.ProcessManagerConfigValidator;
+import org.chorusbdd.chorus.processes.manager.ProcessManagerConfigValidator;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;

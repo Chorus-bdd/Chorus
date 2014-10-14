@@ -73,7 +73,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return initializeSubsystem(
                 "ProcessManager",
                 "chorusProcessManager",
-                "org.chorusbdd.chorus.processes.processmanager.ProcessManagerImpl"
+                "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl"
         );
 
     }

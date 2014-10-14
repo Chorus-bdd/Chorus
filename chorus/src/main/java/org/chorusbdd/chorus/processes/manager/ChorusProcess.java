@@ -27,29 +27,38 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.processmanager;
+package org.chorusbdd.chorus.processes.manager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
+ * Created with IntelliJ IDEA.
  * User: nick
- * Date: 12/12/13
- * Time: 09:08
+ * Date: 17/07/13
+ * Time: 21:33
+ * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractCommandLineBuilder {
-    
-    public abstract List<String> buildCommandLine();
+public interface ChorusProcess {
 
-    protected List<String> getSpaceSeparatedTokens(String spaceSeparated) {
-        List<String> tokens = new ArrayList<String>();
-        String[] j = spaceSeparated.split(" ");
-        for ( String s : j ) {
-            if ( s.trim().length() > 0) {
-                tokens.add(s);
-            }
-        }
-        return tokens;
-    }
+    public static final String STARTING_PROCESS_LOG_PREFIX = "About to run process: ";
 
+    boolean isStopped();
+
+    void destroy();
+
+    void waitFor() throws InterruptedException;
+
+    boolean isExitCodeFailure();
+
+    void checkProcess(int processCheckDelay) throws Exception;
+
+    void waitForMatchInStdOut(String pattern, boolean searchWithinLines);
+
+    void waitForMatchInStdErr(String pattern, boolean searchWithinLines);
+
+    void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
+
+    void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
+
+    void writeToStdIn(String line, boolean newLine);
 }
