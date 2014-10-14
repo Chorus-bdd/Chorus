@@ -14,6 +14,7 @@
         <module>chorus-config</module>
         <module>chorus-executionlistener</module>
         <module>chorus-handlerconfig</module>
+        <module>chorus-output</module>
         <module>chorus</module>
 	    <module>chorus-spring</module>
         <module>chorus-selftest</module>
