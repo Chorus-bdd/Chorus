@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
 import org.chorusbdd.chorus.annotations.Destroy;
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Initialize;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.ChorusOut;
 

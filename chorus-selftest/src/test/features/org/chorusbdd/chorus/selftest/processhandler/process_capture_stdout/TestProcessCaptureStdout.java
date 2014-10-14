@@ -30,8 +30,6 @@
 package org.chorusbdd.chorus.selftest.processhandler.process_capture_stdout;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.

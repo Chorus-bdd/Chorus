@@ -29,10 +29,9 @@
  */
 package org.chorusbdd.chorus.selftest.remoting.jmx.remotechoruscontext;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
-import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.

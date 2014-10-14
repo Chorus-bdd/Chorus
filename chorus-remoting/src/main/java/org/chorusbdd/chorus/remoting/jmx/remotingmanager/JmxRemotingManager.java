@@ -38,7 +38,6 @@ import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerC
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;

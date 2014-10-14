@@ -29,9 +29,9 @@
  */
 package org.chorusbdd.chorus.selftest.recursivesearch;
 
+import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
-import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 
 /**
  * Created with IntelliJ IDEA.

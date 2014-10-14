@@ -29,13 +29,12 @@
  */
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.logging.ChorusOut;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Initialize;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 

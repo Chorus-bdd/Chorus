@@ -30,9 +30,9 @@
 package org.chorusbdd.chorus.selftest.processhandler.nonjava;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
-import org.chorusbdd.chorus.util.OSUtils;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.OSUtils;
 
 import java.io.*;
 import java.util.Enumeration;

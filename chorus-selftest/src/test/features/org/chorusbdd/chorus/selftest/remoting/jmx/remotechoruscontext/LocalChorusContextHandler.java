@@ -34,7 +34,6 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

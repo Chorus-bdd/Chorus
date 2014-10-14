@@ -30,11 +30,11 @@
 package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.parser.StepMacro;
-import org.chorusbdd.chorus.parser.StepMacroParser;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.parser.StepMacro;
+import org.chorusbdd.chorus.parser.StepMacroParser;
 
 import java.io.BufferedReader;
 import java.io.File;

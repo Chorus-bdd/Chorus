@@ -29,9 +29,12 @@
  */
 package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
-import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.chorusbdd.chorus.annotations.Destroy;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Initialize;
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.

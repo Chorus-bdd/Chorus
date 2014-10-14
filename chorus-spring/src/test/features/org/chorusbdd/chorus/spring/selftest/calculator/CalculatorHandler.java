@@ -27,21 +27,18 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.spring.selftest.calculator; 
+package org.chorusbdd.chorus.spring.selftest.calculator;
 
-import org.chorusbdd.chorus.spring.selftest.calculator.Calculator;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 import static junit.framework.Assert.*;
-import static junit.framework.Assert.assertEquals;
-
-import java.math.BigDecimal;
 
 @Handler("Calculator")
 @SpringContext("Calculator-context.xml")

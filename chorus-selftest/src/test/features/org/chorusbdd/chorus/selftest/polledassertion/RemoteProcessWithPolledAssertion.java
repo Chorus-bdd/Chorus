@@ -29,9 +29,12 @@
  */
 package org.chorusbdd.chorus.selftest.polledassertion;
 
-import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.util.FailImmediatelyException;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.PassesWithin;
+import org.chorusbdd.chorus.annotations.PollMode;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.util.FailImmediatelyException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.util.Timer;
@@ -39,7 +42,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: nick

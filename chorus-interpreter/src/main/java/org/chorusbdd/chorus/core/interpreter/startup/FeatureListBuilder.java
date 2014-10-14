@@ -30,12 +30,12 @@
 package org.chorusbdd.chorus.core.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.parser.FeatureFileParser;
-import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.core.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.core.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.parser.FeatureFileParser;
+import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;

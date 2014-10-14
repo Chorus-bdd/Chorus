@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.parser;
 
-import org.chorusbdd.chorus.parser.RecursiveStepMacroException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.StepEndState;
