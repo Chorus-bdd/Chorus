@@ -27,11 +27,8 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.tools;
+package org.chorusbdd.chorus.config;
 
-import org.chorusbdd.chorus.config.*;
-import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
-import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,38 +58,38 @@ public class CommandLineParserTest {
     @Test
     public void testArgWithNoValues() throws InterpreterPropertyException {
         propertyMap = new HashMap<ConfigurationProperty, List<String>>();
-        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(ChorusConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
-        Assert.assertTrue("-showErrors flag not found", parsedArgs.containsKey(ChorusConfigProperty.SHOW_ERRORS));
+        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(TestConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
+        Assert.assertTrue("-showErrors flag not found", parsedArgs.containsKey(TestConfigProperty.SHOW_ERRORS));
     }
 
     @Test
     public void testArgWithSingleValue() throws InterpreterPropertyException {
-        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(ChorusConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
-        List<String> fValues = parsedArgs.get(ChorusConfigProperty.FEATURE_PATHS);
+        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(TestConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
+        List<String> fValues = parsedArgs.get(TestConfigProperty.FEATURE_PATHS);
         Assert.assertEquals("incorrect nunber of -f args found", 1, fValues.size());
     }
 
     @Test
     public void testValueOfWithSingleArg() throws InterpreterPropertyException {
-        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(ChorusConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
-        List<String> fValues = parsedArgs.get(ChorusConfigProperty.FEATURE_PATHS);
+        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(TestConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
+        List<String> fValues = parsedArgs.get(TestConfigProperty.FEATURE_PATHS);
         Assert.assertEquals("incorrect value for -f arg found", "file1", fValues.get(0));
     }
 
     @Test
     public void testArgWithMultipleValues() throws InterpreterPropertyException {
-        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(ChorusConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
-        Assert.assertTrue("-h flag not found", parsedArgs.containsKey(ChorusConfigProperty.HANDLER_PACKAGES));
-        Assert.assertEquals("wrong number of values found for -h flag", 2, parsedArgs.get(ChorusConfigProperty.HANDLER_PACKAGES).size());
+        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(TestConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
+        Assert.assertTrue("-h flag not found", parsedArgs.containsKey(TestConfigProperty.HANDLER_PACKAGES));
+        Assert.assertEquals("wrong number of values found for -h flag", 2, parsedArgs.get(TestConfigProperty.HANDLER_PACKAGES).size());
     }
 
     @Test
     public void testPathsWithHyphens() throws InterpreterPropertyException {
-        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(ChorusConfigProperty.getAll()).parseProperties(propertyMap, TEST_PATH_ARG_WITH_INLINE_HYPHEN);
-        Assert.assertTrue("-h flag not found", parsedArgs.containsKey(ChorusConfigProperty.HANDLER_PACKAGES));
-        Assert.assertEquals("Not equal to handlers.package-name-with-hyphens-", "handlers.package-name-with-hyphens-", parsedArgs.get(ChorusConfigProperty.HANDLER_PACKAGES).get(0));
-        Assert.assertTrue("-f flag not found", parsedArgs.containsKey(ChorusConfigProperty.FEATURE_PATHS));
-        Assert.assertEquals("Not equal to test.with-hyphen.dir", "test.with-hyphen.dir", parsedArgs.get(ChorusConfigProperty.FEATURE_PATHS).get(0));
+        Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(TestConfigProperty.getAll()).parseProperties(propertyMap, TEST_PATH_ARG_WITH_INLINE_HYPHEN);
+        Assert.assertTrue("-h flag not found", parsedArgs.containsKey(TestConfigProperty.HANDLER_PACKAGES));
+        Assert.assertEquals("Not equal to handlers.package-name-with-hyphens-", "handlers.package-name-with-hyphens-", parsedArgs.get(TestConfigProperty.HANDLER_PACKAGES).get(0));
+        Assert.assertTrue("-f flag not found", parsedArgs.containsKey(TestConfigProperty.FEATURE_PATHS));
+        Assert.assertEquals("Not equal to test.with-hyphen.dir", "test.with-hyphen.dir", parsedArgs.get(TestConfigProperty.FEATURE_PATHS).get(0));
     }
 
 }

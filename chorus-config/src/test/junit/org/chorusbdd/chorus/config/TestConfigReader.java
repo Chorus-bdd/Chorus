@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.config;
 
-import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.junit.Test;
 
@@ -47,59 +46,59 @@ public class TestConfigReader extends ChorusAssert {
     @Test
     public void testBooleanSwitchWithValue() throws InterpreterPropertyException {
         String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-dryrun", "true" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         c.readConfiguration();
-        assertTrue(c.isTrue(ChorusConfigProperty.DRY_RUN));
-        assertTrue(c.isSet(ChorusConfigProperty.DRY_RUN));
+        assertTrue(c.isTrue(TestConfigProperty.DRY_RUN));
+        assertTrue(c.isSet(TestConfigProperty.DRY_RUN));
     }
 
     @Test
     public void testBooleanSwitchCanBeSetFalse() throws InterpreterPropertyException {
         String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-dryrun", "false" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         c.readConfiguration();
-        assertTrue(! c.isTrue(ChorusConfigProperty.DRY_RUN));
-        assertTrue(c.isSet(ChorusConfigProperty.DRY_RUN));
+        assertTrue(! c.isTrue(TestConfigProperty.DRY_RUN));
+        assertTrue(c.isSet(TestConfigProperty.DRY_RUN));
     }
 
     @Test
     public void testDefaultValueGetsSetIfAvailable() throws InterpreterPropertyException {
         String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         c.readConfiguration();
-        assertTrue(! c.isTrue(ChorusConfigProperty.DRY_RUN));
-        assertTrue(c.isSet(ChorusConfigProperty.DRY_RUN));
+        assertTrue(! c.isTrue(TestConfigProperty.DRY_RUN));
+        assertTrue(c.isSet(TestConfigProperty.DRY_RUN));
     }
 
     @Test
     public void testADefaultValueDoesNotGetSetIfNoDefaultDefined() throws InterpreterPropertyException {
         String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         c.readConfiguration();
-        assertTrue(! c.isSet(ChorusConfigProperty.TAG_EXPRESSION));
+        assertTrue(! c.isSet(TestConfigProperty.TAG_EXPRESSION));
     }
 
     @Test
     public void testBooleanSwitchWithoutValue() throws InterpreterPropertyException {
         String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-dryrun" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         c.readConfiguration();
-        assertTrue(c.isTrue(ChorusConfigProperty.DRY_RUN));
-        assertTrue(c.isSet(ChorusConfigProperty.DRY_RUN));
+        assertTrue(c.isTrue(TestConfigProperty.DRY_RUN));
+        assertTrue(c.isSet(TestConfigProperty.DRY_RUN));
     }
 
     @Test
     public void testBooleanSwitchUsingShortName() throws InterpreterPropertyException {
         String[] switches = new String[] { "-f", "./features", "-h", "org.chorusbdd.chorus", "-d" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         c.readConfiguration();
-        assertTrue(c.isTrue(ChorusConfigProperty.DRY_RUN));
-        assertTrue(c.isSet(ChorusConfigProperty.DRY_RUN));
+        assertTrue(c.isTrue(TestConfigProperty.DRY_RUN));
+        assertTrue(c.isSet(TestConfigProperty.DRY_RUN));
     }
 
     @Test
     public void testCannotSetLessThanMinimumValues() {
-        ConfigurationProperty propertyWithMinValues = new TestProperty(ChorusConfigProperty.HANDLER_PACKAGES) {
+        ConfigurationProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
             public int getMinValueCount() {
                 return 2;
             }
@@ -117,7 +116,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testCannotSetMoreThanMaxValues() {
-        ConfigurationProperty propertyWithMinValues = new TestProperty(ChorusConfigProperty.HANDLER_PACKAGES) {
+        ConfigurationProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
             public int getMaxValueCount() {
                 return 1;
             }
@@ -135,9 +134,9 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void mandatoryPropertyMustBeSet() {
-        System.clearProperty(ChorusConfigProperty.FEATURE_PATHS.getSystemProperty());  //in case set
+        System.clearProperty(TestConfigProperty.FEATURE_PATHS.getSystemProperty());  //in case set
         String[] switches = new String[] { "-d" };
-        ConfigReader c = new ConfigReader(ChorusConfigProperty.getAll(), switches);
+        ConfigReader c = new ConfigReader(TestConfigProperty.getAll(), switches);
         try {
             c.readConfiguration();
         } catch (InterpreterPropertyException e) {
@@ -149,7 +148,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void appendPropertyMayBeSetFromMultipleSources() throws InterpreterPropertyException {
-        ConfigurationProperty propertyWithMinValues = new TestProperty(ChorusConfigProperty.HANDLER_PACKAGES) {
+        ConfigurationProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
             public PropertySourceMode getPropertySourceMode() {
                 return PropertySourceMode.APPEND;
             }

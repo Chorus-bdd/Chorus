@@ -42,7 +42,7 @@ import java.util.List;
  * Date: 17/01/13
  * Time: 18:22
  */
-public class TestSuiteTest extends Assert {
+public class TestTokenVisitor extends Assert {
 
     private TestSuite testSuite;
     private ScenarioToken scenarioToken;
