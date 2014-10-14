@@ -7,10 +7,10 @@
         <version>7</version>
     </parent>
     <groupId>org.chorusbdd</groupId>
-    <artifactId>chorus-spring</artifactId>
+    <artifactId>chorus-interpreter</artifactId>
     <packaging>jar</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    <name>chorus-spring</name>
+    <name>chorus-interpreter</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
         <license>
@@ -26,19 +26,20 @@
     </scm>
     <build>
 
-        <!-- Copy chorus resources from the test/handlers and test/junit subtree, so resource files
+        <!-- Copy chorus resources from the test/features and test/junit subtree, so resource files
         required by a handlers can be local to the .java, rather than residing in
         a separate tree under test/resources, although the default test/resources location
         is still supported -->
         <testResources>
-             <testResource>
-               <directory>src/test/features</directory>
-                 <includes>
-                   <include>**/*.xml</include>
-                   <include>**/*.properties</include>
-                   <include>**/*.feature</include>
-                 </includes>
-             </testResource>
+            <testResource>
+                <directory>src/test/features</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.feature</include>
+                    <include>**/*.txt</include>
+                </includes>
+            </testResource>
 
             <testResource>
                <directory>src/test/junit</directory>
@@ -46,6 +47,7 @@
                    <include>**/*.xml</include>
                    <include>**/*.properties</include>
                    <include>**/*.feature</include>
+                   <include>**/*.txt</include>
                  </includes>
              </testResource>
 
@@ -65,6 +67,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
+
                 <configuration>
                   <source>1.5</source>
                   <target>1.5</target>
@@ -143,59 +146,99 @@
     </reporting>
 
     <dependencies>
+
+        <!-- chorus internal dependencies -->
+
         <dependency>
             <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus</artifactId>
+            <artifactId>chorus-util</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Annotations are required for @Resource, but only for jdk <= 1.6 -->
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-output</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Spring is required, but dependees may exclude to supply their preferred version -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>3.0.7.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>3.0.7.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>3.0.7.RELEASE</version>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-logging</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- These logging dependencies are optional, Spring has commons-logging dependency already, but possibly no log4j, but
-         we want to use it for our own self-testing -->
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-parser</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-results</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-config</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-executionlistener</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-handlerconfig</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <!-- In general the philosophy is that because Chorus is a library, we are trying to
+        avoid any mandatory dependencies on other libraries, otherwise components using Chorus would be forced
+        to inherit those extra dependencies
+
+        For this reason Spring features have been pushed down into Chorus-Spring module,
+        and certain other features into Chorus-tools. Users seeking to run an interpreter with
+        these features enabled need to declare dependencies on these derived modules, as appropriate
+
+        The basic Chorus interpreter and the JMX remoting feature should run just fine with the
+        main chorus.jar and the JDK -->
+
+        <!-- Optional Dependencies -->
+
+        <!-- Ant is not required unless you make use of ChorusTask, so it is an optional dependency -->
+        <!-- There should be no requirement for ant dependencies outside ChorusTask -->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.8.2</version>
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <optional>true</optional>
-        </dependency>
+        <!-- junit is now an optional dependency, but not a test dependency since used in ChorusSuite -
 
-        <!-- test dependencies -->
-
+        We are using ChorusAssert to avoid a mandatory dependency on junit from the core interpreter
+        although client application can use and throw JUnit assertion errors if they prefer to do so -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test dependencies -->
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>

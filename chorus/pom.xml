@@ -151,52 +151,27 @@
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-util</artifactId>
+            <artifactId>chorus-handlers</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-output</artifactId>
+            <artifactId>chorus-interpreter</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-logging</artifactId>
+            <artifactId>chorus-processes</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-parser</artifactId>
+            <artifactId>chorus-remoting</artifactId>
             <version>2.0.0-SNAPSHOT</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-results</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-config</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-executionlistener</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-handlerconfig</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
 
         <!-- In general the philosophy is that because Chorus is a library, we are trying to
         avoid any mandatory dependencies on other libraries, otherwise components using Chorus would be forced

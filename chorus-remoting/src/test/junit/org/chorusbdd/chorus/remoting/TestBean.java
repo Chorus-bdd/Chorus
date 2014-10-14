@@ -27,27 +27,14 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.remoting;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 19/06/12
- * Time: 08:05
+ * Created by: Steve Neal
+ * Date: 14/10/11
  */
-public class ChorusConstants {
-
-    public static final String DEFAULT_SUITE_NAME = "Test Suite";
-
-    public static final String[] BUILT_IN_HANDLER_PACKAGE_PREFIXES = new String[] {
-        "org.chorusbdd.chorus.handlers",
-        "org.chorusbdd.chorus.selftest"
-    };
-
-    public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
-
-    public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
-
-    public static final String CHORUS_ROOT_PACKAGE = "org.chorusbdd.chorus";
-    public static final String[] ANY_PACKAGE = new String[] {".*"};
+public class TestBean implements TestBeanMBean {
+    public void acceptMessage(String message) {
+        System.out.println(message);
+    }
 }

@@ -37,11 +37,6 @@ import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
 import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;
 import org.chorusbdd.chorus.handlers.remoting.RemotingHandler;
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.SelftestUtils;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
-
-import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.

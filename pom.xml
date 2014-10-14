@@ -15,8 +15,12 @@
         <module>chorus-executionlistener</module>
         <module>chorus-handlerconfig</module>
         <module>chorus-output</module>
+        <module>chorus-interpreter</module>
         <module>chorus</module>
-	    <module>chorus-spring</module>
+        <module>chorus-remoting</module>
+        <module>chorus-processes</module>
+        <module>chorus-handlers</module>
+        <module>chorus-spring</module>
         <module>chorus-selftest</module>
 	</modules>
 </project>

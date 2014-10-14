@@ -32,7 +32,6 @@ package org.chorusbdd.chorus.spring.selftest.calculator;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
-import org.chorusbdd.chorus.spring.selftest.calculator.CalculatorHandler;
 
 /**
  * Used to run a simple process that can be used to test Chorus features

@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.selftest.chorusresource;
 
 import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlers.timers.TimersHandler;
 import org.chorusbdd.chorus.results.FeatureToken;

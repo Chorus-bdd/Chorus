@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.selftest.processhandler.featurescopedprocess;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
-import org.chorusbdd.chorus.selftest.remoting.jmx.singlehandlerexport.JmxSingleHandlerExportHandler;
 
 /**
  * Created by IntelliJ IDEA.
