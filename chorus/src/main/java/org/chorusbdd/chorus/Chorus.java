@@ -32,6 +32,7 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.core.interpreter.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.core.interpreter.interpreter.SubsystemManager;
 import org.chorusbdd.chorus.core.interpreter.startup.*;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
@@ -82,7 +83,7 @@ public class Chorus {
        
         setLoggingProviderAndOutputFormatter();
 
-        SubsystemManager subsystemManager = new SubsystemManager();
+        SubsystemManager subsystemManager = new SubsystemManagerImpl();
 
         addExecutionListeners(subsystemManager);
 

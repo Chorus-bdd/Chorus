@@ -33,7 +33,6 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.core.interpreter.ChorusContext;
 import org.chorusbdd.chorus.core.interpreter.invoker.DefaultStepInvokerProvider;
 import org.chorusbdd.chorus.core.interpreter.invoker.StepInvokerProvider;
-import org.chorusbdd.chorus.core.interpreter.startup.SubsystemManager;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.logging.ChorusLog;

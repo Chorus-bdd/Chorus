@@ -37,7 +37,7 @@ import org.chorusbdd.chorus.results.StepToken;
 import java.util.List;
 
 /**
- * Implementors can register with a ChorusInterpreter to recieve callbacks during test execution.
+ * ExecutionListener can be registered with a ChorusInterpreter to receive callbacks during test execution.
  *
  * Created by: Steve Neal
  * Date: 11/01/12

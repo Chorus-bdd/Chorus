@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.core.interpreter.startup;
 
+import org.chorusbdd.chorus.core.interpreter.interpreter.SubsystemManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
 import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
@@ -44,14 +45,14 @@ import java.util.List;
  *
  * Created by nick on 26/09/2014.
  */
-public class SubsystemManager {
+public class SubsystemManagerImpl implements SubsystemManager {
 
     private final ProcessManager processManager;
     private final RemotingManager remotingManager;
 
-    private ChorusLog log = ChorusLogFactory.getLog(SubsystemManager.class);
+    private ChorusLog log = ChorusLogFactory.getLog(SubsystemManagerImpl.class);
 
-    public SubsystemManager() {
+    public SubsystemManagerImpl() {
         processManager = initializeProcessManager();
         remotingManager = initializeRemotingManager();
     }
