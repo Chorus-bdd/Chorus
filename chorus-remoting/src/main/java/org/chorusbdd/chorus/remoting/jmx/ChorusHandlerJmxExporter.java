@@ -31,9 +31,9 @@ package org.chorusbdd.chorus.remoting.jmx;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepMethodInvokerFactory;
+import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.interpreter.invoker.StepMethodInvokerFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusConstants;

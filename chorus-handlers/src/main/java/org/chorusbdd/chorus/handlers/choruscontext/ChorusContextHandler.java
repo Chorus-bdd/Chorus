@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.handlers.choruscontext;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 

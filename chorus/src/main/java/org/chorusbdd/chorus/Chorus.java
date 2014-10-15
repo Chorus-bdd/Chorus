@@ -31,11 +31,12 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
-import org.chorusbdd.chorus.core.interpreter.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.core.interpreter.interpreter.SubsystemManager;
-import org.chorusbdd.chorus.core.interpreter.startup.*;
+import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
+import org.chorusbdd.chorus.interpreter.startup.*;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
+import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManagerImpl;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;

@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest.remoting.jmx.remotechoruscontext;
 
-import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
+import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 

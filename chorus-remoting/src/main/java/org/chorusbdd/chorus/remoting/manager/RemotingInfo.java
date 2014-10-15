@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.manager;
 
-import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
-
 /**
 * Created by IntelliJ IDEA.
 * User: Nick Ebbutt

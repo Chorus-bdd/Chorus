@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.OutputMode;
+import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.ConfigValidator;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;

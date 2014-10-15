@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.manager;
 
-import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
 
 /**

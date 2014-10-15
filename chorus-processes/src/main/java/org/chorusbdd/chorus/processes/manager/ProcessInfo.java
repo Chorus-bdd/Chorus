@@ -30,8 +30,6 @@
 package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 
 /**
  * Represents the configuration of a running process

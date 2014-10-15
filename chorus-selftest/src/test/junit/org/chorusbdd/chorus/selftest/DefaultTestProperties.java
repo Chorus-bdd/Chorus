@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import org.chorusbdd.chorus.core.interpreter.startup.ChorusConfigProperty;
+import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.output.OutputFormatter;
 
 import java.util.Properties;

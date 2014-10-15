@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;

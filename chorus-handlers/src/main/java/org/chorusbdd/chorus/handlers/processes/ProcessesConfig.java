@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.OutputMode;
+import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
 
 /**
  * Created with IntelliJ IDEA.

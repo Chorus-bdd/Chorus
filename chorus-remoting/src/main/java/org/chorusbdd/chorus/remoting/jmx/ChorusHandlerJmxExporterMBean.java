@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.context.ChorusContext;
 
 import java.util.Map;
 

@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
-import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
+import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;

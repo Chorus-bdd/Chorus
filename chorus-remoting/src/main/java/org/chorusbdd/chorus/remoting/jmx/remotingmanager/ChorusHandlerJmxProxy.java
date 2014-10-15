@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.JmxStepResult;
@@ -92,7 +92,7 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
         try {
             //call the remote method
             Object[] args = {methodUid, ChorusContext.getContext(), params};
-            String[] signature = {"java.lang.String", "org.chorusbdd.chorus.core.interpreter.ChorusContext", "[Ljava.lang.Object;"};
+            String[] signature = {"java.lang.String", "org.chorusbdd.chorus.context.ChorusContext", "[Ljava.lang.Object;"};
             log.debug(String.format("About to invoke method (%s) on MBean (%s)", methodUid, objectName));
             JmxStepResult r = (JmxStepResult) mBeanServerConnection.invoke(objectName, "invokeStep", args, signature);
             //update the local context with any changes made remotely

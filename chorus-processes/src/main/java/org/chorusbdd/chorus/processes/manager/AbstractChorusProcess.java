@@ -29,8 +29,7 @@
  */
 package org.chorusbdd.chorus.processes.manager;
 
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.OutputMode;
+import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 

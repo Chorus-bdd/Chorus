@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest.pendingsteps.pendingwithnofailures;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
+import org.chorusbdd.chorus.interpreter.interpreter.StepPendingException;
 
 /**
  * Created by IntelliJ IDEA.

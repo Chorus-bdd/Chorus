@@ -30,11 +30,12 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.core.interpreter.interpreter.StepMatcher;
-import org.chorusbdd.chorus.core.interpreter.interpreter.StepPendingException;
-import org.chorusbdd.chorus.core.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManager;
-import org.chorusbdd.chorus.core.interpreter.subsystem.remoting.RemotingManagerConfig;
+import org.chorusbdd.chorus.interpreter.interpreter.StepMatcher;
+import org.chorusbdd.chorus.interpreter.interpreter.StepPendingException;
+import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.interpreter.subsystem.SubsystemAdapter;
+import org.chorusbdd.chorus.remoting.manager.RemotingManager;
+import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
@@ -49,7 +50,7 @@ import java.util.Map;
 /**
  * Created by nick on 30/08/2014.
  */
-public class JmxRemotingManager implements RemotingManager {
+public class JmxRemotingManager extends SubsystemAdapter implements RemotingManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(JmxRemotingManager.class);
 

@@ -32,8 +32,8 @@ package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithlocalprocess;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**

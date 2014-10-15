@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.processes.manager;
 
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
 
 import java.io.File;

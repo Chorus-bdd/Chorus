@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.spring;
 
-import org.chorusbdd.chorus.core.interpreter.interpreter.SpringInjector;
+import org.chorusbdd.chorus.interpreter.interpreter.SpringInjector;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;

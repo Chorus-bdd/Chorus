@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.spring.selftest.calculator;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.SpringContext;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.core.interpreter.ChorusContext;
+import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import javax.annotation.Resource;

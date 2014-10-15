@@ -30,8 +30,6 @@
 package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManager;
-import org.chorusbdd.chorus.core.interpreter.subsystem.processes.ProcessManagerConfig;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -288,7 +286,7 @@ public class ProcessManagerImpl implements ProcessManager {
         }
     }
 
-    public ExecutionListener getProcessManagerExecutionListener() {
+    public ExecutionListener getExecutionListener() {
         return processManagerExecutionListener;
     }
 
