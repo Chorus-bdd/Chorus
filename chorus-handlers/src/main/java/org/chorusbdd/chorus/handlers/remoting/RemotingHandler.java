@@ -75,10 +75,10 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
-    @ChorusResource("process.manager")
+    @ChorusResource("subsystem.processes")
     private ProcessManager processManager;
 
-    @ChorusResource("remoting.manager")
+    @ChorusResource("subsystem.remoting")
     private RemotingManager jmxRemotingManager;
     
     private Map<String, RemotingConfig> remotingConfigMap;
