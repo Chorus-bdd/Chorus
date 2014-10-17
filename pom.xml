@@ -20,10 +20,10 @@
         <module>chorus-interpreter</module>
         <module>chorus-subsystem</module>
         <module>chorus-context</module>
-        <module>chorus</module>
         <module>chorus-remoting</module>
         <module>chorus-processes</module>
         <module>chorus-handlers</module>
+        <module>chorus</module>
         <module>chorus-spring</module>
         <module>chorus-selftest</module>
 	</modules>
