@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.scanner.filter;
+package org.chorusbdd.chorus.pathscanner.filter;
 
 import org.chorusbdd.chorus.util.ChorusConstants;
 
@@ -38,24 +38,29 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  * Time: 18:49
  *
  * Always accept built in handler packages
- * Always deny all other org.chorusbdd.* packages, avoid scanning classes which might load optional dependencies
- *
- *  We only look for handlers in the dedicated interpreter handler package
- * loading other classes in the interpreter may trigger class locating of
- * classes from optional dependencies, which we do not want to do since
- * this would make those optional dependencies mandatory
  */
-public class DenyOtherChorusPackagesRule extends ChainableFilterRule {
+public class AlwaysAllowBuiltInHandlerRule extends ChainableFilterRule {
 
-    public DenyOtherChorusPackagesRule(ClassFilter filterDelegate) {
+    public AlwaysAllowBuiltInHandlerRule(ClassFilter filterDelegate) {
         super(filterDelegate);
     }
 
     protected boolean shouldAccept(String className) {
-        return false;
+        return isBuiltInHandler(className);
     }
 
     protected boolean shouldDeny(String className) {
-        return className.startsWith(ChorusConstants.CHORUS_ROOT_PACKAGE);
+        return false;
+    }
+
+    private boolean isBuiltInHandler(String className) {
+        boolean result = false;
+        for ( String pkg : ChorusConstants.BUILT_IN_HANDLER_PACKAGE_PREFIXES) {
+            if (className.startsWith(pkg)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 }

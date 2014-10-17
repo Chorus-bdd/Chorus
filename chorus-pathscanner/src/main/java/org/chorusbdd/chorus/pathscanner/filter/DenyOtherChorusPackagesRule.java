@@ -27,35 +27,35 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.scanner.filter;
+package org.chorusbdd.chorus.pathscanner.filter;
+
+import org.chorusbdd.chorus.util.ChorusConstants;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 11/05/12
- * Time: 15:31
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 18/06/12
+ * Time: 18:49
  *
- * Class filter for classpath class scanning
+ * Always accept built in handler packages
+ * Always deny all other org.chorusbdd.* packages, avoid scanning classes which might load optional dependencies
  *
- *
+ *  We only look for handlers in the dedicated interpreter handler package
+ * loading other classes in the interpreter may trigger class locating of
+ * classes from optional dependencies, which we do not want to do since
+ * this would make those optional dependencies mandatory
  */
-public interface ClassFilter {
+public class DenyOtherChorusPackagesRule extends ChainableFilterRule {
 
-    /**
-     *  A first stage in filtering - check the class passes filter by it's class/package name
-     *
-     * @return true, if the Class with the given fully qualified class name passes the filter
-     */
-    public boolean acceptByName(String className);
+    public DenyOtherChorusPackagesRule(ClassFilter filterDelegate) {
+        super(filterDelegate);
+    }
 
-    /**
-     * A second stage of filtering, only performed if stage one has passed filter checks
-     * Check that the instantiated Class instance passes filters (e.g. using annotations)
-     *
-     * This requires class loading to take place, it is best to use the filter by class
-     * name where possible
-     *
-     * @return true, if the Class clazz passes the filter criteria
-     */
-    public boolean acceptByClass(Class clazz);
+    protected boolean shouldAccept(String className) {
+        return false;
+    }
+
+    protected boolean shouldDeny(String className) {
+        return className.startsWith(ChorusConstants.CHORUS_ROOT_PACKAGE);
+    }
 }

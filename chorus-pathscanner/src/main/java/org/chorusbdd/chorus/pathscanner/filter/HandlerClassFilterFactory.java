@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.scanner.filter;
+package org.chorusbdd.chorus.pathscanner.filter;
 
 import org.chorusbdd.chorus.util.ChorusConstants;
 

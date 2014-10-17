@@ -27,54 +27,25 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.scanner.filter;
+package org.chorusbdd.chorus.pathscanner.filter;
 
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.annotations.Handler;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 18/06/12
- * Time: 18:43
- *
- * Delegate to the chained delegate filter only if this filter rule is passed
- */
-public class ChainableFilterRule implements ClassFilter {
+* Created with IntelliJ IDEA.
+* User: nick
+* Date: 11/05/12
+* Time: 15:36
+*
+* Filter out classes with the Handler annotation
+*/
+public class HandlerAnnotationFilter implements ClassFilter {
 
-    ChorusLog log = ChorusLogFactory.getLog(ChainableFilterRule.class);
-
-    private ClassFilter filterDelegate;
-
-    public ChainableFilterRule(ClassFilter filterDelegate) {
-        this.filterDelegate = filterDelegate;
-    }
-
-    public final boolean acceptByName(String className) {
-        if ( shouldAccept(className) ) {
-            log.trace(getClass() + " accepting handler class " + className + " as permissible handler class");
-            return true;
-        } else if ( shouldDeny(className)) {
-            log.trace(getClass() + " denying handler class " + className + " as permissible handler class");
-            return false;
-        }  else {
-            return filterDelegate.acceptByName(className);
-        }
-    }
-
-    protected boolean shouldDeny(String className) {
-        return false;
-    }
-
-    protected boolean shouldAccept(String className) {
-        return false;
-    }
-
-    public final boolean acceptByClass(Class clazz) {
-        return doAcceptByClass(clazz) && filterDelegate.acceptByClass(clazz);
-    }
-
-    protected boolean doAcceptByClass(Class clazz) {
+    public boolean acceptByName(String className) {
         return true;
+    }
+
+    public boolean acceptByClass(Class clazz) {
+        return clazz.getAnnotation(Handler.class) != null;
     }
 }

@@ -23,6 +23,7 @@
         <module>chorus-remoting</module>
         <module>chorus-processes</module>
         <module>chorus-handlers</module>
+        <module>chorus-pathscanner</module>
         <module>chorus</module>
         <module>chorus-spring</module>
         <module>chorus-selftest</module>

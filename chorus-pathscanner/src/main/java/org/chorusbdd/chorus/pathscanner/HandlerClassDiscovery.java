@@ -27,11 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.scanner;
+package org.chorusbdd.chorus.pathscanner;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.interpreter.scanner.filter.ClassFilter;
-import org.chorusbdd.chorus.interpreter.scanner.filter.HandlerClassFilterFactory;
+import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
+import org.chorusbdd.chorus.pathscanner.filter.HandlerClassFilterFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;

@@ -27,40 +27,35 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.scanner.filter;
-
-import org.chorusbdd.chorus.util.ChorusConstants;
+package org.chorusbdd.chorus.pathscanner.filter;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 18/06/12
- * Time: 18:49
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 11/05/12
+ * Time: 15:31
  *
- * Always accept built in handler packages
+ * Class filter for classpath class scanning
+ *
+ *
  */
-public class AlwaysAllowBuiltInHandlerRule extends ChainableFilterRule {
+public interface ClassFilter {
 
-    public AlwaysAllowBuiltInHandlerRule(ClassFilter filterDelegate) {
-        super(filterDelegate);
-    }
+    /**
+     *  A first stage in filtering - check the class passes filter by it's class/package name
+     *
+     * @return true, if the Class with the given fully qualified class name passes the filter
+     */
+    public boolean acceptByName(String className);
 
-    protected boolean shouldAccept(String className) {
-        return isBuiltInHandler(className);
-    }
-
-    protected boolean shouldDeny(String className) {
-        return false;
-    }
-
-    private boolean isBuiltInHandler(String className) {
-        boolean result = false;
-        for ( String pkg : ChorusConstants.BUILT_IN_HANDLER_PACKAGE_PREFIXES) {
-            if (className.startsWith(pkg)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
+    /**
+     * A second stage of filtering, only performed if stage one has passed filter checks
+     * Check that the instantiated Class instance passes filters (e.g. using annotations)
+     *
+     * This requires class loading to take place, it is best to use the filter by class
+     * name where possible
+     *
+     * @return true, if the Class clazz passes the filter criteria
+     */
+    public boolean acceptByClass(Class clazz);
 }

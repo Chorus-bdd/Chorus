@@ -32,7 +32,7 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.interpreter.scanner.FeatureListBuilder;
+import org.chorusbdd.chorus.pathscanner.FeatureListBuilder;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.interpreter.startup.*;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;

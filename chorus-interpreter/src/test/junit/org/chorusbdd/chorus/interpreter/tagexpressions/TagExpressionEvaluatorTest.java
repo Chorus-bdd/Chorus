@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.interpreter.tagexpressions;
 
-import org.chorusbdd.chorus.interpreter.scanner.TagExpressionEvaluator;
+import org.chorusbdd.chorus.pathscanner.TagExpressionEvaluator;
 import org.junit.Before;
 import org.junit.Test;
 
