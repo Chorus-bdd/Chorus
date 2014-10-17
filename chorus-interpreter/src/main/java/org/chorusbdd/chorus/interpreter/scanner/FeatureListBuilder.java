@@ -27,11 +27,8 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.startup;
+package org.chorusbdd.chorus.interpreter.scanner;
 
-import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.interpreter.scanner.FilePathScanner;
-import org.chorusbdd.chorus.interpreter.tagexpressions.TagExpressionEvaluator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.parser.FeatureFileParser;
@@ -66,37 +63,45 @@ public class FeatureListBuilder {
      */
     private final TagExpressionEvaluator tagExpressionEvaluator = new TagExpressionEvaluator();
 
-    public List<FeatureToken> getFeatureList(ExecutionToken executionToken, ConfigProperties config) throws Exception {
-        List<StepMacro> globalStepMacros = stepMacroBuilder.getGlobalStepMacro(config);
+    public List<FeatureToken> getFeatureList(
+            ExecutionToken executionToken,
+            List<String> featurePaths,
+            List<String> stepMacroPaths,
+            List<String> tagExpressions) throws Exception {
+
+        List<StepMacro> globalStepMacros = stepMacroBuilder.getGlobalStepMacro(stepMacroPaths, featurePaths);
 
         //identify the feature files
-        List<String> featurePaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
         List<File> featureFiles = new FilePathScanner().getFeatureFiles(featurePaths, FilePathScanner.FEATURE_FILTER);
 
-        return createFeatureList(executionToken, featureFiles, globalStepMacros, config);
+        return createFeatureList(executionToken, featureFiles, globalStepMacros, tagExpressions);
     }
 
-    private List<FeatureToken> createFeatureList(ExecutionToken executionToken, List<File> featureFiles, List<StepMacro> globalStepMacro, ConfigProperties configProperties) throws Exception {
+    private List<FeatureToken> createFeatureList(
+            ExecutionToken executionToken,
+            List<File> featureFiles,
+            List<StepMacro> globalStepMacro,
+            List<String> tagExpressions) throws Exception {
+
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
             List<FeatureToken> features = parseFeatures(featureFile, executionToken, globalStepMacro);
             if ( features != null ) {
-                filterFeaturesByScenarioTags(features, configProperties);
+                filterFeaturesByScenarioTags(features, tagExpressions);
                 allFeatures.addAll(features);
             }
         }
         return allFeatures;
     }
 
-    private void filterFeaturesByScenarioTags(List<FeatureToken> features, ConfigProperties config) {
+    private void filterFeaturesByScenarioTags(List<FeatureToken> features, List<String> tagExpressions) {
         log.debug("Filtering by scenario tags");
         //FILTER THE FEATURES AND SCENARIOS (scenarios have also inherited any tags on the feature)
-        if (config.isSet(ChorusConfigProperty.TAG_EXPRESSION)) {
+        if (tagExpressions.size() > 0) {
 
-            List<String> tags = config.getValues(ChorusConfigProperty.TAG_EXPRESSION);
-            String filterExpression = tagExpressionEvaluator.getFilterExpression(tags);
+            String filterExpression = tagExpressionEvaluator.getFilterExpression(tagExpressions);
             
             for (Iterator<FeatureToken> fi = features.iterator(); fi.hasNext(); ) {
                 removeFeatureIfNoScenariosMatchTags(filterExpression, fi);

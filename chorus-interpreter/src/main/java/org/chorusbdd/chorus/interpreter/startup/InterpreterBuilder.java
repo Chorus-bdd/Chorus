@@ -62,11 +62,8 @@ public class InterpreterBuilder {
        
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
         chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
-        List<String> handlerPackages = config.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
-        if (handlerPackages != null) {
-            chorusInterpreter.setBasePackages(handlerPackages.toArray(new String[handlerPackages.size()]));
-        }
-        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);        
+        chorusInterpreter.setBasePackages(config.getValues(ChorusConfigProperty.HANDLER_PACKAGES));
+        chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
         return chorusInterpreter;
     }

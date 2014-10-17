@@ -27,10 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.interpreter;
+package org.chorusbdd.chorus.interpreter.scanner;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.interpreter.scanner.ClasspathScanner;
 import org.chorusbdd.chorus.interpreter.scanner.filter.ClassFilter;
 import org.chorusbdd.chorus.interpreter.scanner.filter.HandlerClassFilterFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -60,7 +59,7 @@ public class HandlerClassDiscovery {
      * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
      * @return a Map of [feature-name -> feature class]
      */
-    public HashMap<String, Class> discoverHandlerClasses(String[] basePackages) throws Exception {
+    public HashMap<String, Class> discoverHandlerClasses(List<String> basePackages) throws Exception {
         //always include the Chorus handlers package
         HashMap<String, Class> handlerNameToHandlerClass = new HashMap<String, Class>();
 

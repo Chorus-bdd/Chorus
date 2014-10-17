@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.interpreter.scanner.filter;
 import org.chorusbdd.chorus.util.ChorusConstants;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,13 +45,13 @@ import java.util.Arrays;
  */
 public class PackagePrefixFilter extends ChainableFilterRule {
 
-    private String[] packageNames;
+    private List<String> packageNames;
     private boolean userPackagesWereSpecified;
 
-    public PackagePrefixFilter(ClassFilter filterDelegate, String... packageNames) {
+    public PackagePrefixFilter(ClassFilter filterDelegate, List<String> packageNames) {
         super(filterDelegate);
         this.packageNames = packageNames;
-        userPackagesWereSpecified = ! Arrays.equals(packageNames, ChorusConstants.ANY_PACKAGE);
+        userPackagesWereSpecified = ! packageNames.equals(Arrays.asList(ChorusConstants.ANY_PACKAGE));
     }
 
     public boolean shouldAccept(String className) {

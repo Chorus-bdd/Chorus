@@ -32,6 +32,7 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.interpreter.scanner.FeatureListBuilder;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.interpreter.startup.*;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
@@ -129,8 +130,13 @@ public class Chorus {
         interpreter.processFeatures(t, features);
     }
 
-    List<FeatureToken> getFeatureList(ExecutionToken t) throws Exception {
-        return featureListBuilder.getFeatureList(t, configReader);
+    List<FeatureToken> getFeatureList(ExecutionToken tagExpression) throws Exception {
+        return featureListBuilder.getFeatureList(
+            tagExpression,
+            configReader.getValues(ChorusConfigProperty.FEATURE_PATHS),
+            configReader.getValues(ChorusConfigProperty.STEPMACRO_PATHS),
+            configReader.getValues(ChorusConfigProperty.TAG_EXPRESSION)
+        );
     }
 
     /**

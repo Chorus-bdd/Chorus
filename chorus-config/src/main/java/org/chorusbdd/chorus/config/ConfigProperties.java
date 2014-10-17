@@ -42,6 +42,9 @@ public interface ConfigProperties {
 
     void setProperty(ConfigurationProperty property, List<String> values);
 
+    /**
+     * Return a list of the values for property, if the property has no values return an empty list
+     */
     List<String> getValues(ConfigurationProperty property);
 
     String getValue(ConfigurationProperty property);

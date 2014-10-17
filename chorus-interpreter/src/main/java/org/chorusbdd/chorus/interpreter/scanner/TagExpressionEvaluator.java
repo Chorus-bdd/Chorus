@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.tagexpressions;
+package org.chorusbdd.chorus.interpreter.scanner;
 
 import java.util.HashSet;
 import java.util.List;

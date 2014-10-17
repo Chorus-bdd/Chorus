@@ -27,10 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.startup;
+package org.chorusbdd.chorus.interpreter.scanner;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.interpreter.scanner.FilePathScanner;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.parser.StepMacro;
@@ -61,13 +60,13 @@ public class StepMacroBuilder {
 
     private ChorusLog log = ChorusLogFactory.getLog(StepMacroBuilder.class);
 
-    List<StepMacro> getGlobalStepMacro(ConfigProperties config) {
-        List<String> stepMacroPaths = config.getValues(ChorusConfigProperty.STEPMACRO_PATHS);
-        if ( stepMacroPaths == null) {
+    List<StepMacro> getGlobalStepMacro(List<String> stepMacroPaths, List<String> featurePaths) {
+        List<String> paths = stepMacroPaths;
+        if ( stepMacroPaths.size() == 0) {
             //if step macro paths are not separately specified, we use the feature paths
-            stepMacroPaths = config.getValues(ChorusConfigProperty.FEATURE_PATHS);
+            paths = featurePaths;
         }
-        return getOrLoadStepMacros(stepMacroPaths);
+        return getOrLoadStepMacros(paths);
     }
    
     private List<StepMacro> getOrLoadStepMacros(List<String> stepMacroPaths) {

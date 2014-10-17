@@ -56,10 +56,9 @@ public class ExecutionListenerFactory {
 
     public List<ExecutionListener> createExecutionListeners(ConfigProperties config, List<ExecutionListener> listeners) {
         List<ExecutionListener> result = new ArrayList<ExecutionListener>();
-        if ( config.isSet(ChorusConfigProperty.JMX_LISTENER)) {
-            //we can have zero to many remote jmx execution listeners available
-            addProxyForRemoteJmxListener(config.getValues(ChorusConfigProperty.JMX_LISTENER), result);
-        }
+
+        //we can have zero to many remote jmx execution listeners available
+        addProxyForRemoteJmxListener(config.getValues(ChorusConfigProperty.JMX_LISTENER), result);
 
         addInterpreterOutputExecutionListener(config, result);
 
@@ -70,11 +69,9 @@ public class ExecutionListenerFactory {
     }
 
     private void addUserExecutionListeners(ConfigProperties config, List<ExecutionListener> result) {
-        if ( config.isSet(ChorusConfigProperty.EXECUTION_LISTENER)) {
-            List<String> listenerClasses = config.getValues(ChorusConfigProperty.EXECUTION_LISTENER);
-            for ( String className : listenerClasses) {
-                addUserExecutionListener(className, result);
-            }
+        List<String> listenerClasses = config.getValues(ChorusConfigProperty.EXECUTION_LISTENER);
+        for ( String className : listenerClasses) {
+            addUserExecutionListener(className, result);
         }
     }
 

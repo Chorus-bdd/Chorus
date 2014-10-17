@@ -31,6 +31,9 @@ package org.chorusbdd.chorus.interpreter.scanner.filter;
 
 import org.chorusbdd.chorus.util.ChorusConstants;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -56,7 +59,7 @@ public class HandlerClassFilterFactory {
      *
      * @param userSpecifiedPrefixes any handler package prefixes specified by user
      */
-    public ClassFilter createClassFilters(String[] userSpecifiedPrefixes) {
+    public ClassFilter createClassFilters(List<String> userSpecifiedPrefixes) {
 
         ClassFilter handlerAnnotationFilter = new HandlerAnnotationFilter();
 
@@ -64,7 +67,7 @@ public class HandlerClassFilterFactory {
         DenyOtherChorusPackagesRule denyOtherChorusPackagesRule = new DenyOtherChorusPackagesRule(handlerAnnotationFilter);
 
         //if user has specified package prefixes, restrict to those
-        String[] userPackageNames = userSpecifiedPrefixes.length == 0 ? ChorusConstants.ANY_PACKAGE : userSpecifiedPrefixes;
+        List<String> userPackageNames = userSpecifiedPrefixes.size() == 0 ? Arrays.asList(ChorusConstants.ANY_PACKAGE) : userSpecifiedPrefixes;
         ClassFilter packagePrefixFilter = new PackagePrefixFilter(denyOtherChorusPackagesRule, userPackageNames);
 
          //always permit built in handlers, deny other chorus packages
