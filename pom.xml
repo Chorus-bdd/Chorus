@@ -19,8 +19,8 @@
         <module>chorus-stepinvoker</module>       <!-- Logic to discover and invoke steps -->
         <module>chorus-context</module>           <!-- Chorus context is a map of shared variables which is accessible to all methods implementing step logic -->
         <module>chorus-subsystem</module>         <!-- Interface implemented by Chorus' pluggable subsystems -->
-        <module>chorus-remoting</module>          <!-- Chorus remoting is a pluggable module which provides Chorus' remoting capabilities -->
-        <module>chorus-processes</module>         <!-- Chorus remoting is a pluggable module which provides Chorus' process management capabilities -->
+        <module>chorus-remoting</module>          <!-- Chorus remoting is a pluggable subsystem which provides Chorus' remoting capabilities -->
+        <module>chorus-processes</module>         <!-- Chorus remoting is a pluggable subsystem which provides Chorus' process management capabilities -->
         <module>chorus-handlers</module>          <!-- Chorus built in handler classes -->
         <module>chorus-pathscanner</module>       <!-- Utilities to scan the classpath to load handler classes and filesystem to load feature files -->
         <module>chorus-interpreter</module>       <!-- Main chorus interpreter -->
