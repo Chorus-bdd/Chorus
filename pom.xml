@@ -7,25 +7,25 @@
 	<version>2.0.0-SNAPSHOT</version>
 	<name>Chorus BDD Project</name>
 	<modules>
-        <module>chorus-util</module>
-        <module>chorus-logging</module>
-        <module>chorus-parser</module>
-        <module>chorus-results</module>
-        <module>chorus-config</module>
-        <module>chorus-executionlistener</module>
-        <module>chorus-handlerconfig</module>
-        <module>chorus-output</module>
-        <module>chorus-annotations</module>
-        <module>chorus-stepinvoker</module>
-        <module>chorus-interpreter</module>
-        <module>chorus-subsystem</module>
-        <module>chorus-context</module>
-        <module>chorus-remoting</module>
-        <module>chorus-processes</module>
-        <module>chorus-handlers</module>
-        <module>chorus-pathscanner</module>
-        <module>chorus</module>
-        <module>chorus-spring</module>
-        <module>chorus-selftest</module>
+        <module>chorus-util</module>              <!-- lowest level utility classes -->
+        <module>chorus-logging</module>           <!-- Chorus logging facade / logging abstractions over other logging provider -->
+        <module>chorus-parser</module>            <!-- parsing of feature files and stepmacro files -->
+        <module>chorus-results</module>           <!-- business objects which represent features / scenarios / steps / sessions -->
+        <module>chorus-config</module>            <!-- utility to define and parse config switches and sys properties -->
+        <module>chorus-executionlistener</module> <!-- Interface which can be implemented to receive interpreter lifecycle events locally or remotely -->
+        <module>chorus-handlerconfig</module>     <!-- Utility classes to load property configs for handler classes  -->
+        <module>chorus-output</module>            <!-- Chorus interpreter output, handle Chorus interpreter output and logging -->
+        <module>chorus-annotations</module>       <!-- Annotations defined by chorus -->
+        <module>chorus-stepinvoker</module>       <!-- Logic to discover and invoke steps -->
+        <module>chorus-context</module>           <!-- Chorus context is a map of shared variables which is accessible to all methods implementing step logic -->
+        <module>chorus-subsystem</module>         <!-- Interface implemented by Chorus' pluggable subsystems -->
+        <module>chorus-remoting</module>          <!-- Chorus remoting is a pluggable module which provides Chorus' remoting capabilities -->
+        <module>chorus-processes</module>         <!-- Chorus remoting is a pluggable module which provides Chorus' process management capabilities -->
+        <module>chorus-handlers</module>          <!-- Chorus built in handler classes -->
+        <module>chorus-pathscanner</module>       <!-- Utilities to scan the classpath to load handler classes and filesystem to load feature files -->
+        <module>chorus-interpreter</module>       <!-- Main chorus interpreter -->
+        <module>chorus</module>                   <!-- Assembly module to build the chorus release -->
+        <module>chorus-spring</module>            <!-- Chorus extensions for Spring support -->
+        <module>chorus-selftest</module>          <!-- Integration tests for the Chorus interpreter -->
 	</modules>
 </project>
