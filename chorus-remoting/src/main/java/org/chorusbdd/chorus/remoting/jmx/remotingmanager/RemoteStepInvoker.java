@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 import javax.management.RuntimeMBeanException;

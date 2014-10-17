@@ -30,12 +30,13 @@
 package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.context.ChorusContext;
-import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.interpreter.invoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.parser.StepMacro;
+import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;

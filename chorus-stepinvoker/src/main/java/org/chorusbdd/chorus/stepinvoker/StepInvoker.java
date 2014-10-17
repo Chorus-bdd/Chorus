@@ -27,71 +27,61 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.invoker;
-
-import org.chorusbdd.chorus.annotations.Step;
+package org.chorusbdd.chorus.stepinvoker;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
 /**
-* User: nick
-* Date: 24/09/13
-* Time: 18:46
-*/
-public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
-
-    private final Class[] parameterTypes;
-    private final String pendingMessage;
-    private final boolean isPending;
-    private final Pattern stepPattern;
-
-    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern) {
-        this(classInstance, method, stepPattern, null);
-    }
-
-    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern, String pendingMessage) {
-        super(classInstance, method);
-        this.stepPattern = stepPattern;
-        this.parameterTypes = method.getParameterTypes();
-        this.pendingMessage = pendingMessage;
-        this.isPending = ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
-    }
+ * User: nick
+ * Date: 20/09/13
+ * Time: 09:09
+ *
+ * A StepInvoker represents some step logic with a Pattern which can be matched against text in a Scenario step
+ * The invoker may be used to execute the step, if the pattern matches
+ *
+ * Step handler methods annotated with @Step may be exposed as StepInvoker instances, in which case we use
+ * reflection to invoke the method on the handler, but StepInvoker instances may also represent a proxy for
+ * remote steps, or rely on some other mechanism to runs step logic.
+ */
+public interface StepInvoker {
 
     /**
-     * @return a Pattern which is matched against step text/action to determine whether this invoker matches a scenario step
+     * A special String which represents the result of calling a method which had a void return type
      */
-    public Pattern getStepPattern() {
-        return stepPattern;
-    }
+    public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
+
+    /**
+     * @return a Pattern which is matched against step text/action to determine whether this stepinvoker matches a scenario step
+     */
+    Pattern getStepPattern();
 
     /**
      * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
-     *
      * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
      */
-    public Class[] getParameterTypes() {
-        return parameterTypes;
-    }
+    Class[] getParameterTypes();
 
     /**
      * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
      */
-    public boolean isPending() {
-        return isPending;
-    }
+    boolean isPending();
 
-    public String getPendingMessage() {
-        return pendingMessage;
-    }
+    /**
+     * @return a pending message if the step is pending, or null if the step is not pending
+     */
+    String getPendingMessage();
 
+    /**
+     * Invoke the method
+     *
+     * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
+     */
+    Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException;
 
-
-    public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Object result =  getMethod().invoke(getClassInstance(), args);
-        result = handleResultIfReturnTypeVoid(getMethod(), result);
-        return result;
-    }
+    /**
+     * @return a String id for this step invoker, which should be unique and final
+     */
+    String getId();
 
 }

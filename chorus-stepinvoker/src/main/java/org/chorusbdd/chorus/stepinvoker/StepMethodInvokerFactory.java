@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.invoker;
+package org.chorusbdd.chorus.stepinvoker;
 
 import org.chorusbdd.chorus.annotations.PassesWithin;
 import org.chorusbdd.chorus.annotations.Step;

@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.interpreter.subsystem;
+package org.chorusbdd.chorus.subsystem;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 

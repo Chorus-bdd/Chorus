@@ -27,41 +27,58 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.invoker;
+package org.chorusbdd.chorus.stepinvoker;
 
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.util.PolledAssertion;
-
-import java.util.concurrent.TimeUnit;
+import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
-* User: nick
-* Date: 24/09/13
-* Time: 18:47
-*/
-class UntilFirstPassInvoker extends PolledInvoker {
+ * User: nick
+ * Date: 20/09/13
+ * Time: 18:10
+ *
+ * Invoke a method on a handler class using reflection to run a step
+ */
+public abstract class AbstractStepMethodInvoker implements StepInvoker {
 
-    private PassesWithin passesWithin;
+    private static AtomicLong idGenerator = new AtomicLong();
 
-    public UntilFirstPassInvoker(StepInvoker wrappedInvoker, PassesWithin passesWithin) {
-        super(wrappedInvoker);
-        this.passesWithin = passesWithin;
+    private Long id = idGenerator.incrementAndGet();
+    private Object classInstance;
+    private Method method;
+
+    public AbstractStepMethodInvoker(Object handlerInstance, Method method) {
+        this.classInstance = handlerInstance;
+        this.method = method;
     }
 
-    protected int getCount() {
-        return passesWithin.length();
+    /**
+     * Returns the name of the method represented by this {@code Method}
+     * object, as a {@code String}.
+     */
+    public String getId() {
+        //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
+        //or if the two handler instances of the same handler class are processed (in error?)
+        //plus the fully qualified class name and method name for clarity
+        return id + ":" + classInstance.getClass().getName() + ":" + method.getName();
     }
 
-    protected TimeUnit getTimeUnit() {
-        return passesWithin.timeUnit();
+    public Object getClassInstance() {
+        return classInstance;
     }
 
-    protected int getPollFrequency() {
-        return passesWithin.pollFrequencyInMilliseconds();
+    protected Method getMethod() {
+        return method;
     }
 
-    protected void doTest(PolledAssertion p, TimeUnit timeUnit, int count) {
-        p.await(timeUnit, count);
+    protected Object handleResultIfReturnTypeVoid(Method method, Object result) {
+        if ( method.getReturnType() == Void.TYPE) {
+            result = VOID_RESULT;
+        }
+        return result;
     }
 
+    public String toString() {
+        return classInstance.getClass().getSimpleName() + "." + method.getName();
+    }
 }

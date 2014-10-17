@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.interpreter;
+package org.chorusbdd.chorus.stepinvoker;
 
 /**
  * Thrown by a handler if it needs to indicate that the step that was invoked is pending.

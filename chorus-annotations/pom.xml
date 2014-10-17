@@ -7,10 +7,10 @@
         <version>7</version>
     </parent>
     <groupId>org.chorusbdd</groupId>
-    <artifactId>chorus-interpreter</artifactId>
+    <artifactId>chorus-annotations</artifactId>
     <packaging>jar</packaging>
     <version>2.0.0-SNAPSHOT</version>
-    <name>chorus-interpreter</name>
+    <name>chorus-annotations</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
         <license>
@@ -32,16 +32,6 @@
         is still supported -->
         <testResources>
             <testResource>
-                <directory>src/test/features</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.feature</include>
-                    <include>**/*.txt</include>
-                </includes>
-            </testResource>
-
-            <testResource>
                <directory>src/test/junit</directory>
                  <includes>
                    <include>**/*.xml</include>
@@ -51,10 +41,20 @@
                  </includes>
              </testResource>
 
+            <testResource>
+                <directory>src/test/features</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.feature</include>
+                    <include>**/*.txt</include>
+                </includes>
+            </testResource>
+
             <!-- include the standard test/resources directory, this is still supported
             if you don't want to put resources within the test/java subtree -->
             <testResource>
-               <directory>src/test/resources</directory>
+               <directory>src/test/**/resources</directory>
             </testResource>
         </testResources>
 
@@ -67,7 +67,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
-
                 <configuration>
                   <source>1.5</source>
                   <target>1.5</target>
@@ -81,17 +80,17 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                  <execution>
-                    <id>attach-sources</id>
-                    <goals>
-                      <goal>jar</goal>
-                    </goals>
-                  </execution>
-                </executions>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-source-plugin</artifactId>
+                 <version>2.1.2</version>
+                 <executions>
+                   <execution>
+                     <id>attach-sources</id>
+                     <goals>
+                       <goal>jar</goal>
+                     </goals>
+                   </execution>
+                 </executions>
             </plugin>
 
             <plugin>
@@ -107,6 +106,7 @@
                    </goals>
                    <configuration>
                      <sources>
+                       <!-- I don't think wildcards work here, would would be ideal -->
                        <source>src/test/junit</source>
                        <source>src/test/features</source>
                      </sources>
@@ -123,8 +123,7 @@
                     <header>src/etc/header.txt</header>
                     <includes>
                         <include>src/main/java/**/*.java</include>
-                        <include>src/test/junit/**/*.java</include>
-                        <include>src/test/features/**/*.java</include>
+                        <include>src/test/**/*.java</include>
                     </includes>
                     <properties>
                         <year>2014</year>
@@ -149,112 +148,32 @@
 
         <!-- chorus internal dependencies -->
 
+
+        <!-- Logging classes are a compile-time dependency for the chorus core library, but not a runtime dependency
+        since there is only one class ChorusCommonsLogProvider which directly depends on commons-logging, and this
+        class is loaded by reflection if found to be on the classpath. Hence these libraries are optional, if found,
+        will be used, otherwise logging to standard out
+        out/err -->
         <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-util</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-output</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-logging</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-parser</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-results</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-config</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-executionlistener</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-handlerconfig</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-annotations</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-stepinvoker</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-subsystem</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
-        </dependency>
-
-
-        <!-- In general the philosophy is that because Chorus is a library, we are trying to
-        avoid any mandatory dependencies on other libraries, otherwise components using Chorus would be forced
-        to inherit those extra dependencies
-
-        For this reason Spring features have been pushed down into Chorus-Spring module,
-        and certain other features into Chorus-tools. Users seeking to run an interpreter with
-        these features enabled need to declare dependencies on these derived modules, as appropriate
-
-        The basic Chorus interpreter and the JMX remoting feature should run just fine with the
-        main chorus.jar and the JDK -->
-
-        <!-- Optional Dependencies -->
-
-        <!-- Ant is not required unless you make use of ChorusTask, so it is an optional dependency -->
-        <!-- There should be no requirement for ant dependencies outside ChorusTask -->
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.8.2</version>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
             <optional>true</optional>
         </dependency>
 
-        <!-- junit is now an optional dependency, but not a test dependency since used in ChorusSuite -
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+            <optional>true</optional>
+        </dependency>
 
-        We are using ChorusAssert to avoid a mandatory dependency on junit from the core interpreter
-        although client application can use and throw JUnit assertion errors if they prefer to do so -->
+        <!-- test dependencies -->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Test dependencies -->
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
 

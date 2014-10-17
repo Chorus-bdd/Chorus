@@ -31,8 +31,8 @@ package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.context.ChorusContext;
-import org.chorusbdd.chorus.interpreter.invoker.DefaultStepInvokerProvider;
-import org.chorusbdd.chorus.interpreter.invoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.DefaultStepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;

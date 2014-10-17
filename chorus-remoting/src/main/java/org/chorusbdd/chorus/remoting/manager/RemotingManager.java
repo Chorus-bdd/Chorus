@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.interpreter.subsystem.Subsystem;
+import org.chorusbdd.chorus.subsystem.Subsystem;
 
 /**
  * Created by nick on 30/08/2014.

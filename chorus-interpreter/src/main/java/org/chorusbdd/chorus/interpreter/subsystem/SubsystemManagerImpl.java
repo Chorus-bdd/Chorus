@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.interpreter.subsystem;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;
@@ -67,8 +68,8 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
     public List<ExecutionListener> getExecutionListeners() {
         return Arrays.asList(
-            processManager.getExecutionListener(),
-            remotingManager.getExecutionListener()
+                processManager.getExecutionListener(),
+                remotingManager.getExecutionListener()
         );
     }
 

@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.interpreter.subsystem.Subsystem;
+import org.chorusbdd.chorus.subsystem.Subsystem;
 
 /**
  * Created by nick on 26/09/2014.

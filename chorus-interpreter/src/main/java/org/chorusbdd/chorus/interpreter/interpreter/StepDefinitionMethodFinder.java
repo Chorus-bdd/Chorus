@@ -29,10 +29,11 @@
  */
 package org.chorusbdd.chorus.interpreter.interpreter;
 
-import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.interpreter.invoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.results.StepToken;
 
 /**

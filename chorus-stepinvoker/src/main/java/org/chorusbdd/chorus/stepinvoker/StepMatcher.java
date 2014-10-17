@@ -27,9 +27,8 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.interpreter;
+package org.chorusbdd.chorus.stepinvoker;
 
-import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.RegexpUtils;

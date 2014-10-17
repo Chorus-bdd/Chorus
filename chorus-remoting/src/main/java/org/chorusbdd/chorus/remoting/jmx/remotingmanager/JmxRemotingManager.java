@@ -30,10 +30,10 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.interpreter.interpreter.StepMatcher;
-import org.chorusbdd.chorus.interpreter.interpreter.StepPendingException;
-import org.chorusbdd.chorus.interpreter.invoker.StepInvoker;
-import org.chorusbdd.chorus.interpreter.subsystem.SubsystemAdapter;
+import org.chorusbdd.chorus.stepinvoker.StepMatcher;
+import org.chorusbdd.chorus.stepinvoker.StepPendingException;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;

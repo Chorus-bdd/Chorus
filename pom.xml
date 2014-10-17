@@ -15,7 +15,11 @@
         <module>chorus-executionlistener</module>
         <module>chorus-handlerconfig</module>
         <module>chorus-output</module>
+        <module>chorus-annotations</module>
+        <module>chorus-stepinvoker</module>
         <module>chorus-interpreter</module>
+        <module>chorus-subsystem</module>
+        <module>chorus-context</module>
         <module>chorus</module>
         <module>chorus-remoting</module>
         <module>chorus-processes</module>
