@@ -46,18 +46,10 @@ import java.util.regex.Pattern;
 public abstract class AbstractChorusProcess implements ChorusProcess {
 
     public static final String LAST_MATCH = "ProcessesHandler.match";
-
-    //where we are managing writing process' output to log files ourselves (i.e. jdk 1.5 or CAPTUREANDLOG mode)
-    //then these are the output streams to the log files for the process.
-    protected FileOutputStream stdOutLogfileStream;
-    protected BufferedWriter stdOutLogBufferedWriter;
-    
-    protected FileOutputStream stdErrLogfileStream;
-    protected BufferedWriter stdErrLogBufferedWriter;
     
     //when we are in CAPTURED mode
-    private InputStreamAndReader stdOutInputStreams;
-    private InputStreamAndReader stdErrInputStreams;
+    private TailLogBufferedReader stdOutInputStreams;
+    private TailLogBufferedReader stdErrInputStreams;
 
     //output stream/writer to write to the process std in
     private OutputStream outputStream;
@@ -108,19 +100,13 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
-        ChorusAssert.assertTrue("Process std out mode must be captured", OutputMode.isCaptured(logOutput.getStdOutMode()));
+        ChorusAssert.assertTrue("Process std out mode cannot be INLINE when pattern matching", OutputMode.canSearchOutput(logOutput.getStdOutMode()));
         if ( stdOutInputStreams == null) {
-            stdOutInputStreams = new InputStreamAndReader("Std Out");
-            InputStream inputStream = process.getInputStream();
-            stdOutInputStreams.createStreams(logOutput, inputStream);
-        }
-        
-        if ( logOutput.getStdOutMode() == OutputMode.CAPTUREDWITHLOG && stdOutLogBufferedWriter == null) {
-            createStdOutLogfileStream(logOutput);
+            stdOutInputStreams = new TailLogBufferedReader(logOutput.getStdOutLogFile());
         }
 
         long timeoutMilliseconds = timeUnit.toMillis(length);
-        waitForOutputPattern(pattern, stdOutInputStreams, searchWithinLines, stdOutLogBufferedWriter, timeoutMilliseconds);
+        waitForOutputPattern(pattern, stdOutInputStreams, searchWithinLines, timeoutMilliseconds);
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
@@ -128,26 +114,20 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
-        ChorusAssert.assertTrue("Process std err mode must be captured", OutputMode.isCaptured(logOutput.getStdErrMode()));
+        ChorusAssert.assertTrue("Process std err mode cannot be INLINE when pattern matching", OutputMode.canSearchOutput(logOutput.getStdErrMode()));
         if ( stdErrInputStreams == null) {
-            stdErrInputStreams = new InputStreamAndReader("Std Err");
-            InputStream inputStream = process.getErrorStream();
-            stdErrInputStreams.createStreams(logOutput, inputStream);
-        }
-
-        if ( logOutput.getStdErrMode() == OutputMode.CAPTUREDWITHLOG && stdErrLogBufferedWriter == null) {
-            createStdErrLogfileStream(logOutput);
+            stdErrInputStreams = new TailLogBufferedReader(logOutput.getStdErrLogFile());
         }
 
         long timeoutMilliseconds = timeUnit.toMillis(length);
-        waitForOutputPattern(pattern, stdErrInputStreams, searchWithinLines, stdErrLogBufferedWriter, timeoutMilliseconds);
+        waitForOutputPattern(pattern, stdErrInputStreams, searchWithinLines, timeoutMilliseconds);
     }
 
-    private void waitForOutputPattern(String pattern, InputStreamAndReader i, boolean searchWithinLines, Writer logStream, long timeoutMilliseconds) {
+    private void waitForOutputPattern(String pattern, TailLogBufferedReader bufferedReader, boolean searchWithinLines, long timeoutMilliseconds) {
         Pattern p = Pattern.compile(pattern);
         long timeout = System.currentTimeMillis() + timeoutMilliseconds;
         try {
-            String matched = waitForPattern(timeout, i.reader, p, searchWithinLines, logStream, timeoutMilliseconds / 1000);
+            String matched = waitForPattern(timeout, bufferedReader, p, searchWithinLines, timeoutMilliseconds / 1000);
             
             //store into the ChorusContext the exact string which matched the pattern so this can be used
             //in subsequent test steps
@@ -159,44 +139,33 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     //read ahead without blocking and attempt to match the pattern
-    private String waitForPattern(long timeout, BufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines, Writer logStream, long timeoutInSeconds) throws IOException {
-        boolean writeToLog = logStream != null;
+    private String waitForPattern(long timeout, TailLogBufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines, long timeoutInSeconds) throws IOException {
         StringBuilder sb = new StringBuilder();
         String result = null;
         label:
         while(true) {
             while ( bufferedReader.ready() ) {
                 int c = bufferedReader.read();
-                if ( c == -1 ) {
-                    ChorusAssert.fail("End of stream while waiting for match");
-                }
-                
-                if (writeToLog) {
-                    logStream.write(c);
-                }
-                
-                if (c == '\n' || c == '\r' ) {
-                    if ( sb.length() > 0) {
-                        Matcher m = pattern.matcher(sb);
-                        boolean match = searchWithinLines ? m.find() : m.matches();
-                        if ( match ) {
-                            result = sb.toString();
-                            break label;    
-                        } else {
-                            sb.setLength(0);
+                if ( c != -1 ) {
+                    if (c == '\n' || c == '\r') {
+                        if (sb.length() > 0) {
+                            Matcher m = pattern.matcher(sb);
+                            boolean match = searchWithinLines ? m.find() : m.matches();
+                            if (match) {
+                                result = sb.toString();
+                                break label;
+                            } else {
+                                sb.setLength(0);
+                            }
                         }
+                    } else {
+                        sb.append((char) c);
                     }
-                } else {
-                    sb.append((char)c);                    
-                }
-
-                if ( writeToLog) {
-                    logStream.flush();
                 }
             } 
             
             //nothing more to read, does the current output match the pattern?
-            if ( searchWithinLines) {
+            if ( sb.length() > 0 && searchWithinLines) {
                 Matcher m = pattern.matcher(sb);
                 if ( m.find() ) {
                     result = m.group(0);
@@ -217,10 +186,6 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                         "Process stopped while waiting for match"
                 );
             }
-        }
-        
-        if ( writeToLog) {
-            logStream.flush();
         }
         return result;
     }
@@ -275,37 +240,22 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
     }
 
-    protected void createStdErrLogfileStream(ProcessLogOutput logOutput) {
-        stdErrLogfileStream = createFileOutputStream(logOutput, logOutput.getStdErrLogFile());
-        ChorusAssert.assertNotNull("Failed to create output stream to std error log at " + logOutput.getStdErrLogFile(), stdErrLogfileStream);
-        stdErrLogBufferedWriter = new BufferedWriter(new OutputStreamWriter(stdErrLogfileStream));
-    }
-
-    protected void createStdOutLogfileStream(ProcessLogOutput logOutput) {
-        stdOutLogfileStream = createFileOutputStream(logOutput, logOutput.getStdOutLogFile());
-        ChorusAssert.assertNotNull("Failed to create output stream to std out log at " + logOutput.getStdOutLogFile(), stdOutLogfileStream);
-        stdOutLogBufferedWriter = new BufferedWriter(new OutputStreamWriter(stdOutLogfileStream));
-    }
-
-    private FileOutputStream createFileOutputStream(ProcessLogOutput logOutput, File logFile) {
-        FileOutputStream result = null;
-        try {
-            getLog().debug("Creating process log at " + logFile.getPath());
-            result = new FileOutputStream(logFile, logOutput.isAppendToLogs());
-        } catch (Exception e) {
-            getLog().warn("Failed to create log file  " + logFile.getPath() + " will not write this log file");
-        }
-        return result;
-    }
-
     protected void closeStreams() {
         
         if ( stdOutInputStreams != null) {
-           stdOutInputStreams.close();
+            try {
+                stdOutInputStreams.close();
+            } catch (IOException e) {
+                getLog().trace("Failed to close stdOutInputStream", e);
+            }
         }
 
         if ( stdErrInputStreams != null) {
-          stdErrInputStreams.close();
+            try {
+                stdErrInputStreams.close();
+            } catch (IOException e) {
+                getLog().trace("Failed to close stdErrInputStream", e);
+            }
         }
 
         if ( outputWriter != null ) {
@@ -325,72 +275,6 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 outputStream = null;
             } catch (IOException e) {
                 getLog().trace("Failed to close output stream for process", e);
-            }
-        }
-
-        if ( stdOutLogfileStream != null) {
-            try {
-                getLog().trace("Closing stdout log file stream for process " + this);
-                stdOutLogBufferedWriter.flush();
-                stdOutLogBufferedWriter.close();
-                stdErrLogfileStream = null;
-                stdOutLogBufferedWriter = null;
-            } catch (IOException e) {
-                getLog().trace("Failed to flush and close stdout log file stream", e);
-            }
-        }
-
-        if ( stdErrLogfileStream != null) {
-            try {
-                getLog().trace("Closing stderr log file stream for process " + this);
-                stdErrLogBufferedWriter.flush();
-                stdErrLogBufferedWriter.close();
-                stdErrLogfileStream = null;
-                stdErrLogfileStream = null;
-            } catch (IOException e) {
-                getLog().trace("Failed to flush and close stderr log file stream", e);
-            }
-        }
-    }
-
-    /**
-     * Input stream and reader for process std out or std error
-     */
-    private class InputStreamAndReader {
-        
-        String name;
-        BufferedInputStream inputStream;
-        BufferedReader reader;
-
-        private InputStreamAndReader(String name) {
-            this.name = name;
-        }
-
-        void createStreams(ProcessLogOutput logOutput, InputStream processErrorStream) {
-            int readAheadBuffer = logOutput.getReadAheadBufferSize();
-            if ( readAheadBuffer > 0 ) {
-                getLog().trace("Creating new read ahead buffered input stream " + name + " for process " + this + " in captured mode");
-                inputStream = new ReadAheadBufferedStream(processErrorStream, 8192, logOutput.getReadAheadBufferSize()).startReadAhead();
-            } else {
-                getLog().trace("Creating new simple buffered input stream " + name + " for process " + this + " in captured mode");
-                inputStream = new BufferedInputStream(processErrorStream);
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-        }
-
-        void close() {
-            if ( inputStream != null) {
-                try {
-                    getLog().trace("Closing input stream " + name + " for process " + this);
-                    inputStream.close();
-                } catch (IOException e) {}
-            }
-            
-            if ( reader != null ) {
-                try {
-                    getLog().trace("Closing reader " + name + " for process " + this);
-                    reader.close();
-                } catch (IOException e) {}            
             }
         }
     }

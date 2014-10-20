@@ -53,6 +53,8 @@ public class ProcessBuilderProcess extends AbstractChorusProcess {
 
         switch (logOutput.getStdOutMode()) {
             case FILE :
+            case CAPTURED :
+            case CAPTUREDWITHLOG :
                 log.debug("Will write process std out to file at " + logOutput.getStdOutLogFile());
                 processBuilder.redirectOutput(
                     logOutput.isAppendToLogs() ? 
@@ -63,14 +65,12 @@ public class ProcessBuilderProcess extends AbstractChorusProcess {
             case INLINE :
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 break;
-            case CAPTURED: 
-                break;
-            case CAPTUREDWITHLOG:
-                break;
         }
         
         switch ( logOutput.getStdErrMode() ) {
-            case FILE :
+            case FILE:
+            case CAPTURED:
+            case CAPTUREDWITHLOG:
                 log.debug("Will write process std err to file at " + logOutput.getStdErrLogFile());
                 processBuilder.redirectError(
                     logOutput.isAppendToLogs() ?
@@ -80,10 +80,6 @@ public class ProcessBuilderProcess extends AbstractChorusProcess {
                 break;
             case INLINE :
                 processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
-                break;
-            case CAPTURED:
-                break;
-            case CAPTUREDWITHLOG:
                 break;
         }
         

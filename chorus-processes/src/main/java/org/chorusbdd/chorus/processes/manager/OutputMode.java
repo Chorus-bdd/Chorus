@@ -43,10 +43,10 @@ public enum OutputMode {
     CAPTUREDWITHLOG;      //capture for examination in test steps and log lines read to file
     
     public static boolean isWriteToLogFile(OutputMode m) {
-        return m == FILE || m == CAPTUREDWITHLOG;
+        return m != INLINE;
     }
 
-    public static boolean isCaptured(OutputMode stdOutMode) {
-        return stdOutMode == CAPTURED || stdOutMode == CAPTUREDWITHLOG;
+    public static boolean canSearchOutput(OutputMode stdOutMode) {
+        return stdOutMode != INLINE;
     }
 }
