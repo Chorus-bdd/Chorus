@@ -31,7 +31,6 @@ package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
 import org.chorusbdd.chorus.output.OutputFormatter;
-import org.chorusbdd.chorus.util.JavaVersion;
 import org.junit.Test;
 
 import java.io.*;

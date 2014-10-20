@@ -31,7 +31,6 @@ package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.JavaVersion;
 
 import java.util.List;
 
