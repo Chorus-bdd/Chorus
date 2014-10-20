@@ -30,15 +30,15 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
-import org.chorusbdd.chorus.stepinvoker.StepPendingException;
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
-import org.chorusbdd.chorus.remoting.manager.RemotingManager;
-import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
+import org.chorusbdd.chorus.remoting.manager.RemotingManager;
+import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepMatcher;
+import org.chorusbdd.chorus.stepinvoker.StepPendingException;
+import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -51,6 +51,8 @@ import java.util.Map;
  * Created by nick on 30/08/2014.
  */
 public class JmxRemotingManager extends SubsystemAdapter implements RemotingManager {
+
+    public static final String REMOTING_PROTOCOL = "jmx";
 
     private static ChorusLog log = ChorusLogFactory.getLog(JmxRemotingManager.class);
 

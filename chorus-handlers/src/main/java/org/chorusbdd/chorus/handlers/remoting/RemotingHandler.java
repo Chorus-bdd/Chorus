@@ -30,12 +30,12 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -79,7 +79,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     private ProcessManager processManager;
 
     @ChorusResource("subsystem.remoting")
-    private RemotingManager jmxRemotingManager;
+    private RemotingManager remotingManager;
     
     private Map<String, RemotingConfig> remotingConfigMap;
 
@@ -91,7 +91,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
-        return jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingManagerConfig());
+        return remotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingManagerConfig());
     }
 
     @Initialize(scope = Scope.FEATURE)
@@ -114,7 +114,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     @Destroy(scope = Scope.SCENARIO)
     public void destroy() {
         try {
-            jmxRemotingManager.closeAllConnections(Scope.SCENARIO);
+            remotingManager.closeAllConnections(Scope.SCENARIO);
         } catch (Throwable t) {
             log.error("Failed while destroying jmx remoting manager");   
         }

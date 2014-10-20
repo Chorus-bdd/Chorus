@@ -86,7 +86,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return initializeSubsystem(
             "RemotingManager",
             "chorusRemotingManager",
-            "org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager"
+            "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager"
         );
     }
 
