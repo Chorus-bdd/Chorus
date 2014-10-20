@@ -50,6 +50,8 @@ public interface ChorusProcess {
 
     boolean isExitCodeFailure();
 
+    int getExitCode();
+
     void checkProcess(int processCheckDelay) throws Exception;
 
     void waitForMatchInStdOut(String pattern, boolean searchWithinLines);

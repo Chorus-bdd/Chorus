@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
 * Created with IntelliJ IDEA.
