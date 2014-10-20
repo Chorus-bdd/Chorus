@@ -42,7 +42,6 @@ import java.util.List;
 * 
 * A ChorusProcess using JDK 1.7 ProcessHandler
 * Should be used when we have a 1.7+ runtime
-* 
 */
 public class ProcessBuilderProcess extends AbstractChorusProcess {
 

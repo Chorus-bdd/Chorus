@@ -38,8 +38,8 @@ package org.chorusbdd.chorus.util;
  */
 public class JavaVersion {
         
-    public static final boolean IS_1_7_OR_GREATER = isGreaterThanOrEqualTo(1.7f);    
-    
+    public static final boolean IS_1_7_OR_GREATER = isGreaterThanOrEqualTo(1.7f);
+
     public static boolean isGreaterThanOrEqualTo(float version) {
         String javaVersion = System.getProperty("java.specification.version");
         boolean result = false;

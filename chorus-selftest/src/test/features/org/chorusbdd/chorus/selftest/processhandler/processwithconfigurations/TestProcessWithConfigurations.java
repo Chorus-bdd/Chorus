@@ -54,7 +54,7 @@ public class TestProcessWithConfigurations extends AbstractInterpreterTest {
 
     @Override
     protected void processActualResults(ChorusSelfTestResults actual) {
-        if ( ! isInProcessAndJdk1_7() ) {           
+        if ( ! isInProcess() ) {
             removeFromStdOut(actual, "ConfA\\nConfig\\n", true);
             removeFromStdOut(actual, "Shared\\nConfig\\n", true);
         }

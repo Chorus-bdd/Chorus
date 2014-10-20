@@ -54,6 +54,6 @@ public class TestProcessWithClasspath extends AbstractInterpreterTest {
 
     @Override
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        removeLineFromStdOut(actualResults, "Whoohoo - loaded the main class OK from the jar", ! isInProcessAndJdk1_7());
+        removeLineFromStdOut(actualResults, "Whoohoo - loaded the main class OK from the jar", ! isInProcess());
     }
 }

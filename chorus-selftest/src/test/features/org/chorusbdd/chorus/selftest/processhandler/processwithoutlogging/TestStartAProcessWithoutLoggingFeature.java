@@ -54,7 +54,7 @@ public class TestStartAProcessWithoutLoggingFeature extends AbstractInterpreterT
     
     @Override
     protected void processActualResults(ChorusSelfTestResults actual) {
-       if ( ! isInProcessAndJdk1_7() ) {
+       if ( ! isInProcess() ) {
            removeLineFromStdOut(actual, "1", true);
            removeLineFromStdOut(actual, "Woohoo, we have started a process", true);
            removeLineFromStdErr(actual, "Eeek, an error might have occurred", true);           

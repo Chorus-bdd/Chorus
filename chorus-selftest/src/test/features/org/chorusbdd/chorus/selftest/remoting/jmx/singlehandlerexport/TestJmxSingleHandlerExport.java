@@ -53,7 +53,7 @@ public class TestJmxSingleHandlerExport extends AbstractInterpreterTest {
     }
 
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        if ( ! isInProcessAndJdk1_7() ) {
+        if ( ! isInProcess() ) {
             removeLineFromStdOut(actualResults, "Exporting the handler", true);
         }
     }
