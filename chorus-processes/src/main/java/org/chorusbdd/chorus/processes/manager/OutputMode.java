@@ -35,12 +35,18 @@ package org.chorusbdd.chorus.processes.manager;
  * Time: 18:41
  * 
  * The output mode for a process std out or std err stream
+ *
+ * Chorus 1.x supported the modes CAPTURED and CAPTUREDWITHLOG in addition to FILE and INLINE
+ *
+ * With 2.x chorus pattern matching against process output by reading from the process log file rather than buffering
+ * it internally. So the CAPTURED and CAPTUREDWITHLOG become redundant. These modes are still supported but are
+ * handled the same as FILE mode.
  */
 public enum OutputMode {
     FILE,                //log to a file
     INLINE,              //log inline with the Chorus interpreter's output stream
-    CAPTURED,            //capture for examination in test steps
-    CAPTUREDWITHLOG;      //capture for examination in test steps and log lines read to file
+    CAPTURED,            //deprecated, use FILE instead
+    CAPTUREDWITHLOG;     //deprecated, use FILE instead
     
     public static boolean isWriteToLogFile(OutputMode m) {
         return m != INLINE;

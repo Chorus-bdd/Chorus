@@ -126,10 +126,6 @@ class ProcessInfo implements ProcessManagerConfig {
         return processManagerConfig.getProcessCheckDelay();
     }
 
-    public int getReadAheadBufferSize() {
-        return processManagerConfig.getReadAheadBufferSize();
-    }
-
     public int getReadTimeoutSeconds() {
         return processManagerConfig.getReadTimeoutSeconds();
     }

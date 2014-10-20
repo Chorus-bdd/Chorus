@@ -70,7 +70,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private boolean appendToLogs;
     private boolean createLogDir = true; //whether to auto create
     private int processCheckDelay = 500;
-    private int readAheadBufferSize = 65536; //read ahead process output in CAPTURED mode
     private int readTimeoutSeconds = 10;
     private Scope processScope = Scope.SCENARIO;
 
@@ -111,7 +110,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
             isAppendToLogs(),
             isCreateLogDir(),
             getProcessCheckDelay(),
-            getReadAheadBufferSize(),
             getReadTimeoutSeconds(),
             getProcessScope()
         );
@@ -280,15 +278,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return this;
     }
 
-    public int getReadAheadBufferSize() {
-        return readAheadBufferSize;
-    }
-
-    public ProcessesConfig setReadAheadBufferSize(int readAheadBufferSize) {
-        this.readAheadBufferSize = readAheadBufferSize;
-        return this;
-    }
-
     public int getReadTimeoutSeconds() {
         return readTimeoutSeconds;
     }
@@ -338,7 +327,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
                 ", appendToLogs=" + appendToLogs +
                 ", createLogDir=" + createLogDir +
                 ", processCheckDelay=" + processCheckDelay +
-                ", readAheadBufferSize=" + readAheadBufferSize +
                 ", readTimeoutSeconds=" + readTimeoutSeconds +
                 ", processScope=" + processScope +
                 ", instancesStarted=" + instancesStarted +
@@ -366,13 +354,12 @@ public class ProcessesConfig implements ProcessManagerConfig {
         private final boolean appendToLogs;
         private final boolean createLogDir; //whether to auto create
         private final int processCheckDelay;
-        private final int readAheadBufferSize; //read ahead process output in CAPTURED mode
         private final int readTimeoutSeconds;
         private final Scope processScope;
 
         RuntimeProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
                     String args, OutputMode stdOutMode, OutputMode stdErrMode, int jmxPort, int debugPort, int terminateWaitTime,
-                    String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay, int readAheadBufferSize,
+                    String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
                     int readTimeoutSeconds, Scope processScope) {
             this.groupName = groupName;
             this.pathToExecutable = pathToExecutable;
@@ -390,7 +377,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
             this.appendToLogs = appendToLogs;
             this.createLogDir = createLogDir;
             this.processCheckDelay = processCheckDelay;
-            this.readAheadBufferSize = readAheadBufferSize;
             this.readTimeoutSeconds = readTimeoutSeconds;
             this.processScope = processScope;
         }
@@ -463,10 +449,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
             return processCheckDelay;
         }
 
-        public int getReadAheadBufferSize() {
-            return readAheadBufferSize;
-        }
-
         public int getReadTimeoutSeconds() {
             return readTimeoutSeconds;
         }
@@ -498,7 +480,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
                     ", appendToLogs=" + appendToLogs +
                     ", createLogDir=" + createLogDir +
                     ", processCheckDelay=" + processCheckDelay +
-                    ", readAheadBufferSize=" + readAheadBufferSize +
                     ", readTimeoutSeconds=" + readTimeoutSeconds +
                     ", processScope=" + processScope +
                     '}';

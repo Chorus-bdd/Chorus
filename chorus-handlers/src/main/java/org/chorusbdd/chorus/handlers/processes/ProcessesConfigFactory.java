@@ -112,7 +112,7 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
             } else if ( "stdOutMode".equals(key)) {
                 c.setStdOutMode(parseOutputMode(value, "stdOutMode"));
             } else if ("readAheadBufferSize".equals(key)) {
-                c.setReadAheadBufferSize(parseIntProperty(value, "readAheadBufferSize"));
+                log.warn("Property readAheadBufferSize is no longer supported from version 2.x");
             } else if ("readTimeoutSeconds".equals(key)) {
                 c.setReadTimeoutSeconds(parseIntProperty(value, "readTimeoutSeconds"));
             } else if ("scope".equals(key)) {

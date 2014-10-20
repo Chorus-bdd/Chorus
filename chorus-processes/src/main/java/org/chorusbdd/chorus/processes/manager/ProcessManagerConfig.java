@@ -71,8 +71,6 @@ public interface ProcessManagerConfig extends HandlerConfig {
 
     int getProcessCheckDelay();
 
-    int getReadAheadBufferSize();
-
     int getReadTimeoutSeconds();
 
     Scope getProcessScope();
