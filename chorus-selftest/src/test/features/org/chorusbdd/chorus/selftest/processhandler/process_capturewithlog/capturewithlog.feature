@@ -4,6 +4,9 @@ Uses: Chorus Context
 Feature: Capture With Log
 
   Test that when in capturewithlog mode, process output which Chorus reads is logged to a file
+  n.b. CAPTUREWITHLOG is now deprecated and works the same as CAPTURE - both now
+  read from the log files the process writes. Originally the output would be read first by chorus and
+  chorus would write the log files
     
   Scenario: When in capturewithlog mode log files are written
     Given I start a capturewithlog process 

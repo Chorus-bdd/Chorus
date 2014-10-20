@@ -47,9 +47,9 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
 
     public static final String LAST_MATCH = "ProcessesHandler.match";
     
-    //when we are in CAPTURED mode
-    private TailLogBufferedReader stdOutInputStreams;
-    private TailLogBufferedReader stdErrInputStreams;
+    //when reading logs to match against process output
+    private TailLogBufferedReader stdOutLogInputStream;
+    private TailLogBufferedReader stdErrLogInputStream;
 
     //output stream/writer to write to the process std in
     private OutputStream outputStream;
@@ -101,12 +101,12 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
 
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
         ChorusAssert.assertTrue("Process std out mode cannot be INLINE when pattern matching", OutputMode.canSearchOutput(logOutput.getStdOutMode()));
-        if ( stdOutInputStreams == null) {
-            stdOutInputStreams = new TailLogBufferedReader(logOutput.getStdOutLogFile());
+        if ( stdOutLogInputStream == null) {
+            stdOutLogInputStream = new TailLogBufferedReader(logOutput.getStdOutLogFile());
         }
 
         long timeoutMilliseconds = timeUnit.toMillis(length);
-        waitForOutputPattern(pattern, stdOutInputStreams, searchWithinLines, timeoutMilliseconds);
+        waitForOutputPattern(pattern, stdOutLogInputStream, searchWithinLines, timeoutMilliseconds);
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
@@ -115,12 +115,12 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
         ChorusAssert.assertTrue("Process std err mode cannot be INLINE when pattern matching", OutputMode.canSearchOutput(logOutput.getStdErrMode()));
-        if ( stdErrInputStreams == null) {
-            stdErrInputStreams = new TailLogBufferedReader(logOutput.getStdErrLogFile());
+        if ( stdErrLogInputStream == null) {
+            stdErrLogInputStream = new TailLogBufferedReader(logOutput.getStdErrLogFile());
         }
 
         long timeoutMilliseconds = timeUnit.toMillis(length);
-        waitForOutputPattern(pattern, stdErrInputStreams, searchWithinLines, timeoutMilliseconds);
+        waitForOutputPattern(pattern, stdErrLogInputStream, searchWithinLines, timeoutMilliseconds);
     }
 
     private void waitForOutputPattern(String pattern, TailLogBufferedReader bufferedReader, boolean searchWithinLines, long timeoutMilliseconds) {
@@ -242,19 +242,19 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
 
     protected void closeStreams() {
         
-        if ( stdOutInputStreams != null) {
+        if ( stdOutLogInputStream != null) {
             try {
-                stdOutInputStreams.close();
+                stdOutLogInputStream.close();
             } catch (IOException e) {
-                getLog().trace("Failed to close stdOutInputStream", e);
+                getLog().trace("Failed to close stdOutLogInputStream", e);
             }
         }
 
-        if ( stdErrInputStreams != null) {
+        if ( stdErrLogInputStream != null) {
             try {
-                stdErrInputStreams.close();
+                stdErrLogInputStream.close();
             } catch (IOException e) {
-                getLog().trace("Failed to close stdErrInputStream", e);
+                getLog().trace("Failed to close stdErrLogInputStream", e);
             }
         }
 
