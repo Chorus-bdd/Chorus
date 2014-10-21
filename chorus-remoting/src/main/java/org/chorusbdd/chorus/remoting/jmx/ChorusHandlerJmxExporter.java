@@ -32,8 +32,8 @@ package org.chorusbdd.chorus.remoting.jmx;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepMethodInvokerFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusConstants;
@@ -159,7 +159,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             Method m = stepMethods.get(methodUid);
             Object handlerInstance = stepHandlers.get(methodUid);
 
-            StepInvoker i = new StepMethodInvokerFactory().createInvoker(handlerInstance, m);
+            StepInvoker i = new HandlerClassInvokerFactory(handlerInstance).createInvoker(handlerInstance, m);
             Object result = i.invoke(args);
             
             //return the updated context

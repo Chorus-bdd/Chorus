@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.pathscanner;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.parser.ChorusParser;
 import org.chorusbdd.chorus.parser.FeatureFileParser;
 import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -135,7 +136,7 @@ public class FeatureListBuilder {
 
     private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken, List<StepMacro> globalStepMacro) {
         List<FeatureToken> features = null;
-        FeatureFileParser parser = new FeatureFileParser(globalStepMacro);
+        ChorusParser<FeatureToken> parser = new FeatureFileParser(globalStepMacro);
         try {
             log.debug(String.format("Loading feature from file: %s", featureFile));
             features = parser.parse(new BufferedReader(new FileReader(featureFile)));

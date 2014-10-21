@@ -42,7 +42,7 @@ import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
  * A Process config
  * 
  * The process will be a java process if pathToExecutable property is not provided.
- * In tbis case the jre and classpath default to the interpreter's jvm and classpath
+ * In this case the jre and classpath default to the interpreter's jvm and classpath
  * These can be overridden by setting the jre and classpath properties
  * 
  * jvmargs and mainclass are only applicable for java processes, they should not be set

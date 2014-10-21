@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.pathscanner;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.parser.ChorusParser;
 import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.parser.StepMacroParser;
 
@@ -91,7 +92,7 @@ public class StepMacroBuilder {
 
     private List<StepMacro> parseStepMacro(File stepMacroFile) {
         List<StepMacro> stepMacro = null;
-        StepMacroParser parser = new StepMacroParser();
+        ChorusParser<StepMacro> parser = new StepMacroParser();
         try {
             log.info(String.format("Loading stepmacro from file: %s", stepMacroFile));
             stepMacro = parser.parse(new BufferedReader(new FileReader(stepMacroFile)));

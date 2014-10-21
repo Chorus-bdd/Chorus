@@ -70,7 +70,7 @@ class StepDefinitionMethodFinder {
     public StepDefinitionMethodFinder findStepMethod() {
         log.debug("Finding step method...");
 
-        for ( StepInvoker i : stepInvokerProvider.getStepInvokerList()) {
+        for ( StepInvoker i : stepInvokerProvider.getStepInvokers()) {
             checkForMatch(i);
         }
         return this;

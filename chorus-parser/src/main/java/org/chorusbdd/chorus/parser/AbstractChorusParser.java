@@ -45,11 +45,9 @@ import java.util.List;
  * Time: 23:12
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractChorusParser<E> {
+public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractChorusParser.class);
-
-    public abstract List<E> parse(Reader reader) throws IOException, ParseException;
 
     protected StepToken createStepToken(String line) {
         int indexOfSpace = line.indexOf(' ');
@@ -82,14 +80,4 @@ public abstract class AbstractChorusParser<E> {
         return stepToken;
     }
 
-    public static class ParseException extends Exception {
-
-        public ParseException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        ParseException(String message, int lineNumber) {
-            super(String.format("%s (at line:%s)", message, lineNumber));
-        }
-    }
 }

@@ -66,7 +66,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
     //the filter tags are read before a feature or scenario so when found store them here until next line is read
     private String lastTagsLine = null;
 
-    private StepMacroParser stepMacroParser = new StepMacroParser();
+    private ChorusParser<StepMacro> stepMacroParser = new StepMacroParser();
     private List<StepMacro> globalStepMacro;
     private int endFeatureLineNumber = -1;
 

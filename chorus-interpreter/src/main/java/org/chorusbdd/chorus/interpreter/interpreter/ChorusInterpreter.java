@@ -33,6 +33,8 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.pathscanner.HandlerClassDiscovery;
 import org.chorusbdd.chorus.stepinvoker.DefaultStepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
@@ -200,9 +202,11 @@ public class ChorusInterpreter {
     }
 
     private StepInvokerProvider createStepInvokerProvider(List<Object> handlerInstances) {
-        StepInvokerProvider stepInvokerProvider = new DefaultStepInvokerProvider();
+        DefaultStepInvokerProvider stepInvokerProvider = new DefaultStepInvokerProvider();
         for ( Object handler : handlerInstances) {
-            stepInvokerProvider.addStepInvokers(handler);
+            HandlerClassInvokerFactory f = new HandlerClassInvokerFactory(handler);
+            List<StepInvoker> l = f.createStepInvokers();
+            stepInvokerProvider.addStepInvokers(l);
         }
         return stepInvokerProvider;
     }

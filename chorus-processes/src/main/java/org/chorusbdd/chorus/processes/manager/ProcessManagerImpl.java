@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
  * The default implementation of Chorus' ProcessManager subsystem
  * 
  * Accessible by annotating a Handler field with 
- * @ChrousResource("process.manager")
+ * @ChrousResource("subsystem.processes")
  * ProcessManager processManager;
  */
 public class ProcessManagerImpl implements ProcessManager {

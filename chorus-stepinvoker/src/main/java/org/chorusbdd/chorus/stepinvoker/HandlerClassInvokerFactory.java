@@ -36,6 +36,8 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -43,9 +45,28 @@ import java.util.regex.Pattern;
 * Date: 24/09/13
 * Time: 18:46
 */
-public class StepMethodInvokerFactory {
+public class HandlerClassInvokerFactory implements InvokerFactory {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepMethodInvokerFactory.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(HandlerClassInvokerFactory.class);
+    private Object handlerInstance;
+
+    public HandlerClassInvokerFactory(Object handlerInstance) {
+        this.handlerInstance = handlerInstance;
+    }
+
+    public List<StepInvoker> createStepInvokers() {
+        List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
+        for (Method method : handlerInstance.getClass().getMethods()) {
+            //only check methods with Step annotation
+            Step stepAnnotationInstance = method.getAnnotation(Step.class);
+            if (stepAnnotationInstance != null) {
+                log.debug("Found @Step annotated method " + method + " on handler " + handlerInstance);
+                StepInvoker invoker = createInvoker(handlerInstance, method);
+                stepInvokers.add(invoker);
+            }
+        }
+        return stepInvokers;
+    }
 
     public StepInvoker createInvoker(Object handlerInstance, Method method) {
         Annotation[] annotations = method.getDeclaredAnnotations();
@@ -74,4 +95,5 @@ public class StepMethodInvokerFactory {
         }
         return simpleMethodInvoker;
     }
+
 }

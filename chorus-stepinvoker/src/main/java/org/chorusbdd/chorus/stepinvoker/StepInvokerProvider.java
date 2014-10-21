@@ -38,14 +38,7 @@ import java.util.List;
  */
 public interface StepInvokerProvider {
 
-    List<StepInvoker> getStepInvokerList();
+    List<StepInvoker> getStepInvokers();
 
-    void addStepInvoker(StepInvoker stepInvoker);
-
-    void removeStepInvoker(StepInvoker stepInvoker);
-
-    void addStepInvokers(Object handlerInstance);
-
-    void removeStepInvokers(Object handlerInstance);
-
+    void addStepInvokers(List<StepInvoker> stepInvokers);
 }
