@@ -73,7 +73,10 @@ public class HandlerClassInvokerFactory implements InvokerFactory {
 
         Step stepAnnotation = method.getAnnotation(Step.class);
         Pattern stepPattern = Pattern.compile(stepAnnotation.value());
+
         String pendingText = stepAnnotation.pending();
+        pendingText = ( Step.NO_PENDING_MESSAGE.equals(pendingText)) ? null : pendingText;
+
         StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(handlerInstance, method, stepPattern, pendingText);
 
         //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate

@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
@@ -40,7 +41,6 @@ import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
-import org.chorusbdd.chorus.util.HandlerUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.lang.reflect.InvocationTargetException;
@@ -161,19 +161,8 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
                 String methodUid = entry.getKey();
                 String regex = entry.getValue()[0];
                 String pending = entry.getValue()[1];
-    
-                //identify the types in the methodUid
-                String[] methodUidParts = methodUid.split("::");
-                Class[] types = new Class[methodUidParts.length - 1];
-                for (int i = 0; i < types.length; i++) {
-                    String typeName = methodUidParts[i + 1];
-                    try {
-                        types[i] = HandlerUtils.forName(typeName);
-                    } catch (ClassNotFoundException e) {
-                        log.error("Could not locate class for: " + typeName, e);
-                    }
-                }
-    
+                Class[] types = MethodUID.getClassesFromMethodUID(methodUid);
+
                 //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
                 //to actually invoke the remote method with it
                 StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
@@ -193,5 +182,6 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
             }
             return this;
         }
+
     }
 }

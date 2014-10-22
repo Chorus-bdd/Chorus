@@ -30,24 +30,23 @@
 package org.chorusbdd.chorus.remoting.jmx;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
+import org.chorusbdd.chorus.stepinvoker.InvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.ChorusConstants;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
-import org.chorusbdd.chorus.util.ExceptionHandling;
-import org.chorusbdd.chorus.util.PolledAssertion;
+import org.chorusbdd.chorus.util.*;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -64,22 +63,14 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     /**
      * Maps: methodUid -> String[] {"step.regexp","step.pending"}
      */
-    private static Map<String, String[]> stepMetadata = new HashMap<String, String[]>();
-
-    /**
-     * Maps: methodUid -> Method
-     */
-    private static Map<String, Method> stepMethods = new HashMap<String, Method>();
-
-    /**
-     * Maps: methodUid -> Handler instance
-     */
-    private static Map<String, Object> stepHandlers = new HashMap<String, Object>();
+    private static Map<String, String[]> stepMetadata = new ConcurrentHashMap<String, String[]>();
 
     private static AtomicBoolean exported = new AtomicBoolean(false);
 
     public static final String JMX_EXPORTER_NAME = ChorusConstants.JMX_EXPORTER_NAME;
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = ChorusConstants.JMX_EXPORTER_ENABLED_PROPERTY;
+
+    private static Map<String, StepInvoker> stepInvokers = new ConcurrentHashMap<String, StepInvoker>();
 
     public ChorusHandlerJmxExporter(Object... handlers) {
 
@@ -90,28 +81,27 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
                 throw new ChorusRemotingException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", handlerClass.getName()));
             }
 
-            //identify all methods that have step definitions and store metadata for them
-            for (Method m : handlerClass.getMethods()) {
-                Step stepInstance = m.getAnnotation(Step.class);
-                if (stepInstance != null) {
-                    addStepMethod(handler, m, stepInstance);
-                }
-            }
-            if (stepMethods.size() == 0) {
+            InvokerFactory invokerFactory = new HandlerClassInvokerFactory(handler);
+            List<StepInvoker> invokers = invokerFactory.createStepInvokers();
+
+            if (invokers.size() == 0) {
                 log.warn(String.format("Cannot export object of type (%s) it no methods that declare the @Step annotation", handlerClass.getName()));
+            }
+
+            for ( StepInvoker i : invokers) {
+                addStepInvoker(i);
             }
         }
     }
 
-    private void addStepMethod(Object handler, Method m, Step stepInstance) {
+    private void addStepInvoker(StepInvoker stepInvoker) {
         //step annotation metadata
         String[] stepMetaData = new String[2];
-        stepMetaData[0] = stepInstance.value();//regexp
-        stepMetaData[1] = stepInstance.pending().equals(Step.NO_PENDING_MESSAGE) ? null : stepInstance.pending(); //pending text or null if not set
-        String methodUid = createUidForMethod(handler, m);
+        stepMetaData[0] = stepInvoker.getStepPattern().toString();//regexp
+        stepMetaData[1] = stepInvoker.getPendingMessage(); //pending text or null if not set
+        String methodUid = MethodUID.createUid(stepInvoker);
         stepMetadata.put(methodUid, stepMetaData);
-        stepMethods.put(methodUid, m);
-        stepHandlers.put(methodUid, handler);
+        stepInvokers.put(methodUid, stepInvoker);
     }
 
     /**
@@ -158,12 +148,10 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         try {
             //reset the local context for the calling thread
             ChorusContext.resetContext(context);
-
-            //invoke the method
-            Method m = stepMethods.get(methodUid);
-            Object handlerInstance = stepHandlers.get(methodUid);
-
-            StepInvoker i = new HandlerClassInvokerFactory(handlerInstance).createInvoker(handlerInstance, m);
+            StepInvoker i = stepInvokers.get(methodUid);
+            if ( i == null) {
+                throw new ChorusException("Cannot find a step invoker for remote method with id " + methodUid);
+            }
             Object result = i.invoke(args);
             
             //return the updated context
@@ -191,16 +179,8 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     }
 
     public Map<String, String[]> getStepMetadata() {
-        return stepMetadata;
+        HashMap<String, String[]> safeCopy = new HashMap<>(stepMetadata);
+        return safeCopy;
     }
 
-    private String createUidForMethod(Object handler, Method m) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(handler.getClass().getSimpleName() + "." + m.getName());
-        Class<?>[] paramTypes = m.getParameterTypes();
-        for (Class<?> paramType : paramTypes) {
-            builder.append("::").append(paramType.getName());
-        }
-        return builder.toString();
-    }
 }

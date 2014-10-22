@@ -56,7 +56,7 @@ public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
         this.stepPattern = stepPattern;
         this.parameterTypes = method.getParameterTypes();
         this.pendingMessage = pendingMessage;
-        this.isPending = ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
+        this.isPending = pendingMessage != null && ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
     }
 
     /**
