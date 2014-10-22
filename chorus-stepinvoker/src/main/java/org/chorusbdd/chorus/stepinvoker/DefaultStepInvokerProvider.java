@@ -47,18 +47,39 @@ public class DefaultStepInvokerProvider implements StepInvokerProvider {
     //an list which allows lookup by id
     private final LinkedHashMap<String, StepInvoker> stepInvokerList = new LinkedHashMap<String, StepInvoker>();
 
+    private final Map<Object, LinkedHashSet<StepInvoker>> stepInvokersByGroup = new HashMap<>();
+
     public List<StepInvoker> getStepInvokers() {
-        return new LinkedList<StepInvoker>(stepInvokerList.values());
+        return new LinkedList<>(stepInvokerList.values());
     }
 
-    public void addStepInvokers(List<StepInvoker> stepInvokers) {
+    public void addStepInvokers(Object groupIdentifier, List<StepInvoker> stepInvokers) {
         for (StepInvoker s : stepInvokers) {
-            addStepInvoker(s);
+            addStepInvoker(groupIdentifier, s);
         }
     }
 
-    public void addStepInvoker(StepInvoker stepInvoker) {
+    public void removeStepInvokers(Object groupIdentifier) {
+        LinkedHashSet<StepInvoker> m = stepInvokersByGroup.remove(groupIdentifier);
+        if ( m != null) {
+            for ( StepInvoker i : m) {
+                stepInvokerList.remove(i.getId());
+            }
+        }
+    }
+
+    public void addStepInvoker(Object groupIdentifier, StepInvoker stepInvoker) {
         stepInvokerList.put(stepInvoker.getId(), stepInvoker);
+        addToGroup(groupIdentifier, stepInvoker);
+    }
+
+    private void addToGroup(Object groupIdentifier, StepInvoker stepInvoker) {
+        LinkedHashSet<StepInvoker> s = stepInvokersByGroup.get(groupIdentifier);
+        if ( s == null ) {
+            s = new LinkedHashSet<>();
+            stepInvokersByGroup.put(groupIdentifier, s);
+        }
+        s.add(stepInvoker);
     }
 
 }

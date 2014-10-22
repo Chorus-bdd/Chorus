@@ -44,11 +44,11 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
     private static AtomicLong idGenerator = new AtomicLong();
 
     private Long id = idGenerator.incrementAndGet();
-    private Object classInstance;
+    private Object handlerInstance;
     private Method method;
 
     public AbstractStepMethodInvoker(Object handlerInstance, Method method) {
-        this.classInstance = handlerInstance;
+        this.handlerInstance = handlerInstance;
         this.method = method;
     }
 
@@ -60,11 +60,11 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
         //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
         //or if the two handler instances of the same handler class are processed (in error?)
         //plus the fully qualified class name and method name for clarity
-        return id + ":" + classInstance.getClass().getName() + ":" + method.getName();
+        return id + ":" + handlerInstance.getClass().getName() + ":" + method.getName();
     }
 
-    public Object getClassInstance() {
-        return classInstance;
+    public Object getHandlerInstance() {
+        return handlerInstance;
     }
 
     protected Method getMethod() {
@@ -79,6 +79,6 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
     }
 
     public String toString() {
-        return classInstance.getClass().getSimpleName() + "." + method.getName();
+        return handlerInstance.getClass().getSimpleName() + "." + method.getName();
     }
 }

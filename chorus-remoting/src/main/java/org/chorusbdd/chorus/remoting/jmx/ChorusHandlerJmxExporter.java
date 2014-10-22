@@ -94,20 +94,24 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             for (Method m : handlerClass.getMethods()) {
                 Step stepInstance = m.getAnnotation(Step.class);
                 if (stepInstance != null) {
-                    //step annotation metadata
-                    String[] stepMetaData = new String[2];
-                    stepMetaData[0] = stepInstance.value();//regexp
-                    stepMetaData[1] = stepInstance.pending().equals(Step.NO_PENDING_MESSAGE) ? null : stepInstance.pending(); //pending text or null if not set
-                    String methodUid = createUidForMethod(handler, m);
-                    stepMetadata.put(methodUid, stepMetaData);
-                    stepMethods.put(methodUid, m);
-                    stepHandlers.put(methodUid, handler);
+                    addStepMethod(handler, m, stepInstance);
                 }
             }
             if (stepMethods.size() == 0) {
                 log.warn(String.format("Cannot export object of type (%s) it no methods that declare the @Step annotation", handlerClass.getName()));
             }
         }
+    }
+
+    private void addStepMethod(Object handler, Method m, Step stepInstance) {
+        //step annotation metadata
+        String[] stepMetaData = new String[2];
+        stepMetaData[0] = stepInstance.value();//regexp
+        stepMetaData[1] = stepInstance.pending().equals(Step.NO_PENDING_MESSAGE) ? null : stepInstance.pending(); //pending text or null if not set
+        String methodUid = createUidForMethod(handler, m);
+        stepMetadata.put(methodUid, stepMetaData);
+        stepMethods.put(methodUid, m);
+        stepHandlers.put(methodUid, handler);
     }
 
     /**

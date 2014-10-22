@@ -34,11 +34,17 @@ import java.util.List;
 /**
  * Created by nick on 02/09/2014.
  *
- * Maintain a list of StepInvoker
+ * Maintain a collection of StepInvoker which are assigned into groups
+ * (generally a group is related to a specific handler class)
+ *
+ * The ability to remove and replace by group is intended to support dynamic reloading of handler classes and their
+ * step implementations
  */
 public interface StepInvokerProvider {
 
     List<StepInvoker> getStepInvokers();
 
-    void addStepInvokers(List<StepInvoker> stepInvokers);
+    void addStepInvokers(Object groupIdentifier, List<StepInvoker> stepInvokers);
+
+    void removeStepInvokers(Object groupIdentifier);
 }

@@ -47,12 +47,12 @@ public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
     private final boolean isPending;
     private final Pattern stepPattern;
 
-    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern) {
-        this(classInstance, method, stepPattern, null);
+    public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern) {
+        this(handlerInstance, method, stepPattern, null);
     }
 
-    public SimpleMethodInvoker(Object classInstance, Method method, Pattern stepPattern, String pendingMessage) {
-        super(classInstance, method);
+    public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage) {
+        super(handlerInstance, method);
         this.stepPattern = stepPattern;
         this.parameterTypes = method.getParameterTypes();
         this.pendingMessage = pendingMessage;
@@ -89,7 +89,7 @@ public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
 
 
     public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Object result =  getMethod().invoke(getClassInstance(), args);
+        Object result =  getMethod().invoke(getHandlerInstance(), args);
         result = handleResultIfReturnTypeVoid(getMethod(), result);
         return result;
     }
