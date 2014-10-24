@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.stepinvoker.StepFinder;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
@@ -156,12 +157,12 @@ public class StepProcessor {
             contextVariableStepExpander.processStep(step);
 
             //identify what method should be called and its parameters
-            StepDefinitionMethodFinder stepDefinitionMethodFinder = new StepDefinitionMethodFinder(stepInvokerProvider, step);
-            stepDefinitionMethodFinder.findStepMethod();
+            StepFinder stepFinder = new StepFinder(stepInvokerProvider.getStepInvokers(), step.getAction());
+            stepFinder.findStepMethod();
 
             //call the method if found
-            if (stepDefinitionMethodFinder.isMethodAvailable()) {
-                endState = callStepMethod(executionToken, step, endState, stepDefinitionMethodFinder);
+            if (stepFinder.isMethodAvailable()) {
+                endState = callStepMethod(executionToken, step, endState, stepFinder);
             } else {
                 log.debug("Could not find a step method definition for step " + step);
                 //no method found yet for this step
@@ -172,9 +173,9 @@ public class StepProcessor {
         return endState;
     }
 
-    private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
+    private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepFinder stepFinder) {
         //setting a pending message in the step annotation implies the step is pending - we don't execute it
-        StepInvoker chosenStepInvoker = stepDefinitionMethodFinder.getChosenStepInvoker();
+        StepInvoker chosenStepInvoker = stepFinder.getChosenStepInvoker();
         if ( chosenStepInvoker.isPending()) {
             String pendingMessage = chosenStepInvoker.getPendingMessage();
             log.debug("Step has a pending message " + pendingMessage + " skipping step");
@@ -188,20 +189,20 @@ public class StepProcessor {
                 endState = StepEndState.DRYRUN;
                 executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
             } else {
-                endState = executeStepMethod(executionToken, step, stepDefinitionMethodFinder);
+                endState = executeStepMethod(executionToken, step, stepFinder);
             }
         }
         return endState;
     }
 
-    private StepEndState executeStepMethod(ExecutionToken executionToken, StepToken step, StepDefinitionMethodFinder stepDefinitionMethodFinder) {
+    private StepEndState executeStepMethod(ExecutionToken executionToken, StepToken step, StepFinder stepFinder) {
         StepEndState endState;
-        log.debug("Now executing the step using method " + stepDefinitionMethodFinder);
+        log.debug("Now executing the step using method " + stepFinder);
         long startTime = System.currentTimeMillis();
         try {
             //call the step method using reflection
-            Object result = stepDefinitionMethodFinder.getChosenStepInvoker().invoke(
-                    stepDefinitionMethodFinder.getInvokerArgs()
+            Object result = stepFinder.getChosenStepInvoker().invoke(
+                    stepFinder.getInvokerArgs()
             );
             log.debug("Finished executing the step, step passed, result was " + result);
 

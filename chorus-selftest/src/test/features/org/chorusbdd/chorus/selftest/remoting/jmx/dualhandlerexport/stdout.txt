@@ -13,7 +13,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Given I start a config1 process named DualHandlerExport                                  PASSED  
     And I call a step method exported by handler one in DualHandlerExport                    PASSED  One
     And I call a step method exported by handler two in DualHandlerExport                    PASSED  two
-Chorus --> INFO    - Ambiguous method (JmxDualHandlerExportHandler.canCallAStepMethodExportedByBoth) found for step (I call a step method exported by both handlers) on (DualHandlerExport) will use first method found (JmxDualHandlerExportHandlerTwo.canCallAStepMethodExportedByBoth)
+Chorus --> INFO    - Ambiguous step [I call a step method exported by both handlers], more than one implementation, will use [RemoteStep:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth] not [RemoteStep:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth]
     And I call a step method exported by both handlers in DualHandlerExport                  PASSED  
     Then the ambiguity is logged and one of the matching steps is called in DualHandlerExportPASSED  
     And I can stop the process named DualHandlerExport                                       PASSED  

@@ -36,4 +36,10 @@ public class MethodUID {
         }
         return types;
     }
+
+    public static String getClassAndMethod(String methodUid) {
+        //identify the types in the methodUid
+        String[] methodUidParts = methodUid.split("::");
+        return methodUidParts[0];
+    }
 }

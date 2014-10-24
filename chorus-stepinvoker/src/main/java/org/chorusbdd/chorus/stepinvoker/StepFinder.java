@@ -27,14 +27,12 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.interpreter;
+package org.chorusbdd.chorus.stepinvoker;
 
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
-import org.chorusbdd.chorus.results.StepToken;
+
+import java.util.List;
 
 /**
 * Created with IntelliJ IDEA.
@@ -45,18 +43,18 @@ import org.chorusbdd.chorus.results.StepToken;
 * Find a matching step method to call from a List of handler classes and create a StepInvoker to call it
 *
 */
-class StepDefinitionMethodFinder {
+public class StepFinder {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepDefinitionMethodFinder.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(StepFinder.class);
 
-    private StepInvokerProvider stepInvokerProvider;
-    private StepToken step;
+    private List<StepInvoker> stepInvokers;
+    private String stepAction;
     private StepInvoker chosenStepInvoker;
     private Object[] invokerArgs;
 
-    public StepDefinitionMethodFinder(StepInvokerProvider stepInvokerProvider, StepToken step) {
-        this.stepInvokerProvider = stepInvokerProvider;
-        this.step = step;
+    public StepFinder(List<StepInvoker> stepInvokers, String stepAction) {
+        this.stepInvokers = stepInvokers;
+        this.stepAction = stepAction;
     }
 
     public StepInvoker getChosenStepInvoker() {
@@ -67,35 +65,33 @@ class StepDefinitionMethodFinder {
         return invokerArgs;
     }
 
-    public StepDefinitionMethodFinder findStepMethod() {
+    public StepFinder findStepMethod() {
         log.debug("Finding step method...");
 
-        for ( StepInvoker i : stepInvokerProvider.getStepInvokers()) {
+        for ( StepInvoker i : stepInvokers) {
             checkForMatch(i);
         }
         return this;
     }
 
     private void checkForMatch(StepInvoker invoker) {
-        String action = step.getAction();
-
-        log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + action + "]");
-        Object[] values = StepMatcher.extractGroupsAndCheckMethodParams(invoker, action);
+        log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + stepAction + "]");
+        Object[] values = StepMatcher.extractGroupsAndCheckMethodParams(invoker, stepAction);
         if (values != null) { //the regexp matched the action and the method's parameters
-            foundStepMethod(invoker, values);
+            foundStepInvoker(invoker, values);
         }
     }
 
-    private void foundStepMethod(StepInvoker stepInvoker, Object[] values) {
+    private void foundStepInvoker(StepInvoker stepInvoker, Object[] values) {
         log.trace("Matched!");
         if (chosenStepInvoker == null) {
             this.invokerArgs = values;
             this.chosenStepInvoker = stepInvoker;
         } else {
-            log.info(String.format("Ambiguous method (%s) found for step (%s) will use first method found (%s)",
-            stepInvoker,
-            step,
-            this.chosenStepInvoker));
+            log.info(String.format("Ambiguous step [%s], more than one implementation, will use [%s] not [%s]",
+            stepAction,
+            this.chosenStepInvoker.getTechnicalDescription(),
+            stepInvoker.getTechnicalDescription()));
         }
     }
 
@@ -103,4 +99,7 @@ class StepDefinitionMethodFinder {
         return chosenStepInvoker != null;
     }
 
+    public boolean stepWasFound() {
+        return chosenStepInvoker != null;
+    }
 }

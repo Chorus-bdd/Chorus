@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
+import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
@@ -120,8 +121,11 @@ public class RemoteStepInvoker implements StepInvoker {
         return "RemoteStepInvoker" + System.identityHashCode(this);
     }
 
+    public String getTechnicalDescription() {
+        return "RemoteStep:" + MethodUID.getClassAndMethod(methodUid);
+    }
 
     public String toString() {
-        return methodUid;
+        return pattern.toString();
     }
 }

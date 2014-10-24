@@ -36,6 +36,7 @@ import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
+import org.chorusbdd.chorus.stepinvoker.StepFinder;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.stepinvoker.StepPendingException;
@@ -44,7 +45,9 @@ import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,18 +73,38 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
 
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingInfo);
         Map<String, String[]> stepMetaData = proxy.getStepMetadata();
-        
-        RemoteStepFinder remoteStepFinder = new RemoteStepFinder(action, componentName, stepMetaData, proxy).findRemoteStepInvoker();
+
+        List<StepInvoker> invokers = getRemoteStepInvokers(proxy, stepMetaData);
+
+        StepFinder stepFinder = new StepFinder(invokers, action);
+        stepFinder.findStepMethod();
 
         Object result;
-        if (remoteStepFinder.stepWasFound()) {
-            result = processRemoteMethod(remoteStepFinder.getFoundStepInvoker(), remoteStepFinder.getFoundArgs());
+        if (stepFinder.stepWasFound()) {
+            result = processRemoteMethod(stepFinder.getChosenStepInvoker(), stepFinder.getInvokerArgs());
         } else {
             String message = String.format("There is no step handler available for action (%s) on component (%s)", action, componentName);
             log.error(message);
             throw new RemoteStepNotFoundException(action, componentName);
         }
         return result;
+    }
+
+    private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy, Map<String, String[]> stepMetaData) {
+        List<StepInvoker> invokers = new ArrayList<>();
+        for (Map.Entry<String, String[]> entry : stepMetaData.entrySet()) {
+            String methodUid = entry.getKey();
+
+            String regex = entry.getValue()[0];
+            String pending = entry.getValue()[1];
+            Class[] types = MethodUID.getClassesFromMethodUID(methodUid);
+
+            //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
+            //to actually invoke the remote method with it
+            StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
+            invokers.add(stepInvoker);
+        }
+        return invokers;
     }
 
     private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingManagerConfig remotingInfo) {
@@ -126,62 +149,4 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     }
 
 
-    /**
-     * Find the correct remote method and warn if there are multiple matches
-     */
-    private static class RemoteStepFinder {
-        private String action;
-        private String componentName;
-        private Map<String, String[]> stepMetaData;
-        private ChorusHandlerJmxProxy proxy;
-        private StepInvoker foundStepInvoker;
-        private Object[] foundArgs;
-
-        public RemoteStepFinder(String action, String componentName, Map<String, String[]> stepMetaData, ChorusHandlerJmxProxy proxy) {
-            this.action = action;
-            this.componentName = componentName;
-            this.stepMetaData = stepMetaData;
-            this.proxy = proxy;
-        }
-
-        public boolean stepWasFound() {
-            return foundStepInvoker != null;
-        }
-
-        public StepInvoker getFoundStepInvoker() {
-            return foundStepInvoker;
-        }
-
-        public Object[] getFoundArgs() {
-            return foundArgs;
-        }
-
-        public RemoteStepFinder findRemoteStepInvoker() {
-            for (Map.Entry<String, String[]> entry : stepMetaData.entrySet()) {
-                String methodUid = entry.getKey();
-                String regex = entry.getValue()[0];
-                String pending = entry.getValue()[1];
-                Class[] types = MethodUID.getClassesFromMethodUID(methodUid);
-
-                //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
-                //to actually invoke the remote method with it
-                StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
-                Object[] args = StepMatcher.extractGroupsAndCheckMethodParams(stepInvoker, action);
-                if (args != null) {
-                    if (foundStepInvoker == null) {
-                        foundStepInvoker = stepInvoker;
-                        foundArgs = args;
-                    } else {
-                        log.info(String.format("Ambiguous method (%s) found for step (%s) on (%s) will use first method found (%s)",
-                                methodUid,
-                                action,
-                                componentName,
-                                foundStepInvoker));
-                    }
-                }
-            }
-            return this;
-        }
-
-    }
 }

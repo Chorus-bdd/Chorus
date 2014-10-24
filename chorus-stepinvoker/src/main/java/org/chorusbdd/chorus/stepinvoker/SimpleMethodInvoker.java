@@ -94,4 +94,8 @@ public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
         return result;
     }
 
+    public String getTechnicalDescription() {
+        return getHandlerInstance().getClass().getSimpleName() + ":" + getMethod().getName();
+    }
+
 }

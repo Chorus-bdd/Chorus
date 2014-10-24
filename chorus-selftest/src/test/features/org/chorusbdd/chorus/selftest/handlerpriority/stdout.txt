@@ -2,13 +2,13 @@ Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/
 Feature: Handler Priority                                                                            
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
-Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
-Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerThree.isWorkingProperly) found for step (Given Chorus is working properly) will use first method found (HandlerPriorityHandler.isWorkingProperly)
+Chorus --> INFO    - Ambiguous step [Chorus is working properly], more than one implementation, will use [HandlerPriorityHandler:isWorkingProperly] not [HandlerPriorityHandlerTwo:isWorkingProperly]
+Chorus --> INFO    - Ambiguous step [Chorus is working properly], more than one implementation, will use [HandlerPriorityHandler:isWorkingProperly] not [HandlerPriorityHandlerThree:isWorkingProperly]
     Given Chorus is working properly                                                         PASSED  
-Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerTwo.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
-Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerThree.stepsInAllThreeHandlers) found for step (Then steps in all three handlers should be handled by Handler Priority) will use first method found (HandlerPriorityHandler.stepsInAllThreeHandlers)
+Chorus --> INFO    - Ambiguous step [steps in all three handlers should be handled by Handler Priority], more than one implementation, will use [HandlerPriorityHandler:stepsInAllThreeHandlers] not [HandlerPriorityHandlerTwo:stepsInAllThreeHandlers]
+Chorus --> INFO    - Ambiguous step [steps in all three handlers should be handled by Handler Priority], more than one implementation, will use [HandlerPriorityHandler:stepsInAllThreeHandlers] not [HandlerPriorityHandlerThree:stepsInAllThreeHandlers]
     Then steps in all three handlers should be handled by Handler Priority                   PASSED  
-Chorus --> INFO    - Ambiguous method (HandlerPriorityHandlerThree.stepsInJustTwoAndThree) found for step (And steps in just handler two and three should be handled by Handler Priority Two) will use first method found (HandlerPriorityHandlerTwo.stepsInJustTwoAndThree)
+Chorus --> INFO    - Ambiguous step [steps in just handler two and three should be handled by Handler Priority Two], more than one implementation, will use [HandlerPriorityHandlerTwo:stepsInJustTwoAndThree] not [HandlerPriorityHandlerThree:stepsInJustTwoAndThree]
     And steps in just handler two and three should be handled by Handler Priority Two        PASSED  
     And steps in just handler two should be handled by Handler Priority Two                  PASSED  
 

@@ -114,6 +114,10 @@ public abstract class PolledInvoker implements StepInvoker {
 
     protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, int count);
 
+    public String getTechnicalDescription() {
+        return wrappedInvoker.getTechnicalDescription();
+    }
+
     public String toString() {
         return "Polled:" + wrappedInvoker.toString();
     }

@@ -60,7 +60,7 @@ public abstract class AbstractStepMethodInvoker implements StepInvoker {
         //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
         //or if the two handler instances of the same handler class are processed (in error?)
         //plus the fully qualified class name and method name for clarity
-        return id + ":" + handlerInstance.getClass().getName() + ":" + method.getName();
+        return id + ":" + handlerInstance.getClass().getSimpleName() + ":" + method.getName();
     }
 
     public Object getHandlerInstance() {
