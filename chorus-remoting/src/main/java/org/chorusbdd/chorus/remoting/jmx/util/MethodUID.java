@@ -22,7 +22,7 @@ public class MethodUID {
         return builder.toString();
     }
 
-    public static Class[] getClassesFromMethodUID(String methodUid) {
+    public static Class[] getArgumentClassListFromMethodUID(String methodUid) {
         //identify the types in the methodUid
         String[] methodUidParts = methodUid.split("::");
         Class[] types = new Class[methodUidParts.length - 1];
@@ -40,6 +40,7 @@ public class MethodUID {
     public static String getClassAndMethod(String methodUid) {
         //identify the types in the methodUid
         String[] methodUidParts = methodUid.split("::");
-        return methodUidParts[0];
+        String[] longIdClassAndMethod = methodUidParts[0].split(":");
+        return longIdClassAndMethod[1] + ":" + longIdClassAndMethod[2];
     }
 }

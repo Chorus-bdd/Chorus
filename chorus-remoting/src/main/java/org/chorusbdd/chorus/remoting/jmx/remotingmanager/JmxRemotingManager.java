@@ -32,13 +32,13 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.InvokerMapAdapter;
 import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.stepinvoker.StepFinder;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
@@ -72,7 +72,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         ChorusAssert.assertTrue("Remoting config must be valid for " + componentName, new RemotingConfigValidator().checkValid(remotingInfo));
 
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingInfo);
-        Map<String, String[]> stepMetaData = proxy.getStepMetadata();
+        List<Map> stepMetaData = proxy.getStepMetadata();
 
         List<StepInvoker> invokers = getRemoteStepInvokers(proxy, stepMetaData);
 
@@ -90,19 +90,12 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         return result;
     }
 
-    private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy, Map<String, String[]> stepMetaData) {
+    private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy, List<Map> stepMetaData) {
         List<StepInvoker> invokers = new ArrayList<>();
-        for (Map.Entry<String, String[]> entry : stepMetaData.entrySet()) {
-            String methodUid = entry.getKey();
-
-            String regex = entry.getValue()[0];
-            String pending = entry.getValue()[1];
-            Class[] types = MethodUID.getClassesFromMethodUID(methodUid);
-
-            //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
-            //to actually invoke the remote method with it
-            StepInvoker stepInvoker = new RemoteStepInvoker(regex, types, proxy, methodUid, pending);
-            invokers.add(stepInvoker);
+        InvokerMapAdapter invokerMapAdapter = new InvokerMapAdapter();
+        for (Map invokerProperties : stepMetaData) {
+            StepInvoker invoker = invokerMapAdapter.toRemoteStepInvoker(proxy, invokerProperties);
+            invokers.add(invoker);
         }
         return invokers;
     }
@@ -110,7 +103,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingManagerConfig remotingInfo) {
         ChorusHandlerJmxProxy proxy = proxies.get(componentName);
         if ( proxy == null) {
-            proxy = new ChorusHandlerJmxProxy(remotingInfo.getHost(), remotingInfo.getPort(), remotingInfo.getConnectionAttempts(), remotingInfo.getConnectionAttemptMillis());
+            proxy = new ChorusHandlerJmxProxy(componentName, remotingInfo.getHost(), remotingInfo.getPort(), remotingInfo.getConnectionAttempts(), remotingInfo.getConnectionAttemptMillis());
             proxies.put(componentName, proxy);
             log.debug("Opened JMX connection to: " + componentName);
         }

@@ -48,7 +48,6 @@ Chorus --> INFO    - Matched step but could not coerce Foxtrot to type char
 Chorus --> INFO    - Processing scenario: Negative number conversion
     Ensure I can coerce a value -123 to an Integer                                           PASSED  -123
     And I can coerce a value -123.45 to a Float                                              PASSED  -123.45
-Chorus --> INFO    - Ambiguous method (TypeCoercionHandler.test) found for step (And I can coerce a value -12345 to a Long) will use first method found (TypeCoercionHandler.test)
     And I can coerce a value -12345 to a Long                                                PASSED  -12345
     And I can coerce a value -12345.67 to a Double                                           PASSED  -12345.67
   Scenario: Coercion to Object

@@ -36,6 +36,7 @@ import org.chorusbdd.chorus.remoting.jmx.JmxStepResult;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 import javax.management.MBeanException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,34 +52,38 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxProxy.class);
 
-    private Map<String, String[]> stepMetadata;
+    private List<Map> stepMetadata;
 
     private static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
-    private static final String JMX_EXPORTER_STEP_METADATA = "StepMetadata";
-
-    public ChorusHandlerJmxProxy(String host, int jmxPort) {
-        this(host, jmxPort, 0, 0);
-    }
+    private static final String JMX_EXPORTER_STEP_METADATA = "StepInvokers";
+    private String componentName;
 
     @SuppressWarnings("unchecked")
-    public ChorusHandlerJmxProxy(String host, int jmxPort, int connectionRetryCount, int millisBetweenConnectionAttempts) throws ChorusRemotingException {
+    public ChorusHandlerJmxProxy(String componentName, String host, int jmxPort, int connectionRetryCount, int millisBetweenConnectionAttempts) throws ChorusRemotingException {
         super(host, jmxPort, JMX_EXPORTER_NAME, connectionRetryCount, millisBetweenConnectionAttempts);
+        this.componentName = componentName;
 
         //the step metadata won't change so load from the remote MBean and cache it here
-        stepMetadata = (Map<String, String[]>) getAttribute(JMX_EXPORTER_STEP_METADATA);
+        stepMetadata = (List<Map>) getAttribute(JMX_EXPORTER_STEP_METADATA);
 
         //debug logging of metadata
         if (log.isDebugEnabled()) {
             log.debug("Loading step metadata for (" + objectName + ")");
-            for (Map.Entry<String, String[]> entry : stepMetadata.entrySet()) {
-                log.debug(String.format("Found method (%s) matches (%s) pending (%s)",
-                        entry.getKey(), entry.getValue()[0], entry.getValue()[1] != null));
+            for (Map entry : stepMetadata) {
+                log.debug("Found remote step invoker " + entry);
             }
         }
     }
 
-    public Map<String, String[]> getStepMetadata() {
+    public List<Map> getStepMetadata() {
         return stepMetadata;
+    }
+
+    /**
+     * @return the name of the component (from the remoting configuration) that this proxy connects to
+     */
+    public String getComponentName() {
+        return componentName;
     }
 
     /**

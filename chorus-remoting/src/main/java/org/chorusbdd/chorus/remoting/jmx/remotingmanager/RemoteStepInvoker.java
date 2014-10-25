@@ -54,8 +54,7 @@ public class RemoteStepInvoker implements StepInvoker {
         this.proxy = proxy;
         this.methodUid = methodUid;
         this.pendingMessage = pendingMessage;
-        pattern = Pattern.compile(regex);
-
+        this.pattern = Pattern.compile(regex);
     }
 
     /**
@@ -122,7 +121,7 @@ public class RemoteStepInvoker implements StepInvoker {
     }
 
     public String getTechnicalDescription() {
-        return "RemoteStep:" + MethodUID.getClassAndMethod(methodUid);
+        return "RemoteComponent:" + proxy.getComponentName() + ":" + MethodUID.getClassAndMethod(methodUid);
     }
 
     public String toString() {

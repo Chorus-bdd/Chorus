@@ -36,8 +36,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -56,7 +55,8 @@ public class HandlerClassInvokerFactory implements InvokerFactory {
 
     public List<StepInvoker> createStepInvokers() {
         List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
-        for (Method method : handlerInstance.getClass().getMethods()) {
+        Method[] methods = handlerInstance.getClass().getMethods();
+        for (Method method : methods) {
             //only check methods with Step annotation
             Step stepAnnotationInstance = method.getAnnotation(Step.class);
             if (stepAnnotationInstance != null) {

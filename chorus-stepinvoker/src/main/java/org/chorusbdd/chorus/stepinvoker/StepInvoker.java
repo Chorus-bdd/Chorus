@@ -86,7 +86,7 @@ public interface StepInvoker {
 
     /**
      * Where more than one possible step invoker matches an action, the technical description may be used to
-     * identify the implementation
+     * identify the implementation to the user.
      * @return a short description of the step implementation (e.g class and method name)
      */
     String getTechnicalDescription();

@@ -43,9 +43,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,17 +58,16 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxExporter.class);
 
-    /**
-     * Maps: methodUid -> String[] {"step.regexp","step.pending"}
-     */
-    private static Map<String, String[]> stepMetadata = new ConcurrentHashMap<String, String[]>();
-
     private static AtomicBoolean exported = new AtomicBoolean(false);
 
     public static final String JMX_EXPORTER_NAME = ChorusConstants.JMX_EXPORTER_NAME;
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = ChorusConstants.JMX_EXPORTER_ENABLED_PROPERTY;
 
-    private static Map<String, StepInvoker> stepInvokers = new ConcurrentHashMap<String, StepInvoker>();
+    //synchronized since may be accessed by application thread for export and jmx thread for step invoker retrieval
+    //Linked map for reproducible ordering which is a nice property to have although shouldn't affect test pass/fail
+    private static Map<String, StepInvoker> stepInvokers = Collections.synchronizedMap(
+        new LinkedHashMap<String, StepInvoker>()
+    );
 
     public ChorusHandlerJmxExporter(Object... handlers) {
 
@@ -100,7 +97,6 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         stepMetaData[0] = stepInvoker.getStepPattern().toString();//regexp
         stepMetaData[1] = stepInvoker.getPendingMessage(); //pending text or null if not set
         String methodUid = MethodUID.createUid(stepInvoker);
-        stepMetadata.put(methodUid, stepMetaData);
         stepInvokers.put(methodUid, stepInvoker);
     }
 
@@ -178,9 +174,13 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), stackTrace);
     }
 
-    public Map<String, String[]> getStepMetadata() {
-        HashMap<String, String[]> safeCopy = new HashMap<>(stepMetadata);
-        return safeCopy;
+    public List<Map> getStepInvokers() {
+        List<Map> invokers = new ArrayList<>();
+        InvokerMapAdapter invokerMapAdapter = new InvokerMapAdapter();
+        for ( Map.Entry<String, StepInvoker> i : stepInvokers.entrySet() ) {
+            invokers.add(invokerMapAdapter.toMap(i.getKey(), i.getValue()));
+        }
+        return invokers;
     }
 
 }

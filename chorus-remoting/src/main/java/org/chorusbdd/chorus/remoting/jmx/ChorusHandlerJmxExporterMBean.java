@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.remoting.jmx;
 
 import org.chorusbdd.chorus.context.ChorusContext;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,7 +42,7 @@ import java.util.Map;
  */
 public interface ChorusHandlerJmxExporterMBean {
 
-    public Map<String, String[]> getStepMetadata();
+    public List<Map> getStepInvokers();
 
     public JmxStepResult invokeStep(String methodUid, ChorusContext context, Object... params) throws Exception;
 }

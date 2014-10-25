@@ -57,7 +57,7 @@ public class TypeCoercionHandler {
         return val;
     }
 
-    @Step("I can(?:'t)? coerce a value (.*) to a Long")
+    @Step("I can(?:'t)? coerce a value (.*) to a long")
     public long test(long val) {
         return val;
     }
