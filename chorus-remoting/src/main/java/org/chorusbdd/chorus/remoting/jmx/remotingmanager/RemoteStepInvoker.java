@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
@@ -45,15 +44,23 @@ public class RemoteStepInvoker implements StepInvoker {
 
     private Class[] parameterTypes;
     private ChorusHandlerJmxProxy proxy;
-    private String methodUid;
+    private String remoteStepId;
     private String pendingMessage;
+    private String technicalDescription;
     private final Pattern pattern;
 
-    public RemoteStepInvoker(String regex, Class[] parameterTypes, ChorusHandlerJmxProxy proxy, String methodUid, String pendingMessage) {
+    public RemoteStepInvoker(
+            String regex,
+            Class[] parameterTypes,
+            ChorusHandlerJmxProxy proxy,
+            String remoteStepId,
+            String pendingMessage,
+            String technicalDescription) {
         this.parameterTypes = parameterTypes;
         this.proxy = proxy;
-        this.methodUid = methodUid;
+        this.remoteStepId = remoteStepId;
         this.pendingMessage = pendingMessage;
+        this.technicalDescription = technicalDescription;
         this.pattern = Pattern.compile(regex);
     }
 
@@ -96,7 +103,7 @@ public class RemoteStepInvoker implements StepInvoker {
     public Object invoke(Object... args) {
         Object result;
         try {
-            result = proxy.invokeStep(methodUid, args);
+            result = proxy.invokeStep(remoteStepId, args);
         } catch (RuntimeMBeanException mbe) {
             //here if an exception was thrown by the remote Step method
             RuntimeException targetException = mbe.getTargetException();
@@ -121,7 +128,7 @@ public class RemoteStepInvoker implements StepInvoker {
     }
 
     public String getTechnicalDescription() {
-        return "RemoteComponent:" + proxy.getComponentName() + ":" + MethodUID.getClassAndMethod(methodUid);
+        return "RemoteComponent:" + proxy.getComponentName() + ":" + technicalDescription;
     }
 
     public String toString() {

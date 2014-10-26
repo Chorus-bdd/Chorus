@@ -36,13 +36,10 @@ import java.util.Map;
 
 /**
  * This interface defines the protocol used between a ChorusHandlerJmxProxy and a ChorusHandlerJmxExporterMBean
- * <p/>
- * Created by: Steve Neal
- * Date: 14/10/11
  */
 public interface ChorusHandlerJmxExporterMBean {
 
     public List<Map> getStepInvokers();
 
-    public JmxStepResult invokeStep(String methodUid, ChorusContext context, Object... params) throws Exception;
+    public JmxStepResult invokeStep(String stepId, Map chorusContext, Object... params) throws Exception;
 }

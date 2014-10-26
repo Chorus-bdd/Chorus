@@ -90,19 +90,19 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
      * Calls the invoke Step method on the remote MBean. The current ChorusContext will be
      * serialized as part of this and marshalled to the remote bean.
      *
-     * @param methodUid the uid of the method to call
-     * @param params    params to pass in the call
+     * @param stepId the id of the step to call
+     * @param params params to pass in the call
      */
-    public Object invokeStep(String methodUid, Object... params) throws Exception {
+    public Object invokeStep(String stepId, Object... params) throws Exception {
         try {
             //call the remote method
-            Object[] args = {methodUid, ChorusContext.getContext(), params};
-            String[] signature = {"java.lang.String", "org.chorusbdd.chorus.context.ChorusContext", "[Ljava.lang.Object;"};
-            log.debug(String.format("About to invoke method (%s) on MBean (%s)", methodUid, objectName));
+            Object[] args = {stepId, ChorusContext.getContext().getSnapshot(), params};
+            String[] signature = {"java.lang.String", "java.util.Map", "[Ljava.lang.Object;"};
+            log.debug(String.format("About to invoke step (%s) on MBean (%s)", stepId, objectName));
             JmxStepResult r = (JmxStepResult) mBeanServerConnection.invoke(objectName, "invokeStep", args, signature);
             //update the local context with any changes made remotely
-            ChorusContext update = r.getChorusContext();
-            ChorusContext.resetContext(update);
+            Map newContextState = r.getChorusContext();
+            ChorusContext.resetContext(newContextState);
 
             //return the result which the remote step method returned
             return r.getResult();

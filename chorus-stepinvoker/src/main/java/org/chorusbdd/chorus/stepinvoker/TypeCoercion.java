@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * Date: 28/06/12
  * Time: 08:58
  */
-class TypeCoercion {
+public class TypeCoercion {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RegexpUtils.class);
 
@@ -62,36 +62,36 @@ class TypeCoercion {
         try {
             if ( "null".equals(value)) {
                 result = null;
-            } else if (requiredType == String.class) {
+            } else if (isStringType(requiredType)) {
                 result = (T) value;
-            } else if (requiredType == StringBuffer.class) {
+            } else if (isStringBufferType(requiredType)) {
                 result = (T) new StringBuffer(value);
-            }else if (requiredType == Integer.class || requiredType == int.class) {
+            } else if (isIntType(requiredType)) {
                 result = (T) new Integer(value);
-            } else if (requiredType == Long.class || requiredType == long.class) {
+            } else if (isLongType(requiredType)) {
                 result = (T) new Long(value);
-            } else if (requiredType == Float.class || requiredType == float.class) {
+            } else if (isFloatType(requiredType)) {
                 result = (T) new Float(value);
-            } else if (requiredType == Double.class || requiredType == double.class) {
+            } else if (isDoubleType(requiredType)) {
                 result = (T) new Double(value);
-            } else if (requiredType == BigDecimal.class) {
+            } else if (isBigDecimalType(requiredType)) {
                 result = (T) new BigDecimal(value);
-            } else if (requiredType == BigInteger.class) {
-                    result = (T) new BigInteger(value);
-            } else if ((requiredType == Boolean.class || requiredType == boolean.class)
+            } else if (isBigIntegerType(requiredType)) {
+                result = (T) new BigInteger(value);
+            } else if (isBooleanType(requiredType)
                  && "true".equalsIgnoreCase(value)      //be stricter than Boolean.parseValue
                  || "false".equalsIgnoreCase(value)) {  //do not accept 'wibble' as a boolean false value
                 //dont create new Booleans (there are only 2 possible values)
                 result = (T) (Boolean) Boolean.parseBoolean(value);
-            } else if (requiredType == Short.class || requiredType == short.class) {
+            } else if (isShortType(requiredType)) {
                 result = (T) new Short(value);
-            } else if (requiredType == Byte.class || requiredType == byte.class) {
+            } else if (isByteType(requiredType)) {
                 result = (T) new Byte(value);
-            } else if ( (requiredType == Character.class || requiredType == char.class) && value.length() == 1) {
+            } else if (isCharType(requiredType) && value.length() == 1) {
                 result = (T) (Character) value.toCharArray()[0];
-            } else if (requiredType.isEnum()) {
+            } else if (isEnumeratedType(requiredType)) {
                 result = (T)coerceEnum(value, requiredType);
-            } else if (requiredType == Object.class) {//attempt to convert the String to the most appropriate value
+            } else if (isObjectType(requiredType)) {//attempt to convert the String to the most appropriate value
                 result = (T)coerceObject(value);
             }
         } catch (Throwable t) {
@@ -151,5 +151,63 @@ class TypeCoercion {
             //fail quietly if couldn't reflect on enum
         }
         return result;
+    }
+
+
+    private static <T> boolean isBigIntegerType(Class<T> requiredType) {
+        return requiredType == BigInteger.class;
+    }
+
+    private static <T> boolean isBigDecimalType(Class<T> requiredType) {
+        return requiredType == BigDecimal.class;
+    }
+
+    private static <T> boolean isObjectType(Class<T> requiredType) {
+        return requiredType == Object.class;
+    }
+
+    private static <T> boolean isEnumeratedType(Class<T> requiredType) {
+        return requiredType.isEnum();
+    }
+
+    //why support StringBuffer not StringBuilder?
+    private static <T> boolean isStringBufferType(Class<T> requiredType) {
+        return requiredType == StringBuffer.class;
+    }
+
+    private static <T> boolean isStringType(Class<T> requiredType) {
+        return requiredType == String.class;
+    }
+
+    private static <T> boolean isCharType(Class<T> requiredType) {
+        return requiredType == Character.class || requiredType == char.class;
+    }
+
+    private static <T> boolean isByteType(Class<T> requiredType) {
+        return requiredType == Byte.class || requiredType == byte.class;
+    }
+
+    private static <T> boolean isShortType(Class<T> requiredType) {
+        return requiredType == Short.class || requiredType == short.class;
+    }
+
+    private static <T> boolean isBooleanType(Class<T> requiredType) {
+        return requiredType == Boolean.class || requiredType == boolean.class;
+    }
+
+    private static <T> boolean isDoubleType(Class<T> requiredType) {
+        return requiredType == Double.class || requiredType == double.class;
+    }
+
+    private static <T> boolean isFloatType(Class<T> requiredType) {
+        return requiredType == Float.class || requiredType == float.class;
+    }
+
+    private static <T> boolean isLongType(Class<T> requiredType) {
+        return requiredType == Long.class || requiredType == long.class;
+    }
+
+    private static <T> boolean isIntType(Class<T> requiredType) {
+        return requiredType == Integer.class || requiredType == int.class;
     }
 }

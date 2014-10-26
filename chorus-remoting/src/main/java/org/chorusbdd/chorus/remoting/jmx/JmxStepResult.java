@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.Serializable;
@@ -56,7 +55,7 @@ public class JmxStepResult implements Serializable {
     //we may be able to add more fields and still deserialize earlier versions of JmxStepResult
     private Map<String, Object> fieldMap = new HashMap<String, Object>();
 
-    public JmxStepResult(ChorusContext chorusContext, Object result) {
+    public JmxStepResult(Map chorusContext, Object result) {
         fieldMap.put(CHORUS_CONTEXT_FIELD, chorusContext);
         fieldMap.put(STEP_RESULT_FIELD, result);
         if ( result != null && ! (result instanceof Serializable)) {
@@ -67,8 +66,8 @@ public class JmxStepResult implements Serializable {
         }
     }
 
-    public ChorusContext getChorusContext() {
-        return (ChorusContext)fieldMap.get(CHORUS_CONTEXT_FIELD);
+    public Map getChorusContext() {
+        return (Map)fieldMap.get(CHORUS_CONTEXT_FIELD);
     }
 
     public Object getResult() {

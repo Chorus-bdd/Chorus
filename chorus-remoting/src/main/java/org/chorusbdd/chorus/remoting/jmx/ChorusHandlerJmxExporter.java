@@ -31,7 +31,6 @@ package org.chorusbdd.chorus.remoting.jmx;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.context.ChorusContext;
-import org.chorusbdd.chorus.remoting.jmx.util.MethodUID;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.InvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
@@ -44,7 +43,6 @@ import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -92,12 +90,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     }
 
     private void addStepInvoker(StepInvoker stepInvoker) {
-        //step annotation metadata
-        String[] stepMetaData = new String[2];
-        stepMetaData[0] = stepInvoker.getStepPattern().toString();//regexp
-        stepMetaData[1] = stepInvoker.getPendingMessage(); //pending text or null if not set
-        String methodUid = MethodUID.createUid(stepInvoker);
-        stepInvokers.put(methodUid, stepInvoker);
+        stepInvokers.put(stepInvoker.getId(), stepInvoker);
     }
 
     /**
@@ -124,12 +117,12 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return this;
     }
 
-    public JmxStepResult invokeStep(String methodUid, ChorusContext context, Object... args) throws Exception {
+    public JmxStepResult invokeStep(String stepId, Map chorusContext, Object... args) throws Exception {
 
         //log debug messages
         if (log.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder("About to invoke method (");
-            builder.append(methodUid);
+            builder.append(stepId);
             builder.append(") with parameters (");
             for (int i = 0; i < args.length; i++) {
                 builder.append(args[i]);
@@ -143,15 +136,15 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
         try {
             //reset the local context for the calling thread
-            ChorusContext.resetContext(context);
-            StepInvoker i = stepInvokers.get(methodUid);
+            ChorusContext.resetContext(chorusContext);
+            StepInvoker i = stepInvokers.get(stepId);
             if ( i == null) {
-                throw new ChorusException("Cannot find a step invoker for remote method with id " + methodUid);
+                throw new ChorusException("Cannot find a step invoker for remote method with id " + stepId);
             }
             Object result = i.invoke(args);
             
             //return the updated context
-            return new JmxStepResult(ChorusContext.getContext(), result);
+            return new JmxStepResult(ChorusContext.getContext().getSnapshot(), result);
         } catch (PolledAssertion.PolledAssertionError e) { //typically AssertionError propagated by PolledInvoker
             throw createRemotingException(e.getCause());
         } catch (InvocationTargetException e) {
@@ -177,8 +170,11 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     public List<Map> getStepInvokers() {
         List<Map> invokers = new ArrayList<>();
         InvokerMapAdapter invokerMapAdapter = new InvokerMapAdapter();
-        for ( Map.Entry<String, StepInvoker> i : stepInvokers.entrySet() ) {
-            invokers.add(invokerMapAdapter.toMap(i.getKey(), i.getValue()));
+        for ( StepInvoker s : stepInvokers.values() ) {
+            Map stepForExport = invokerMapAdapter.toMap(s);
+            if ( stepForExport != null) {
+                invokers.add(stepForExport);
+            }
         }
         return invokers;
     }

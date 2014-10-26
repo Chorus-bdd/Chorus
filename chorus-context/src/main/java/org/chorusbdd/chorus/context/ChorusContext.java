@@ -70,11 +70,11 @@ public class ChorusContext implements Map<String, Object>, Serializable {
      * This method is not intended for programmers to use. It should only ever
      * be called by the interpreter to manage the processing threads' contexts.
      *
-     * @param context
+     * @param newState
      */
-    public static synchronized void resetContext(ChorusContext context) {
+    public static synchronized void resetContext(Map newState) {
         getContext().clear();
-        getContext().putAll(context);
+        getContext().putAll(newState);
     }
 
     public static synchronized void destroy() {
@@ -100,6 +100,10 @@ public class ChorusContext implements Map<String, Object>, Serializable {
     //
     // - map delegation calls
     //
+
+    public Map<String,Object> getSnapshot() {
+        return new HashMap<>(state);
+    }
 
     public Object put(String key, Object value) {
         return state.put(key, value);
