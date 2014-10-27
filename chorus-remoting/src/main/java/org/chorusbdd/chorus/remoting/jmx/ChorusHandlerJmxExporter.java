@@ -117,15 +117,15 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return this;
     }
 
-    public JmxStepResult invokeStep(String stepId, Map chorusContext, Object... args) throws Exception {
+    public JmxStepResult invokeStep(String stepId, Map chorusContext, List<String> args) throws Exception {
 
         //log debug messages
         if (log.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder("About to invoke method (");
             builder.append(stepId);
             builder.append(") with parameters (");
-            for (int i = 0; i < args.length; i++) {
-                builder.append(args[i]);
+            for (int i = 0; i < args.size(); i++) {
+                builder.append(args.get(i));
                 if (i > 0) {
                     builder.append(", ");
                 }

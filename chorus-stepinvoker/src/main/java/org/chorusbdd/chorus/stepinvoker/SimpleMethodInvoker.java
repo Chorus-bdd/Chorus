@@ -30,9 +30,13 @@
 package org.chorusbdd.chorus.stepinvoker;
 
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
 /**
@@ -40,21 +44,23 @@ import java.util.regex.Pattern;
 * Date: 24/09/13
 * Time: 18:46
 */
-public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
+public class SimpleMethodInvoker implements StepInvoker {
 
-    private final Class[] parameterTypes;
+    private static ChorusLog log = ChorusLogFactory.getLog(SimpleMethodInvoker.class);
+
+    private static AtomicLong idGenerator = new AtomicLong();
+
+    private Long id = SimpleMethodInvoker.idGenerator.incrementAndGet();
     private final String pendingMessage;
     private final boolean isPending;
     private final Pattern stepPattern;
-
-    public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern) {
-        this(handlerInstance, method, stepPattern, null);
-    }
+    private Object handlerInstance;
+    private Method method;
 
     public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage) {
-        super(handlerInstance, method);
+        this.handlerInstance = handlerInstance;
+        this.method = method;
         this.stepPattern = stepPattern;
-        this.parameterTypes = method.getParameterTypes();
         this.pendingMessage = pendingMessage;
         this.isPending = pendingMessage != null && ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
     }
@@ -64,15 +70,6 @@ public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
      */
     public Pattern getStepPattern() {
         return stepPattern;
-    }
-
-    /**
-     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
-     *
-     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
-     */
-    public Class[] getParameterTypes() {
-        return parameterTypes;
     }
 
     /**
@@ -87,15 +84,83 @@ public class SimpleMethodInvoker extends AbstractStepMethodInvoker {
     }
 
 
+    public Object invoke(List<String> args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Class<?>[] parameterTypes = getMethod().getParameterTypes();
 
-    public Object invoke(Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Object result =  getMethod().invoke(getHandlerInstance(), args);
+        checkArgumentCount(args, parameterTypes);
+
+        Object[] methodArguments = coerceArgs(args, parameterTypes);
+        Object result =  getMethod().invoke(getHandlerInstance(), methodArguments);
         result = handleResultIfReturnTypeVoid(getMethod(), result);
         return result;
+    }
+
+    private void checkArgumentCount(List<String> args, Class<?>[] parameterTypes) {
+        //check that there are the same number of expected values as there are regex groups
+        if (args.size() != parameterTypes.length) {
+            //I think this is always an error in the handler's step definition - group should always match param count
+            //it's worth logging it to warn level, or people may spend hours looking and may not spot the problem
+            String message = "Number of method parameters does not match regex groups";
+            log.warn(message);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private Object[] coerceArgs(List<String> args, Class<?>[] parameterTypes) {
+        Object[] values = new Object[args.size()];
+        for (int i = 0; i < args.size(); i++) {
+            String valueStr = args.get(i);
+            Class type = parameterTypes[i];
+            Object coercedValue = TypeCoercion.coerceType(valueStr, type);
+            if (("null".equals(valueStr) && coercedValue == null ) || coercedValue != null) {
+                values[i] = coercedValue;
+            } else {
+                //the type coercion failed for this method parameter
+                //return null to indicate this reg exp / method is not a match
+                //log at info level that we found a match but could not perform the coercion  - this will not show
+                //at the default log level warn, but will show as soon as user increases it
+                //It seems valid to support a form of method parameter overloading here, where two methods have
+                //the same regex but different class types for their parameters, logging at warn by default might
+                //get irritating in this case
+                String message = "Matched step but could not coerce " + valueStr + " to type " + type;
+                log.info(message);
+                throw new IllegalArgumentException(message);
+            }
+        }
+        return values;
     }
 
     public String getTechnicalDescription() {
         return getHandlerInstance().getClass().getSimpleName() + ":" + getMethod().getName();
     }
 
+    /**
+     * Returns the name of the method represented by this {@code Method}
+     * object, as a {@code String}.
+     */
+    public String getId() {
+        //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
+        //or if the two handler instances of the same handler class are processed (in error?)
+        //plus the fully qualified class name and method name for clarity
+        return id + ":" + handlerInstance.getClass().getSimpleName() + ":" + method.getName();
+    }
+
+    public Object getHandlerInstance() {
+        return handlerInstance;
+    }
+
+    protected Method getMethod() {
+        return method;
+    }
+
+    protected Object handleResultIfReturnTypeVoid(Method method, Object result) {
+        if ( method.getReturnType() == Void.TYPE) {
+            result = VOID_RESULT;
+        }
+        return result;
+    }
+
+    public String toString() {
+        return handlerInstance.getClass().getSimpleName() + "." + method.getName();
+    }
 }

@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.stepinvoker;
 
 import org.chorusbdd.chorus.util.PolledAssertion;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
@@ -56,8 +57,9 @@ public abstract class PolledInvoker implements StepInvoker {
 
     /**
      * Invoke the method
+     * @param args
      */
-    public Object invoke(final Object... args) {
+    public Object invoke(final List<String> args) {
         final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
@@ -92,14 +94,6 @@ public abstract class PolledInvoker implements StepInvoker {
 
     public String getPendingMessage() {
         return wrappedInvoker.getPendingMessage();
-    }
-
-    /**
-     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
-     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
-     */
-    public Class[] getParameterTypes() {
-        return wrappedInvoker.getParameterTypes();
     }
 
     public String getId() {

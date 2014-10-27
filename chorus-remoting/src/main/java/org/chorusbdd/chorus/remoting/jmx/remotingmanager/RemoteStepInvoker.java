@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 import javax.management.RuntimeMBeanException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -42,7 +43,6 @@ import java.util.regex.Pattern;
  */
 public class RemoteStepInvoker implements StepInvoker {
 
-    private Class[] parameterTypes;
     private ChorusHandlerJmxProxy proxy;
     private String remoteStepId;
     private String pendingMessage;
@@ -51,12 +51,10 @@ public class RemoteStepInvoker implements StepInvoker {
 
     public RemoteStepInvoker(
             String regex,
-            Class[] parameterTypes,
             ChorusHandlerJmxProxy proxy,
             String remoteStepId,
             String pendingMessage,
             String technicalDescription) {
-        this.parameterTypes = parameterTypes;
         this.proxy = proxy;
         this.remoteStepId = remoteStepId;
         this.pendingMessage = pendingMessage;
@@ -69,15 +67,6 @@ public class RemoteStepInvoker implements StepInvoker {
      */
     public Pattern getStepPattern() {
         return pattern;
-    }
-
-    /**
-     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
-     *
-     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
-     */
-    public Class[] getParameterTypes() {
-        return parameterTypes;
     }
 
     /**
@@ -100,7 +89,7 @@ public class RemoteStepInvoker implements StepInvoker {
      * @param args
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    public Object invoke(Object... args) {
+    public Object invoke(List<String> args) {
         Object result;
         try {
             result = proxy.invokeStep(remoteStepId, args);

@@ -202,7 +202,7 @@ public class StepProcessor {
         try {
             //call the step method using reflection
             Object result = stepFinder.getChosenStepInvoker().invoke(
-                    stepFinder.getInvokerArgs()
+                stepFinder.getInvokerArgs()
             );
             log.debug("Finished executing the step, step passed, result was " + result);
 

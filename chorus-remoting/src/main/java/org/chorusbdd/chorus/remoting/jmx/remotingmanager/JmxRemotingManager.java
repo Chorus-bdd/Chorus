@@ -109,7 +109,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         return proxy;
     }
 
-    private Object processRemoteMethod(StepInvoker remoteStepInvoker, Object[] args) {
+    private Object processRemoteMethod(StepInvoker remoteStepInvoker, List<String> args) {
         Object result;
         if (remoteStepInvoker.isPending()) {
             throw new StepPendingException(remoteStepInvoker.getPendingMessage());

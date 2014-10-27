@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.stepinvoker;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -57,12 +58,6 @@ public interface StepInvoker {
     Pattern getStepPattern();
 
     /**
-     * Chorus needs to extract values from the matched pattern and pass them as parameters when invoking the step
-     * @return an array of parameter types the length of which should equal the number of capture groups in the step pattern
-     */
-    Class[] getParameterTypes();
-
-    /**
      * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
      */
     boolean isPending();
@@ -73,11 +68,12 @@ public interface StepInvoker {
     String getPendingMessage();
 
     /**
-     * Invoke the method
+     * Invoke the step passing the String values from the step action which match the capture groups in the step pattern
      *
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
+     * @param args
      */
-    Object invoke(Object... args) throws IllegalAccessException, InvocationTargetException;
+    Object invoke(List<String> args) throws IllegalAccessException, InvocationTargetException;
 
     /**
      * @return a String id for this step invoker, which should be unique and final

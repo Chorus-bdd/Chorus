@@ -23,27 +23,27 @@ Chorus --> INFO    - Processing scenario: Enum Value Coercion
     Then I can coerce the value Genesis to a GenesisAlbum                                    PASSED  Genesis
     And I can coerce the value Trespass to a GenesisAlbum                                    PASSED  Trespass
 Chorus --> INFO    - Matched step but could not coerce Quadrophenia to type class org.chorusbdd.chorus.selftest.typecoercion.GenesisAlbum
-    But I can't coerce the value Quadrophenia to a GenesisAlbum                              UNDEFINED 
+    But I can't coerce the value Quadrophenia to a GenesisAlbum                              FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Matched step but could not coerce Quadrophenia to type class org.chorusbdd.chorus.selftest.typecoercion.GenesisAlbum
   Scenario: Failed int conversion
 Chorus --> INFO    - Processing scenario: Failed int conversion
 Chorus --> INFO    - Matched step but could not coerce wibble to type int
-    Ensure I can't coerce a value wibble to an int                                           UNDEFINED 
+    Ensure I can't coerce a value wibble to an int                                           FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Matched step but could not coerce wibble to type int
   Scenario: Failed int conversion from float value
 Chorus --> INFO    - Processing scenario: Failed int conversion from float value
 Chorus --> INFO    - Matched step but could not coerce 1.2 to type int
-    Ensure I can't coerce a value 1.2 to an int                                              UNDEFINED 
+    Ensure I can't coerce a value 1.2 to an int                                              FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Matched step but could not coerce 1.2 to type int
   Scenario: Failed boolean conversion
 Chorus --> INFO    - Processing scenario: Failed boolean conversion
 Chorus --> INFO    - Matched step but could not coerce wibble to type boolean
-    Ensure I can't coerce a value wibble to a boolean                                        UNDEFINED 
+    Ensure I can't coerce a value wibble to a boolean                                        FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Matched step but could not coerce wibble to type boolean
   Scenario: Failed byte conversion
 Chorus --> INFO    - Processing scenario: Failed byte conversion
 Chorus --> INFO    - Matched step but could not coerce Z to type byte
-    Ensure I can't coerce a value Z to a byte                                                UNDEFINED 
+    Ensure I can't coerce a value Z to a byte                                                FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Matched step but could not coerce Z to type byte
   Scenario: Failed char conversion
 Chorus --> INFO    - Processing scenario: Failed char conversion
 Chorus --> INFO    - Matched step but could not coerce Foxtrot to type char
-    Ensure I can't coerce a value Foxtrot to a char                                          UNDEFINED 
+    Ensure I can't coerce a value Foxtrot to a char                                          FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Matched step but could not coerce Foxtrot to type char
   Scenario: Negative number conversion
 Chorus --> INFO    - Processing scenario: Negative number conversion
     Ensure I can coerce a value -123 to an Integer                                           PASSED  -123
@@ -62,4 +62,4 @@ Chorus --> INFO    - Processing scenario: Coercion to Object
 
 Features  (total:1) (passed:0) (failed:1)
 Scenarios (total:9) (passed:3) (failed:6)
-Steps     (total:34) (passed:28) (failed:0) (undefined:6) (pending:0) (skipped:0)
+Steps     (total:34) (passed:28) (failed:6) (undefined:0) (pending:0) (skipped:0)

@@ -32,7 +32,9 @@ package org.chorusbdd.chorus.stepinvoker;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
 * Created with IntelliJ IDEA.
@@ -50,7 +52,7 @@ public class StepFinder {
     private List<StepInvoker> stepInvokers;
     private String stepAction;
     private StepInvoker chosenStepInvoker;
-    private Object[] invokerArgs;
+    private List<String> invokerArgs;
 
     public StepFinder(List<StepInvoker> stepInvokers, String stepAction) {
         this.stepInvokers = stepInvokers;
@@ -61,7 +63,7 @@ public class StepFinder {
         return chosenStepInvoker;
     }
 
-    public Object[] getInvokerArgs() {
+    public List<String> getInvokerArgs() {
         return invokerArgs;
     }
 
@@ -76,14 +78,21 @@ public class StepFinder {
 
     private void checkForMatch(StepInvoker invoker) {
         log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + stepAction + "]");
-        Object[] values = StepMatcher.extractGroupsAndCheckMethodParams(invoker, stepAction);
-        if (values != null) { //the regexp matched the action and the method's parameters
-            foundStepInvoker(invoker, values);
+        Matcher matcher = invoker.getStepPattern().matcher(stepAction);
+        if (matcher.matches()) {
+            int groupCount = matcher.groupCount();
+
+            //collect the regex group values
+            List<String> regexGroupValues = new ArrayList<>();
+            for (int i = 0; i < groupCount; i++) {
+                regexGroupValues.add(matcher.group(i + 1));
+            }
+            foundStepInvoker(invoker, regexGroupValues);
         }
     }
 
-    private void foundStepInvoker(StepInvoker stepInvoker, Object[] values) {
-        log.trace("Matched!");
+    private void foundStepInvoker(StepInvoker stepInvoker, List<String> values) {
+        if ( log.isTraceEnabled() ) log.trace("Matched! " + stepInvoker + "," + values);
         if (chosenStepInvoker == null) {
             this.invokerArgs = values;
             this.chosenStepInvoker = stepInvoker;
