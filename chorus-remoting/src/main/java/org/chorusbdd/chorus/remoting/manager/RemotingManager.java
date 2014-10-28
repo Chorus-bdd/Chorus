@@ -30,7 +30,10 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.subsystem.Subsystem;
+
+import java.util.List;
 
 /**
  * Created by nick on 30/08/2014.
@@ -50,10 +53,15 @@ public interface RemotingManager extends Subsystem {
      * For general connectivity errors or other error conditions a ChorusException should be thrown (with a cause)
      * 
      * @param action            - the step text from the scenario which we want to match to a remote step
-     * @param componentName     - the name of the component we want to connect to
      * @return                    the value returned by the remote component when invoking the remote step implementation
      **/
-    Object performActionInRemoteComponent(String action, String componentName, RemotingManagerConfig remotingInfo);
+    Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig);
+
+    /**
+     * Get the StepInvokers for the component represented by remotingConfig
+     */
+    List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig);
+
 
     void closeAllConnections(Scope handlerScope);
 }

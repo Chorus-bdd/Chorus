@@ -37,9 +37,13 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,7 +66,7 @@ import java.util.Map;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
+public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, StepInvokerProvider {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
@@ -91,7 +95,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
     @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
-        return remotingManager.performActionInRemoteComponent(action, componentName, remotingConfig.buildRemotingManagerConfig());
+        return remotingManager.performActionInRemoteComponent(action, remotingConfig.buildRemotingManagerConfig());
     }
 
     @Initialize(scope = Scope.FEATURE)
@@ -135,5 +139,15 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig> {
 
     public void addConfiguration(RemotingConfig handlerConfig) {
         remotingConfigMap.put(handlerConfig.getConfigName(), handlerConfig);
+    }
+
+    public List<StepInvoker> getStepInvokers() {
+        List<StepInvoker> invokers = new ArrayList<StepInvoker>();
+        for ( RemotingConfig c : remotingConfigMap.values()) {
+            if ( ! c.isRequireStepSuffix() ) {
+                invokers.addAll(remotingManager.getStepInvokers(c));
+            }
+        }
+        return invokers;
     }
 }

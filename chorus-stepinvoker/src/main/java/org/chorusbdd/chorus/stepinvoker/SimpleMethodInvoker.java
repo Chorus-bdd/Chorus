@@ -84,7 +84,7 @@ public class SimpleMethodInvoker implements StepInvoker {
     }
 
 
-    public Object invoke(List<String> args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public Object invoke(List<String> args) throws ReflectiveOperationException {
         Class<?>[] parameterTypes = getMethod().getParameterTypes();
 
         checkArgumentCount(args, parameterTypes);
@@ -135,8 +135,7 @@ public class SimpleMethodInvoker implements StepInvoker {
     }
 
     /**
-     * Returns the name of the method represented by this {@code Method}
-     * object, as a {@code String}.
+     * @return a String id for this step invoker, which should be unique and final
      */
     public String getId() {
         //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader

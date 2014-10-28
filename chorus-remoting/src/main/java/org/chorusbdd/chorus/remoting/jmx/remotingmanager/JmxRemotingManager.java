@@ -36,7 +36,7 @@ import org.chorusbdd.chorus.remoting.jmx.InvokerMapAdapter;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
-import org.chorusbdd.chorus.stepinvoker.StepFinder;
+import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
@@ -66,21 +66,21 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    public Object performActionInRemoteComponent(String action, String componentName, RemotingManagerConfig remotingInfo) {
+    public Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig) {
+        String componentName = remotingConfig.getConfigName();
 
-        ChorusAssert.assertTrue("Remoting config must be valid for " + componentName, new RemotingConfigValidator().checkValid(remotingInfo));
+        ChorusAssert.assertTrue("Remoting config must be valid for " + componentName, new RemotingConfigValidator().checkValid(remotingConfig));
 
-        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingInfo);
-        List<Map> stepMetaData = proxy.getStepMetadata();
+        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfig);
 
-        List<StepInvoker> invokers = getRemoteStepInvokers(proxy, stepMetaData);
+        List<StepInvoker> invokers = getRemoteStepInvokers(proxy);
 
-        StepFinder stepFinder = new StepFinder(invokers, action);
-        stepFinder.findStepMethod();
+        StepMatcher stepMatcher = new StepMatcher(invokers, action);
+        stepMatcher.findStepMethod();
 
         Object result;
-        if (stepFinder.stepWasFound()) {
-            result = processRemoteMethod(stepFinder.getChosenStepInvoker(), stepFinder.getInvokerArgs());
+        if (stepMatcher.isStepFound()) {
+            result = processRemoteMethod(stepMatcher.getFoundStepInvoker(), stepMatcher.getInvokerArgs());
         } else {
             String message = String.format("There is no step handler available for action (%s) on component (%s)", action, componentName);
             log.error(message);
@@ -89,20 +89,25 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         return result;
     }
 
-    private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy, List<Map> stepMetaData) {
+    public List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig) {
+        ChorusHandlerJmxProxy proxy = getProxyForComponent(remotingConfig.getConfigName(), remotingConfig);
+        return getRemoteStepInvokers(proxy);
+    }
+
+    private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy) {
         List<StepInvoker> invokers = new ArrayList<>();
         InvokerMapAdapter invokerMapAdapter = new InvokerMapAdapter();
-        for (Map invokerProperties : stepMetaData) {
+        for (Map invokerProperties : proxy.getStepMetadata()) {
             StepInvoker invoker = invokerMapAdapter.toRemoteStepInvoker(proxy, invokerProperties);
             invokers.add(invoker);
         }
         return invokers;
     }
 
-    private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingManagerConfig remotingInfo) {
+    private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingManagerConfig remotingConfig) {
         ChorusHandlerJmxProxy proxy = proxies.get(componentName);
         if ( proxy == null) {
-            proxy = new ChorusHandlerJmxProxy(componentName, remotingInfo.getHost(), remotingInfo.getPort(), remotingInfo.getConnectionAttempts(), remotingInfo.getConnectionAttemptMillis());
+            proxy = new ChorusHandlerJmxProxy(componentName, remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
             proxies.put(componentName, proxy);
             log.debug("Opened JMX connection to: " + componentName);
         }
@@ -119,9 +124,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
             result = remoteStepInvoker.invoke(args);
 
         //let any runtime exceptions propagate
-        } catch (IllegalAccessException e) {
-            throw new ChorusRemotingException(e);
-        } catch (InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             throw new ChorusRemotingException(e);
         }
         return result;

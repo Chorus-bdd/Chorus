@@ -5,7 +5,10 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.util.ChorusException;
+
+import java.util.List;
 
 /**
  * A RemotingManager which is protocol aware and will delegate remoting calls to the appropriate
@@ -22,16 +25,26 @@ public class ProtocolAwareRemotingManager implements RemotingManager {
      * For general connectivity errors or other error conditions a ChorusException should be thrown (with a cause)
      *
      * @param action        - the step text from the scenario which we want to match to a remote step
-     * @param componentName - the name of the component we want to connect to
      * @param remotingInfo
      * @return the value returned by the remote component when invoking the remote step implementation
      */
-    public Object performActionInRemoteComponent(String action, String componentName, RemotingManagerConfig remotingInfo) {
+    public Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingInfo) {
         Object result;
         if ( JmxRemotingManager.REMOTING_PROTOCOL.equals(remotingInfo.getProtocol())) {
-            result = jmxRemotingManager.performActionInRemoteComponent(action, componentName, remotingInfo);
+            result = jmxRemotingManager.performActionInRemoteComponent(action, remotingInfo);
         } else {
             throw new ChorusException("Unsupported Remoting Protocol " + remotingInfo.getProtocol());
+        }
+        return result;
+    }
+
+    @Override
+    public List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig) {
+        List<StepInvoker> result = null;
+        if ( JmxRemotingManager.REMOTING_PROTOCOL.equals(remotingConfig.getProtocol())) {
+            result = jmxRemotingManager.getStepInvokers(remotingConfig);
+        } else {
+            throw new ChorusException("Unsupported Remoting Protocol " + remotingConfig.getProtocol());
         }
         return result;
     }

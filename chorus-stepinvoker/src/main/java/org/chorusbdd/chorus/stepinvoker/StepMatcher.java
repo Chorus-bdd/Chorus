@@ -42,24 +42,24 @@ import java.util.regex.Matcher;
 * Date: 16/05/12
 * Time: 22:07
 *
-* Find a matching step method to call from a List of handler classes and create a StepInvoker to call it
-*
+* Find a StepInvoker which matches a step action, and pick out any step arguments corresponding to capture groups
+* in the step pattern
 */
-public class StepFinder {
+public class StepMatcher {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepFinder.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(StepMatcher.class);
 
     private List<StepInvoker> stepInvokers;
     private String stepAction;
     private StepInvoker chosenStepInvoker;
     private List<String> invokerArgs;
 
-    public StepFinder(List<StepInvoker> stepInvokers, String stepAction) {
+    public StepMatcher(List<StepInvoker> stepInvokers, String stepAction) {
         this.stepInvokers = stepInvokers;
         this.stepAction = stepAction;
     }
 
-    public StepInvoker getChosenStepInvoker() {
+    public StepInvoker getFoundStepInvoker() {
         return chosenStepInvoker;
     }
 
@@ -67,7 +67,7 @@ public class StepFinder {
         return invokerArgs;
     }
 
-    public StepFinder findStepMethod() {
+    public StepMatcher findStepMethod() {
         log.debug("Finding step method...");
 
         for ( StepInvoker i : stepInvokers) {
@@ -104,11 +104,7 @@ public class StepFinder {
         }
     }
 
-    public boolean isMethodAvailable() {
-        return chosenStepInvoker != null;
-    }
-
-    public boolean stepWasFound() {
+    public boolean isStepFound() {
         return chosenStepInvoker != null;
     }
 }

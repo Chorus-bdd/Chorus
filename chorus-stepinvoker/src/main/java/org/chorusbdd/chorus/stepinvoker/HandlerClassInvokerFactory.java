@@ -55,6 +55,34 @@ public class HandlerClassInvokerFactory implements InvokerFactory {
 
     public List<StepInvoker> createStepInvokers() {
         List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
+
+        //if the handler implements StepInvokerProvider then get the step invokers directly
+        addStepProviderInvokers(stepInvokers);
+
+        //add step invokers for any annotated step methods
+        addMethodStepInvokers(stepInvokers);
+
+        return stepInvokers;
+    }
+
+    private void addStepProviderInvokers(List<StepInvoker> stepInvokers) {
+        if (handlerInstance instanceof StepInvokerProvider) {
+            List<StepInvoker> invokersByInterface = ((StepInvokerProvider) handlerInstance).getStepInvokers();
+            stepInvokers.addAll(invokersByInterface);
+            log.debug("Added " + invokersByInterface.size() + " step invokers for handler class " +
+                    handlerInstance.getClass().getSimpleName() + " step provider");
+        }
+    }
+
+    private void addMethodStepInvokers(List<StepInvoker> stepInvokers) {
+        List<StepInvoker> invokersForMethods = getStepInvokersForAnnotatedMethods();
+        stepInvokers.addAll(invokersForMethods);
+        log.debug("Added " + invokersForMethods.size() + " step invokers for handler class " +
+                handlerInstance.getClass().getSimpleName() + " annotated methods");
+    }
+
+    private List<StepInvoker> getStepInvokersForAnnotatedMethods() {
+        List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
         Method[] methods = handlerInstance.getClass().getMethods();
         for (Method method : methods) {
             //only check methods with Step annotation

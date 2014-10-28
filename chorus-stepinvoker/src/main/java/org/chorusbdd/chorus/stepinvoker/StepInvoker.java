@@ -49,11 +49,12 @@ public interface StepInvoker {
 
     /**
      * A special String which represents the result of calling a method which had a void return type
+     * This allows us to distinguish between a remote step returning null and a remote step defining a void return type
      */
     public static final String VOID_RESULT = "STEP_INVOKER_VOID_RESULT";
 
     /**
-     * @return a Pattern which is matched against step text/action to determine whether this stepinvoker matches a scenario step
+     * @return a Pattern which is matched against step text/action to determine whether this invoker matches a scenario step
      */
     Pattern getStepPattern();
 
@@ -71,9 +72,8 @@ public interface StepInvoker {
      * Invoke the step passing the String values from the step action which match the capture groups in the step pattern
      *
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
-     * @param args
      */
-    Object invoke(List<String> args) throws IllegalAccessException, InvocationTargetException;
+    Object invoke(List<String> args) throws ReflectiveOperationException;
 
     /**
      * @return a String id for this step invoker, which should be unique and final
@@ -81,8 +81,8 @@ public interface StepInvoker {
     String getId();
 
     /**
-     * Where more than one possible step invoker matches an action, the technical description may be used to
-     * identify the implementation to the user.
+     * The technical description may be used to
+     *
      * @return a short description of the step implementation (e.g class and method name)
      */
     String getTechnicalDescription();
