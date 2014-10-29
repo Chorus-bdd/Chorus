@@ -38,7 +38,7 @@ import java.io.File;
  */
 public class ProcessManagerConfigValidator extends AbstractConfigValidator<ProcessManagerConfig> {
 
-    public boolean checkValid(ProcessManagerConfig processesConfig) {
+    protected boolean checkValid(ProcessManagerConfig processesConfig) {
         boolean valid = true;
 
         if ( isJavaProcess(processesConfig) ) {

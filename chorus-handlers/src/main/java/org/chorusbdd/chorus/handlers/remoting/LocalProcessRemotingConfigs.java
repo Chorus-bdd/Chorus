@@ -27,7 +27,7 @@ class LocalProcessRemotingConfigs {
         RemotingConfig result = null;
         ProcessManagerConfig processInfo = processManager.getProcessConfig(processName);
         if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
-            result = getConfigForLocalProcess(processInfo);
+            result = getConfigForLocalProcess(processInfo, processName);
         }
         return result;
     }
@@ -39,14 +39,15 @@ class LocalProcessRemotingConfigs {
      * is there a matching remoting config with that config name? If there is, then use that
      * otherwise take defaults by creating a new remoting config
      */
-    private RemotingConfig getConfigForLocalProcess(ProcessManagerConfig processInfo) {
-        String processConfigName = processInfo.getConfigName();
+    private RemotingConfig getConfigForLocalProcess(ProcessManagerConfig processInfo, String processName) {
 
-        RemotingConfig remotingConfig = remotingConfigMap.get(processConfigName);
+        //there is no remoting config for this process config name, so try to create one based on process properties
+        RemotingConfig remotingConfig = remotingConfigMap.get(processName);
         if (remotingConfig == null) {
             remotingConfig = new RemotingConfig();
             remotingConfig.setHost("localhost");
-            remotingConfig.setPort(processInfo.getJmxPort());
+            remotingConfig.setPort(processInfo.getRemotingPort());
+            remotingConfig.setConfigName(processName);
         }
         return remotingConfig;
     }

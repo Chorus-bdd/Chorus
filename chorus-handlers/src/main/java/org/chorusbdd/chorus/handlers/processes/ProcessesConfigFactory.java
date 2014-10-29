@@ -70,7 +70,7 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-            if ( "configName".equals(key)) {
+            if ("configName".equals(key)) {
                 c.setConfigName(value);
             } else if ("pathToExecutable".equals(key)) {
                 c.setPathToExecutable(value);
@@ -85,8 +85,12 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
             } else if ("mainclass".equals(key)) {
                 c.setMainclass(value);
             } else if ("jmxport".equals(key)) {
+                //jmxport is is deprecated, use remotingPort
                 int jmxport = parseIntProperty(value, "jmxport");
-                c.setJmxPort(jmxport);
+                c.setRemotingPort(jmxport);
+            } else if ("remotingPort".equals(key)) {
+                int remotingPort = parseIntProperty(value, "remotingPort");
+                c.setRemotingPort(remotingPort);
             } else if ("debugport".equals(key)) {
                 int debugport = parseIntProperty(value, "debugport");
                 c.setDebugPort(debugport);

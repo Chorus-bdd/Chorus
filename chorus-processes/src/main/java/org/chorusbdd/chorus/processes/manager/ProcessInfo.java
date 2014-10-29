@@ -94,8 +94,8 @@ class ProcessInfo implements ProcessManagerConfig {
         return processManagerConfig.getStdOutMode();
     }
 
-    public int getJmxPort() {
-        return processManagerConfig.getJmxPort();
+    public int getRemotingPort() {
+        return processManagerConfig.getRemotingPort();
     }
 
     public boolean isRemotingConfigDefined() {

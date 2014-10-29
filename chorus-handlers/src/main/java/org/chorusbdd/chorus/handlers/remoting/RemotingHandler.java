@@ -142,7 +142,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     }
 
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> invokers = new ArrayList<StepInvoker>();
+        List<StepInvoker> invokers = new ArrayList<>();
         for ( RemotingConfig c : remotingConfigMap.values()) {
             if ( ! c.isRequireStepSuffix() ) {
                 invokers.addAll(remotingManager.getStepInvokers(c));

@@ -43,7 +43,6 @@ import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,13 +62,15 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
      */
     private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
 
+    private final RemotingConfigValidator configValidator = new RemotingConfigValidator();
+
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
     public Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig) {
         String componentName = remotingConfig.getConfigName();
 
-        ChorusAssert.assertTrue("Remoting config must be valid for " + componentName, new RemotingConfigValidator().checkValid(remotingConfig));
+        checkConfig(remotingConfig);
 
         ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfig);
 
@@ -90,8 +91,14 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     }
 
     public List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig) {
+        checkConfig(remotingConfig);
         ChorusHandlerJmxProxy proxy = getProxyForComponent(remotingConfig.getConfigName(), remotingConfig);
         return getRemoteStepInvokers(proxy);
+    }
+    
+    private void checkConfig(RemotingManagerConfig remotingConfig) {
+        boolean validConfig = configValidator.isValid(remotingConfig);
+        ChorusAssert.assertTrue("Remoting config must be valid for " + remotingConfig.getConfigName(), validConfig);
     }
 
     private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy) {

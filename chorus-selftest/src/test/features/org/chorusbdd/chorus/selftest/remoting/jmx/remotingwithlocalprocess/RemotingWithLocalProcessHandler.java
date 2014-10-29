@@ -62,6 +62,6 @@ public class RemotingWithLocalProcessHandler extends ChorusAssert {
     @Step("I can get the (debug port|jmx port) for (.*) from processes manager")
     public int checkDebugPort(String property, String processName) {
         ProcessManagerConfig processConfig = processManager.getProcessConfig(processName);
-        return "debug port".equals(property) ? processConfig.getDebugPort() : processConfig.getJmxPort();
+        return "debug port".equals(property) ? processConfig.getDebugPort() : processConfig.getRemotingPort();
     }
 }

@@ -36,7 +36,7 @@ import org.chorusbdd.chorus.handlerconfig.AbstractConfigValidator;
  */
 public class RemotingConfigValidator extends AbstractConfigValidator<RemotingManagerConfig> {
 
-    public boolean checkValid(RemotingManagerConfig remotingConfig) {
+    protected boolean checkValid(RemotingManagerConfig remotingConfig) {
         boolean valid = true;
         if ( ! isSet(remotingConfig.getHost()) ) {
             logInvalidConfig("host was not set", remotingConfig);

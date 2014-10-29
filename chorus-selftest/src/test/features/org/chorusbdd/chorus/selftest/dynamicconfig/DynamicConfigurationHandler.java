@@ -59,7 +59,7 @@ public class DynamicConfigurationHandler {
         ProcessesConfig c = new ProcessesConfig().
                 setConfigName(processConfigName).
                 setMainclass(mainclass).
-                setJmxPort(12345).
+                setRemotingPort(12345).
                 setStdOutAndErrMode(OutputMode.FILE);
         processesHandler.addConfiguration(c);
     }

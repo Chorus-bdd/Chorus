@@ -55,7 +55,7 @@ public interface ProcessManagerConfig extends HandlerConfig {
 
     OutputMode getStdOutMode();
 
-    int getJmxPort();
+    int getRemotingPort();
 
     boolean isRemotingConfigDefined();
 

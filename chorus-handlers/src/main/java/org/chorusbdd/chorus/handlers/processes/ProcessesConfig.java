@@ -63,7 +63,6 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private String args;
     private OutputMode stdOutMode = OutputMode.INLINE;
     private OutputMode stdErrMode = OutputMode.INLINE;
-    private int jmxPort = -1;
     private int debugPort = -1;
     private int terminateWaitTime = 30;
     private String logDirectory;
@@ -73,12 +72,16 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private int readTimeoutSeconds = 10;
     private Scope processScope = Scope.SCENARIO;
 
+    //where starting multiple processes (under different names) from the same processes config, the remotingPort is the base port and will be auto incremented
+    //Chorus' remoting handler can also use this property to connect to a locally started process automatically without adding remoting config
+    private int remotingPort = -1;
+
     //when we start a process based on this config we keep count of this so we can auto increment
     //debug and jmx ports for any other similar processes started under different names/aliases
     private int instancesStarted = 0;
 
     /**
-     * If multiple ProcessManagerConfig are built from the same ProcessesConfig the jmxPort and debugPort
+     * If multiple ProcessManagerConfig are built from the same ProcessesConfig the remotingPort and debugPort
      * will be auto-incremented / increase by one each time.
      * 
      * This allows the user to start several instances of a process with the same config under different 
@@ -90,7 +93,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
 
         //using the getter methods to allow subclasses to override
 
-        int nextJmxPort = getJmxPort() != -1 ? getJmxPort() + instancesStarted : -1;
+        int nextremotingPort = getRemotingPort() != -1 ? getRemotingPort() + instancesStarted : -1;
         int nextDebugPort = getDebugPort() != -1 ? getDebugPort() + instancesStarted : -1;
 
         RuntimeProcessConfig nextProcess = new RuntimeProcessConfig(
@@ -103,7 +106,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
             getArgs(),
             getStdOutMode(),
             getStdErrMode(),
-            nextJmxPort,
+            nextremotingPort,
             nextDebugPort,
             getTerminateWaitTime(),
             getLogDirectory(),
@@ -211,17 +214,17 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return this;
     }
 
-    public int getJmxPort() {
-        return jmxPort;
+    public int getRemotingPort() {
+        return remotingPort;
     }
 
-    public ProcessesConfig setJmxPort(int jmxPort) {
-        this.jmxPort = jmxPort;
+    public ProcessesConfig setRemotingPort(int remotingPort) {
+        this.remotingPort = remotingPort;
         return this;
     }
 
     public boolean isRemotingConfigDefined() {
-        return jmxPort != -1;
+        return remotingPort != -1;
     }
 
     public int getDebugPort() {
@@ -320,7 +323,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
                 ", args='" + args + '\'' +
                 ", stdOutMode=" + stdOutMode +
                 ", stdErrMode=" + stdErrMode +
-                ", jmxPort=" + jmxPort +
+                ", remotingPort=" + remotingPort +
                 ", debugPort=" + debugPort +
                 ", terminateWaitTime=" + terminateWaitTime +
                 ", logDirectory='" + logDirectory + '\'' +
@@ -347,7 +350,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
         private final String args;
         private final OutputMode stdOutMode;
         private final OutputMode stdErrMode;
-        private final int jmxPort;
+        private final int remotingPort;
         private final int debugPort;
         private final int terminateWaitTime;
         private final String logDirectory;
@@ -358,7 +361,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
         private final Scope processScope;
 
         RuntimeProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
-                    String args, OutputMode stdOutMode, OutputMode stdErrMode, int jmxPort, int debugPort, int terminateWaitTime,
+                    String args, OutputMode stdOutMode, OutputMode stdErrMode, int remotingPort, int debugPort, int terminateWaitTime,
                     String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
                     int readTimeoutSeconds, Scope processScope) {
             this.groupName = groupName;
@@ -370,7 +373,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
             this.args = args;
             this.stdOutMode = stdOutMode;
             this.stdErrMode = stdErrMode;
-            this.jmxPort = jmxPort;
+            this.remotingPort = remotingPort;
             this.debugPort = debugPort;
             this.terminateWaitTime = terminateWaitTime;
             this.logDirectory = logDirectory;
@@ -417,12 +420,12 @@ public class ProcessesConfig implements ProcessManagerConfig {
             return stdOutMode;
         }
 
-        public int getJmxPort() {
-            return jmxPort;
+        public int getRemotingPort() {
+            return remotingPort;
         }
 
         public boolean isRemotingConfigDefined() {
-            return jmxPort != -1;
+            return remotingPort != -1;
         }
 
         public int getDebugPort() {
@@ -473,7 +476,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
                     ", args='" + args + '\'' +
                     ", stdOutMode=" + stdOutMode +
                     ", stdErrMode=" + stdErrMode +
-                    ", jmxPort=" + jmxPort +
+                    ", remotingPort=" + remotingPort +
                     ", debugPort=" + debugPort +
                     ", terminateWaitTime=" + terminateWaitTime +
                     ", logDirectory='" + logDirectory + '\'' +

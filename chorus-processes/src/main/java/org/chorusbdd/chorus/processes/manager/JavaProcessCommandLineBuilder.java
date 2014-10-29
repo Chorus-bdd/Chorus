@@ -108,10 +108,10 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
     private List<String> getJmxTokens(ProcessManagerConfig processesConfig) {
         List<String> jmxTokens = new ArrayList<String>();
-        if (processesConfig.getJmxPort() > -1) {
+        if (processesConfig.getRemotingPort() > -1) {
             jmxTokens.add("-Dcom.sun.management.jmxremote.ssl=false");
             jmxTokens.add("-Dcom.sun.management.jmxremote.authenticate=false");
-            jmxTokens.add(String.format("-Dcom.sun.management.jmxremote.port=%s", processesConfig.getJmxPort()));
+            jmxTokens.add(String.format("-Dcom.sun.management.jmxremote.port=%s", processesConfig.getRemotingPort()));
             jmxTokens.add("-D" + ChorusConstants.JMX_EXPORTER_ENABLED_PROPERTY + "=true");
         }
         return jmxTokens;

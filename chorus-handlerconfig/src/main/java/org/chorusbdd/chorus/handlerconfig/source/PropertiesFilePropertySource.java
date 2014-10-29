@@ -54,13 +54,13 @@ import java.util.*;
  *
  * In handler-specific files, the form of each property key should be:
  * configName.property
- * e.g. myfirstprocess.jmxport=1234 - the configName is myfirstprocess and the property is jmxport
+ * e.g. myfirstprocess.remotingPort=1234 - the configName is myfirstprocess and the property is remotingPort
  * When the properties are parsed, we return a separate Properties instance for each configName we encounter
  *
  * In non-handler-specific property files, e.g. chorus.properties, or featurename.properties we expect to find an
  * additional prefix token which identifies the handler type:
  * handlerType.configName.property
- * e.g. processes.myfirstprocess.jmxport=1234
+ * e.g. processes.myfirstprocess.remotingPort=1234
  *
  * In general the user can choose whether to use the general form of the properties files (all
  * properties in one place), or to opt for the handler-specific format (shorter property keys but more files!)
