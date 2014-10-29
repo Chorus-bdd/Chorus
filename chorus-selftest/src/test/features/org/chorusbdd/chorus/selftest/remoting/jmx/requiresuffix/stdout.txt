@@ -1,0 +1,13 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/requiresuffix/remotingnocomponentname.feature
+Feature: Remoting No Component Name Suffix                                                           
+Chorus --> INFO    - No default handler found for Feature: (Remoting No Component Name Suffix), will use built-in handlers and Uses: statements
+  Scenario: Call An Exported Method
+Chorus --> INFO    - Processing scenario: Call An Exported Method
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Check I can call a step method exported by the handler                                   PASSED  
+    Check I can call a step method exported by the handler in NoComponentName                PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

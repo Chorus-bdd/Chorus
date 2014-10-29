@@ -36,6 +36,7 @@ import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.StartMode;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -49,7 +50,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
     
-    private Map<String, ProcessesConfig> processConfigTemplates;
+    private Map<String, ProcessesConfig> processConfigs;
 
     @ChorusResource("feature.dir")
     private File featureDir;
@@ -174,8 +175,14 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
 
     @Initialize(scope= Scope.FEATURE)
-    public void setup() {
-        processConfigTemplates = loadProcessConfig();
+    public void setupFeature() throws Exception {
+        processConfigs = loadProcessConfig();
+        automaticallyStartProcessesForScope(Scope.FEATURE);
+    }
+
+    @Initialize(scope= Scope.SCENARIO)
+    public void setupScenario() throws Exception {
+        automaticallyStartProcessesForScope(Scope.SCENARIO);
     }
 
     @Destroy(scope= Scope.SCENARIO)
@@ -186,7 +193,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     }
 
     private void resetScenarioScopedPortsInConfigTemplates() {
-        for (ProcessesConfig config : processConfigTemplates.values()) {
+        for (ProcessesConfig config : processConfigs.values()) {
             if (Scope.SCENARIO.equals(config.getProcessScope())) {
                 config.resetPorts();
             }
@@ -195,15 +202,25 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
     @Destroy(scope= Scope.FEATURE)
     public void destroyFeature() {
-        processManager.stopAllProcesses();
+        processManager.stopProcessesRunningWithinScope(Scope.FEATURE);
     }
 
+    /**
+     * Automatically start any processes configured to start mode automatic at the feature or scenario scope
+     */
+    private void automaticallyStartProcessesForScope(Scope scope) throws Exception {
+        for ( ProcessesConfig c : processConfigs.values()) {
+            if ( c.getStartMode() == StartMode.AUTOMATIC && scope == c.getProcessScope()) {
+                startProcess(c, c.getConfigName());
+            }
+        }
+    }
 
     ///////////////////////////////////////////////////////////////
     // Config load
 
     private ProcessesConfig getConfig(final String configName) {
-        ProcessesConfig c = processConfigTemplates.get(configName);
+        ProcessesConfig c = processConfigs.get(configName);
         if (c == null) {
             throw new ChorusException("No configuration found for process: " + configName);
         }
@@ -221,6 +238,6 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     }
 
     public void addConfiguration(ProcessesConfig handlerConfig) {
-        processConfigTemplates.put(handlerConfig.getConfigName(), handlerConfig);
+        processConfigs.put(handlerConfig.getConfigName(), handlerConfig);
     }
 }

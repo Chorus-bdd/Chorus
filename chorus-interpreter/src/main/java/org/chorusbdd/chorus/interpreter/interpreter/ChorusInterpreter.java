@@ -187,7 +187,7 @@ public class ChorusInterpreter {
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
         log.debug("Running scenario steps for Scenario " + scenario);
-        StepInvokerProvider p = createStepInvokerProvider(handlerInstances);
+        StepInvokerProvider p = getStepInvokers(handlerInstances);
         stepProcessor.runSteps(executionToken, p, scenario.getSteps(), skip);
 
         stopTimeoutTasks();
@@ -201,7 +201,7 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }
 
-    private StepInvokerProvider createStepInvokerProvider(List<Object> handlerInstances) {
+    private StepInvokerProvider getStepInvokers(List<Object> handlerInstances) {
         DefaultStepInvokerProvider stepInvokerProvider = new DefaultStepInvokerProvider();
         for ( Object handler : handlerInstances) {
             HandlerClassInvokerFactory f = new HandlerClassInvokerFactory(handler);

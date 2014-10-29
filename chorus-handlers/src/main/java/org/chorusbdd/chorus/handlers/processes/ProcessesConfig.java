@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlers.processes;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.OutputMode;
 import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.StartMode;
 
 /**
  * Created with IntelliJ IDEA.
@@ -71,6 +72,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private int processCheckDelay = 500;
     private int readTimeoutSeconds = 10;
     private Scope processScope = Scope.SCENARIO;
+    private StartMode startMode = StartMode.STEP;
 
     //where starting multiple processes (under different names) from the same processes config, the remotingPort is the base port and will be auto incremented
     //Chorus' remoting handler can also use this property to connect to a locally started process automatically without adding remoting config
@@ -114,7 +116,8 @@ public class ProcessesConfig implements ProcessManagerConfig {
             isCreateLogDir(),
             getProcessCheckDelay(),
             getReadTimeoutSeconds(),
-            getProcessScope()
+            getProcessScope(),
+            getStartMode()
         );
         instancesStarted++;
         return nextProcess;
@@ -299,6 +302,14 @@ public class ProcessesConfig implements ProcessManagerConfig {
         return this;
     }
 
+    public StartMode getStartMode() {
+        return startMode;
+    }
+
+    public void setStartMode(StartMode startMode) {
+        this.startMode = startMode;
+    }
+
     public boolean isJavaProcess() {
         return ! isSet(pathToExecutable);
     }
@@ -359,11 +370,12 @@ public class ProcessesConfig implements ProcessManagerConfig {
         private final int processCheckDelay;
         private final int readTimeoutSeconds;
         private final Scope processScope;
+        private final StartMode startMode;
 
         RuntimeProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
                     String args, OutputMode stdOutMode, OutputMode stdErrMode, int remotingPort, int debugPort, int terminateWaitTime,
                     String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
-                    int readTimeoutSeconds, Scope processScope) {
+                    int readTimeoutSeconds, Scope processScope, StartMode startMode) {
             this.groupName = groupName;
             this.pathToExecutable = pathToExecutable;
             this.jre = jre;
@@ -382,6 +394,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
             this.processCheckDelay = processCheckDelay;
             this.readTimeoutSeconds = readTimeoutSeconds;
             this.processScope = processScope;
+            this.startMode = startMode;
         }
 
         public String getConfigName() {
@@ -458,6 +471,10 @@ public class ProcessesConfig implements ProcessManagerConfig {
 
         public Scope getProcessScope() {
             return processScope;
+        }
+
+        public StartMode getStartMode() {
+            return startMode;
         }
 
         public boolean isJavaProcess() {

@@ -27,29 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.manager;
+package org.chorusbdd.chorus.selftest.remoting.jmx.requiresuffix;
 
-import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public interface RemotingManagerConfig extends HandlerConfig {
+public class TestRemotingNoComponentNameSuffix extends AbstractInterpreterTest {
 
-    String getProtocol();
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/requiresuffix";
 
-    String getConfigName();
+    final int expectedExitCode = 0;  //success
 
-    String getHost();
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    int getPort();
-
-    int getConnectionAttempts();
-
-    int getConnectionAttemptMillis();
-
-    /**
-     * @return false to make a remote step accessible without adding the (in componentName) suffix to the step action
-     */
-    boolean isRequireComponentNameSuffix();
+    protected String getFeaturePath() {
+        return featurePath;
+    }
+    
 }

@@ -134,6 +134,8 @@ class ProcessInfo implements ProcessManagerConfig {
         return processManagerConfig.getProcessScope();
     }
 
+    public StartMode getStartMode() { return processManagerConfig.getStartMode(); }
+
     public boolean isJavaProcess() {
         return processManagerConfig.isJavaProcess();
     }

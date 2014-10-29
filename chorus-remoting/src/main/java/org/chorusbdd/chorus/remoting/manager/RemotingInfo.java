@@ -43,16 +43,16 @@ public class RemotingInfo implements RemotingManagerConfig {
     private final int port;
     private final int connectionAttempts;
     private final int connectionAttemptMillis;
-    private boolean requireStepSuffix;
+    private boolean requireComponentNameSuffix;
 
-    public RemotingInfo(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis, boolean requireStepSuffix) {
+    public RemotingInfo(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis, boolean requireComponentNameSuffix) {
         this.protocol = protocol;
         this.configName = configName;
         this.host = host;
         this.port = port;
         this.connectionAttempts = connectionAttempts;
         this.connectionAttemptMillis = connectionAttemptMillis;
-        this.requireStepSuffix = requireStepSuffix;
+        this.requireComponentNameSuffix = requireComponentNameSuffix;
     }
 
     public String getProtocol() {
@@ -79,8 +79,8 @@ public class RemotingInfo implements RemotingManagerConfig {
         return connectionAttemptMillis;
     }
 
-    public boolean isRequireStepSuffix() {
-        return requireStepSuffix;
+    public boolean isRequireComponentNameSuffix() {
+        return requireComponentNameSuffix;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class RemotingInfo implements RemotingManagerConfig {
                 ", port=" + port +
                 ", connectionAttempts=" + connectionAttempts +
                 ", connectionAttemptMillis=" + connectionAttemptMillis +
-                ", requireStepSuffix=" + requireStepSuffix +
+                ", requireComponentNameSuffix=" + requireComponentNameSuffix +
                 '}';
     }
 }
