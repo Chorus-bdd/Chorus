@@ -27,44 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.selftest.processhandler.autostart;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.subsystem.Subsystem;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 
 /**
- * Created by nick on 26/09/2014.
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public interface ProcessManager extends Subsystem {
+public class TestAutostartProcesses extends AbstractInterpreterTest {
 
-    void startProcess(String processName, ProcessManagerConfig processInfo) throws Exception;
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/processhandler/autostart/autostartprocess.feature";
 
-    void stopProcess(String processName);
+    final int expectedExitCode = 0;  //success
 
-    void stopProcessesRunningWithinScope(Scope scope);
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    void stopAllProcesses();
-
-    ProcessManagerConfig getProcessConfig(String processName);
-
-    void checkProcessHasStopped(String processName);
-
-    void checkProcessIsRunning(String processName);
-
-    void checkProcessIsNotRunning(String processName);
-
-    void waitForProcessToTerminate(String processName);
-
-    void readFromProcess(String pattern, String processName, boolean searchWithinLines);
-
-    void readFromProcessWithinNSeconds(String pattern, String processName, boolean searchWithinLines, int seconds);
-
-    void readFromProcessStdError(String pattern, String processName, boolean searchWithinLines);
-
-    void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, boolean searchWithinLines, int seconds);
-
-    void writeToProcess(String line, String processName, boolean newLine);
-
-    void waitForProcessToTerminate(String processName, int waitTimeSeconds);
+    protected String getFeaturePath() {
+        return featurePath;
+    }
 
 }

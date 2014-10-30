@@ -1,0 +1,36 @@
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/autostart/autostartprocess.feature
+Feature: Autostart Process                                                                           
+Chorus --> INFO    - No default handler found for Feature: (Autostart Process), will use built-in handlers and Uses: statements
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    When the process featurescope is running                                                 PASSED  
+    And the process featurescope-two is running                                              PASSED  
+    And I set the process id to 1 in featurescope                                            PASSED  
+    And I set the process id to 2 in featurescope-two                                        PASSED  
+    Then I check the process scenarioscope is running                                        PASSED  
+    And I check the process scenarioscope-two is running                                     PASSED  
+    And I stop the process scenarioscope                                                     PASSED  
+    And I stop the process scenarioscope-two                                                 PASSED  
+  Scenario: Check feature scoped processes are still running
+Chorus --> INFO    - Processing scenario: Check feature scoped processes are still running
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    When I get the process id from featurescope                                              PASSED  1
+    Then the variable lastResult has the value 1                                             PASSED  
+    And I get the process id from featurescope-two                                           PASSED  2
+    Then the variable lastResult has the value 2                                             PASSED  
+  Scenario: Check scenario scoped processes are running
+Chorus --> INFO    - Processing scenario: Check scenario scoped processes are running
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Check the process scenarioscope is running                                               PASSED  
+    And the process scenarioscope-two is running                                             PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:14) (passed:14) (failed:0) (undefined:0) (pending:0) (skipped:0)

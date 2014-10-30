@@ -27,44 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.selftest.processhandler.autostart;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.subsystem.Subsystem;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
- * Created by nick on 26/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public interface ProcessManager extends Subsystem {
+@Handler("Start A Process Handler")
+public class StartAProcessHandler extends ChorusAssert {
 
-    void startProcess(String processName, ProcessManagerConfig processInfo) throws Exception;
+    private int id;
 
-    void stopProcess(String processName);
+    @Step(".*I set the process id to (\\d+)")
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    void stopProcessesRunningWithinScope(Scope scope);
-
-    void stopAllProcesses();
-
-    ProcessManagerConfig getProcessConfig(String processName);
-
-    void checkProcessHasStopped(String processName);
-
-    void checkProcessIsRunning(String processName);
-
-    void checkProcessIsNotRunning(String processName);
-
-    void waitForProcessToTerminate(String processName);
-
-    void readFromProcess(String pattern, String processName, boolean searchWithinLines);
-
-    void readFromProcessWithinNSeconds(String pattern, String processName, boolean searchWithinLines, int seconds);
-
-    void readFromProcessStdError(String pattern, String processName, boolean searchWithinLines);
-
-    void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, boolean searchWithinLines, int seconds);
-
-    void writeToProcess(String line, String processName, boolean newLine);
-
-    void waitForProcessToTerminate(String processName, int waitTimeSeconds);
+    @Step(".*I get the process id")
+    public int getId() {
+        return id;
+    }
 
 }

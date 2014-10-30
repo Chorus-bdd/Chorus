@@ -27,44 +27,24 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.selftest.processhandler.autostart;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.subsystem.Subsystem;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 /**
- * Created by nick on 26/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public interface ProcessManager extends Subsystem {
+public class StartAProcessMain {
 
-    void startProcess(String processName, ProcessManagerConfig processInfo) throws Exception;
+    public static void main(String[] args) throws InterruptedException {
 
-    void stopProcess(String processName);
+        ChorusHandlerJmxExporter chorusHandlerJmxExporter = new ChorusHandlerJmxExporter(new StartAProcessHandler());
+        chorusHandlerJmxExporter.export();
 
-    void stopProcessesRunningWithinScope(Scope scope);
-
-    void stopAllProcesses();
-
-    ProcessManagerConfig getProcessConfig(String processName);
-
-    void checkProcessHasStopped(String processName);
-
-    void checkProcessIsRunning(String processName);
-
-    void checkProcessIsNotRunning(String processName);
-
-    void waitForProcessToTerminate(String processName);
-
-    void readFromProcess(String pattern, String processName, boolean searchWithinLines);
-
-    void readFromProcessWithinNSeconds(String pattern, String processName, boolean searchWithinLines, int seconds);
-
-    void readFromProcessStdError(String pattern, String processName, boolean searchWithinLines);
-
-    void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, boolean searchWithinLines, int seconds);
-
-    void writeToProcess(String line, String processName, boolean newLine);
-
-    void waitForProcessToTerminate(String processName, int waitTimeSeconds);
+        Thread.sleep(60000);
+    }
 
 }

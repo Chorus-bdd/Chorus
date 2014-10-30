@@ -74,6 +74,7 @@ public class ProcessesConfig implements ProcessManagerConfig {
     private Scope processScope = Scope.SCENARIO;
     private StartMode startMode = StartMode.STEP;
 
+    //port on which to start the service which allows the process to export handlers across the network
     //where starting multiple processes (under different names) from the same processes config, the remotingPort is the base port and will be auto incremented
     //Chorus' remoting handler can also use this property to connect to a locally started process automatically without adding remoting config
     private int remotingPort = -1;

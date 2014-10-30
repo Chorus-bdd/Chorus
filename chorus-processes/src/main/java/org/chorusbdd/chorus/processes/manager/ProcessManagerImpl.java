@@ -182,6 +182,11 @@ public class ProcessManagerImpl implements ProcessManager {
         ChorusAssert.assertTrue("Check the process " + processName + " is running", ! p.getProcess().isStopped());
     }
 
+    public void checkProcessIsNotRunning(String processName) {
+        ProcessInfo p = processes.get(processName);
+        ChorusAssert.assertTrue("Check the process " + processName + " is not running",  p == null || p.getProcess().isStopped());
+    }
+
     public synchronized void waitForProcessToTerminate(String processName) {
         ProcessInfo p = processes.get(processName);
         if ( p == null ) {

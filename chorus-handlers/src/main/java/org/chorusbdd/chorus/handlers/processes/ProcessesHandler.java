@@ -109,6 +109,11 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
         processManager.checkProcessIsRunning(processName);
     }
 
+    @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) is not running")
+    public void checkProcessIsNotRunning(String processName) {
+        processManager.checkProcessIsNotRunning(processName);
+    }
+
     @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*?")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
         processManager.waitForProcessToTerminate(processName, waitSeconds);

@@ -79,9 +79,7 @@ public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoade
                E c = configBuilder.createConfig(props.getValue(), defaultProperties);
                ConfigValidator<? super E> validator = configBuilder.createValidator(c);
 
-               if ( HandlerConfig.DEFAULT_PROPERTIES_GROUP.equals(props.getKey())) {
-                   map.put(props.getKey(), c);
-               } else {
+               if ( ! HandlerConfig.DEFAULT_PROPERTIES_GROUP.equals(props.getKey())) {
                    //apart from the 'default' configs all configs must pass validation rules
                    //we still include the default configs in results so that we can see what the defaults were
                    addIfValid(map, props, c, validator);
