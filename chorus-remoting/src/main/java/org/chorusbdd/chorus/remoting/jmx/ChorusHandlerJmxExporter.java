@@ -163,8 +163,6 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
         String message = "remote " + t.getClass().getSimpleName() +
             ( t.getMessage() == null ? " " : " - " + t.getMessage() );
-        //String location = ExceptionHandling.getExceptionLocation(t);
-
 
         StackTraceElement[] stackTrace = t.getStackTrace();
         return new JmxRemotingException(message, t.getClass().getSimpleName(), stackTrace);
