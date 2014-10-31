@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.serialization.ChorusRemotingException;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
@@ -158,7 +158,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         }
     }
 
-    private ChorusRemotingException createRemotingException(Throwable t) {
+    private JmxRemotingException createRemotingException(Throwable t) {
         //here we are sending the exception name and the stack trace elements, but not the exception instance itself
         //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
         String message = "remote " + t.getClass().getSimpleName() +
@@ -167,7 +167,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
 
         StackTraceElement[] stackTrace = t.getStackTrace();
-        return new ChorusRemotingException(message, t.getClass().getSimpleName(), stackTrace);
+        return new JmxRemotingException(message, t.getClass().getSimpleName(), stackTrace);
     }
 
     public List<JmxInvokerResult> getStepInvokers() {

@@ -33,8 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  When exceptions occur remotely, we throw a ChorusRemotingException and this should be received by the
- *  remote chorus interpreter
+ *  When exceptions occur remotely we throw a JmxRemotingException
  *
  *  If we include the remote application's exception as a cause, this might result in a deserialization error
  *  if the interpreter doesn't have the exception class in its classpath.
@@ -45,7 +44,7 @@ import java.util.Map;
  *  are sent back, hence, the best approach is probably to marshall and send the StackTraceElements and exception name
  *  of the cause, rather than serializing the exception instance itself.
  */
-public class ChorusRemotingException extends RuntimeException {
+public class JmxRemotingException extends RuntimeException {
 
     private static final long serialVersionUID = 1;
 
@@ -69,7 +68,7 @@ public class ChorusRemotingException extends RuntimeException {
      * @param nameOfCauseExceptionClass 
      * @param traceOfCauseException 
      */
-    public ChorusRemotingException(String message, String nameOfCauseExceptionClass, StackTraceElement[] traceOfCauseException) {
+    public JmxRemotingException(String message, String nameOfCauseExceptionClass, StackTraceElement[] traceOfCauseException) {
         super(message);
 
         fieldData.put(STACK_TRACE_ELEMENTS, traceOfCauseException);
