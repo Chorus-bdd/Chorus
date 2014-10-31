@@ -44,20 +44,22 @@ import java.util.Map;
  * Wrap the result of implementing a step remotely - this is the object returned by the
  * step implementation method - along with the remote chorus context state
  */
-public class JmxStepResult implements Serializable {
+public class JmxStepResult extends AbstractJmxResult {
 
     private static final long serialVersionUID = 1;
 
+    private static final String SERIALIZE_VERSION = "SERIALIZE_VERSION";
     public static final String CHORUS_CONTEXT_FIELD = "CHORUS_CONTEXT";
     public static final String STEP_RESULT_FIELD = "STEP_RESULT";
 
-    //Using a Map to store field data because it might help to support backwards compatibility
-    //we may be able to add more fields and still deserialize earlier versions of JmxStepResult
-    private Map<String, Object> fieldMap = new HashMap<String, Object>();
+    //the current version of this serialization
+    //for use if we need to change the serialization properties and support backwards compatibility
+    private static final int CURRENT_SERIALIZE_VERSION = 1;
 
     public JmxStepResult(Map chorusContext, Object result) {
-        fieldMap.put(CHORUS_CONTEXT_FIELD, chorusContext);
-        fieldMap.put(STEP_RESULT_FIELD, result);
+        put(SERIALIZE_VERSION, CURRENT_SERIALIZE_VERSION);
+        put(CHORUS_CONTEXT_FIELD, chorusContext);
+        put(STEP_RESULT_FIELD, result);
         if ( result != null && ! (result instanceof Serializable)) {
             throw new ChorusException(
                 "The returned type of a remotely called step implementation must be Serializable, " +
@@ -67,10 +69,10 @@ public class JmxStepResult implements Serializable {
     }
 
     public Map getChorusContext() {
-        return (Map)fieldMap.get(CHORUS_CONTEXT_FIELD);
+        return (Map)get(CHORUS_CONTEXT_FIELD);
     }
 
     public Object getResult() {
-        return fieldMap.get(STEP_RESULT_FIELD);
+        return get(STEP_RESULT_FIELD);
     }
 }

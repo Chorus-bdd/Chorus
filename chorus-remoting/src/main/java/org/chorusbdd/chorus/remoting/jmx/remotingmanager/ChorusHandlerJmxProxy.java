@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.jmx.JmxStepResult;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
@@ -52,7 +53,7 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxProxy.class);
 
-    private List<Map> stepMetadata;
+    private List<JmxInvokerResult> stepMetadata;
 
     private static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
     private static final String JMX_EXPORTER_STEP_METADATA = "StepInvokers";
@@ -64,18 +65,18 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
         this.componentName = componentName;
 
         //the step metadata won't change so load from the remote MBean and cache it here
-        stepMetadata = (List<Map>) getAttribute(JMX_EXPORTER_STEP_METADATA);
+        stepMetadata = (List<JmxInvokerResult>) getAttribute(JMX_EXPORTER_STEP_METADATA);
 
         //debug logging of metadata
         if (log.isDebugEnabled()) {
             log.debug("Loading step metadata for (" + objectName + ")");
-            for (Map entry : stepMetadata) {
+            for (JmxInvokerResult entry : stepMetadata) {
                 log.debug("Found remote step invoker " + entry);
             }
         }
     }
 
-    public List<Map> getStepMetadata() {
+    public List<JmxInvokerResult> getStepMetadata() {
         return stepMetadata;
     }
 

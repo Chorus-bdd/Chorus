@@ -36,9 +36,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -76,13 +74,18 @@ public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoade
            }
 
            for ( Map.Entry<String, Properties> props : propertiesByConfigName.entrySet()) {
-               E c = configBuilder.createConfig(props.getValue(), defaultProperties);
-               ConfigValidator<? super E> validator = configBuilder.createValidator(c);
+
+               //build an ordered list supplying default property values first
+               List<Properties> propertiesList = Arrays.asList(defaultProperties, props.getValue());
+
+               //create and validate
+               E newConfig = configBuilder.createConfig(propertiesList);
+               ConfigValidator<? super E> validator = configBuilder.createValidator(newConfig);
 
                if ( ! HandlerConfig.DEFAULT_PROPERTIES_GROUP.equals(props.getKey())) {
                    //apart from the 'default' configs all configs must pass validation rules
                    //we still include the default configs in results so that we can see what the defaults were
-                   addIfValid(map, props, c, validator);
+                   addIfValid(map, props, newConfig, validator);
                }
            }
         } catch (Exception e) {
@@ -92,13 +95,13 @@ public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoade
         return map;
     }
 
-    private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E c, ConfigValidator<? super E> validator) {
-        if (validator.isValid(c)) {
-            configMap.put(props.getKey(), c);
+    private void addIfValid(Map<String, E> configMap, Map.Entry<String, Properties> props, E newConfig, ConfigValidator<? super E> validator) {
+        if (validator.isValid(newConfig)) {
+            configMap.put(props.getKey(), newConfig);
         } else {
             log.warn(validator.getErrorDescription());
             log.warn("Removing " + props.getKey() + " which is not a valid " + handlerName + " handler config");
-            log.debug(c);
+            log.debug(newConfig);
         }
     }
 

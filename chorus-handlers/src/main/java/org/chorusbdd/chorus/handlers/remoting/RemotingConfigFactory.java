@@ -38,6 +38,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.util.ChorusException;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -51,10 +52,11 @@ public class RemotingConfigFactory extends AbstractHandlerConfigFactory implemen
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigFactory.class);
 
-    public RemotingConfig createConfig(Properties p, Properties defaults) {
+    public RemotingConfig createConfig(List<Properties> p) {
         RemotingConfig r = new RemotingConfig();
-        setProperties(defaults, r);
-        setProperties(p, r);
+        for ( Properties properties : p) {
+            setProperties(properties, r);
+        }
         return r;
     }
 

@@ -42,6 +42,7 @@ import org.chorusbdd.chorus.processes.manager.StartMode;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -56,10 +57,11 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigFactory.class);
 
-    public ProcessesConfig createConfig(Properties p, Properties defaults) {
+    public ProcessesConfig createConfig(List<Properties> p) {
         ProcessesConfig c = new ProcessesConfig();
-        setProperties(defaults, c);
-        setProperties(p, c);
+        for ( Properties properties : p) {
+            setProperties(properties, c);
+        }
         return c;
     }
 

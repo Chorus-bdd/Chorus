@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlerconfig;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -42,9 +43,15 @@ import java.util.Properties;
 public interface HandlerConfigFactory<E extends HandlerConfig> {
 
     /**
-     * Create a config, first initialising with the default properties, and then overriding the defaults with Properties p
+     * Create a config, initializing with Properties in the order supplied in the List
+     * Later Properties in the list may override values set by earlier Properties
+     *
+     * Initially this list contains default properties plus config specific properties
+     * (property inheritance from a named parent group may be added at some future point)
+     *
+     * @param p
      */
-    E createConfig(Properties p, Properties defaults);
+    E createConfig(List<Properties> p);
 
 
     /**

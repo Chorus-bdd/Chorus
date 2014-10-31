@@ -167,14 +167,11 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), stackTrace);
     }
 
-    public List<Map> getStepInvokers() {
-        List<Map> invokers = new ArrayList<>();
-        InvokerMapAdapter invokerMapAdapter = new InvokerMapAdapter();
+    public List<JmxInvokerResult> getStepInvokers() {
+        List<JmxInvokerResult> invokers = new ArrayList<>();
         for ( StepInvoker s : stepInvokers.values() ) {
-            Map stepForExport = invokerMapAdapter.toMap(s);
-            if ( stepForExport != null) {
-                invokers.add(stepForExport);
-            }
+            JmxInvokerResult jmxInvoker = new JmxInvokerResult(s);
+            invokers.add(jmxInvoker);
         }
         return invokers;
     }

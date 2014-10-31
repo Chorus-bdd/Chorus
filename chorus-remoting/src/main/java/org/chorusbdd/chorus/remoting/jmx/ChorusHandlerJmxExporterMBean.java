@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public interface ChorusHandlerJmxExporterMBean {
 
-    public List<Map> getStepInvokers();
+    public List<JmxInvokerResult> getStepInvokers();
 
     public JmxStepResult invokeStep(String stepId, Map chorusContext, List<String> params) throws Exception;
 }

@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.InvokerMapAdapter;
+import org.chorusbdd.chorus.remoting.jmx.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
@@ -103,9 +103,8 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
 
     private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy) {
         List<StepInvoker> invokers = new ArrayList<>();
-        InvokerMapAdapter invokerMapAdapter = new InvokerMapAdapter();
-        for (Map invokerProperties : proxy.getStepMetadata()) {
-            StepInvoker invoker = invokerMapAdapter.toRemoteStepInvoker(proxy, invokerProperties);
+        for (JmxInvokerResult r : proxy.getStepMetadata()) {
+            StepInvoker invoker = r.toRemoteStepInvoker(proxy);
             invokers.add(invoker);
         }
         return invokers;
