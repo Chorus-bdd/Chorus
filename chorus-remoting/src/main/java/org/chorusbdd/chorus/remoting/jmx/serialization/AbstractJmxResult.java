@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.remoting.jmx;
+package org.chorusbdd.chorus.remoting.jmx.serialization;
 
 import java.io.Serializable;
 import java.util.HashMap;

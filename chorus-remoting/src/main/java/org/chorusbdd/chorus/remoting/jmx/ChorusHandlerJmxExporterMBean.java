@@ -29,7 +29,8 @@
  */
 package org.chorusbdd.chorus.remoting.jmx;
 
-import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 
 import java.util.List;
 import java.util.Map;

@@ -32,9 +32,8 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.JmxInvokerResult;
-import org.chorusbdd.chorus.remoting.jmx.JmxStepResult;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 
 import javax.management.MBeanException;
 import java.util.List;
@@ -60,7 +59,7 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
     private String componentName;
 
     @SuppressWarnings("unchecked")
-    public ChorusHandlerJmxProxy(String componentName, String host, int jmxPort, int connectionRetryCount, int millisBetweenConnectionAttempts) throws ChorusRemotingException {
+    public ChorusHandlerJmxProxy(String componentName, String host, int jmxPort, int connectionRetryCount, int millisBetweenConnectionAttempts) {
         super(host, jmxPort, JMX_EXPORTER_NAME, connectionRetryCount, millisBetweenConnectionAttempts);
         this.componentName = componentName;
 

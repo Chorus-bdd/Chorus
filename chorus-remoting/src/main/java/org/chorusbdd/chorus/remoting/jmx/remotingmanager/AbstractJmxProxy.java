@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -63,9 +63,8 @@ public class AbstractJmxProxy {
      * @param mBeanName must be formatted according to the MBean spec
      * @param connectionAttempts number of times to try to connect before giving up
      * @param millisBetweenRetries how log to wait between each connection attempt
-     * @throws ChorusRemotingException if not possible to connect
      */
-    public AbstractJmxProxy(String host, int jmxPort, String mBeanName, int connectionAttempts, long millisBetweenRetries) throws ChorusRemotingException {
+    public AbstractJmxProxy(String host, int jmxPort, String mBeanName, int connectionAttempts, long millisBetweenRetries) {
         Exception connectException = null;
         int attempt = 1;
         try {
@@ -98,7 +97,7 @@ public class AbstractJmxProxy {
         } catch (Exception e) {
             String msg = String.format("Failed to connect to mBean server on (%s:%s)", host, jmxPort);
             log.error(msg);
-            throw new ChorusRemotingException(msg, connectException == null ? e : connectException);
+            throw new ChorusException(msg, connectException == null ? e : connectException);
         }
 
         try {
@@ -122,12 +121,12 @@ public class AbstractJmxProxy {
             } else {
                 String msg = String.format("There is no MBean on server (%s:%d) with name (%s)", host, jmxPort, mBeanName);
                 log.error(msg);
-                throw new ChorusRemotingException(msg);
+                throw new ChorusException(msg);
             }
         } catch (Exception e) {
             String msg = String.format("Failed to lookup mBean with name (%s) on server (%s:%s)", mBeanName, host, jmxPort);
             log.error(msg);
-            throw new ChorusRemotingException(msg, e);
+            throw new ChorusException(msg, e);
         }
     }
 
@@ -135,12 +134,12 @@ public class AbstractJmxProxy {
         return attempt <= connectionAttempts;
     }
 
-    public Object getAttribute(String name) throws ChorusRemotingException {
+    public Object getAttribute(String name) {
         try {
             //call the remote method
             return mBeanServerConnection.getAttribute(objectName, name);
         } catch (Exception e) {
-            throw new ChorusRemotingException("Failed to call MBean method", e);
+            throw new ChorusException("Failed to call MBean method", e);
         }
     }
 

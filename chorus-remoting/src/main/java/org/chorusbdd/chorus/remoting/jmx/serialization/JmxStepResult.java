@@ -27,12 +27,11 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.jmx;
+package org.chorusbdd.chorus.remoting.jmx.serialization;
 
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

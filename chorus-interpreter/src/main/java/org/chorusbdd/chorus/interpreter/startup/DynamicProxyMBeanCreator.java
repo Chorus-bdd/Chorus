@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.interpreter.startup;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 import javax.management.MBeanServerConnection;
@@ -80,7 +81,7 @@ public class DynamicProxyMBeanCreator {
             } else {
                 log.warn(msg);
             }
-            throw new ChorusRemotingException(msg, e);
+            throw new ChorusException(msg, e);
         }
         mBeanServerConnection = result;
         return result;

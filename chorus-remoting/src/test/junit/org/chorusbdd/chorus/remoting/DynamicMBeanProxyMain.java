@@ -31,14 +31,13 @@ package org.chorusbdd.chorus.remoting;
 
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.AbstractJmxProxy;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
 
 /**
  * Created by: Steve Neal
  * Date: 12/10/11
  */
 public class DynamicMBeanProxyMain {
-    public static void main(String[] args) throws ChorusRemotingException {
+    public static void main(String[] args) {
         String host = "localhost";
         int jmxPort = 18080;
         String mBeanName = "org.chorusbdd.chorus:name=testbean";

@@ -41,7 +41,6 @@ import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.PolledAssertion;
 
@@ -267,20 +266,16 @@ public class StepProcessor {
     }
 
     private String getStepMessage(Throwable cause, String exceptionMessage) {
-        String location = "";
-        boolean isRemotingException = cause instanceof ChorusRemotingException;
-        if ( ! isRemotingException) {
-            //the remoting exception contains its own location in the message
-            location = ExceptionHandling.getExceptionLocation(cause);
-        }
+        String location = ExceptionHandling.getExceptionLocation(cause);
+
         String exceptionSimpleName = cause.getClass().getSimpleName();
         String message;
         if( exceptionMessage == null ) {
             message = exceptionSimpleName;
         } else {
             message = exceptionMessage;
-            //ensure we have the name of the exception included
-            if ( ! message.contains(exceptionSimpleName) && ! isRemotingException) {
+            //ensure we have the name of an exception included
+            if ( ! message.contains("Exception") && ! message.contains("Error")) {
                 message = exceptionSimpleName + " " + message;
             }
         }

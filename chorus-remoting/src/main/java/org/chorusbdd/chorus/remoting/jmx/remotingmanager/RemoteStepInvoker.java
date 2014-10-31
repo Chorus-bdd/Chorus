@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import javax.management.RuntimeMBeanException;
 import java.util.List;
@@ -94,17 +94,10 @@ public class RemoteStepInvoker implements StepInvoker {
         try {
             result = proxy.invokeStep(remoteStepId, args);
         } catch (RuntimeMBeanException mbe) {
-            //here if an exception was thrown by the remote Step method
             RuntimeException targetException = mbe.getTargetException();
-            if (targetException instanceof ChorusRemotingException) {
-                //the exception thrown by the remote Step method was converted to a ChorusRemotingException by the chorus step exporter
-                //this is how we handle remote exceptions which might otherwise come from library classes we don't have locally
-                throw targetException;
-            } else {
-                throw new ChorusRemotingException(targetException);
-            }
+            throw targetException;
         } catch (Exception e) {
-            throw new ChorusRemotingException(e);
+            throw new ChorusException(e);
         }
         return result;
     }

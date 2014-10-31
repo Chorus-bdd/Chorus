@@ -31,11 +31,14 @@ package org.chorusbdd.chorus.remoting.jmx;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.serialization.ChorusRemotingException;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.InvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.*;
 
 import javax.management.MBeanServer;
@@ -73,7 +76,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
             //assert that this is a Handler
             Class<?> handlerClass = handler.getClass();
             if (handlerClass.getAnnotation(Handler.class) == null) {
-                throw new ChorusRemotingException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", handlerClass.getName()));
+                throw new ChorusException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", handlerClass.getName()));
             }
 
             InvokerFactory invokerFactory = new HandlerClassInvokerFactory(handler);
@@ -106,7 +109,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
                     MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
                     mbs.registerMBean(this, new ObjectName(JMX_EXPORTER_NAME));
                 } catch (Exception e) {
-                    throw new ChorusRemotingException(String.format("Failed to export ChorusHandlerJmxExporter with jmx name (%s)", JMX_EXPORTER_NAME), e);
+                    throw new ChorusException(String.format("Failed to export ChorusHandlerJmxExporter with jmx name (%s)", JMX_EXPORTER_NAME), e);
                 }
             }
         } else {
@@ -160,11 +163,11 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
         String message = "remote " + t.getClass().getSimpleName() +
             ( t.getMessage() == null ? " " : " - " + t.getMessage() );
-        String location = ExceptionHandling.getExceptionLocation(t);
+        //String location = ExceptionHandling.getExceptionLocation(t);
 
 
         StackTraceElement[] stackTrace = t.getStackTrace();
-        return new ChorusRemotingException(location + message, t.getClass().getSimpleName(), stackTrace);
+        return new ChorusRemotingException(message, t.getClass().getSimpleName(), stackTrace);
     }
 
     public List<JmxInvokerResult> getStepInvokers() {

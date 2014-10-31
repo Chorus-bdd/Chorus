@@ -32,15 +32,15 @@ package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.JmxInvokerResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepMatcher;
 import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
-import org.chorusbdd.chorus.util.ChorusRemotingException;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.util.ArrayList;
@@ -131,7 +131,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
 
         //let any runtime exceptions propagate
         } catch (ReflectiveOperationException e) {
-            throw new ChorusRemotingException(e);
+            throw new ChorusException(e);
         }
         return result;
     }

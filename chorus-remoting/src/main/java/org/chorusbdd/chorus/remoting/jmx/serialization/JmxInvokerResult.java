@@ -1,14 +1,10 @@
-package org.chorusbdd.chorus.remoting.jmx;
+package org.chorusbdd.chorus.remoting.jmx.serialization;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.ChorusHandlerJmxProxy;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.RemoteStepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by nick on 25/10/14.
