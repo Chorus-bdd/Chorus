@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.selftest;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;

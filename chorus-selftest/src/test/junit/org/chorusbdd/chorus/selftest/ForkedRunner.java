@@ -34,7 +34,6 @@ import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessCommandLineBuilder;
-import org.chorusbdd.chorus.processes.manager.ProcessRedirector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

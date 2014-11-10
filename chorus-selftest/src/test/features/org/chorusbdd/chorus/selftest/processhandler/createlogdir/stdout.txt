@@ -17,7 +17,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
   Scenario: Scenario fails if could not create log directory
 Chorus --> INFO    - Processing scenario: Scenario fails if could not create log directory
     Given Chorus is working properly                                                         PASSED  
-    And I start a config3 process                                                            FAILED  (ProcessLogOutput:linenumber)-ChorusAssertionError Cannot write to the logs directory at src/test/features/org/chorusbdd/chorus/selftest/processhandler/createlogdir/config3logs
+    And I start a config3 process                                                            FAILED  (ProcessOutputConfiguration:linenumber)-ChorusAssertionError Cannot write to the logs directory at src/test/features/org/chorusbdd/chorus/selftest/processhandler/createlogdir/config3logs
     And I wait for up to 10 seconds for the process named config3 to stop                    SKIPPED 
 
 
