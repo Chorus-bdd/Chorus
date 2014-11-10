@@ -3,7 +3,7 @@ package org.chorusbdd.chorus.processes.manager.patternmatching;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.ChorusProcess;
+import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.File;
@@ -95,7 +95,7 @@ class TailLogPatternMatcher implements ProcessOutputPatternMatcher {
 
             if ( process.isStopped() && ! bufferedReader.ready()) {
                 ChorusAssert.fail(
-                        process.isExitCodeFailure() ?
+                        process.isExitWithFailureCode() ?
                                 "Process stopped with error code " + process.getExitCode() + " while waiting for match" :
                                 "Process stopped while waiting for match"
                 );

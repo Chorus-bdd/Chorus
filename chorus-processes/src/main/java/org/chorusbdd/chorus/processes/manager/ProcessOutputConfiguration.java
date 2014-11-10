@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
@@ -52,7 +53,7 @@ import java.io.File;
 * Also here we create the log directory if configured to do so, and fail the feature
 * if it is not writable
 */
-class ProcessOutputConfiguration {
+public class ProcessOutputConfiguration {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessOutputConfiguration.class);
 

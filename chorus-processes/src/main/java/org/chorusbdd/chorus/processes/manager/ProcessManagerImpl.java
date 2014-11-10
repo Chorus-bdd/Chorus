@@ -39,6 +39,8 @@ import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessComm
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.NativeProcessCommandLineBuilder;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigValidator;
+import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -123,7 +125,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
         ChorusProcess chorusProcess = chorusProcessFactory.createChorusProcess(name, commandLineTokens, outputConfig);
         namedProcess.setProcess(chorusProcess);
-        chorusProcess.checkProcess(namedProcess.getProcessCheckDelay());
+        chorusProcess.checkNoFailureWithin(namedProcess.getProcessCheckDelay());
     }
 
     public synchronized void stopProcess(String processName) {

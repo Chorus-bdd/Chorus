@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ import java.util.List;
  * Time: 22:15
  * To change this template use File | Settings | File Templates.
  */
-class ChorusProcessFactory {
+public class ChorusProcessFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ChorusProcessFactory.class);
 

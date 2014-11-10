@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.processes.manager.patternmatching;
 
-import org.chorusbdd.chorus.processes.manager.ChorusProcess;
+import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 

@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.process;
 
 import java.util.concurrent.TimeUnit;
 
@@ -46,12 +46,22 @@ public interface ChorusProcess {
 
     void waitFor() throws InterruptedException;
 
-    boolean isExitCodeFailure();
+    boolean isExitWithFailureCode();
 
     int getExitCode();
 
-    void checkProcess(int processCheckDelay) throws Exception;
+    /**
+     * Check the process has not terminated with a non-zero (error) code
+     * This call will block until checkMillis milliseconds have elapsed
+     *
+     * @throws Exception if the process terminates with an error code within the delay period
+     */
+    void checkNoFailureWithin(int checkMillis) throws Exception;
 
+    /**
+     * Match the pattern in the process stdOut
+     * @param searchWithinLines false to match pattern against whole lines, not within a line
+     */
     void waitForMatchInStdOut(String pattern, boolean searchWithinLines);
 
     void waitForMatchInStdErr(String pattern, boolean searchWithinLines);

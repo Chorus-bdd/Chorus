@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.processes.manager.commandlinebuilder;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.NamedProcess;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 
 import java.io.File;
 import java.util.ArrayList;

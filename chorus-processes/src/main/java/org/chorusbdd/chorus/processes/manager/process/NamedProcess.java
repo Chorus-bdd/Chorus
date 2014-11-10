@@ -27,12 +27,13 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.process;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.processes.manager.config.StartMode;
+import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 
 /**
  * Represents a running process
@@ -45,7 +46,7 @@ public class NamedProcess implements ProcessManagerConfig {
     private final ProcessManagerConfig processManagerConfig;
     private ChorusProcess process;
 
-    NamedProcess(String processName, ProcessManagerConfig processManagerConfig) {
+    public NamedProcess(String processName, ProcessManagerConfig processManagerConfig) {
         this.processName = processName;
         this.processManagerConfig = processManagerConfig;
     }

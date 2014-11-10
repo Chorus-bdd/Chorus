@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
 import org.chorusbdd.chorus.processes.manager.patternmatching.PatternMatcherFactory;
 import org.chorusbdd.chorus.processes.manager.patternmatching.ProcessOutputPatternMatcher;
+import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.*;
@@ -188,7 +189,7 @@ class ProcessManagerProcess implements ChorusProcess {
         }
     }
 
-    public boolean isExitCodeFailure() {
+    public boolean isExitWithFailureCode() {
         return process.exitValue() != 0;
     }
 
@@ -196,26 +197,20 @@ class ProcessManagerProcess implements ChorusProcess {
         return process.exitValue();
     }
 
-    /**
-     * Check the process for a short time after it is started, and only pass the start process step
-     * if the process has not terminated with a non-zero (error) code
-     *
-     * @param processCheckDelay
-     * @throws Exception
-     */
-    public void checkProcess(int processCheckDelay) throws Exception {
+
+    public void checkNoFailureWithin(int checkMillis) throws Exception {
         //process checking can be turned off by setting delay == -1
-        if ( processCheckDelay > 0) {
+        if ( checkMillis > 0) {
             int cumulativeSleepTime = 0;
             boolean stopped;
-            while(cumulativeSleepTime < processCheckDelay) {
-                int sleep = Math.min(50, processCheckDelay - cumulativeSleepTime);
+            while(cumulativeSleepTime < checkMillis) {
+                int sleep = Math.min(50, checkMillis - cumulativeSleepTime);
                 Thread.sleep(sleep);
                 cumulativeSleepTime += sleep;
 
                 stopped = isStopped();
                 if ( stopped ) {
-                    if ( isExitCodeFailure()) {
+                    if ( isExitWithFailureCode()) {
                         throw new ProcessCheckFailedException(
                                 "Process terminated with a non-zero exit code during processCheckDelay period, step fails");
                     } else {
