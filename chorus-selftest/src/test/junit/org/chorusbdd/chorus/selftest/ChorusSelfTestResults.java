@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import org.chorusbdd.chorus.processes.manager.ChorusProcess;
-
 /**
 * Created by IntelliJ IDEA.
 * User: Nick Ebbutt
@@ -91,7 +89,7 @@ public class ChorusSelfTestResults {
     }
 
     private String replaceSystemSpecificProcessDetails(String output) {
-        return output.replaceAll(ChorusProcess.STARTING_PROCESS_LOG_PREFIX + ".*", ChorusProcess.STARTING_PROCESS_LOG_PREFIX + " <system specific process details replaced>");
+        return output.replaceAll("About to run process: " + ".*", "About to run process: " + " <system specific process details replaced>");
     }
 
     //ensure we have consistent paths to compare

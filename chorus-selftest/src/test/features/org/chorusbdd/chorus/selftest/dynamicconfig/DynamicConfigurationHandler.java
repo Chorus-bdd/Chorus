@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.selftest.dynamicconfig;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.processes.manager.OutputMode;
+import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
 import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;

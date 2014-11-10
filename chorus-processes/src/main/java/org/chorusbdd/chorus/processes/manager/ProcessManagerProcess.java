@@ -30,52 +30,135 @@
 package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
+import org.chorusbdd.chorus.processes.manager.patternmatching.PatternMatcherFactory;
+import org.chorusbdd.chorus.processes.manager.patternmatching.ProcessOutputPatternMatcher;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * User: nick
- * Date: 24/07/13
- * Time: 08:55
- */
-public abstract class AbstractChorusProcess implements ChorusProcess {
+* Created with IntelliJ IDEA.
+* User: nick
+* Date: 20/09/12
+* Time: 22:22
+* 
+* A ChorusProcess using JDK 1.7 ProcessHandler
+*/
+class ProcessManagerProcess implements ChorusProcess {
 
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessManagerProcess.class);
+    private final ProcessBuilder processBuilder;
+    protected String name;
+    protected Process process;
+
+    private PatternMatcherFactory patternMatcherFactory = new PatternMatcherFactory();
     private ProcessOutputPatternMatcher stdOutPatternMatcher;
     private ProcessOutputPatternMatcher stdErrPatternMatcher;
 
     //output stream/writer to write to the process std in
     private OutputStream outputStream;
     private BufferedWriter outputWriter;
-    
-    protected String name;
-    private ProcessLogOutput logOutput;
+    private ProcessOutputConfiguration outputConfig;
 
-    protected Process process;
-
-    public AbstractChorusProcess(String name, ProcessLogOutput logOutput) {
+    public ProcessManagerProcess(String name, List<String> command, ProcessOutputConfiguration outputConfig) throws Exception {
         this.name = name;
-        this.logOutput = logOutput;
-
-        stdOutPatternMatcher = createPatternMatcher(
-            logOutput.getStdOutMode(),
-            logOutput.getStdOutLogFile(),
-            "stdOut");
-
-        stdErrPatternMatcher = createPatternMatcher(
-            logOutput.getStdErrMode(),
-            logOutput.getStdErrLogFile(),
-            "stdErr");
+        this.outputConfig = outputConfig;
+        processBuilder = new ProcessBuilder(command);
     }
 
-    private ProcessOutputPatternMatcher createPatternMatcher(OutputMode mode, File logFile, String streamDesc) {
-        return OutputMode.isWriteToLogFile(mode) ?
-            new TailLogPatternMatcher(this, logFile) :
-            new WarnOnMatchPatternMatcher(streamDesc);
+    public void start() throws IOException {
+        stdOutPatternMatcher = setUpOutput(outputConfig.getStdOutFileAndMode());
+        stdErrPatternMatcher = setUpOutput(outputConfig.getStdErrFileAndMode());
+
+        this.process = processBuilder.start();
+        log.debug("Started process " + process + " with log output " + getOutputConfig());
     }
 
-    protected abstract ChorusLog getLog();
+    private ProcessOutputPatternMatcher setUpOutput(LogFileAndMode logFileAndMode) {
+        redirectOutput(logFileAndMode);
+        return patternMatcherFactory.createPatternMatcher(this, logFileAndMode);
+    }
+
+    private void redirectOutput(LogFileAndMode logFileAndMode) {
+        switch (logFileAndMode.getMode()) {
+            case FILE :
+            case CAPTURED :
+            case CAPTUREDWITHLOG :
+                File logFile = logFileAndMode.getFile();
+                log.debug("Will write process " + logFileAndMode.getStreamDescription() + " to file at " + logFile);
+                redirectOutputToFile(logFile, logFileAndMode.isStdError());
+                break;
+            case INLINE :
+                redirectOutputInline(logFileAndMode.isStdError());
+                break;
+        }
+    }
+
+    private void redirectOutputInline(boolean isErrStream) {
+        if ( isErrStream ) {
+            processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+        } else {
+            processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+        }
+    }
+
+    private void redirectOutputToFile(File logFile, boolean isErrStream) {
+        if ( isErrStream ) {
+            processBuilder.redirectError(
+                    outputConfig.isAppendToLogs() ?
+                            ProcessBuilder.Redirect.appendTo(logFile) :
+                            ProcessBuilder.Redirect.to(logFile)
+            );
+        } else {
+            processBuilder.redirectOutput(
+                outputConfig.isAppendToLogs() ?
+                        ProcessBuilder.Redirect.appendTo(logFile) :
+                        ProcessBuilder.Redirect.to(logFile)
+            );
+        }
+    }
+
+    public boolean isStopped() {
+        boolean stopped = true;
+        try {
+            process.exitValue();
+        } catch (IllegalThreadStateException e) {
+            stopped = false;
+        }
+        return stopped;
+    }
+
+    public void destroy() {
+        try {
+            // destroying the process will close its stdout/stderr and so cause our ProcessRedirector daemon threads to exit
+            log.debug("Destroying process " + process);
+            process.destroy();
+            try {
+                //this ensures that all of the processes resources are cleaned up before proceeding
+                process.waitFor();
+            } catch (InterruptedException e) {
+                log.error("Interrupted while waiting for process to terminate",e);
+            }
+        } finally {
+            closeStreams();
+        }
+    }
+
+    public void waitFor() throws InterruptedException {
+        process.waitFor();
+    }
+
+    protected ChorusLog getLog() {
+        return log;
+    }
+
+    ProcessOutputConfiguration getOutputConfig() {
+        return outputConfig;
+    }
 
     public String toString() {
         return getClass().getSimpleName() + "{" +
@@ -91,7 +174,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
             outputStream = new BufferedOutputStream(process.getOutputStream());
             outputWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
         }
-        
+
         try {
             outputWriter.write(text);
             if ( newLine ) {
@@ -105,11 +188,10 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
     }
 
-
     public boolean isExitCodeFailure() {
         return process.exitValue() != 0;
     }
-    
+
     public int getExitCode() {
         return process.exitValue();
     }
@@ -150,13 +232,12 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
         }
     }
 
-
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines) {
-        stdOutPatternMatcher.waitForMatch(pattern, searchWithinLines, TimeUnit.SECONDS, logOutput.getReadTimeoutSeconds());
+        stdOutPatternMatcher.waitForMatch(pattern, searchWithinLines, TimeUnit.SECONDS, outputConfig.getReadTimeoutSeconds());
     }
 
     public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
-        stdErrPatternMatcher.waitForMatch(pattern, searchWithinLines, TimeUnit.SECONDS, logOutput.getReadTimeoutSeconds());
+        stdErrPatternMatcher.waitForMatch(pattern, searchWithinLines, TimeUnit.SECONDS, outputConfig.getReadTimeoutSeconds());
     }
 
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {
@@ -168,7 +249,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
     }
 
     protected void closeStreams() {
-        
+
         stdErrPatternMatcher.close();
         stdOutPatternMatcher.close();
 
@@ -181,7 +262,7 @@ public abstract class AbstractChorusProcess implements ChorusProcess {
                 getLog().trace("Failed to flush and close output writer", e);
             }
         }
-        
+
         if ( outputStream != null ) {
             try {
                 getLog().trace("Closing output stream for process " + this);

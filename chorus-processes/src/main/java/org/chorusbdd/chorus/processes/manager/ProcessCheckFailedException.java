@@ -36,7 +36,7 @@ package org.chorusbdd.chorus.processes.manager;
  * 
  * An exception raised when the process check fails after starting a process
  */
-public class ProcessCheckFailedException extends Exception {
+class ProcessCheckFailedException extends Exception {
     
     public ProcessCheckFailedException(String description) {
         super(description);

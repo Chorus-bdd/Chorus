@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.patternmatching;
 
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  *
  * Throw an error if the user attempts to pattern match when the process output mode does not support it
  */
-public class WarnOnMatchPatternMatcher implements ProcessOutputPatternMatcher {
+class WarnOnMatchPatternMatcher implements ProcessOutputPatternMatcher {
 
     private String streamDescription;
 

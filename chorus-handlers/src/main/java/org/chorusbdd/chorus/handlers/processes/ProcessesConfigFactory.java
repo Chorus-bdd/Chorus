@@ -30,15 +30,15 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.processes.manager.OutputMode;
-import org.chorusbdd.chorus.processes.manager.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.config.OutputMode;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.AbstractHandlerConfigFactory;
 import org.chorusbdd.chorus.handlerconfig.ConfigValidator;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.ProcessManagerConfigValidator;
-import org.chorusbdd.chorus.processes.manager.StartMode;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigValidator;
+import org.chorusbdd.chorus.processes.manager.config.StartMode;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;

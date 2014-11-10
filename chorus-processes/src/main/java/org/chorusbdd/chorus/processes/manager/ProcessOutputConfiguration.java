@@ -31,6 +31,8 @@ package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
+import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
@@ -42,33 +44,31 @@ import java.io.File;
 * Date: 12/11/12
 * Time: 14:25
 *
-* Calculate the standard out and standard error files for a process log output
-* based on feature file, config and alias
-* 
-* A process with the same config but a different alias will have different log file names, so this cannot 
+* Calculate the LogFileAndMode for process output based on feature file, scenario config and alias
+*
+* A process with the same config but a different alias will have different log file names, so this cannot
 * be done in the ProcessesConfig
 * 
 * Also here we create the log directory if configured to do so, and fail the feature
 * if it is not writable
 */
-class ProcessLogOutput {
+class ProcessOutputConfiguration {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessLogOutput.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(ProcessOutputConfiguration.class);
 
     private FeatureToken featureToken;
     private File featureDir;
     private String logFileBaseName;
-    private ProcessInfo processesConfig;
-    private OutputMode stdErrMode;
-    private OutputMode stdOutMode;
+    private NamedProcess processesConfig;
+
+    private LogFileAndMode stdOutFileAndMode;
+    private LogFileAndMode stdErrFileAndMode;
 
     private File logDirectory;  //calculated but may or may not exist
-    private File stdOutLogFile; //calculated but may or may not exist
-    private File stdErrLogFile; //calculated but may or may not exist
     private boolean isAppendToLogs;
     private int readTimeoutSeconds;
 
-    public ProcessLogOutput(FeatureToken featureToken, File featureDir, File featureFile, ProcessInfo processesConfig) {
+    public ProcessOutputConfiguration(FeatureToken featureToken, File featureDir, File featureFile, NamedProcess processesConfig) {
         this.featureDir = featureDir;
         this.logFileBaseName = calculateLogFileBaseName(featureToken, featureFile, processesConfig.getProcessName());
         this.processesConfig = processesConfig;
@@ -77,19 +77,28 @@ class ProcessLogOutput {
         this.readTimeoutSeconds = processesConfig.getReadTimeoutSeconds();
 
         logDirectory = calculateLogDirectory();
-        calculateLogFiles(logDirectory);
 
-        stdOutMode = processesConfig.getStdOutMode();
-        stdErrMode = processesConfig.getStdErrMode();
+        stdOutFileAndMode = new LogFileAndMode(
+            new File(logDirectory, String.format("%s-out.log", logFileBaseName)),
+            processesConfig.getStdOutMode(),
+            "stdOut",
+            false
+        );
+
+        stdErrFileAndMode = new LogFileAndMode(
+            new File(logDirectory, String.format("%s-err.log", logFileBaseName)),
+            processesConfig.getStdErrMode(),
+            "stdErr",
+            true
+        );
        
         //let's fail the feature if we cannot create the log directory
         //alternative would be to log inline but this might swamp interpreter output
-        if (  OutputMode.isWriteToLogFile(stdOutMode) || OutputMode.isWriteToLogFile(stdErrMode) ) {
+        if (  OutputMode.isWriteToLogFile(stdOutFileAndMode.getMode()) || OutputMode.isWriteToLogFile(stdErrFileAndMode.getMode()) ) {
             getOrCreateLogDirectory(logDirectory);
             ChorusAssert.assertTrue("Cannot write to the logs directory at " + logDirectory, logDirectory.canWrite());
         }
     }
-
 
     private File calculateLogDirectory() {
         //if a logs directory was provided in the config use that, or default to featureDir/logs
@@ -98,11 +107,6 @@ class ProcessLogOutput {
             processesConfig.getLogDirectory() :
             defaultPath;
         return new File(directoryPath);
-    }
-
-    private void calculateLogFiles(File logDirectory) {
-        stdOutLogFile = new File(logDirectory, String.format("%s-out.log", logFileBaseName));
-        stdErrLogFile = new File(logDirectory, String.format("%s-err.log", logFileBaseName));
     }
 
     private void getOrCreateLogDirectory(File logDirectory) {
@@ -138,24 +142,16 @@ class ProcessLogOutput {
         return processNameForLogFiles;
     }
 
-    OutputMode getStdErrMode() {
-        return stdErrMode;
+    public LogFileAndMode getStdOutFileAndMode() {
+        return stdOutFileAndMode;
     }
 
-    OutputMode getStdOutMode() {
-        return stdOutMode;
+    public LogFileAndMode getStdErrFileAndMode() {
+        return stdErrFileAndMode;
     }
 
     public String getLogFileBaseName() {
         return logFileBaseName;
-    }
-
-    public File getStdOutLogFile() {
-        return stdOutLogFile;
-    }
-
-    public File getStdErrLogFile() {
-        return stdErrLogFile;
     }
 
     public boolean isAppendToLogs() {
@@ -169,11 +165,9 @@ class ProcessLogOutput {
     @Override
     public String toString() {
         return "ProcessLogOutput{" +
-                "stdErrMode=" + stdErrMode +
-                ", stdOutMode=" + stdOutMode +
-                ", stdOutLogFile=" + stdOutLogFile +
-                ", stdErrLogFile=" + stdErrLogFile +
-                ", logFileBaseName='" + logFileBaseName + '\'' +
+                "logFileBaseName='" + logFileBaseName + '\'' +
+                ", stdOutFileAndMode=" + stdOutFileAndMode +
+                ", stdErrFileAndMode=" + stdErrFileAndMode +
                 ", isAppendToLogs=" + isAppendToLogs +
                 '}';
     }

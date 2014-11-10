@@ -40,8 +40,6 @@ import java.util.concurrent.TimeUnit;
  */
 public interface ChorusProcess {
 
-    public static final String STARTING_PROCESS_LOG_PREFIX = "About to run process: ";
-
     boolean isStopped();
 
     void destroy();

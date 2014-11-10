@@ -48,12 +48,10 @@ public interface RemotingManager extends Subsystem {
 
     /**
      * Find a step method in the remote component which matches the 'action' String
-     * 
-     * This method should throw a RemoteStepNotFoundException if a matching remote step cannot be found for this component
-     * For general connectivity errors or other error conditions a ChorusException should be thrown (with a cause)
-     * 
+     *
      * @param action            - the step text from the scenario which we want to match to a remote step
      * @return                    the value returned by the remote component when invoking the remote step implementation
+     * @throws org.chorusbdd.chorus.util.ChorusException if executing the step fails
      **/
     Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig);
 

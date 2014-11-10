@@ -34,6 +34,11 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.commandlinebuilder.AbstractCommandLineBuilder;
+import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessCommandLineBuilder;
+import org.chorusbdd.chorus.processes.manager.commandlinebuilder.NativeProcessCommandLineBuilder;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigValidator;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -63,7 +68,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessManager.class);
 
-    private final Map<String, ProcessInfo> processes = new ConcurrentHashMap<String, ProcessInfo>();
+    private final Map<String, NamedProcess> processes = new ConcurrentHashMap<String, NamedProcess>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
     private final ProcessManagerConfigValidator processesConfigValidator = new ProcessManagerConfigValidator();
@@ -89,36 +94,36 @@ public class ProcessManagerImpl implements ProcessManager {
      */
     public synchronized void startProcess(String processName, ProcessManagerConfig processManagerConfig) throws Exception {
 
-        ProcessInfo processInfo = new ProcessInfo(processName, processManagerConfig);
-        checkConfigAndNotAlreadyStarted(processInfo);
+        NamedProcess namedProcess = new NamedProcess(processName, processManagerConfig);
+        checkConfigAndNotAlreadyStarted(namedProcess);
 
         //get the log output containing logging configuration for this process
-        ProcessLogOutput logOutput = new ProcessLogOutput(featureToken, featureDir, featureFile, processInfo);
-        String logFileBaseName = logOutput.getLogFileBaseName();
+        ProcessOutputConfiguration outputConfig = new ProcessOutputConfiguration(featureToken, featureDir, featureFile, namedProcess);
+        String logFileBaseName = outputConfig.getLogFileBaseName();
 
-        AbstractCommandLineBuilder b = processInfo.isJavaProcess() ?
-                new JavaProcessCommandLineBuilder(featureDir, processInfo, logFileBaseName) :
-                new NativeProcessCommandLineBuilder(processInfo, featureDir);
+        AbstractCommandLineBuilder b = namedProcess.isJavaProcess() ?
+                new JavaProcessCommandLineBuilder(featureDir, namedProcess, logFileBaseName) :
+                new NativeProcessCommandLineBuilder(namedProcess, featureDir);
 
         List<String> commandLineTokens = b.buildCommandLine();
-        startProcess(commandLineTokens, logOutput, processInfo);
+        startProcess(commandLineTokens, outputConfig, namedProcess);
     }
 
-    private void checkConfigAndNotAlreadyStarted(ProcessInfo processInfo) {
-        String processName = processInfo.getProcessName();
+    private void checkConfigAndNotAlreadyStarted(NamedProcess namedProcess) {
+        String processName = namedProcess.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
-        ChorusAssert.assertTrue("The config for " + processName + " must be valid", processesConfigValidator.checkValid(processInfo));
+        ChorusAssert.assertTrue("The config for " + processName + " must be valid", processesConfigValidator.isValid(namedProcess));
     }
 
 
-    private void startProcess(List<String> commandLineTokens, ProcessLogOutput logOutput,  ProcessInfo processInfo) throws Exception {
-        String name = processInfo.getProcessName();
+    private void startProcess(List<String> commandLineTokens, ProcessOutputConfiguration outputConfig,  NamedProcess namedProcess) throws Exception {
+        String name = namedProcess.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + name, processes.containsKey(name));
-        processes.put(name, processInfo);
+        processes.put(name, namedProcess);
 
-        ChorusProcess chorusProcess = chorusProcessFactory.createChorusProcess(name, commandLineTokens, logOutput);
-        processInfo.setProcess(chorusProcess);
-        chorusProcess.checkProcess(processInfo.getProcessCheckDelay());
+        ChorusProcess chorusProcess = chorusProcessFactory.createChorusProcess(name, commandLineTokens, outputConfig);
+        namedProcess.setProcess(chorusProcess);
+        chorusProcess.checkProcess(namedProcess.getProcessCheckDelay());
     }
 
     public synchronized void stopProcess(String processName) {
@@ -138,7 +143,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     public synchronized void stopProcessesRunningWithinScope(Scope scope) {
-        for (final ProcessInfo pInfo : processes.values()) {
+        for (final NamedProcess pInfo : processes.values()) {
             if (pInfo.getProcessScope() == scope ) {
                 log.debug("Stopping process named " + pInfo.getProcessName() + " scoped to " + scope);
                 try {
@@ -160,14 +165,14 @@ public class ProcessManagerImpl implements ProcessManager {
     // ----------------------------------------------------- Process Properties
 
     public synchronized ProcessManagerConfig getProcessConfig(final String processName) {
-        final ProcessInfo processInfo = processes.get(processName);
-        return processInfo;
+        final NamedProcess namedProcess = processes.get(processName);
+        return namedProcess;
     }
 
     // --------------------------------------------------------- Process Status
 
     public synchronized void checkProcessHasStopped(String processName) {
-        ProcessInfo p = processes.get(processName);
+        NamedProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to check is stopped");
         }
@@ -175,7 +180,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     public synchronized void checkProcessIsRunning(String processName) {
-        ProcessInfo p = processes.get(processName);
+        NamedProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to check is running");
         }
@@ -183,12 +188,12 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     public void checkProcessIsNotRunning(String processName) {
-        ProcessInfo p = processes.get(processName);
+        NamedProcess p = processes.get(processName);
         ChorusAssert.assertTrue("Check the process " + processName + " is not running",  p == null || p.getProcess().isStopped());
     }
 
     public synchronized void waitForProcessToTerminate(String processName) {
-        ProcessInfo p = processes.get(processName);
+        NamedProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait to terminate");
         }
@@ -227,7 +232,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
 
     private synchronized ChorusProcess getAndCheckProcessByName(String processName) {
-        ProcessInfo p = processes.get(processName);
+        NamedProcess p = processes.get(processName);
         if ( p == null ) {
             ChorusAssert.fail("Could not find the process " + processName);
         }
@@ -235,7 +240,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     public synchronized void waitForProcessToTerminate(String processName, int waitTimeSeconds) {
-        ProcessInfo p = processes.get(processName);
+        NamedProcess p = processes.get(processName);
         if ( p == null ) {
             throw new ChorusException("There is no process named '" + processName + "' to wait for");
         }

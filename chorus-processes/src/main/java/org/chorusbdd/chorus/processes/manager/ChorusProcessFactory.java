@@ -41,11 +41,11 @@ import java.util.List;
  * Time: 22:15
  * To change this template use File | Settings | File Templates.
  */
-public class ChorusProcessFactory {
+class ChorusProcessFactory {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessBuilderProcess.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusProcessFactory.class);
 
-    public ChorusProcess createChorusProcess(String name, List<String> commandTokens, ProcessLogOutput logOutput) throws Exception {
+    public ChorusProcess createChorusProcess(String name, List<String> commandTokens, ProcessOutputConfiguration outputConfig) throws Exception {
 
         StringBuilder commandBuilder = new StringBuilder();
         for ( String s : commandTokens) {
@@ -54,7 +54,9 @@ public class ChorusProcessFactory {
         commandBuilder.deleteCharAt(commandBuilder.length() - 1);
         
         String command = commandBuilder.toString();
-        log.info(ChorusProcess.STARTING_PROCESS_LOG_PREFIX + command);
-        return new ProcessBuilderProcess(name, commandTokens, logOutput);
+        log.info("About to run process: " + command);
+        ProcessManagerProcess processManagerProcess = new ProcessManagerProcess(name, commandTokens, outputConfig);
+        processManagerProcess.start();
+        return processManagerProcess;
     }
 }

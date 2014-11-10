@@ -1,8 +1,9 @@
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.patternmatching;
 
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.ChorusProcess;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by nick on 20/10/2014.
  */
-public class TailLogPatternMatcher implements ProcessOutputPatternMatcher {
+class TailLogPatternMatcher implements ProcessOutputPatternMatcher {
 
     private static ChorusLog log = ChorusLogFactory.getLog(TailLogPatternMatcher.class);
 

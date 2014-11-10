@@ -27,55 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
-
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
+package org.chorusbdd.chorus.processes.manager.config;
 
 /**
- * Created by nick on 24/09/2014.
+ * User: nick
+ * Date: 22/07/13
+ * Time: 18:41
+ * 
+ * The output mode for a process std out or std err stream
+ *
+ * Chorus 1.x supported the modes CAPTURED and CAPTUREDWITHLOG in addition to FILE and INLINE
+ *
+ * With 2.x chorus pattern matching against process output by reading from the process log file rather than buffering
+ * it internally. So the CAPTURED and CAPTUREDWITHLOG become redundant. These modes are still supported but are
+ * handled the same as FILE mode.
  */
-public interface ProcessManagerConfig extends HandlerConfig {
+public enum OutputMode {
+    FILE,                //log to a file
+    INLINE,              //log inline with the Chorus interpreter's output stream
+    CAPTURED,            //deprecated, use FILE instead
+    CAPTUREDWITHLOG;     //deprecated, use FILE instead
+    
+    public static boolean isWriteToLogFile(OutputMode m) {
+        return m != INLINE;
+    }
 
-    String getConfigName();
-
-    String getJre();
-
-    String getClasspath();
-
-    String getJvmargs();
-
-    String getMainclass();
-
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
-
-    StartMode getStartMode();
+    public static boolean canSearchOutput(OutputMode stdOutMode) {
+        return stdOutMode != INLINE;
+    }
 }

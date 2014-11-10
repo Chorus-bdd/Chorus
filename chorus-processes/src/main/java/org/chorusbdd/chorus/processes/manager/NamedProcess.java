@@ -30,18 +30,22 @@
 package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.processes.manager.config.OutputMode;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.config.StartMode;
 
 /**
- * Represents the configuration of a running process
- * This is derived from a ProcessesConfiguration (the process config template)
+ * Represents a running process
+ *
+ * The process has a name and a configuration
  */
-class ProcessInfo implements ProcessManagerConfig {
+public class NamedProcess implements ProcessManagerConfig {
 
     private final String processName;
     private final ProcessManagerConfig processManagerConfig;
     private ChorusProcess process;
 
-    ProcessInfo(String processName, ProcessManagerConfig processManagerConfig) {
+    NamedProcess(String processName, ProcessManagerConfig processManagerConfig) {
         this.processName = processName;
         this.processManagerConfig = processManagerConfig;
     }

@@ -27,32 +27,29 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.commandlinebuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: nick
- * Date: 22/07/13
- * Time: 18:41
- * 
- * The output mode for a process std out or std err stream
- *
- * Chorus 1.x supported the modes CAPTURED and CAPTUREDWITHLOG in addition to FILE and INLINE
- *
- * With 2.x chorus pattern matching against process output by reading from the process log file rather than buffering
- * it internally. So the CAPTURED and CAPTUREDWITHLOG become redundant. These modes are still supported but are
- * handled the same as FILE mode.
+ * Date: 12/12/13
+ * Time: 09:08
  */
-public enum OutputMode {
-    FILE,                //log to a file
-    INLINE,              //log inline with the Chorus interpreter's output stream
-    CAPTURED,            //deprecated, use FILE instead
-    CAPTUREDWITHLOG;     //deprecated, use FILE instead
+public abstract class AbstractCommandLineBuilder {
     
-    public static boolean isWriteToLogFile(OutputMode m) {
-        return m != INLINE;
+    public abstract List<String> buildCommandLine();
+
+    protected List<String> getSpaceSeparatedTokens(String spaceSeparated) {
+        List<String> tokens = new ArrayList<String>();
+        String[] j = spaceSeparated.split(" ");
+        for ( String s : j ) {
+            if ( s.trim().length() > 0) {
+                tokens.add(s);
+            }
+        }
+        return tokens;
     }
 
-    public static boolean canSearchOutput(OutputMode stdOutMode) {
-        return stdOutMode != INLINE;
-    }
 }

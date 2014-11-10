@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.config;
 
 /**
  * Created by nick on 29/10/14.

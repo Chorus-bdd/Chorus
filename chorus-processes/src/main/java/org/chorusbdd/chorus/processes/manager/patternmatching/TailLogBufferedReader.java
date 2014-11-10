@@ -1,11 +1,11 @@
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.patternmatching;
 
 import java.io.*;
 
 /**
  * Created by nick on 20/10/2014.
  */
-public class TailLogBufferedReader {
+class TailLogBufferedReader {
 
     private File logFile;
 

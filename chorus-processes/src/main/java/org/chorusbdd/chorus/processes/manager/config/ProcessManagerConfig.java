@@ -27,29 +27,53 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager;
+package org.chorusbdd.chorus.processes.manager.config;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 
 /**
- * User: nick
- * Date: 12/12/13
- * Time: 09:08
+ * Created by nick on 24/09/2014.
  */
-public abstract class AbstractCommandLineBuilder {
-    
-    public abstract List<String> buildCommandLine();
+public interface ProcessManagerConfig extends HandlerConfig {
 
-    protected List<String> getSpaceSeparatedTokens(String spaceSeparated) {
-        List<String> tokens = new ArrayList<String>();
-        String[] j = spaceSeparated.split(" ");
-        for ( String s : j ) {
-            if ( s.trim().length() > 0) {
-                tokens.add(s);
-            }
-        }
-        return tokens;
-    }
+    String getJre();
 
+    String getClasspath();
+
+    String getJvmargs();
+
+    String getMainclass();
+
+    String getPathToExecutable();
+
+    String getArgs();
+
+    OutputMode getStdErrMode();
+
+    OutputMode getStdOutMode();
+
+    int getRemotingPort();
+
+    boolean isRemotingConfigDefined();
+
+    int getDebugPort();
+
+    int getTerminateWaitTime();
+
+    String getLogDirectory();
+
+    boolean isAppendToLogs();
+
+    boolean isCreateLogDir();
+
+    int getProcessCheckDelay();
+
+    int getReadTimeoutSeconds();
+
+    Scope getProcessScope();
+
+    boolean isJavaProcess();
+
+    StartMode getStartMode();
 }
