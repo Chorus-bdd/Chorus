@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.processes.manager.process;
 
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,13 +64,11 @@ public interface ChorusProcess {
      * Match the pattern in the process stdOut
      * @param searchWithinLines false to match pattern against whole lines, not within a line
      */
-    void waitForMatchInStdOut(String pattern, boolean searchWithinLines);
-
-    void waitForMatchInStdErr(String pattern, boolean searchWithinLines);
-
     void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
 
     void waitForMatchInStdErr(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length);
 
     void writeToStdIn(String line, boolean newLine);
+
+    ProcessManagerConfig getConfiguration();
 }

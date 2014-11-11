@@ -32,9 +32,11 @@ package org.chorusbdd.chorus.processes.manager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.processes.manager.patternmatching.PatternMatcherFactory;
 import org.chorusbdd.chorus.processes.manager.patternmatching.ProcessOutputPatternMatcher;
 import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.*;
@@ -64,9 +66,11 @@ class ProcessManagerProcess implements ChorusProcess {
     private OutputStream outputStream;
     private BufferedWriter outputWriter;
     private ProcessOutputConfiguration outputConfig;
+    private NamedProcessConfig namedProcessConfig;
 
-    public ProcessManagerProcess(String name, List<String> command, ProcessOutputConfiguration outputConfig) throws Exception {
-        this.name = name;
+    public ProcessManagerProcess(NamedProcessConfig namedProcessConfig, List<String> command, ProcessOutputConfiguration outputConfig) throws Exception {
+        this.namedProcessConfig = namedProcessConfig;
+        this.name = namedProcessConfig.getProcessName();
         this.outputConfig = outputConfig;
         processBuilder = new ProcessBuilder(command);
     }
@@ -189,6 +193,10 @@ class ProcessManagerProcess implements ChorusProcess {
         }
     }
 
+    public ProcessManagerConfig getConfiguration() {
+        return namedProcessConfig;
+    }
+
     public boolean isExitWithFailureCode() {
         return process.exitValue() != 0;
     }
@@ -225,14 +233,6 @@ class ProcessManagerProcess implements ChorusProcess {
             }
 
         }
-    }
-
-    public void waitForMatchInStdOut(String pattern, boolean searchWithinLines) {
-        stdOutPatternMatcher.waitForMatch(pattern, searchWithinLines, TimeUnit.SECONDS, outputConfig.getReadTimeoutSeconds());
-    }
-
-    public void waitForMatchInStdErr(String pattern, boolean searchWithinLines) {
-        stdErrPatternMatcher.waitForMatch(pattern, searchWithinLines, TimeUnit.SECONDS, outputConfig.getReadTimeoutSeconds());
     }
 
     public void waitForMatchInStdOut(String pattern, boolean searchWithinLines, TimeUnit timeUnit, long length) {

@@ -40,13 +40,13 @@ import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
  *
  * The process has a name and a configuration
  */
-public class NamedProcess implements ProcessManagerConfig {
+public class NamedProcessConfig implements ProcessManagerConfig {
 
     private final String processName;
     private final ProcessManagerConfig processManagerConfig;
     private ChorusProcess process;
 
-    public NamedProcess(String processName, ProcessManagerConfig processManagerConfig) {
+    public NamedProcessConfig(String processName, ProcessManagerConfig processManagerConfig) {
         this.processName = processName;
         this.processManagerConfig = processManagerConfig;
     }

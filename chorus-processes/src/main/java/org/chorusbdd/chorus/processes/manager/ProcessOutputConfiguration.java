@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
@@ -60,22 +60,20 @@ public class ProcessOutputConfiguration {
     private FeatureToken featureToken;
     private File featureDir;
     private String logFileBaseName;
-    private NamedProcess processesConfig;
+    private NamedProcessConfig processesConfig;
 
     private LogFileAndMode stdOutFileAndMode;
     private LogFileAndMode stdErrFileAndMode;
 
     private File logDirectory;  //calculated but may or may not exist
     private boolean isAppendToLogs;
-    private int readTimeoutSeconds;
 
-    public ProcessOutputConfiguration(FeatureToken featureToken, File featureDir, File featureFile, NamedProcess processesConfig) {
-        this.featureDir = featureDir;
-        this.logFileBaseName = calculateLogFileBaseName(featureToken, featureFile, processesConfig.getProcessName());
+    public ProcessOutputConfiguration(FeatureToken featureToken, NamedProcessConfig processesConfig) {
+        this.featureDir = featureToken.getFeatureDir();
+        this.logFileBaseName = calculateLogFileBaseName(featureToken, featureToken.getFeatureFile(), processesConfig.getProcessName());
         this.processesConfig = processesConfig;
         this.isAppendToLogs = processesConfig.isAppendToLogs();
         this.featureToken = featureToken;
-        this.readTimeoutSeconds = processesConfig.getReadTimeoutSeconds();
 
         logDirectory = calculateLogDirectory();
 
@@ -157,10 +155,6 @@ public class ProcessOutputConfiguration {
 
     public boolean isAppendToLogs() {
         return isAppendToLogs;
-    }
-
-    int getReadTimeoutSeconds() {
-        return readTimeoutSeconds;
     }
 
     @Override
