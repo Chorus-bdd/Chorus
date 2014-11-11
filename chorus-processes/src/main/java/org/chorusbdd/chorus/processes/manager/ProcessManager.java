@@ -42,7 +42,10 @@ public interface ProcessManager extends Subsystem {
 
     void stopProcess(String processName);
 
-    void stopProcessesRunningWithinScope(Scope scope);
+    /**
+     * Stop all processes which are configured to run in the scope s
+     */
+    void stopProcesses(Scope s);
 
     void stopAllProcesses();
 

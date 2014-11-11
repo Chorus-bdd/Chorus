@@ -123,7 +123,7 @@ public class ProcessManagerImpl implements ProcessManager {
         }
     }
 
-    public synchronized void stopProcessesRunningWithinScope(Scope scope) {
+    public synchronized void stopProcesses(Scope scope) {
         for (final NamedProcessConfig pInfo : processes.values()) {
             if (pInfo.getProcessScope() == scope ) {
                 log.debug("Stopping process named " + pInfo.getProcessName() + " scoped to " + scope);

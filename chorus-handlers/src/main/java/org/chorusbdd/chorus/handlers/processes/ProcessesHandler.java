@@ -193,7 +193,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     @Destroy(scope= Scope.SCENARIO)
     //by default stop any processes which were started during a scenario
     public void destroyScenario() {
-        processManager.stopProcessesRunningWithinScope(Scope.SCENARIO);
+        processManager.stopProcesses(Scope.SCENARIO);
         resetScenarioScopedPortsInConfigTemplates();
     }
 
@@ -207,7 +207,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
 
     @Destroy(scope= Scope.FEATURE)
     public void destroyFeature() {
-        processManager.stopProcessesRunningWithinScope(Scope.FEATURE);
+        processManager.stopProcesses(Scope.FEATURE);
     }
 
     /**
