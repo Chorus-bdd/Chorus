@@ -104,7 +104,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy) {
         List<StepInvoker> invokers = new ArrayList<>();
         for (JmxInvokerResult r : proxy.getStepMetadata()) {
-            StepInvoker invoker = r.toRemoteStepInvoker(proxy);
+            StepInvoker invoker = RemoteStepInvoker.createRemoteStepInvoker(r, proxy);
             invokers.add(invoker);
         }
         return invokers;

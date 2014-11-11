@@ -20,12 +20,12 @@ public class JmxInvokerResult extends AbstractJmxResult {
 
     private static final long serialVersionUID = 1;
 
-    private static final String SERIALIZE_VERSION = "SERIALIZE_VERSION";
-    private static final String STEP_ID = "STEP_ID";
-    private static final String PENDING_MSG = "PENDING_MSG";
-    private static final String PATTERN = "PATTERN";
-    private static final String TECHNICAL_DESCRIPTION = "TECHNICAL_DESCRIPTION";
-    private static final String ID = "ID";
+    public static final String SERIALIZE_VERSION = "SERIALIZE_VERSION";
+    public static final String STEP_ID = "STEP_ID";
+    public static final String PENDING_MSG = "PENDING_MSG";
+    public static final String PATTERN = "PATTERN";
+    public static final String TECHNICAL_DESCRIPTION = "TECHNICAL_DESCRIPTION";
+    public static final String ID = "ID";
 
     //the current version of this serialization
     //for use if we need to change the serialization properties and support backwards compatibility
@@ -44,18 +44,4 @@ public class JmxInvokerResult extends AbstractJmxResult {
         put(ID, i.getId());
     }
 
-    /**
-     * @return a StepInvoker which will invoke the remote method
-     */
-    public RemoteStepInvoker toRemoteStepInvoker(ChorusHandlerJmxProxy jmxProxy) {
-        String remoteStepId = (String) get(STEP_ID);
-        String regex = (String) get(PATTERN);
-        String pending = (String) get(PENDING_MSG);
-        String technicalDescription = (String)get(TECHNICAL_DESCRIPTION);
-
-        //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
-        //to actually invoke the remote method with it
-        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, pending, technicalDescription);
-        return stepInvoker;
-    }
 }

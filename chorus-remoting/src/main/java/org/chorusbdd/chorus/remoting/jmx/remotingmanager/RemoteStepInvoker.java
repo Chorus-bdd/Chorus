@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -49,7 +50,7 @@ public class RemoteStepInvoker implements StepInvoker {
     private String technicalDescription;
     private final Pattern pattern;
 
-    public RemoteStepInvoker(
+    private RemoteStepInvoker(
             String regex,
             ChorusHandlerJmxProxy proxy,
             String remoteStepId,
@@ -115,5 +116,20 @@ public class RemoteStepInvoker implements StepInvoker {
 
     public String toString() {
         return pattern.toString();
+    }
+
+    /**
+     * @return a StepInvoker which will invoke the remote method
+     */
+    public static RemoteStepInvoker createRemoteStepInvoker(JmxInvokerResult jmxInvokerResult, ChorusHandlerJmxProxy jmxProxy) {
+        String remoteStepId = (String) jmxInvokerResult.get(JmxInvokerResult.STEP_ID);
+        String regex = (String) jmxInvokerResult.get(JmxInvokerResult.PATTERN);
+        String pending = (String) jmxInvokerResult.get(JmxInvokerResult.PENDING_MSG);
+        String technicalDescription = (String)jmxInvokerResult.get(JmxInvokerResult.TECHNICAL_DESCRIPTION);
+
+        //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
+        //to actually invoke the remote method with it
+        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, pending, technicalDescription);
+        return stepInvoker;
     }
 }

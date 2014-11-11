@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.PropertiesFileAndDbConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;

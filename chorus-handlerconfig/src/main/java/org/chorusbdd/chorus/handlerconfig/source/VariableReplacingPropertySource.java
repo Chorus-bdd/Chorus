@@ -70,8 +70,8 @@ public class VariableReplacingPropertySource implements PropertyGroupsSource {
         this.featureToken = featureToken;
     }
 
-    public Map<String, Properties> loadProperties() {
-        Map<String, Properties> m = wrappedSource.loadProperties();
+    public Map<String, Properties> mergeProperties(Map<String, Properties> propertiesByConfigName) {
+        Map<String, Properties> m = wrappedSource.mergeProperties(propertiesByConfigName);
 
         for ( Map.Entry<String, Properties> e : m.entrySet()) {
             expandVariables(e);

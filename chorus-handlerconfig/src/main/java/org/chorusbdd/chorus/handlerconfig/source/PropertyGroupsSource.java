@@ -39,11 +39,15 @@ import java.util.Properties;
  * Time: 10:43
  *
  * A source for Properties which are grouped by configName
+ *
  */
 public interface PropertyGroupsSource {
 
     /**
-     * @return Properties grouped by a String configName
+     * Merge properties from this properties source with properties from the map provided
+     *
+     * @param propertiesByConfigName, initial map of properties by config name
+     * @return merged properties by configName
      */
-    Map<String, Properties> loadProperties();
+    Map<String, Properties> mergeProperties(Map<String, Properties> propertiesByConfigName);
 }

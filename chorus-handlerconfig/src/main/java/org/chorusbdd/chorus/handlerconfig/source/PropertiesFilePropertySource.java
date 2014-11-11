@@ -49,6 +49,8 @@ import java.util.*;
  * Properties for the handlers used by a given feature are loaded from .properties files which are either in the
  * same directory as the .feature or in a subdirectory /conf
  *
+ * Properties can also be provided in properties files on the classpath at root level, and this is often used to set defaults
+ *
  * We support properties files which are handler-specific (i.e. have the handler name in the suffix, e.g. -remoting.properties)
  * as well as general properties files which may contain properties for any handler
  *
@@ -114,10 +116,9 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
         this.featureToken = featureToken;
     }
 
-    public Map<String, Properties> loadProperties() {
+    public Map<String, Properties> mergeProperties(Map<String, Properties> propertiesByConfigName) {
         Properties p = loadFromPropertyFiles();
 
-        Map<String, Properties> propertiesByGroup = new HashMap<String, Properties>();
         for ( Map.Entry e : p.entrySet()) {
             String key = e.getKey().toString();
             String value = e.getValue().toString();
@@ -130,22 +131,22 @@ public class PropertiesFilePropertySource implements PropertyGroupsSource {
             int tokenCount = getTokenCount(key);
             if ( tokenCount >= 2 ) {
                 //some properties files mix properties for different handlers, in this case the property names we want start with the handler prefix token
-                findConfigNameAndSetProperty(propertiesByGroup, key, value);
+                findConfigNameAndSetProperty(propertiesByConfigName, key, value);
             } else {
                 log.warn("Unrecognised property key format " + key + " will ignore this property");
             }
         }
-        return propertiesByGroup;
+        return propertiesByConfigName;
     }
 
-    private void findConfigNameAndSetProperty(Map<String, Properties> propertiesByGroup, String key, String value) {
+    private void findConfigNameAndSetProperty(Map<String, Properties> propertiesByConfigName, String key, String value) {
         //find the configName which should now be the first token in key, and get or create the Properties group for it
         //the property to set in the configName propertyGroup is the second token in key - set that property to value
         int i = key.indexOf('.');
         String configName = key.substring(0, i);
         String property = key.substring(i + 1, key.length());
 
-        Properties propertiesForThisConfigName = getOrCreateProperties(propertiesByGroup, configName);
+        Properties propertiesForThisConfigName = getOrCreateProperties(propertiesByConfigName, configName);
         propertiesForThisConfigName.setProperty(property, value);
     }
 

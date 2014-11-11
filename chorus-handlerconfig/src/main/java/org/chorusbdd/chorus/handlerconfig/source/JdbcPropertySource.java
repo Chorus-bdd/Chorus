@@ -61,9 +61,8 @@ public class JdbcPropertySource implements PropertyGroupsSource {
         this.jdbcProperties = jdbcProperties;
     }
 
-    public Map<String, Properties> loadProperties() {
+    public Map<String, Properties> mergeProperties(Map<String, Properties> propertiesByConfigName) {
         Connection conn = null;
-        Map<String, Properties> propertiesByConfigName = new HashMap<String, Properties>();
         try {
             //load MBean config from DB
             Class.forName(jdbcProperties.getProperty(JDBC_DRIVER));
