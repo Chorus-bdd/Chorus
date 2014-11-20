@@ -257,7 +257,7 @@ public class HandlerManager {
                     log.error("Failed to set @ChorusResource (" + resourceName + ") with object of type: " + o.getClass(), e);
                 }
             } else {
-                log.debug("Set field to value " + o);
+                log.trace("Set field to value " + o);
             }
         }
     }
@@ -278,12 +278,22 @@ public class HandlerManager {
             o = feature.getFeatureFile().getParentFile();
         } else if (ChorusResource.featureToken.equals(resourceName)) {
             o = feature;
-        } else if (ChorusResource.processManager.equals(resourceName)) {
-            o = subsystemManager.getProcessManager();
-        } else if (ChorusResource.remotingManager.equals(resourceName)) {
-            o = subsystemManager.getRemotingManager();
+        } else if (resourceName.matches("subsystem.+")) {
+            o = getSubsystemResource(resourceName);
         } else if ( resourceName.startsWith(ChorusResource.handlerPrefix)) {
             o = getHandlerResource(resourceName, handlerInstances);
+        }
+        return o;
+    }
+
+    private Object getSubsystemResource(String resourceName) {
+        Object o;
+        String subsystemId = resourceName.substring(10);
+        log.trace("Looking for subsystem named " + subsystemId + " for @ChorusResource field");
+        o = subsystemManager.getSubsystemById(subsystemId);
+
+        if ( o == null) {
+            log.warn("Cannot set @ChorusResource field since cannot find a subsystem which is named " + resourceName);
         }
         return o;
     }

@@ -45,7 +45,7 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 @Handler("Remoting With Local Process")
 public class RemotingWithLocalProcessHandler extends ChorusAssert {
 
-    @ChorusResource("subsystem.processes")
+    @ChorusResource("subsystem.processManager")
     ProcessManager processManager;
 
     @Step("I can call a step method exported by the handler")

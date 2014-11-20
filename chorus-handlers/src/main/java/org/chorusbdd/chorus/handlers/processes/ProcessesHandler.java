@@ -61,7 +61,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
-    @ChorusResource("subsystem.processes")
+    @ChorusResource("subsystem.processManager")
     private ProcessManager processManager;
 
     // -------------------------------------------------------------- Steps

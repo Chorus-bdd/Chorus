@@ -3,6 +3,15 @@
 <changes>
 
     <version>
+        <versionNumber>2.0.0</versionNumber>
+        <comment>New modular chorus interpreter. This is not fully backwards compatible with 1.x.x due to some package renaming
+            which may require minor revisions to end user step logic</comment>
+        <change desc="Initial chorus 2.0.0 with modular structure"/>
+        <change desc="Revised utility classes for loading handler configuration"/>
+        <change desc="@ChorusResource - Support for injecting chorus subsystems for process management and remoting"/>
+        <change desc="@ChorusResource - Support for injecting handler instances"/>
+    </version>
+    <version>
         <versionNumber>1.6.9</versionNumber>
         <comment>Some improvements to Remoting logic and addition of ProcessManager</comment>
         <change desc="ProcessesHandler and RemotingHandler delegate to a ProcessManager and RemotingManager, cleaner division of responsibilities"/>

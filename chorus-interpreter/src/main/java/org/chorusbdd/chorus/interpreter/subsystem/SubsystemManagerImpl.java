@@ -36,7 +36,9 @@ import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Some of Chorus' subsystems are pluggable, we depend only on the abstractions
@@ -50,6 +52,8 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
     private final Subsystem processManager;
     private final Subsystem remotingManager;
+
+    private Map<String, Subsystem> subsystems = new HashMap<>();
 
     private ChorusLog log = ChorusLogFactory.getLog(SubsystemManagerImpl.class);
 
@@ -66,16 +70,20 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return remotingManager;
     }
 
+    public Subsystem getSubsystemById(String id) {
+        return subsystems.get(id);
+    }
+
     public List<ExecutionListener> getExecutionListeners() {
         return Arrays.asList(
-                processManager.getExecutionListener(),
-                remotingManager.getExecutionListener()
+            processManager.getExecutionListener(),
+            remotingManager.getExecutionListener()
         );
     }
 
     private Subsystem initializeProcessManager() {
         return initializeSubsystem(
-            "ProcessManager",
+            "processManager",
             "chorusProcessManager",
             "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl"
         );
@@ -84,25 +92,26 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
     private Subsystem initializeRemotingManager() {
         return initializeSubsystem(
-            "RemotingManager",
+            "remotingManager",
             "chorusRemotingManager",
             "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager"
         );
     }
 
-    private <E> E initializeSubsystem(String description, String chorusProperty, String defaultImplementingClass) {
-        String processManagerClass = System.getProperty(chorusProperty, defaultImplementingClass);
-        log.debug("Implementation for " + description + " is " + processManagerClass);
+    private <E> E initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass) {
+        String processManagerClass = System.getProperty(sysProp, defaultImplementingClass);
+        log.debug("Implementation for " + subsystemId + " is " + processManagerClass);
         E instance = null;
         try {
             Class clazz = Class.forName(processManagerClass);
             instance = (E)clazz.newInstance();
         } catch (Exception e) {
-            log.error("Failed to initialize  " + description +
+            log.error("Failed to initialize  " + subsystemId +
                     " is class " + processManagerClass + " in the classpath, " +
                     "does it have a nullary constructor?", e);
-            throw new ChorusException("Failed to initialize " + description, e);
+            throw new ChorusException("Failed to initialize " + subsystemId, e);
         }
+        subsystems.put(subsystemId, (Subsystem)instance);
         return instance;
     }
 }
