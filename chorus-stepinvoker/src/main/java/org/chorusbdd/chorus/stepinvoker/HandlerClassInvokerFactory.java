@@ -36,7 +36,8 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -44,7 +45,7 @@ import java.util.regex.Pattern;
 * Date: 24/09/13
 * Time: 18:46
 */
-public class HandlerClassInvokerFactory implements InvokerFactory {
+public class HandlerClassInvokerFactory implements StepInvokerProvider {
 
     private static ChorusLog log = ChorusLogFactory.getLog(HandlerClassInvokerFactory.class);
     private Object handlerInstance;
@@ -53,7 +54,7 @@ public class HandlerClassInvokerFactory implements InvokerFactory {
         this.handlerInstance = handlerInstance;
     }
 
-    public List<StepInvoker> createStepInvokers() {
+    public List<StepInvoker> getStepInvokers() {
         List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
 
         //if the handler implements StepInvokerProvider then get the step invokers directly

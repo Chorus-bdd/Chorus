@@ -306,9 +306,8 @@ public class StepProcessor {
 
     private StepEndState handleStepPendingException(ExecutionToken executionToken, StepToken step, StepPendingException cause) {
         StepEndState endState;
-        StepPendingException spe = (StepPendingException) cause;
-        step.setThrowable(spe);
-        step.setMessage(spe.getMessage());
+        step.setThrowable(cause);
+        step.setMessage(cause.getMessage());
         endState = StepEndState.PENDING;
         executionToken.incrementStepsPending();
         log.debug("Step Pending Exception prevented execution");

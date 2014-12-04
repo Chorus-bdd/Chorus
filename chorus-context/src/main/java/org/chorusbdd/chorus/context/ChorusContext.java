@@ -46,7 +46,7 @@ public class ChorusContext implements Map<String, Object>, Serializable {
     private static final long serialVersionUID = 1;
 
     /**
-     * The last non-null result returned by any handler step is stored in the context variable lastResult
+     * The last non-void result returned by any handler step is stored in the context variable lastResult
      */
     public static final String LAST_RESULT = "lastResult";
 

@@ -37,8 +37,8 @@ import org.chorusbdd.chorus.remoting.jmx.serialization.JmxRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
-import org.chorusbdd.chorus.stepinvoker.InvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.util.*;
 
 import javax.management.MBeanServer;
@@ -79,8 +79,8 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
                 throw new ChorusException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", handlerClass.getName()));
             }
 
-            InvokerFactory invokerFactory = new HandlerClassInvokerFactory(handler);
-            List<StepInvoker> invokers = invokerFactory.createStepInvokers();
+            StepInvokerProvider invokerFactory = new HandlerClassInvokerFactory(handler);
+            List<StepInvoker> invokers = invokerFactory.getStepInvokers();
 
             if (invokers.size() == 0) {
                 log.warn(String.format("Cannot export object of type (%s) it no methods that declare the @Step annotation", handlerClass.getName()));

@@ -91,10 +91,10 @@ public class StepMatcher {
         }
     }
 
-    private void foundStepInvoker(StepInvoker stepInvoker, List<String> values) {
-        if ( log.isTraceEnabled() ) log.trace("Matched! " + stepInvoker + "," + values);
+    private void foundStepInvoker(StepInvoker stepInvoker, List<String> stepArguments) {
+        if ( log.isTraceEnabled() ) log.trace("Matched! " + stepInvoker + "," + stepArguments);
         if (chosenStepInvoker == null) {
-            this.invokerArgs = values;
+            this.invokerArgs = stepArguments;
             this.chosenStepInvoker = stepInvoker;
         } else {
             log.info(String.format("Ambiguous step [%s], more than one implementation, will use [%s] not [%s]",

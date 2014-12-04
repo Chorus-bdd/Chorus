@@ -205,7 +205,7 @@ public class ChorusInterpreter {
         DefaultStepInvokerProvider stepInvokerProvider = new DefaultStepInvokerProvider();
         for ( Object handler : handlerInstances) {
             HandlerClassInvokerFactory f = new HandlerClassInvokerFactory(handler);
-            List<StepInvoker> l = f.createStepInvokers();
+            List<StepInvoker> l = f.getStepInvokers();
             stepInvokerProvider.addStepInvokers(handler, l);
         }
         return stepInvokerProvider;
