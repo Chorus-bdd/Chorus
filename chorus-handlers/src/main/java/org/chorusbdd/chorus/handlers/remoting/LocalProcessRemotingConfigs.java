@@ -7,6 +7,8 @@ import java.util.Map;
 
 /**
  * Created by nick on 06/10/2014.
+ *
+ * Generate a RemotingConfig from a local process which was started by ProcessManager
  */
 class LocalProcessRemotingConfigs {
 
