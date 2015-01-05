@@ -49,6 +49,7 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
 
     private static ChorusLog log = ChorusLogFactory.getLog(HandlerClassInvokerFactory.class);
     private Object handlerInstance;
+    private List<StepInvoker> invokersForMethods;
 
     public HandlerClassInvokerFactory(Object handlerInstance) {
         this.handlerInstance = handlerInstance;
@@ -58,9 +59,11 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
         List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
 
         //if the handler implements StepInvokerProvider then get the step invokers directly
+        //these invokers may change at any point in the scenario lifecycle, even between steps
         addStepProviderInvokers(stepInvokers);
 
         //add step invokers for any annotated step methods
+        //these are tied to the handler class and so are only calculated once
         addMethodStepInvokers(stepInvokers);
 
         return stepInvokers;
@@ -76,10 +79,17 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
     }
 
     private void addMethodStepInvokers(List<StepInvoker> stepInvokers) {
-        List<StepInvoker> invokersForMethods = getStepInvokersForAnnotatedMethods();
+        createMethodInvokers();
         stepInvokers.addAll(invokersForMethods);
         log.debug("Added " + invokersForMethods.size() + " step invokers for handler class " +
                 handlerInstance.getClass().getSimpleName() + " annotated methods");
+    }
+
+    //we only create these once since they are part of the class definition which will not change
+    private void createMethodInvokers() {
+        if ( invokersForMethods == null) {
+            invokersForMethods = getStepInvokersForAnnotatedMethods();
+        }
     }
 
     private List<StepInvoker> getStepInvokersForAnnotatedMethods() {

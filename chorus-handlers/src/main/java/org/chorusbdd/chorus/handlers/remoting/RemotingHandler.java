@@ -42,7 +42,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +89,8 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
 
     private LocalProcessRemotingConfigs localProcessRemotingConfigs;
 
+    private List<StepInvoker> remoteInvokersToUse = new LinkedList<StepInvoker>();
+
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
@@ -96,6 +98,13 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
         return remotingManager.performActionInRemoteComponent(action, remotingConfig.buildRemotingManagerConfig());
+    }
+
+    @Step("Remoting use ([a-zA-Z0-9_-]+)")
+    public void useRemoteComponent(String componentName) {
+        RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
+        remoteInvokersToUse.clear();
+        remoteInvokersToUse.addAll(remotingManager.getStepInvokers(remotingConfig));
     }
 
     @Initialize(scope = Scope.FEATURE)
@@ -141,13 +150,10 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
         remotingConfigMap.put(handlerConfig.getConfigName(), handlerConfig);
     }
 
+    /**
+     * List of remote invokers for components remoting handler is currently 'using'
+     */
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> invokers = new ArrayList<>();
-        for ( RemotingConfig c : remotingConfigMap.values()) {
-            if ( ! c.isRequireComponentNameSuffix() ) {
-                invokers.addAll(remotingManager.getStepInvokers(c));
-            }
-        }
-        return invokers;
+        return remoteInvokersToUse;
     }
 }
