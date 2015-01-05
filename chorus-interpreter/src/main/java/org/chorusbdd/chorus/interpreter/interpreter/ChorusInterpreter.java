@@ -159,7 +159,7 @@ public class ChorusInterpreter {
                     feature.isFeatureStartScenarioFailed();
             
             if ( skip ) {
-                log.warn("Skipping scenario " + scenario + " since " + KeyWord.START_FEATURE_SCENARIO_NAME + " failed");
+                log.warn("Skipping scenario " + scenario + " since " + KeyWord.FEATURE_START_SCENARIO_NAME + " failed");
             }
             
             processScenario(

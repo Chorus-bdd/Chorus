@@ -60,7 +60,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     private String unavailableHandlersMessage;
 
     public FeatureToken() {
-        super(getNextId());
+        this(getNextId());
     }
 
     private FeatureToken(long tokenId) {

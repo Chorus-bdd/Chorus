@@ -36,7 +36,6 @@ import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileAndDbConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.config.StartMode;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -182,12 +181,6 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     @Initialize(scope= Scope.FEATURE)
     public void setupFeature() throws Exception {
         processConfigs = loadProcessConfig();
-        automaticallyStartProcessesForScope(Scope.FEATURE);
-    }
-
-    @Initialize(scope= Scope.SCENARIO)
-    public void setupScenario() throws Exception {
-        automaticallyStartProcessesForScope(Scope.SCENARIO);
     }
 
     @Destroy(scope= Scope.SCENARIO)
@@ -208,17 +201,6 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     @Destroy(scope= Scope.FEATURE)
     public void destroyFeature() {
         processManager.stopProcesses(Scope.FEATURE);
-    }
-
-    /**
-     * Automatically start any processes configured to start mode automatic at the feature or scenario scope
-     */
-    private void automaticallyStartProcessesForScope(Scope scope) throws Exception {
-        for ( ProcessesConfig c : processConfigs.values()) {
-            if ( c.getStartMode() == StartMode.AUTOMATIC && scope == c.getProcessScope()) {
-                startProcess(c, c.getConfigName());
-            }
-        }
     }
 
     ///////////////////////////////////////////////////////////////

@@ -50,7 +50,7 @@ public enum KeyWord {
     FeatureStart("Feature-Start:"),
     FeatureEnd("Feature-End:");
 
-    public static final String START_FEATURE_SCENARIO_NAME = "Feature-Start";
+    public static final String FEATURE_START_SCENARIO_NAME = "Feature-Start";
     public static final String FEATURE_END_SCENARIO_NAME = "Feature-End";
 
     private String keyWord;

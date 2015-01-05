@@ -183,7 +183,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     throw new ParseException(KeyWord.FeatureStart + " statement must precede all scenarios", lineNumber);
                 }
                 resetLastTagsLine();
-                currentScenario = createScenario(KeyWord.START_FEATURE_SCENARIO_NAME, null, null, null);
+                currentScenario = createScenario(KeyWord.FEATURE_START_SCENARIO_NAME, null, null, null);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
                 continue;

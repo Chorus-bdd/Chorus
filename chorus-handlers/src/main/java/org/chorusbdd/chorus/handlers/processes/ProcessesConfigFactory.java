@@ -38,7 +38,6 @@ import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigValidator;
-import org.chorusbdd.chorus.processes.manager.config.StartMode;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;
@@ -124,8 +123,6 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
                 c.setReadTimeoutSeconds(parseIntProperty(value, "readTimeoutSeconds"));
             } else if ("scope".equals(key)) {
                 c.setProcessScope(parseProcessScope(value));
-            } else if ("startMode".equals(key)) {
-                c.setStartMode(parseStartMode(value));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }
@@ -152,17 +149,6 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
             );
         }
         return l;
-    }
-
-    private static StartMode parseStartMode(String value) {
-        StartMode s = StartMode.valueOf(value.toUpperCase().trim());
-        if ( s == null) {
-            throw new ChorusException(
-                    "Failed to parse property startMode with value '" + value + "', shoud be one of: "
-                            + Arrays.asList(StartMode.values())
-            );
-        }
-        return s;
     }
 
 }

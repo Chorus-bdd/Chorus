@@ -49,7 +49,7 @@ public class StepToken extends AbstractToken {
     private String message = "";
 
     //not serializing throwable, there's a chance remote processes will not be able deserialize
-    //and non primative fields also make it difficult to reload steps from XML
+    //and non primitive fields also make it difficult to reload steps from XML
     private transient Throwable throwable;
 
     private String stackTrace;  //exception stack trace

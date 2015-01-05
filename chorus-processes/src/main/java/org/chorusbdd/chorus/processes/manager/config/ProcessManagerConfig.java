@@ -74,6 +74,4 @@ public interface ProcessManagerConfig extends HandlerConfig {
     Scope getProcessScope();
 
     boolean isJavaProcess();
-
-    StartMode getStartMode();
 }

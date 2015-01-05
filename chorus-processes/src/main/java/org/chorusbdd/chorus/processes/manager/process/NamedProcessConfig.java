@@ -32,8 +32,6 @@ package org.chorusbdd.chorus.processes.manager.process;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
-import org.chorusbdd.chorus.processes.manager.config.StartMode;
-import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 
 /**
  * Represents a running process
@@ -138,8 +136,6 @@ public class NamedProcessConfig implements ProcessManagerConfig {
     public Scope getProcessScope() {
         return processManagerConfig.getProcessScope();
     }
-
-    public StartMode getStartMode() { return processManagerConfig.getStartMode(); }
 
     public boolean isJavaProcess() {
         return processManagerConfig.isJavaProcess();
