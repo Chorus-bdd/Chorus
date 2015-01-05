@@ -51,10 +51,10 @@ public class StepMacroTest extends Assert {
     @Test
     public void testStepMacroPatternMatch() {
         StepMacro stepMacro = new StepMacro("I reference a step macro with (\\d+) steps and (\\d+) capture groups");
-        stepMacro.addStep(new StepToken("Given", "my number of steps is <$1> steps"));
-        stepMacro.addStep(new StepToken("Then", "my number of groups is <$2> groups"));
+        stepMacro.addStep(StepToken.createStep("Given", "my number of steps is <$1> steps"));
+        stepMacro.addStep(StepToken.createStep("Then", "my number of groups is <$2> groups"));
 
-        StepToken scenarioStepToken = new StepToken("Given", "I reference a step macro with 2 steps and 2 capture groups");
+        StepToken scenarioStepToken = StepToken.createStep("Given", "I reference a step macro with 2 steps and 2 capture groups");
         stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro), false);
 
         assertEquals(scenarioStepToken.getChildSteps().size(), 2);
@@ -65,9 +65,9 @@ public class StepMacroTest extends Assert {
     @Test(expected=RecursiveStepMacroException.class)
     public void testMaxStepDepthForRecursiveMatching() {
         StepMacro stepMacro = new StepMacro("I have a recursive match");
-        stepMacro.addStep(new StepToken("Given", "I have a recursive match"));
+        stepMacro.addStep(StepToken.createStep("Given", "I have a recursive match"));
 
-        StepToken scenarioStepToken = new StepToken("Given", "I have a recursive match");
+        StepToken scenarioStepToken = StepToken.createStep("Given", "I have a recursive match");
         stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro), false);
     }
 
@@ -77,12 +77,12 @@ public class StepMacroTest extends Assert {
     //any capture groups in the step macro steps should be expanded before this matching occurs
     public void testRecursiveMatching()  {
         StepMacro stepMacro = new StepMacro("I have a parent (.*) macro");
-        stepMacro.addStep(new StepToken("", "With a step which matches a child <$1> macro"));
+        stepMacro.addStep(StepToken.createStep("", "With a step which matches a child <$1> macro"));
 
         StepMacro childStepMacro = new StepMacro("With a step which matches a child step macro");
-        childStepMacro.addStep(new StepToken("", "Child Step"));
+        childStepMacro.addStep(StepToken.createStep("", "Child Step"));
 
-        StepToken scenarioStepToken = new StepToken("Given", "I have a parent step macro");
+        StepToken scenarioStepToken = StepToken.createStep("Given", "I have a parent step macro");
         stepMacro.processStep(scenarioStepToken, Arrays.asList(stepMacro, childStepMacro), false);
 
         assertEquals(scenarioStepToken.getChildSteps().size(), 1);
@@ -95,9 +95,9 @@ public class StepMacroTest extends Assert {
     @Test
     public void testMismatchedCaptureGroups() {
         StepMacro stepMacro = new StepMacro("I reference a step macro with (\\d+) steps and (\\d+) capture groups");
-        stepMacro.addStep(new StepToken("Given", "my number of steps is <$3> steps"));
+        stepMacro.addStep(StepToken.createStep("Given", "my number of steps is <$3> steps"));
 
-        StepToken scenarioStepToken = new StepToken("Given", "I reference a step macro with 1 steps and 2 capture groups");
+        StepToken scenarioStepToken = StepToken.createStep("Given", "I reference a step macro with 1 steps and 2 capture groups");
         try {
             stepMacro.processStep(scenarioStepToken, Collections.singletonList(stepMacro), false);
             fail("Expecting mismatched groups exception");

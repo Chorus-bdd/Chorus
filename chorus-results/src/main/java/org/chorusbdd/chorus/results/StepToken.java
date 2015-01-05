@@ -35,12 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by: Steve Neal
- * Date: 30/09/11
+ * Represents a Scenario step
  */
 public class StepToken extends AbstractToken {
 
     private static final long serialVersionUID = 3;
+
+    public static final String DIRECTIVE_TYPE = "#!";
 
     private final String type;
     private String action;
@@ -62,10 +63,9 @@ public class StepToken extends AbstractToken {
 
     private long timeTaken = 0;  //time taken to run the step
 
-    public StepToken(String type, String action) {
-        this(getNextId(), type, action);
-    }
-
+    /**
+     * Use the static factory methods to create an instance of a StepToken
+     */
     private StepToken(long id, String type, String action) {
         super(id);
         this.type = type;
@@ -149,11 +149,19 @@ public class StepToken extends AbstractToken {
     }
 
     public void addChildStep(StepToken childToken) {
+        if ( isDirective()) {
+            //directives may not be step macro / may not have child steps
+            throw new UnsupportedOperationException("Directives may not have child steps");
+        }
         childSteps.add(childToken);
     }
 
     public List<StepToken> getChildSteps() {
         return childSteps;
+    }
+
+    public boolean isDirective() {
+        return DIRECTIVE_TYPE.equals(type);
     }
 
     /**
@@ -176,6 +184,14 @@ public class StepToken extends AbstractToken {
 
     public boolean isStepMacro() {
         return childSteps.size() > 0;
+    }
+
+    public static StepToken createDirective(String action) {
+        return new StepToken(getNextId(), DIRECTIVE_TYPE, action);
+    }
+
+    public static StepToken createStep(String type, String action) {
+        return new StepToken(getNextId(), type, action);
     }
 
     public StepToken deepCopy() {

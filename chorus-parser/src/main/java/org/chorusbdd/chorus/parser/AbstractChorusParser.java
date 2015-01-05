@@ -34,8 +34,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -49,24 +48,23 @@ public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(AbstractChorusParser.class);
 
+    private List<StepToken> bufferedDirectives = new LinkedList<StepToken>();
+
     protected StepToken createStepToken(String line) {
         int indexOfSpace = line.indexOf(' ');
         String type = line.substring(0, indexOfSpace).trim();
         String action = line.substring(indexOfSpace, line.length()).trim();
-        return new StepToken(type, action);
+        return StepToken.createStep(type, action);
     }
 
-    protected StepToken addStep(ScenarioToken scenarioToken, String line, List<StepMacro> stepMacros) {
-        StepToken s = createStepToken(line);
-        return addStep(scenarioToken, s, stepMacros);
+    protected StepToken createStepToken(String type, String action) {
+        return StepToken.createStep(type, action);
     }
 
-    protected StepToken addStep(ScenarioToken scenarioToken, String type, String action, List<StepMacro> stepMacros) {
-        StepToken s = new StepToken(type, action);
-        return addStep(scenarioToken, s, stepMacros);
-    }
+    protected StepToken addStepToScenario(ScenarioToken scenarioToken, StepToken stepToken, List<StepMacro> stepMacros) {
 
-    protected StepToken addStep(ScenarioToken scenarioToken, StepToken stepToken, List<StepMacro> stepMacros) {
+        addBufferedDirectives(scenarioToken);
+
         //we first see if the step matches any StepMacros which were defined during pre-parsing
         //and if so populate child steps
 
@@ -80,4 +78,41 @@ public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
         return stepToken;
     }
 
+    //if there were any directives associated with the step (or the preceding scenario statement)
+    //then we need to add them first
+    private void addBufferedDirectives(ScenarioToken scenarioToken) {
+        for(StepToken d : bufferedDirectives) {
+            scenarioToken.addStep(d);
+        }
+        clearDirectives();
+    }
+
+
+    protected String parseDirectives(String line) {
+        int directiveIndex = line.lastIndexOf(StepToken.DIRECTIVE_TYPE);
+        while(directiveIndex != -1) {
+            addDirective(line.substring(directiveIndex));
+            line = line.substring(0, directiveIndex);
+            directiveIndex = line.lastIndexOf(StepToken.DIRECTIVE_TYPE);
+        }
+        return line;
+    }
+
+
+    private void addDirective(String directive) {
+        assert(directive.startsWith("#!"));
+        String action = directive.substring(2).trim();
+        if ( action.length() > 0) {
+            StepToken s = StepToken.createDirective(action);
+            bufferedDirectives.add(s);
+        }
+    }
+
+    protected void clearDirectives() {
+        bufferedDirectives.clear();
+    }
+
+    protected int getDirectiveCount() {
+        return bufferedDirectives.size();
+    }
 }

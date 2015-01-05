@@ -40,7 +40,9 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
@@ -171,6 +173,15 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     @Step(".*write '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process")
     public void writeToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, false);
+    }
+
+    @Step("Processes start ([a-zA-Z0-9-_]*)")
+    public void startProcessDirective(String processNameList) throws Exception {
+        StringTokenizer st = new StringTokenizer(processNameList);
+        while(st.hasMoreTokens()) {
+            String processName = st.nextToken();
+            startProcessFromConfig(processName);
+        }
     }
 
 

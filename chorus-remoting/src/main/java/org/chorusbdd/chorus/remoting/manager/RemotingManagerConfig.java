@@ -47,9 +47,4 @@ public interface RemotingManagerConfig extends HandlerConfig {
     int getConnectionAttempts();
 
     int getConnectionAttemptMillis();
-
-    /**
-     * @return false to make a remote step accessible without adding the (in componentName) suffix to the step action
-     */
-    boolean isRequireComponentNameSuffix();
 }

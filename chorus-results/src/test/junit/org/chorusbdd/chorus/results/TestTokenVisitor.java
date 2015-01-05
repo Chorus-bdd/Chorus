@@ -58,11 +58,11 @@ public class TestTokenVisitor extends Assert {
     public void doBefore() {
         scenarioToken = new ScenarioToken();
         scenarioToken.setName("Test Scenario");
-        stepOne = scenarioToken.addStep(new StepToken("If", "I create a step"));
-        stepTwo = scenarioToken.addStep(new StepToken("If", "I create a second step"));
+        stepOne = scenarioToken.addStep(StepToken.createStep("If", "I create a step"));
+        stepTwo = scenarioToken.addStep(StepToken.createStep("If", "I create a second step"));
 
         scenarioTwo = new ScenarioToken();
-        stepThree = scenarioTwo.addStep(new StepToken("If", "I add a step to scenario 2"));
+        stepThree = scenarioTwo.addStep(StepToken.createStep("If", "I add a step to scenario 2"));
         featureToken = new FeatureToken();
         featureToken.addScenario(scenarioToken);
         featureToken.addScenario(scenarioTwo);

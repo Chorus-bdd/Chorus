@@ -92,8 +92,6 @@ public class RemotingConfigFactory extends AbstractHandlerConfigFactory implemen
                 r.setProtocol(vals[0]);
                 r.setHost(vals[1]);
                 r.setPort(parseIntProperty(vals[2], "connection:port"));
-            } else if ( "requireComponentNameSuffix".equals(key)) {
-                r.setRequireComponentNameSuffix(parseBooleanProperty(value, "requireComponentNameSuffix"));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Remoting handler property");
             }

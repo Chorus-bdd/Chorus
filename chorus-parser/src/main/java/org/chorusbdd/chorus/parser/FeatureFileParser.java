@@ -120,6 +120,8 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             line = line.trim();
             lineNumber++;
 
+            line = parseDirectives(line);
+
             if (line.length() == 0 || line.startsWith("#")) {
                 continue;//ignore blank lines and comments
             }
@@ -133,18 +135,23 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 continue;
             }
 
-            if (KeyWord.Uses.matchesLine(line)) {
+            KeyWord keyWord = KeyWord.getKeyWord(line);
+            if ( keyWord != null && ! keyWord.isSupportsDirectives() && getDirectiveCount() > 0) {
+                throw new ParseException("Cannot add any directives (#!) before keyword " + keyWord, lineNumber);
+            }
+
+            if (KeyWord.Uses.is(keyWord)) {
                 checkNoCurrentFeature(currentFeature, lineNumber, "Uses: declarations must precede Feature: declarations");
                 usingDeclarations.add(line.substring(6, line.length()).trim());
                 continue;
             }
 
-            if (KeyWord.Configurations.matchesLine(line)) {
+            if (KeyWord.Configurations.is(keyWord)) {
                 configurationNames = readConfigurationNames(line);
                 continue;
             }
 
-            if (KeyWord.Feature.matchesLine(line)) {
+            if (KeyWord.Feature.is(keyWord)) {
                 checkNoCurrentFeature(currentFeature, lineNumber, "Cannot define more than one Feature: in a .feature file");
                 currentFeaturesTags = extractTagsAndResetLastTagsLineField();
                 currentFeature = createFeature(line, usingDeclarations);
@@ -152,13 +159,13 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 continue;
             }
 
-            if (KeyWord.Background.matchesLine(line)) {
+            if (KeyWord.Background.is(keyWord)) {
                 backgroundScenario = createScenario("Background", backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_SCENARIO_BACKGROUND_STEPS;
                 continue;
             }
 
-            if (KeyWord.Scenario.matchesLine(line)) {
+            if (KeyWord.Scenario.is(keyWord)) {
                 if ( currentFeature == null) {
                     throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.Scenario, lineNumber);
                 }
@@ -175,7 +182,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
             //FeatureStart section is essentially just a scenario which must appear first and is not involved in tagging
             //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
-            if (KeyWord.FeatureStart.matchesLine(line)) {
+            if (KeyWord.FeatureStart.is(keyWord)) {
                 if ( currentFeature == null) {
                     throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureStart, lineNumber);
                 }
@@ -191,7 +198,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
             //FeatureEnd section is essentially just a scenario which must appear last and is not involved in tagging
             //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
-            if (KeyWord.FeatureEnd.matchesLine(line)) {
+            if (KeyWord.FeatureEnd.is(keyWord)) {
                 if ( currentFeature == null) {
                     throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureEnd, lineNumber);
                 }
@@ -203,7 +210,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 continue;
             }
 
-            if (KeyWord.ScenarioOutline.matchesLine(line)) {
+            if (KeyWord.ScenarioOutline.is(keyWord)) {
                 currentScenariosTags = extractTagsAndResetLastTagsLineField();
                 String scenarioName = line.substring(KeyWord.ScenarioOutline.stringVal().length()).trim();
                 outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
@@ -212,13 +219,13 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 continue;
             }
 
-            if (KeyWord.Examples.matchesLine(line)) {
+            if (KeyWord.Examples.is(keyWord)) {
                 //backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_EXAMPLES_TABLE;
                 continue;
             }
 
-            if (KeyWord.StepMacro.matchesLine(line)) {
+            if (KeyWord.StepMacro.is(keyWord)) {
                 parserState = READING_STEP_MACRO;
                 continue;
             }
@@ -228,17 +235,20 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     currentFeature.appendToDescription(line);
                     break;
                 case READING_SCENARIO_BACKGROUND_STEPS:
-                    addStep(backgroundScenario, line, allStepMacro);
+                    addStepToScenario(backgroundScenario, createStepToken(line), allStepMacro);
                     break;
                 case READING_SCENARIO_OUTLINE_STEPS:
                     //pass empty list of macros -
                     //we don't want to expand macros upfront since the outline step contain placeholders which must be expanded first
-                    addStep(outlineScenario, line, Collections.<StepMacro>emptyList());
+                    addStepToScenario(outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList());
                     break;
                 case READING_SCENARIO_STEPS:
-                    addStep(currentScenario, line, allStepMacro);
+                    addStepToScenario(currentScenario, createStepToken(line), allStepMacro);
                     break;
                 case READING_EXAMPLES_TABLE:
+                    if( getDirectiveCount() > 0) {
+                        throw new ParseException("Cannot add any directives (#!) in examples table " + keyWord, lineNumber);
+                    }
                     if (examplesTableHeaders == null) {
                         //reading the headers row in the examples table
                         examplesTableHeaders = readTableRowData(line, false);
@@ -316,7 +326,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 //pass empty list of macros since background steps have already been matched to step macros and expanded,
                 //we add a deep copy of the background step, which will also contain copies of any macro child steps.
                 StepToken copiedStep = backgroundStep.deepCopy();
-                addStep(scenario, copiedStep, Collections.<StepMacro>emptyList());
+                addStepToScenario(scenario, copiedStep, Collections.<StepMacro>emptyList());
             }
         }
         scenario.setName(name);
@@ -350,7 +360,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 value = RegexpUtils.escapeRegexReplacement(value);
                 action = action.replaceAll("<" + placeholder + ">", value);
             }
-            addStep(scenario, step.getType(), action, stepMacros);
+            addStepToScenario(scenario, createStepToken(step.getType(), action), stepMacros);
         }
 
         //add the filter tags

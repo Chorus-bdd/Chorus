@@ -162,7 +162,7 @@ public class StepMacro {
             action = replaceGroupsInMacroStep(macroMatcher, action);
 
             //having replaced any capture groups, create the child step
-            StepToken childToken = new StepToken (type, action);
+            StepToken childToken = StepToken.createStep(type, action);
 
             //match the new child step against the list of StepMacros recursively
             boolean alreadyMatched = false;

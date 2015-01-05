@@ -70,6 +70,8 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
 
             line = line.trim();
 
+            line = parseDirectives(line);
+
             if (line.length() == 0 || line.startsWith("#")) {
                 continue;//ignore blank lines and comments
             }
@@ -87,6 +89,7 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
             for ( KeyWord w : KeyWord.values()) {
                 if (w.matchesLine(line) && w != KeyWord.StepMacro) {
                     readingStepMacro = false;
+                    clearDirectives();
                     continue;
                 }
             }
@@ -102,6 +105,10 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
                 StepToken s = createStepToken(line);
                 currentMacro.addStep(s);
             }
+
+            //if we encounter any non-blank line (a step) which is not a StepMacro step and not a StepMacro definition
+            //then we need to clear any directives or they will end up being sucked into the following step macro
+            clearDirectives();
         }
 
         removeEmptyMacros(result);

@@ -49,7 +49,6 @@ public class RemotingConfig implements RemotingManagerConfig {
     private int port;
     private int connectionAttempts = 40;
     private int connectionAttemptMillis = 250;
-    private boolean requireComponentNameSuffix = true;
 
     public RemotingManagerConfig buildRemotingManagerConfig() {
         return new RuntimeRemotingConfig(
@@ -58,8 +57,7 @@ public class RemotingConfig implements RemotingManagerConfig {
             host,
             port,
             connectionAttempts,
-            connectionAttemptMillis,
-                requireComponentNameSuffix
+            connectionAttemptMillis
         );
     }
 
@@ -83,14 +81,6 @@ public class RemotingConfig implements RemotingManagerConfig {
 
     public int getConnectionAttemptMillis() {
         return connectionAttemptMillis;
-    }
-
-    public boolean isRequireComponentNameSuffix() {
-        return requireComponentNameSuffix;
-    }
-
-    public void setRequireComponentNameSuffix(boolean requireComponentNameSuffix) {
-        this.requireComponentNameSuffix = requireComponentNameSuffix;
     }
 
     public RemotingConfig setConnectionAttemptMillis(int connectionAttemptMillis) {
@@ -134,7 +124,6 @@ public class RemotingConfig implements RemotingManagerConfig {
                 ", port=" + port +
                 ", connectionAttempts=" + connectionAttempts +
                 ", connectionAttemptMillis=" + connectionAttemptMillis +
-                ", requireComponentNameSuffix=" + requireComponentNameSuffix +
                 '}';
     }
 
@@ -149,16 +138,14 @@ public class RemotingConfig implements RemotingManagerConfig {
         private final int port;
         private final int connectionAttempts;
         private final int connectionAttemptMillis;
-        private boolean requireComponentNameSuffix;
 
-        RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis, boolean requireComponentNameSuffix) {
+        RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis) {
             this.protocol = protocol;
             this.configName = configName;
             this.host = host;
             this.port = port;
             this.connectionAttempts = connectionAttempts;
             this.connectionAttemptMillis = connectionAttemptMillis;
-            this.requireComponentNameSuffix = requireComponentNameSuffix;
         }
 
         public String getProtocol() {
@@ -185,10 +172,6 @@ public class RemotingConfig implements RemotingManagerConfig {
             return connectionAttemptMillis;
         }
 
-        public boolean isRequireComponentNameSuffix() {
-            return requireComponentNameSuffix;
-        }
-
         @Override
         public String toString() {
             return "RuntimeRemotingConfig{" +
@@ -198,7 +181,6 @@ public class RemotingConfig implements RemotingManagerConfig {
                     ", port=" + port +
                     ", connectionAttempts=" + connectionAttempts +
                     ", connectionAttemptMillis=" + connectionAttemptMillis +
-                    ", requireComponentNameSuffix=" + requireComponentNameSuffix +
                     '}';
         }
     }

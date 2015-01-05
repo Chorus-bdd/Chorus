@@ -39,24 +39,26 @@ package org.chorusbdd.chorus.parser;
  */
 public enum KeyWord {
     
-    Uses("Uses:"),
-    Configurations("Configurations:"),
-    Feature("Feature:"),
-    Background("Background:"),
-    Scenario("Scenario:"),
-    ScenarioOutline("Scenario-Outline:"),
-    Examples("Examples:"),
-    StepMacro("Step-Macro:"),
-    FeatureStart("Feature-Start:"),
-    FeatureEnd("Feature-End:");
+    Uses("Uses:", false),
+    Configurations("Configurations:", false),
+    Feature("Feature:", false),
+    Background("Background:", true),
+    Scenario("Scenario:", true),
+    ScenarioOutline("Scenario-Outline:", true),
+    Examples("Examples:", false),
+    StepMacro("Step-Macro:", true),
+    FeatureStart("Feature-Start:", true),
+    FeatureEnd("Feature-End:", true);
 
     public static final String FEATURE_START_SCENARIO_NAME = "Feature-Start";
     public static final String FEATURE_END_SCENARIO_NAME = "Feature-End";
 
     private String keyWord;
+    private boolean supportsDirectives;
 
-    KeyWord(String keyWord) {
+    KeyWord(String keyWord, boolean supportsDirectives) {
         this.keyWord = keyWord;
+        this.supportsDirectives = supportsDirectives;
     }
 
     public String stringVal() {
@@ -66,7 +68,26 @@ public enum KeyWord {
     public boolean matchesLine(String line) {
         return line.startsWith(keyWord);
     }
-    
+
+    public boolean is(KeyWord k) {
+        return this == k;
+    }
+
+    public boolean isSupportsDirectives() {
+        return supportsDirectives;
+    }
+
+    public static KeyWord getKeyWord(String line) {
+        KeyWord result = null;
+        for ( KeyWord k : values() ) {
+            if ( line.startsWith(k.keyWord)) {
+                result = k;
+                break;
+            }
+        }
+        return result;
+    }
+
     public String toString() {
         return keyWord;
     }

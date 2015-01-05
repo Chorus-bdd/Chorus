@@ -12,6 +12,8 @@ Feature: Remoting No Component Name Suffix
   To make this work with a locally started process, the process must be configured with startMode=automatic so that
   Chorus can interrogate its exported steps when the remoting handler scenario initialization runs
 
+  #! Processes start NoComponentName
+  #! Remoting use NoComponentName
   Scenario: Call An Exported Method
     Check I can call a step method exported by the handler
     Check I can call a step method exported by the handler in NoComponentName
