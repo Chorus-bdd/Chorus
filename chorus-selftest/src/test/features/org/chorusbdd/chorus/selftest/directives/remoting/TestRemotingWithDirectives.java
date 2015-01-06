@@ -27,26 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.remoting.jmx.requiresuffix;
+package org.chorusbdd.chorus.selftest.directives.remoting;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 14/06/12
- * Time: 09:21
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-@Handler("Handler to Export from process")
-public class RemotingNoComponentNameHandler extends ChorusAssert {
+public class TestRemotingWithDirectives extends AbstractInterpreterTest {
 
-    @Step("I can call a step method exported by the handler")
-    public void canCallAMethod() {
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/directives/remoting";
+
+    final int expectedExitCode = 0;  //success
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    @Step(value = "I can declare a step pending remotely", pending = "This step is pending")
-    public void pendingStep() {
+    protected String getFeaturePath() {
+        return featurePath;
     }
+    
 }

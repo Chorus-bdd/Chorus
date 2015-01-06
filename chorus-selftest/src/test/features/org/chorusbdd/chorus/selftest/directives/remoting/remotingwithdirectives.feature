@@ -1,16 +1,10 @@
 Uses: Processes
 Uses: Remoting
 
-Feature: Remoting No Component Name Suffix
+Feature: Remoting With Directives
 
-  Test that we can set the remoting property requireComponentNameSuffix=false to make remote steps appear as local
-  steps (avoiding the suffix 'in componentName'
-
-  Using the suffix 'in componentName' should still work, so we have the choice to be explicit about which
-  process we are connecting to
-
-  To make this work with a locally started process, the process must be configured with startMode=automatic so that
-  Chorus can interrogate its exported steps when the remoting handler scenario initialization runs
+  Test that we can use processes and remoting handler directives to start processes and use step definitions
+  from remote components without the 'in componentName' step suffix
 
   #! Processes start NoComponentName
   Scenario: Call An Exported Method

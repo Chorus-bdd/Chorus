@@ -27,24 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.remoting.jmx.requiresuffix;
+package org.chorusbdd.chorus.selftest.directives.remoting;
 
-import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
- * Date: 04/07/12
- * Time: 09:16
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class StartAProcessMain {
+@Handler("Remoting Handler For Export")
+public class RemotingHandlerForExport extends ChorusAssert {
 
-    public static void main(String[] args) throws InterruptedException {
-        RemotingNoComponentNameHandler handler = new RemotingNoComponentNameHandler();
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
-        exporter.export();
-
-        Thread.sleep(60000);
+    @Step("I can call a step method exported by the handler")
+    public void canCallAMethod() {
     }
-
 }

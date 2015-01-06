@@ -27,29 +27,24 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.remoting.jmx.requiresuffix;
+package org.chorusbdd.chorus.selftest.directives.remoting;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
+import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 25/06/12
- * Time: 22:14
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 04/07/12
+ * Time: 09:16
  */
-public class TestRemotingNoComponentNameSuffix extends AbstractInterpreterTest {
+public class StartAProcessMain {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/requiresuffix";
+    public static void main(String[] args) throws InterruptedException {
+        RemotingHandlerForExport handler = new RemotingHandlerForExport();
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
+        exporter.export();
 
-    final int expectedExitCode = 0;  //success
-
-    protected int getExpectedExitCode() {
-        return expectedExitCode;
+        Thread.sleep(60000);
     }
 
-    protected String getFeaturePath() {
-        return featurePath;
-    }
-    
 }
