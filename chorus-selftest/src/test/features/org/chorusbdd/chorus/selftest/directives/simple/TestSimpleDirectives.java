@@ -37,7 +37,7 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestRemotingWithDirectives extends AbstractInterpreterTest {
+public class TestSimpleDirectives extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/directives/simple";
 

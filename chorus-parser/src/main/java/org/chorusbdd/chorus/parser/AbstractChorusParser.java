@@ -62,9 +62,6 @@ public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
     }
 
     protected StepToken addStepToScenario(ScenarioToken scenarioToken, StepToken stepToken, List<StepMacro> stepMacros) {
-
-        addBufferedDirectives(scenarioToken);
-
         //we first see if the step matches any StepMacros which were defined during pre-parsing
         //and if so populate child steps
 
@@ -80,7 +77,7 @@ public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
 
     //if there were any directives associated with the step (or the preceding scenario statement)
     //then we need to add them first
-    private void addBufferedDirectives(ScenarioToken scenarioToken) {
+    protected void addBufferedDirectives(ScenarioToken scenarioToken) {
         for(StepToken d : bufferedDirectives) {
             scenarioToken.addStep(d);
         }

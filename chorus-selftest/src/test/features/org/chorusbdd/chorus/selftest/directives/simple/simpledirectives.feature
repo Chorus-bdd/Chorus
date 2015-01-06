@@ -1,26 +1,47 @@
-Uses: Processes
-Uses: Remoting
+
 
 Feature: Simple Directives
 
-  #! Processes start NoComponentName
-  Scenario: Call An Exported Method
-    Check I can call a step method exported by the handler                        #! Remoting use NoComponentName
+  Directives can be placed before a Scenario: statement or appended to a step
 
-  #! Processes start NoComponentName
-  #! Remoting use NoComponentName
-  Scenario: Call An Exported Method
-    Check I can call a step method exported by the handler
+  #! Directive One
+  Scenario: Directive Before Scenario
+    Given I can run a Step
+    When I can run a Step
+    Then I can run a Step
+
+  #! Directive One
+  #! Directive Two
+  Scenario: Two Directives Before Scenario
+    Given I can run a Step
+    When I can run a Step
+    Then I can run a Step
+
+  #! Directive One   #! Directive Two
+  Scenario: Two Directives Before Scenario combined in a line
+    Given I can run a Step
+    When I can run a Step
+    Then I can run a Step
+
+  #! Directive One
+  # Blank line or comments here make no difference, the directive still gets associated with the next scenario
+
+  #!    Directive Two
+  Scenario: Two Directives Before Scenario with intervening blank line and comment
+    Given I can run a Step
+    When I can run a Step
+    Then I can run a Step
 
 
-  #! Processes start NoComponentName #! Remoting use NoComponentName
-  Scenario: Call An Exported Method
-    Check I can call a step method exported by the handler
+  Scenario: Directives after a step get run before the step
+    Given I can run a Step        #! Directive One
+    When I can run a Step
+    Then I can run a Step
 
-
-  Scenario: Call An Exported Method
-    Check I can call a step method exported by the handler                        #! Processes start NoComponentName  #! Remoting use NoComponentName
-
+  Scenario: Two Directives after a step get inserted before the step
+    Given I can run a Step        #! Directive One
+    When I can run a Step         #! Directive One   #! Directive Two
+    Then I can run a Step
 
 
 

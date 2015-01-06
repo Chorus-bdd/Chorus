@@ -162,6 +162,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             if (KeyWord.Background.is(keyWord)) {
                 backgroundScenario = createScenario("Background", backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_SCENARIO_BACKGROUND_STEPS;
+                addBufferedDirectives(backgroundScenario);
                 continue;
             }
 
@@ -177,6 +178,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 currentScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
+                addBufferedDirectives(currentScenario);
                 continue;
             }
 
@@ -193,6 +195,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 currentScenario = createScenario(KeyWord.FEATURE_START_SCENARIO_NAME, null, null, null);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
+                addBufferedDirectives(currentScenario);
                 continue;
             }
 
@@ -207,6 +210,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 currentScenario = createScenario(KeyWord.FEATURE_END_SCENARIO_NAME, null, null, null);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
+                addBufferedDirectives(currentScenario);
                 continue;
             }
 
@@ -216,6 +220,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 examplesTableHeaders = null;//reset the examples table
                 parserState = READING_SCENARIO_OUTLINE_STEPS;
+                addBufferedDirectives(outlineScenario);
                 continue;
             }
 
@@ -235,15 +240,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     currentFeature.appendToDescription(line);
                     break;
                 case READING_SCENARIO_BACKGROUND_STEPS:
-                    addStepToScenario(backgroundScenario, createStepToken(line), allStepMacro);
+                    addStepAndDirectives(backgroundScenario, createStepToken(line), allStepMacro);
                     break;
                 case READING_SCENARIO_OUTLINE_STEPS:
                     //pass empty list of macros -
                     //we don't want to expand macros upfront since the outline step contain placeholders which must be expanded first
-                    addStepToScenario(outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList());
+                    addStepAndDirectives(outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList());
                     break;
                 case READING_SCENARIO_STEPS:
-                    addStepToScenario(currentScenario, createStepToken(line), allStepMacro);
+                    addStepAndDirectives(currentScenario, createStepToken(line), allStepMacro);
                     break;
                 case READING_EXAMPLES_TABLE:
                     if( getDirectiveCount() > 0) {
@@ -302,6 +307,11 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         }
         return results;
 
+    }
+
+    private void addStepAndDirectives(ScenarioToken scenario, StepToken stepToken, List<StepMacro> stepMacros) {
+        addBufferedDirectives(scenario);
+        addStepToScenario(scenario, stepToken, stepMacros);
     }
 
     private void checkNoCurrentFeature(FeatureToken currentFeature, int lineNumber, String message) throws ParseException {

@@ -42,7 +42,22 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 @Handler("Simple Directives")
 public class SimpleDirectiveHandler extends ChorusAssert {
 
-    @Step("I can call a step method exported by the handler")
-    public void canCallAMethod() {
+    @Step("Directive One.*")
+    public void directiveOne() {
+    }
+
+    @Step("Directive Two.*")
+    public String directiveTwo() {
+        return "OK";
+    }
+
+    @Step("Directive (Three|Four|Five|Six).*")
+    public String otherDirective(String directive) {
+        return directive;
+    }
+
+    @Step("I can run a (.*)")
+    public void runAStep(String description) {
+
     }
 }
