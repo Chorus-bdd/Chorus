@@ -1,0 +1,8 @@
+Chorus --> WARN    - Failed to parse feature file src/test/features/org/chorusbdd/chorus/selftest/directives/parsingerror/nodirectivebeforeexamples.feature will skip this feature file
+Chorus --> WARN    - Cannot add any directives (#!) before keyword Examples: (at line:14)
+Chorus --> WARN    - Failed to parse feature file src/test/features/org/chorusbdd/chorus/selftest/directives/parsingerror/nodirectivebeforefeaturestatement.feature will skip this feature file
+Chorus --> WARN    - Cannot add any directives (#!) before keyword Feature: (at line:4)
+
+Features  (total:2) (passed:0) (failed:2)
+Scenarios (total:0) (passed:0) (failed:0)
+Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)
