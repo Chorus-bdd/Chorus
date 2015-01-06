@@ -13,10 +13,22 @@ Feature: Remoting No Component Name Suffix
   Chorus can interrogate its exported steps when the remoting handler scenario initialization runs
 
   #! Processes start NoComponentName
+  Scenario: Call An Exported Method
+    Check I can call a step method exported by the handler                        #! Remoting use NoComponentName
+
+  #! Processes start NoComponentName
   #! Remoting use NoComponentName
   Scenario: Call An Exported Method
     Check I can call a step method exported by the handler
-    Check I can call a step method exported by the handler in NoComponentName
+
+
+  #! Processes start NoComponentName #! Remoting use NoComponentName
+  Scenario: Call An Exported Method
+    Check I can call a step method exported by the handler
+
+
+  Scenario: Call An Exported Method
+    Check I can call a step method exported by the handler                        #! Processes start NoComponentName  #! Remoting use NoComponentName
 
 
 

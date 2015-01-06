@@ -89,21 +89,20 @@ public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
 
 
     protected String parseDirectives(String line) {
-        int directiveIndex = line.lastIndexOf(StepToken.DIRECTIVE_TYPE);
-        while(directiveIndex != -1) {
-            addDirective(line.substring(directiveIndex));
-            line = line.substring(0, directiveIndex);
-            directiveIndex = line.lastIndexOf(StepToken.DIRECTIVE_TYPE);
+        String[] tokens = line.split(StepToken.DIRECTIVE_TYPE);
+
+        //the first token is the step type and action, followed by zero or more directives
+        //we want to process the directives and return the step text with the directives stripped
+        for ( int loop=1; loop < tokens.length; loop++) {
+            addBufferedDirective(tokens[loop].trim());
         }
-        return line;
+        return tokens[0];
     }
 
 
-    private void addDirective(String directive) {
-        assert(directive.startsWith("#!"));
-        String action = directive.substring(2).trim();
-        if ( action.length() > 0) {
-            StepToken s = StepToken.createDirective(action);
+    private void addBufferedDirective(String directive) {
+        if ( directive.length() > 0) {
+            StepToken s = StepToken.createDirective(directive);
             bufferedDirectives.add(s);
         }
     }
