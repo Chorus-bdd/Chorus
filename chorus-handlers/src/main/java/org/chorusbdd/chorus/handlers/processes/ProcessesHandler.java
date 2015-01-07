@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
@@ -42,7 +43,6 @@ import org.chorusbdd.chorus.util.ChorusException;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
@@ -84,7 +84,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
         return instancesStarted == 0 ? processName : String.format("%s-%d", processName, instancesStarted + 1);
     }
 
-    @Step(".*start an? (.+) process named ([a-zA-Z0-9-_]*).*?")
+    @Step(".*start an? (.+) process named " + HandlerPatterns.processNamePattern + ".*?")
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
         ProcessesConfig config = getConfig(configName);
         startProcess(config, processName);
@@ -95,92 +95,92 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
         processManager.startProcess(processName, processInfo);
     }
 
-    @Step(".*stop (?:the )?process (?:named )?([a-zA-Z0-9-_]+).*?")
+    @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")
     public void stopProcess(String processName) {
         processManager.stopProcess(processName);
     }
 
-    @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) (?:is |has )(?:stopped|terminated).*?")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " (?:is |has )(?:stopped|terminated).*?")
     public void checkProcessHasStopped(String processName) {
         processManager.checkProcessHasStopped(processName);
     }
 
-    @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) is running")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " is running")
     public void checkProcessIsRunning(String processName) {
         processManager.checkProcessIsRunning(processName);
     }
 
-    @Step(".*?(?:the process )?(?:named )?([a-zA-Z0-9-_]+) is not running")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " is not running")
     public void checkProcessIsNotRunning(String processName) {
         processManager.checkProcessIsNotRunning(processName);
     }
 
-    @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?([a-zA-Z0-9-_]+) to (?:stop|terminate).*?")
+    @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " to (?:stop|terminate).*?")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
         processManager.waitForProcessToTerminate(processName, waitSeconds);
     }
 
-    @Step(".*wait for (?:the process )?(?:named )?([a-zA-Z0-9-_]*) to (?:stop|terminate).*?")
+    @Step(".*wait for (?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " to (?:stop|terminate).*?")
     public void waitForProcessToTerminate(String processName) {
         processManager.waitForProcessToTerminate(processName);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process")
     public void readLineFromProcess(String pattern, String processName) {
         processManager.readFromProcess(pattern, processName, false);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error")
     public void readLineFromProcessStdError(String pattern, String processName) {
         processManager.readFromProcessStdError(pattern, processName, false);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process within (\\d+) second(?:s)?")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process within (\\d+) second(?:s)?")
     public void readLineFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessWithinNSeconds(pattern, processName, false, seconds);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error within (\\d+) second(?:s)?")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error within (\\d+) second(?:s)?")
     public void readLineFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessStdErrorWithinNSeconds(pattern, processName, false, seconds);
     }
 
-    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process")
     public void readFromProcess(String pattern, String processName) {
         processManager.readFromProcess(pattern, processName, true);
     }
 
-    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error")
     public void readFromProcessStdError(String pattern, String processName) {
         processManager.readFromProcessStdError(pattern, processName, true);
     }
 
-    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process within (\\d+) second(?:s)?")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process within (\\d+) second(?:s)?")
     public void readFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessWithinNSeconds(pattern, processName, true, seconds);
     }
 
-    @Step(".*read '(.*)' from (?:the )?([a-zA-Z0-9-_]*) process std error within (\\d+) second(?:s)?")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error within (\\d+) second(?:s)?")
     public void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessStdErrorWithinNSeconds(pattern, processName, true, seconds);
     }
 
-    @Step(".*write the line '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process")
+    @Step(".*write the line '(.*)' to (?:the )?" + HandlerPatterns.processNamePattern + " process")
     public void writeLineToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, true);
     }
 
-    @Step(".*write '(.*)' to (?:the )?([a-zA-Z0-9-_]*) process")
+    @Step(".*write '(.*)' to (?:the )?" + HandlerPatterns.processNamePattern + " process")
     public void writeToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, false);
     }
 
-    @Step("Processes start ([a-zA-Z0-9-_]*)")
+    //A Directive which can be used to start one or more processes using the config name
+    @Step("Processes start " + HandlerPatterns.processNameListPattern)
     public void startProcessDirective(String processNameList) throws Exception {
-        StringTokenizer st = new StringTokenizer(processNameList);
-        while(st.hasMoreTokens()) {
-            String processName = st.nextToken();
-            startProcessFromConfig(processName);
+        List<String> processNames = HandlerPatterns.getProcessNames(processNameList);
+        for ( String p : processNames) {
+            startProcessFromConfig(p);
         }
     }
 

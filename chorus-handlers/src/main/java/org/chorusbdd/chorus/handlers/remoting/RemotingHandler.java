@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileAndDbConfigLoader;
+import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
@@ -94,17 +95,21 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    @Step("(.*) (?:in|from) ([a-zA-Z0-9_-]+)$")
+    @Step("(.*) (?:in|from) " + HandlerPatterns.processNamePattern + "$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
         return remotingManager.performActionInRemoteComponent(action, remotingConfig.buildRemotingManagerConfig());
     }
 
-    @Step("Remoting use ([a-zA-Z0-9_-]+)")
-    public void useRemoteComponent(String componentName) {
-        RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
+    //A Directive which can be used to start one or more processes using the config name
+    @Step("Remoting use " + HandlerPatterns.processNameListPattern)
+    public void startProcessDirective(String processNameList) throws Exception {
+        List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
         remoteInvokersToUse.clear();
-        remoteInvokersToUse.addAll(remotingManager.getStepInvokers(remotingConfig));
+        for ( String p : componentNames) {
+            RemotingConfig remotingConfig = getRemotingConfigForComponent(p);
+            remoteInvokersToUse.addAll(remotingManager.getStepInvokers(remotingConfig));
+        }
     }
 
     @Initialize(scope = Scope.FEATURE)
