@@ -66,11 +66,14 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
         boolean readingStepMacro = false;
         String line;
         StepMacro currentMacro = null;
+        int lineNumber = 0;
         while ((line = reader.readLine()) != null) {
 
             line = line.trim();
 
-            line = parseDirectives(line);
+            lineNumber++;
+
+            line = removeAndBufferDirectives(line);
 
             if (line.length() == 0 || line.startsWith("#")) {
                 continue;//ignore blank lines and comments
@@ -98,12 +101,14 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
                 readingStepMacro = true;
                 currentMacro = new StepMacro(line.substring(KeyWord.StepMacro.stringVal().length()).trim());
                 result.add(currentMacro);
+                addKeyWordDirectives(new StepMacroStepConsumer(currentMacro), lineNumber);
                 continue;
             }
 
             if ( readingStepMacro ) {
                 StepToken s = createStepToken(line);
                 currentMacro.addStep(s);
+                addStepDirectives(new StepMacroStepConsumer(currentMacro), lineNumber);
             }
 
             //if we encounter any non-blank line (a step) which is not a StepMacro step and not a StepMacro definition
@@ -136,4 +141,5 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
             }
         }
     }
+
 }
