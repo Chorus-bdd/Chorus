@@ -67,13 +67,14 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
         String line;
         StepMacro currentMacro = null;
         int lineNumber = 0;
+        DirectiveParser directiveParser = new DirectiveParser();
         while ((line = reader.readLine()) != null) {
 
             line = line.trim();
 
             lineNumber++;
 
-            line = removeAndBufferDirectives(line);
+            line = directiveParser.parseDirectives(line, lineNumber);
 
             if (line.length() == 0 || line.startsWith("#")) {
                 continue;//ignore blank lines and comments
@@ -92,7 +93,7 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
             for ( KeyWord w : KeyWord.values()) {
                 if (w.matchesLine(line) && w != KeyWord.StepMacro) {
                     readingStepMacro = false;
-                    clearDirectives();
+                    directiveParser.clearDirectives();
                     continue;
                 }
             }
@@ -101,19 +102,19 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
                 readingStepMacro = true;
                 currentMacro = new StepMacro(line.substring(KeyWord.StepMacro.stringVal().length()).trim());
                 result.add(currentMacro);
-                addKeyWordDirectives(new StepMacroStepConsumer(currentMacro), lineNumber);
+                directiveParser.addKeyWordDirectives(new StepMacroStepConsumer(currentMacro));
                 continue;
             }
 
             if ( readingStepMacro ) {
                 StepToken s = createStepToken(line);
+                directiveParser.addStepDirectives(new StepMacroStepConsumer(currentMacro));
                 currentMacro.addStep(s);
-                addStepDirectives(new StepMacroStepConsumer(currentMacro), lineNumber);
             }
 
             //if we encounter any non-blank line (a step) which is not a StepMacro step and not a StepMacro definition
             //then we need to clear any directives or they will end up being sucked into the following step macro
-            clearDirectives();
+            directiveParser.clearDirectives();
         }
 
         removeEmptyMacros(result);

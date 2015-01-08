@@ -1,8 +1,10 @@
 Chorus --> WARN    - Failed to parse feature file src/test/features/org/chorusbdd/chorus/selftest/directives/parsingerror/nodirectivebeforeexamples.feature will skip this feature file
-Chorus --> WARN    - Cannot add any directives (#!) before keyword Examples: (at line:14)
+Chorus --> WARN    - Cannot add directive [#! This directive should cause a parser error] before the keyword Examples: (at line:13)
 Chorus --> WARN    - Failed to parse feature file src/test/features/org/chorusbdd/chorus/selftest/directives/parsingerror/nodirectivebeforefeaturestatement.feature will skip this feature file
-Chorus --> WARN    - Cannot add any directives (#!) before keyword Feature: (at line:4)
+Chorus --> WARN    - Cannot add directive [#! This directive should cause a parser error] before the keyword Feature: (at line:3)
+Chorus --> WARN    - Failed to parse feature file src/test/features/org/chorusbdd/chorus/selftest/directives/parsingerror/nokeyworddirectivesinscenario.feature will skip this feature file
+Chorus --> WARN    - Invalid location for directive #! Directive Three This should cause a parser error since it is a keyword directive on its own line (at line:12)
 
-Features  (total:2) (passed:0) (failed:2)
+Features  (total:3) (passed:0) (failed:3)
 Scenarios (total:0) (passed:0) (failed:0)
 Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -1,6 +1,6 @@
 
 
-Feature: No New Line Directives Between Steps
+Feature: No Keyword Directives During Scenario
 
   During a scenario directives can be appended to step lines but cannot appear on their own line
   Otherwise it would not be clear if a directive which appears last within a scenario
@@ -9,6 +9,6 @@ Feature: No New Line Directives Between Steps
   #! Directive One is OK
   Scenario: Directive Before Scenario
     Given I can run a Step      #! Directive Two is OK
-    #! Directive Three This should cause a parser error
+    #! Directive Three This should cause a parser error since it is a keyword directive on its own line
     When I can run a Step
     Then I can run a Step

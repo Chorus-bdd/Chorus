@@ -116,11 +116,14 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         String line = null;
 
         int lineNumber = 0;
+
+        DirectiveParser directiveParser = new DirectiveParser();
+
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             lineNumber++;
 
-            line = removeAndBufferDirectives(line);
+            line = directiveParser.parseDirectives(line, lineNumber);
 
             if (isEmptyLineOrComment(line)) {
                 continue;//ignore blank lines and comments
@@ -136,8 +139,8 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             }
 
             KeyWord keyWord = KeyWord.getKeyWord(line);
-            if ( keyWord != null && ! keyWord.isSupportsDirectives() && getKeyWordDirectives().size() > 0) {
-                throw new ParseException("Cannot add any directives (#!) before keyword " + keyWord, lineNumber);
+            if ( keyWord != null ) {
+                checkDirectivesForKeyword(directiveParser, keyWord);
             }
 
             if (KeyWord.Uses.is(keyWord)) {
@@ -162,7 +165,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             if (KeyWord.Background.is(keyWord)) {
                 backgroundScenario = createScenario("Background", backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_SCENARIO_BACKGROUND_STEPS;
-                addKeyWordDirectives(new ScenarioTokenStepConsumer(backgroundScenario), lineNumber);
+                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(backgroundScenario));
                 continue;
             }
 
@@ -178,7 +181,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 currentScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
-                addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario), lineNumber);
+                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
                 continue;
             }
 
@@ -195,7 +198,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 currentScenario = createScenario(KeyWord.FEATURE_START_SCENARIO_NAME, null, null, null);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
-                addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario), lineNumber);
+                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
                 continue;
             }
 
@@ -210,7 +213,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 currentScenario = createScenario(KeyWord.FEATURE_END_SCENARIO_NAME, null, null, null);
                 currentFeature.addScenario(currentScenario);
                 parserState = READING_SCENARIO_STEPS;
-                addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario), lineNumber);
+                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
                 continue;
             }
 
@@ -220,7 +223,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 examplesTableHeaders = null;//reset the examples table
                 parserState = READING_SCENARIO_OUTLINE_STEPS;
-                addKeyWordDirectives(new ScenarioTokenStepConsumer(outlineScenario), lineNumber);
+                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(outlineScenario));
                 continue;
             }
 
@@ -240,15 +243,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     currentFeature.appendToDescription(line);
                     break;
                 case READING_SCENARIO_BACKGROUND_STEPS:
-                    addStepAndStepDirectives(backgroundScenario, createStepToken(line), allStepMacro, lineNumber);
+                    addStepAndStepDirectives(directiveParser, backgroundScenario, createStepToken(line), allStepMacro);
                     break;
                 case READING_SCENARIO_OUTLINE_STEPS:
                     //pass empty list of macros -
                     //we don't want to expand macros upfront since the outline step contain placeholders which must be expanded first
-                    addStepAndStepDirectives(outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList(), lineNumber);
+                    addStepAndStepDirectives(directiveParser, outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList());
                     break;
                 case READING_SCENARIO_STEPS:
-                    addStepAndStepDirectives(currentScenario, createStepToken(line), allStepMacro, lineNumber);
+                    addStepAndStepDirectives(directiveParser, currentScenario, createStepToken(line), allStepMacro);
                     break;
                 case READING_EXAMPLES_TABLE:
                     if (examplesTableHeaders == null) {
@@ -306,8 +309,34 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     }
 
-    private void addStepAndStepDirectives(ScenarioToken scenario, StepToken stepToken, List<StepMacro> stepMacros, int lineNumber) throws ParseException {
-        addStepDirectives(new ScenarioTokenStepConsumer(scenario), lineNumber);
+    //We can never have step directives associated with a keyword
+    //If a keyword supports directives, then we can have one more more 'keyword' directives but no 'step' directives before a keyword
+    private void checkDirectivesForKeyword(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
+        checkNoStepDirectiveBeforeKeyword(directiveParser, keyWord);
+        checkForInvalidKeywordDirective(directiveParser, keyWord);
+    }
+
+    private void checkForInvalidKeywordDirective(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
+        if (directiveParser.keywordDirectivesExist() && ! keyWord.isSupportsDirectives()) {
+            LineNumberAndDirective d = directiveParser.getFirstKeywordDirective();
+            throw new ParseException("Cannot add directive [" + d.getDirective() + "] before the keyword " + keyWord, d.getLine());
+        }
+    }
+
+    private void checkNoStepDirectiveBeforeKeyword(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
+        if (directiveParser.stepDirectivesExist()) {
+            LineNumberAndDirective d = directiveParser.getFirstStepDirective();
+            throw new ParseException("Cannot add step directive [" + d.getDirective() + "] before keyword" + keyWord, d.getLine());
+        }
+    }
+
+    private void addStepAndStepDirectives(
+            DirectiveParser directiveParser,
+            ScenarioToken scenario,
+            StepToken stepToken,
+            List<StepMacro> stepMacros) throws ParseException {
+
+        directiveParser.addStepDirectives(new ScenarioTokenStepConsumer(scenario));
         addStepToScenario(scenario, stepToken, stepMacros);
     }
 
