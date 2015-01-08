@@ -234,6 +234,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
             if (KeyWord.StepMacro.is(keyWord)) {
                 parserState = READING_STEP_MACRO;
+                directiveParser.clearDirectives();
                 continue;
             }
 
@@ -285,12 +286,15 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     break;
                 case READING_STEP_MACRO:
                     //take no action since step macros are pre-parsed before we start main feature file parsing.
+                    directiveParser.clearDirectives();  //don't want to keep any directives associated with step macro
                     break;
                 default:
                     throw new ParseException("Parse error, unexpected text '" + line + "'", lineNumber);
 
             }
         }
+
+        directiveParser.checkForUnprocessedDirectives();
 
         List<FeatureToken> results = new ArrayList<FeatureToken>();
         if (currentFeature != null) {

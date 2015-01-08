@@ -6,6 +6,31 @@ import java.util.*;
 
 /**
  * Created by GA2EBBU on 08/01/2015.
+ *
+ * <pre>
+ * This class contains the logic to parse and process directives
+ *
+ * A directive is prefixed with #! and can appear in two forms:
+ *
+ * a) keyword-directive
+ *
+ * 'Keyword' directives can appear before some keywords, such as Scenario:
+ * See the KeyWord enumeration which makes clear which keywords permit directives.
+ * These appear on their own line, as below:
+ *
+ * #! My Directive One
+ * #! My Directive Two  #! My Directive Three
+ * Scenario: My Scenario
+ *
+ *
+ * b) step-directive
+ *
+ * One or more 'Step' directives can be appended to a step, e.g.
+ *
+ * Given I run a step      #! My Directive One
+ * When I run a step       #! My Directive One   #! My Directive Two
+ *
+ * </pre>
  */
 public class DirectiveParser {
 
@@ -114,4 +139,14 @@ public class DirectiveParser {
         return bufferedStepDirectives.get(0);
     }
 
+    //this catches for any unprocessed directives at the end of parsing
+    public void checkForUnprocessedDirectives() throws ParseException {
+        List<LineNumberAndDirective> remaining = new LinkedList<>();
+        remaining.addAll(bufferedKeyWordDirectives);
+        remaining.addAll(bufferedStepDirectives);
+        if ( remaining.size() > 0) {
+            LineNumberAndDirective exampleError = remaining.get(0);
+            throw new ParseException("Invalid trailing directive [" + exampleError.getDirective() + "]", exampleError.getLine());
+        }
+    }
 }

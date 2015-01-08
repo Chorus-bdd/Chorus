@@ -1,0 +1,5 @@
+
+#! Directive One
+Step-Macro: I run a Step Macro Standalone
+   Given macro step 1                                               #! Directive Two
+   Then macro step 2                                                #! Directive Three    #! Directive Four
