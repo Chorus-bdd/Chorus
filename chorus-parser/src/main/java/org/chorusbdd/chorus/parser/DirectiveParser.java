@@ -45,6 +45,32 @@ public class DirectiveParser {
         addAndClearDirectives(bufferedKeyWordDirectives, c);
     }
 
+    //We can never have step directives associated with a keyword
+    //If a keyword supports directives, then we can have one more more 'keyword' directives but no 'step' directives before a keyword
+    public void checkDirectivesForKeyword(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
+        checkNoStepDirectiveBeforeKeyword(directiveParser, keyWord);
+        checkForInvalidKeywordDirective(directiveParser, keyWord);
+    }
+
+    public void clearDirectives() {
+        bufferedStepDirectives.clear();
+        bufferedKeyWordDirectives.clear();
+    }
+
+    private void checkForInvalidKeywordDirective(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
+        if (directiveParser.keywordDirectivesExist() && ! keyWord.isSupportsDirectives()) {
+            LineNumberAndDirective d = directiveParser.getFirstKeywordDirective();
+            throw new ParseException("Cannot add directive [" + d.getDirective() + "] before the keyword " + keyWord, d.getLine());
+        }
+    }
+
+    private void checkNoStepDirectiveBeforeKeyword(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
+        if (directiveParser.stepDirectivesExist()) {
+            LineNumberAndDirective d = directiveParser.getFirstStepDirective();
+            throw new ParseException("Cannot add step directive [" + d.getDirective() + "] before keyword" + keyWord, d.getLine());
+        }
+    }
+
     private void logErrorIfDirectivesExist(List<LineNumberAndDirective> directives) throws ParseException {
         if ( directives.size() > 0) {
             LineNumberAndDirective firstInvalidDirective = directives.get(0);
@@ -72,24 +98,19 @@ public class DirectiveParser {
         }
     }
 
-    public void clearDirectives() {
-        bufferedStepDirectives.clear();
-        bufferedKeyWordDirectives.clear();
-    }
-
-    public boolean stepDirectivesExist() {
+    private boolean stepDirectivesExist() {
         return bufferedStepDirectives.size() > 0;
     }
 
-    public boolean keywordDirectivesExist() {
+    private boolean keywordDirectivesExist() {
         return bufferedKeyWordDirectives.size() > 0;
     }
 
-    public LineNumberAndDirective getFirstKeywordDirective() {
+    private LineNumberAndDirective getFirstKeywordDirective() {
         return bufferedKeyWordDirectives.get(0);
     }
 
-    public LineNumberAndDirective getFirstStepDirective() {
+    private LineNumberAndDirective getFirstStepDirective() {
         return bufferedStepDirectives.get(0);
     }
 

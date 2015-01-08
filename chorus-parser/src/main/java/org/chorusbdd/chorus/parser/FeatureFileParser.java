@@ -140,7 +140,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
             KeyWord keyWord = KeyWord.getKeyWord(line);
             if ( keyWord != null ) {
-                checkDirectivesForKeyword(directiveParser, keyWord);
+                directiveParser.checkDirectivesForKeyword(directiveParser, keyWord);
             }
 
             if (KeyWord.Uses.is(keyWord)) {
@@ -228,7 +228,6 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             }
 
             if (KeyWord.Examples.is(keyWord)) {
-                //backgroundScenario = createScenario(line, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                 parserState = READING_EXAMPLES_TABLE;
                 continue;
             }
@@ -307,27 +306,6 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         }
         return results;
 
-    }
-
-    //We can never have step directives associated with a keyword
-    //If a keyword supports directives, then we can have one more more 'keyword' directives but no 'step' directives before a keyword
-    private void checkDirectivesForKeyword(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
-        checkNoStepDirectiveBeforeKeyword(directiveParser, keyWord);
-        checkForInvalidKeywordDirective(directiveParser, keyWord);
-    }
-
-    private void checkForInvalidKeywordDirective(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
-        if (directiveParser.keywordDirectivesExist() && ! keyWord.isSupportsDirectives()) {
-            LineNumberAndDirective d = directiveParser.getFirstKeywordDirective();
-            throw new ParseException("Cannot add directive [" + d.getDirective() + "] before the keyword " + keyWord, d.getLine());
-        }
-    }
-
-    private void checkNoStepDirectiveBeforeKeyword(DirectiveParser directiveParser, KeyWord keyWord) throws ParseException {
-        if (directiveParser.stepDirectivesExist()) {
-            LineNumberAndDirective d = directiveParser.getFirstStepDirective();
-            throw new ParseException("Cannot add step directive [" + d.getDirective() + "] before keyword" + keyWord, d.getLine());
-        }
     }
 
     private void addStepAndStepDirectives(
