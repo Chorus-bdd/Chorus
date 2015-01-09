@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.results;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,6 +54,8 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     private String name;
     private String[] usesHandlers;
     private String configurationName = BASE_CONFIGURATION;
+    private List<String> allConfigurationNames = Collections.singletonList(BASE_CONFIGURATION);
+
     private StringBuilder description = new StringBuilder();
     private List<ScenarioToken> scenarios = new ArrayList<ScenarioToken>();
     private transient File featureFile;
@@ -99,6 +102,18 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
 
     public void setConfigurationName(String configurationName) {
         this.configurationName = configurationName;
+    }
+
+    /**
+     * All configurations available for this feature
+     * (n.b. if we add 'profiles' not all these configurations may get run depending on interpreter profile)
+     */
+    public List<String> getAllConfigurationNames() {
+        return allConfigurationNames;
+    }
+
+    public void setAllConfigurationNames(List<String> allConfigurationNames) {
+        this.allConfigurationNames = allConfigurationNames;
     }
 
     public void appendToDescription(String line) {

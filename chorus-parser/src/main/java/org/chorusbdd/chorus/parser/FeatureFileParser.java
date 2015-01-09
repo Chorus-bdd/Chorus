@@ -304,6 +304,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                 for (String name : configurationNames) {
                     FeatureToken copy = currentFeature.deepCopy();
                     copy.setConfigurationName(name);
+                    copy.setAllConfigurationNames(configurationNames);
                     results.add(copy);
                 }
             }

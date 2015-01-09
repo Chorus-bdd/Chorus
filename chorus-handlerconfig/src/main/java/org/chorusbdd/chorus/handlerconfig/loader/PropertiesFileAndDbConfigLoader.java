@@ -35,7 +35,7 @@ import java.util.Properties;
  * property   - the property key to set
  * value      - the property value to set
  */
-public class PropertiesFileAndDbConfigLoader<E extends HandlerConfig> implements ConfigLoader<E> {
+public class PropertiesFileAndDbConfigLoader<E extends HandlerConfig> implements GroupedConfigLoader<E> {
 
     private HandlerConfigFactory<E> configFactory;
     private String handlerName;

@@ -47,7 +47,7 @@ import java.util.*;
  * Load properties from a PropertiesSource and convert them to
  * Handler specific configs using a HandlerConfigFactory
  */
-public class DefaultConfigLoader<E extends HandlerConfig> implements ConfigLoader<E> {
+public class DefaultConfigLoader<E extends HandlerConfig> implements GroupedConfigLoader<E> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(DefaultConfigLoader.class);
     private static final Properties EMPTY_PROPERTIES = new Properties();

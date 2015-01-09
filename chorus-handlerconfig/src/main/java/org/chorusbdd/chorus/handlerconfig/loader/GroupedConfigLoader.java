@@ -6,8 +6,10 @@ import java.util.Map;
 
 /**
  * Created by nick on 03/10/2014.
+ *
+ * Loads config properties in grouped by a String key
  */
-public interface ConfigLoader<E extends HandlerConfig> {
+public interface GroupedConfigLoader<E extends HandlerConfig> {
 
     Map<String, E> loadConfigs();
 }
