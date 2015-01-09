@@ -41,20 +41,20 @@ public class FeaturePropertyLoaderFactory {
     /**
      * @return a List of precedence-sorted PropertyLoader with the highest precedence loaders last
      */
-    public List<PropertyLoader> createPropertyLoaders(FeatureToken featureToken, String configurationName, String handlerSuffix) {
+    public List<PropertyLoader> createPropertyLoaders(FeatureToken featureToken, String configurationName, String handlerName) {
         List<PropertyLoader> results = new LinkedList<>();
-        String handlerPrefix = handlerSuffix + ".";
+        String handlerPrefix = handlerName + ".";
 
         File featureDir = featureToken.getFeatureDir();
         File featureConfDir = new File(featureDir, "conf");
 
         results.add(new ClassPathPropertyLoader(FeaturePropertyLoaderFactory.class, "/chorus.properties"));
-        results.add(new PrefixingPropertyLoader(new ClassPathPropertyLoader(FeaturePropertyLoaderFactory.class, "/chorus-" + handlerSuffix + ".properties"), handlerPrefix));
+        results.add(new PrefixingPropertyLoader(new ClassPathPropertyLoader(FeaturePropertyLoaderFactory.class, "/chorus-" + handlerName + ".properties"), handlerPrefix));
 
-        results.addAll(addPropertiesForConfigDir(featureDir, featureToken, configurationName, handlerSuffix, handlerPrefix));
-        results.addAll(addPropertiesForConfigDir(featureConfDir, featureToken, configurationName, handlerSuffix, handlerPrefix));
+        results.addAll(addPropertiesForConfigDir(featureDir, featureToken, configurationName, handlerName, handlerPrefix));
+        results.addAll(addPropertiesForConfigDir(featureConfDir, featureToken, configurationName, handlerName, handlerPrefix));
 
-        results= stripNullLoader(results);
+        results = stripNullLoader(results);
         results = replaceVariables(results, featureToken);
         return results;
     }
@@ -94,14 +94,14 @@ public class FeaturePropertyLoaderFactory {
         return allLoaders;
     }
 
-    private PropertyLoader getHandlerPropertyFileLoader(File dir, String s, String handlerPrefix) {
-        PropertyLoader p = getPropertyFileLoader(dir, s);
-        return p == PropertyLoader.NULL_LOADER ? p : new PrefixingPropertyLoader(p, handlerPrefix);
-    }
-
-    private PropertyLoader getPropertyFileLoader(File dir, String s) {
+    private PropertyLoader getHandlerPropertyFileLoader(File dir, String s) {
         File p = new File(dir, s);
         return p.exists() && p.canRead() ? new FilePropertyLoader(p) : PropertyLoader.NULL_LOADER;
+    }
+
+    private PropertyLoader getPropertyFileLoader(File dir, String s, String handlerPrefix) {
+        PropertyLoader p = getHandlerPropertyFileLoader(dir, s);
+        return p == PropertyLoader.NULL_LOADER ? p : new PrefixStrippingPropertyLoader(p, handlerPrefix);
     }
 
 }
