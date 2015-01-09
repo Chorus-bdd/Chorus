@@ -72,8 +72,12 @@ public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
         return stepToken;
     }
 
-    protected boolean isEmptyLineOrComment(String line) {
-        return line.startsWith("#") || line.length() == 0;
+    public static String removeComments(String line) {
+        //remove commented portion
+        if ( line.length() > 0) {
+          String[] tokens = line.split("(#[^!]|#$)");  //any # which is not followed by !, or any # which is at the end of a line
+          line = tokens.length > 0 ? tokens[0] : "";
+        }
+        return line.trim();
     }
-
 }

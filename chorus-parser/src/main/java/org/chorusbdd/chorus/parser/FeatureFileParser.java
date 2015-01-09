@@ -123,14 +123,14 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             line = line.trim();
             lineNumber++;
 
+            //remove commented portion
+            //any content after the first # which is not a #! (directive)
+            line = removeComments(line);
+
             line = directiveParser.parseDirectives(line, lineNumber);
 
-            if (isEmptyLineOrComment(line)) {
+            if (line.length() == 0) {
                 continue;//ignore blank lines and comments
-            }
-
-            if (line.contains("#")) {
-                line = line.substring(0, line.indexOf("#"));//remove end of lastTagsLine comments
             }
 
             if (line.startsWith("@")) {

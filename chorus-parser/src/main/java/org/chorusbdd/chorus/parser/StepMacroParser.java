@@ -74,14 +74,12 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
 
             lineNumber++;
 
+            line = removeComments(line);
+
             line = directiveParser.parseDirectives(line, lineNumber);
 
-            if (line.length() == 0 || line.startsWith("#")) {
+            if (line.length() == 0) {
                 continue;//ignore blank lines and comments
-            }
-
-            if (line.contains("#")) {
-                line = line.substring(0, line.indexOf("#"));//remove end of lastTagsLine comments
             }
 
             if (line.startsWith("@")) {
