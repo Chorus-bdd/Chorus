@@ -1,11 +1,13 @@
 package org.chorusbdd.chorus.handlerconfig.propertyload;
 
+import org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyLoader;
+import org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyOperations;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.handlerconfig.propertyload.PropertyOperations.properties;
+import static org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyOperations.properties;
 
 
 /**

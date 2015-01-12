@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.propertyload;
 
+import org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 

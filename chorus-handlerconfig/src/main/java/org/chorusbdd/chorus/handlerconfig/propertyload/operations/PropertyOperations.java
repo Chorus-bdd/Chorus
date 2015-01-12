@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerconfig.propertyload;
+package org.chorusbdd.chorus.handlerconfig.propertyload.operations;
 
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.function.*;

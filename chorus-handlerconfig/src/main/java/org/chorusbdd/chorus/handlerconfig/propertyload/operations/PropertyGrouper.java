@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerconfig.propertyload;
+package org.chorusbdd.chorus.handlerconfig.propertyload.operations;
 
 import org.chorusbdd.chorus.util.function.BiFunction;
 import org.chorusbdd.chorus.util.function.Tuple3;

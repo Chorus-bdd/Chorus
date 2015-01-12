@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerconfig.propertyload;
+package org.chorusbdd.chorus.handlerconfig.propertyload.operations;
 
 import org.chorusbdd.chorus.util.function.BiPredicate;
 
@@ -31,14 +31,5 @@ class FilteringPropertyLoader implements PropertyLoader {
             }
         }
         return dest;
-    }
-
-    public static PropertyLoader filterByKeyPrefix(final String prefix, PropertyLoader l) {
-        return new FilteringPropertyLoader(l, new BiPredicate<String, String>() {
-            @Override
-            public boolean test(String key, String value) {
-                return key.startsWith(prefix);
-            }
-        });
     }
 }
