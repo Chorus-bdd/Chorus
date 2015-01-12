@@ -5,5 +5,5 @@ package org.chorusbdd.chorus.util.function;
  */
 public interface Predicate<T> {
 
-    boolean test(T value);
+    boolean test(T v);
 }

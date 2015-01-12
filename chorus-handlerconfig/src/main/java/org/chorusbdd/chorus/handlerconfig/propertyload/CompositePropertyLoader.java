@@ -1,10 +1,7 @@
 package org.chorusbdd.chorus.handlerconfig.propertyload;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by nick on 12/01/15.
@@ -12,6 +9,10 @@ import java.util.Properties;
 public class CompositePropertyLoader implements PropertyLoader {
 
     private LinkedList<PropertyLoader> childLoaders = new LinkedList<PropertyLoader>();
+
+    public CompositePropertyLoader(PropertyLoader... propertyLoaders) {
+        this(Arrays.asList(propertyLoaders));
+    }
 
     public CompositePropertyLoader( Collection<PropertyLoader> loaders ) {
         childLoaders.addAll(loaders);

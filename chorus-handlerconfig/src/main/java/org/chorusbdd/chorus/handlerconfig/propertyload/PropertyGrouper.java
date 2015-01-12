@@ -1,13 +1,14 @@
 package org.chorusbdd.chorus.handlerconfig.propertyload;
 
 import org.chorusbdd.chorus.util.function.BiFunction;
-import org.chorusbdd.chorus.util.function.Tuple2;
 import org.chorusbdd.chorus.util.function.Tuple3;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.chorusbdd.chorus.util.function.Tuple3.tuple3;
 
 /**
  * Created by nick on 12/01/15.
@@ -47,9 +48,9 @@ public class PropertyGrouper implements GroupedPropertyLoader {
     }
 
     public static GroupedPropertyLoader groupByKeyPrefix(PropertyLoader l) {
-        return new PropertyGrouper(l, new BiFunction<String, String, String>() {
-            public Tuple apply(String key, String val) {
-                return key.split(".", 2)[0];
+        return new PropertyGrouper(l, new BiFunction<String, String, Tuple3<String,String,String>>() {
+            public Tuple3 apply(String key, String val) {
+                return tuple3(key.split(".", 2)[0], key, val);
             }
         });
     }

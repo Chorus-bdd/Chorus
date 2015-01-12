@@ -13,12 +13,12 @@ public class Tuple2<K,V> {
         this.v = v;
     }
 
-    public V getOne() {
-        return v;
+    public K getOne() {
+        return k;
     }
 
-    public K getTwo() {
-        return k;
+    public V getTwo() {
+        return v;
     }
 
     public static <K,V> Tuple2<K,V> tuple2(K k, V v) {
