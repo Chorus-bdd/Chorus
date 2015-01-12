@@ -44,8 +44,8 @@ import java.util.*;
  * Date: 18/09/12
  * Time: 08:39
  * 
- * Load properties from a PropertiesSource and convert them to
- * Handler specific configs using a HandlerConfigFactory
+ * Convert properties from Property instances to handler-specific config beans
+ * using a HandlerConfigFactory
  */
 public class DefaultConfigLoader<E extends HandlerConfig> implements GroupedConfigLoader<E> {
 

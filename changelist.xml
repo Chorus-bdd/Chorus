@@ -10,6 +10,8 @@
         <change desc="Revised utility classes for loading handler configuration"/>
         <change desc="@ChorusResource - Support for injecting chorus subsystems for process management and remoting"/>
         <change desc="@ChorusResource - Support for injecting handler instances"/>
+        <change desc="Add support for directives #!"/>
+        <change desc="Refactored jmx remoting and restructured to permit new remoting protocols"/>
     </version>
     <version>
         <versionNumber>1.6.9</versionNumber>

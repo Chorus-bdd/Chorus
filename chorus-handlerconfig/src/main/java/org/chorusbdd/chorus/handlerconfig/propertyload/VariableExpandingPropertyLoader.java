@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 /**
  * Created by GA2EBBU on 09/01/2015.
  */
-public class VariableReplacingPropertyLoader implements PropertyLoader {
+public class VariableExpandingPropertyLoader implements PropertyLoader {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(VariableReplacingPropertyLoader.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(VariableExpandingPropertyLoader.class);
 
     private PropertyLoader wrappedLoader;
     private FeatureToken featureToken;
@@ -27,7 +27,7 @@ public class VariableReplacingPropertyLoader implements PropertyLoader {
     public static final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.feature.config";
     public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
-    public VariableReplacingPropertyLoader(PropertyLoader wrappedLoader, FeatureToken featureToken) {
+    public VariableExpandingPropertyLoader(PropertyLoader wrappedLoader, FeatureToken featureToken) {
         this.wrappedLoader = wrappedLoader;
         this.featureToken = featureToken;
     }
@@ -107,5 +107,9 @@ public class VariableReplacingPropertyLoader implements PropertyLoader {
             log.debug("Raplaced variable " + variable + " with value " + s + " for property " + fullPropertyName);
         }
         return replaced;
+    }
+
+    public static PropertyLoader expandVariables(PropertyLoader propertyLoader, FeatureToken featureToken) {
+        return new VariableExpandingPropertyLoader(propertyLoader, featureToken);
     }
 }
