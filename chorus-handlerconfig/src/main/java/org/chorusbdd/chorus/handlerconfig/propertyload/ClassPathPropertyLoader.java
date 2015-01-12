@@ -15,26 +15,23 @@ public class ClassPathPropertyLoader implements PropertyLoader {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ClassPathPropertyLoader.class);
 
-    private Class clazz;
     private String path;
 
-    public ClassPathPropertyLoader(Class clazz, String path) {
-        this.clazz = clazz;
+    public ClassPathPropertyLoader(String path) {
         this.path = path;
     }
 
     public Properties loadProperties() throws IOException {
-        URL u = clazz.getResource(path);
+        URL u = ClassPathPropertyLoader.class.getResource(path);
         Properties props = new Properties();
 
-        log.trace(String.format("About to load configuration properties from classpath class " + clazz.getName() +
-                " at path: %s, resource exists? " + (u != null), path));
+        log.trace(String.format("About to load configuration properties from classpath at path: %s, resource exists? " + (u != null), path));
 
         if ( u != null ) {
-            InputStream is = clazz.getResourceAsStream(path);
+            InputStream is = ClassPathPropertyLoader.class.getResourceAsStream(path);
             props.load(is);
             is.close();
-            log.debug(String.format("Loaded configuration properties from classpath class " + clazz.getName() + " at path: %s", path));
+            log.debug(String.format("Loaded configuration properties from classpath at path: %s", path));
         }
         return props;
     }

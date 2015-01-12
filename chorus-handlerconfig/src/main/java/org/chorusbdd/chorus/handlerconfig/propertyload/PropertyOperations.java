@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.propertyload;
 
+import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.function.*;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.util.Properties;
 /**
  * Created by nick on 12/01/15.
  *
- *
+ * A monadic type to provide functions to transform Properties
  */
 public class PropertyOperations implements PropertyLoader {
 
@@ -34,6 +35,15 @@ public class PropertyOperations implements PropertyLoader {
                 return valuePredicate.test(value);
             }
         }));
+    }
+
+    public PropertyOperations filterByKeyPrefix(final String keyPrefix) {
+        return filterKeys(new Predicate<String>() {
+            @Override
+            public boolean test(String key) {
+                return key.startsWith(keyPrefix);
+            }
+        });
     }
 
     public PropertyOperations filter(final BiPredicate<String,String> keyAndValueFilter) {
@@ -120,8 +130,19 @@ public class PropertyOperations implements PropertyLoader {
         });
     }
 
+    public PropertyOperations expandVariables(FeatureToken featureToken) {
+        return new PropertyOperations(new VariableExpandingPropertyLoader(propertyLoader, featureToken));
+    }
+
     public Properties loadProperties() throws IOException {
         return propertyLoader.loadProperties();
+    }
+
+    /**
+     * unit operation, return the wrapped loader
+     */
+    public PropertyLoader getLoader() {
+        return propertyLoader;
     }
 
     public static PropertyOperations properties(PropertyLoader propertyLoader) {
