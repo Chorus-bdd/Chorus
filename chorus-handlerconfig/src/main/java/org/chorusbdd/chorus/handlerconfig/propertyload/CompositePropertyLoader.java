@@ -6,9 +6,9 @@ import java.util.*;
 /**
  * Created by nick on 12/01/15.
  */
-public class CompositePropertyLoader implements PropertyLoader {
+class CompositePropertyLoader implements PropertyLoader {
 
-    private LinkedList<PropertyLoader> childLoaders = new LinkedList<PropertyLoader>();
+    private LinkedList<PropertyLoader> childLoaders = new LinkedList<>();
 
     public CompositePropertyLoader(PropertyLoader... propertyLoaders) {
         this(Arrays.asList(propertyLoaders));

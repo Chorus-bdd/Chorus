@@ -8,14 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.util.function.Tuple3.tuple3;
-
 /**
  * Created by nick on 12/01/15.
  *
  * Group properties from a PropertyLoader using a BinaryFunction to calculate the group
  */
-public class PropertyGrouper implements GroupedPropertyLoader {
+class PropertyGrouper implements GroupedPropertyLoader {
 
     private PropertyLoader loader;
     private BiFunction<String, String, Tuple3<String, String, String>> binaryFunction;
@@ -45,13 +43,5 @@ public class PropertyGrouper implements GroupedPropertyLoader {
             results.put(group, p);
         }
         p.setProperty(key, value);
-    }
-
-    public static GroupedPropertyLoader groupByKeyPrefix(PropertyLoader l) {
-        return new PropertyGrouper(l, new BiFunction<String, String, Tuple3<String,String,String>>() {
-            public Tuple3 apply(String key, String val) {
-                return tuple3(key.split(".", 2)[0], key, val);
-            }
-        });
     }
 }

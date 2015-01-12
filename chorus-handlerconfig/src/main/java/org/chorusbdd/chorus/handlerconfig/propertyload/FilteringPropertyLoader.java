@@ -12,7 +12,7 @@ import java.util.Properties;
  * Apply a function to convert the keys from a source Properties object into a Properties instance
  * with modified keys
  */
-public class FilteringPropertyLoader implements PropertyLoader {
+class FilteringPropertyLoader implements PropertyLoader {
 
     private PropertyLoader wrappedLoader;
     private BiPredicate<String,String> predicate;

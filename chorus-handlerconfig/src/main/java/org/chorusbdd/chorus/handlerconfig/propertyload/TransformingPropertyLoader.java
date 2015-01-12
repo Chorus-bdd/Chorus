@@ -12,7 +12,7 @@ import java.util.Properties;
  *
  * Apply a function to convert the map entries from a source Properties object into a Properties instance with modified values
  */
-public class TransformingPropertyLoader implements PropertyLoader {
+class TransformingPropertyLoader implements PropertyLoader {
 
     private PropertyLoader wrappedLoader;
     private BiFunction<String, String, Tuple2<String, String>> mappingFunction;

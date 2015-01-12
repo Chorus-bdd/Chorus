@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Created by GA2EBBU on 09/01/2015.
  */
-public class VariableExpandingPropertyLoader implements PropertyLoader {
+class VariableExpandingPropertyLoader implements PropertyLoader {
 
     private static ChorusLog log = ChorusLogFactory.getLog(VariableExpandingPropertyLoader.class);
 
