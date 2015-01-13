@@ -34,7 +34,7 @@ public class HandlerPropertyLoader implements PropertyLoader {
 
         //If a db properties are included, load and merge extra properties from the db
         //the locally defined properties take precedence
-        propertyLoader = new DbPropertiesLoader(handlerName).mergeWithDatabaseProperties(propertyLoader);
+        propertyLoader = new DbPropertiesMerge(handlerName).mergeWithDatabaseProperties(propertyLoader);
 
 
         return propertyLoader.loadProperties();

@@ -34,15 +34,15 @@ import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties
  * property   - the property key to set, e.g. remoting.myprocess.jmxPort
  * value      - the property value to set
  */
-class DbPropertiesLoader {
+class DbPropertiesMerge {
 
     private String handlerName;
 
-    public DbPropertiesLoader(String handlerName) {
+    public DbPropertiesMerge(String handlerName) {
         this.handlerName = handlerName;
     }
 
-    public PropertyOperations mergeWithDatabaseProperties(PropertyOperations properties) throws IOException {
+    PropertyOperations mergeWithDatabaseProperties(PropertyOperations properties) throws IOException {
 
         //if there is a special database configs properties group, use these to load even more properties!
         Properties dbProperties = properties.filterByKeyPrefix(
