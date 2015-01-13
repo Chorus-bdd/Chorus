@@ -70,54 +70,54 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-            if ("pathToExecutable".equals(key)) {
+            if ("pathToExecutable".equalsIgnoreCase(key)) {
                 c.setPathToExecutable(value);
-            } else if ("jre".equals(key)) {
+            } else if ("jre".equalsIgnoreCase(key)) {
                 c.setJre(value);
-            } else if ("classpath".equals(key)) {
+            } else if ("classpath".equalsIgnoreCase(key)) {
                 c.setClasspath(value);
-            } else if ("args".equals(key)) {
+            } else if ("args".equalsIgnoreCase(key)) {
                 c.setArgs(value);
-            } else if ("jvmargs".equals(key)) {
+            } else if ("jvmargs".equalsIgnoreCase(key)) {
                 c.setJvmargs(value);
-            } else if ("mainclass".equals(key)) {
+            } else if ("mainclass".equalsIgnoreCase(key)) {
                 c.setMainclass(value);
-            } else if ("jmxport".equals(key)) {
+            } else if ("jmxport".equalsIgnoreCase(key)) {
                 //jmxport is is deprecated, use remotingPort
                 int jmxport = parseIntProperty(value, "jmxport");
                 c.setRemotingPort(jmxport);
-            } else if ("remotingPort".equals(key)) {
+            } else if ("remotingPort".equalsIgnoreCase(key)) {
                 int remotingPort = parseIntProperty(value, "remotingPort");
                 c.setRemotingPort(remotingPort);
-            } else if ("debugport".equals(key)) {
+            } else if ("debugport".equalsIgnoreCase(key)) {
                 int debugport = parseIntProperty(value, "debugport");
                 c.setDebugPort(debugport);
-            } else if ("terminateWaitTime".equals(key)) {
+            } else if ("terminateWaitTime".equalsIgnoreCase(key)) {
                 c.setTerminateWaitTime(parseIntProperty(value, "terminateWaitTime"));
-            } else if ("logging".equals(key)) {
+            } else if ("logging".equalsIgnoreCase(key)) {
                 //we still support logging property as an alternative to stdOutMode and stdErrMode
                 //if true, both process std out and error go to a file, if false inline
                 Boolean b = parseBooleanProperty(value, "logging");
                 OutputMode m = b ? OutputMode.FILE : OutputMode.INLINE;
                 c.setStdErrMode(m);
                 c.setStdOutMode(m);
-            } else if ("logDirectory".equals(key)) {
+            } else if ("logDirectory".equalsIgnoreCase(key)) {
                 c.setLogDirectory(value);
-            } else if ("appendToLogs".equals(key)) {
+            } else if ("appendToLogs".equalsIgnoreCase(key)) {
                 c.setAppendToLogs(parseBooleanProperty(value, "appendToLogs"));
-            } else if ("createLogDir".equals(key)) {
+            } else if ("createLogDir".equalsIgnoreCase(key)) {
                 c.setCreateLogDir(parseBooleanProperty(value, "createLogDir"));
-            } else if ( "processCheckDelay".equals(key)) {
+            } else if ( "processCheckDelay".equalsIgnoreCase(key)) {
                 c.setProcessCheckDelay(parseIntProperty(value, "processCheckDelay"));
-            } else if ( "stdErrMode".equals(key)) {
+            } else if ( "stdErrMode".equalsIgnoreCase(key)) {
                 c.setStdErrMode(parseOutputMode(value, "stdErrMode"));
-            } else if ( "stdOutMode".equals(key)) {
+            } else if ( "stdOutMode".equalsIgnoreCase(key)) {
                 c.setStdOutMode(parseOutputMode(value, "stdOutMode"));
-            } else if ("readAheadBufferSize".equals(key)) {
+            } else if ("readAheadBufferSize".equalsIgnoreCase(key)) {
                 log.warn("Property readAheadBufferSize is no longer supported from version 2.x");
-            } else if ("readTimeoutSeconds".equals(key)) {
+            } else if ("readTimeoutSeconds".equalsIgnoreCase(key)) {
                 c.setReadTimeoutSeconds(parseIntProperty(value, "readTimeoutSeconds"));
-            } else if ("scope".equals(key)) {
+            } else if ("scope".equalsIgnoreCase(key)) {
                 c.setProcessScope(parseProcessScope(value));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");

@@ -92,7 +92,7 @@ public class PropertyOperationsTest {
         Map<String,Properties> p =
                 properties(mockProperties()).prefixKeys("prefix1.").merge(
                         properties(mockProperties()).prefixKeys("prefix2.")).
-                        splitKeyAndGroup("\\.").loadProperties();
+                        splitKeyAndGroup("\\.").loadPropertyGroups();
 
         Map<String, Properties> expected = new HashMap<>();
         expected.put("prefix1", mockProperties());
@@ -105,7 +105,7 @@ public class PropertyOperationsTest {
         PropertyOperations prefixed = properties(mockProperties()).prefixKeys("prefix1").merge(
                 properties(mockProperties()).prefixKeys("prefix2"));
 
-        Map<String,Properties> p = prefixed.splitKeyAndGroup("\\.").loadProperties();
+        Map<String,Properties> p = prefixed.splitKeyAndGroup("\\.").loadPropertyGroups();
 
         //where the grouping delimiter cannot be matched, we simply use "" as the group
         //so here the source properties are unchanged but end up in the "" group

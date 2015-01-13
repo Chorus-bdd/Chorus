@@ -23,7 +23,7 @@ class PropertyGrouper implements GroupedPropertyLoader {
         this.binaryFunction = binaryFunction;
     }
 
-    public Map<String, Properties> loadProperties() throws IOException {
+    public Map<String, Properties> loadPropertyGroups() throws IOException {
         Map<String, Properties> results = new HashMap<>();
 
         Properties p = loader.loadProperties();

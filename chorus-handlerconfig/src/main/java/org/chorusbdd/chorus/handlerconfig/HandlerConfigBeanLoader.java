@@ -1,8 +1,8 @@
 package org.chorusbdd.chorus.handlerconfig;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.DefaultConfigBeanBuilder;
 import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
-import org.chorusbdd.chorus.handlerconfig.configbean.PropertyFileAndDbConfigBeanBuilder;
 import org.chorusbdd.chorus.handlerconfig.properties.HandlerPropertyLoaderFactory;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -10,6 +10,8 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 
 /**
  * Created by nick on 13/01/15.
@@ -28,13 +30,13 @@ import java.util.Properties;
  * processes.processTwo.jmxPort=2345
  *
  */
-public class HandlerConfigLoader<E extends HandlerConfigBean> {
+public class HandlerConfigBeanLoader<E extends HandlerConfigBean> {
 
     private final ConfigBeanFactory<E> configFactory;
     private final String handlerName;
     private final FeatureToken featureToken;
 
-    public HandlerConfigLoader(
+    public HandlerConfigBeanLoader(
             ConfigBeanFactory<E> configFactory,
             String handlerName,
             FeatureToken featureToken) {
@@ -45,13 +47,18 @@ public class HandlerConfigLoader<E extends HandlerConfigBean> {
 
     public Map<String, E> loadConfigs() throws IOException {
 
-        //load Properties from all the possible locations based on the current feature and handler name
+        //load Properties from file paths based on the current feature and handler name
         PropertyOperations propertyLoader = new HandlerPropertyLoaderFactory().createPropertyLoader(featureToken, handlerName);
 
-        //group the configs into config groups
-        Map<String, Properties> groupedConfigs = propertyLoader.splitKeyAndGroup("\\.").loadProperties();
+        //If a database properties are included, load and merge extra properties from the db
+        //the locally defined properties take precedence
+        propertyLoader = new DbPropertiesLoader(handlerName).mergeWithDatabaseProperties(propertyLoader);
 
-        //Convert to config beans
-        return new PropertyFileAndDbConfigBeanBuilder<E>(configFactory, handlerName).buildConfigs(groupedConfigs);
+        //group the configs into config groups
+        Map<String, Properties> groupedConfigs = propertyLoader.splitKeyAndGroup("\\.").loadPropertyGroups();
+
+        //Convert to config beans one bean for each group
+        return new DefaultConfigBeanBuilder<E>(handlerName, configFactory).buildConfigs(groupedConfigs);
     }
+
 }

@@ -165,4 +165,7 @@ public class PropertyOperations implements PropertyLoader {
         });
     }
 
+    public static PropertyOperations emptyProperties() {
+        return properties(new Properties());
+    }
 }

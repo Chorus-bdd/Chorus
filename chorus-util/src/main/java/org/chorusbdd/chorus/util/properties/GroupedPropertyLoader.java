@@ -9,5 +9,5 @@ import java.util.Properties;
  */
 public interface GroupedPropertyLoader {
 
-    Map<String, Properties> loadProperties() throws IOException;
+    Map<String, Properties> loadPropertyGroups() throws IOException;
 }

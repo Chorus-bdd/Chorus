@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigBeanLoader;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -227,7 +227,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     }
 
     private Map<String, ProcessesConfig> loadProcessConfig() throws IOException {
-        HandlerConfigLoader<ProcessesConfig> l = new HandlerConfigLoader<ProcessesConfig>(
+        HandlerConfigBeanLoader<ProcessesConfig> l = new HandlerConfigBeanLoader<ProcessesConfig>(
             new ProcessesConfigBeanFactory(),
             "processes",
             featureToken
@@ -235,7 +235,7 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
         return l.loadConfigs();
     }
 
-    public void addConfiguration(ProcessesConfig handlerConfig) {
-        processConfigs.put(handlerConfig.getConfigName(), handlerConfig);
+    public void addConfiguration(ProcessesConfig handlerConfigBean) {
+        processConfigs.put(handlerConfigBean.getConfigName(), handlerConfigBean);
     }
 }

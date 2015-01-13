@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigBeanLoader;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -115,7 +115,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
 
     @Initialize(scope = Scope.FEATURE)
     public void initialize() throws IOException {
-        HandlerConfigLoader<RemotingConfig> configLoader = new HandlerConfigLoader<RemotingConfig>(
+        HandlerConfigBeanLoader<RemotingConfig> configLoader = new HandlerConfigBeanLoader<RemotingConfig>(
             new RemotingConfigBeanFactory(),
             "remoting",
             featureToken
@@ -151,8 +151,8 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
         return remotingConfig;
     }
 
-    public void addConfiguration(RemotingConfig handlerConfig) {
-        remotingConfigMap.put(handlerConfig.getConfigName(), handlerConfig);
+    public void addConfiguration(RemotingConfig handlerConfigBean) {
+        remotingConfigMap.put(handlerConfigBean.getConfigName(), handlerConfigBean);
     }
 
     /**
