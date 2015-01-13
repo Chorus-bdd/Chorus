@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -11,5 +12,5 @@ import java.util.Map;
  */
 public interface GroupedConfigLoader<E extends HandlerConfig> {
 
-    Map<String, E> loadConfigs();
+    Map<String, E> loadConfigs() throws IOException;
 }

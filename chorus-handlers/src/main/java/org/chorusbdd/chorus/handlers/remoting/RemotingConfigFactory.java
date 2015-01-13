@@ -52,11 +52,12 @@ public class RemotingConfigFactory extends AbstractHandlerConfigFactory implemen
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigFactory.class);
 
-    public RemotingConfig createConfig(List<Properties> p) {
+    public RemotingConfig createConfig(List<Properties> p, String configName) {
         RemotingConfig r = new RemotingConfig();
         for ( Properties properties : p) {
             setProperties(properties, r);
         }
+        r.setConfigName(configName);
         return r;
     }
 
@@ -69,9 +70,7 @@ public class RemotingConfigFactory extends AbstractHandlerConfigFactory implemen
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
 
-            if ( "configName".equals(key)) {
-                r.setConfigName(value);
-            } else if ("protocol".equals(key)) {
+            if ("protocol".equals(key)) {
                 r.setProtocol(value);
             } else if ("host".equals(key)) {
                 r.setHost(value);

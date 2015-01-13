@@ -27,15 +27,14 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerconfig.source;
+package org.chorusbdd.chorus.handlerconfig.propertyload;
 
+import org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.ChorusException;
 
+import java.io.IOException;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -45,9 +44,9 @@ import java.util.Properties;
  * Time: 10:21
  * To change this template use File | Settings | File Templates.
  */
-public class JdbcPropertySource implements PropertyGroupsSource {
+public class JdbcPropertyLoader implements PropertyLoader {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(JdbcPropertySource.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(JdbcPropertyLoader.class);
 
     private final String JDBC_DRIVER = "jdbc_driver";
     private final String JDBC_URL = "jdbc_url";
@@ -57,12 +56,13 @@ public class JdbcPropertySource implements PropertyGroupsSource {
 
     private Properties jdbcProperties;
 
-    public JdbcPropertySource(Properties jdbcProperties) {
+    public JdbcPropertyLoader(Properties jdbcProperties) {
         this.jdbcProperties = jdbcProperties;
     }
 
-    public Map<String, Properties> mergeProperties(Map<String, Properties> propertiesByConfigName) {
+    public Properties loadProperties() throws IOException {
         Connection conn = null;
+        Properties p = new Properties();
         try {
             //load MBean config from DB
             Class.forName(jdbcProperties.getProperty(JDBC_DRIVER));
@@ -77,23 +77,22 @@ public class JdbcPropertySource implements PropertyGroupsSource {
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                String configName = rs.getString("configName");
                 String propertyKey = rs.getString("property");
                 String value = rs.getString("value");
-                if ( configName == null || propertyKey == null || value == null ) {
+                if ( propertyKey == null || value == null ) {
                     String message = String.format("Not adding partially defined database property " +
-                            "%s, %s, %s", configName, propertyKey, value);
+                            "%s, %s", propertyKey, value);
                     log.debug(message);
                 } else {
-                    addProperty(propertiesByConfigName, configName, propertyKey, value);
+                    p.setProperty(propertyKey, value);
                 }
             }
             rs.close();
             stmt.close();
-            log.debug("Loaded " + propertiesByConfigName.size() + " property group configurations from database");
+            log.debug("Loaded " + p.size() + " properties from database");
         } catch (Exception e) {
             log.error("Failed to load property group configurations from database", e);
-            throw new ChorusException("Failed to load property group configurations from database");
+            throw new IOException("Failed to load property group configurations from database", e);
         } finally {
             if (conn != null) {
                 try {
@@ -103,17 +102,7 @@ public class JdbcPropertySource implements PropertyGroupsSource {
                 }
             }
         }
-        return propertiesByConfigName;
-    }
-
-    private void addProperty(Map<String, Properties> propertiesByConfigName, String configName, String propertyKey, String value) {
-        Properties p = propertiesByConfigName.get(configName);
-        if ( p == null) {
-            p = new Properties();
-            p.put("configName", configName);
-            propertiesByConfigName.put(configName, p);
-        }
-        p.put(propertyKey, value);
+        return p;
     }
 }
 

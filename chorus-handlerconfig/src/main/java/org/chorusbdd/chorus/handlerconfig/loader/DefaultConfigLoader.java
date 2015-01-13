@@ -79,7 +79,7 @@ public class DefaultConfigLoader<E extends HandlerConfig> implements GroupedConf
                List<Properties> propertiesList = Arrays.asList(defaultProperties, props.getValue());
 
                //create and validate
-               E newConfig = configBuilder.createConfig(propertiesList);
+               E newConfig = configBuilder.createConfig(propertiesList, props.getKey());
                ConfigValidator<? super E> validator = configBuilder.createValidator(newConfig);
 
                if ( ! HandlerConfig.DEFAULT_PROPERTIES_GROUP.equals(props.getKey())) {

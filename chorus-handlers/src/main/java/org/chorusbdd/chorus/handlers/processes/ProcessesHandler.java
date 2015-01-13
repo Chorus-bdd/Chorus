@@ -41,6 +41,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -225,10 +226,9 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
         return c;
     }
 
-    private Map<String, ProcessesConfig> loadProcessConfig() {
+    private Map<String, ProcessesConfig> loadProcessConfig() throws IOException {
         PropertiesFileAndDbConfigLoader<ProcessesConfig> l = new PropertiesFileAndDbConfigLoader<ProcessesConfig>(
             new ProcessesConfigFactory(),
-            "Processes",
             "processes",
             featureToken
         );

@@ -50,8 +50,9 @@ public interface HandlerConfigFactory<E extends HandlerConfig> {
      * (property inheritance from a named parent group may be added at some future point)
      *
      * @param p
+     * @param configName
      */
-    E createConfig(List<Properties> p);
+    E createConfig(List<Properties> p, String configName);
 
 
     /**

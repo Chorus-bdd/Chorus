@@ -1,7 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.propertyload.operations;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -11,7 +10,7 @@ public interface PropertyLoader {
 
     PropertyLoader NULL_LOADER = new PropertyLoader() {
         public Properties loadProperties() throws IOException {
-            return (Properties)Collections.emptyMap();
+            return new Properties();
         }
     };
 

@@ -68,6 +68,14 @@ public class PropertyOperations implements PropertyLoader {
         });
     }
 
+    public PropertyOperations removeKeyPrefix(final String handlerPrefix) {
+        return transformKeys(new Function<String, String>() {
+            public String apply(String key) {
+                return key.startsWith(handlerPrefix) ? key.substring(handlerPrefix.length()) : key;
+            }
+        });
+    }
+
     public PropertyOperations transformValues(final Function<String,String> transform) {
         return new PropertyOperations(new TransformingPropertyLoader(propertyLoader, new BiFunction<String, String, Tuple2<String, String>>() {
             @Override
@@ -156,4 +164,5 @@ public class PropertyOperations implements PropertyLoader {
             }
         });
     }
+
 }

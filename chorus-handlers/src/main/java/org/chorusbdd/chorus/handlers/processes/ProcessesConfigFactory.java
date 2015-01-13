@@ -56,11 +56,12 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigFactory.class);
 
-    public ProcessesConfig createConfig(List<Properties> p) {
+    public ProcessesConfig createConfig(List<Properties> p, String configName) {
         ProcessesConfig c = new ProcessesConfig();
         for ( Properties properties : p) {
             setProperties(properties, c);
         }
+        c.setConfigName(configName);
         return c;
     }
 
@@ -72,9 +73,7 @@ public class ProcessesConfigFactory extends AbstractHandlerConfigFactory impleme
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-            if ("configName".equals(key)) {
-                c.setConfigName(value);
-            } else if ("pathToExecutable".equals(key)) {
+            if ("pathToExecutable".equals(key)) {
                 c.setPathToExecutable(value);
             } else if ("jre".equals(key)) {
                 c.setJre(value);

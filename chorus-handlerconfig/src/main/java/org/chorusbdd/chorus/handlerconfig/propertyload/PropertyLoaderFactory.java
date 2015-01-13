@@ -54,28 +54,30 @@ public class PropertyLoaderFactory {
         File featureDir = featureToken.getFeatureDir();
         File featureConfDir = new File(featureDir, "conf");
 
-        l.merge(new ClassPathPropertyLoader("/chorus.properties"));
-        l.merge(properties(new ClassPathPropertyLoader("/chorus-" + handlerName + ".properties")).prefixKeys(handlerPrefix));
+        l = l.merge(new ClassPathPropertyLoader("/chorus.properties"));
+        l = l.merge(properties(new ClassPathPropertyLoader("/chorus-" + handlerName + ".properties")).prefixKeys(handlerPrefix));
 
-        mergeLoadersForDirectory(l, featureDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
-        mergeLoadersForDirectory(l, featureConfDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
+        l = mergeLoadersForDirectory(l, featureDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
+        l = mergeLoadersForDirectory(l, featureConfDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
 
-        l.expandVariables(featureToken);
-        l.filterByKeyPrefix(handlerPrefix);
+        l = l.expandVariables(featureToken);
+        l = l.filterByKeyPrefix(handlerPrefix);
+        l = l.removeKeyPrefix(handlerPrefix);
         return l;
     }
 
-    private void mergeLoadersForDirectory(PropertyOperations o, File dir, FeatureToken featureToken, String configurationName, String handlerName, String handlerPrefix) {
-        o.merge(getPropertyLoader(dir, "chorus.properties"));
-        o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, "chorus-" + handlerName + ".properties"));
+    private PropertyOperations mergeLoadersForDirectory(PropertyOperations o, File dir, FeatureToken featureToken, String configurationName, String handlerName, String handlerPrefix) {
+        o = o.merge(getPropertyLoader(dir, "chorus.properties"));
+        o = o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, "chorus-" + handlerName + ".properties"));
 
-        String featureName = featureToken.getName();
+        String featureNameBase = featureToken.getFeatureFile().getName().replace(".feature", "");
 
-        o.merge(getPropertyLoader(dir, featureName + ".properties"));
-        o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureName + "." + handlerName + ".properties"));
+        o = o.merge(getPropertyLoader(dir, featureNameBase + ".properties"));
+        o = o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureNameBase + "-" + handlerName + ".properties"));
 
-        o.merge(getPropertyLoader(dir, featureName + "-" + configurationName + ".properties"));
-        o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureName + "-" + configurationName + "." + handlerName + ".properties"));
+        o = o.merge(getPropertyLoader(dir, featureNameBase + "-" + configurationName + ".properties"));
+        o = o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureNameBase + "-" + configurationName + "-" + handlerName + ".properties"));
+        return o;
     }
 
     /**
@@ -89,8 +91,8 @@ public class PropertyLoaderFactory {
     }
 
     private PropertyLoader getPropertyLoader(File dir, String s) {
-        File p = new File(dir, s);
-        return p.exists() && p.canRead() ? new FilePropertyLoader(p) : PropertyLoader.NULL_LOADER;
+        File propsFile = new File(dir, s);
+        return propsFile.exists() && propsFile.canRead() ? new FilePropertyLoader(propsFile) : PropertyLoader.NULL_LOADER;
     }
 
 }

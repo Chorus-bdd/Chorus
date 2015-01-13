@@ -2,14 +2,17 @@ package org.chorusbdd.chorus.handlerconfig.loader;
 
 import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigFactory;
-import org.chorusbdd.chorus.handlerconfig.source.JdbcPropertySource;
-import org.chorusbdd.chorus.handlerconfig.source.PropertiesFilePropertySource;
-import org.chorusbdd.chorus.handlerconfig.source.VariableReplacingPropertySource;
+import org.chorusbdd.chorus.handlerconfig.propertyload.JdbcPropertyLoader;
+import org.chorusbdd.chorus.handlerconfig.propertyload.PropertyLoaderFactory;
+import org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyOperations;
 import org.chorusbdd.chorus.results.FeatureToken;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.chorusbdd.chorus.handlerconfig.propertyload.operations.PropertyOperations.properties;
 
 /**
  * Created by nick on 03/10/2014.
@@ -39,51 +42,41 @@ public class PropertiesFileAndDbConfigLoader<E extends HandlerConfig> implements
 
     private HandlerConfigFactory<E> configFactory;
     private String handlerName;
-    private String propertiesFileSuffix;
     private FeatureToken featureToken;
 
     public PropertiesFileAndDbConfigLoader(
             HandlerConfigFactory<E> configFactory,
             String handlerName,
-            String propertiesFileSuffix,
             FeatureToken featureToken) {
         this.configFactory = configFactory;
         this.handlerName = handlerName;
-        this.propertiesFileSuffix = propertiesFileSuffix;
         this.featureToken = featureToken;
     }
 
-    public Map<String, E> loadConfigs() {
+    public Map<String, E> loadConfigs() throws IOException {
 
-        Map<String, Properties> propertiesByConfigName = getPropertiesFromFilesystem(new HashMap<String, Properties>());
+        //load these up front to avoid loading twice
+        PropertyOperations propertyLoader = new PropertyLoaderFactory().createPropertyLoader(featureToken, handlerName);
+        Map<String, Properties> groupedProperties = propertyLoader.stripAndGroupByFirstKeyToken("\\.").loadProperties();
 
-        if ( propertiesByConfigName.containsKey(HandlerConfig.DATABASE_CONFIGS_PROPERTY_GROUP)) {
+        //if there were database properties specified, use these to load even more properties!
+        Map<String, Properties> dbGroupedProperties = new HashMap<>();
+        if ( groupedProperties.containsKey(HandlerConfig.DATABASE_CONFIGS_PROPERTY_GROUP)) {
             //remove the special database properties if they exist, these define a connection to the database to load more configs
             //they don't contain the standard configuration properties for this handler
-            Properties dbConnectionProps = propertiesByConfigName.remove(HandlerConfig.DATABASE_CONFIGS_PROPERTY_GROUP);
-            propertiesByConfigName = mergePropertiesFromDatabase(dbConnectionProps, propertiesByConfigName);
+            Properties dbConnectionProps = groupedProperties.remove(HandlerConfig.DATABASE_CONFIGS_PROPERTY_GROUP);
+            dbGroupedProperties = properties(new JdbcPropertyLoader(dbConnectionProps)).stripAndGroupByFirstKeyToken("\\.").loadProperties();
         }
 
-        Map<String, E> configs = transformtoHandlerConfigs(propertiesByConfigName);
+        //the ordering here means local properties take precedence
+        dbGroupedProperties.putAll(groupedProperties);
+
+        Map<String, E> configs = transformtoHandlerConfigs(dbGroupedProperties);
         return configs;
     }
 
-    private Map<String, Properties> mergePropertiesFromDatabase(Properties dbConnectionProperties, Map<String, Properties> propertiesByConfigName) {
-        return new VariableReplacingPropertySource(
-            new JdbcPropertySource(dbConnectionProperties),
-            featureToken
-        ).mergeProperties(propertiesByConfigName);
-    }
-
-    private Map<String, Properties> getPropertiesFromFilesystem(Map<String, Properties> propertiesByConfigName) {
-        return new VariableReplacingPropertySource(
-            new PropertiesFilePropertySource(handlerName, propertiesFileSuffix, featureToken),
-            featureToken
-        ).mergeProperties(propertiesByConfigName);
-    }
-
-    private Map<String, E> transformtoHandlerConfigs(Map<String, Properties> filesystemProperties) {
-        DefaultConfigLoader configLoader = new DefaultConfigLoader(handlerName, configFactory, filesystemProperties);
+    private Map<String, E> transformtoHandlerConfigs(Map<String, Properties> propertiesByGroup) {
+        DefaultConfigLoader configLoader = new DefaultConfigLoader(handlerName, configFactory, propertiesByGroup);
         return configLoader.loadConfigs();
     }
 

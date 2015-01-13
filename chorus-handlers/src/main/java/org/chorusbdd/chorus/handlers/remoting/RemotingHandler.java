@@ -43,6 +43,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -113,10 +114,9 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     }
 
     @Initialize(scope = Scope.FEATURE)
-    public void initialize() {
+    public void initialize() throws IOException {
         PropertiesFileAndDbConfigLoader<RemotingConfig> configLoader = new PropertiesFileAndDbConfigLoader<RemotingConfig>(
             new RemotingConfigFactory(),
-            "Remoting",
             "remoting",
             featureToken
         );
