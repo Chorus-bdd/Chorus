@@ -3,8 +3,6 @@ package org.chorusbdd.chorus.handlerconfig;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.DefaultConfigBeanBuilder;
 import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
-import org.chorusbdd.chorus.handlerconfig.properties.HandlerPropertyLoaderFactory;
-import org.chorusbdd.chorus.util.properties.PropertyOperations;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.IOException;
@@ -18,7 +16,8 @@ import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties
  *
  * Create config beans required for a (built in) handler
  *
- * This involves loading Properties and then converting the Properties to config beans using a ConfigBeanBuilder
+ * This involves loading Properties, splitting them into groups using the first token in the property key
+ * and then converting each resulting Properties to config beans using a ConfigBeanBuilder
  *
  * This is most useful in cases where we want the handler to convert raw Properties to a bean class representing config,
  * and the handler needs to load multiple such config beans from subgroups in the properties
@@ -47,15 +46,10 @@ public class HandlerConfigBeanLoader<E extends HandlerConfigBean> {
 
     public Map<String, E> loadConfigs() throws IOException {
 
-        //load Properties from file paths based on the current feature and handler name
-        PropertyOperations propertyLoader = new HandlerPropertyLoaderFactory().createPropertyLoader(featureToken, handlerName);
-
-        //If a database properties are included, load and merge extra properties from the db
-        //the locally defined properties take precedence
-        propertyLoader = new DbPropertiesLoader(handlerName).mergeWithDatabaseProperties(propertyLoader);
+        Properties allProperties = new HandlerPropertyLoader(handlerName, featureToken).loadProperties();
 
         //group the configs into config groups
-        Map<String, Properties> groupedConfigs = propertyLoader.splitKeyAndGroup("\\.").loadPropertyGroups();
+        Map<String, Properties> groupedConfigs = properties(allProperties).splitKeyAndGroup("\\.").loadPropertyGroups();
 
         //Convert to config beans one bean for each group
         return new DefaultConfigBeanBuilder<E>(handlerName, configFactory).buildConfigs(groupedConfigs);

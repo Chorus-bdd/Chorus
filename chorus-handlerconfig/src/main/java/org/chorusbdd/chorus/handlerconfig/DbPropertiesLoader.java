@@ -6,8 +6,6 @@ import org.chorusbdd.chorus.util.function.Predicate;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
@@ -49,11 +47,11 @@ class DbPropertiesLoader {
         //if there is a special database configs properties group, use these to load even more properties!
         Properties dbProperties = properties.filterByKeyPrefix(
                 HandlerConfigBean.DATABASE_CONFIGS_PROPERTY_GROUP).removeKeyPrefix(
-                HandlerConfigBean.DATABASE_CONFIGS_PROPERTY_GROUP).loadProperties();
+                HandlerConfigBean.DATABASE_CONFIGS_PROPERTY_GROUP + ".").loadProperties();
         PropertyOperations dbProps = loadDbProps(dbProperties);
 
         //local properties take precedence over db loaded properties so merge them over the top of any db ones
-        return dbProps.filterKeys(new RemoveDbProps()).merge(properties);
+        return dbProps.merge(properties).filterKeys(new RemoveDbProps());
     }
 
     private PropertyOperations loadDbProps(Properties connectionProperties) throws IOException {
@@ -63,7 +61,7 @@ class DbPropertiesLoader {
             //remove the special database properties if they exist, these define a connection to the database to load more configs
             //they don't contain the standard configuration properties for this handler
             PropertyOperations propertiesFromDb = properties(new JdbcPropertyLoader(connectionProperties));
-            result.merge(propertiesFromDb.filterByKeyPrefix(handlerName).removeKeyPrefix(handlerName + "."));
+            result = result.merge(propertiesFromDb.filterByKeyPrefix(handlerName).removeKeyPrefix(handlerName + "."));
         }
         return result;
     }
