@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigValidator;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
@@ -62,7 +62,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
      */
     private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
 
-    private final RemotingConfigValidator configValidator = new RemotingConfigValidator();
+    private final RemotingConfigBeanValidator configValidator = new RemotingConfigBeanValidator();
 
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean

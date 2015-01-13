@@ -27,51 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
+package org.chorusbdd.chorus.handlerconfig.configbean;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.chorusbdd.chorus.util.ChorusException;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created with IntelliJ IDEA.
+ * User: GA2EBBU
+ * Date: 21/09/12
+ * Time: 11:09
+ * To change this template use File | Settings | File Templates.
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public class AbstractConfigBeanFactory {
 
-    String getJre();
+    protected int parseIntProperty(String value, String propertyName) {
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException e) {
+            throw new ChorusException("Could not parse property '" + propertyName + "' with value '" + value + "' as an integer");
+        }
+    }
 
-    String getClasspath();
-
-    String getJvmargs();
-
-    String getMainclass();
-
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
+    protected boolean parseBooleanProperty(String value, String propertyKey) {
+        try {
+            return Boolean.parseBoolean(value);
+        } catch (Exception e) {
+            throw new ChorusException("Failed to parse property " + propertyKey + " with value '" + value + "' as boolean");
+        }
+    }
 }

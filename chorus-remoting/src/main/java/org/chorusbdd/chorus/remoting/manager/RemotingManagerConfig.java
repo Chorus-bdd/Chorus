@@ -29,12 +29,12 @@
  */
 package org.chorusbdd.chorus.remoting.manager;
 
-import org.chorusbdd.chorus.handlerconfig.HandlerConfig;
+import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
 
 /**
  * Created by nick on 24/09/2014.
  */
-public interface RemotingManagerConfig extends HandlerConfig {
+public interface RemotingManagerConfig extends HandlerConfigBean {
 
     String getProtocol();
 

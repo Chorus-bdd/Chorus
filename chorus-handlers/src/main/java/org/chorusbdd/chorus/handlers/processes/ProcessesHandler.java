@@ -30,13 +30,13 @@
 package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
-import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.loader.PropertiesFileAndDbConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -227,8 +227,8 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     }
 
     private Map<String, ProcessesConfig> loadProcessConfig() throws IOException {
-        PropertiesFileAndDbConfigLoader<ProcessesConfig> l = new PropertiesFileAndDbConfigLoader<ProcessesConfig>(
-            new ProcessesConfigFactory(),
+        HandlerConfigLoader<ProcessesConfig> l = new HandlerConfigLoader<ProcessesConfig>(
+            new ProcessesConfigBeanFactory(),
             "processes",
             featureToken
         );

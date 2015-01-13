@@ -27,51 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
-
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+package org.chorusbdd.chorus.handlerconfig.configbean;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created by nick on 23/09/2014.
+ *
+ * Validate a config for a handler
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public interface ConfigBeanValidator<E extends HandlerConfigBean> {
 
-    String getJre();
+    /**
+     *  @return true if the supplied handler config is va;id
+     */
+    boolean isValid(E handlerConfig);
 
-    String getClasspath();
-
-    String getJvmargs();
-
-    String getMainclass();
-
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
+    /**
+     * @return a description of the config error which caused the last validation check to fail
+     */
+    String getErrorDescription();
 }

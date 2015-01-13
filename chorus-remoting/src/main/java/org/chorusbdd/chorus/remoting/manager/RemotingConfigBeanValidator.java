@@ -27,51 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
+package org.chorusbdd.chorus.remoting.manager;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created by nick on 23/09/2014.
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public class RemotingConfigBeanValidator extends AbstractConfigBeanValidator<RemotingManagerConfig> {
 
-    String getJre();
+    protected boolean checkValid(RemotingManagerConfig remotingConfig) {
+        boolean valid = true;
+        if ( ! isSet(remotingConfig.getHost()) ) {
+            logInvalidConfig("host was not set", remotingConfig);
+            valid = false;
+        } else if ( ! isSet(remotingConfig.getProtocol())) {
+            logInvalidConfig("protocol was not set", remotingConfig);
+            valid = false;
+        } else if ( remotingConfig.getPort() <= 0 ) {
+            logInvalidConfig("port was not set", remotingConfig);
+            valid = false;
+        }
+        return valid;
+    }
 
-    String getClasspath();
-
-    String getJvmargs();
-
-    String getMainclass();
-
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
 }

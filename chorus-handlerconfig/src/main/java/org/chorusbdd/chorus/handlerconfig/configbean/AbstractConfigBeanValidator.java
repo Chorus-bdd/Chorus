@@ -27,51 +27,41 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
-
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+package org.chorusbdd.chorus.handlerconfig.configbean;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created by nick on 23/09/2014.
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public abstract class AbstractConfigBeanValidator<E extends HandlerConfigBean> implements ConfigBeanValidator<E> {
 
-    String getJre();
+    private static StringBuilder validationErrors = new StringBuilder();
 
-    String getClasspath();
+    public boolean isValid(E config) {
+        validationErrors.setLength(0);
+        boolean valid = true;
+        if ( ! isSet(config.getConfigName())) {
+            logInvalidConfig("configName was null or empty", config);
+            valid = false;
+        }
 
-    String getJvmargs();
+        if ( valid ) {
+            valid = checkValid(config);
+        }
+        return valid;
+    }
 
-    String getMainclass();
+    protected abstract boolean checkValid(E config);
 
-    String getPathToExecutable();
+    protected void logInvalidConfig(String message, E config) {
+        validationErrors.append("Invalid " + config.getClass().getSimpleName() + " " + config.getConfigName() + " - " + message);
+    }
 
-    String getArgs();
+    protected boolean isSet(String propertyValue) {
+        return propertyValue != null && propertyValue.trim().length() > 0;
+    }
 
-    OutputMode getStdErrMode();
 
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
+    public String getErrorDescription() {
+        return validationErrors.toString();
+    }
 }

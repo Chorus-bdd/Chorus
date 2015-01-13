@@ -27,51 +27,34 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
+package org.chorusbdd.chorus.handlerconfig.configbean;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import java.util.Properties;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 21/09/12
+ * Time: 08:59
+ *
+ * Create a handler configuration and a validator from the supplied properties
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public interface ConfigBeanFactory<E extends HandlerConfigBean> {
 
-    String getJre();
+    /**
+     * Create a config, initializing with Properties in the order supplied in the List
+     * Later Properties in the list may override values set by earlier Properties
+     *
+     * Initially this list contains default properties plus config specific properties
+     * (property inheritance from a named parent group may be added at some future point)
+     *  @param p
+     * @param configName
+     */
+    E createConfig(Properties p, String configName);
 
-    String getClasspath();
 
-    String getJvmargs();
-
-    String getMainclass();
-
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
+    /**
+     * @return a validator for the HandlerConfig
+     */
+    ConfigBeanValidator<? super E> createValidator(E config);
 }

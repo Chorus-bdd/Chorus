@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigValidator;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigBeanValidator;
 import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -68,7 +68,7 @@ public class ProcessManagerImpl implements ProcessManager {
     private final Map<String, NamedProcessConfig> processes = new ConcurrentHashMap<String, NamedProcessConfig>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
-    private final ProcessManagerConfigValidator processesConfigValidator = new ProcessManagerConfigValidator();
+    private final ProcessManagerConfigBeanValidator processesConfigValidator = new ProcessManagerConfigBeanValidator();
 
     private ExecutionListener processManagerExecutionListener = new ProcessManagerExecutionListener();
     private ChorusProcessFactory chorusProcessFactory = new ChorusProcessFactory();

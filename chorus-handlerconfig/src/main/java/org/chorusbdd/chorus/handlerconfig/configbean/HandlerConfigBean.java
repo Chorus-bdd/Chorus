@@ -27,51 +27,31 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
-
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+package org.chorusbdd.chorus.handlerconfig.configbean;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 21/09/12
+ * Time: 08:44
+ *
+ * Interface for a handler config bean which supports validation rules
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public interface HandlerConfigBean {
 
-    String getJre();
+    /**
+     * The name of the properties group which may be defined to supply default settings for other configs
+     */
+    String DEFAULT_PROPERTIES_GROUP = "default";
 
-    String getClasspath();
+    /**
+     * A special config name which is used to define database connection properties to
+     * load configs from the database
+     */
+    String DATABASE_CONFIGS_PROPERTY_GROUP  = "dbconfigs";
 
-    String getJvmargs();
-
-    String getMainclass();
-
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
+    /**
+     * @return the config name to which this HandlerConfig relates
+     */
+    String getConfigName();
 }
