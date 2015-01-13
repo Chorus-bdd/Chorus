@@ -4,7 +4,7 @@ import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
 import org.chorusbdd.chorus.handlerconfig.configbean.PropertyFileAndDbConfigBeanBuilder;
 import org.chorusbdd.chorus.handlerconfig.properties.HandlerPropertyLoaderFactory;
-import org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations;
+import org.chorusbdd.chorus.util.properties.PropertyOperations;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.IOException;

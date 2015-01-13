@@ -1,13 +1,14 @@
 package org.chorusbdd.chorus.handlerconfig.properties;
 
-import org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyLoader;
-import org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
+import org.chorusbdd.chorus.util.properties.PropertyOperations;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations.properties;
+import static org.chorusbdd.chorus.handlerconfig.properties.VariableExpandingPropertyLoader.expandVariables;
+import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 
 
 /**
@@ -60,7 +61,7 @@ public class HandlerPropertyLoaderFactory {
         props = mergeLoadersForDirectory(props, featureDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
         props = mergeLoadersForDirectory(props, featureConfDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
 
-        props = props.expandVariables(featureToken);
+        props = expandVariables(props, featureToken);
         props = props.filterByKeyPrefix(handlerPrefix);
         props = props.removeKeyPrefix(handlerPrefix);
         return props;

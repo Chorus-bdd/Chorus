@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlerconfig.properties;
 
-import org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyLoader;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 

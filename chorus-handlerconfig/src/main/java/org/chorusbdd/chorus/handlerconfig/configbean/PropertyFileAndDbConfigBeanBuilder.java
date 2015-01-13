@@ -1,14 +1,14 @@
 package org.chorusbdd.chorus.handlerconfig.configbean;
 
 import org.chorusbdd.chorus.handlerconfig.properties.JdbcPropertyLoader;
-import org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations;
+import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations.properties;
+import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 
 /**
  * Created by nick on 03/10/2014.

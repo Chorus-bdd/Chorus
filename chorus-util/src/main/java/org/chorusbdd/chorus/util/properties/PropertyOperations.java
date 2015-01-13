@@ -1,6 +1,5 @@
-package org.chorusbdd.chorus.handlerconfig.properties.operations;
+package org.chorusbdd.chorus.util.properties;
 
-import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.function.*;
 
 import java.io.IOException;
@@ -138,10 +137,6 @@ public class PropertyOperations implements PropertyLoader {
                 return Tuple3.tuple3(keyTokens[0], keyTokens[1], value);
             }
         });
-    }
-
-    public PropertyOperations expandVariables(FeatureToken featureToken) {
-        return new PropertyOperations(new VariableExpandingPropertyLoader(propertyLoader, featureToken));
     }
 
     public Properties loadProperties() throws IOException {

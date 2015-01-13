@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerconfig.properties.operations;
+package org.chorusbdd.chorus.util.properties;
 
 import java.io.IOException;
 import java.util.Properties;

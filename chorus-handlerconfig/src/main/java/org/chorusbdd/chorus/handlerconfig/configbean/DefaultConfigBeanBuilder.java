@@ -29,14 +29,14 @@
  */
 package org.chorusbdd.chorus.handlerconfig.configbean;
 
-import org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations;
+import org.chorusbdd.chorus.util.properties.PropertyOperations;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.*;
 
-import static org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations.properties;
+import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 
 /**
  * Created by IntelliJ IDEA.

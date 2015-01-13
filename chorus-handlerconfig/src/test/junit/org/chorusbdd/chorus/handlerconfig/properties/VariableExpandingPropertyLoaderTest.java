@@ -1,13 +1,14 @@
-package org.chorusbdd.chorus.handlerconfig.properties.operations;
+package org.chorusbdd.chorus.handlerconfig.properties;
 
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.handlerconfig.properties.operations.VariableExpandingPropertyLoader.expandVariables;
+import static org.chorusbdd.chorus.handlerconfig.properties.VariableExpandingPropertyLoader.expandVariables;
 import static org.junit.Assert.*;
 
 public class VariableExpandingPropertyLoaderTest {

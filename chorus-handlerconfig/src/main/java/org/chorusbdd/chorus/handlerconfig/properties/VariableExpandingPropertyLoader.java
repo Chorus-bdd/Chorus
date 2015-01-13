@@ -1,8 +1,10 @@
-package org.chorusbdd.chorus.handlerconfig.properties.operations;
+package org.chorusbdd.chorus.handlerconfig.properties;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
+import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.IOException;
 import java.util.Map;
@@ -109,7 +111,7 @@ class VariableExpandingPropertyLoader implements PropertyLoader {
         return replaced;
     }
 
-    public static PropertyLoader expandVariables(PropertyLoader propertyLoader, FeatureToken featureToken) {
-        return new VariableExpandingPropertyLoader(propertyLoader, featureToken);
+    public static PropertyOperations expandVariables(PropertyLoader propertyLoader, FeatureToken featureToken) {
+        return new PropertyOperations(new VariableExpandingPropertyLoader(propertyLoader, featureToken));
     }
 }

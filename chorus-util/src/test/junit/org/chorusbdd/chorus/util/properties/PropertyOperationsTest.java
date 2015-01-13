@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.handlerconfig.properties.operations;
+package org.chorusbdd.chorus.util.properties;
 
 import org.chorusbdd.chorus.util.function.*;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.handlerconfig.properties.operations.PropertyOperations.properties;
+import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 import static org.chorusbdd.chorus.util.function.Tuple2.tuple2;
 import static org.junit.Assert.assertEquals;
 
