@@ -102,6 +102,8 @@ public class PropertyOperations implements PropertyLoader {
     }
 
     /**
+     * Split the key into 2 and use the first token to group
+     *
      * <pre>
      * For keys in the form:
      *   Properties()
@@ -124,12 +126,12 @@ public class PropertyOperations implements PropertyLoader {
      *  Where the delimiter does not exist in the source key, the group "" will be used.
      * </pre>
      *            
-     * @param delimiterExpression
+     * @param keyDelimiter
      */
-    public GroupedPropertyLoader stripAndGroupByFirstKeyToken(final String delimiterExpression) {
+    public GroupedPropertyLoader groupBySplitKey(final String keyDelimiter) {
         return group(new BiFunction<String, String, Tuple3<String, String, String>>() {
             public Tuple3<String, String, String> apply(String key, String value) {
-                String[] keyTokens = key.split(delimiterExpression, 2);
+                String[] keyTokens = key.split(keyDelimiter, 2);
                 if ( keyTokens.length == 1) {
                     keyTokens = new String[] {"", keyTokens[0]};
                 }

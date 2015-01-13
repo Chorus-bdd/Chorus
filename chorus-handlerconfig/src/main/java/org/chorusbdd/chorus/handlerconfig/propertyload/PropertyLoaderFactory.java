@@ -48,36 +48,36 @@ public class PropertyLoaderFactory {
      * @return a PropertyLoader to load the properties for a feature in a given configuration
      */
     public PropertyOperations createPropertyLoader(FeatureToken featureToken, String handlerName) {
-        PropertyOperations l = PropertyOperations.properties(new Properties());
+        PropertyOperations props = PropertyOperations.properties(new Properties());
         final String handlerPrefix = handlerName + ".";
 
         File featureDir = featureToken.getFeatureDir();
         File featureConfDir = new File(featureDir, "conf");
 
-        l = l.merge(new ClassPathPropertyLoader("/chorus.properties"));
-        l = l.merge(properties(new ClassPathPropertyLoader("/chorus-" + handlerName + ".properties")).prefixKeys(handlerPrefix));
+        props = props.merge(new ClassPathPropertyLoader("/chorus.properties"));
+        props = props.merge(properties(new ClassPathPropertyLoader("/chorus-" + handlerName + ".properties")).prefixKeys(handlerPrefix));
 
-        l = mergeLoadersForDirectory(l, featureDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
-        l = mergeLoadersForDirectory(l, featureConfDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
+        props = mergeLoadersForDirectory(props, featureDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
+        props = mergeLoadersForDirectory(props, featureConfDir, featureToken, featureToken.getConfigurationName(), handlerName, handlerPrefix);
 
-        l = l.expandVariables(featureToken);
-        l = l.filterByKeyPrefix(handlerPrefix);
-        l = l.removeKeyPrefix(handlerPrefix);
-        return l;
+        props = props.expandVariables(featureToken);
+        props = props.filterByKeyPrefix(handlerPrefix);
+        props = props.removeKeyPrefix(handlerPrefix);
+        return props;
     }
 
-    private PropertyOperations mergeLoadersForDirectory(PropertyOperations o, File dir, FeatureToken featureToken, String configurationName, String handlerName, String handlerPrefix) {
-        o = o.merge(getPropertyLoader(dir, "chorus.properties"));
-        o = o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, "chorus-" + handlerName + ".properties"));
+    private PropertyOperations mergeLoadersForDirectory(PropertyOperations props, File dir, FeatureToken featureToken, String configurationName, String handlerName, String handlerPrefix) {
+        props = props.merge(getPropertyLoader(dir, "chorus.properties"));
+        props = props.merge(getPropertyPrefixingLoader(handlerPrefix, dir, "chorus-" + handlerName + ".properties"));
 
         String featureNameBase = featureToken.getFeatureFile().getName().replace(".feature", "");
 
-        o = o.merge(getPropertyLoader(dir, featureNameBase + ".properties"));
-        o = o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureNameBase + "-" + handlerName + ".properties"));
+        props = props.merge(getPropertyLoader(dir, featureNameBase + ".properties"));
+        props = props.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureNameBase + "-" + handlerName + ".properties"));
 
-        o = o.merge(getPropertyLoader(dir, featureNameBase + "-" + configurationName + ".properties"));
-        o = o.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureNameBase + "-" + configurationName + "-" + handlerName + ".properties"));
-        return o;
+        props = props.merge(getPropertyLoader(dir, featureNameBase + "-" + configurationName + ".properties"));
+        props = props.merge(getPropertyPrefixingLoader(handlerPrefix, dir, featureNameBase + "-" + configurationName + "-" + handlerName + ".properties"));
+        return props;
     }
 
     /**

@@ -64,9 +64,9 @@ public class LoadConfigFromDatabaseHandler {
         Connection connection = DriverManager.getConnection(url);
 
         Statement s = connection.createStatement();
-        s.executeUpdate("create table ProcessProperties ( \"configName\" varchar(64), \"property\" varchar(64), \"value\" varchar(256))");
-        s.executeUpdate("insert into ProcessProperties values('myProcess', 'mainclass','" + ConfigLoadMain.class.getName() + "')");
-        s.executeUpdate("insert into ProcessProperties values('myProcess', 'remotingPort','" + 12345 + "')");
+        s.executeUpdate("create table ProcessProperties ( \"property\" varchar(256), \"value\" varchar(256))");
+        s.executeUpdate("insert into ProcessProperties values('processes.myProcess.mainclass','" + ConfigLoadMain.class.getName() + "')");
+        s.executeUpdate("insert into ProcessProperties values('processes.myProcess.remotingPort','" + 12345 + "')");
 
         s.close();
         connection.close();

@@ -57,7 +57,7 @@ public class PropertiesFileAndDbConfigLoader<E extends HandlerConfig> implements
 
         //load these up front to avoid loading twice
         PropertyOperations propertyLoader = new PropertyLoaderFactory().createPropertyLoader(featureToken, handlerName);
-        Map<String, Properties> groupedProperties = propertyLoader.stripAndGroupByFirstKeyToken("\\.").loadProperties();
+        Map<String, Properties> groupedProperties = propertyLoader.groupBySplitKey("\\.").loadProperties();
 
         //if there were database properties specified, use these to load even more properties!
         Map<String, Properties> dbGroupedProperties = new HashMap<>();
@@ -65,7 +65,9 @@ public class PropertiesFileAndDbConfigLoader<E extends HandlerConfig> implements
             //remove the special database properties if they exist, these define a connection to the database to load more configs
             //they don't contain the standard configuration properties for this handler
             Properties dbConnectionProps = groupedProperties.remove(HandlerConfig.DATABASE_CONFIGS_PROPERTY_GROUP);
-            dbGroupedProperties = properties(new JdbcPropertyLoader(dbConnectionProps)).stripAndGroupByFirstKeyToken("\\.").loadProperties();
+
+            PropertyOperations dbProps = properties(new JdbcPropertyLoader(dbConnectionProps));
+            dbGroupedProperties = dbProps.filterByKeyPrefix(handlerName).removeKeyPrefix(handlerName + ".").groupBySplitKey("\\.").loadProperties();
         }
 
         //the ordering here means local properties take precedence
