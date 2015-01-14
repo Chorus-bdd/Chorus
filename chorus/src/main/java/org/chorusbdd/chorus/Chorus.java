@@ -61,6 +61,7 @@ public class Chorus {
     private final ConfigReader configReader;
     private final FeatureListBuilder featureListBuilder;
     private ChorusInterpreter interpreter;
+    private SubsystemManager subsystemManager;
 
     public static void main(String[] args) throws Exception {
         boolean success = false;
@@ -89,14 +90,13 @@ public class Chorus {
 
         //configure logging first
         interpreterBuilder = new InterpreterBuilder(listenerSupport);
-        interpreter = interpreterBuilder.buildAndConfigure(configReader);
+        interpreter = interpreterBuilder.buildAndConfigure(configReader, subsystemManager);
         featureListBuilder = new FeatureListBuilder();
     }
 
     private void configureSubsystems() {
-        SubsystemManager subsystemManager = new SubsystemManagerImpl();
+        subsystemManager = new SubsystemManagerImpl();
         listenerSupport.addExecutionListener(subsystemManager.getExecutionListeners());
-        interpreter.setSubsystemManager(subsystemManager);
     }
 
     private void configureOutput() {
