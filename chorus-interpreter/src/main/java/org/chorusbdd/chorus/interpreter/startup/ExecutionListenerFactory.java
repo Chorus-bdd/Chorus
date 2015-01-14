@@ -54,16 +54,11 @@ public class ExecutionListenerFactory {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ExecutionListenerFactory.class);
 
-    public List<ExecutionListener> createExecutionListeners(ConfigProperties config, List<ExecutionListener> listeners) {
+    public List<ExecutionListener> createExecutionListeners(ConfigProperties config) {
         List<ExecutionListener> result = new ArrayList<ExecutionListener>();
 
         //we can have zero to many remote jmx execution listeners available
         addProxyForRemoteJmxListener(config.getValues(ChorusConfigProperty.JMX_LISTENER), result);
-
-        addInterpreterOutputExecutionListener(config, result);
-
-        result.addAll(listeners);
-
         addUserExecutionListeners(config, result);
         return result;
     }
@@ -103,13 +98,6 @@ public class ExecutionListenerFactory {
         }
     }
 
-    private void addInterpreterOutputExecutionListener(ConfigProperties config, List<ExecutionListener> result) {
-        boolean verbose = config.isTrue(ChorusConfigProperty.SHOW_ERRORS);
-        boolean showSummary = config.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
-        
-        InterpreterOutputExecutionListener e = new InterpreterOutputExecutionListener(showSummary, verbose, OutputFactory.getOutputFormatter());
-        result.add(e);
-    }
 
     private void addProxyForRemoteJmxListener(List<String> remoteListenerHostAndPorts, List<ExecutionListener> result) {
         for ( String hostAndPort : remoteListenerHostAndPorts ) {

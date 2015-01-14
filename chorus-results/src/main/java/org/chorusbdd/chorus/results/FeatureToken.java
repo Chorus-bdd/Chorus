@@ -216,6 +216,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
      */
     public FeatureToken deepCopy() {
         FeatureToken copy = new FeatureToken(getNextId());
+        super.deepCopy(copy);
         copy.name = this.name;
         copy.usesHandlers = usesHandlers.clone();
         copy.configurationName = this.configurationName;

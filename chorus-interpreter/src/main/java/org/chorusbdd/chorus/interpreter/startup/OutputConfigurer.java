@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.interpreter.startup;
 
+import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
@@ -44,9 +45,26 @@ import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
  */
 public class OutputConfigurer {
 
-    public void configureOutput(ConfigReader config) {
+    public InterpreterOutputExecutionListener configureOutput(ConfigReader config) {
         OutputFormatter outputFormatter = createOutputFormatter(config);
-        createLogProvider(config, outputFormatter);
+
+        //the interpreter output execution listener implements OutputFormatter
+        //and wraps and delegates to the configured formatter instance
+
+        //We pass the interpreter output execution listener to the log provider
+        //This allows us to capture any interpreter logging in the InterpreterOutputExecutionListener before sending it on to the configured
+        //formatter for formatting/output
+
+        InterpreterOutputExecutionListener interpreterOutputExecutionListener = createInterpreterOutputListener(config, outputFormatter);
+
+        createLogProvider(config, interpreterOutputExecutionListener);
+        return interpreterOutputExecutionListener;
+    }
+
+    private InterpreterOutputExecutionListener createInterpreterOutputListener(ConfigProperties config, OutputFormatter outputFormatter) {
+        boolean verbose = config.isTrue(ChorusConfigProperty.SHOW_ERRORS);
+        boolean showSummary = config.isTrue(ChorusConfigProperty.SHOW_SUMMARY);
+        return new InterpreterOutputExecutionListener(showSummary, verbose, outputFormatter);
     }
 
     private void createLogProvider(ConfigReader config, OutputFormatter outputFormatter) {

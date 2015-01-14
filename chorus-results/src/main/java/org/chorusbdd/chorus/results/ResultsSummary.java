@@ -267,7 +267,7 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
 
     public ResultsSummary deepCopy() {
         ResultsSummary s = new ResultsSummary(getNextId());
-
+        super.deepCopy(s);
         s.featuresFailed = featuresFailed;
         s.featuresPending = featuresPending;
         s.featuresPassed = featuresPassed;

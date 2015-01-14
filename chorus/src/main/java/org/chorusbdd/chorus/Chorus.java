@@ -82,25 +82,30 @@ public class Chorus {
     public Chorus(String[] args) throws InterpreterPropertyException {
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
-       
-        setLoggingProviderAndOutputFormatter();
 
-        SubsystemManager subsystemManager = new SubsystemManagerImpl();
-
-        addExecutionListeners(subsystemManager);
+        configureOutput();
+        configureSubsystems();
+        addCustomExecutionListeners();
 
         //configure logging first
         interpreterBuilder = new InterpreterBuilder(listenerSupport);
         interpreter = interpreterBuilder.buildAndConfigure(configReader);
-        interpreter.setSubsystemManager(subsystemManager);
         featureListBuilder = new FeatureListBuilder();
     }
 
-    private void addExecutionListeners(SubsystemManager subsystemManager) {
-        List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListeners(
-            configReader,
-            subsystemManager.getExecutionListeners()
-        );
+    private void configureSubsystems() {
+        SubsystemManager subsystemManager = new SubsystemManagerImpl();
+        listenerSupport.addExecutionListener(subsystemManager.getExecutionListeners());
+        interpreter.setSubsystemManager(subsystemManager);
+    }
+
+    private void configureOutput() {
+        ExecutionListener l = new OutputConfigurer().configureOutput(configReader);
+        listenerSupport.addExecutionListener(l);
+    }
+
+    private void addCustomExecutionListeners() {
+        List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListeners(configReader);
         listenerSupport.addExecutionListener(listeners);
     }
 
@@ -208,8 +213,4 @@ public class Chorus {
         return sb.toString();
     }
 
-    //configure Chorus' logging and interpreter output from the config properties
-    private void setLoggingProviderAndOutputFormatter() {
-        new OutputConfigurer().configureOutput(configReader);
-    }
 }

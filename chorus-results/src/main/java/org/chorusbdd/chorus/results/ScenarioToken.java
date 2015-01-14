@@ -117,6 +117,7 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     
     public ScenarioToken deepCopy() {
         ScenarioToken copy = new ScenarioToken(getNextId());
+        super.deepCopy(copy);
         copy.name = this.name;
         copy.steps = new ArrayList<StepToken>();
         for (StepToken step : steps) {

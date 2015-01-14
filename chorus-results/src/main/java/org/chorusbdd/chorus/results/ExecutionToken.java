@@ -258,6 +258,7 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
         ExecutionToken t = new ExecutionToken(
             getNextId(), testSuiteName, executionStartTime, executionHost
         );
+        super.deepCopy(t);
         t.resultsSummary = resultsSummary.deepCopy();
         return t;
     }

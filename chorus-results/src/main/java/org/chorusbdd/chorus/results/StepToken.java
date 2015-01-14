@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.results;
 
-import org.chorusbdd.chorus.results.util.StackTraceUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +46,6 @@ public class StepToken extends AbstractToken {
 
     private StepEndState endState = StepEndState.NOT_RUN;
     private String message = "";
-
-    //not serializing throwable, there's a chance remote processes will not be able deserialize
-    //and non primitive fields also make it difficult to reload steps from XML
-    private transient Throwable throwable;
-
-    private String stackTrace;  //exception stack trace
-    private String exception;  //toString() on throwable
 
     /**
      * Step macro are composite steps which contain child steps
@@ -103,12 +94,6 @@ public class StepToken extends AbstractToken {
         this.message = message;
     }
 
-    public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
-        this.exception = throwable.toString();
-        this.stackTrace = StackTraceUtil.getStackTraceAsString(throwable);
-    }
-
     public boolean inOneOf(StepEndState... states) {
         boolean result = false;
         for ( StepEndState s : states) {
@@ -119,22 +104,6 @@ public class StepToken extends AbstractToken {
             }
         }
         return result;
-    }
-
-    public String getStackTrace() {
-        return stackTrace;
-    }
-
-    public void setStackTrace(String stackTrace) {
-        this.stackTrace = stackTrace;
-    }
-
-    public String getException() {
-        return exception;
-    }
-
-    public void setException(String exception) {
-        this.exception = exception;
     }
 
     /**
@@ -196,11 +165,10 @@ public class StepToken extends AbstractToken {
 
     public StepToken deepCopy() {
         StepToken copy = new StepToken(getNextId(), this.type, this.action);
+        super.deepCopy(copy);
         copy.endState = this.endState;
         copy.message = this.message;
         copy.throwable = this.throwable;
-        copy.exception = this.exception;
-        copy.stackTrace = this.stackTrace;
         copy.timeTaken = this.timeTaken;
         copy.childSteps = recursiveCopy(childSteps);
         return copy;
