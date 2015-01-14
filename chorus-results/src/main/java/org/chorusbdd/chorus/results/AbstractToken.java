@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.results;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -45,8 +47,21 @@ public abstract class AbstractToken implements Token {
 
     private final long tokenId;
 
+    /**
+     * Everything exteraneously 'logged' by the interpreter during the processing of this element
+     */
+    private List<String> interpreterOutput = new LinkedList<>();
+
     public AbstractToken(long tokenId) {
         this.tokenId = tokenId;
+    }
+
+    public List<String> getInterpreterOutput() {
+        return interpreterOutput;
+    }
+
+    public void addInterpreterOutput(String output) {
+        interpreterOutput.add(output);
     }
 
     public long getTokenId() {
