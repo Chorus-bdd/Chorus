@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -59,22 +60,22 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
         STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
     }
     
-    protected PrintWriter out;
     protected ScheduledFuture progressFuture;
     protected Object printLock = new Object();
+    private Supplier<PrintWriter> outWriterSupplier;
 
-    public void setPrintStream(PrintStream outStream) {
-        out = new PrintWriter(outStream);
+    public void setPrintStreamSupplier(Supplier<PrintStream> outStreamSupplier) {
+        this.outWriterSupplier = new PrintWriterSupplier(outStreamSupplier);
     }
 
     public void printFeature(FeatureToken feature) {
-        out.printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
-        out.flush();
+        getOutWriter().printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
+        getOutWriter().flush();
     }
 
     public void printScenario(ScenarioToken scenario) {
-        out.printf("  Scenario: %s%n", scenario.getName());
-        out.flush();
+        getOutWriter().printf("  Scenario: %s%n", scenario.getName());
+        getOutWriter().flush();
     }
 
     public abstract void printStepStart(StepToken step, int depth);
@@ -82,13 +83,13 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
     public abstract void printStepEnd(StepToken step, int depth);
 
     protected void printStepWithoutEndState(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
-        out.printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
-        out.flush();
+        getOutWriter().printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+        getOutWriter().flush();
     }
 
     protected void printCompletedStep(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
-        out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
-        out.flush();
+        getOutWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+        getOutWriter().flush();
     }
 
     protected void startProgressTask(Runnable progress, int frameRate) {
@@ -159,13 +160,13 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
     }
 
     public void printStackTrace(String stackTrace) {
-        out.print(stackTrace);
-        out.flush();
+        getOutWriter().print(stackTrace);
+        getOutWriter().flush();
     }
 
     public void printMessage(String message) {
-        out.printf("%s%n", message);
-        out.flush();
+        getOutWriter().printf("%s%n", message);
+        getOutWriter().flush();
     }
 
     public void log(LogLevel level, Object message) {
@@ -180,23 +181,23 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
         if ( level == LogLevel.ERROR ) {
             t.printStackTrace(ChorusOut.err);
         } else {
-            t.printStackTrace(out);
-            out.flush();
+            t.printStackTrace(getOutWriter());
+            getOutWriter().flush();
         }
     }
 
     protected void logOut(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
-        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        out.flush();
+        getOutWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        getOutWriter().flush();
     }
 
     protected void logErr(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
-        out.println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        out.flush();
+        getOutWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        getOutWriter().flush();
     }
 
     protected abstract class StepProgressRunnable implements Runnable {
@@ -223,5 +224,36 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
         }
 
         protected abstract String getTerminator(int frameCount);
+    }
+
+
+    protected PrintWriter getOutWriter() {
+        return outWriterSupplier.get();
+    }
+
+
+    /**
+     * Lazy create the PrintWriter where the underlying PrintStream has changed
+     */
+    private class PrintWriterSupplier implements Supplier<PrintWriter> {
+
+        private PrintStream oldPrintStream;
+        private PrintWriter printWriter;
+        private Supplier<PrintStream> printStreamSupplier;
+
+        public PrintWriterSupplier(Supplier<PrintStream> printStreamSupplier) {
+            this.printStreamSupplier = printStreamSupplier;
+        }
+
+        @Override
+        public PrintWriter get() {
+            PrintStream newOut = printStreamSupplier.get();
+            if ( newOut != oldPrintStream) {
+                //the wrapped stream has changed, need to refresh the print writer
+                printWriter = new PrintWriter(newOut);
+                oldPrintStream = newOut;
+            }
+            return printWriter;
+        }
     }
 }

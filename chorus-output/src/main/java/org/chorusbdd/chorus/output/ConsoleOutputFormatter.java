@@ -55,8 +55,8 @@ public final class ConsoleOutputFormatter extends AbstractOutputFormatter {
         if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
             StringBuilder depthPadding = getDepthPadding(depth);
             int stepLengthChars =  STEP_LENGTH_CHARS - depthPadding.length(); 
-            out.printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
-            out.flush();
+            getOutWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+            getOutWriter().flush();
         }
     }
 

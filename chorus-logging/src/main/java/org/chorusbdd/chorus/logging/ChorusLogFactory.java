@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.logging;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -46,16 +44,12 @@ public class ChorusLogFactory {
 
     private static volatile ChorusLogProvider logProvider = NullLogProvider.NULL_LOG_PROVIDER;
 
-    private static final AtomicBoolean isInitialized = new AtomicBoolean();
-
     public static void setLogProvider(ChorusLogProvider logProvider) {
-        if ( ! isInitialized.getAndSet(true)) {
-            ChorusLogFactory.logProvider = logProvider;
-        }
+        ChorusLogFactory.logProvider = logProvider;
     }
 
     public static ChorusLog getLog(Class clazz) {
-        if ( ! isInitialized.getAndSet(true)) {
+        if ( logProvider == null ) {
             logProvider = new DefaultLogProviderFactory().createLogProvider();
         }
         return logProvider.getLog(clazz);

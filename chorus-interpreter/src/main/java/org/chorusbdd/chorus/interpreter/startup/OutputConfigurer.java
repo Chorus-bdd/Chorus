@@ -34,7 +34,6 @@ import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
 import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.output.OutputFactory;
 import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
 
@@ -75,7 +74,6 @@ public class OutputConfigurer {
 
     private OutputFormatter createOutputFormatter(ConfigReader config) {
         OutputFormatter outputFormatter = new OutputFormatterFactory().createOutputFormatter(config);
-        OutputFactory.setOutputFormatter(outputFormatter);
         return outputFormatter;
     }
 

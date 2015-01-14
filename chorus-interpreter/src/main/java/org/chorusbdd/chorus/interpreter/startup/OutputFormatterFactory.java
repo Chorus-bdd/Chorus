@@ -34,6 +34,9 @@ import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.output.ConsoleOutputFormatter;
 import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.output.PlainOutputFormatter;
+import org.chorusbdd.chorus.util.function.Supplier;
+
+import java.io.PrintStream;
 
 /**
  * Created by nick on 04/02/14.
@@ -64,7 +67,12 @@ public class OutputFormatterFactory {
             }
         }
 
-        formatter.setPrintStream(ChorusOut.out);
+        formatter.setPrintStreamSupplier(new Supplier<PrintStream>() {
+            @Override
+            public PrintStream get() {
+                return ChorusOut.out;
+            }
+        });
         return formatter;
     }
 }

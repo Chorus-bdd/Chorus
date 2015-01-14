@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.PrintStream;
 
@@ -47,9 +48,10 @@ public interface OutputFormatter {
     String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
 
     /**
-     * will be called before any print method, to provide a PrintStream to which the formatter can write its output
+     * will be called whenever output occurs to provide a PrintStream
+     * to which the formatter can write its output
      */
-    void setPrintStream(PrintStream out);
+    void setPrintStreamSupplier(Supplier<PrintStream> printStreamSupplier);
 
     void printFeature(FeatureToken feature);
 

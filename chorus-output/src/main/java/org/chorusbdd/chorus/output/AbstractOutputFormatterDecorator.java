@@ -5,6 +5,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.PrintStream;
 
@@ -22,8 +23,8 @@ public abstract class AbstractOutputFormatterDecorator implements OutputFormatte
     }
 
     @Override
-    public void setPrintStream(PrintStream out) {
-        wrappedFormatter.setPrintStream(out);
+    public void setPrintStreamSupplier(Supplier<PrintStream> printStreamSupplier) {
+        wrappedFormatter.setPrintStreamSupplier(printStreamSupplier);
     }
 
     @Override

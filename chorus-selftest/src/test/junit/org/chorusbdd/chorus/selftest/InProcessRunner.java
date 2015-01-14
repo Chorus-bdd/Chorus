@@ -32,12 +32,7 @@ package org.chorusbdd.chorus.selftest;
 import org.apache.log4j.Logger;
 import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusOut;
-import org.chorusbdd.chorus.output.OutputFactory;
-import org.chorusbdd.chorus.output.OutputFormatter;
-import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
-import org.chorusbdd.chorus.output.PlainOutputFormatter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -56,19 +51,6 @@ import java.util.Properties;
  */
 public class InProcessRunner implements ChorusSelfTestRunner {
 
-    static {
-        //initialize the logging subsystem up front, with defaults
-        //this fixes the OutputFormatter and LogProvider instance for all the in process tests - this is important
-        //since during testing we set the formatters print stream to make it write to our test byte array buffers for 
-        //output comparison
-        OutputFormatter outputFormatter = new PlainOutputFormatter();
-        OutputFactory.setOutputFormatter(outputFormatter);
-
-        OutputFormatterLogProvider logProvider = new OutputFormatterLogProvider();
-        logProvider.setOutputFormatter(outputFormatter);
-        ChorusLogFactory.setLogProvider(logProvider);
-    }
-    
     public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) {
         
          //use log4j configuration
@@ -89,8 +71,6 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          try {
              ChorusOut.setStdOutStream(outStream);
              ChorusOut.setStdErrStream(errStream);
-             
-             OutputFactory.getOutputFormatter().setPrintStream(outStream);
 
              //there's a bit of jiggery pokery necessary here to get the log4j appender and
              //change it's output stream so that it writes to the buffers we created for this particular test
@@ -109,7 +89,6 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          } finally {
              ChorusOut.setStdOutStream(System.out);
              ChorusOut.setStdErrStream(System.err);
-             OutputFactory.getOutputFormatter().setPrintStream(System.out);
          }
 
          return new ChorusSelfTestResults(out.toString(), err.toString(), success ? 0 : 1);

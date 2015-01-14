@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.PrintStream;
 
@@ -48,7 +49,7 @@ class NullOutputFormatter implements OutputFormatter {
     private NullOutputFormatter() {
     }
 
-    public void setPrintStream(PrintStream out) {
+    public void setPrintStreamSupplier(Supplier<PrintStream> out) {
         logWarning();
     }
 
