@@ -4,7 +4,7 @@ Chorus is a Behaviour Driven Development (BDD) testing framework written in Java
 
 It is targeted at distributed systems, which are more complex to test than a single development stack. 
 
-If you want to test a system with many networked components which need to collaborate, or has multiple User Interfaces which can interact, then Chorus may be for you. Testing such a system end to end can be tough with conventional frameworks. You'll end up doing a lot of the plumbing yourself.
+If you want to test a system which has many networked components which need to collaborate, or has multiple User Interfaces which can interact, then Chorus may be for you. Testing such a system end to end can be tough with conventional frameworks. You'll end up doing a lot of the plumbing yourself.
 
 Chorus allows a team to write plain English tests which can execute across components running remotely. 
 For example in the test below, the first step may run on a web application, and the second may run on a fat client:
