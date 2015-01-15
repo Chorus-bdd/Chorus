@@ -2,15 +2,25 @@
 
 Chorus is a Behaviour Driven Development (BDD) testing framework written in Java.
 
-It is targeted at distributed system testing. It allows a team to define plain English tests in which some or all
-scenario steps are executed in components running remotely over the network - _Executable Specifications for Distributed Systems._
+It is targeted at testing distributed systems, which are more complex to test than a single component or development stack. 
+The goal of Chrous is to make _Executable Specifications for Distributed Systems._ a reality.
 
-Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave, these extensions help to make the framework a pragmatic choice for programmers.
+If you want to test a system which is comprised of many networked components which need to collaborate, or has multiple User Interfaces used by different sets of users, then Chorus may be for you. Testing such a system end to end can be tough with conventional frameworks. You'll end up doing a lot of the plumbing yourself.
 
-Chorus is a Java framework and presently provides a solution to connect to and test Java components.
+Chorus allows a team to write plain English tests in which steps can be executed in different components running remotely over the network 
+For example in the test below, the first step may run on a web application, and the second may run on a fat client:
+
+Scenario: A trade shows in the blotter once booked
+  When a Sales User books a trade
+  Then the trade shows up in the traders blotter
+
+Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
+
+Chorus is a Java framework, and presently provides a solution to connect to and test Java (or JVM-based) components.
+It is very easy to extend. 
+Need a handler for managing virtualized Docker components? You can add one, assuming we don't get there first!
+
 We hope to add connectivity solutions for other languages in the near future
-
-In addition to its Remoting features, Chorus also provides process handling which makes it easy to stop and start processes during a scenario.
 
 **Getting Started:**
 
