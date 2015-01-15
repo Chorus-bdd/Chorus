@@ -9,8 +9,8 @@ If you want to test a system which has many networked components which need to c
 Chorus allows a team to write plain English tests which can execute across components running remotely. 
 For example in the test below, the first step may run on a web application, and the second may run on a fat client:
 
-Scenario: A trade shows in the blotter once booked
-  When a Sales User books a trade
+Scenario: A trade shows in the blotter once booked  
+  When a Sales User books a trade  
   Then the trade shows up in the traders blotter
 
 Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
