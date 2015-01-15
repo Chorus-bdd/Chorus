@@ -10,8 +10,8 @@ Chorus allows a team to write plain English tests which can execute across compo
 For example in the test below, the first step may run on a web application, and the second may run on a fat client:
 
 Scenario: A trade shows in the blotter once booked  
-  When a Sales User books a trade  
-  Then the trade shows up in the traders blotter
+- When a Sales User books a trade  
+- Then the trade shows up in the Trader's blotter
 
 Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
 
