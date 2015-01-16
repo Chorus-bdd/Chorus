@@ -42,7 +42,7 @@ public class TestJmxDualHandlerExport extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/dualhandlerexport";
 
-    final int expectedExitCode = 0;  //fail
+    final int expectedExitCode = 1;  //fail
                                                       
     protected int getExpectedExitCode() {
         return expectedExitCode;

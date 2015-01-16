@@ -1,6 +1,7 @@
 Uses: Lifecycle Methods Scenario Scoped
 Uses: Lifecycle Methods Feature Scoped
 Uses: Lifecycle Methods Multiple Methods
+Uses: Simple Handler
 
 Feature: Lifecycle Methods
 

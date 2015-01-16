@@ -30,17 +30,15 @@
 package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.context.ChorusContext;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.parser.StepMacro;
-import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.stepinvoker.*;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.PolledAssertion;
 
@@ -159,14 +157,28 @@ public class StepProcessor {
             StepMatcher stepMatcher = new StepMatcher(stepInvokerProvider.getStepInvokers(), step.getAction());
             stepMatcher.findStepMethod();
 
-            //call the method if found
-            if (stepMatcher.isStepFound()) {
-                endState = callStepMethod(executionToken, step, endState, stepMatcher);
-            } else {
-                log.debug("Could not find a step method definition for step " + step);
-                //no method found yet for this step
-                endState = StepEndState.UNDEFINED;
-                executionToken.incrementStepsUndefined();
+            StepMatchResult stepMatchResult = stepMatcher.getStepMatchResult();
+            switch(stepMatchResult) {
+                case STEP_FOUND :
+                    endState = callStepMethod(executionToken, step, endState, stepMatcher);
+                    break;
+                case STEP_NOT_FOUND:
+                    log.debug("Could not find a step method definition for step " + step);
+                    //no method found yet for this step
+                    endState = StepEndState.UNDEFINED;
+                    executionToken.incrementStepsUndefined();
+                    break;
+                case DUPLICATE_MATCH_ERROR:
+                    endState = StepEndState.FAILED;
+                    handleGenericException(executionToken, step, stepMatcher.getMatchException());
+                    break;
+                default:
+                    //we should never get here but in case we do...
+                    endState = StepEndState.FAILED;
+                    ChorusException cause = new ChorusException("Unsupported StepMatchResult");
+                    cause.fillInStackTrace();
+                    handleGenericException(executionToken, step, cause);
+                    break;
             }
         }
         return endState;

@@ -27,16 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.lifecyclemethods;
+package org.chorusbdd.chorus.selftest.duplicatestepmatch;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Initialize;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,18 +38,26 @@ import java.util.Properties;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("LoadMyPropertiesHandler")
-public class LoadMyPropertiesHandler {
+@Handler("DuplicateHandlerOne")
+public class DuplicateStepMatchHandlerOne {
 
-    private Properties myProperties = new Properties();
+    @Step("Chorus is working properly")
+    public void isWorkingProperly() {
 
-    //use the following annotation on a field in your handler
-    @ChorusResource("feature.dir")
-    File featureDir;
-
-    //when the handler is initialized, load the properties
-    @Initialize
-    public void readConfig() throws IOException {
-        myProperties.load(new FileInputStream(new File(featureDir, "myProperties.properties")));
     }
+
+    @Step("I can not run a step with two matching definitions")
+    public void canNotRunAStep() {
+    }
+
+    @Step("I can not run a step with .*")
+    public void canNotRunAStep2() {
+    }
+
+    @Step("steps which conflict between two handlers also cause a match error")
+    public void conflict() {
+
+    }
+
+
 }

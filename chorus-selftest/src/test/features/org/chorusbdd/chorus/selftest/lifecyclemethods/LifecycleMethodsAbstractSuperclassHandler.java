@@ -91,23 +91,5 @@ public abstract class LifecycleMethodsAbstractSuperclassHandler {
     abstract int getInstanceCreationCount();
 
 
-    @Step("Chorus is working properly")
-    public void isWorkingProperly() {
 
-    }
-
-    @Step("I can run a feature start scenario")
-    public void runFeatureStart() {
-
-    }
-
-    @Step("I can run a feature with a single scenario")
-    public void canRunAFeature() {
-
-    }
-
-    @Step("I can run a feature end scenario")
-    public void canRunFeatureEnd() {
-
-    }
 }

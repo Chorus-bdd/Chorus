@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.stepinvoker;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class StepMatcher {
     private String stepAction;
     private StepInvoker chosenStepInvoker;
     private List<String> invokerArgs;
+    private StepMatchResult stepMatchResult = StepMatchResult.STEP_NOT_FOUND;
+    private ChorusException matchException;
 
     public StepMatcher(List<StepInvoker> stepInvokers, String stepAction) {
         this.stepInvokers = stepInvokers;
@@ -68,15 +71,21 @@ public class StepMatcher {
     }
 
     public StepMatcher findStepMethod() {
+        reset();
         log.debug("Finding step method...");
 
-        for ( StepInvoker i : stepInvokers) {
-            checkForMatch(i);
+        try {
+            for ( StepInvoker i : stepInvokers) {
+                checkForMatch(i);
+            }
+        } catch (DuplicateStepMatchException e) {
+            stepMatchResult = StepMatchResult.DUPLICATE_MATCH_ERROR;
+            this.matchException = e;
         }
         return this;
     }
 
-    private void checkForMatch(StepInvoker invoker) {
+    private void checkForMatch(StepInvoker invoker) throws DuplicateStepMatchException {
         log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + stepAction + "]");
         Matcher matcher = invoker.getStepPattern().matcher(stepAction);
         if (matcher.matches()) {
@@ -91,20 +100,35 @@ public class StepMatcher {
         }
     }
 
-    private void foundStepInvoker(StepInvoker stepInvoker, List<String> stepArguments) {
+    private void foundStepInvoker(StepInvoker stepInvoker, List<String> stepArguments) throws DuplicateStepMatchException {
         if ( log.isTraceEnabled() ) log.trace("Matched! " + stepInvoker + "," + stepArguments);
         if (chosenStepInvoker == null) {
             this.invokerArgs = stepArguments;
             this.chosenStepInvoker = stepInvoker;
+            this.stepMatchResult = StepMatchResult.STEP_FOUND;
         } else {
-            log.info(String.format("Ambiguous step [%s], more than one implementation, will use [%s] not [%s]",
-            stepAction,
-            this.chosenStepInvoker.getTechnicalDescription(),
-            stepInvoker.getTechnicalDescription()));
+            throw new DuplicateStepMatchException(
+                String.format("Ambiguous step [%s], more than one implementation (%s / %s)",
+                    stepAction,
+                    this.chosenStepInvoker.getTechnicalDescription(),
+                    stepInvoker.getTechnicalDescription()
+                )
+            );
         }
     }
 
-    public boolean isStepFound() {
-        return chosenStepInvoker != null;
+    private void reset() {
+        stepMatchResult = StepMatchResult.STEP_NOT_FOUND;
+        matchException = null;
+        chosenStepInvoker = null;
     }
+
+    public StepMatchResult getStepMatchResult() {
+        return stepMatchResult;
+    }
+
+    public ChorusException getMatchException() {
+        return matchException;
+    }
+
 }

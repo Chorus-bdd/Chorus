@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.handlerpriority;
+package org.chorusbdd.chorus.selftest.duplicatestepmatch;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
@@ -37,11 +37,11 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestHandlerPriority extends AbstractInterpreterTest {
+public class TestDuplicateStepMatch extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/handlerpriority.feature";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/duplicatestepmatch";
 
-    final int expectedExitCode = 0;  //pass
+    final int expectedExitCode = 1;  //fail
 
     protected int getExpectedExitCode() {
         return expectedExitCode;
@@ -50,4 +50,5 @@ public class TestHandlerPriority extends AbstractInterpreterTest {
     protected String getFeaturePath() {
         return featurePath;
     }
+
 }

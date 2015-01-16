@@ -21,8 +21,6 @@ name='Multiple Methods Handler'
 }
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
-Chorus --> INFO    - Ambiguous step [I can run a feature start scenario], more than one implementation, will use [LifecycleMethodsScenarioScopedHandler:runFeatureStart] not [LifecycleMethodsFeatureScopedHandler:runFeatureStart]
-Chorus --> INFO    - Ambiguous step [I can run a feature start scenario], more than one implementation, will use [LifecycleMethodsScenarioScopedHandler:runFeatureStart] not [LifecycleMethodsMultipleMethodsHandler:runFeatureStart]
     Given I can run a feature start scenario                                                 PASSED  
 LifecycleMethodsFeatureScopedHandler{
 name='Scenario Scoped Handler'
@@ -50,8 +48,6 @@ name='Multiple Methods Handler'
 }
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
-Chorus --> INFO    - Ambiguous step [Chorus is working properly], more than one implementation, will use [LifecycleMethodsScenarioScopedHandler:isWorkingProperly] not [LifecycleMethodsFeatureScopedHandler:isWorkingProperly]
-Chorus --> INFO    - Ambiguous step [Chorus is working properly], more than one implementation, will use [LifecycleMethodsScenarioScopedHandler:isWorkingProperly] not [LifecycleMethodsMultipleMethodsHandler:isWorkingProperly]
     Check Chorus is working properly                                                         PASSED  
 LifecycleMethodsFeatureScopedHandler{
 name='Scenario Scoped Handler'
@@ -79,8 +75,6 @@ name='Multiple Methods Handler'
 }
   Scenario: Feature-End
 Chorus --> INFO    - Processing scenario: Feature-End
-Chorus --> INFO    - Ambiguous step [I can run a feature end scenario], more than one implementation, will use [LifecycleMethodsScenarioScopedHandler:canRunFeatureEnd] not [LifecycleMethodsFeatureScopedHandler:canRunFeatureEnd]
-Chorus --> INFO    - Ambiguous step [I can run a feature end scenario], more than one implementation, will use [LifecycleMethodsScenarioScopedHandler:canRunFeatureEnd] not [LifecycleMethodsMultipleMethodsHandler:canRunFeatureEnd]
     Given I can run a feature end scenario                                                   PASSED  
 LifecycleMethodsFeatureScopedHandler{
 name='Scenario Scoped Handler'

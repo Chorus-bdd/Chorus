@@ -16,9 +16,7 @@ Feature: Jmx Dual Handler Export
       And I call a step method exported by handler one in DualHandlerExport
       And I call a step method exported by handler two in DualHandlerExport
       And I call a step method exported by both handlers in DualHandlerExport
-      Then the ambiguity is logged and one of the matching steps is called in DualHandlerExport
-      #TODO we should tighten the contract here to make it fully deterministic which definition will be used
-      And I can stop the process named DualHandlerExport
+      Then a ChorusException is thrown with a message which reports the ambiguity
 
 
 

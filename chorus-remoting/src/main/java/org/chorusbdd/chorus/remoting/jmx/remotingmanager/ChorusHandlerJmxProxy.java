@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JMX proxy specifically interacting with Features exported by the ChorusHandlerJmxExporter class.
+ * JMX proxy specifically interacting with remote steps exported by the ChorusHandlerJmxExporter class.
  * Provides simple interface for interacting with the methods exposed by the ChorusHandlerJmxExporter:
  * allows for step metadata to be downloaded from remote handlers, and for these methods to be
  * invoked.

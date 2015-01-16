@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.stepinvoker;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -76,6 +75,9 @@ public interface StepInvoker {
     Object invoke(List<String> args) throws ReflectiveOperationException;
 
     /**
+     * The id is used to uniquely identify a step invoker, since it's possible the Pattern is duplicated by several step providers
+     * (this would cause an error if we match a step against the pattern)
+     *
      * @return a String id for this step invoker, which should be unique and final
      */
     String getId();

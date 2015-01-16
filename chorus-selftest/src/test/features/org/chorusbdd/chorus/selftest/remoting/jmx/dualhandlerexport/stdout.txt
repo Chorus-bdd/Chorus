@@ -13,12 +13,10 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Given I start a config1 process named DualHandlerExport                                  PASSED  
     And I call a step method exported by handler one in DualHandlerExport                    PASSED  One
     And I call a step method exported by handler two in DualHandlerExport                    PASSED  two
-Chorus --> INFO    - Ambiguous step [I call a step method exported by both handlers], more than one implementation, will use [RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth] not [RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth]
-    And I call a step method exported by both handlers in DualHandlerExport                  PASSED  
-    Then the ambiguity is logged and one of the matching steps is called in DualHandlerExportPASSED  
-    And I can stop the process named DualHandlerExport                                       PASSED  
+    And I call a step method exported by both handlers in DualHandlerExport                  FAILED  (StepMatcher:linenumber)-DuplicateStepMatchException Ambiguous step [I call a step method exported by both handlers], more than one implementation (RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth / RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth)
+    Then a ChorusException is thrown with a message which reports the ambiguity              SKIPPED 
 
 
-Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:2) (passed:2) (failed:0)
-Steps     (total:9) (passed:9) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:2) (passed:1) (failed:1)
+Steps     (total:8) (passed:6) (failed:1) (undefined:0) (pending:0) (skipped:1)

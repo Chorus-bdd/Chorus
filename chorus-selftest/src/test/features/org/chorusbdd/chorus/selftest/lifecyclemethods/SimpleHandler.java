@@ -27,11 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.handlerpriority;
+package org.chorusbdd.chorus.selftest.lifecyclemethods;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,23 +38,22 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler("Handler Priority Three")
-public class HandlerPriorityHandlerThree {
+@Handler("Simple Handler")
+public class SimpleHandler {
+
 
     @Step("Chorus is working properly")
     public void isWorkingProperly() {
+
     }
 
-    @Step("steps in all three handlers should be handled by (.*)")
-    public void stepsInAllThreeHandlers(String expectedHandler) {
-        String actualHandler = getClass().getAnnotation(Handler.class).value();
-        ChorusAssert.assertEquals(actualHandler, expectedHandler);
+    @Step("I can run a feature start scenario")
+    public void runFeatureStart() {
+
     }
 
-    @Step("steps in just handler two and three should be handled by (.*)")
-    public void stepsInJustTwoAndThree(String expectedHandler) {
-        String actualHandler = getClass().getAnnotation(Handler.class).value();
-        ChorusAssert.assertEquals(actualHandler, expectedHandler);
-    }
+    @Step("I can run a feature end scenario")
+    public void canRunFeatureEnd() {
 
+    }
 }

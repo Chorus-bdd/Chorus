@@ -36,9 +36,7 @@ import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
-import org.chorusbdd.chorus.stepinvoker.StepPendingException;
+import org.chorusbdd.chorus.stepinvoker.*;
 import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -80,12 +78,19 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         stepMatcher.findStepMethod();
 
         Object result;
-        if (stepMatcher.isStepFound()) {
-            result = processRemoteMethod(stepMatcher.getFoundStepInvoker(), stepMatcher.getInvokerArgs());
-        } else {
-            String message = String.format("There is no step handler available for action (%s) on component (%s)", action, componentName);
-            log.error(message);
-            throw new RemoteStepNotFoundException(action, componentName);
+        StepMatchResult stepMatchResult = stepMatcher.getStepMatchResult();
+        switch(stepMatchResult) {
+            case STEP_FOUND:
+                result = processRemoteMethod(stepMatcher.getFoundStepInvoker(), stepMatcher.getInvokerArgs());
+                break;
+            case STEP_NOT_FOUND:
+                String message = String.format("There is no step handler available for action (%s) on component (%s)", action, componentName);
+                log.error(message);
+                throw new RemoteStepNotFoundException(action, componentName);
+            case DUPLICATE_MATCH_ERROR:
+                throw stepMatcher.getMatchException();
+            default:
+                throw new ChorusException("Unsupported StepMatchResult");
         }
         return result;
     }

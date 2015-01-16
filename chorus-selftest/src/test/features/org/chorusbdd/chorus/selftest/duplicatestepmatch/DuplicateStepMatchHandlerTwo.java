@@ -27,28 +27,26 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.handlerpriority.nodefaulthandler;
+package org.chorusbdd.chorus.selftest.duplicatestepmatch;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 
 /**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 25/06/12
- * Time: 22:14
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class TestHandlerPriorityNoDefaultHandler extends AbstractInterpreterTest {
-
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/handlerpriority/nodefaulthandler/handlerpriority_nodefault.feature";
-
-    final int expectedExitCode = 0;  //pass
+@Handler("DuplicateHandlerTwo")
+public class DuplicateStepMatchHandlerTwo {
 
 
-    protected int getExpectedExitCode() {
-        return expectedExitCode;
+
+    @Step("steps which conflict between two handlers (also cause a match .*)")
+    public void conflict(String s) {
+
     }
 
-    protected String getFeaturePath() {
-        return featurePath;
-    }
+
 }
