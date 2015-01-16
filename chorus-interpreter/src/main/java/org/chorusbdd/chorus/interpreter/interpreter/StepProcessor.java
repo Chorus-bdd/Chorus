@@ -44,6 +44,8 @@ import org.chorusbdd.chorus.util.PolledAssertion;
 
 import java.io.InterruptedIOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -154,7 +156,9 @@ public class StepProcessor {
             contextVariableStepExpander.processStep(step);
 
             //identify what method should be called and its parameters
-            StepMatcher stepMatcher = new StepMatcher(stepInvokerProvider.getStepInvokers(), step.getAction());
+            List<StepInvoker> stepInvokers = stepInvokerProvider.getStepInvokers();
+            sortInvokersByPattern(stepInvokers);
+            StepMatcher stepMatcher = new StepMatcher(stepInvokers, step.getAction());
             stepMatcher.findStepMethod();
 
             StepMatchResult stepMatchResult = stepMatcher.getStepMatchResult();
@@ -182,6 +186,16 @@ public class StepProcessor {
             }
         }
         return endState;
+    }
+
+    //without doing this, the order of matching is indeterminate, which can cause differences in output which are a problem for testing
+    //prefer fully determinate behaviour. The only sensible solution is to sort by pattern
+    private void sortInvokersByPattern(List<StepInvoker> stepInvokers) {
+        Collections.sort(stepInvokers, new Comparator<StepInvoker>() {
+            public int compare(StepInvoker o1, StepInvoker o2) {
+                return o1.getStepPattern().toString().compareTo(o2.getStepPattern().toString());
+            }
+        });
     }
 
     private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepMatcher stepMatcher) {

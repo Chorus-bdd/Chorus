@@ -4,11 +4,11 @@ Chorus --> INFO    - No default handler found for Feature: (Test For Duplicate M
   Scenario: Fail With A Duplicate Match From A Single Handler
 Chorus --> INFO    - Processing scenario: Fail With A Duplicate Match From A Single Handler
     Given Chorus is working properly                                                         PASSED  
-    Then I can not run a step with two matching definitions                                  FAILED  (StepMatcher:linenumber)-DuplicateStepMatchException Ambiguous step [I can not run a step with two matching definitions], more than one implementation (DuplicateStepMatchHandlerOne:canNotRunAStep / DuplicateStepMatchHandlerOne:canNotRunAStep2)
+    Then I can not run a step with two matching definitions                                  FAILED  (StepMatcher:linenumber)-DuplicateStepMatchException Ambiguous step [I can not run a step with two matching definitions], more than one implementation (DuplicateStepMatchHandlerOne:canNotRunAStep2 / DuplicateStepMatchHandlerOne:canNotRunAStep)
   Scenario: Fail With A Duplicate Match Across Two Handlers
 Chorus --> INFO    - Processing scenario: Fail With A Duplicate Match Across Two Handlers
     Given Chorus is working properly                                                         PASSED  
-    Then steps which conflict between two handlers also cause a match error                  FAILED  (StepMatcher:linenumber)-DuplicateStepMatchException Ambiguous step [steps which conflict between two handlers also cause a match error], more than one implementation (DuplicateStepMatchHandlerOne:conflict / DuplicateStepMatchHandlerTwo:conflict)
+    Then steps which conflict between two handlers also cause a match error                  FAILED  (StepMatcher:linenumber)-DuplicateStepMatchException Ambiguous step [steps which conflict between two handlers also cause a match error], more than one implementation (DuplicateStepMatchHandlerTwo:conflict / DuplicateStepMatchHandlerOne:conflict)
 
 
 Features  (total:1) (passed:0) (failed:1)
