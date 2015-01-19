@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.remoting.jmx.serialization.ApiVersion;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxRemotingException;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
@@ -156,6 +157,11 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         } catch (Throwable t) {
             throw createRemotingException(t);
         }
+    }
+
+    @Override
+    public float getApiVersion() {
+        return ApiVersion.API_VERSION;
     }
 
     private JmxRemotingException createRemotingException(Throwable t) {

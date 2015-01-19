@@ -18,6 +18,11 @@ import java.util.Map;
 public class AbstractJmxResult implements Serializable {
 
 
+    /**
+     * Property representing the version of the API usd to create this message
+     */
+    public static final String API_VERSION = "API_VERSION";
+
     //Using a Map to store field data because it might help to support backwards compatibility
     //we may be able to add more fields and still deserialize earlier versions of JmxStepResult
     private Map<String, Object> fieldMap = new HashMap<String, Object>();

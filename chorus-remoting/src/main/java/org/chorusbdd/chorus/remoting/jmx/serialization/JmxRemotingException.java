@@ -29,9 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.serialization;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *  When exceptions occur remotely we throw a JmxRemotingException
  *
@@ -48,15 +45,7 @@ public class JmxRemotingException extends RuntimeException {
 
     private static final long serialVersionUID = 1;
 
-    private static final String SERIALIZE_VERSION = "SERIALIZE_VERSION";
-    private static final String STACK_TRACE_ELEMENTS = "STACK_TRACE_ELEMENTS";
-    private static final String REMOTE_EXCEPTION_CLASS = "REMOTE_EXCEPTION_CLASS";
-
-    //the current version of this serialization
-    //for use if we need to change the serialization properties and support backwards compatibility
-    private static final int CURRENT_SERIALIZE_VERSION = 1;
-
-    private Map<String, Object> fieldData = new HashMap<>();
+    private final ExceptionResult exceptionResult;
 
     /**
      * Use this constructor to safely send a client-side exception back to the chorus interpreter
@@ -70,33 +59,19 @@ public class JmxRemotingException extends RuntimeException {
      */
     public JmxRemotingException(String message, String nameOfCauseExceptionClass, StackTraceElement[] traceOfCauseException) {
         super(message);
-
-        fieldData.put(STACK_TRACE_ELEMENTS, traceOfCauseException);
-        fieldData.put(REMOTE_EXCEPTION_CLASS, nameOfCauseExceptionClass);
-        fieldData.put(SERIALIZE_VERSION, CURRENT_SERIALIZE_VERSION);
+        exceptionResult = new ExceptionResult(message, nameOfCauseExceptionClass, traceOfCauseException);
     }
 
     public StackTraceElement[] getStackTrace() {
-        return (StackTraceElement[]) fieldData.get(STACK_TRACE_ELEMENTS);
+        return (StackTraceElement[]) exceptionResult.getStackTrace();
     }
 
     public String getRemoteExceptionClassName() {
-        return (String) fieldData.get(REMOTE_EXCEPTION_CLASS);
+        return exceptionResult.getRemoteExceptionClassName();
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder(super.toString());
-
-        String remoteExceptionClassName = getRemoteExceptionClassName();
-        StackTraceElement[] remoteExceptionTrace = getStackTrace();
-
-        if ( ! "".equals(remoteExceptionClassName)) {
-            sb.append("Caused by").append(remoteExceptionClassName).append("\n");
-            sb.append("Remote stack trace \n");
-            for ( StackTraceElement s : remoteExceptionTrace) {
-                sb.append(s.toString()).append("\n");
-            }
-        }
-        return sb.toString();
+        String s = super.toString();
+        return exceptionResult.toString(s);
     }
 }

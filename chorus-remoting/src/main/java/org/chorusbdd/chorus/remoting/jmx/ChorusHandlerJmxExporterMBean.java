@@ -43,4 +43,6 @@ public interface ChorusHandlerJmxExporterMBean {
     public List<JmxInvokerResult> getStepInvokers();
 
     public JmxStepResult invokeStep(String stepId, Map chorusContext, List<String> params) throws Exception;
+
+    public float getApiVersion();
 }

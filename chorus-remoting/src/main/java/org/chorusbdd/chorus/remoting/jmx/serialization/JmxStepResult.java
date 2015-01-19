@@ -47,16 +47,10 @@ public class JmxStepResult extends AbstractJmxResult {
 
     private static final long serialVersionUID = 1;
 
-    private static final String SERIALIZE_VERSION = "SERIALIZE_VERSION";
     public static final String CHORUS_CONTEXT_FIELD = "CHORUS_CONTEXT";
     public static final String STEP_RESULT_FIELD = "STEP_RESULT";
 
-    //the current version of this serialization
-    //for use if we need to change the serialization properties and support backwards compatibility
-    private static final int CURRENT_SERIALIZE_VERSION = 1;
-
     public JmxStepResult(Map chorusContext, Object result) {
-        put(SERIALIZE_VERSION, CURRENT_SERIALIZE_VERSION);
         put(CHORUS_CONTEXT_FIELD, chorusContext);
         put(STEP_RESULT_FIELD, result);
         if ( result != null && ! (result instanceof Serializable)) {

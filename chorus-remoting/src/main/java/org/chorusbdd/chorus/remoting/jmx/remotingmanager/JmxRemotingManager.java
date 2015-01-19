@@ -63,7 +63,15 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     private final RemotingConfigBeanValidator configValidator = new RemotingConfigBeanValidator();
 
     /**
-     * Will delegate calls to a remote Handler exported as a JMX MBean
+     *
+     * Perform an action on a specific remote component
+     * Here we try to find a matching step method on a remote handler to delegate the call to
+     * We need this to support the old-style steps suffixed with 'in ${componentName}'
+     *
+     * The new way of doing remoting returns all the available remote steps as List<StepInvoker>
+     * so they can be matched against the step action by the interpreter alongside any local steps
+     * This new mechanism is used when the directive #! Remoting is used
+     *
      */
     public Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig) {
         String componentName = remotingConfig.getConfigName();
