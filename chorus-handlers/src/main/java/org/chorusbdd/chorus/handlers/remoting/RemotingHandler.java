@@ -107,7 +107,7 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
 
     //A Directive which can be used to start one or more processes using the config name
     @Step("Remoting use " + HandlerPatterns.processNameListPattern)
-    public void startProcessDirective(String processNameList) throws Exception {
+    public void remotingUseDirective(String processNameList) throws Exception {
         List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
         remoteInvokersToUse.clear();
         for ( String p : componentNames) {
@@ -168,9 +168,9 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     }
 
     private void disposeForScope(Scope scope) {
-        List<RemotingManagerConfig> scenarioConfigs = filter(configsToDispose, scope);
-        remotingManager.closeConnections(scenarioConfigs);
-        for ( RemotingManagerConfig r : scenarioConfigs) {
+        List<RemotingManagerConfig> configsToDispose = filter(this.configsToDispose, scope);
+        remotingManager.closeConnections(configsToDispose);
+        for ( RemotingManagerConfig r : configsToDispose) {
             remoteInvokersToUse.remove(r.getConfigName());
         }
     }

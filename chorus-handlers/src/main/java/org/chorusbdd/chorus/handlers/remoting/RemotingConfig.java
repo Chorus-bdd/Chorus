@@ -90,7 +90,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         return scope;
     }
 
-    public void setScope(Scope s) {
+    public void setScope(Scope scope) {
         this.scope = scope;
     }
 
@@ -135,6 +135,7 @@ public class RemotingConfig implements RemotingManagerConfig {
                 ", port=" + port +
                 ", connectionAttempts=" + connectionAttempts +
                 ", connectionAttemptMillis=" + connectionAttemptMillis +
+                ", scope=" + scope +
                 '}';
     }
 
@@ -198,6 +199,7 @@ public class RemotingConfig implements RemotingManagerConfig {
                     ", port=" + port +
                     ", connectionAttempts=" + connectionAttempts +
                     ", connectionAttemptMillis=" + connectionAttemptMillis +
+                    ", scope=" + scope +
                     '}';
         }
     }

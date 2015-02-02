@@ -166,6 +166,34 @@
             <version>2.0.0.rc2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-handlers</artifactId>
+            <version>2.0.0.rc2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-interpreter</artifactId>
+            <version>2.0.0.rc2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-processes</artifactId>
+            <version>2.0.0.rc2</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-remoting</artifactId>
+            <version>2.0.0.rc2</version>
+            <optional>true</optional>
+        </dependency>
+
         <!-- logging -->
 
 	    <dependency>
