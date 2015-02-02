@@ -73,6 +73,8 @@ public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory impleme
                 r.setHost(value);
             } else if ("port".equalsIgnoreCase(key)) {
                 r.setPort(parseIntProperty(value, "port"));
+            } else if ("scope".equalsIgnoreCase(key)) {
+                r.setScope(parseScope(value));
             } else if ("connectionAttempts".equalsIgnoreCase(key)) {
                 r.setConnnectionAttempts(parseIntProperty(value, "connectionAttempts"));
             } else if ("connectionAttemptMillis".equalsIgnoreCase(key)) {

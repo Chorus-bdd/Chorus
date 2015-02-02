@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
@@ -56,7 +55,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     private static ChorusLog log = ChorusLogFactory.getLog(JmxRemotingManager.class);
 
     /**
-     * Map: mBeanName -> proxy
+     * Map: configName -> proxy
      */
     private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
 
@@ -150,9 +149,22 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     }
 
     /**
-     * Called at end of scenario - closes all MBean connections
+     * Close any connections and clean up resources for the configs provided
      */
-    public void closeAllConnections(Scope handlerScope) {
+    public void closeConnections(List<RemotingManagerConfig> connections) {
+        for ( RemotingManagerConfig c : connections) {
+            ChorusHandlerJmxProxy proxy = proxies.remove(c.getConfigName());
+            if ( proxy != null) {
+                proxy.destroy();
+                log.debug("Closed JMX connection to: " + c.getConfigName());
+            }
+        }
+    }
+
+    /**
+     * Close all connections
+     */
+    public void closeAllConnections() {
         for (Map.Entry<String, ChorusHandlerJmxProxy> entry : proxies.entrySet()) {
             String name = entry.getKey();
             ChorusHandlerJmxProxy jmxProxy = entry.getValue();
@@ -161,6 +173,8 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         }
         proxies.clear();
     }
+
+
 
 
 }

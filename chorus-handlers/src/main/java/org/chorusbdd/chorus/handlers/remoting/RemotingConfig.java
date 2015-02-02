@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 
 /**
@@ -49,6 +50,7 @@ public class RemotingConfig implements RemotingManagerConfig {
     private int port;
     private int connectionAttempts = 40;
     private int connectionAttemptMillis = 250;
+    private Scope scope = Scope.SCENARIO;
 
     public RemotingManagerConfig buildRemotingManagerConfig() {
         return new RuntimeRemotingConfig(
@@ -57,7 +59,8 @@ public class RemotingConfig implements RemotingManagerConfig {
             host,
             port,
             connectionAttempts,
-            connectionAttemptMillis
+            connectionAttemptMillis,
+            scope
         );
     }
 
@@ -81,6 +84,14 @@ public class RemotingConfig implements RemotingManagerConfig {
 
     public int getConnectionAttemptMillis() {
         return connectionAttemptMillis;
+    }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public void setScope(Scope s) {
+        this.scope = scope;
     }
 
     public RemotingConfig setConnectionAttemptMillis(int connectionAttemptMillis) {
@@ -138,14 +149,16 @@ public class RemotingConfig implements RemotingManagerConfig {
         private final int port;
         private final int connectionAttempts;
         private final int connectionAttemptMillis;
+        private final Scope scope;
 
-        RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis) {
+        RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis, Scope scope) {
             this.protocol = protocol;
             this.configName = configName;
             this.host = host;
             this.port = port;
             this.connectionAttempts = connectionAttempts;
             this.connectionAttemptMillis = connectionAttemptMillis;
+            this.scope = scope;
         }
 
         public String getProtocol() {
@@ -170,6 +183,10 @@ public class RemotingConfig implements RemotingManagerConfig {
 
         public int getConnectionAttemptMillis() {
             return connectionAttemptMillis;
+        }
+
+        public Scope getScope() {
+            return scope;
         }
 
         @Override

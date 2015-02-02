@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.remoting.manager;
 
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
@@ -56,10 +55,13 @@ public interface RemotingManager extends Subsystem {
     Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig);
 
     /**
-     * Get the StepInvokers for the component represented by remotingConfig
+     * Get the StepInvoker for the component represented by remotingConfig
      */
     List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig);
 
 
-    void closeAllConnections(Scope handlerScope);
+    void closeConnections(List<RemotingManagerConfig> connections);
+
+
+    void closeAllConnections();
 }

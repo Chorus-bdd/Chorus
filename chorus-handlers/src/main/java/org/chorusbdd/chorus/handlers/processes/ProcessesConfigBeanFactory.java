@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
@@ -118,22 +117,11 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
             } else if ("readTimeoutSeconds".equalsIgnoreCase(key)) {
                 c.setReadTimeoutSeconds(parseIntProperty(value, "readTimeoutSeconds"));
             } else if ("scope".equalsIgnoreCase(key)) {
-                c.setProcessScope(parseProcessScope(value));
+                c.setProcessScope(parseScope(value));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }
         }
-    }
-
-    private static Scope parseProcessScope(String value) {
-        Scope processScope = Scope.valueOf(value.toUpperCase().trim());
-        if ( processScope == null) {
-            throw new ChorusException(
-                "Failed to parse property processScope with value '" + value + "', should be one of: "
-                        + Arrays.asList(Scope.values())
-            );  
-        }
-        return processScope;
     }
 
     private static OutputMode parseOutputMode(String value, String propertyName) {

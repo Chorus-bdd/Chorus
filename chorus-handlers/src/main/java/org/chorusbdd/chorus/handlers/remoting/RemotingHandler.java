@@ -37,6 +37,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
+import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
@@ -44,9 +45,7 @@ import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This handler can be used to invoke steps on components running remotely across the network.
@@ -91,7 +90,9 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
 
     private LocalProcessRemotingConfigs localProcessRemotingConfigs;
 
-    private List<StepInvoker> remoteInvokersToUse = new LinkedList<StepInvoker>();
+    private Map<String, List<StepInvoker>> remoteInvokersToUse = new HashMap<String, List<StepInvoker>>();
+
+    private Set<RemotingManagerConfig> configsToDispose = new HashSet<>();
 
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
@@ -99,7 +100,9 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     @Step("(.*) (?:in|from) " + HandlerPatterns.processNamePattern + "$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
-        return remotingManager.performActionInRemoteComponent(action, remotingConfig.buildRemotingManagerConfig());
+        RemotingManagerConfig immutableConfig = remotingConfig.buildRemotingManagerConfig();
+        configsToDispose.add(immutableConfig);
+        return remotingManager.performActionInRemoteComponent(action, immutableConfig);
     }
 
     //A Directive which can be used to start one or more processes using the config name
@@ -109,7 +112,11 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
         remoteInvokersToUse.clear();
         for ( String p : componentNames) {
             RemotingConfig remotingConfig = getRemotingConfigForComponent(p);
-            remoteInvokersToUse.addAll(remotingManager.getStepInvokers(remotingConfig));
+
+            RemotingManagerConfig immutableConfig = remotingConfig.buildRemotingManagerConfig();
+            List<StepInvoker> stepInvokers = remotingManager.getStepInvokers(immutableConfig);
+            remoteInvokersToUse.put(remotingConfig.getConfigName(), new LinkedList<StepInvoker>(stepInvokers));
+            configsToDispose.add(immutableConfig);
         }
     }
 
@@ -125,17 +132,57 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     }
 
     /**
-     * Called at end of scenario - closes all MBean connections
-     * 
-     * n.b. it is not (yet) possible to scope a remote connection to feature, so connections will all be closed on scenario end
+     * List of remote invokers for components the remoting handler is currently 'using'
+     */
+    public List<StepInvoker> getStepInvokers() {
+        List<StepInvoker> allInvokers = new LinkedList<>();
+        for ( List<StepInvoker> l : remoteInvokersToUse.values()){
+            allInvokers.addAll(l);
+        }
+        return allInvokers;
+    }
+
+    /**
+     * Called at end of scenario - close and remove MBean connections scoped to scenario
      */
     @Destroy(scope = Scope.SCENARIO)
-    public void destroy() {
+    public void destroyScenario() {
         try {
-            remotingManager.closeAllConnections(Scope.SCENARIO);
+            disposeForScope(Scope.SCENARIO);
         } catch (Throwable t) {
-            log.error("Failed while destroying jmx remoting manager");   
+            log.error("Failed during destroyScenario() jmx remoting manager");
         }
+    }
+
+    /**
+     * Called at end of scenario - close and remove MBean connections scoped to feature
+     */
+    @Destroy(scope = Scope.FEATURE)
+    public void destroyFeature() {
+        try {
+            disposeForScope(Scope.FEATURE);
+            dispose();
+        } catch (Throwable t) {
+            log.error("Failed during destroyFeature jmx remoting manager");
+        }
+    }
+
+    private void disposeForScope(Scope scope) {
+        List<RemotingManagerConfig> scenarioConfigs = filter(configsToDispose, scope);
+        remotingManager.closeConnections(scenarioConfigs);
+        for ( RemotingManagerConfig r : scenarioConfigs) {
+            remoteInvokersToUse.remove(r.getConfigName());
+        }
+    }
+
+    private List<RemotingManagerConfig> filter(Set<RemotingManagerConfig> configsToDispose, Scope scope) {
+        List<RemotingManagerConfig> result = new LinkedList<>();
+        for ( RemotingManagerConfig c : configsToDispose) {
+            if ( c.getScope() == scope) {
+                result.add(c);
+            }
+        }
+        return result;
     }
 
     private RemotingConfig getRemotingConfigForComponent(String name) {
@@ -155,10 +202,10 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
         remotingConfigMap.put(handlerConfigBean.getConfigName(), handlerConfigBean);
     }
 
-    /**
-     * List of remote invokers for components remoting handler is currently 'using'
-     */
-    public List<StepInvoker> getStepInvokers() {
-        return remoteInvokersToUse;
+
+    private void dispose() {
+        remotingManager.closeAllConnections();  //there should be nothing left but let's make sure
+        remoteInvokersToUse.clear();
+        configsToDispose.clear();
     }
 }

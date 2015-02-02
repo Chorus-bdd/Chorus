@@ -29,7 +29,10 @@
  */
 package org.chorusbdd.chorus.handlerconfig.configbean;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.util.ChorusException;
+
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,5 +57,16 @@ public class AbstractConfigBeanFactory {
         } catch (Exception e) {
             throw new ChorusException("Failed to parse property " + propertyKey + " with value '" + value + "' as boolean");
         }
+    }
+
+    protected static Scope parseScope(String value) {
+        Scope processScope = Scope.valueOf(value.toUpperCase().trim());
+        if ( processScope == null) {
+            throw new ChorusException(
+                    "Failed to parse property processScope with value '" + value + "', should be one of: "
+                            + Arrays.asList(Scope.values())
+            );
+        }
+        return processScope;
     }
 }

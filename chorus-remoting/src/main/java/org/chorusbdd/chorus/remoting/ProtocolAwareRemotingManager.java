@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.remoting;
 
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
@@ -49,8 +48,12 @@ public class ProtocolAwareRemotingManager implements RemotingManager {
         return result;
     }
 
-    public void closeAllConnections(Scope handlerScope) {
-        jmxRemotingManager.closeAllConnections(handlerScope);
+    public void closeConnections(List<RemotingManagerConfig> connections) {
+        jmxRemotingManager.closeConnections(connections);
+    }
+
+    public void closeAllConnections() {
+        jmxRemotingManager.closeAllConnections();
     }
 
     public ExecutionListener getExecutionListener() {

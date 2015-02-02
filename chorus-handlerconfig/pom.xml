@@ -172,6 +172,12 @@
             <version>2.0.0.rc2-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.chorusbdd</groupId>
+            <artifactId>chorus-annotations</artifactId>
+            <version>2.0.0.rc2-SNAPSHOT</version>
+        </dependency>
+
         <!-- test dependencies -->
 
         <dependency>

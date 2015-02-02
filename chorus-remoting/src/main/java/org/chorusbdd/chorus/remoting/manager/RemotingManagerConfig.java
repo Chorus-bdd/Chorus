@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.manager;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
 
 /**
@@ -47,4 +48,6 @@ public interface RemotingManagerConfig extends HandlerConfigBean {
     int getConnectionAttempts();
 
     int getConnectionAttemptMillis();
+
+    Scope getScope();
 }
