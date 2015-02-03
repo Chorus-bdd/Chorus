@@ -155,6 +155,9 @@
             <version>2.0.0.rc2</version>
         </dependency>
 
+        <!-- The below are required since these are also optional in the core chorus module -->
+        <!-- Since the chorus module builds an 'uber jar' which includes the contents of these modules
+         these modules should not be required by a third party -->
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-handlers</artifactId>

@@ -41,11 +41,15 @@ import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.stepinvoker.*;
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepMatchResult;
+import org.chorusbdd.chorus.stepinvoker.StepMatcher;
+import org.chorusbdd.chorus.stepinvoker.StepPendingException;
 import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.util.*;
+
+import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
 
 /**
  * Created by nick on 30/08/2014.
@@ -127,7 +131,10 @@ public class JmxRemotingManager implements RemotingManager {
 
     private void checkConfig(RemotingManagerConfig remotingConfig) {
         boolean validConfig = configValidator.isValid(remotingConfig);
-        ChorusAssert.assertTrue("Remoting config must be valid for " + remotingConfig.getConfigName(), validConfig);
+        if ( ! validConfig) {
+            log.warn(configValidator.getErrorDescription());
+            fail("Remoting config must be valid for " + remotingConfig.getConfigName());
+        }
     }
 
     private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy) {
