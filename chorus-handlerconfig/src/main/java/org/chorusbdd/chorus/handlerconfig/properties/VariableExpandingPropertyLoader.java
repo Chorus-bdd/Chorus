@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by GA2EBBU on 09/01/2015.
  */
-class VariableExpandingPropertyLoader implements PropertyLoader {
+public class VariableExpandingPropertyLoader implements PropertyLoader {
 
     private static ChorusLog log = ChorusLogFactory.getLog(VariableExpandingPropertyLoader.class);
 
@@ -35,7 +35,7 @@ class VariableExpandingPropertyLoader implements PropertyLoader {
     }
 
     @Override
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties() {
         Properties p = wrappedLoader.loadProperties();
         Properties expanded = expandVariables(p);
         return expanded;

@@ -42,7 +42,7 @@ class DbPropertiesMerge {
         this.handlerName = handlerName;
     }
 
-    PropertyOperations mergeWithDatabaseProperties(PropertyOperations properties) throws IOException {
+    PropertyOperations mergeWithDatabaseProperties(PropertyOperations properties) {
 
         //if there is a special database configs properties group, use these to load even more properties!
         Properties dbProperties = properties.filterByKeyPrefix(
@@ -54,7 +54,7 @@ class DbPropertiesMerge {
         return dbProps.merge(properties).filterKeys(new RemoveDbProps());
     }
 
-    private PropertyOperations loadDbProps(Properties connectionProperties) throws IOException {
+    private PropertyOperations loadDbProps(Properties connectionProperties) {
         PropertyOperations result = PropertyOperations.emptyProperties();
 
         if (connectionProperties.size() > 0) {

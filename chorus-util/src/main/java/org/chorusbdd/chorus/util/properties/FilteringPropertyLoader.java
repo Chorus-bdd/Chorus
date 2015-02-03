@@ -22,7 +22,7 @@ class FilteringPropertyLoader implements PropertyLoader {
         this.predicate = predicate;
     }
 
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties() {
         Properties p = wrappedLoader.loadProperties();
         Properties dest = new Properties();
         for ( Map.Entry<Object,Object> mapEntry : p.entrySet()) {

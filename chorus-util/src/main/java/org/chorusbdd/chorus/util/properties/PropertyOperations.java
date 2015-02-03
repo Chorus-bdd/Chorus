@@ -139,7 +139,11 @@ public class PropertyOperations implements PropertyLoader {
         });
     }
 
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties() {
+        return propertyLoader.loadProperties();
+    }
+
+    public Properties getProperties() {
         return propertyLoader.loadProperties();
     }
 
@@ -159,7 +163,7 @@ public class PropertyOperations implements PropertyLoader {
      */
     public static PropertyOperations properties(final Properties properties) {
         return new PropertyOperations(new PropertyLoader() {
-            public Properties loadProperties() throws IOException {
+            public Properties loadProperties() {
                 return properties != null ? properties : new Properties();
             }
         });

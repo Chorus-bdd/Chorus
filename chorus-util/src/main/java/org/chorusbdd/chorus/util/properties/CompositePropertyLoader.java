@@ -30,7 +30,7 @@ class CompositePropertyLoader implements PropertyLoader {
     }
 
     @Override
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties()  {
         Properties result = new Properties();
         for( PropertyLoader p : childLoaders) {
             result.putAll(p.loadProperties());

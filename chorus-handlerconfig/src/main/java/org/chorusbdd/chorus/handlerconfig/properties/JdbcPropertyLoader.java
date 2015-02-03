@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlerconfig.properties;
 
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -60,7 +61,7 @@ public class JdbcPropertyLoader implements PropertyLoader {
         this.jdbcProperties = jdbcProperties;
     }
 
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties(){
         Connection conn = null;
         Properties p = new Properties();
         try {
@@ -92,7 +93,7 @@ public class JdbcPropertyLoader implements PropertyLoader {
             log.debug("Loaded " + p.size() + " properties from database");
         } catch (Exception e) {
             log.error("Failed to load property group configurations from database", e);
-            throw new IOException("Failed to load property group configurations from database", e);
+            throw new ChorusException("Failed to load property group configurations from database", e);
         } finally {
             if (conn != null) {
                 try {

@@ -27,7 +27,7 @@ public class HandlerPropertyLoader implements PropertyLoader {
         this.featureToken = featureToken;
     }
 
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties() {
 
         //load Properties from file paths based on the current feature and handler name
         PropertyOperations propertyLoader = new HandlerPropertyLoaderFactory().createPropertyLoader(featureToken, handlerName);

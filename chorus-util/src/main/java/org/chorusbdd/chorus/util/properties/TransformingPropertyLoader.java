@@ -26,7 +26,7 @@ class TransformingPropertyLoader implements PropertyLoader {
         this.mappingFunction = mappingFunction;
     }
 
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties()  {
         Properties p = wrappedLoader.loadProperties();
         Properties dest = new Properties();
         for ( Map.Entry<Object,Object> mapEntry : p.entrySet()) {

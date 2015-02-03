@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.properties;
 
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -22,13 +23,17 @@ public class FilePropertyLoader implements PropertyLoader {
         this.propertiesFile = propertiesFile;
     }
 
-    public Properties loadProperties() throws IOException {
+    public Properties loadProperties() {
         Properties props = new Properties();
         log.trace(String.format("Going to load configuration properties from: %s", propertiesFile.getAbsolutePath() + " exists? " + propertiesFile.exists()));
         if (propertiesFile.exists()) {
-            FileInputStream fis = new FileInputStream(propertiesFile);
-            props.load(fis);
-            fis.close();
+            try (FileInputStream fis = new FileInputStream(propertiesFile)) {
+                props.load(fis);
+            } catch (Exception e) {
+                String message = "Failed to load properties from file " + propertiesFile + " " + e.getMessage();
+                log.error(message);
+                throw new ChorusException(message, e);
+            }
             log.debug(String.format("Loaded configuration properties from: %s", propertiesFile.getAbsolutePath()));
         }
         return props;

@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.util.properties;
 
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -9,11 +8,11 @@ import java.util.Properties;
 public interface PropertyLoader {
 
     PropertyLoader NULL_LOADER = new PropertyLoader() {
-        public Properties loadProperties() throws IOException {
+        public Properties loadProperties() {
             return new Properties();
         }
     };
 
 
-    public Properties loadProperties() throws IOException;
+    public Properties loadProperties();
 }
