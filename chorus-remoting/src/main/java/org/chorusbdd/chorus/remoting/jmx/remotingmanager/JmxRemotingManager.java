@@ -29,26 +29,28 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
+import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
+import org.chorusbdd.chorus.results.ExecutionToken;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.*;
-import org.chorusbdd.chorus.subsystem.SubsystemAdapter;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by nick on 30/08/2014.
  */
-public class JmxRemotingManager extends SubsystemAdapter implements RemotingManager {
+public class JmxRemotingManager implements RemotingManager {
 
     public static final String REMOTING_PROTOCOL = "jmx";
 
@@ -60,6 +62,10 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
     private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
 
     private final RemotingConfigBeanValidator configValidator = new RemotingConfigBeanValidator();
+
+    private final List<RemotingManagerConfig> remotingConfigs = new LinkedList<>();
+
+    private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
 
     /**
      *
@@ -102,12 +108,23 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         return result;
     }
 
-    public List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig) {
+    @Override
+    public void connect(RemotingManagerConfig remotingConfig) {
         checkConfig(remotingConfig);
         ChorusHandlerJmxProxy proxy = getProxyForComponent(remotingConfig.getConfigName(), remotingConfig);
-        return getRemoteStepInvokers(proxy);
+        List<StepInvoker> invokers = getRemoteStepInvokers(proxy);
+        remoteInvokersToUse.put(remotingConfig, invokers);
     }
-    
+
+    @Override
+    public List<StepInvoker> getStepInvokers() {
+        List<StepInvoker> invokers = new LinkedList<StepInvoker>();
+        for ( List<StepInvoker> l : remoteInvokersToUse.values()) {
+            invokers.addAll(l);
+        }
+        return invokers;
+    }
+
     private void checkConfig(RemotingManagerConfig remotingConfig) {
         boolean validConfig = configValidator.isValid(remotingConfig);
         ChorusAssert.assertTrue("Remoting config must be valid for " + remotingConfig.getConfigName(), validConfig);
@@ -127,6 +144,7 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         if ( proxy == null) {
             proxy = new ChorusHandlerJmxProxy(componentName, remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
             proxies.put(componentName, proxy);
+            remotingConfigs.add(remotingConfig);
             log.debug("Opened JMX connection to: " + componentName);
         }
         return proxy;
@@ -148,33 +166,58 @@ public class JmxRemotingManager extends SubsystemAdapter implements RemotingMana
         return result;
     }
 
-    /**
-     * Close any connections and clean up resources for the configs provided
-     */
-    public void closeConnections(List<RemotingManagerConfig> connections) {
-        for ( RemotingManagerConfig c : connections) {
-            ChorusHandlerJmxProxy proxy = proxies.remove(c.getConfigName());
-            if ( proxy != null) {
-                proxy.destroy();
-                log.debug("Closed JMX connection to: " + c.getConfigName());
-            }
+
+    private void closeConnection(RemotingManagerConfig c) {
+        ChorusHandlerJmxProxy proxy = proxies.remove(c.getConfigName());
+        if ( proxy != null) {
+            proxy.destroy();
+            log.debug("Closed JMX connection to: " + c.getConfigName());
         }
+        remotingConfigs.remove(c);
+        remoteInvokersToUse.remove(c);
     }
 
     /**
      * Close all connections
      */
     public void closeAllConnections() {
-        for (Map.Entry<String, ChorusHandlerJmxProxy> entry : proxies.entrySet()) {
-            String name = entry.getKey();
-            ChorusHandlerJmxProxy jmxProxy = entry.getValue();
-            jmxProxy.destroy();
-            log.debug("Closed JMX connection to: " + name);
+        for(RemotingManagerConfig c : remotingConfigs) {
+            closeConnection(c);
         }
-        proxies.clear();
     }
 
 
+    @Override
+    public ExecutionListener getExecutionListener() {
+        return new RemotingManagerExecutionListener();
+    }
+
+    private class RemotingManagerExecutionListener extends ExecutionListenerAdapter {
 
 
+        public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            try {
+                closeAllConnections();
+            } catch (Throwable t) {
+                log.error("Failed during destroyFeature jmx remoting manager");
+            }
+        }
+
+        public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+            try {
+                disposeForScope(Scope.SCENARIO);
+            } catch (Throwable t) {
+                log.error("Failed during destroyScenario() jmx remoting manager");
+            }
+        }
+
+        private void disposeForScope(Scope scope) {
+
+            for ( RemotingManagerConfig c : remotingConfigs) {
+                if ( c.getScope() == scope) {
+                    closeConnection(c);
+                }
+            }
+        }
+    }
 }

@@ -57,11 +57,9 @@ public interface RemotingManager extends Subsystem {
     /**
      * Get the StepInvoker for the component represented by remotingConfig
      */
-    List<StepInvoker> getStepInvokers(RemotingManagerConfig remotingConfig);
+    void connect(RemotingManagerConfig remotingConfig);
 
-
-    void closeConnections(List<RemotingManagerConfig> connections);
-
+    List<StepInvoker> getStepInvokers();
 
     void closeAllConnections();
 }

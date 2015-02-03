@@ -33,11 +33,6 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
-import org.chorusbdd.chorus.handlers.processes.ProcessesConfigBuilder;
-import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
-import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;
-import org.chorusbdd.chorus.handlers.remoting.RemotingHandler;
 
 import java.util.Properties;
 

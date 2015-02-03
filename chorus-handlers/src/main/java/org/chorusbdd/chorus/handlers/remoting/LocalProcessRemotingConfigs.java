@@ -13,9 +13,9 @@ import java.util.Map;
 class LocalProcessRemotingConfigs {
 
     private ProcessManager processManager;
-    private Map<String, RemotingConfig> remotingConfigMap;
+    private Map<String, RemotingConfigBuilder> remotingConfigMap;
 
-    public LocalProcessRemotingConfigs(ProcessManager processManager, Map<String, RemotingConfig> remotingConfigMap) {
+    public LocalProcessRemotingConfigs(ProcessManager processManager, Map<String, RemotingConfigBuilder> remotingConfigMap) {
         this.processManager = processManager;
         this.remotingConfigMap = remotingConfigMap;
     }
@@ -25,8 +25,8 @@ class LocalProcessRemotingConfigs {
      * If processName was a process started by ProcessesHandler/ProcessManager, then we may be able to find the remoting setup
      * from the process config
      */
-    RemotingConfig getConfigForProcessManagerProcess(String processName) {
-        RemotingConfig result = null;
+    RemotingConfigBuilder getConfigForProcessManagerProcess(String processName) {
+        RemotingConfigBuilder result = null;
         ProcessManagerConfig processInfo = processManager.getProcessConfig(processName);
         if ( processInfo != null && processInfo.isRemotingConfigDefined() ) {
             result = getConfigForLocalProcess(processInfo, processName);
@@ -41,16 +41,16 @@ class LocalProcessRemotingConfigs {
      * is there a matching remoting config with that config name? If there is, then use that
      * otherwise take defaults by creating a new remoting config
      */
-    private RemotingConfig getConfigForLocalProcess(ProcessManagerConfig processInfo, String processName) {
+    private RemotingConfigBuilder getConfigForLocalProcess(ProcessManagerConfig processInfo, String processName) {
 
         //there is no remoting config for this process config name, so try to create one based on process properties
-        RemotingConfig remotingConfig = remotingConfigMap.get(processName);
-        if (remotingConfig == null) {
-            remotingConfig = new RemotingConfig();
-            remotingConfig.setHost("localhost");
-            remotingConfig.setPort(processInfo.getRemotingPort());
-            remotingConfig.setConfigName(processName);
+        RemotingConfigBuilder remotingConfigBuilder = remotingConfigMap.get(processName);
+        if (remotingConfigBuilder == null) {
+            remotingConfigBuilder = new RemotingConfigBuilder();
+            remotingConfigBuilder.setHost("localhost");
+            remotingConfigBuilder.setPort(processInfo.getRemotingPort());
+            remotingConfigBuilder.setConfigName(processName);
         }
-        return remotingConfig;
+        return remotingConfigBuilder;
     }
 }

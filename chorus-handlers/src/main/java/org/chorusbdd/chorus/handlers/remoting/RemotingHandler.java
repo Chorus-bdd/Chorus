@@ -31,7 +31,8 @@ package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBeanLoader;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -44,7 +45,6 @@ import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -67,7 +67,7 @@ import java.util.*;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, StepInvokerProvider {
+public class RemotingHandler implements ConfigurableHandler<RemotingConfigBuilder>, StepInvokerProvider {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
@@ -85,23 +85,17 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
 
     @ChorusResource("subsystem.remotingManager")
     private RemotingManager remotingManager;
-    
-    private Map<String, RemotingConfig> remotingConfigMap;
 
-    private LocalProcessRemotingConfigs localProcessRemotingConfigs;
-
-    private Map<String, List<StepInvoker>> remoteInvokersToUse = new HashMap<String, List<StepInvoker>>();
-
-    private Set<RemotingManagerConfig> configsToDispose = new HashSet<>();
+    @ChorusResource("subsystem.configurationManager")
+    private ConfigurationManager configurationManager;
 
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
     @Step("(.*) (?:in|from) " + HandlerPatterns.processNamePattern + "$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
-        RemotingConfig remotingConfig = getRemotingConfigForComponent(componentName);
-        RemotingManagerConfig immutableConfig = remotingConfig.buildRemotingManagerConfig();
-        configsToDispose.add(immutableConfig);
+        RemotingConfigBuilder remotingConfigBuilder = getRemotingConfigForComponent(componentName);
+        RemotingManagerConfig immutableConfig = remotingConfigBuilder.build();
         return remotingManager.performActionInRemoteComponent(action, immutableConfig);
     }
 
@@ -109,103 +103,25 @@ public class RemotingHandler implements ConfigurableHandler<RemotingConfig>, Ste
     @Step("Remoting use " + HandlerPatterns.processNameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
         List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
-        remoteInvokersToUse.clear();
         for ( String p : componentNames) {
-            RemotingConfig remotingConfig = getRemotingConfigForComponent(p);
-
-            RemotingManagerConfig immutableConfig = remotingConfig.buildRemotingManagerConfig();
-            List<StepInvoker> stepInvokers = remotingManager.getStepInvokers(immutableConfig);
-            remoteInvokersToUse.put(remotingConfig.getConfigName(), new LinkedList<StepInvoker>(stepInvokers));
-            configsToDispose.add(immutableConfig);
+            RemotingConfigBuilder remotingConfigBuilder = getRemotingConfigForComponent(p);
+            RemotingManagerConfig immutableConfig = remotingConfigBuilder.build();
+            remotingManager.connect(immutableConfig);
         }
     }
 
-    @Initialize(scope = Scope.FEATURE)
-    public void initialize() throws IOException {
-        HandlerConfigBeanLoader<RemotingConfig> configLoader = new HandlerConfigBeanLoader<RemotingConfig>(
-            new RemotingConfigBeanFactory(),
-            "remoting",
-            featureToken
-        );
-        remotingConfigMap = configLoader.loadConfigs();
-        localProcessRemotingConfigs = new LocalProcessRemotingConfigs(processManager, remotingConfigMap);
-    }
-
     /**
-     * List of remote invokers for components the remoting handler is currently 'using'
+     * List step invokers for the currently connected componenets
      */
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> allInvokers = new LinkedList<>();
-        for ( List<StepInvoker> l : remoteInvokersToUse.values()){
-            allInvokers.addAll(l);
-        }
-        return allInvokers;
+        return remotingManager.getStepInvokers();
     }
 
-    /**
-     * Called at end of scenario - close and remove MBean connections scoped to scenario
-     */
-    @Destroy(scope = Scope.SCENARIO)
-    public void destroyScenario() {
-        try {
-            disposeForScope(Scope.SCENARIO);
-        } catch (Throwable t) {
-            log.error("Failed during destroyScenario() jmx remoting manager");
-        }
+    private RemotingConfigBuilder getRemotingConfigForComponent(String configName) {
+        HandlerConfigLoad handlerConfigLoad = new HandlerConfigLoad();
+        Properties p = handlerConfigLoad.getConfig(configurationManager, configName, "remoting");
+        RemotingConfigBeanFactory beanFactory = new RemotingConfigBeanFactory();
+        return beanFactory.createConfig(p, configName);
     }
 
-    /**
-     * Called at end of scenario - close and remove MBean connections scoped to feature
-     */
-    @Destroy(scope = Scope.FEATURE)
-    public void destroyFeature() {
-        try {
-            disposeForScope(Scope.FEATURE);
-            dispose();
-        } catch (Throwable t) {
-            log.error("Failed during destroyFeature jmx remoting manager");
-        }
-    }
-
-    private void disposeForScope(Scope scope) {
-        List<RemotingManagerConfig> configsToDispose = filter(this.configsToDispose, scope);
-        remotingManager.closeConnections(configsToDispose);
-        for ( RemotingManagerConfig r : configsToDispose) {
-            remoteInvokersToUse.remove(r.getConfigName());
-        }
-    }
-
-    private List<RemotingManagerConfig> filter(Set<RemotingManagerConfig> configsToDispose, Scope scope) {
-        List<RemotingManagerConfig> result = new LinkedList<>();
-        for ( RemotingManagerConfig c : configsToDispose) {
-            if ( c.getScope() == scope) {
-                result.add(c);
-            }
-        }
-        return result;
-    }
-
-    private RemotingConfig getRemotingConfigForComponent(String name) {
-        RemotingConfig remotingConfig = remotingConfigMap.get(name);
-        if (remotingConfig == null) {
-            //perhaps this was a process started locally by process manager
-            remotingConfig = localProcessRemotingConfigs.getConfigForProcessManagerProcess(name);
-        }
-
-        if (remotingConfig == null) {
-            throw new ChorusException("Failed to find remoting configuration for component: " + name);
-        }
-        return remotingConfig;
-    }
-
-    public void addConfiguration(RemotingConfig handlerConfigBean) {
-        remotingConfigMap.put(handlerConfigBean.getConfigName(), handlerConfigBean);
-    }
-
-
-    private void dispose() {
-        remotingManager.closeAllConnections();  //there should be nothing left but let's make sure
-        remoteInvokersToUse.clear();
-        configsToDispose.clear();
-    }
-}
+ }

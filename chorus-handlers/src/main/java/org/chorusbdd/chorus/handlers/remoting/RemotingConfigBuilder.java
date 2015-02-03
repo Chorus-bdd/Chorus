@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfig;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 
 /**
@@ -41,7 +42,7 @@ import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 * Configuration for a remote component used by the RemotingHandler
 * A builder for RemotingInfo used by the RemotingManager to control remoting
 */
-public class RemotingConfig implements RemotingManagerConfig {
+public class RemotingConfigBuilder implements RemotingManagerConfig {
 
     //default protocol to jmx so we don't have to specify it if loading props from db
     private String protocol = "jmx";
@@ -52,8 +53,8 @@ public class RemotingConfig implements RemotingManagerConfig {
     private int connectionAttemptMillis = 250;
     private Scope scope = Scope.SCENARIO;
 
-    public RemotingManagerConfig buildRemotingManagerConfig() {
-        return new RuntimeRemotingConfig(
+    public RemotingManagerConfig build() {
+        return new RemotingConfig(
             protocol,
             configName,
             host,
@@ -68,7 +69,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         return protocol;
     }
 
-    public RemotingConfig setProtocol(String protocol) {
+    public RemotingConfigBuilder setProtocol(String protocol) {
         this.protocol = protocol;
         return this;
     }
@@ -77,7 +78,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         return configName;
     }
 
-    public RemotingConfig setConfigName(String configName) {
+    public RemotingConfigBuilder setConfigName(String configName) {
         this.configName = configName;
         return this;
     }
@@ -94,7 +95,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         this.scope = scope;
     }
 
-    public RemotingConfig setConnectionAttemptMillis(int connectionAttemptMillis) {
+    public RemotingConfigBuilder setConnectionAttemptMillis(int connectionAttemptMillis) {
         this.connectionAttemptMillis = connectionAttemptMillis;
         return this;
     }
@@ -103,7 +104,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         return connectionAttempts;
     }
 
-    public RemotingConfig setConnnectionAttempts(int connectionAttempts) {
+    public RemotingConfigBuilder setConnnectionAttempts(int connectionAttempts) {
         this.connectionAttempts = connectionAttempts;
         return this;
     }
@@ -112,7 +113,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         return host;
     }
 
-    public RemotingConfig setHost(String host) {
+    public RemotingConfigBuilder setHost(String host) {
         this.host = host;
         return this;
     }
@@ -121,87 +122,8 @@ public class RemotingConfig implements RemotingManagerConfig {
         return port;
     }
 
-    public RemotingConfig setPort(int port) {
+    public RemotingConfigBuilder setPort(int port) {
         this.port = port;
         return this;
     }
-
-    @Override
-    public String toString() {
-        return "RemotingConfig{" +
-                "protocol='" + protocol + '\'' +
-                ", configName='" + configName + '\'' +
-                ", host='" + host + '\'' +
-                ", port=" + port +
-                ", connectionAttempts=" + connectionAttempts +
-                ", connectionAttemptMillis=" + connectionAttemptMillis +
-                ", scope=" + scope +
-                '}';
-    }
-
-    /**
-     * An immutable remoting config
-     */
-    class RuntimeRemotingConfig implements RemotingManagerConfig {
-
-        private final String protocol;
-        private final String configName;
-        private final String host;
-        private final int port;
-        private final int connectionAttempts;
-        private final int connectionAttemptMillis;
-        private final Scope scope;
-
-        RuntimeRemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis, Scope scope) {
-            this.protocol = protocol;
-            this.configName = configName;
-            this.host = host;
-            this.port = port;
-            this.connectionAttempts = connectionAttempts;
-            this.connectionAttemptMillis = connectionAttemptMillis;
-            this.scope = scope;
-        }
-
-        public String getProtocol() {
-            return protocol;
-        }
-
-        public String getConfigName() {
-            return configName;
-        }
-
-        public String getHost() {
-            return host;
-        }
-
-        public int getPort() {
-            return port;
-        }
-
-        public int getConnectionAttempts() {
-            return connectionAttempts;
-        }
-
-        public int getConnectionAttemptMillis() {
-            return connectionAttemptMillis;
-        }
-
-        public Scope getScope() {
-            return scope;
-        }
-
-        @Override
-        public String toString() {
-            return "RuntimeRemotingConfig{" +
-                    "protocol='" + protocol + '\'' +
-                    ", configName='" + configName + '\'' +
-                    ", host='" + host + '\'' +
-                    ", port=" + port +
-                    ", connectionAttempts=" + connectionAttempts +
-                    ", connectionAttemptMillis=" + connectionAttemptMillis +
-                    ", scope=" + scope +
-                    '}';
-        }
-    }
-
 }

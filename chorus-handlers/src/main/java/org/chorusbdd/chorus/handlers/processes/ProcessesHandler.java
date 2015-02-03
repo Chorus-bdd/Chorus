@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.handlers.processes;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -91,6 +92,12 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfigBuil
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
         ProcessesConfigBuilder config = getConfig(configName);
         startProcess(config, processName);
+    }
+
+    private ProcessesConfigBuilder getConfig(String configName) {
+        ProcessesConfigBeanFactory f = new ProcessesConfigBeanFactory();
+        Properties p = new HandlerConfigLoad().getConfig(configurationManager, configName, "processes");
+        return f.createConfig(p, configName);
     }
 
     private void startProcess(ProcessesConfigBuilder config, String processName) throws Exception {
@@ -190,47 +197,4 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfigBuil
         }
     }
 
-
-    ////////////////////////////////////////////////////////////////
-    // Lifecycle events 
-
-
-    @Destroy(scope= Scope.SCENARIO)
-    //by default stop any processes which were started during a scenario
-    public void destroyScenario() {
-        processManager.stopProcesses(Scope.SCENARIO);
-    }
-
-    @Destroy(scope= Scope.FEATURE)
-    public void destroyFeature() {
-        processManager.stopProcesses(Scope.FEATURE);
-    }
-
-    ///////////////////////////////////////////////////////////////
-    // Config load
-
-    private ProcessesConfigBuilder getConfig(final String configName) {
-        PropertyOperations processProperties = configurationManager.getAllProperties().filterByKeyPrefix("processes.").removeKeyPrefix("processes.");
-
-        Properties defProps = processProperties.filterByKeyPrefix("default.").removeKeyPrefix("default.").getProperties();
-        Properties processProps = processProperties.filterByKeyPrefix(configName + ".").removeKeyPrefix(configName + ".").getProperties();
-
-        Properties merged = properties(defProps).merge(properties(processProps)).getProperties();
-
-        ProcessesConfigBeanFactory f = new ProcessesConfigBeanFactory();
-        return f.createConfig(merged, configName);
-    }
-
-//    private Map<String, ProcessesConfigBuilder> loadProcessConfig() throws IOException {
-//        HandlerConfigBeanLoader<ProcessesConfigBuilder> l = new HandlerConfigBeanLoader<ProcessesConfigBuilder>(
-//            new ProcessesConfigBeanFactory(),
-//            "processes",
-//            featureToken
-//        );
-//        return l.loadConfigs();
-//    }
-//
-//    public void addConfiguration(ProcessesConfigBuilder handlerConfigBean) {
-//        processConfigs.put(handlerConfigBean.getConfigName(), handlerConfigBean);
-//    }
 }

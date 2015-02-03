@@ -40,6 +40,7 @@ import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.NamedExecutors;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -296,8 +297,28 @@ public class ProcessManagerImpl implements ProcessManager {
         return processManagerExecutionListener;
     }
 
+
     private class ProcessManagerExecutionListener extends ExecutionListenerAdapter {
+
         public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
             ProcessManagerImpl.this.featureToken = feature;
         }
+
+        /**
+         * @param testExecutionToken a token representing the current suite of tests running
+         * @param scenario a token representing the scenario which has just completed
+         */
+        public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+            stopProcesses(Scope.SCENARIO);
+        }
+
+        /**
+         * @param testExecutionToken a token representing the current suite of tests running
+         * @param feature a token representing the feature which has just completed
+         */
+        public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            stopProcesses(Scope.FEATURE);
+        }
+
+
     }}

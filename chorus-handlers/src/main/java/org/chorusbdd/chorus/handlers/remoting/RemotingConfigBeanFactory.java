@@ -47,22 +47,22 @@ import java.util.Properties;
  * Date: 21/09/12
  * Time: 08:51
  */
-public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<RemotingConfig> {
+public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<RemotingConfigBuilder> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBeanFactory.class);
 
-    public RemotingConfig createConfig(Properties p, String configName) {
-        RemotingConfig r = new RemotingConfig();
+    public RemotingConfigBuilder createConfig(Properties p, String configName) {
+        RemotingConfigBuilder r = new RemotingConfigBuilder();
         setProperties(p, r);
         r.setConfigName(configName);
         return r;
     }
 
-    public ConfigBeanValidator<RemotingManagerConfig> createValidator(RemotingConfig config) {
+    public ConfigBeanValidator<RemotingManagerConfig> createValidator(RemotingConfigBuilder config) {
         return new RemotingConfigBeanValidator();
     }
 
-    private void setProperties(Properties p, RemotingConfig r) {
+    private void setProperties(Properties p, RemotingConfigBuilder r) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
