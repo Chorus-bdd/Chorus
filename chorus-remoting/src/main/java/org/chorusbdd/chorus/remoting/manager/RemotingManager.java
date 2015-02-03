@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by nick on 30/08/2014.
@@ -48,16 +49,15 @@ public interface RemotingManager extends Subsystem {
     /**
      * Find a step method in the remote component which matches the 'action' String
      *
+     * @param configName
+     * @param remotingConfig
      * @param action            - the step text from the scenario which we want to match to a remote step
      * @return                    the value returned by the remote component when invoking the remote step implementation
      * @throws org.chorusbdd.chorus.util.ChorusException if executing the step fails
      **/
-    Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig);
+    Object performActionInRemoteComponent(String configName, Properties remotingConfig, String action);
 
-    /**
-     * Get the StepInvoker for the component represented by remotingConfig
-     */
-    void connect(RemotingManagerConfig remotingConfig);
+    public void connect(String configName, Properties remotingProperties);
 
     List<StepInvoker> getStepInvokers();
 

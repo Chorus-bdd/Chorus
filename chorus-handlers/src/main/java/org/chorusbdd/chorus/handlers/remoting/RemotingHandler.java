@@ -40,7 +40,6 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
-import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
@@ -96,19 +95,18 @@ public class RemotingHandler implements StepInvokerProvider {
      */
     @Step("(.*) (?:in|from) " + HandlerPatterns.processNamePattern + "$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
-        RemotingConfigBuilder remotingConfigBuilder = getRemotingConfigForComponent(componentName);
-        RemotingManagerConfig immutableConfig = remotingConfigBuilder.build();
-        return remotingManager.performActionInRemoteComponent(action, immutableConfig);
+        Properties remotingProperties = getRemotingConfigForComponent(componentName);
+        return remotingManager.performActionInRemoteComponent(componentName, remotingProperties, action);
     }
 
     //A Directive which can be used to start one or more processes using the config name
     @Step("Remoting use " + HandlerPatterns.processNameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
+
         List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
-        for ( String p : componentNames) {
-            RemotingConfigBuilder remotingConfigBuilder = getRemotingConfigForComponent(p);
-            RemotingManagerConfig immutableConfig = remotingConfigBuilder.build();
-            remotingManager.connect(immutableConfig);
+        for ( String componentName : componentNames) {
+            Properties remotingProperties = getRemotingConfigForComponent(componentName);
+            remotingManager.connect(componentName, remotingProperties);
         }
     }
 
@@ -119,11 +117,9 @@ public class RemotingHandler implements StepInvokerProvider {
         return remotingManager.getStepInvokers();
     }
 
-    private RemotingConfigBuilder getRemotingConfigForComponent(String configName) {
+    private Properties getRemotingConfigForComponent(String configName) {
         HandlerConfigLoad handlerConfigLoad = new HandlerConfigLoad();
-        Properties p = handlerConfigLoad.getConfig(configurationManager, configName, "remoting");
-        RemotingConfigBeanFactory beanFactory = new RemotingConfigBeanFactory();
-        return beanFactory.createConfig(p, configName);
+        return handlerConfigLoad.getConfig(configurationManager, configName, "remoting");
     }
 
  }

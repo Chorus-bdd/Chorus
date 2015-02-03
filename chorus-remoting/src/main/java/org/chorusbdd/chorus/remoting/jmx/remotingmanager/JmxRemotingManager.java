@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
@@ -70,6 +71,7 @@ public class JmxRemotingManager implements RemotingManager {
     private final List<RemotingManagerConfig> remotingConfigs = new LinkedList<>();
 
     private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
+    private final RemotingConfigBeanFactory remotingConfigBeanFactory = new RemotingConfigBeanFactory();
 
     /**
      *
@@ -82,7 +84,10 @@ public class JmxRemotingManager implements RemotingManager {
      * This new mechanism is used when the directive #! Remoting is used
      *
      */
-    public Object performActionInRemoteComponent(String action, RemotingManagerConfig remotingConfig) {
+    public Object performActionInRemoteComponent(String configName, Properties remotingProperties, String action) {
+
+        RemotingManagerConfig remotingConfig = buildRemotingConfig(configName, remotingProperties);
+
         String componentName = remotingConfig.getConfigName();
 
         checkConfig(remotingConfig);
@@ -113,11 +118,17 @@ public class JmxRemotingManager implements RemotingManager {
     }
 
     @Override
-    public void connect(RemotingManagerConfig remotingConfig) {
+    public void connect(String configName, Properties remotingProperties) {
+        RemotingManagerConfig remotingConfig = buildRemotingConfig(configName, remotingProperties);
+
         checkConfig(remotingConfig);
         ChorusHandlerJmxProxy proxy = getProxyForComponent(remotingConfig.getConfigName(), remotingConfig);
         List<StepInvoker> invokers = getRemoteStepInvokers(proxy);
         remoteInvokersToUse.put(remotingConfig, invokers);
+    }
+
+    private RemotingManagerConfig buildRemotingConfig(String configName, Properties remotingProperties) {
+        return remotingConfigBeanFactory.createConfig(remotingProperties, configName).build();
     }
 
     @Override

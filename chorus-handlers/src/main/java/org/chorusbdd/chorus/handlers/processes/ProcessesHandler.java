@@ -39,7 +39,6 @@ import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
@@ -74,37 +73,27 @@ public class ProcessesHandler {
     public void startProcessFromConfig(String configName) throws Exception {
         //no user process name was supplied so use the config name,
         //or the config name with a count appended if this config has already been started during the scenario
-        ProcessesConfigBuilder config = getConfig(configName);
-        String processName = nextProcessName(configName, config);
-        startProcess(config, processName);
+        Properties config = getConfig(configName);
+        String processName = nextProcessName(configName);
+        processManager.startProcess(configName, processName, config);
     }
 
     //for first process just use the config processName with no suffix
     //this is so if we just start a single myconfig process, it will be called myconfig
     //the second will be called myconfig-2
-    private synchronized String nextProcessName(String configName, ProcessesConfigBuilder config) {
+    private synchronized String nextProcessName(String configName) {
         int instancesStarted = processManager.getNumberOfInstancesStarted(configName);
         return instancesStarted == 0 ? configName : String.format("%s-%d", configName, instancesStarted + 1);
     }
 
     @Step(".*start an? (.+) process named " + HandlerPatterns.processNamePattern + ".*?")
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
-        ProcessesConfigBuilder config = getConfig(configName);
-        startProcess(config, processName);
+        Properties config = getConfig(configName);
+        processManager.startProcess(configName, processName, config);
     }
 
-    private ProcessesConfigBuilder getConfig(String configName) {
-        ProcessesConfigBeanFactory f = new ProcessesConfigBeanFactory();
-        Properties p = new HandlerConfigLoad().getConfig(configurationManager, configName, "processes");
-        return f.createConfig(p, configName);
-    }
-
-    private void startProcess(ProcessesConfigBuilder config, String processName) throws Exception {
-        int startedCount = processManager.getNumberOfInstancesStarted(config.getConfigName());
-        config.incrementDebugPort(startedCount);       //auto increment if multiple instances
-        config.incrementRemotingPort(startedCount); //auto increment if multiple instances
-        ProcessManagerConfig runtimeConfig = config.build();
-        processManager.startProcess(processName, runtimeConfig);
+    private Properties getConfig(String configName) {
+        return new HandlerConfigLoad().getConfig(configurationManager, configName, "processes");
     }
 
     @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")

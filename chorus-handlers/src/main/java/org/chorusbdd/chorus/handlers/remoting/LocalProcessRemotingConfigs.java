@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.handlers.remoting;
 
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilder;
 
 import java.util.Map;
 

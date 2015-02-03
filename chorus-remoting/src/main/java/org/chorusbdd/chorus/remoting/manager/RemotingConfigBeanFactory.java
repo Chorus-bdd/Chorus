@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.remoting;
+package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;

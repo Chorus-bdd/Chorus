@@ -27,16 +27,13 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.processes;
+package org.chorusbdd.chorus.processes.manager.config;
 
-import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanValidator;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigBeanValidator;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;

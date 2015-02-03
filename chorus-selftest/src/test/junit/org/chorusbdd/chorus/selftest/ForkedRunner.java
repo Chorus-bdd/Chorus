@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import org.chorusbdd.chorus.config.ConfigurationProperty;
-import org.chorusbdd.chorus.handlers.processes.ProcessesConfigBuilder;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilder;
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessCommandLineBuilder;

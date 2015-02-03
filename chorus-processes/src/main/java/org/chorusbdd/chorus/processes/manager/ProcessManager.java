@@ -33,12 +33,14 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
+import java.util.Properties;
+
 /**
  * Created by nick on 26/09/2014.
  */
 public interface ProcessManager extends Subsystem {
 
-    void startProcess(String processName, ProcessManagerConfig processInfo) throws Exception;
+    void startProcess(String configName, String processName, Properties processProperties) throws Exception;
 
     void stopProcess(String processName);
 

@@ -27,12 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.processes;
+package org.chorusbdd.chorus.processes.manager.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 
 /**
  * Created with IntelliJ IDEA.

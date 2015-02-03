@@ -27,11 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.remoting;
+package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfig;
-import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 
 /**
 * Created by IntelliJ IDEA.

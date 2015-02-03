@@ -36,6 +36,8 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigBeanValidator;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilder;
 import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -47,6 +49,7 @@ import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
@@ -69,6 +72,8 @@ public class ProcessManagerImpl implements ProcessManager {
     private final Map<String, NamedProcessConfig> processes = new ConcurrentHashMap<String, NamedProcessConfig>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+
+    private final ProcessesConfigBeanFactory processesConfigBeanFactory = new ProcessesConfigBeanFactory();
     private final ProcessManagerConfigBeanValidator processesConfigValidator = new ProcessManagerConfigBeanValidator();
 
     private ExecutionListener processManagerExecutionListener = new ProcessManagerExecutionListener();
@@ -88,9 +93,11 @@ public class ProcessManagerImpl implements ProcessManager {
      *
      * @throws Exception
      */
-    public synchronized void startProcess(String processName, ProcessManagerConfig processManagerConfig) throws Exception {
+    public synchronized void startProcess(String configName, String processName, Properties processProperties) throws Exception {
 
-        NamedProcessConfig namedProcessConfig = new NamedProcessConfig(processName, processManagerConfig);
+        ProcessManagerConfig runtimeConfig = getRuntimeConfig(configName, processProperties);
+
+        NamedProcessConfig namedProcessConfig = new NamedProcessConfig(processName, runtimeConfig);
         checkConfigAndNotAlreadyStarted(namedProcessConfig);
 
         ChorusProcess chorusProcess = chorusProcessFactory.startChorusProcess(namedProcessConfig, featureToken);
@@ -99,6 +106,14 @@ public class ProcessManagerImpl implements ProcessManager {
         processes.put(processName, namedProcessConfig);
 
         chorusProcess.checkNoFailureWithin(namedProcessConfig.getProcessCheckDelay());
+    }
+
+    private ProcessManagerConfig getRuntimeConfig(String configName, Properties processProperties) {
+        ProcessesConfigBuilder config = processesConfigBeanFactory.createConfig(processProperties, configName);
+        int startedCount = getNumberOfInstancesStarted(configName);
+        config.incrementDebugPort(startedCount);       //auto increment if multiple instances
+        config.incrementRemotingPort(startedCount); //auto increment if multiple instances
+        return config.build();
     }
 
     private void checkConfigAndNotAlreadyStarted(NamedProcessConfig namedProcessConfig) {
