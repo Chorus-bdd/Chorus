@@ -103,7 +103,11 @@ public class ProcessManagerImpl implements ProcessManager {
     private void checkConfigAndNotAlreadyStarted(NamedProcessConfig namedProcessConfig) {
         String processName = namedProcessConfig.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
-        ChorusAssert.assertTrue("The config for " + processName + " must be valid", processesConfigValidator.isValid(namedProcessConfig));
+        boolean valid = processesConfigValidator.isValid(namedProcessConfig);
+        if ( ! valid) {
+            log.warn(processesConfigValidator.getErrorDescription());
+            ChorusAssert.fail("The config for " + processName + " must be valid");
+        }
     }
 
 
@@ -236,6 +240,17 @@ public class ProcessManagerImpl implements ProcessManager {
             throw new ChorusException("Process " + processName + " failed to terminate after " + waitTimeSeconds + " seconds");
         }
         t.setWaitFinished(); //prevent the interrupt, process finished naturally
+    }
+
+    @Override
+    public int getNumberOfInstancesStarted(String configName) {
+        int count = 0;
+        for ( NamedProcessConfig n : processes.values()) {
+            if ( configName.equals(n.getConfigName())) {
+                count++;
+            }
+        }
+        return count;
     }
 
     class InterruptWaitTask implements Runnable {

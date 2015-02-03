@@ -32,11 +32,14 @@ package org.chorusbdd.chorus.selftest.dynamicconfig;
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlers.processes.ProcessesConfigBuilder;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.handlers.processes.ProcessesHandler;
 import org.chorusbdd.chorus.handlers.remoting.RemotingConfig;
 import org.chorusbdd.chorus.handlers.remoting.RemotingHandler;
+
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,28 +50,27 @@ import org.chorusbdd.chorus.handlers.remoting.RemotingHandler;
 @Handler("Dynamic Configuration")
 public class DynamicConfigurationHandler {
 
-    @ChorusResource("handler.Processes")
-    ProcessesHandler processesHandler;
-
-    @ChorusResource("handler.Remoting")
-    RemotingHandler remotingHandler;
+    @ChorusResource("subsystem.configurationManager")
+    ConfigurationManager configurationManager;
 
     @Step(".*add a process config called (.*)")
     public void addProcessConfig(String processConfigName)  {
         String mainclass = "org.chorusbdd.chorus.selftest.dynamicconfig.DynamicProcess";
-        ProcessesConfig c = new ProcessesConfig().
-                setConfigName(processConfigName).
-                setMainclass(mainclass).
-                setRemotingPort(12345).
-                setStdOutAndErrMode(OutputMode.FILE);
-        processesHandler.addConfiguration(c);
+        Properties p = new Properties();
+        p.setProperty("processes." + processConfigName + ".mainClass", mainclass);
+        p.setProperty("processes." + processConfigName + ".remotingPort", String.valueOf(12345));
+        p.setProperty("processes." + processConfigName + ".stdOutMode", "FILE");
+        p.setProperty("processes." + processConfigName + ".stdErrMode", "FILE");
+        configurationManager.addFeatureProperties(p);
     }
 
     @Step(".*add a remoting config called (.*)")
     public void addRemotingConfig(String configName)  {
-        RemotingConfig c = new RemotingConfig();
-        c.setConfigName(configName).setProtocol("jmx").setHost("localhost").setPort(12345);
-        remotingHandler.addConfiguration(c);
+        Properties p = new Properties();
+        p.setProperty("remoting." + configName + ".protocol", "jmx");
+        p.setProperty("remoting." + configName + ".host", "localhost");
+        p.setProperty("remoting." + configName + ".port", String.valueOf(12345));
+        configurationManager.addFeatureProperties(p);
     }
 
 }

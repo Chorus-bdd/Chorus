@@ -14,6 +14,8 @@ public interface SubsystemManager {
 
     Object getRemotingManager();
 
+    Object getConfigurationManager();
+
     Subsystem getSubsystemById(String id);
 
     List<ExecutionListener> getExecutionListeners();

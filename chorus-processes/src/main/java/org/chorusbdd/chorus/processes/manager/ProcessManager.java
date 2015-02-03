@@ -71,4 +71,5 @@ public interface ProcessManager extends Subsystem {
 
     void waitForProcessToTerminate(String processName, int waitTimeSeconds);
 
+    int getNumberOfInstancesStarted(String configName);
 }

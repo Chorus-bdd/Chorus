@@ -30,6 +30,8 @@
 package org.chorusbdd.chorus.interpreter.subsystem;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
+import org.chorusbdd.chorus.handlerconfig.ChorusProperties;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.subsystem.Subsystem;
@@ -45,13 +47,12 @@ import java.util.Map;
  *
  * Created by nick on 26/09/2014.
  *
- * TODO replace these hardcoded subsystems by dynamically loading them from config and using a
- * String key
  */
 public class SubsystemManagerImpl implements SubsystemManager {
 
     private final Subsystem processManager;
     private final Subsystem remotingManager;
+    private final ConfigurationManager configurationManager;
 
     private Map<String, Subsystem> subsystems = new HashMap<>();
 
@@ -60,6 +61,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     public SubsystemManagerImpl() {
         processManager = initializeProcessManager();
         remotingManager = initializeRemotingManager();
+        configurationManager = initializeConfigurationManager();
     }
 
     public Subsystem getProcessManager() {
@@ -70,12 +72,18 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return remotingManager;
     }
 
+    @Override
+    public Object getConfigurationManager() {
+        return configurationManager;
+    }
+
     public Subsystem getSubsystemById(String id) {
         return subsystems.get(id);
     }
 
     public List<ExecutionListener> getExecutionListeners() {
         return Arrays.asList(
+            configurationManager.getExecutionListener(),
             processManager.getExecutionListener(),
             remotingManager.getExecutionListener()
         );
@@ -96,6 +104,15 @@ public class SubsystemManagerImpl implements SubsystemManager {
             "chorusRemotingManager",
             "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager"
         );
+    }
+
+    private ConfigurationManager initializeConfigurationManager() {
+        return initializeSubsystem(
+            "configurationManager",
+            "chorusConfigurationManager",
+            "org.chorusbdd.chorus.handlerconfig.ChorusProperties"
+        );
+
     }
 
     private <E> E initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass) {

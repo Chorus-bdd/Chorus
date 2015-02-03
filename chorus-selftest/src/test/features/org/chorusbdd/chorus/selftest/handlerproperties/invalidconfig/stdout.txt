@@ -1,13 +1,12 @@
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/invalidconfig/invalidhandlerconfig.feature
 Feature: Invalid Handler Config                                                                      
 Chorus --> INFO    - No default handler found for Feature: (Invalid Handler Config), will use built-in handlers and Uses: statements
-Chorus --> WARN    - Invalid ProcessesConfig config1 - main class was null or empty
-Chorus --> WARN    - Removing config1 which is not a valid processes handler config
 Chorus --> WARN    - Invalid RemotingConfig config1 - host was not set
 Chorus --> WARN    - Removing config1 which is not a valid remoting handler config
   Scenario: Invalid config1 Processes Properties
 Chorus --> INFO    - Processing scenario: Invalid config1 Processes Properties
-    I can start a config1 process                                                            FAILED  (ProcessesHandler:linenumber)-ChorusException No configuration found for process: config1
+Chorus --> WARN    - Invalid NamedProcessConfig config1 - main class was null or empty
+    I can start a config1 process                                                            FAILED  (ProcessManagerImpl:linenumber)-ChorusAssertionError The config for config1 must be valid
     And wait for config1 to terminate                                                        SKIPPED 
   Scenario: Invalid config1 Remoting Properties
 Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties

@@ -18,28 +18,19 @@ import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties
 /**
  * Created by GA2EBBU on 03/02/2015.
  *
- * A singleton which manages all chorus properties
+ * The default ConfigurationManager for chorus
  */
-public class ChorusProperties implements PropertiesSubsystem {
-
-    private static final ChorusProperties chorusProperties = new ChorusProperties();
+public class ChorusProperties implements ConfigurationManager {
 
     private Properties sessionProperties = new Properties();
     private Properties featureProperties = new Properties();
 
     private FeatureToken currentFeature;
 
-    private ChorusProperties() {
-    }
-
-    public static ChorusProperties get() {
-        return chorusProperties;
-    }
-
     @Override
     public PropertyOperations getAllProperties() {
         return expandVariables(
-            properties(sessionProperties).merge(properties(featureProperties)), currentFeature
+                properties(sessionProperties).merge(properties(featureProperties)), currentFeature
         );
     }
 

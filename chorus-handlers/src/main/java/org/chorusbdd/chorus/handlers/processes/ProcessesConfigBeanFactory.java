@@ -50,22 +50,22 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<ProcessesConfig> {
+public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<ProcessesConfigBuilder> {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
 
-    public ProcessesConfig createConfig(Properties p, String configName) {
-        ProcessesConfig c = new ProcessesConfig();
+    public ProcessesConfigBuilder createConfig(Properties p, String configName) {
+        ProcessesConfigBuilder c = new ProcessesConfigBuilder();
         setProperties(p, c);
         c.setConfigName(configName);
         return c;
     }
 
-    public ConfigBeanValidator<ProcessManagerConfig> createValidator(ProcessesConfig config) {
+    public ConfigBeanValidator<ProcessManagerConfig> createValidator(ProcessesConfigBuilder config) {
         return new ProcessManagerConfigBeanValidator();
     }
 
-    private void setProperties(Properties p, ProcessesConfig c) {
+    private void setProperties(Properties p, ProcessesConfigBuilder c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();

@@ -31,28 +31,27 @@ package org.chorusbdd.chorus.handlers.processes;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigBeanLoader;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
+
+import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
+public class ProcessesHandler implements ConfigurableHandler<ProcessesConfigBuilder>{
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
-    
-    private Map<String, ProcessesConfig> processConfigs;
 
     @ChorusResource("feature.dir")
     private File featureDir;
@@ -66,13 +65,16 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     @ChorusResource("subsystem.processManager")
     private ProcessManager processManager;
 
+    @ChorusResource("subsystem.configurationManager")
+    private ConfigurationManager configurationManager;
+
     // -------------------------------------------------------------- Steps
 
     @Step(".*start a (.*) process")
     public void startProcessFromConfig(String configName) throws Exception {
         //no user process name was supplied so use the config name,
         //or the config name with a count appended if this config has already been started during the scenario
-        ProcessesConfig config = getConfig(configName);
+        ProcessesConfigBuilder config = getConfig(configName);
         String processName = nextProcessName(configName, config);
         startProcess(config, processName);
     }
@@ -80,20 +82,23 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     //for first process just use the config processName with no suffix
     //this is so if we just start a single myconfig process, it will be called myconfig
     //the second will be called myconfig-2
-    private synchronized String nextProcessName(String processName, ProcessesConfig config) {
-        int instancesStarted = config.getInstancesStarted();
-        return instancesStarted == 0 ? processName : String.format("%s-%d", processName, instancesStarted + 1);
+    private synchronized String nextProcessName(String configName, ProcessesConfigBuilder config) {
+        int instancesStarted = processManager.getNumberOfInstancesStarted(configName);
+        return instancesStarted == 0 ? configName : String.format("%s-%d", configName, instancesStarted + 1);
     }
 
     @Step(".*start an? (.+) process named " + HandlerPatterns.processNamePattern + ".*?")
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
-        ProcessesConfig config = getConfig(configName);
+        ProcessesConfigBuilder config = getConfig(configName);
         startProcess(config, processName);
     }
 
-    private void startProcess(ProcessesConfig config, String processName) throws Exception {
-        ProcessManagerConfig processInfo = config.buildProcessManagerConfig();
-        processManager.startProcess(processName, processInfo);
+    private void startProcess(ProcessesConfigBuilder config, String processName) throws Exception {
+        int startedCount = processManager.getNumberOfInstancesStarted(config.getConfigName());
+        config.incrementDebugPort(startedCount);       //auto increment if multiple instances
+        config.incrementRemotingPort(startedCount); //auto increment if multiple instances
+        ProcessManagerConfig runtimeConfig = config.build();
+        processManager.startProcess(processName, runtimeConfig);
     }
 
     @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")
@@ -190,24 +195,10 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     // Lifecycle events 
 
 
-    @Initialize(scope= Scope.FEATURE)
-    public void setupFeature() throws Exception {
-        processConfigs = loadProcessConfig();
-    }
-
     @Destroy(scope= Scope.SCENARIO)
     //by default stop any processes which were started during a scenario
     public void destroyScenario() {
         processManager.stopProcesses(Scope.SCENARIO);
-        resetScenarioScopedPortsInConfigTemplates();
-    }
-
-    private void resetScenarioScopedPortsInConfigTemplates() {
-        for (ProcessesConfig config : processConfigs.values()) {
-            if (Scope.SCENARIO.equals(config.getProcessScope())) {
-                config.resetPorts();
-            }
-        }
     }
 
     @Destroy(scope= Scope.FEATURE)
@@ -218,24 +209,28 @@ public class ProcessesHandler implements ConfigurableHandler<ProcessesConfig>{
     ///////////////////////////////////////////////////////////////
     // Config load
 
-    private ProcessesConfig getConfig(final String configName) {
-        ProcessesConfig c = processConfigs.get(configName);
-        if (c == null) {
-            throw new ChorusException("No configuration found for process: " + configName);
-        }
-        return c;
+    private ProcessesConfigBuilder getConfig(final String configName) {
+        PropertyOperations processProperties = configurationManager.getAllProperties().filterByKeyPrefix("processes.").removeKeyPrefix("processes.");
+
+        Properties defProps = processProperties.filterByKeyPrefix("default.").removeKeyPrefix("default.").getProperties();
+        Properties processProps = processProperties.filterByKeyPrefix(configName + ".").removeKeyPrefix(configName + ".").getProperties();
+
+        Properties merged = properties(defProps).merge(properties(processProps)).getProperties();
+
+        ProcessesConfigBeanFactory f = new ProcessesConfigBeanFactory();
+        return f.createConfig(merged, configName);
     }
 
-    private Map<String, ProcessesConfig> loadProcessConfig() throws IOException {
-        HandlerConfigBeanLoader<ProcessesConfig> l = new HandlerConfigBeanLoader<ProcessesConfig>(
-            new ProcessesConfigBeanFactory(),
-            "processes",
-            featureToken
-        );
-        return l.loadConfigs();
-    }
-
-    public void addConfiguration(ProcessesConfig handlerConfigBean) {
-        processConfigs.put(handlerConfigBean.getConfigName(), handlerConfigBean);
-    }
+//    private Map<String, ProcessesConfigBuilder> loadProcessConfig() throws IOException {
+//        HandlerConfigBeanLoader<ProcessesConfigBuilder> l = new HandlerConfigBeanLoader<ProcessesConfigBuilder>(
+//            new ProcessesConfigBeanFactory(),
+//            "processes",
+//            featureToken
+//        );
+//        return l.loadConfigs();
+//    }
+//
+//    public void addConfiguration(ProcessesConfigBuilder handlerConfigBean) {
+//        processConfigs.put(handlerConfigBean.getConfigName(), handlerConfigBean);
+//    }
 }

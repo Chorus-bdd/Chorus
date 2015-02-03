@@ -30,8 +30,8 @@
 package org.chorusbdd.chorus.selftest;
 
 import org.chorusbdd.chorus.config.ConfigurationProperty;
+import org.chorusbdd.chorus.handlers.processes.ProcessesConfigBuilder;
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
-import org.chorusbdd.chorus.handlers.processes.ProcessesConfig;
 import org.chorusbdd.chorus.output.OutputFormatter;
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessCommandLineBuilder;
 
@@ -74,13 +74,13 @@ public class ForkedRunner implements ChorusSelfTestRunner {
 
         StringBuilder jvmArgs = getJvmArgs(sysPropsForTest);
 
-        ProcessesConfig processesConfig = new ProcessesConfig();
-        processesConfig.setJvmargs(jvmArgs.toString());
-        processesConfig.setArgs(switches);
-        processesConfig.setMainclass(mainClass);
+        ProcessesConfigBuilder processesConfigBuilder = new ProcessesConfigBuilder();
+        processesConfigBuilder.setJvmargs(jvmArgs.toString());
+        processesConfigBuilder.setArgs(switches);
+        processesConfigBuilder.setMainclass(mainClass);
         JavaProcessCommandLineBuilder javaProcessCommandLineBuilder = new JavaProcessCommandLineBuilder(
             new File(System.getProperty("user.dir")),
-            processesConfig.buildProcessManagerConfig(),
+            processesConfigBuilder.build(),
             "forkedTests"
         );
 

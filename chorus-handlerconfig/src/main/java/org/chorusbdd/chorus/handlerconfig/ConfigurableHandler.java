@@ -7,5 +7,4 @@ import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
  */
 public interface ConfigurableHandler<E extends HandlerConfigBean> {
 
-    void addConfiguration(E handlerConfigBean);
 }

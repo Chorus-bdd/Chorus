@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.handlerconfig;
 
-import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
@@ -9,7 +8,7 @@ import java.util.Properties;
 /**
  * Created by GA2EBBU on 03/02/2015.
  */
-public interface PropertiesSubsystem extends Subsystem {
+public interface ConfigurationManager extends Subsystem {
 
    /**
     * Returns all properties defined, with system properties and other special Chorus properties expanded
