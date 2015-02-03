@@ -29,8 +29,10 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
@@ -39,18 +41,15 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
-
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class ProcessesHandler implements ConfigurableHandler<ProcessesConfigBuilder>{
+public class ProcessesHandler {
 
     private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
 

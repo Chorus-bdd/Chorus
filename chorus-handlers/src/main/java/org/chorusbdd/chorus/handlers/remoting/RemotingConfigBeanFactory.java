@@ -29,13 +29,10 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
-import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanValidator;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Map;
@@ -56,10 +53,6 @@ public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory impleme
         setProperties(p, r);
         r.setConfigName(configName);
         return r;
-    }
-
-    public ConfigBeanValidator<RemotingManagerConfig> createValidator(RemotingConfigBuilder config) {
-        return new RemotingConfigBeanValidator();
     }
 
     private void setProperties(Properties p, RemotingConfigBuilder r) {

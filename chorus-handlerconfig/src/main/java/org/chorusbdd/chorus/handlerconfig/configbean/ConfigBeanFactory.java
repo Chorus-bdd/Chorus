@@ -52,9 +52,4 @@ public interface ConfigBeanFactory<E extends HandlerConfigBean> {
      */
     E createConfig(Properties p, String configName);
 
-
-    /**
-     * @return a validator for the HandlerConfig
-     */
-    ConfigBeanValidator<? super E> createValidator(E config);
 }

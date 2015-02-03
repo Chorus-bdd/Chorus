@@ -29,8 +29,10 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.annotations.*;
-import org.chorusbdd.chorus.handlerconfig.ConfigurableHandler;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
@@ -42,10 +44,10 @@ import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * This handler can be used to invoke steps on components running remotely across the network.
@@ -67,7 +69,7 @@ import java.util.*;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class RemotingHandler implements ConfigurableHandler<RemotingConfigBuilder>, StepInvokerProvider {
+public class RemotingHandler implements StepInvokerProvider {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
