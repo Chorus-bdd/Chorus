@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.util.properties;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -9,5 +8,5 @@ import java.util.Properties;
  */
 public interface GroupedPropertyLoader {
 
-    Map<String, Properties> loadPropertyGroups() throws IOException;
+    Map<String, Properties> loadPropertyGroups();
 }

@@ -40,17 +40,6 @@ package org.chorusbdd.chorus.handlerconfig.configbean;
 public interface HandlerConfigBean {
 
     /**
-     * The name of the properties group which may be defined to supply default settings for other configs
-     */
-    String DEFAULT_PROPERTIES_GROUP = "default";
-
-    /**
-     * A special config name which is used to define database connection properties to
-     * load configs from the database
-     */
-    String DATABASE_CONFIGS_PROPERTY_GROUP  = "dbconfigs";
-
-    /**
      * @return the config name to which this HandlerConfig relates
      */
     String getConfigName();

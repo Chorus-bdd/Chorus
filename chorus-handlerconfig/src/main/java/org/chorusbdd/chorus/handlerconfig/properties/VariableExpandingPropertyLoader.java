@@ -6,7 +6,6 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -70,7 +69,7 @@ public class VariableExpandingPropertyLoader implements PropertyLoader {
     private boolean replaceGroupVariable(String fullPropertyName, String variable, StringBuilder sb) {
         String property = variable.substring(2, variable.length() - 1);
         boolean result = replaceWithSystemProperty(fullPropertyName, variable, sb, property);
-        if ( ! result ) {
+        if ( ! result && featureToken != null) {
             result = replaceWithChorusProperty(fullPropertyName, variable, sb, property);
         }
         return result;

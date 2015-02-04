@@ -50,4 +50,13 @@ public class ChorusConstants {
 
     public static final String CHORUS_ROOT_PACKAGE = "org.chorusbdd.chorus";
     public static final String[] ANY_PACKAGE = new String[] {".*"};
+    /**
+     * A special config name which is used to define database connection properties to
+     * load configs from the database
+     */
+    public static final String DATABASE_CONFIGS_PROPERTY_GROUP  = "dbproperties";
+    /**
+     * The name of the properties group which may be defined to supply default settings for other configs
+     */
+    public static final String DEFAULT_PROPERTIES_GROUP = "default";
 }

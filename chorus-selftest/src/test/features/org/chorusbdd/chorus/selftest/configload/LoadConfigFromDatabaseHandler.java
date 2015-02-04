@@ -29,14 +29,12 @@
  */
 package org.chorusbdd.chorus.selftest.configload;
 
-import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.annotations.Step;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,28 +48,6 @@ public class LoadConfigFromDatabaseHandler {
     @ChorusResource("feature.dir")
     File featureDir;
 
-    @Initialize(scope= Scope.FEATURE)
-    public void setup() throws Exception {
-        File file = new File(featureDir, "derby");
-        if ( file.exists() ) {
-            deleteRecursively(file);
-        }
-
-        file.mkdir();
-        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-        Class.forName(driver);
-        String url = "jdbc:derby:" + featureDir.getPath() + "/derby/sampleDB;create=true";
-        Connection connection = DriverManager.getConnection(url);
-
-        Statement s = connection.createStatement();
-        s.executeUpdate("create table ProcessProperties ( \"property\" varchar(256), \"value\" varchar(256))");
-        s.executeUpdate("insert into ProcessProperties values('processes.myProcess.mainclass','" + ConfigLoadMain.class.getName() + "')");
-        s.executeUpdate("insert into ProcessProperties values('processes.myProcess.remotingPort','" + 12345 + "')");
-
-        s.close();
-        connection.close();
-    }
-
 
     @Step("I create a javadb database and insert processes config")
     public void featureStart() throws Exception {
@@ -79,16 +55,6 @@ public class LoadConfigFromDatabaseHandler {
 
     @Step("I insert a configuration for the myProcess process")
     public void insertConfig() throws Exception {
-    }
-
-    void deleteRecursively(File f) throws IOException {
-        if (f.isDirectory()) {
-            for (File c : f.listFiles())
-                deleteRecursively(c);
-        }
-        if (!f.delete()) {
-            throw new FileNotFoundException("Failed to delete file: " + f);
-        }
     }
 
 }

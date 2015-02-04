@@ -4,12 +4,18 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.handlerconfig.properties.ClassPathPropertyLoader;
 import org.chorusbdd.chorus.handlerconfig.properties.FilePropertyLoader;
+import org.chorusbdd.chorus.handlerconfig.properties.JdbcPropertyLoader;
+import org.chorusbdd.chorus.handlerconfig.properties.VariableExpandingPropertyLoader;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.util.ChorusConstants;
 import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.File;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.chorusbdd.chorus.handlerconfig.properties.VariableExpandingPropertyLoader.expandVariables;
@@ -21,6 +27,8 @@ import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties
  * The default ConfigurationManager for chorus
  */
 public class ChorusProperties implements ConfigurationManager {
+
+    private static ChorusLog log = ChorusLogFactory.getLog(ChorusProperties.class);
 
     private Properties sessionProperties = new Properties();
     private Properties featureProperties = new Properties();
@@ -69,13 +77,33 @@ public class ChorusProperties implements ConfigurationManager {
         PropertyOperations featureProps = PropertyOperations.emptyProperties();
         featureProps = mergeLoadersForDirectory(featureProps, feature.getFeatureDir(), feature);
         featureProps = mergeLoadersForDirectory(featureProps, new File(feature.getFeatureDir(), "conf"), feature);
+        featureProps = addPropertiesFromDatabase(properties(featureProps.loadProperties())); //load the feature props once then merge any db props
         this.featureProperties = featureProps.loadProperties();
     }
 
     private void loadSessionProperties() {
         PropertyOperations sessionProps = PropertyOperations.emptyProperties();
         sessionProps.merge(new ClassPathPropertyLoader("/chorus.properties"));
-        this.sessionProperties = sessionProps.loadProperties();
+        PropertyOperations withDbProps = addPropertiesFromDatabase(properties(sessionProps.loadProperties()));  //load the session props once then merge any db props
+        this.sessionProperties = withDbProps.loadProperties();
+    }
+
+    /**
+     * If there are any database properties defined in sourceProperties then use them to merge extra properties from the databsase
+     * @param sourceProperties
+     * @return
+     */
+    private PropertyOperations addPropertiesFromDatabase(PropertyOperations sourceProperties) {
+        PropertyOperations dbPropsOnly = sourceProperties.filterByKeyPrefix(ChorusConstants.DATABASE_CONFIGS_PROPERTY_GROUP + ".")
+                                                         .removeKeyPrefix(ChorusConstants.DATABASE_CONFIGS_PROPERTY_GROUP + ".");
+        dbPropsOnly = VariableExpandingPropertyLoader.expandVariables(dbPropsOnly, currentFeature);
+        Map<String, Properties> dbPropsByDbName = dbPropsOnly.splitKeyAndGroup("\\.").loadPropertyGroups();
+        PropertyOperations o = sourceProperties;
+        for ( Map.Entry<String, Properties> m : dbPropsByDbName.entrySet()) {
+            log.debug("Creating loader for database properties " + m.getKey());
+            o = o.merge(new JdbcPropertyLoader(m.getValue()));
+        }
+        return o;
     }
 
     @Override
