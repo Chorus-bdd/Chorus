@@ -51,7 +51,7 @@ public interface ProcessManager extends Subsystem {
 
     void stopAllProcesses();
 
-    ProcessManagerConfig getProcessConfig(String processName);
+    ProcessManagerConfig getProcessInfo(String processName);
 
     void checkProcessHasStopped(String processName);
 

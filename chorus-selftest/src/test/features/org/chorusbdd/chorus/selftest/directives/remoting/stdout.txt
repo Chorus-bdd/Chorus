@@ -5,25 +5,25 @@ Chorus --> INFO    - No default handler found for Feature: (Remoting With Direct
 Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start NoComponentName                                                       PASSED  
-    #! Remoting use NoComponentName                                                          PASSED  
+    #! Processes connect NoComponentName                                                     PASSED  
     Check I can call a step method exported by the handler                                   PASSED  
   Scenario: Call An Exported Method
 Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start NoComponentName                                                       PASSED  
-    #! Remoting use NoComponentName                                                          PASSED  
+    #! Processes connect NoComponentName                                                     PASSED  
     Check I can call a step method exported by the handler                                   PASSED  
   Scenario: Call An Exported Method
 Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start NoComponentName                                                       PASSED  
-    #! Remoting use NoComponentName                                                          PASSED  
+    #! Processes connect NoComponentName                                                     PASSED  
     Check I can call a step method exported by the handler                                   PASSED  
   Scenario: Call An Exported Method
 Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start NoComponentName                                                       PASSED  
-    #! Remoting use NoComponentName                                                          PASSED  
+    #! Processes connect NoComponentName                                                     PASSED  
     Check I can call a step method exported by the handler                                   PASSED  
 
 

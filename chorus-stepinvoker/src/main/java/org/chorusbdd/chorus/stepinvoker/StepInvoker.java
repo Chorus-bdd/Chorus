@@ -58,7 +58,7 @@ public interface StepInvoker {
     Pattern getStepPattern();
 
     /**
-     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
+     * @return true if this step is 'pending'
      */
     boolean isPending();
 

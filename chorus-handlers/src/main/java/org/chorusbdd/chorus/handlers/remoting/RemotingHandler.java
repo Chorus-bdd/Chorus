@@ -41,8 +41,6 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 
 import java.io.File;
 import java.util.List;
@@ -68,7 +66,7 @@ import java.util.Properties;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class RemotingHandler implements StepInvokerProvider {
+public class RemotingHandler {
 
     private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
@@ -99,8 +97,8 @@ public class RemotingHandler implements StepInvokerProvider {
         return remotingManager.performActionInRemoteComponent(componentName, remotingProperties, action);
     }
 
-    //A Directive which can be used to start one or more processes using the config name
-    @Step("Remoting use " + HandlerPatterns.processNameListPattern)
+    //A Directive which can be used to connect to one or more processes
+    @Step("Remoting connect " + HandlerPatterns.processNameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
 
         List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
@@ -108,13 +106,6 @@ public class RemotingHandler implements StepInvokerProvider {
             Properties remotingProperties = getRemotingConfigForComponent(componentName);
             remotingManager.connect(componentName, remotingProperties);
         }
-    }
-
-    /**
-     * List step invokers for the currently connected componenets
-     */
-    public List<StepInvoker> getStepInvokers() {
-        return remotingManager.getStepInvokers();
     }
 
     private Properties getRemotingConfigForComponent(String configName) {

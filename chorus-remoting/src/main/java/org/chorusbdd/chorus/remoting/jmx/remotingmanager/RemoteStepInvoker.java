@@ -46,6 +46,7 @@ public class RemoteStepInvoker implements StepInvoker {
 
     private ChorusHandlerJmxProxy proxy;
     private String remoteStepId;
+    private Boolean isPending;
     private String pendingMessage;
     private String technicalDescription;
     private final Pattern pattern;
@@ -54,10 +55,12 @@ public class RemoteStepInvoker implements StepInvoker {
             String regex,
             ChorusHandlerJmxProxy proxy,
             String remoteStepId,
+            Boolean isPending,
             String pendingMessage,
             String technicalDescription) {
         this.proxy = proxy;
         this.remoteStepId = remoteStepId;
+        this.isPending = isPending;
         this.pendingMessage = pendingMessage;
         this.technicalDescription = technicalDescription;
         this.pattern = Pattern.compile(regex);
@@ -74,7 +77,7 @@ public class RemoteStepInvoker implements StepInvoker {
      * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
      */
     public boolean isPending() {
-        return pendingMessage != null;
+        return isPending;
     }
 
     /**
@@ -126,10 +129,11 @@ public class RemoteStepInvoker implements StepInvoker {
         String regex = (String) jmxInvokerResult.get(JmxInvokerResult.PATTERN);
         String pending = (String) jmxInvokerResult.get(JmxInvokerResult.PENDING_MSG);
         String technicalDescription = (String)jmxInvokerResult.get(JmxInvokerResult.TECHNICAL_DESCRIPTION);
+        Boolean isPending=(Boolean)jmxInvokerResult.get(JmxInvokerResult.IS_PENDING);
 
         //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
         //to actually invoke the remote method with it
-        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, pending, technicalDescription);
+        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, isPending, pending, technicalDescription);
         return stepInvoker;
     }
 }

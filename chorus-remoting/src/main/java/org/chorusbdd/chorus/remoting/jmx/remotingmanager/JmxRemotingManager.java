@@ -199,7 +199,7 @@ public class JmxRemotingManager implements RemotingManager {
      * Close all connections
      */
     public void closeAllConnections() {
-        for(RemotingManagerConfig c : remotingConfigs) {
+        for(RemotingManagerConfig c : new ArrayList<>(remotingConfigs)) {
             closeConnection(c);
         }
     }
@@ -217,7 +217,7 @@ public class JmxRemotingManager implements RemotingManager {
             try {
                 closeAllConnections();
             } catch (Throwable t) {
-                log.error("Failed during destroyFeature jmx remoting manager");
+                log.error("Failed during destroyFeature jmx remoting manager", t);
             }
         }
 
@@ -225,13 +225,13 @@ public class JmxRemotingManager implements RemotingManager {
             try {
                 disposeForScope(Scope.SCENARIO);
             } catch (Throwable t) {
-                log.error("Failed during destroyScenario() jmx remoting manager");
+                log.error("Failed during destroyScenario() jmx remoting manager", t);
             }
         }
 
         private void disposeForScope(Scope scope) {
 
-            for ( RemotingManagerConfig c : remotingConfigs) {
+            for ( RemotingManagerConfig c : new ArrayList<>(remotingConfigs)) {
                 if ( c.getScope() == scope) {
                     closeConnection(c);
                 }

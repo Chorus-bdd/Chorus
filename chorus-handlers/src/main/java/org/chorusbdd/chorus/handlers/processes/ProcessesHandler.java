@@ -39,11 +39,16 @@ import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilder;
+import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
 import java.util.List;
 import java.util.Properties;
+
+import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
 
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
@@ -63,6 +68,9 @@ public class ProcessesHandler {
 
     @ChorusResource("subsystem.processManager")
     private ProcessManager processManager;
+
+    @ChorusResource("subsystem.remotingManager")
+    private RemotingManager remotingManager;
 
     @ChorusResource("subsystem.configurationManager")
     private ConfigurationManager configurationManager;
@@ -184,5 +192,36 @@ public class ProcessesHandler {
             startProcessFromConfig(p);
         }
     }
+
+    //A Directive which can be used to connect to one or more processes using the config name so we an run steps on them
+    @Step("Processes connect " + HandlerPatterns.processNameListPattern)
+    public void remotingUseDirective(String processNameList) throws Exception {
+        List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
+        for ( String componentName : componentNames) {
+            Properties remotingProperties = getRemotingConfig(componentName);
+            remotingManager.connect(componentName, remotingProperties);
+        }
+    }
+
+    /**
+     * Generate a remoting config to connect to a running process
+     */
+    Properties getRemotingConfig(String processName) {
+        RemotingConfigBuilder result = null;
+        ProcessManagerConfig processInfo = processManager.getProcessInfo(processName);
+        if ( processInfo == null) {
+            fail("Process " + processName + " is not running");
+        }
+
+        if ( processInfo.getRemotingPort() == -1) {
+            fail("Cannot connect " + processName + " unknown remoting port");
+        }
+
+        Properties remotingProps = new Properties();
+        remotingProps.put("connection", "jmx:localhost:" + processInfo.getRemotingPort());
+        remotingProps.put("scope", processInfo.getProcessScope());
+        return remotingProps;
+    }
+
 
 }

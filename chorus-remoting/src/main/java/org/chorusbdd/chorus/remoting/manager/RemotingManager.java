@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
 import java.util.List;
@@ -44,7 +45,7 @@ import java.util.Properties;
  * A new instance of the RemotingManager for each supported protocol is created at the start of each scenario 
  * which uses RemotingHandler
  */
-public interface RemotingManager extends Subsystem {
+public interface RemotingManager extends Subsystem, StepInvokerProvider {
 
     /**
      * Find a step method in the remote component which matches the 'action' String

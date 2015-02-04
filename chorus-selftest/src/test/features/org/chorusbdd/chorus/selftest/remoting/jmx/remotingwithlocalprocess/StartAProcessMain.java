@@ -46,7 +46,7 @@ public class StartAProcessMain {
             System.out.println(s);
         }
 
-        RemotingWithLocalProcessHandler handler = new RemotingWithLocalProcessHandler();
+        BillAndBenHandler handler = new BillAndBenHandler();
         ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
         exporter.export();
 

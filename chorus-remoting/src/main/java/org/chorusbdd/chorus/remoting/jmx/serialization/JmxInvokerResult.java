@@ -20,6 +20,7 @@ public class JmxInvokerResult extends AbstractJmxResult {
 
     public static final String STEP_ID = "STEP_ID";
     public static final String PENDING_MSG = "PENDING_MSG";
+    public static final String IS_PENDING = "IS_PENDING";
     public static final String PATTERN = "PATTERN";
     public static final String TECHNICAL_DESCRIPTION = "TECHNICAL_DESCRIPTION";
 
@@ -31,6 +32,7 @@ public class JmxInvokerResult extends AbstractJmxResult {
         put(API_VERSION, ApiVersion.API_VERSION);
         put(STEP_ID, i.getId());
         put(PENDING_MSG, i.getPendingMessage());
+        put(IS_PENDING, i.isPending());
         put(PATTERN, i.getStepPattern().toString());
         put(TECHNICAL_DESCRIPTION, i.getTechnicalDescription());
     }

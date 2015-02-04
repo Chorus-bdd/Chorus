@@ -204,6 +204,7 @@ public class ChorusInterpreter {
             HandlerClassInvokerFactory f = new HandlerClassInvokerFactory(handler);
             stepInvokerProvider.addChild(f);
         }
+        stepInvokerProvider.addChild((StepInvokerProvider)subsystemManager.getRemotingManager());
         return stepInvokerProvider;
     }
 

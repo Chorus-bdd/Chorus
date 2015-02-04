@@ -5,7 +5,7 @@ Chorus --> INFO    - No default handler found for Feature: (Remoting Directives)
 Chorus --> INFO    - Processing scenario: Feature-Start
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start SingleHandlerExport                                                   PASSED  
-    #! Remoting use SingleHandlerExport                                                      PASSED  
+    #! Remoting connect SingleHandlerExport                                                  PASSED  
   Scenario: Call An Exported Method
 Chorus --> INFO    - Processing scenario: Call An Exported Method
     Check I can call a step method exported by the handler                                   PASSED  

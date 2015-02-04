@@ -165,7 +165,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
     // ----------------------------------------------------- Process Properties
 
-    public synchronized ProcessManagerConfig getProcessConfig(final String processName) {
+    public synchronized ProcessManagerConfig getProcessInfo(final String processName) {
         final NamedProcessConfig namedProcessConfig = processes.get(processName);
         return namedProcessConfig;
     }

@@ -8,7 +8,7 @@ Feature: Remoting Directives
 
 
   #! Processes start SingleHandlerExport
-  #! Remoting use SingleHandlerExport
+  #! Remoting connect SingleHandlerExport
   Feature-Start:
 
   Scenario: Call An Exported Method
