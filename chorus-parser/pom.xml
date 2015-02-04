@@ -9,7 +9,7 @@
     <groupId>org.chorusbdd</groupId>
     <artifactId>chorus-parser</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.0.rc2</version>
+    <version>2.0.0.rc3-SNAPSHOT</version>
     <name>chorus-parser</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
@@ -157,20 +157,20 @@
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-results</artifactId>
-            <version>2.0.0.rc2</version>
+            <version>2.0.0.rc3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-logging</artifactId>
-            <version>2.0.0.rc2</version>
+            <version>2.0.0.rc3-SNAPSHOT</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-util</artifactId>
-            <version>2.0.0.rc2</version>
+            <version>2.0.0.rc3-SNAPSHOT</version>
         </dependency>
 
         <!-- test dependencies -->
