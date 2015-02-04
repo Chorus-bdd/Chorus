@@ -85,13 +85,19 @@ public class Chorus {
         configReader.readConfiguration();
 
         configureOutput();
-        configureSubsystems();
-        addCustomExecutionListeners();
+        addExecutionListeners();
 
         //configure logging first
         interpreterBuilder = new InterpreterBuilder(listenerSupport);
         interpreter = interpreterBuilder.buildAndConfigure(configReader, subsystemManager);
         featureListBuilder = new FeatureListBuilder();
+    }
+
+    private void addExecutionListeners() {
+        //add custom execution listeners before subsystem listeners
+        //guarantees user listener will have their callbacks before subsystems
+        addCustomExecutionListeners();
+        configureSubsystems();
     }
 
     private void configureSubsystems() {
