@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -43,7 +44,6 @@ import org.junit.runners.model.Statement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -51,7 +51,7 @@ import java.util.List;
  * Date: 27/08/13
  * Time: 08:36
  */
-public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusTest> {
+public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
     private Class clazz;
     private List<FeatureToken> features;
@@ -70,7 +70,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusTest> {
     }
 
     @Override
-    protected List<ChorusTest> getChildren() {
+    protected List<ChorusFeatureTest> getChildren() {
         Method method;
         try {
             method = clazz.getMethod("getChorusArgs");
@@ -107,57 +107,78 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusTest> {
             throw new RuntimeException("Failed to get feature list", e);
         }
         
-        List<ChorusTest> tests = new ArrayList<ChorusTest>();
+        List<ChorusFeatureTest> tests = new ArrayList<ChorusFeatureTest>();
         for (FeatureToken f  : features) {
-            tests.add(new ChorusTest(chorus, executionToken, f));        
+            try {
+                tests.add(new ChorusFeatureTest(chorus, executionToken, f));
+            } catch (InitializationError initializationError) {
+                initializationError.printStackTrace();
+            }
         }
         return tests;
     }
     
-    protected Description describeChild(ChorusTest child) {
+    protected Description describeChild(ChorusFeatureTest child) {
         return child.getDescription();
     }
 
-    protected void runChild(ChorusTest child, RunNotifier notifier) {
-        notifier.fireTestStarted(child.getDescription());
-        try {
-            child.run();
-            if ( ! child.isSuccess()) {
-                notifier.fireTestFailure(new FailureWithNoException(child.getDescription(), child.getFeatureName()));
-            }
-        } catch (Exception e) {
-            notifier.fireTestFailure(new Failure(child.getDescription(), e));    
-        }
-        notifier.fireTestFinished(child.getDescription());
+    protected void runChild(ChorusFeatureTest child, RunNotifier notifier) {
+        child.run(notifier);
     }
     
-    public class ChorusTest {
+    public class ChorusFeatureTest extends ParentRunner<ChorusSuite.ChorusScenario> {
+        private final Chorus chorus;
+        private final ExecutionToken t;
+        private final FeatureToken featureToken;
+        private final List<ChorusScenario> children;
 
-        private Chorus chorus;
-        private ExecutionToken t;
-        private FeatureToken featureToken;
-
-        public ChorusTest(Chorus chorus, ExecutionToken t, FeatureToken featureToken) {
+        public ChorusFeatureTest(Chorus chorus, ExecutionToken t, FeatureToken featureToken) throws InitializationError {
+            super(ChorusFeatureTest.class);
             this.chorus = chorus;
             this.t = t;
             //To change body of created methods use File | Settings | File Templates.
-            this.featureToken = featureToken;          
+            this.featureToken = featureToken;
+            this.children = createChildren();
+        }
+
+        @Override
+        protected List<ChorusScenario> getChildren() {
+            return children;
+        }
+
+        private List<ChorusScenario> createChildren() {
+            List<ChorusScenario> l = new ArrayList<>();
+            for (ScenarioToken s : featureToken.getScenarios()) {
+                l.add(new ChorusScenario(chorus, t, featureToken, s));
+            }
+            return l;
         }
 
         public Description getDescription() {
-            return Description.createTestDescription(clazz, featureToken.getNameWithConfiguration());
+            Description d = Description.createSuiteDescription(featureToken.getNameWithConfiguration());
+            for (ChorusScenario s : children) {
+                d.addChild(s.getDescription());
+            }
+            return d;
         }
 
-        public void run() throws Exception {
-            chorus.processFeatures(t, Collections.singletonList(featureToken));
-        }
-        
-        public boolean isSuccess() {
-            return isJUnitPass(featureToken);
+        @Override
+        protected Description describeChild(ChorusScenario child) {
+            return child.getDescription();
         }
 
-        public String getFeatureName() {
-            return featureToken.getNameWithConfiguration();
+        @Override
+        protected void runChild(ChorusScenario child, RunNotifier notifier) {
+            notifier.fireTestStarted(child.getDescription());
+            try {
+                child.run();
+                if ( ! child.isSuccess()) {
+                    notifier.fireTestFailure(new FailureWithNoException(child.getDescription(), child.getScenarioName()));
+                }
+            } catch (Exception e) {
+                notifier.fireTestFailure(new Failure(child.getDescription(), e));
+            }
+            notifier.fireTestFinished(child.getDescription());
         }
     }
 
@@ -186,6 +207,45 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusTest> {
         public void evaluate() throws Throwable {
             statement.evaluate();
             chorus.endTests(executionToken, features);
+        }
+    }
+
+    private class ChorusScenario {
+        private Chorus chorus;
+        private ExecutionToken t;
+        private FeatureToken featureToken;
+        private ScenarioToken scenarioToken;
+
+        public ChorusScenario(Chorus chorus, ExecutionToken t, FeatureToken featureToken, ScenarioToken scenarioToken) {
+            this.chorus = chorus;
+            this.t = t;
+            this.featureToken = featureToken;
+            this.scenarioToken = scenarioToken;
+        }
+
+        public Description getDescription() {
+            String conf = featureToken.getConfigurationName().equals(FeatureToken.BASE_CONFIGURATION) ? "" : " [" + featureToken.getConfigurationName() + "]";
+            return Description.createTestDescription(clazz, scenarioToken.getName() + conf);
+        }
+
+        public void run() throws Exception {
+
+        }
+
+        public boolean isSuccess() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return true;
+            //return isJUnitPass(featureToken);
+        }
+
+        public String getScenarioName()
+        {
+
+            return scenarioToken.getName();
         }
     }
 }
