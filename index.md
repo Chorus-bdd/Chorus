@@ -15,9 +15,7 @@ Scenario: Buy a Waffle
   Then a waffle is added to my basket
 {% endhighlight %}
 
-
-A developer has to take this test, and write the code to execute it.
-From a developer's point of view, it looks like it might be easy to implement the logic to execute the test above.
+From a developer's point of view, it looks like it might be fairly easy to implement the logic for the test above.
 
 However in a complex system, with several user interfaces and components, things are not so simple:
 
@@ -29,11 +27,13 @@ Scenario: Book a trade
   Then my position against google is 0
 {% endhighlight %}
 
-Here there are at least two components involved, a trader client and a customer client, and perhaps a booking system and a pricing system.
-We'll need to connect to these components to execute the steps in the test. Before we can even do this, we may need to create a testing
-environment with those processes running.
+Here there are at least two components involved, a trader client and a customer client.
+Perhaps there's also a booking system and a pricing component.
 
-In short, testing a large system rather than a single UI can be tough.
+We'll need to connect to these components to execute the test. Before we can even do this, we may need to create a testing
+environment with each of these processes running.
+
+In short, testing a large system can be tough.
 
 This is where Chorus can help.
 
@@ -49,7 +49,7 @@ Scenario: Book a trade
   Then the position in my trader client is 0
 {% endhighlight %}
 
-Want to create a virtualized environment to run the test?
+Want to create a virtualized environment to run the test by deploying Docker images?
 
 {% highlight gherkin %}
 #! Docker: deploy traderClient, customerClient
