@@ -12,11 +12,39 @@ import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties
  */
 public class HandlerConfigLoad {
 
-    public Properties getConfig(ConfigurationManager configurationManager, String configName, String handlerPrefix) {
-        PropertyOperations handlerProps = configurationManager.getAllProperties().filterByKeyPrefix(handlerPrefix + ".").removeKeyPrefix(handlerPrefix + ".");
-        Properties defaultProps = handlerProps.filterByKeyPrefix(ChorusConstants.DEFAULT_PROPERTIES_GROUP + ".").removeKeyPrefix(ChorusConstants.DEFAULT_PROPERTIES_GROUP + ".").getProperties();
-        Properties configProps = handlerProps.filterByKeyPrefix(configName + ".").removeKeyPrefix(configName + ".").getProperties();
-        Properties merged = properties(defaultProps).merge(properties(configProps)).getProperties();
-        return merged;
+    /**
+     * Get properties for a simple handler which takes only properties prefixed with handler name:
+     *
+     * myHandler.property1=val
+     * myHandler.property2=val
+     */
+    public Properties getHandlerProperties(ConfigurationManager configurationManager, String handlerPrefix) {
+        PropertyOperations allproperties = properties(configurationManager.getAllProperties());
+        PropertyOperations handlerProps = allproperties.filterByAndRemoveKeyPrefix(handlerPrefix + ".");
+        return handlerProps.loadProperties();
+    }
+
+    /**
+     * Get properties for a specific config, for a handler which maintains properties grouped by configName
+     *
+     * Defaults may also be provided in a special default configName, defaults provide base values which may be overridden
+     * by those set at configName level.
+     *
+     * myHandler.config1.property1=val
+     * myHandler.config1.property2=val
+     *
+     * myHandler.config2.property1=val
+     * myHandler.config2.property2=val
+     *
+     * myHandler.default.property1=val
+     */
+    public Properties getConfigProperties(ConfigurationManager configurationManager, String handlerPrefix, String configName) {
+        PropertyOperations handlerProps = properties(getHandlerProperties(configurationManager, handlerPrefix));
+
+        PropertyOperations defaultProps = handlerProps.filterByAndRemoveKeyPrefix(ChorusConstants.DEFAULT_PROPERTIES_GROUP + ".");
+        PropertyOperations configProps = handlerProps.filterByAndRemoveKeyPrefix(configName + ".");
+
+        PropertyOperations merged = defaultProps.merge(configProps);
+        return merged.loadProperties();
     }
 }

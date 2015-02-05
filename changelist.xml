@@ -7,12 +7,13 @@
         <comment>New modular chorus interpreter. This is not fully backwards compatible with 1.x.x due to some package renaming
             which may require minor revisions to end user step logic</comment>
         <change desc="Initial chorus 2.0.0 with modular structure"/>
-        <change desc="Revised utility classes for loading handler configuration"/>
-        <change desc="@ChorusResource - Support for injecting chorus subsystems for process management and remoting"/>
+        <change desc="Subsystems for Remoting, Process management and Configuration"/>
+        <change desc="@ChorusResource - Support for injecting chorus subsystems for process management, remoting and configuration into a handler"/>
         <change desc="@ChorusResource - Support for injecting handler instances"/>
-        <change desc="Add support for directives #!"/>
+        <change desc="Revised handler configuration with ConfigurationManager subsystem"/>
+        <change desc="Support for directives #!"/>
         <change desc="Refactored jmx remoting and restructured to permit new remoting protocols"/>
-        <change desc="Property parsing for remoting and processes handlers are no longer case-sensitive"/>
+        <change desc="Property names for handler configuration are no longer case-sensitive"/>
     </version>
     <version>
         <versionNumber>1.6.9</versionNumber>

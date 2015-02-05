@@ -36,20 +36,20 @@ public class ChorusProperties implements ConfigurationManager {
     private FeatureToken currentFeature;
 
     @Override
-    public PropertyOperations getAllProperties() {
+    public Properties getAllProperties() {
         return expandVariables(
                 properties(sessionProperties).merge(properties(featureProperties)), currentFeature
-        );
+        ).loadProperties();
     }
 
     @Override
-    public PropertyOperations getFeatureProperties() {
-        return properties(featureProperties);
+    public Properties getFeatureProperties() {
+        return expandVariables(properties(featureProperties), currentFeature).loadProperties();
     }
 
     @Override
-    public PropertyOperations getSessionProperties() {
-        return properties(sessionProperties);
+    public Properties getSessionProperties() {
+        return expandVariables(properties(sessionProperties), currentFeature).loadProperties();
     }
 
     @Override
@@ -101,7 +101,9 @@ public class ChorusProperties implements ConfigurationManager {
         PropertyOperations o = sourceProperties;
         for ( Map.Entry<String, Properties> m : dbPropsByDbName.entrySet()) {
             log.debug("Creating loader for database properties " + m.getKey());
-            o = o.merge(new JdbcPropertyLoader(m.getValue()));
+
+            //current properties which may be from properties files or classpath take precedence over db properties so merge them on top
+            o = properties(new JdbcPropertyLoader(m.getValue())).merge(o);
         }
         return o;
     }

@@ -2,7 +2,6 @@ package org.chorusbdd.chorus.util.properties;
 
 import org.chorusbdd.chorus.util.function.*;
 
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -73,6 +72,10 @@ public class PropertyOperations implements PropertyLoader {
                 return key.startsWith(handlerPrefix) ? key.substring(handlerPrefix.length()) : key;
             }
         });
+    }
+
+    public PropertyOperations filterByAndRemoveKeyPrefix(final String prefix) {
+        return filterByKeyPrefix(prefix).removeKeyPrefix(prefix);
     }
 
     public PropertyOperations transformValues(final Function<String,String> transform) {
