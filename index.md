@@ -17,23 +17,26 @@ Scenario: Buy a Waffle
 
 From a developer's point of view, it looks like it might be fairly easy to implement the logic for the test above.
 
-However in a complex system, with several user interfaces and components, things are not so simple:
+However in a complex system, with several user interfaces and components, things are not so simple...
+
+In the example below there are at least two components involved, a trader client and a customer client.
+Perhaps there's also a booking system and a pricing component.
 
 {% highlight gherkin %}
 Scenario: Book a trade
-  Given my position in google shares is $500,000
+  Given my position in google shares is $50,000
   And my quote to sell google is $500
   When a customer enters 'Buy 100 google'
   Then my position against google is 0
 {% endhighlight %}
 
-Here there are at least two components involved, a trader client and a customer client.
-Perhaps there's also a booking system and a pricing component.
 
-We'll need to connect to these components to execute the test. Before we can even do this, we may need to create a testing
+We need to connect to these components to execute the test. Before we can even do this, we may need to create a testing
 environment with each of these processes running.
 
-In short, testing a large system can be tough.
+We'll have to write the code for all of this ourselves, and tie it in to the test lifecycle somehow.
+
+In short, testing a large system can be tough. (Perhaps that's why so few complex systems have tests...)
 
 This is where Chorus can help.
 
