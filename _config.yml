@@ -8,21 +8,21 @@ relative_permalinks: true
 
 # Setup
 title:            Chorus BDD
-tagline:          'A Jekyll theme'
+tagline:          'BDD testing for distributed systems'
 description:      'BDD testing for distributed systems'
 url:              http://hyde.getpoole.com
 baseurl:          /
 
 author:
-  name:           'Mark Otto'
-  url:            https://twitter.com/mdo
+  name:           'Chorus BDD'
+  url:            https://github.com/Chorus-bdd/
 
-paginate:         5
+paginate:         2
 
 # Custom vars
 version:          2.1.0
 
 github:
-  repo:           https://github.com/poole/hyde
+  repo:           https://github.com/Chorus-bdd/
 
 gems: [jekyll_github_sample]
