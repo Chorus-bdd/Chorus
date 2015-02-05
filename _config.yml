@@ -10,14 +10,12 @@ relative_permalinks: true
 title:            Chorus BDD
 tagline:          'BDD testing for distributed systems'
 description:      'BDD testing for distributed systems'
-url:              http://hyde.getpoole.com
+url:              https://github.com/Chorus-bdd/
 baseurl:          /
 
 author:
   name:           'Chorus BDD'
   url:            https://github.com/Chorus-bdd/
-
-paginate:         2
 
 # Custom vars
 version:          2.1.0
@@ -26,3 +24,5 @@ github:
   repo:           https://github.com/Chorus-bdd/
 
 gems: [jekyll_github_sample]
+
+include:          ['_pages']
