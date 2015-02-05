@@ -5,6 +5,34 @@ title: Introducing Hyde
 
 Hyde is a brazen two-column [Jekyll](http://jekyllrb.com) theme that pairs a prominent sidebar with uncomplicated content. It's based on [Poole](http://getpoole.com), the Jekyll butler.
 
+### Nick Edit
+Here's an edit by Nick
+
+Here's another edit by Nick
+
+
+### Another header
+
+* List point 1
+* List point 2
+
+    System.out.println("Nick")
+    System.out.println("Mitch")
+
+
+{% gist cdd36b08c62abb6168bd %}
+
+
+### From chorus demo
+
+{% github_sample Chorus-bdd/Chorus-demo/blob/master/src/demo/calculator/CalculatorHandler.java 0 1000 %}
+
+
+{% github_sample_ref Chorus-bdd/Chorus-demo/blob/master/src/demo/calculator/CalculatorHandler.java %}
+{% highlight java %}
+{% github_sample Chorus-bdd/Chorus-demo/blob/master/src/demo/calculator/CalculatorHandler.java %}
+{% endhighlight %}
+
 ### Built on Poole
 
 Poole is the Jekyll Butler, serving as an upstanding and effective foundation for Jekyll themes by [@mdo](https://twitter.com/mdo). Poole, and every theme built on it (like Hyde here) includes the following:
