@@ -6,7 +6,7 @@ layout: page
 
 Chorus is a BDD testing tool which makes it easy to test distributed systems
 
-BDD tests are written in non-technical prose. Such a test forms an important part of system documentation
+BDD tests are written in non-technical prose. These tests can form an important part of system documentation
 
 {% highlight gherkin %}
 Scenario: Buy a Waffle
@@ -16,7 +16,8 @@ Scenario: Buy a Waffle
 {% endhighlight %}
 
 
-From a developer's point of view, it looks like it might be easy to implement the steps to get this to run.
+A developer has to take this test, and write the code to execute it.
+From a developer's point of view, it looks like it might be easy to implement the logic to execute the test above.
 
 However in a complex system, with several user interfaces and components, things are not so simple:
 
@@ -32,7 +33,7 @@ Here there are at least two components involved, a trader client and a customer 
 We'll need to connect to these components to execute the steps in the test. Before we can even do this, we may need to create a testing
 environment with those processes running.
 
-In short, testing a system rather than a single UI can be tough.
+In short, testing a large system rather than a single UI can be tough.
 
 This is where Chorus can help.
 
