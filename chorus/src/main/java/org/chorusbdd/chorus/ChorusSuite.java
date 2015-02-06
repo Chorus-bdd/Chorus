@@ -40,8 +40,7 @@ import org.junit.runners.model.InitializationError;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +53,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
     private Class clazz;
     private Chorus chorus;
-    private ExecutionToken executionToken;
     private JUnitSuiteExecutionListener executionListener = new JUnitSuiteExecutionListener();
 
     public ChorusSuite(Class clazz) throws InitializationError {
@@ -90,7 +88,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         try {
             chorus = new Chorus(args.split(" "));
-            chorus.addExecutionListener(executionListener);
+            chorus.addJUnitExecutionListener(executionListener);
         } catch (InterpreterPropertyException e) {
             throw new RuntimeException("Unsupported property", e);
         }
@@ -112,7 +110,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         List<ChorusFeatureTest> tests = new ArrayList<>();
         for (FeatureToken f  : features) {
             try {
-                tests.add(new ChorusFeatureTest(chorus, executionToken, f));
+                tests.add(new ChorusFeatureTest(f));
             } catch (InitializationError initializationError) {
                 initializationError.printStackTrace();
             }
@@ -129,22 +127,17 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     }
     
     public class ChorusFeatureTest extends ParentRunner<ChorusSuite.ChorusScenario> {
-        private final Chorus chorus;
-        private final ExecutionToken t;
         private final FeatureToken featureToken;
         private final List<ChorusScenario> children;
 
-        public ChorusFeatureTest(Chorus chorus, ExecutionToken t, FeatureToken featureToken) throws InitializationError {
+        public ChorusFeatureTest(FeatureToken featureToken) throws InitializationError {
             super(ChorusFeatureTest.class);
-            this.chorus = chorus;
-            this.t = t;
             //To change body of created methods use File | Settings | File Templates.
             this.featureToken = featureToken;
             this.children = createChildren();
         }
 
         public void run(RunNotifier notifier) {
-            executionListener.awaitFeatureStart();
             super.run(notifier);
             executionListener.awaitFeatureEnd();
         }
@@ -156,8 +149,9 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         private List<ChorusScenario> createChildren() {
             List<ChorusScenario> l = new ArrayList<>();
+            HashSet<String> scenarioNames = new HashSet<>();  //used to guarantee unique scenario names
             for (ScenarioToken s : featureToken.getScenarios()) {
-                l.add(new ChorusScenario(featureToken, s));
+                l.add(new ChorusScenario(featureToken, s, scenarioNames));
             }
             return l;
         }
@@ -206,21 +200,37 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     }
 
     private class ChorusScenario {
+
         private FeatureToken featureToken;
         private ScenarioToken scenarioToken;
+        private String scenarioName;
 
-        public ChorusScenario(FeatureToken featureToken, ScenarioToken scenarioToken) {
+        public ChorusScenario(FeatureToken featureToken, ScenarioToken scenarioToken, Set<String> scenarioNames) {
             this.featureToken = featureToken;
             this.scenarioToken = scenarioToken;
+
+            calculateName(featureToken, scenarioToken, scenarioNames);
+        }
+
+        //The JUnit description seems to require a class to be globally unique - we don't have a class so get problems
+        //when scenarios have the same name within our features. In this case detect the problem and prepend the feature name to the string.
+        private void calculateName(FeatureToken featureToken, ScenarioToken scenarioToken, Set<String> scenarioNames) {
+            String conf = featureToken.getConfigurationName().equals(FeatureToken.BASE_CONFIGURATION) ? "" : " [" + featureToken.getConfigurationName() + "]";
+            String name = scenarioToken.getName() + conf;
+            if ( ! scenarioNames.add(name)) {
+                name = featureToken.getNameWithConfiguration() + " " + scenarioToken.getName();
+            }
+            this.scenarioName = name;
         }
 
         public Description getDescription() {
-            String conf = featureToken.getConfigurationName().equals(FeatureToken.BASE_CONFIGURATION) ? "" : " [" + featureToken.getConfigurationName() + "]";
-            return Description.createTestDescription(clazz, scenarioToken.getName() + conf);
+            return Description.createTestDescription(clazz, scenarioName);
         }
 
         public void run() throws Exception {
-
+            if ( ! executionListener.isCompleted(featureToken)) {
+                executionListener.awaitScenarioEnd();
+            }
         }
 
         public boolean isSuccess() {
@@ -232,47 +242,92 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         }
     }
 
+
     private class JUnitSuiteExecutionListener extends ExecutionListenerAdapter {
+
+        long waitForTestStartLimit = Long.parseLong(System.getProperty("chorusJUnitScenarioTimeout", "10"));   //10 seconds
+        long waitForFeatureLimit = Long.parseLong(System.getProperty("chorusJUnitFeatureTimeout", "1200"));    //20 mins
+        long waitForScenarioLimit = Long.parseLong(System.getProperty("chorusJUnitScenarioTimeout", "300"));   //5 mins
 
         private CyclicBarrier startBarrier = new CyclicBarrier(2);
         private volatile List<FeatureToken> features;
 
-        private CyclicBarrier featureStartBarrier = new CyclicBarrier(2);
+        private CyclicBarrier featureBarrier = new CyclicBarrier(2);
 
-        private CyclicBarrier featureEndBarrier = new CyclicBarrier(2);
+        private CyclicBarrier scenarioBarrier = new CyclicBarrier(2);
 
+        private Set<FeatureToken> completedFeatures = Collections.synchronizedSet(new HashSet<FeatureToken>());
+
+        private volatile boolean timedOut = false;
 
         public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
             this.features = features;
             awaitTestStart();
         }
 
-        public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
-            awaitFeatureStart();
-        }
-
         public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            completedFeatures.add(feature);
+            if ( scenarioBarrier.getNumberWaiting() > 1) {
+                //this feature terminated early, the secenario will not run,
+                //usually this happens when we can't find feature-level resources such as a handler class
+                await(scenarioBarrier, 1000, "interrupt scenario");
+            }
             awaitFeatureEnd();
+            pauseForJUnitOutput();
         }
 
-        private void await(CyclicBarrier cyclicBarrier, long length) {
+        public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+            awaitScenarioEnd();
+            pauseForJUnitOutput();
+        }
+
+        public boolean isTimedOut() {
+            return timedOut;
+        }
+
+        private void await(CyclicBarrier cyclicBarrier, long length, String desc) {
             try {
-                cyclicBarrier.await(length, TimeUnit.MILLISECONDS);
+                cyclicBarrier.await(length, TimeUnit.SECONDS);
             } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("Timed out waiting for " + desc);
+                System.out.println("Timed out waiting for " + desc);
+                timedOut = true;
+            }
+        }
+
+        /**
+         * A race condition (in Intellij junit plugin?) causes std output to bleed into the next test unless we pause briefly
+         */
+        private void pauseForJUnitOutput()  {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
 
-        public void awaitFeatureStart() {
-            await(featureStartBarrier, 10000);
+        public boolean isCompleted(FeatureToken featureToken) {
+            return completedFeatures.contains(featureToken);
         }
 
         public void awaitFeatureEnd() {
-            await(featureEndBarrier, 600000);
+            if ( ! isTimedOut() ) {
+                await(featureBarrier, waitForFeatureLimit, "feature end");
+            }
+        }
+
+        private void awaitScenarioEnd() {
+            if ( ! isTimedOut() ) {
+                await(scenarioBarrier, waitForScenarioLimit, "scenario start");
+            }
         }
 
         public void awaitTestStart() {
-            await(startBarrier, 10000);
+            if ( ! isTimedOut() ) {
+                await(startBarrier, waitForTestStartLimit, "suite start");
+            }
         }
+
     }
 }

@@ -180,8 +180,8 @@ public class Chorus {
         return configReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
     }
 
-    public void addExecutionListener(ExecutionListener... listeners) {
-        listenerSupport.addExecutionListener(listeners);
+    void addJUnitExecutionListener(ExecutionListener listener) {
+        listenerSupport.prependExecutionListener(listener);
     }
 
 

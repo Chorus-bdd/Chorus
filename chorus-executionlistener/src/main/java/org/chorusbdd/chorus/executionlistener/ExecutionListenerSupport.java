@@ -66,12 +66,8 @@ public class ExecutionListenerSupport {
         this.listeners.removeAll(listeners);
     }
 
-    /**
-     * Clear any existing listeners and add the listeners provided
-     */
-    public void setExecutionListener(ExecutionListener... listener) {
-        listeners.clear();
-        listeners.addAll(Arrays.asList(listener));
+    public void prependExecutionListener(ExecutionListener listener) {
+        listeners.add(0, listener);
     }
 
     public void notifyStartTests(ExecutionToken t, List<FeatureToken> features) {
