@@ -15,6 +15,7 @@ import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -117,7 +118,7 @@ public class ChorusProperties implements ConfigurationManager {
      * Load and remove properties at the appropriate points in the chorus lifecyle
      */
     private class PropertySubsystemExecutionListener extends ExecutionListenerAdapter {
-        public void testsStarted(ExecutionToken testExecutionToken) {
+        public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
             loadSessionProperties();
         }
 

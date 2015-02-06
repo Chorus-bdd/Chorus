@@ -52,8 +52,8 @@ public class RemoteExecutionListener implements RemoteExecutionListenerMBean {
         this.chorusExecutionListener = chorusExecutionListener;
     }
 
-    public void testsStarted(ExecutionToken testExecutionToken) {
-        chorusExecutionListener.testsStarted(testExecutionToken);
+    public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+        chorusExecutionListener.testsStarted(testExecutionToken, features);
     }
 
     public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {

@@ -14,7 +14,7 @@ public class NullExecutionListener {
 
     public static final ExecutionListener NULL_LISTENER = new ExecutionListener() {
 
-        public void testsStarted(ExecutionToken testExecutionToken) {}
+        public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {}
 
         public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {}
 

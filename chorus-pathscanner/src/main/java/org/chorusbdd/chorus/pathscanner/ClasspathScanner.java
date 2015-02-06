@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.pathscanner.filter.FilenameFilter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -67,17 +68,21 @@ public class ClasspathScanner {
 
     private static String[] classpathNames;
 
-    public static Set<Class> doScan(ClassFilter classFilter) throws IOException, ClassNotFoundException {
+    public static Set<Class> doScan(ClassFilter classFilter) {
         Set<Class> s = new HashSet<Class>();
-        for (String clazz : getClasspathClassNames()) {
-            //check the name/package first before we try class loading
-            //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
-            if ( classFilter.acceptByName(clazz)) {
-                Class c = Class.forName(clazz);
-                if (classFilter.acceptByClass(c)) {
-                    s.add(c);
+        try {
+            for (String clazz : getClasspathClassNames()) {
+                //check the name/package first before we try class loading
+                //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
+                if ( classFilter.acceptByName(clazz)) {
+                    Class c = Class.forName(clazz);
+                    if (classFilter.acceptByClass(c)) {
+                        s.add(c);
+                    }
                 }
             }
+        } catch (Exception e) {
+            throw new ChorusException("Failed during classpath scanning", e);
         }
         return s;
     }

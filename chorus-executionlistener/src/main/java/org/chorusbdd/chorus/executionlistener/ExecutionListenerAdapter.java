@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class ExecutionListenerAdapter implements ExecutionListener {
 
-    public void testsStarted(ExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
     }
 
     public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {

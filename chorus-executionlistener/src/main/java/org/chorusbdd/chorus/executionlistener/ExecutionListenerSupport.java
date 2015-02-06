@@ -34,10 +34,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -77,9 +74,9 @@ public class ExecutionListenerSupport {
         listeners.addAll(Arrays.asList(listener));
     }
 
-    public void notifyStartTests(ExecutionToken t) {
+    public void notifyStartTests(ExecutionToken t, List<FeatureToken> features) {
         for (ExecutionListener listener : listeners) {
-            listener.testsStarted(t);
+            listener.testsStarted(t, features);
         }
     }
 

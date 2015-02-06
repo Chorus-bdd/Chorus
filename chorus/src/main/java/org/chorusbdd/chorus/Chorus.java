@@ -31,19 +31,21 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.ConfigReader;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
-import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
-import org.chorusbdd.chorus.pathscanner.FeatureListBuilder;
-import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
-import org.chorusbdd.chorus.interpreter.startup.*;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
+import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
+import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
+import org.chorusbdd.chorus.interpreter.startup.ExecutionListenerFactory;
+import org.chorusbdd.chorus.interpreter.startup.InterpreterBuilder;
+import org.chorusbdd.chorus.interpreter.startup.OutputConfigurer;
+import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManagerImpl;
 import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.pathscanner.FeatureListBuilder;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -122,8 +124,10 @@ public class Chorus {
     public boolean run() throws Exception {
         boolean passed = false;
         try {
-            ExecutionToken t = startTests();
+            ExecutionToken t = new ExecutionToken(getSuiteName());
             List<FeatureToken> features = getFeatureList(t);
+            startTests(t, features);
+            initializeInterpreter();
             processFeatures(t, features);
             endTests(t, features);
             passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
@@ -137,13 +141,17 @@ public class Chorus {
         return passed;
     }
 
-    void processFeatures(ExecutionToken t, List<FeatureToken> features) throws Exception {
-        interpreter.processFeatures(t, features);
+    void initializeInterpreter() {
+        interpreter.initialize();
     }
 
-    List<FeatureToken> getFeatureList(ExecutionToken tagExpression) throws Exception {
+    void processFeatures(ExecutionToken t, List<FeatureToken> features) throws Exception {
+        interpreter.runFeatures(t, features);
+    }
+
+    List<FeatureToken> getFeatureList(ExecutionToken executionToken) throws Exception {
         return featureListBuilder.getFeatureList(
-            tagExpression,
+            executionToken,
             configReader.getValues(ChorusConfigProperty.FEATURE_PATHS),
             configReader.getValues(ChorusConfigProperty.STEPMACRO_PATHS),
             configReader.getValues(ChorusConfigProperty.TAG_EXPRESSION)
@@ -154,10 +162,8 @@ public class Chorus {
      * Start tests, notifying executionListeners
      * @return an executionToken to collate results for this test run
      */
-    public ExecutionToken startTests() {
-        ExecutionToken t = new ExecutionToken(getSuiteName());
-        listenerSupport.notifyStartTests(t);
-        return t;
+    public void startTests(ExecutionToken executionToken, List<FeatureToken> features) {
+        listenerSupport.notifyStartTests(executionToken, features);
     }
 
     /**
@@ -176,26 +182,6 @@ public class Chorus {
 
     public void addExecutionListener(ExecutionListener... listeners) {
         listenerSupport.addExecutionListener(listeners);
-    }
-
-    public boolean removeExecutionListener(ExecutionListener... listeners) {
-        return listenerSupport.removeExecutionListener(listeners);
-    }
-
-    public void addExecutionListener(Collection<ExecutionListener> listeners) {
-        listenerSupport.addExecutionListener(listeners);
-    }
-
-    public void removeExecutionListeners(List<ExecutionListener> listeners) {
-        listenerSupport.removeExecutionListeners(listeners);
-    }
-
-    public void setExecutionListener(ExecutionListener... listener) {
-        listenerSupport.setExecutionListener(listener);
-    }
-
-    public List<ExecutionListener> getListeners() {
-        return listenerSupport.getListeners();
     }
 
 

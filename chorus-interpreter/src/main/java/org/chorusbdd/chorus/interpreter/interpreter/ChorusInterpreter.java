@@ -31,18 +31,19 @@ package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.context.ChorusContext;
-import org.chorusbdd.chorus.pathscanner.HandlerClassDiscovery;
-import org.chorusbdd.chorus.stepinvoker.*;
-import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.parser.KeyWord;
+import org.chorusbdd.chorus.pathscanner.HandlerClassDiscovery;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.stepinvoker.CompositeStepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.util.NamedExecutors;
 
 import java.util.*;
@@ -64,7 +65,7 @@ public class ChorusInterpreter {
     private long scenarioTimeoutMillis = 360000;
     private List<String> basePackages = Collections.emptyList();
 
-    private ExecutionListenerSupport executionListenerSupport = new ExecutionListenerSupport();
+    private ExecutionListenerSupport executionListenerSupport;
 
     private HandlerClassDiscovery handlerClassDiscovery = new HandlerClassDiscovery();
     private SpringContextSupport springContextSupport = new SpringContextSupport();
@@ -73,24 +74,28 @@ public class ChorusInterpreter {
     private ScheduledFuture scenarioTimeoutStopThread;
     private ScheduledFuture scenarioTimeoutKill;
 
-    private StepProcessor stepProcessor = new StepProcessor(executionListenerSupport);
+    private StepProcessor stepProcessor;
 
     private SubsystemManager subsystemManager;
+    private HashMap<String, Class> allHandlerClasses;
 
-    public ChorusInterpreter() {}
+    public ChorusInterpreter(ExecutionListenerSupport executionListenerSupport) {
+        this.executionListenerSupport = executionListenerSupport;
+        stepProcessor = new StepProcessor(executionListenerSupport);
+    }
 
-    public void processFeatures(ExecutionToken executionToken, List<FeatureToken> features) throws Exception {
-
+    public void initialize() {
         //load all available handler classes
-        HashMap<String, Class> allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(basePackages);
-        
+        allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(basePackages);
+    }
+
+    public void runFeatures(ExecutionToken executionToken, List<FeatureToken> features) throws Exception {
         //RUN EACH FEATURE
         for (FeatureToken feature : features) {
             try {
-                processFeature(
-                        executionToken,
-                        allHandlerClasses,
-                        feature
+                runFeature(
+                    executionToken,
+                    feature
                 );
             } catch (Throwable t) {
                 log.error("Exception while running feature " + feature, t);
@@ -99,24 +104,33 @@ public class ChorusInterpreter {
         }    
     }
 
-    private void processFeature(ExecutionToken executionToken, HashMap<String, Class> allHandlerClasses, FeatureToken feature) throws Exception {
+    private void runFeature(ExecutionToken executionToken, FeatureToken feature) throws Exception {
 
+        executionListenerSupport.notifyFeatureStarted(executionToken, feature);
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
         String config = feature.isConfiguration() ? " in config " + feature.getConfigurationName() : "";
         log.info("Running feature from file: " + feature.getFeatureFile() + config);
-        executionListenerSupport.notifyFeatureStarted(executionToken, feature);
 
         //check that the required handler classes are all available and list them in order of precidence
         List<Class> orderedHandlerClasses = new ArrayList<Class>();
         StringBuilder unavailableHandlersMessage = handlerClassDiscovery.findHandlerClasses(allHandlerClasses, feature, orderedHandlerClasses);
         boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
 
+
         //run the scenarios in the feature
         if (foundAllHandlerClasses) {
             log.debug("The following handlers will be used " + orderedHandlerClasses);
-            runScenarios(executionToken, feature, orderedHandlerClasses);
+            List<ScenarioToken> scenarios = feature.getScenarios();
+
+            HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager);
+            handlerManager.createFeatureScopedHandlers();
+            handlerManager.processStartOfFeature();
+
+            runScenarios(executionToken, feature, scenarios, handlerManager);
+
+            handlerManager.processEndOfFeature();
 
             String description = feature.getEndState() == EndState.PASSED ? " passed! " : feature.getEndState() == EndState.PENDING ? " pending! " : " failed! ";
             log.trace("The feature " + description);
@@ -138,39 +152,31 @@ public class ChorusInterpreter {
         executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
     }
 
-    private void runScenarios(ExecutionToken executionToken, FeatureToken feature, List<Class> orderedHandlerClasses) throws Exception {
-        List<ScenarioToken> scenarios = feature.getScenarios();
-        
-        HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager);
-        handlerManager.createFeatureScopedHandlers();
-        handlerManager.processStartOfFeature();
-
+    private void runScenarios(ExecutionToken executionToken, FeatureToken feature, List<ScenarioToken> scenarios, HandlerManager handlerManager) throws Exception {
         log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
             ScenarioToken scenario = iterator.next();
 
             //if the feature start scenario exists and failed we skip all but feature end scenario
-            boolean skip = 
-                    ! scenario.isFeatureStartScenario() && 
+            boolean skip =
+                    ! scenario.isFeatureStartScenario() &&
                     ! scenario.isFeatureEndScenario() &&
                     feature.isFeatureStartScenarioFailed();
-            
+
             if ( skip ) {
                 log.warn("Skipping scenario " + scenario + " since " + KeyWord.FEATURE_START_SCENARIO_NAME + " failed");
             }
-            
-            processScenario(
+
+            runScenario(
                 executionToken,
                 handlerManager,
                 scenario,
                 skip
             );
         }
-
-        handlerManager.processEndOfFeature();
     }
 
-    private void processScenario(ExecutionToken executionToken, HandlerManager handlerManager, ScenarioToken scenario, boolean skip) throws Exception {
+    private void runScenario(ExecutionToken executionToken, HandlerManager handlerManager, ScenarioToken scenario, boolean skip) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
         log.info(String.format("Processing scenario: %s", scenario.getName()));
 
@@ -275,17 +281,6 @@ public class ChorusInterpreter {
         this.stepProcessor.setDryRun(dryRun);
     }
 
-    public void addExecutionListener(ExecutionListener... listeners) {
-        executionListenerSupport.addExecutionListener(listeners);
-    }
-
-    public void addExecutionListeners(List<ExecutionListener> executionListeners) {
-        executionListenerSupport.addExecutionListener(executionListeners);
-    }
-
-    public boolean removeExecutionListener(ExecutionListener... listeners) {
-        return executionListenerSupport.removeExecutionListener(listeners);
-    }
 
     public void setScenarioTimeoutMillis(long scenarioTimeoutMillis) {
         this.scenarioTimeoutMillis = scenarioTimeoutMillis;

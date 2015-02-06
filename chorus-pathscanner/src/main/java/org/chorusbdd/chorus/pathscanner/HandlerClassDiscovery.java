@@ -59,7 +59,7 @@ public class HandlerClassDiscovery {
      * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
      * @return a Map of [feature-name -> feature class]
      */
-    public HashMap<String, Class> discoverHandlerClasses(List<String> basePackages) throws Exception {
+    public HashMap<String, Class> discoverHandlerClasses(List<String> basePackages) {
         //always include the Chorus handlers package
         HashMap<String, Class> handlerNameToHandlerClass = new HashMap<String, Class>();
 

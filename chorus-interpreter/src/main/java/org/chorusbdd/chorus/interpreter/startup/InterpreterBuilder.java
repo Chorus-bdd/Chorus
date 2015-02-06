@@ -30,13 +30,11 @@
 package org.chorusbdd.chorus.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
+import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,9 +58,7 @@ public class InterpreterBuilder {
      * Run the interpreter, collating results into the executionToken
      */
     public ChorusInterpreter buildAndConfigure(ConfigProperties config, SubsystemManager subsystemManager) {
-       
-        ChorusInterpreter chorusInterpreter = new ChorusInterpreter();
-        chorusInterpreter.addExecutionListeners(listenerSupport.getListeners());
+        ChorusInterpreter chorusInterpreter = new ChorusInterpreter(listenerSupport);
         chorusInterpreter.setBasePackages(config.getValues(ChorusConfigProperty.HANDLER_PACKAGES));
         chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));

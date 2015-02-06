@@ -46,8 +46,9 @@ public interface ExecutionListener {
 
     /**
      * @param testExecutionToken a token representing the current suite of tests starting execution
+     * @param features
      */
-    public void testsStarted(ExecutionToken testExecutionToken);
+    public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features);
 
     /**
      * @param testExecutionToken a token representing the current suite of tests

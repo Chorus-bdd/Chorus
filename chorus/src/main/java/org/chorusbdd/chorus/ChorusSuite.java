@@ -30,21 +30,20 @@
 package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
-import org.chorusbdd.chorus.results.EndState;
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.results.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: nick
@@ -54,19 +53,13 @@ import java.util.List;
 public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
     private Class clazz;
-    private List<FeatureToken> features;
     private Chorus chorus;
     private ExecutionToken executionToken;
+    private JUnitSuiteExecutionListener executionListener = new JUnitSuiteExecutionListener();
 
     public ChorusSuite(Class clazz) throws InitializationError {
         super(clazz);
         this.clazz = clazz;
-    }
-
-    protected Statement classBlock(final RunNotifier notifier) {
-        Statement statement= super.classBlock(notifier);
-        statement = new EndChorusSuite(statement);
-        return statement;
     }
 
     @Override
@@ -77,11 +70,11 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("Failed to find getChorusArgs method");
         }
-        
+
         if (! Modifier.isStatic(method.getModifiers())) {
-            throw new RuntimeException("The getChorusArgs method is not static");    
+            throw new RuntimeException("The getChorusArgs method is not static");
         }
-        
+
         if ( ! String.class.equals(method.getReturnType())) {
             throw new RuntimeException("The getChorusArgs method does not return a String");
         }
@@ -94,20 +87,29 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             throw new RuntimeException("Failed during call to getChorusArgs", e);
         }
 
+
         try {
-             chorus = new Chorus(args.split(" "));
+            chorus = new Chorus(args.split(" "));
+            chorus.addExecutionListener(executionListener);
         } catch (InterpreterPropertyException e) {
             throw new RuntimeException("Unsupported property", e);
         }
 
-        executionToken = chorus.startTests();
-        try {
-             features = chorus.getFeatureList(executionToken);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to get feature list", e);
-        }
-        
-        List<ChorusFeatureTest> tests = new ArrayList<ChorusFeatureTest>();
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    chorus.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        executionListener.awaitTestStart();
+        List<FeatureToken> features = executionListener.features;
+        List<ChorusFeatureTest> tests = new ArrayList<>();
         for (FeatureToken f  : features) {
             try {
                 tests.add(new ChorusFeatureTest(chorus, executionToken, f));
@@ -141,6 +143,12 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             this.children = createChildren();
         }
 
+        public void run(RunNotifier notifier) {
+            executionListener.awaitFeatureStart();
+            super.run(notifier);
+            executionListener.awaitFeatureEnd();
+        }
+
         @Override
         protected List<ChorusScenario> getChildren() {
             return children;
@@ -149,7 +157,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         private List<ChorusScenario> createChildren() {
             List<ChorusScenario> l = new ArrayList<>();
             for (ScenarioToken s : featureToken.getScenarios()) {
-                l.add(new ChorusScenario(chorus, t, featureToken, s));
+                l.add(new ChorusScenario(featureToken, s));
             }
             return l;
         }
@@ -193,32 +201,15 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         }
     }
 
-    public static boolean isJUnitPass(FeatureToken featureToken) {
+    public static boolean isJUnitPass(PassPendingFailToken featureToken) {
         return featureToken.getEndState() == EndState.PASSED || featureToken.getEndState() == EndState.PENDING;
     }
 
-    private class EndChorusSuite extends Statement {
-        private Statement statement;
-
-        public EndChorusSuite(Statement statement) {
-            this.statement = statement;
-        }
-
-        public void evaluate() throws Throwable {
-            statement.evaluate();
-            chorus.endTests(executionToken, features);
-        }
-    }
-
     private class ChorusScenario {
-        private Chorus chorus;
-        private ExecutionToken t;
         private FeatureToken featureToken;
         private ScenarioToken scenarioToken;
 
-        public ChorusScenario(Chorus chorus, ExecutionToken t, FeatureToken featureToken, ScenarioToken scenarioToken) {
-            this.chorus = chorus;
-            this.t = t;
+        public ChorusScenario(FeatureToken featureToken, ScenarioToken scenarioToken) {
             this.featureToken = featureToken;
             this.scenarioToken = scenarioToken;
         }
@@ -233,19 +224,55 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         }
 
         public boolean isSuccess() {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return true;
-            //return isJUnitPass(featureToken);
+            return isJUnitPass(scenarioToken);
         }
 
-        public String getScenarioName()
-        {
-
+        public String getScenarioName()  {
             return scenarioToken.getName();
+        }
+    }
+
+    private class JUnitSuiteExecutionListener extends ExecutionListenerAdapter {
+
+        private CyclicBarrier startBarrier = new CyclicBarrier(2);
+        private volatile List<FeatureToken> features;
+
+        private CyclicBarrier featureStartBarrier = new CyclicBarrier(2);
+
+        private CyclicBarrier featureEndBarrier = new CyclicBarrier(2);
+
+
+        public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+            this.features = features;
+            awaitTestStart();
+        }
+
+        public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            awaitFeatureStart();
+        }
+
+        public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            awaitFeatureEnd();
+        }
+
+        private void await(CyclicBarrier cyclicBarrier, long length) {
+            try {
+                cyclicBarrier.await(length, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void awaitFeatureStart() {
+            await(featureStartBarrier, 10000);
+        }
+
+        public void awaitFeatureEnd() {
+            await(featureEndBarrier, 600000);
+        }
+
+        public void awaitTestStart() {
+            await(startBarrier, 10000);
         }
     }
 }

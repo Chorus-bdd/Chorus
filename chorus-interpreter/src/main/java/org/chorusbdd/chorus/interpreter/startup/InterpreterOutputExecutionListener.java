@@ -63,7 +63,7 @@ public class InterpreterOutputExecutionListener extends AbstractOutputFormatterD
         this.verbose = verbose;
     }
 
-    public void testsStarted(ExecutionToken testExecutionToken) {
+    public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         tokenLogCapture.setLastToken(testExecutionToken);
     }
 
