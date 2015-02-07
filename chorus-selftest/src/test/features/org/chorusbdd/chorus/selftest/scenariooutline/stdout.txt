@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/scenariooutline.feature
 Feature: Scenario Outline                                                                            
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariooutline/scenariooutline.feature
   Scenario: Simple Scenario [1] A Long Value
 Chorus --> INFO    - Processing scenario: Simple Scenario [1] A Long Value
     Given Chorus is working properly                                                         PASSED  

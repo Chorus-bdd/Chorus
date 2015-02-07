@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotechoruscontext/remotechoruscontext.feature
 Feature: JMX Remote Chorus Context                                                                   
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotechoruscontext/remotechoruscontext.feature
 Chorus --> INFO    - No default handler found for Feature: (JMX Remote Chorus Context), will use built-in handlers and Uses: statements
   Scenario: View And Change A Context Variable Remotely
 Chorus --> INFO    - Processing scenario: View And Change A Context Variable Remotely

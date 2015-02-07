@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/pendingsteps/pendingwithnofailures/pendingsteps.feature
 Feature: Pending Steps                                                                               
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/pendingsteps/pendingwithnofailures/pendingsteps.feature
   Scenario: Pending Annotations
 Chorus --> INFO    - Processing scenario: Pending Annotations
     Given Chorus is working properly                                                         PASSED  

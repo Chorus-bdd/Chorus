@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dryrun/dryrun.feature
 Feature: Dry Run                                                                                     
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dryrun/dryrun.feature
   Scenario: Simple Scenario One
 Chorus --> INFO    - Processing scenario: Simple Scenario One
     Given Chorus is working properly                                                         DRYRUN  This step is OK

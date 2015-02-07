@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariotimeout/scenariotimeout.feature
 Feature: Scenario Timeout                                                                            
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/scenariotimeout/scenariotimeout.feature
   Scenario: This scenario thread is interrupted due to scenario timeout
 Chorus --> INFO    - Processing scenario: This scenario thread is interrupted due to scenario timeout
     Given Chorus is working properly                                                         PASSED  

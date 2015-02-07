@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_write_stdin/writestdin.feature
 Feature: Capture Std Output                                                                          
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/process_write_stdin/writestdin.feature
 Chorus --> INFO    - No default handler found for Feature: (Capture Std Output), will use built-in handlers and Uses: statements
   Scenario: I write and read a line
 Chorus --> INFO    - Processing scenario: I write and read a line

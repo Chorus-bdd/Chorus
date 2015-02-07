@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/multiplescenario/multiplescenario.feature
 Feature: Multiple Scenario                                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/multiplescenario/multiplescenario.feature
   Scenario: Simple Scenario One
 Chorus --> INFO    - Processing scenario: Simple Scenario One
     Given Chorus is working properly                                                         PASSED  

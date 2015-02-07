@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/duplicatestepmatch/duplicatestepmatch.feature
 Feature: Test For Duplicate Match Errors                                                             
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/duplicatestepmatch/duplicatestepmatch.feature
 Chorus --> INFO    - No default handler found for Feature: (Test For Duplicate Match Errors), will use built-in handlers and Uses: statements
   Scenario: Fail With A Duplicate Match From A Single Handler
 Chorus --> INFO    - Processing scenario: Fail With A Duplicate Match From A Single Handler

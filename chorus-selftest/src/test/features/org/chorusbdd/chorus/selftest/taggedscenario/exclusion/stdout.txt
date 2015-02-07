@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/exclusion/exclusivetag.feature
 Feature: Exclusive Tag                                                                               
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/exclusion/exclusivetag.feature
   Scenario: Scenario One
 Chorus --> INFO    - Processing scenario: Scenario One
     Given Chorus is working properly                                                         PASSED  

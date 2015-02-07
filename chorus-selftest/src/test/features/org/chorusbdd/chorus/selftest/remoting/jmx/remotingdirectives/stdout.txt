@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotingdirectives/remotingdirectives.feature
 Feature: Remoting Directives                                                                         
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotingdirectives/remotingdirectives.feature
 Chorus --> INFO    - No default handler found for Feature: (Remoting Directives), will use built-in handlers and Uses: statements
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start

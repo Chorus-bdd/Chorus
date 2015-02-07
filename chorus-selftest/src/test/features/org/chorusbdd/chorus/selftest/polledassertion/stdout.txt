@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/polledassertion/polledassertion.feature
 Feature: Polled Assertion                                                                            
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/polledassertion/polledassertion.feature
   Scenario: Passes Within Invoker Is Working
 Chorus --> INFO    - Processing scenario: Passes Within Invoker Is Working
     Given I increment a value with a timer task                                              PASSED  

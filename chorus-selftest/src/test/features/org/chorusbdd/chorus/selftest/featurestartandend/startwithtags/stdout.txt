@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startwithtags/featurestartwithtags.feature
 Feature: Feature Start With Tags                                                                     
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startwithtags/featurestartwithtags.feature
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
     First I run feature start                                                                PASSED  
@@ -10,8 +10,8 @@ Chorus --> INFO    - Processing scenario: Scenario Two
 Chorus --> INFO    - Processing scenario: Feature-End
     But I run feature end                                                                    PASSED  
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startwithtags/startandendwithbackground.feature
 Feature: Feature Start With Background                                                               
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startwithtags/startandendwithbackground.feature
 Chorus --> INFO    - No default handler found for Feature: (Feature Start With Background), will use built-in handlers and Uses: statements
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start

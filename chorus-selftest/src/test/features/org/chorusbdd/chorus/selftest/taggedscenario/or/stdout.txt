@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/or/taggedscenarioor.feature
 Feature: Tagged Scenario Or                                                                          
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/or/taggedscenarioor.feature
   Scenario: Scenario One
 Chorus --> INFO    - Processing scenario: Scenario One
     Given Chorus is working properly                                                         PASSED  

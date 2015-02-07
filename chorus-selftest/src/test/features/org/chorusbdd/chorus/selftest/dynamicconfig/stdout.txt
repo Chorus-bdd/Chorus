@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dynamicconfig/dynamicconfig.feature
 Feature: Dynamic Configuration                                                                       
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dynamicconfig/dynamicconfig.feature
   Scenario: Configure and start a process dynamically
 Chorus --> INFO    - Processing scenario: Configure and start a process dynamically
     Given I add a process config called dynamicOne                                           PASSED  

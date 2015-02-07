@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/configload/loadconfigfromdatabase.feature
 Feature: Load Config From Database                                                                   
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/configload/loadconfigfromdatabase.feature
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
     First I create a javadb database and insert processes config                             PASSED  

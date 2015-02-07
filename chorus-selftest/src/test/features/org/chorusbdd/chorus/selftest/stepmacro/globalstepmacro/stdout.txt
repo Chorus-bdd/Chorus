@@ -1,7 +1,7 @@
 Chorus --> INFO    - Loading stepmacro from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/globalsteps.stepmacro
 Chorus --> INFO    - Loading stepmacro from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/subfolder/globalmacro2.stepmacro
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/gloablstepmacro.feature
 Feature: Global Step Macro                                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/gloablstepmacro.feature
   Scenario: Calling a global macro
 Chorus --> INFO    - Processing scenario: Calling a global macro
     Given Chorus is working properly                                                         PASSED  
@@ -14,8 +14,8 @@ Chorus --> INFO    - Processing scenario: Calling a global macro
     And I can call a macro from a different directory so long as it is in the feature path   
     .. Then the steps in the macro will be executed                                          PASSED  
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/subfolder/globalstepmacrotwo.feature
 Feature: Global Step Macro Two                                                                       
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/globalstepmacro/subfolder/globalstepmacrotwo.feature
 Chorus --> INFO    - No default handler found for Feature: (Global Step Macro Two), will use built-in handlers and Uses: statements
   Scenario: Calling a global macro
 Chorus --> INFO    - Processing scenario: Calling a global macro

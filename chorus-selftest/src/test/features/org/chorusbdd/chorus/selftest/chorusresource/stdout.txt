@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/chorusresource/chorusresource.feature
 Feature: Chorus Resource                                                                             
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/chorusresource/chorusresource.feature
 Chorus --> INFO    - No default handler found for Feature: (Chorus Resource), will use built-in handlers and Uses: statements
   Scenario: Test Chorus Resource [1] feature
 Chorus --> INFO    - Processing scenario: Test Chorus Resource [1] feature

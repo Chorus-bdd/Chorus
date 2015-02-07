@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/backgrounddirectives.feature
 Feature: Background Directives                                                                       
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/backgrounddirectives.feature
 Chorus --> INFO    - No default handler found for Feature: (Background Directives), will use built-in handlers and Uses: statements
   Scenario: Directive With Background
 Chorus --> INFO    - Processing scenario: Directive With Background
@@ -24,8 +24,8 @@ Chorus --> INFO    - Processing scenario: Directive With Background And Secnario
     When I can run a Step                                                                    PASSED  
     Then I can run a Step                                                                    PASSED  
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/directiveswithcontextvariables.feature
 Feature: Directives With Context Variables                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/directiveswithcontextvariables.feature
 Chorus --> INFO    - No default handler found for Feature: (Directives With Context Variables), will use built-in handlers and Uses: statements
   Scenario: Directives can expand context variables
 Chorus --> INFO    - Processing scenario: Directives can expand context variables
@@ -33,8 +33,8 @@ Chorus --> INFO    - Processing scenario: Directives can expand context variable
     #! Directive One                                                                         PASSED  
     Then I can run a Step                                                                    PASSED  
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/directiveswithoutsteps.feature
 Feature: Directives Without Any Steps                                                                
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/directiveswithoutsteps.feature
 Chorus --> INFO    - No default handler found for Feature: (Directives Without Any Steps), will use built-in handlers and Uses: statements
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
@@ -48,8 +48,8 @@ Chorus --> INFO    - Processing scenario: Directives But No Steps
 Chorus --> INFO    - Processing scenario: Feature-End
     #! Directive Five Feature End                                                            PASSED  Five
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/directiveswithscenariooutiline.feature
 Feature: Directives With Scenario Outline                                                            
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/directiveswithscenariooutiline.feature
 Chorus --> INFO    - No default handler found for Feature: (Directives With Scenario Outline), will use built-in handlers and Uses: statements
   Scenario: A Scenario Outline can use directives [1] One
 Chorus --> INFO    - Processing scenario: A Scenario Outline can use directives [1] One
@@ -62,8 +62,8 @@ Chorus --> INFO    - Processing scenario: A Scenario Outline can use directives 
     #! Directive Two                                                                         PASSED  OK
     Given I can run a Step Two                                                               PASSED  
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/simpledirectives.feature
 Feature: Simple Directives                                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/simple/simpledirectives.feature
   Scenario: Directive Before Scenario
 Chorus --> INFO    - Processing scenario: Directive Before Scenario
     #! Directive One                                                                         PASSED  

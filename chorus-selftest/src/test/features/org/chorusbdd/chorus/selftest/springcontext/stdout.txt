@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/springcontext/springcontext.feature
 Feature: Spring Context                                                                              
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/springcontext/springcontext.feature
   Scenario: Spring Context Resources Injected
 Chorus --> INFO    - Processing scenario: Spring Context Resources Injected
 Chorus --> INFO    - Created new SpringContext for handler class org.chorusbdd.chorus.selftest.springcontext.SpringContextHandler at testSpringContext.xml

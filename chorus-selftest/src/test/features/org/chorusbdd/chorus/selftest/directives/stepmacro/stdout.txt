@@ -1,6 +1,6 @@
 Chorus --> INFO    - Loading stepmacro from file: src/test/features/org/chorusbdd/chorus/selftest/directives/stepmacro/stepmacrodirectives.stepmacro
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/stepmacro/stepmacrodirectives.feature
 Feature: Step Macro Directives                                                                       
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/stepmacro/stepmacrodirectives.feature
   Scenario: Directive Before Scenario
 Chorus --> INFO    - Processing scenario: Directive Before Scenario
     First I run a Step Macro Standalone                                                      

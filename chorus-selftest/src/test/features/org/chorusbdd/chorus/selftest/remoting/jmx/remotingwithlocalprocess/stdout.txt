@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotingwithlocalprocess/remotingwithlocalprocess.feature
 Feature: Remoting With Local Process                                                                 
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/remoting/jmx/remotingwithlocalprocess/remotingwithlocalprocess.feature
   Scenario: I don't need to define a remoting config for a locally started process
 Chorus --> INFO    - Processing scenario: I don't need to define a remoting config for a locally started process
 Chorus --> INFO    - About to run process:  <system specific process details replaced>

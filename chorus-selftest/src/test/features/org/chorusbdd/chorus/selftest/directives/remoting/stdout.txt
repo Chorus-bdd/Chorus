@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/remoting/remotingwithdirectives.feature
 Feature: Remoting With Directives                                                                    
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/remoting/remotingwithdirectives.feature
 Chorus --> INFO    - No default handler found for Feature: (Remoting With Directives), will use built-in handlers and Uses: statements
   Scenario: Call An Exported Method
 Chorus --> INFO    - Processing scenario: Call An Exported Method

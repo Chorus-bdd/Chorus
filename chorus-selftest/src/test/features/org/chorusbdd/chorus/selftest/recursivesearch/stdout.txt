@@ -1,12 +1,12 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/recursivesearch/recursivesearch.feature
 Feature: Recursive Search                                                                            
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/recursivesearch/recursivesearch.feature
   Scenario: Top Level Scenario
 Chorus --> INFO    - Processing scenario: Top Level Scenario
     Given Chorus is working properly                                                         PASSED  
     Then I can run a feature with a single scenario                                          PASSED  
 
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/recursivesearch/subpackage/subpackage.feature
 Feature: Sub Package Discovery                                                                       
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/recursivesearch/subpackage/subpackage.feature
   Scenario: Child Level Scenario
 Chorus --> INFO    - Processing scenario: Child Level Scenario
     Given Chorus is working properly                                                         PASSED  

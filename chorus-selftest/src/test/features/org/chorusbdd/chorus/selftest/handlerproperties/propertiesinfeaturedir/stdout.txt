@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/propertiesinfeaturedir/propertiesinfeaturedir.feature
 Feature: Properties In Feature Directory                                                             
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/handlerproperties/propertiesinfeaturedir/propertiesinfeaturedir.feature
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
     Given Chorus is working properly                                                         PASSED  

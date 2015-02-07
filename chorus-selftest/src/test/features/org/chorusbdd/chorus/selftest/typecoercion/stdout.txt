@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/typecoercion/typecoercion.feature
 Feature: Type Coercion                                                                               
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/typecoercion/typecoercion.feature
   Scenario: Successful Single Value Coercion
 Chorus --> INFO    - Processing scenario: Successful Single Value Coercion
     Given Chorus is working properly                                                         PASSED  

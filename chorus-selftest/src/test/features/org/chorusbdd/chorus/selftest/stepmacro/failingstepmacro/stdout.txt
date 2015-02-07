@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/failingstepmacro/failingstepmacro.feature
 Feature: Failing Step Macro                                                                          
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/failingstepmacro/failingstepmacro.feature
   Scenario: Simple Step Macro Scenario
 Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
     Given Chorus is working properly                                                         PASSED  

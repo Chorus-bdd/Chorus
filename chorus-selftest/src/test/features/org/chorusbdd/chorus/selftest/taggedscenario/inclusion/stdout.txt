@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/inclusion/inclusivetag.feature
 Feature: Inclusive Tag                                                                               
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/taggedscenario/inclusion/inclusivetag.feature
   Scenario: Scenario Two
 Chorus --> INFO    - Processing scenario: Scenario Two
     Given Chorus is working properly                                                         PASSED  

@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/choruscontext.feature
 Feature: Check Chorus Context Handler                                                                
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/choruscontext.feature
   Scenario: Test Context Variables
 Chorus --> INFO    - Processing scenario: Test Context Variables
     Given Chorus is working properly                                                         PASSED  

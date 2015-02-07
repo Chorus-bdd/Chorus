@@ -1,6 +1,6 @@
 Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.processhandler.nonjava.PropertyWritingExecutionListener
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/nonjava/startnonjava.feature
 Feature: Start Non Java Processes                                                                    
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/nonjava/startnonjava.feature
   Scenario: Start a relative path process
 Chorus --> INFO    - Processing scenario: Start a relative path process
     Given Chorus is working properly                                                         PASSED  

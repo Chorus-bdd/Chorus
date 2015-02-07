@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/stepmacrowithcontextvariables/stepmacrowithcontextvariables.feature
 Feature: Step Macro With Context Variables                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/stepmacro/stepmacrowithcontextvariables/stepmacrowithcontextvariables.feature
   Scenario: Simple Step Macro Scenario
 Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
     Given I create a variable myVar with value wibble                                        PASSED  

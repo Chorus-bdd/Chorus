@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/lastresult/storelastresult.feature
 Feature: Store Last Result                                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/lastresult/storelastresult.feature
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
 Chorus --> INFO    - About to run process:  <system specific process details replaced>

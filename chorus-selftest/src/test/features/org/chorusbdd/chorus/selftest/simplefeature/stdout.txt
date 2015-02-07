@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/simplefeature/simplefeature.feature
 Feature: Simple Feature                                                                              
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/simplefeature/simplefeature.feature
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
     Given Chorus is working properly                                                         PASSED  

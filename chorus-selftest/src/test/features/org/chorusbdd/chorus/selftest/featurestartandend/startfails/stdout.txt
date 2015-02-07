@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startfails/statfails.feature
 Feature: Feature Start Fails                                                                         
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/startfails/statfails.feature
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
     First I run feature start                                                                PASSED  

@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processwithlog4jconfig/processwithlog4jconfig.feature
 Feature: Process With Log4j                                                                          
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/processhandler/processwithlog4jconfig/processwithlog4jconfig.feature
   Scenario: Start a Process with log4j logging
 Chorus --> INFO    - Processing scenario: Start a Process with log4j logging
 Chorus --> INFO    - About to run process:  <system specific process details replaced>

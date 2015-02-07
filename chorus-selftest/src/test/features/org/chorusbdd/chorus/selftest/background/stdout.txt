@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/background/background.feature
 Feature: Test Background                                                                             
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/background/background.feature
   Scenario: Scenario With Background One
 Chorus --> INFO    - Processing scenario: Scenario With Background One
     Given Chorus is working properly                                                         PASSED  

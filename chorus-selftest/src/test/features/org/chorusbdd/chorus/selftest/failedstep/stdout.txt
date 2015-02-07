@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/failedstep/failedstep.feature
 Feature: Failed Step                                                                                 
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/failedstep/failedstep.feature
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
     Given Chorus is working properly                                                         PASSED  

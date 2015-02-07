@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/lifecyclemethods/lifecyclemethods.feature
 Feature: Lifecycle Methods                                                                           
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/lifecyclemethods/lifecyclemethods.feature
 Chorus --> INFO    - No default handler found for Feature: (Lifecycle Methods), will use built-in handlers and Uses: statements
 Feature Init for Feature scoped handler ---->
 LifecycleMethodsFeatureScopedHandler{

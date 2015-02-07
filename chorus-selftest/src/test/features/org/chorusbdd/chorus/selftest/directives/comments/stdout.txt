@@ -1,5 +1,5 @@
-Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/comments/directiveswithcomments.feature
 Feature: Directives With Comments                                                                    
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/directives/comments/directiveswithcomments.feature
   Scenario: Directive Before Scenario
 Chorus --> INFO    - Processing scenario: Directive Before Scenario
     #! Directive One                                                                         PASSED  
