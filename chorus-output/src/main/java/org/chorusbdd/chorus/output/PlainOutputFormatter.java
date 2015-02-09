@@ -63,7 +63,7 @@ public final class PlainOutputFormatter extends AbstractOutputFormatter {
 
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
-        int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
+        int stepLengthChars = getStepLengthCharCount() - depthPadding.length();
         if ( step.isStepMacro() ) {
             printStepWithoutEndState(step, depthPadding, stepLengthChars, "%n");
         } else {
@@ -82,7 +82,7 @@ public final class PlainOutputFormatter extends AbstractOutputFormatter {
         cancelStepAnimation();
         if ( ! step.isStepMacro() ) {
             StringBuilder depthPadding = getDepthPadding(depth);
-            int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
+            int stepLengthChars = getStepLengthCharCount() - depthPadding.length();
             printCompletedStep(step, depthPadding, stepLengthChars);
         }
     }

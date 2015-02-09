@@ -54,6 +54,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     private Class clazz;
     private Chorus chorus;
     private JUnitSuiteExecutionListener executionListener = new JUnitSuiteExecutionListener();
+    private Thread testThread;
 
     public ChorusSuite(Class clazz) throws InitializationError {
         super(clazz);
@@ -85,7 +86,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             throw new RuntimeException("Failed during call to getChorusArgs", e);
         }
 
-
         try {
             chorus = new Chorus(args.split(" "));
             chorus.addJUnitExecutionListener(executionListener);
@@ -93,37 +93,115 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             throw new RuntimeException("Unsupported property", e);
         }
 
-        new Thread(new Runnable() {
+        ExecutionToken executionToken = chorus.createExecutionToken();
+        List<ChorusFeatureTest> tests = getChorusFeatureTests(executionToken);
+        return tests;
+    }
 
-            @Override
-            public void run() {
+    private List<ChorusFeatureTest> getChorusFeatureTests(ExecutionToken executionToken) {
+        List<ChorusFeatureTest> tests = null;
+        try {
+            List<FeatureToken> features = chorus.getFeatureList(executionToken);
+
+            tests = new ArrayList<>();
+            for (FeatureToken f  : features) {
                 try {
-                    chorus.run();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    tests.add(new ChorusFeatureTest(f));
+                } catch (InitializationError initializationError) {
+                    initializationError.printStackTrace();
                 }
             }
-        }).start();
 
-        executionListener.awaitTestStart();
-        List<FeatureToken> features = executionListener.features;
-        List<ChorusFeatureTest> tests = new ArrayList<>();
-        for (FeatureToken f  : features) {
-            try {
-                tests.add(new ChorusFeatureTest(f));
-            } catch (InitializationError initializationError) {
-                initializationError.printStackTrace();
+            if ( tests.size() > 0) {
+                ChorusFeatureTest t = tests.remove(0);
+                tests.add(0, new InitialFeature(t.featureToken, t, executionToken, features));
+
+                t = tests.remove(tests.size() - 1);
+                tests.add(new FinalFeature(t.featureToken, t));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return tests;
     }
-    
+
+
+
     protected Description describeChild(ChorusFeatureTest child) {
         return child.getDescription();
     }
 
     protected void runChild(ChorusFeatureTest child, RunNotifier notifier) {
         child.run(notifier);
+    }
+
+    public class InitialFeature extends ChorusFeatureTest {
+
+        ChorusFeatureTest wrappedFeature;
+        private ExecutionToken executionToken;
+        private List<FeatureToken> features;
+
+        public InitialFeature(FeatureToken featureToken, ChorusFeatureTest wrappedFeature, ExecutionToken executionToken, List<FeatureToken> features) throws InitializationError {
+            super(featureToken);
+            this.wrappedFeature = wrappedFeature;
+            this.executionToken = executionToken;
+            this.features = features;
+        }
+
+        public void run(RunNotifier notifier) {
+            testThread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        chorus.startTests(executionToken, features);
+                        chorus.initializeInterpreter();
+                        chorus.processFeatures(executionToken, features);
+                        chorus.endTests(executionToken, features);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            testThread.start();
+
+            executionListener.awaitTestStart();
+            wrappedFeature.run(notifier);
+        }
+    }
+
+    public class FinalFeature extends ChorusFeatureTest {
+
+        ChorusFeatureTest wrappedFeature;
+
+        public FinalFeature(FeatureToken featureToken, ChorusFeatureTest wrappedFeature) throws InitializationError {
+            super(featureToken);
+            this.wrappedFeature = wrappedFeature;
+        }
+
+        public void run(RunNotifier notifier) {
+            wrappedFeature.run(notifier);
+
+            //wait for tests to terminate
+            try {
+                testThread.join(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pauseForJUnitOutput();
+        }
+    }
+
+
+    /**
+     * A race condition (in Intellij junit plugin?) causes std output to bleed into the next test unless we pause briefly
+     */
+    private void pauseForJUnitOutput()  {
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     
     public class ChorusFeatureTest extends ParentRunner<ChorusSuite.ChorusScenario> {
@@ -138,6 +216,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         }
 
         public void run(RunNotifier notifier) {
+            executionListener.awaitFeatureStart();
             super.run(notifier);
             executionListener.awaitFeatureEnd();
         }
@@ -229,6 +308,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         public void run() throws Exception {
             if ( ! executionListener.isCompleted(featureToken)) {
+                executionListener.awaitScenarioStart();
                 executionListener.awaitScenarioEnd();
             }
         }
@@ -261,14 +341,23 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         private volatile boolean timedOut = false;
 
         public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+            pauseForJUnitOutput();
             this.features = features;
             awaitTestStart();
+            pauseForJUnitOutput();
+        }
+
+        public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            pauseForJUnitOutput();
+            awaitFeatureStart();
+            pauseForJUnitOutput();
         }
 
         public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
+            pauseForJUnitOutput();
             completedFeatures.add(feature);
             if ( scenarioBarrier.getNumberWaiting() > 1) {
-                //this feature terminated early, the secenario will not run,
+                //this feature terminated early, the scenario will not run,
                 //usually this happens when we can't find feature-level resources such as a handler class
                 await(scenarioBarrier, 1000, "interrupt scenario");
             }
@@ -276,7 +365,14 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             pauseForJUnitOutput();
         }
 
+        public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+            pauseForJUnitOutput();
+            awaitScenarioStart();
+            pauseForJUnitOutput();
+        }
+
         public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
+            pauseForJUnitOutput();
             awaitScenarioEnd();
             pauseForJUnitOutput();
         }
@@ -296,19 +392,15 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             }
         }
 
-        /**
-         * A race condition (in Intellij junit plugin?) causes std output to bleed into the next test unless we pause briefly
-         */
-        private void pauseForJUnitOutput()  {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
         public boolean isCompleted(FeatureToken featureToken) {
             return completedFeatures.contains(featureToken);
+        }
+
+        public void awaitFeatureStart() {
+            if ( ! isTimedOut() ) {
+                await(featureBarrier, waitForFeatureLimit, "feature start");
+            }
         }
 
         public void awaitFeatureEnd() {
@@ -317,9 +409,15 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             }
         }
 
-        private void awaitScenarioEnd() {
+        public void awaitScenarioStart() {
             if ( ! isTimedOut() ) {
                 await(scenarioBarrier, waitForScenarioLimit, "scenario start");
+            }
+        }
+
+        public void awaitScenarioEnd() {
+            if ( ! isTimedOut() ) {
+                await(scenarioBarrier, waitForScenarioLimit, "scenario end");
             }
         }
 

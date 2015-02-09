@@ -40,7 +40,7 @@ public final class ConsoleOutputFormatter extends AbstractOutputFormatter {
     
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);
-        int stepLengthChars = STEP_LENGTH_CHARS - depthPadding.length();
+        int stepLengthChars = getStepLengthCharCount() - depthPadding.length();
         String terminator = step.isStepMacro() ? "%n" : "|\r";
         printStepWithoutEndState(step, depthPadding, stepLengthChars, terminator);
 
@@ -54,7 +54,7 @@ public final class ConsoleOutputFormatter extends AbstractOutputFormatter {
         cancelStepAnimation();
         if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
             StringBuilder depthPadding = getDepthPadding(depth);
-            int stepLengthChars =  STEP_LENGTH_CHARS - depthPadding.length(); 
+            int stepLengthChars =  getStepLengthCharCount() - depthPadding.length();
             getOutWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
             getOutWriter().flush();
         }

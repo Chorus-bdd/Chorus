@@ -124,7 +124,7 @@ public class Chorus {
     public boolean run() throws Exception {
         boolean passed = false;
         try {
-            ExecutionToken t = new ExecutionToken(getSuiteName());
+            ExecutionToken t = createExecutionToken();
             List<FeatureToken> features = getFeatureList(t);
             startTests(t, features);
             initializeInterpreter();
@@ -139,6 +139,10 @@ public class Chorus {
             t.printStackTrace(ChorusOut.err);
         }
         return passed;
+    }
+
+    ExecutionToken createExecutionToken() {
+        return new ExecutionToken(getSuiteName());
     }
 
     void initializeInterpreter() {

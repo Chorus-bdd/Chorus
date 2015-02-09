@@ -53,9 +53,9 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
 
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-    protected static int STEP_LENGTH_CHARS;
+    private int STEP_LENGTH_CHARS;
 
-    static {
+    public AbstractOutputFormatter() {
         //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
         STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
     }
@@ -198,6 +198,10 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
         //and don't want refactoring the code to break tests if log statements move class
         getOutWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
         getOutWriter().flush();
+    }
+
+    protected int getStepLengthCharCount() {
+        return STEP_LENGTH_CHARS;
     }
 
     protected abstract class StepProgressRunnable implements Runnable {
