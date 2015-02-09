@@ -96,8 +96,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         ExecutionToken executionToken = chorus.createExecutionToken();
         List<ChorusFeatureTest> tests = getChorusFeatureTests(executionToken);
-
-        System.err.println("TESTS " + tests);
         return tests;
     }
 
@@ -133,7 +131,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     }
 
     protected void runChild(ChorusFeatureTest child, RunNotifier notifier) {
-        System.out.println("******************************* RUNNING");
         child.run(notifier);
     }
 
