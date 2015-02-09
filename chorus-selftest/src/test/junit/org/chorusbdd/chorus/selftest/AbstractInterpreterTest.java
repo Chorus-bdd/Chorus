@@ -49,6 +49,9 @@ public abstract class AbstractInterpreterTest extends Assert {
         //since the tests were written the default char length for a step line has increased, set this back
         //rather than update all the expected stdout.txt, since it is easier to read when comparing output ath this length
         setOutputFormatterStepLengthChars();
+
+        //for spring test spring tries to load log4j so we need a configuration to avoid a warning
+        System.setProperty("log4j.configuration", "org/chorusbdd/chorus/selftest/chorus-selftest-log4j.xml");
     }
 
     public static void setOutputFormatterStepLengthChars() {

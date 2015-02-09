@@ -49,7 +49,7 @@ public class ChorusLogFactory {
     }
 
     public static ChorusLog getLog(Class clazz) {
-        if ( logProvider == null ) {
+        if ( logProvider == NullLogProvider.NULL_LOG_PROVIDER ) {
             logProvider = new DefaultLogProviderFactory().createLogProvider();
         }
         return logProvider.getLog(clazz);

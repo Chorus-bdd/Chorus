@@ -31,6 +31,7 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.results.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -95,6 +96,8 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         ExecutionToken executionToken = chorus.createExecutionToken();
         List<ChorusFeatureTest> tests = getChorusFeatureTests(executionToken);
+
+        System.err.println("TESTS " + tests);
         return tests;
     }
 
@@ -125,13 +128,12 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         return tests;
     }
 
-
-
     protected Description describeChild(ChorusFeatureTest child) {
         return child.getDescription();
     }
 
     protected void runChild(ChorusFeatureTest child, RunNotifier notifier) {
+        System.out.println("******************************* RUNNING");
         child.run(notifier);
     }
 
@@ -154,6 +156,8 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
                 @Override
                 public void run() {
                     try {
+                        ChorusOut.out = System.out;
+                        ChorusOut.err = System.err;
                         chorus.startTests(executionToken, features);
                         chorus.initializeInterpreter();
                         chorus.processFeatures(executionToken, features);

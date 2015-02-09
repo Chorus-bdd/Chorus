@@ -29,9 +29,16 @@
  */
 package org.chorusbdd.chorus.selftest.junitsuite;
 
+import org.chorusbdd.Chorus;
 import org.chorusbdd.chorus.ChorusSuite;
+import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.selftest.InProcessRunner;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.junit.runner.RunWith;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,11 +49,12 @@ import org.junit.runner.RunWith;
 @RunWith(ChorusSuite.class)
 public class TestJUnitRunner extends ChorusAssert {
 
-    static {
-        System.setProperty("chorusLogLevel", "info");
-    }
-
     public static String getChorusArgs() {
+
+        InProcessRunner.clearChorusProperties();
+
+        System.setProperty("chorusLogLevel", "info");
+
         return "-f src/test/junit/org/chorusbdd/chorus/selftest/junitsuite " +
                 "-h org.chorusbdd.chorus.selftest.junitsuite";
     }
