@@ -198,6 +198,7 @@ public class ProcessesHandler {
     public void remotingUseDirective(String processNameList) throws Exception {
         List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
         for ( String componentName : componentNames) {
+            processManager.checkProcessIsRunning(componentName);
             Properties remotingProperties = getRemotingConfig(componentName);
             remotingManager.connect(componentName, remotingProperties);
         }
