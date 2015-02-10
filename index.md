@@ -17,8 +17,9 @@ Scenario: Buy a Waffle
 
 The developer has to implement the logic for each of the test steps.
 
-From a developer's point of view this, doing this for the test above may not be trivial but it looks possible.
-This is because all these steps on the test seem to operate on the same web site or user interface.
+Doing this for the test above may not be trivial, but it looks possible.
+This is because all these steps on the test operate on the same web site or user interface
+We can write our test so that it starts the browser and logs in on the first step
 
 However, in a complex distributed system, with several user interfaces and components, things are not so simple...
 
@@ -27,7 +28,7 @@ Scenario: Book a trade
   Given my position against Google is $50,000
   And my quote to sell Google shares is $500
   When a customer submits an order to 'Buy 100 Google'
-  Then the position for Google in my trader client is 0
+  Then the position for Google in my trader UI is 0
 {% endhighlight %}
 
 
@@ -37,7 +38,7 @@ There are at least two components involved, a trader client and a customer clien
 
 We'd need to connect to all these components to execute the steps.
 
-Worse still, we may need to create a testing environment with each of these processes running.
+Worse still, we may need to create a testing environment with each of these processes running
 We'd have to write the code for all of this ourselves, and tie it in to the test lifecycle, somehow.
 
 This is where Chorus can help.
