@@ -45,27 +45,30 @@ import java.util.Properties;
 @Handler("Dynamic Configuration")
 public class DynamicConfigurationHandler {
 
+    private int remotingPort = 23456;
+
     @ChorusResource("subsystem.configurationManager")
     ConfigurationManager configurationManager;
 
-    @Step(".*add a process config called (.*)")
-    public void addProcessConfig(String processConfigName)  {
+    @Step(".*add a process config on port (\\d+) called (.*)")
+    public void addProcessConfig(int port, String processConfigName)  {
         String mainclass = "org.chorusbdd.chorus.selftest.dynamicconfig.DynamicProcess";
         Properties p = new Properties();
         p.setProperty("processes." + processConfigName + ".mainClass", mainclass);
-        p.setProperty("processes." + processConfigName + ".remotingPort", String.valueOf(12345));
+        p.setProperty("processes." + processConfigName + ".remotingPort", String.valueOf(port));
         p.setProperty("processes." + processConfigName + ".stdOutMode", "FILE");
         p.setProperty("processes." + processConfigName + ".stdErrMode", "FILE");
         configurationManager.addFeatureProperties(p);
     }
 
-    @Step(".*add a remoting config called (.*)")
-    public void addRemotingConfig(String configName)  {
+    @Step(".*add a remoting config on port (\\d+) called (.*)")
+    public void addRemotingConfig(int port, String configName)  {
         Properties p = new Properties();
         p.setProperty("remoting." + configName + ".protocol", "jmx");
         p.setProperty("remoting." + configName + ".host", "localhost");
-        p.setProperty("remoting." + configName + ".port", String.valueOf(12345));
+        p.setProperty("remoting." + configName + ".port", String.valueOf(port));
         configurationManager.addFeatureProperties(p);
+        remotingPort++;
     }
 
 }

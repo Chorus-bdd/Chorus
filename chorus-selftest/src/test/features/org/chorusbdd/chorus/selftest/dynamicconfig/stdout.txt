@@ -2,18 +2,18 @@ Feature: Dynamic Configuration
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/dynamicconfig/dynamicconfig.feature
   Scenario: Configure and start a process dynamically
 Chorus --> INFO    - Processing scenario: Configure and start a process dynamically
-    Given I add a process config called dynamicOne                                           PASSED  
-    And I add a process config called dynamicTwo                                             PASSED  
+    Given I add a process config on port 12345 called dynamicOne                             PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    When I start a dynamicOne process named Ebeneezer                                        PASSED  
+    And I start a dynamicOne process named Ebeneezer                                         PASSED  
+    When I add a process config on port 23456 called dynamicTwo                              PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a dynamicTwo process named Scrooge                                           PASSED  
     Then the process named Ebeneezer is running                                              PASSED  
     And the process named Scrooge is running                                                 PASSED  
   Scenario: Configure remoting dynamically
 Chorus --> INFO    - Processing scenario: Configure remoting dynamically
-    Given I add a process config called hagrid                                               PASSED  
-    And I add a remoting config called harryPotter                                           PASSED  
+    Given I add a process config on port 23456 called hagrid                                 PASSED  
+    And I add a remoting config on port 23456 called harryPotter                             PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a hagrid process                                                             PASSED  
     Then I can call an exported method in harryPotter                                        PASSED  dumbledore
