@@ -53,23 +53,9 @@ public class TestProcessCheckDelay extends AbstractInterpreterTest {
     }
 
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        
-        //in the Jdk15Process we don't always capture the exception
-        //since it starts and dies before we can attach to the standard out
-        //ProcessBuilderProcess binds to the output atomically on startup
-        if ( 
-            ! isInProcess() &&
-               !(actualResults.getStandardError().contains("NoClassDefFoundError") ||
-               actualResults.getStandardError().contains("Could not find or load main class ThisClassDoesNotExist"))
-        ) {
-            fail("Expected standard error to contain NoClassDefFoundError");
-        }
-
-        
-        actualResults.setStandardError(   //eliminate troublesome stack elements
-                "java.lang.NoClassDefFoundError: ThisClassDoesNotExist\n" +
-                "Caused by: java.lang.ClassNotFoundException: ThisClassDoesNotExist"
-        );
+        removeLineFromStdErr(actualResults, "Error: Could not find or load main class ThisClassDoesNotExist", false);
+        removeLineFromStdErr(actualResults, "Error: Could not find or load main class ThisClassDoesNotExist", false);
+        removeLineFromStdErr(actualResults, "Error: Could not find or load main class ThisClassDoesNotExist", false);
     }
     
 }

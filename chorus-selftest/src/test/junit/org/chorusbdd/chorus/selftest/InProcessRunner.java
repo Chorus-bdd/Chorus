@@ -29,15 +29,13 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.WriterAppender;
 import org.chorusbdd.chorus.Chorus;
 import org.chorusbdd.chorus.logging.ChorusOut;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -56,10 +54,10 @@ public class InProcessRunner implements ChorusSelfTestRunner {
          setSystemProperties(sysPropsForTest);
 
          ByteArrayOutputStream out = new ByteArrayOutputStream();
-         PrintStream outStream = new PrintStream(out);
+         PrintStream outStream = new PrintStreamMultiplexer(out, System.out);
 
          ByteArrayOutputStream err = new ByteArrayOutputStream();
-         PrintStream errStream = new PrintStream(err);
+         PrintStream errStream = new PrintStreamMultiplexer(err, System.err);
 
          boolean success = false;
          try {
@@ -104,6 +102,182 @@ public class InProcessRunner implements ChorusSelfTestRunner {
             if ( e.getKey().toString().startsWith("chorus")) {
                 i.remove();
             }
+        }
+    }
+
+    private static class PrintStreamMultiplexer extends PrintStream {
+
+        private PrintStream wrappedStream;
+
+        public PrintStreamMultiplexer(ByteArrayOutputStream out, PrintStream wrappedStream) {
+            super(out);
+            this.wrappedStream = wrappedStream;
+        }
+
+        public void write(int b) {
+            wrappedStream.write(b);
+            super.write(b);
+        }
+
+        public void write(byte buf[], int off, int len) {
+            wrappedStream.write(buf, off, len);
+            super.write(buf, off, len);
+        }
+
+        @Override
+        public void print(boolean b) {
+            wrappedStream.print(b);
+            super.print(b);
+        }
+
+        @Override
+        public void print(char c) {
+            wrappedStream.print(c);
+            super.print(c);
+        }
+
+        @Override
+        public void print(int i) {
+            wrappedStream.print(i);
+            super.print(i);
+        }
+
+        @Override
+        public void print(long l) {
+            wrappedStream.print(l);
+            super.print(l);
+        }
+
+        @Override
+        public void print(float f) {
+            wrappedStream.print(f);
+            super.print(f);
+        }
+
+        @Override
+        public void print(double d) {
+            wrappedStream.print(d);
+            super.print(d);
+        }
+
+        @Override
+        public void print(char[] s) {
+            wrappedStream.print(s);
+            super.print(s);
+        }
+
+        @Override
+        public void print(String s) {
+            wrappedStream.print(s);
+            super.print(s);
+        }
+
+        @Override
+        public void print(Object obj) {
+            wrappedStream.print(obj);
+            super.print(obj);
+        }
+
+        @Override
+        public void println() {
+            wrappedStream.println();
+            super.println();
+        }
+
+        @Override
+        public void println(boolean x) {
+            wrappedStream.print(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(char x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(int x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(long x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(float x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(double x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(char[] x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(String x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public void println(Object x) {
+            wrappedStream.println(x);
+            super.println(x);
+        }
+
+        @Override
+        public PrintStream printf(String format, Object... args) {
+            wrappedStream.printf(format, args);
+            return super.printf(format, args);
+        }
+
+        @Override
+        public PrintStream printf(Locale l, String format, Object... args) {
+            wrappedStream.printf(l, format, args);
+            return super.printf(l, format, args);
+        }
+
+        @Override
+        public PrintStream format(String format, Object... args) {
+            wrappedStream.format(format, args);
+            return super.format(format, args);
+        }
+
+        @Override
+        public PrintStream format(Locale l, String format, Object... args) {
+            wrappedStream.format(l, format, args);
+            return super.format(l, format, args);
+        }
+
+        @Override
+        public PrintStream append(CharSequence csq) {
+            wrappedStream.append(csq);
+            return super.append(csq);
+        }
+
+        @Override
+        public PrintStream append(CharSequence csq, int start, int end) {
+            wrappedStream.append(csq, start, end);
+            return super.append(csq, start, end);
+        }
+
+        @Override
+        public PrintStream append(char c) {
+            wrappedStream.append(c);
+            return super.append(c);
         }
     }
 }

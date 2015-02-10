@@ -10,8 +10,15 @@ Chorus --> INFO    - Processing scenario: Start a process without process check 
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a withoutchecking process named Samwise                                      PASSED  
+  Scenario: Start a process with checking using directives
+Chorus --> INFO    - Processing scenario: Start a process with checking using directives
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    #! Processes start withoutchecking, withchecking                                         FAILED  (ProcessManagerProcess:linenumber)-ProcessCheckFailedException Process terminated with a non-zero exit code during processCheckDelay period, step fails
+    Given Chorus is working properly                                                         SKIPPED 
+    Then these steps will be skipped                                                         SKIPPED 
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:2) (passed:1) (failed:1)
-Steps     (total:4) (passed:3) (failed:1) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:3) (passed:1) (failed:2)
+Steps     (total:7) (passed:3) (failed:2) (undefined:0) (pending:0) (skipped:2)

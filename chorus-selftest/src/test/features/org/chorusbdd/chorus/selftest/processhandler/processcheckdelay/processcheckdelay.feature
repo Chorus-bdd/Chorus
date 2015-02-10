@@ -19,6 +19,10 @@ Feature: Process Check Delay
     Given Chorus is working properly
     And I start a withoutchecking process named Samwise
 
+  #! Processes start withoutchecking, withchecking
+  Scenario: Start a process with checking using directives
+    Given Chorus is working properly
+    Then these steps will be skipped
 
 
 
