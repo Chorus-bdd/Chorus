@@ -6,61 +6,65 @@ layout: page
 
 Chorus is a BDD testing tool which makes it easy to test distributed systems
 
-BDD tests are written in non-technical prose. These tests can form an important part of system documentation
+BDD tests are written in non-technical prose:
 
 {% highlight gherkin %}
 Scenario: Buy a Waffle
-  Given I am logged in to the website
-  And I click buy a waffle
+  Given I am logged in
+  And I click 'buy a waffle'
   Then a waffle is added to my basket
 {% endhighlight %}
 
-From a developer's point of view, it looks like it might be fairly easy to implement the logic for the test above.
+The developer has to implement the logic for each of the test steps.
 
-However in a complex system, with several user interfaces and components, things are not so simple...
+From a developer's point of view this, doing this for the test above may not be trivial but it looks possible.
+This is because all these steps on the test seem to operate on the same web site or user interface.
 
-In the example below there are at least two components involved, a trader client and a customer client.
-Perhaps there's also a booking system and a pricing component.
+However, in a complex distributed system, with several user interfaces and components, things are not so simple...
 
 {% highlight gherkin %}
 Scenario: Book a trade
-  Given my position in google shares is $50,000
-  And my quote to sell google is $500
-  When a customer enters 'Buy 100 google'
-  Then my position against google is 0
+  Given my position against Google is $50,000
+  And my quote to sell Google shares is $500
+  When a customer submits an order to 'Buy 100 Google'
+  Then the position for Google in my trader client is 0
 {% endhighlight %}
 
 
-We need to connect to these components to execute the test. Before we can even do this, we may need to create a testing
-environment with each of these processes running.
+How might we implement a test like this?
 
-We'll have to write the code for all of this ourselves, and tie it in to the test lifecycle somehow.
+There are at least two components involved, a trader client and a customer client - perhaps there is also a booking system and a pricing component.
 
-In short, testing a large system can be tough. (Perhaps that's why so few complex systems have tests...)
+We'd need to connect to all these components to execute the steps.
+
+Worse still, we may need to create a testing environment with each of these processes running.
+We'd have to write the code for all of this ourselves, and tie it in to the test lifecycle, somehow.
 
 This is where Chorus can help.
 
-Chorus provides the ability for a developer to add technical directives to the feature:
+Chorus provides the ability for a developer to add technical directives to a test feature.
 
 {% highlight gherkin %}
 #! Processes: start traderClient, customerClient
 #! Processes: connect traderClient, customerClient
 Scenario: Book a trade
-  Given my position against google is $500,000
-  And my quote to sell google is $500
-  When a customer enters 'Buy 100 google'
-  Then the position in my trader client is 0
+  Given my position against Google is $50,000
+  And my quote to sell Google shares is $500
+  When a customer submits an order to 'Buy 100 Google'
+  Then the position for Google in my trader client is 0
 {% endhighlight %}
 
-Want to create a virtualized environment to run the test by deploying Docker images?
+In the above example we start two processes, and connect to them to run the steps in the test
+
+Perhaps we could create a virtualized environment to run the test by deploying Docker images?
 
 {% highlight gherkin %}
 #! Docker: deploy traderClient, customerClient
 #! Docker: connect traderClient, customerClient
 Scenario: Book a trade
-  Given my position against google is $500,000
-  And my quote to sell google is $500
-  When a customer enters 'Buy 100 google'
+  Given my position against Google is $50,000
+  And my quote to sell Google is $500
+  When a customer submits an order to 'Buy 100 Google'
   Then the position in my trader client is 0
 {% endhighlight %}
 
