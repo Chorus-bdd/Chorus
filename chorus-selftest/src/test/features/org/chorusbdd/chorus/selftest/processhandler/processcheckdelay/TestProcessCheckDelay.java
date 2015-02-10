@@ -53,9 +53,13 @@ public class TestProcessCheckDelay extends AbstractInterpreterTest {
     }
 
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-        removeLineFromStdErr(actualResults, "Error: Could not find or load main class ThisClassDoesNotExist", false);
-        removeLineFromStdErr(actualResults, "Error: Could not find or load main class ThisClassDoesNotExist", false);
-        removeLineFromStdErr(actualResults, "Error: Could not find or load main class ThisClassDoesNotExist", false);
+        String err = removeAsynchronouslyLoggedOutput(
+                actualResults.getStandardError(),
+                "Error: Could not find or load main class ThisClassDoesNotExist",
+                false,
+                "Remove ThisClassDoesNotExist"
+        );
+        actualResults.setStandardError(err);
     }
     
 }
