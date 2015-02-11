@@ -59,7 +59,7 @@ public class JmxRemotingManager implements RemotingManager {
 
     public static final String REMOTING_PROTOCOL = "jmx";
 
-    private static ChorusLog log = ChorusLogFactory.getLog(JmxRemotingManager.class);
+    private ChorusLog log = ChorusLogFactory.getLog(JmxRemotingManager.class);
 
     /**
      * Map: configName -> proxy

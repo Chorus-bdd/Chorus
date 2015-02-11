@@ -59,7 +59,7 @@ import java.util.List;
  */
 public class StepProcessor {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepProcessor.class);
+    private ChorusLog log = ChorusLogFactory.getLog(StepProcessor.class);
 
     private ExecutionListenerSupport executionListenerSupport;
     private boolean dryRun;

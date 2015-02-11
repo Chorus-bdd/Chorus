@@ -106,7 +106,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         public void info(Object message, Throwable t) {
             if ( logLevel >= LogLevel.INFO.getLevel() ) {
                 outputFormatter.log(LogLevel.INFO, message);
-                outputFormatter.logThrowable(LogLevel.INFO, t);
+                outputFormatter.logError(LogLevel.INFO, t);
             }
         }
 
@@ -119,7 +119,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         public void warn(Object message, Throwable t) {
             if ( logLevel >= LogLevel.WARN.getLevel() ) {
                 outputFormatter.log(LogLevel.WARN, message);
-                outputFormatter.logThrowable(LogLevel.WARN, t);
+                outputFormatter.logError(LogLevel.WARN, t);
             }
         }
 
@@ -132,7 +132,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         public void error(Object message, Throwable t) {
             if ( logLevel >= LogLevel.ERROR.getLevel() ) {
                 outputFormatter.log(LogLevel.ERROR, message);
-                outputFormatter.logThrowable(LogLevel.ERROR, t);
+                outputFormatter.logError(LogLevel.ERROR, t);
             }
         }
 
@@ -145,7 +145,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         public void fatal(Object message, Throwable t) {
             if ( logLevel >= LogLevel.FATAL.getLevel() ) {
                 outputFormatter.log(LogLevel.FATAL, message);
-                outputFormatter.logThrowable(LogLevel.FATAL, t);
+                outputFormatter.logError(LogLevel.FATAL, t);
             }
         }
 
@@ -158,7 +158,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         public void trace(Object message, Throwable t) {
             if ( logLevel >= LogLevel.TRACE.getLevel() ) {
                 outputFormatter.log(LogLevel.TRACE, message);
-                outputFormatter.logThrowable(LogLevel.TRACE, t);
+                outputFormatter.logError(LogLevel.TRACE, t);
             }
         }
 
@@ -171,7 +171,7 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
         public void debug(Object message, Throwable t) {
             if ( logLevel >= LogLevel.DEBUG.getLevel() ) {
                 outputFormatter.log(LogLevel.DEBUG, message);
-                outputFormatter.logThrowable(LogLevel.DEBUG, t);
+                outputFormatter.logError(LogLevel.DEBUG, t);
             }
         }
     }

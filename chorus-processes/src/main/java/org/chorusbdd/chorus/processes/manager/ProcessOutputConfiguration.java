@@ -55,7 +55,7 @@ import java.io.File;
 */
 public class ProcessOutputConfiguration {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessOutputConfiguration.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessOutputConfiguration.class);
 
     private FeatureToken featureToken;
     private File featureDir;

@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 */
 class ProcessManagerProcess implements ChorusProcess {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessManagerProcess.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessManagerProcess.class);
     private final ProcessBuilder processBuilder;
     protected String name;
     protected Process process;

@@ -58,7 +58,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unchecked")
 public class ChorusInterpreter {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusInterpreter.class);
 
     private static final ScheduledExecutorService timeoutExcecutor = NamedExecutors.newSingleThreadScheduledExecutor("TimeoutExecutor");
 

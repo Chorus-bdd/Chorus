@@ -55,7 +55,7 @@ import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
 
     @ChorusResource("feature.dir")
     private File featureDir;

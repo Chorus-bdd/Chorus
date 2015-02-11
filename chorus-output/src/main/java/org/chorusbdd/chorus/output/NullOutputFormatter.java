@@ -34,9 +34,6 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.function.Supplier;
-
-import java.io.PrintStream;
 
 /**
  * A null implementation of OutputFormatter
@@ -47,10 +44,6 @@ class NullOutputFormatter implements OutputFormatter {
     static final NullOutputFormatter NULL_FORMATTER = new NullOutputFormatter();
 
     private NullOutputFormatter() {
-    }
-
-    public void setPrintStreamSupplier(Supplier<PrintStream> out) {
-        logWarning();
     }
 
     public void printFeature(FeatureToken feature) {
@@ -77,8 +70,10 @@ class NullOutputFormatter implements OutputFormatter {
     public void log(LogLevel type, Object message) {
     }
 
-    public void logThrowable(LogLevel type, Throwable t) {
+    public void logError(LogLevel type, Throwable t) {
     }
+
+    public void dispose() {}
 
     private void logWarning() {
         System.err.println("No OutputFormatter configured, ChorusLogFactory has not been initialized properly");

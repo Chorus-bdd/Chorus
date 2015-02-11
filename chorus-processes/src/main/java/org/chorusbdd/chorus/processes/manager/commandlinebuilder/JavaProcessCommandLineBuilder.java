@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(JavaProcessCommandLineBuilder.class);
+    private ChorusLog log = ChorusLogFactory.getLog(JavaProcessCommandLineBuilder.class);
 
     private File featureDir;
     private ProcessManagerConfig processInfo;

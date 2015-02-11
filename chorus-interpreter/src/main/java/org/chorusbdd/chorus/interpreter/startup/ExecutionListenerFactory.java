@@ -51,7 +51,7 @@ import java.util.StringTokenizer;
  */
 public class ExecutionListenerFactory {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ExecutionListenerFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ExecutionListenerFactory.class);
 
     public List<ExecutionListener> createExecutionListeners(ConfigProperties config) {
         List<ExecutionListener> result = new ArrayList<ExecutionListener>();

@@ -64,7 +64,7 @@ import java.util.zip.ZipFile;
  */
 public class ClasspathScanner {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
 
     private static String[] classpathNames;
 
@@ -133,6 +133,7 @@ public class ClasspathScanner {
     public static String[] getClasspathFileNames() throws IOException {
         //for performance we most likely only want to do this once for each interpreter session,
         //classpath should not change dynamically
+        ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
         log.debug("Getting file names " + Thread.currentThread().getName());
         long start = System.currentTimeMillis();
         if ( classpathNames == null ) {

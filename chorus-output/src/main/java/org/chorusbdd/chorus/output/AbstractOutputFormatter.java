@@ -35,7 +35,6 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -53,6 +52,9 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
 
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+    private PrintStream printStream;
+    private PrintWriter printWriter;
+
     private int STEP_LENGTH_CHARS;
 
     public AbstractOutputFormatter() {
@@ -62,11 +64,6 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
     
     protected ScheduledFuture progressFuture;
     protected Object printLock = new Object();
-    private Supplier<PrintWriter> outWriterSupplier;
-
-    public void setPrintStreamSupplier(Supplier<PrintStream> outStreamSupplier) {
-        this.outWriterSupplier = new PrintWriterSupplier(outStreamSupplier);
-    }
 
     public void printFeature(FeatureToken feature) {
         getOutWriter().printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
@@ -177,7 +174,7 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
         }
     }
 
-    public void logThrowable(LogLevel level, Throwable t) {
+    public void logError(LogLevel level, Throwable t) {
         if ( level == LogLevel.ERROR ) {
             t.printStackTrace(ChorusOut.err);
         } else {
@@ -232,32 +229,15 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
 
 
     protected PrintWriter getOutWriter() {
-        return outWriterSupplier.get();
+        if ( printWriter == null || printStream != ChorusOut.out) {
+            printWriter = new PrintWriter(ChorusOut.out);
+            printStream = ChorusOut.out;
+        }
+        return printWriter;
     }
 
-
-    /**
-     * Lazy create the PrintWriter where the underlying PrintStream has changed
-     */
-    private class PrintWriterSupplier implements Supplier<PrintWriter> {
-
-        private PrintStream oldPrintStream;
-        private PrintWriter printWriter;
-        private Supplier<PrintStream> printStreamSupplier;
-
-        public PrintWriterSupplier(Supplier<PrintStream> printStreamSupplier) {
-            this.printStreamSupplier = printStreamSupplier;
-        }
-
-        @Override
-        public PrintWriter get() {
-            PrintStream newOut = printStreamSupplier.get();
-            if ( newOut != oldPrintStream) {
-                //the wrapped stream has changed, need to refresh the print writer
-                printWriter = new PrintWriter(newOut);
-                oldPrintStream = newOut;
-            }
-            return printWriter;
-        }
+    public void dispose() {
+        //Nothing to do since don't need to close system out
     }
+
 }

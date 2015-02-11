@@ -29,12 +29,11 @@
  */
 package org.chorusbdd.chorus.handlerconfig.properties;
 
-import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
@@ -47,7 +46,7 @@ import java.util.Properties;
  */
 public class JdbcPropertyLoader implements PropertyLoader {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(JdbcPropertyLoader.class);
+    private ChorusLog log = ChorusLogFactory.getLog(JdbcPropertyLoader.class);
 
     private final String JDBC_DRIVER = "jdbc_driver";
     private final String JDBC_URL = "jdbc_url";

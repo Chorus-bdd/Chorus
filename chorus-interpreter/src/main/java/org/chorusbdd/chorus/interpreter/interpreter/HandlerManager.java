@@ -50,7 +50,7 @@ import java.util.*;
  */
 public class HandlerManager {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(HandlerManager.class);
+    private ChorusLog log = ChorusLogFactory.getLog(HandlerManager.class);
     
     //retain ordering of handlers 
     private final LinkedHashMap<Class, Object> featureScopedHandlers = new LinkedHashMap<Class, Object>();

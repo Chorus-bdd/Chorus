@@ -46,7 +46,7 @@ import java.util.Properties;
  */
 public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<RemotingConfigBuilder> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBeanFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBeanFactory.class);
 
     public RemotingConfigBuilder createConfig(Properties p, String configName) {
         RemotingConfigBuilder r = new RemotingConfigBuilder();

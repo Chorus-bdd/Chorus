@@ -118,9 +118,9 @@ public class InterpreterOutputExecutionListener extends AbstractOutputFormatterD
     }
 
     @Override
-    public void logThrowable(LogLevel type, Throwable t) {
+    public void logError(LogLevel type, Throwable t) {
         tokenLogCapture.addInterpreterError(type, t);
-        super.logThrowable(type, t);
+        super.logError(type, t);
     }
 
     /**

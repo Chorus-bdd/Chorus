@@ -1,11 +1,10 @@
 package org.chorusbdd.chorus.handlerconfig.properties;
 
-import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
@@ -15,7 +14,7 @@ import java.util.Properties;
  */
 public class ClassPathPropertyLoader implements PropertyLoader {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ClassPathPropertyLoader.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ClassPathPropertyLoader.class);
 
     private String path;
 

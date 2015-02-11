@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
 */
 public class HandlerClassInvokerFactory implements StepInvokerProvider {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(HandlerClassInvokerFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(HandlerClassInvokerFactory.class);
     private Object handlerInstance;
     private List<StepInvoker> invokersForMethods;
 

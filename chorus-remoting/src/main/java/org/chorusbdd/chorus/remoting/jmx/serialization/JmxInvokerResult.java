@@ -1,7 +1,5 @@
 package org.chorusbdd.chorus.remoting.jmx.serialization;
 
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 
 /**
@@ -13,8 +11,6 @@ import org.chorusbdd.chorus.stepinvoker.StepInvoker;
  * when attributes are added or removed from StepInvoker
  */
 public class JmxInvokerResult extends AbstractJmxResult {
-
-    private static ChorusLog log = ChorusLogFactory.getLog(JmxInvokerResult.class);
 
     private static final long serialVersionUID = 1;
 

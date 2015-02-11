@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  */
 public class TypeCoercion {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(RegexpUtils.class);
+    private ChorusLog log = ChorusLogFactory.getLog(RegexpUtils.class);
 
     private static Pattern floatPattern = Pattern.compile("-?[0-9]+\\.[0-9]+");
     private static Pattern intPattern = Pattern.compile("-?[0-9]+");
@@ -56,7 +56,7 @@ public class TypeCoercion {
      *
      * @return the coerced value, or null if the value cannot be converted to the required type
      */
-    public static <T> T coerceType(String value, Class<T> requiredType) {
+    public static <T> T coerceType(ChorusLog log, String value, Class<T> requiredType) {
 
         T result = null;
         try {

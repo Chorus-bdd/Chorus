@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
+    private ChorusLog log = ChorusLogFactory.getLog(NativeProcessCommandLineBuilder.class);
 
     private NamedProcessConfig namedProcessConfig;
     private File featureDir;

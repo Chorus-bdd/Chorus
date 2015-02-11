@@ -68,7 +68,7 @@ import java.util.Properties;
 @SuppressWarnings("UnusedDeclaration")
 public class RemotingHandler {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
+    private ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
     @ChorusResource("feature.dir")
     private File featureDir;

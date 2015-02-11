@@ -49,7 +49,7 @@ import java.util.Properties;
  */
 public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<ProcessesConfigBuilder> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
 
     public ProcessesConfigBuilder createConfig(Properties p, String configName) {
         ProcessesConfigBuilder c = new ProcessesConfigBuilder();

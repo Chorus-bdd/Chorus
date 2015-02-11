@@ -33,6 +33,8 @@ import org.chorusbdd.chorus.results.util.NetworkUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,7 +68,7 @@ import java.util.Date;
  */
 public class ExecutionToken extends AbstractToken implements PassPendingFailToken {
 
-    private static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 4;
 
     private static final ThreadLocal<SimpleDateFormat> formatThreadLocal = new ThreadLocal<SimpleDateFormat>() {
         public SimpleDateFormat initialValue() {
@@ -79,6 +81,12 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
     private String executionHost;
 
     private ResultsSummary resultsSummary = new ResultsSummary();
+
+    /**
+     * Placeholder for the various and properties and switches which make up Chorus' configuration
+     * We will need to add these and publish them so that we can record them in test history
+     */
+    private Map executionParameters = new HashMap();
 
     public ExecutionToken(String testSuiteName) {
         this(getNextId(), testSuiteName, System.currentTimeMillis(), NetworkUtils.getHostname());

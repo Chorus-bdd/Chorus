@@ -46,8 +46,9 @@ import java.lang.reflect.Method;
  */
 public class SpringContextSupport {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(SpringContextSupport.class);
     private static final String SPRING_CONTEXT_CLASS = "org.springframework.context.ApplicationContext";
+
+    private ChorusLog log = ChorusLogFactory.getLog(SpringContextSupport.class);
 
     private SpringInjector springInjector = SpringInjector.NULL_INJECTOR;
 

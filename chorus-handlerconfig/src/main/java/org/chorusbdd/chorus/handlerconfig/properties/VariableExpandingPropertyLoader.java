@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class VariableExpandingPropertyLoader implements PropertyLoader {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(VariableExpandingPropertyLoader.class);
+    private ChorusLog log = ChorusLogFactory.getLog(VariableExpandingPropertyLoader.class);
 
     private PropertyLoader wrappedLoader;
     private FeatureToken featureToken;

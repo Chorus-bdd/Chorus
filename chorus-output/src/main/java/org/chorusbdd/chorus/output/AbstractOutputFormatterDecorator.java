@@ -5,9 +5,6 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.function.Supplier;
-
-import java.io.PrintStream;
 
 /**
  * Created by GA2EBBU on 14/01/2015.
@@ -20,11 +17,6 @@ public abstract class AbstractOutputFormatterDecorator implements OutputFormatte
 
     public AbstractOutputFormatterDecorator(OutputFormatter wrappedFormatter) {
         this.wrappedFormatter = wrappedFormatter;
-    }
-
-    @Override
-    public void setPrintStreamSupplier(Supplier<PrintStream> printStreamSupplier) {
-        wrappedFormatter.setPrintStreamSupplier(printStreamSupplier);
     }
 
     @Override
@@ -68,7 +60,11 @@ public abstract class AbstractOutputFormatterDecorator implements OutputFormatte
     }
 
     @Override
-    public void logThrowable(LogLevel type, Throwable t) {
-        wrappedFormatter.logThrowable(type, t);
+    public void logError(LogLevel type, Throwable t) {
+        wrappedFormatter.logError(type, t);
+    }
+
+    public void dispose() {
+        wrappedFormatter.dispose();
     }
 }

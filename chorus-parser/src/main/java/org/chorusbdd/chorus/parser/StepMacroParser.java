@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class StepMacroParser extends AbstractChorusParser<StepMacro> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepMacroParser.class);
+    private ChorusLog log = ChorusLogFactory.getLog(StepMacroParser.class);
 
     public static final int MAX_LENGTH_CHARS = 1000000;
 

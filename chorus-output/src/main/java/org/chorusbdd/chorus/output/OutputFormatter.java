@@ -34,9 +34,6 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
-import org.chorusbdd.chorus.util.function.Supplier;
-
-import java.io.PrintStream;
 
 /**
  * Created by: Steve Neal
@@ -47,11 +44,6 @@ public interface OutputFormatter {
     String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusConsoleFormatterStepLength";
     String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
 
-    /**
-     * will be called whenever output occurs to provide a PrintStream
-     * to which the formatter can write its output
-     */
-    void setPrintStreamSupplier(Supplier<PrintStream> printStreamSupplier);
 
     void printFeature(FeatureToken feature);
 
@@ -69,5 +61,10 @@ public interface OutputFormatter {
 
     void log(LogLevel type, Object message);
     
-    void logThrowable(LogLevel type, Throwable t);
+    void logError(LogLevel type, Throwable t);
+
+    /**
+     * Called to allow cleanup when Chorus exits
+     */
+    void dispose();
 }

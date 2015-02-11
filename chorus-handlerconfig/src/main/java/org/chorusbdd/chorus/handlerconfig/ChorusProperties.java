@@ -29,7 +29,7 @@ import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties
  */
 public class ChorusProperties implements ConfigurationManager {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ChorusProperties.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusProperties.class);
 
     private Properties sessionProperties = new Properties();
     private Properties featureProperties = new Properties();

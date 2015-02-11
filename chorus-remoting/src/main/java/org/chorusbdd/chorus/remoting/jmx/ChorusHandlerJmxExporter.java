@@ -58,7 +58,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxExporter.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxExporter.class);
 
     private static AtomicBoolean exported = new AtomicBoolean(false);
 

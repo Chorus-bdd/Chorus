@@ -45,7 +45,7 @@ import java.util.List;
  */
 public abstract class AbstractChorusParser<E> implements ChorusParser<E> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(AbstractChorusParser.class);
+    private ChorusLog log = ChorusLogFactory.getLog(AbstractChorusParser.class);
 
     protected StepToken createStepToken(String line) {
         int indexOfSpace = line.indexOf(' ');

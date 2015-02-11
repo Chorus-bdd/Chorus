@@ -50,7 +50,7 @@ import java.util.Map;
  */
 public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxProxy.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxProxy.class);
 
     private List<JmxInvokerResult> stepMetadata;
 

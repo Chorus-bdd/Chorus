@@ -48,7 +48,7 @@ import java.util.regex.Matcher;
 */
 public class StepMatcher {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepMatcher.class);
+    private ChorusLog log = ChorusLogFactory.getLog(StepMatcher.class);
 
     private List<StepInvoker> stepInvokers;
     private String stepAction;

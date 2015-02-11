@@ -67,7 +67,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
     private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessManager.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessManager.class);
 
     private final Map<String, NamedProcessConfig> processes = new ConcurrentHashMap<String, NamedProcessConfig>();
 

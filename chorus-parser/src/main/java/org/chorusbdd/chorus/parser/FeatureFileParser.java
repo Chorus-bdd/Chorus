@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(FeatureFileParser.class);
+    private ChorusLog log = ChorusLogFactory.getLog(FeatureFileParser.class);
 
     //finite state machine states
     private static final int START = 0;

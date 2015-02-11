@@ -90,7 +90,7 @@ import java.util.regex.Pattern;
 public class StepMacro {
 
     private static final int MAX_STEP_DEPTH = 500;
-    private static ChorusLog log = ChorusLogFactory.getLog(StepMacro.class);
+    private ChorusLog log = ChorusLogFactory.getLog(StepMacro.class);
 
     private Pattern pattern;
     private List<StepToken> steps = new ArrayList<StepToken>();

@@ -31,7 +31,6 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
-import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.results.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -153,12 +152,11 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
                 @Override
                 public void run() {
                     try {
-                        ChorusOut.out = System.out;
-                        ChorusOut.err = System.err;
                         chorus.startTests(executionToken, features);
                         chorus.initializeInterpreter();
                         chorus.processFeatures(executionToken, features);
                         chorus.endTests(executionToken, features);
+                        chorus.dispose();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -49,7 +49,7 @@ import java.util.Set;
  */
 public class AbstractJmxProxy {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(AbstractJmxProxy.class);
+    private ChorusLog log = ChorusLogFactory.getLog(AbstractJmxProxy.class);
 
     private JMXConnector jmxConnector;
     protected MBeanServerConnection mBeanServerConnection;

@@ -1,13 +1,12 @@
 package org.chorusbdd.chorus.handlerconfig.properties;
 
-import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.properties.PropertyLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -15,7 +14,7 @@ import java.util.Properties;
  */
 public class FilePropertyLoader implements PropertyLoader {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(FilePropertyLoader.class);
+    private ChorusLog log = ChorusLogFactory.getLog(FilePropertyLoader.class);
 
     private File propertiesFile;
 

@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class ChorusProcessFactory {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ChorusProcessFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusProcessFactory.class);
 
     public ChorusProcess startChorusProcess(NamedProcessConfig namedProcessConfig, FeatureToken featureToken) throws Exception {
 

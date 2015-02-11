@@ -47,7 +47,7 @@ import java.io.OutputStream;
 */
 public class ProcessRedirector implements Runnable {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ProcessRedirector.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessRedirector.class);
 
     private InputStream in;
     private OutputStream[] out;

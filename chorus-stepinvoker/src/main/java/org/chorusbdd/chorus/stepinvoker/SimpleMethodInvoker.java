@@ -33,7 +33,6 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -46,7 +45,7 @@ import java.util.regex.Pattern;
 */
 public class SimpleMethodInvoker implements StepInvoker {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(SimpleMethodInvoker.class);
+    private ChorusLog log = ChorusLogFactory.getLog(SimpleMethodInvoker.class);
 
     private static AtomicLong idGenerator = new AtomicLong();
 
@@ -111,7 +110,7 @@ public class SimpleMethodInvoker implements StepInvoker {
         for (int i = 0; i < args.size(); i++) {
             String valueStr = args.get(i);
             Class type = parameterTypes[i];
-            Object coercedValue = TypeCoercion.coerceType(valueStr, type);
+            Object coercedValue = TypeCoercion.coerceType(log, valueStr, type);
             if (("null".equals(valueStr) && coercedValue == null ) || coercedValue != null) {
                 values[i] = coercedValue;
             } else {

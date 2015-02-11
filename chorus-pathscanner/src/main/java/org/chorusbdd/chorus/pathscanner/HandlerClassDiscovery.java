@@ -49,7 +49,7 @@ import java.util.Set;
  */
 public class HandlerClassDiscovery {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(HandlerClassDiscovery.class);
+    private ChorusLog log = ChorusLogFactory.getLog(HandlerClassDiscovery.class);
 
     private Map<String, String> duplicateNameToDescription = new HashMap<String,String>();
 

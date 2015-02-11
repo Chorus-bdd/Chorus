@@ -54,7 +54,7 @@ import java.util.Map;
  */
 public class SpringContextInjector implements SpringInjector {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(SpringContextInjector.class);
+    private ChorusLog log = ChorusLogFactory.getLog(SpringContextInjector.class);
 
     /**
      * Map: Handler instance -> Spring context
@@ -130,6 +130,8 @@ public class SpringContextInjector implements SpringInjector {
     }
 
     private static void injectResourceFields(ApplicationContext springContext, Object handler, Class handlerClass) {
+        ChorusLog log = ChorusLogFactory.getLog(SpringContextInjector.class);
+
         //inject handler fields with the Spring beans
         Field[] fields = handlerClass.getDeclaredFields();
         for (Field field : fields) {

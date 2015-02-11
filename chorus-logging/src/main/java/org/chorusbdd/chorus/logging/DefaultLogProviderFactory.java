@@ -56,25 +56,6 @@ public class DefaultLogProviderFactory {
         return result;
     }
 
-//
-//    private ChorusLogProvider getCommonsProviderIfCommonsIsPresent() {
-//        ChorusLogProvider result = null;
-//            try {
-//
-//                //do we have commons logging on the classpath?
-//                Class c = Class.forName("org.apache.commons.logging.Log");
-//
-//                //if so load up the ChorusCommonsLogProvider
-//                //doing this by reflection to avoid any nasty class loading issues if we import
-//                //ChorusCommonsLogProvider and commons isn't actually present
-//                Class commonsLogProvider = Class.forName("org.chorusbdd.chorus.logging.ChorusCommonsLogProvider");
-//                result = (ChorusLogProvider)commonsLogProvider.newInstance();
-//
-//            } catch (Exception e) {
-//            }
-//        return result;
-//    }
-
     private ChorusLogProvider getSystemPropertyProvider(ChorusLogProvider result) {
         String provider = System.getProperty("chorusLogProvider");
         if ( provider != null) {

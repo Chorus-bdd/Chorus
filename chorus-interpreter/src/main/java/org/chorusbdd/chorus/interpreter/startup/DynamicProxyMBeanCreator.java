@@ -52,7 +52,7 @@ import java.lang.reflect.Proxy;
  */
 public class DynamicProxyMBeanCreator {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(DynamicProxyMBeanCreator.class);
+    private ChorusLog log = ChorusLogFactory.getLog(DynamicProxyMBeanCreator.class);
 
     private JMXConnector jmxConnector;
     protected MBeanServerConnection mBeanServerConnection;

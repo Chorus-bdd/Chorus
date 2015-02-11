@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
  */
 public class ContextVariableStepExpander {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(ContextVariableStepExpander.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ContextVariableStepExpander.class);
 
     private Pattern p = Pattern.compile("\\$\\{.*?\\}");
 

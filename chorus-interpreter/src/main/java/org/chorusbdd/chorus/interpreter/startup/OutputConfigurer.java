@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.config.ConfigReader;
+import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
 import org.chorusbdd.chorus.logging.LogLevel;
@@ -44,8 +45,11 @@ import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
  */
 public class OutputConfigurer {
 
-    public InterpreterOutputExecutionListener configureOutput(ConfigReader config) {
-        OutputFormatter outputFormatter = createOutputFormatter(config);
+    private InterpreterOutputExecutionListener outputExecutionListener;
+    private OutputFormatter outputFormatter;
+
+    public void configureOutput(ConfigReader config) {
+        outputFormatter = createOutputFormatter(config);
 
         //the interpreter output execution listener implements OutputFormatter
         //and wraps and delegates to the configured formatter instance
@@ -54,10 +58,8 @@ public class OutputConfigurer {
         //This allows us to capture any interpreter logging in the InterpreterOutputExecutionListener before sending it on to the configured
         //formatter for formatting/output
 
-        InterpreterOutputExecutionListener interpreterOutputExecutionListener = createInterpreterOutputListener(config, outputFormatter);
-
-        createLogProvider(config, interpreterOutputExecutionListener);
-        return interpreterOutputExecutionListener;
+        outputExecutionListener = createInterpreterOutputListener(config, outputFormatter);
+        createLogProvider(config, outputExecutionListener);
     }
 
     private InterpreterOutputExecutionListener createInterpreterOutputListener(ConfigProperties config, OutputFormatter outputFormatter) {
@@ -90,5 +92,13 @@ public class OutputConfigurer {
             //e.g. a log4j.xml file, at present we rely on the user to configure them as they see fit
             ((OutputFormatterLogProvider) chorusLogProvider).setLogLevel(l);
         }
+    }
+
+    public ExecutionListener getOutputExecutionListener() {
+        return outputExecutionListener;
+    }
+
+    public void dispose() {
+        outputFormatter.dispose();
     }
 }

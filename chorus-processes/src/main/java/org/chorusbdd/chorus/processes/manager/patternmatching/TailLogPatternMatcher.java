@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 class TailLogPatternMatcher implements ProcessOutputPatternMatcher {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(TailLogPatternMatcher.class);
+    private ChorusLog log = ChorusLogFactory.getLog(TailLogPatternMatcher.class);
 
     private ChorusProcess process;
     private File logFile;

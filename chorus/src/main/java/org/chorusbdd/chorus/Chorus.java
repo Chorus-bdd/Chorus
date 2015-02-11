@@ -60,8 +60,9 @@ public class Chorus {
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
     private InterpreterBuilder interpreterBuilder;
 
-    private final ConfigReader configReader;
+    private OutputConfigurer outputConfigurer;
     private final FeatureListBuilder featureListBuilder;
+    private final ConfigReader configReader;
     private ChorusInterpreter interpreter;
     private SubsystemManager subsystemManager;
 
@@ -83,6 +84,7 @@ public class Chorus {
     }
 
     public Chorus(String[] args) throws InterpreterPropertyException {
+        outputConfigurer = new OutputConfigurer();
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
 
@@ -108,7 +110,8 @@ public class Chorus {
     }
 
     private void configureOutput() {
-        ExecutionListener l = new OutputConfigurer().configureOutput(configReader);
+        outputConfigurer.configureOutput(configReader);
+        ExecutionListener l = outputConfigurer.getOutputExecutionListener();
         listenerSupport.addExecutionListener(l);
     }
 
@@ -131,6 +134,7 @@ public class Chorus {
             processFeatures(t, features);
             endTests(t, features);
             passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
+            dispose();
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
             ChorusOut.err.print(ChorusConfigProperty.getHelpText());
@@ -180,14 +184,13 @@ public class Chorus {
         listenerSupport.notifyTestsCompleted(t, features);
     }
 
-    public List<String> getFeatureFilePaths() {
-        return configReader.getValues(ChorusConfigProperty.FEATURE_PATHS);
-    }
-
     void addJUnitExecutionListener(ExecutionListener listener) {
         listenerSupport.prependExecutionListener(listener);
     }
 
+    void dispose() {
+        outputConfigurer.dispose();
+    }
 
     //to get the suite name we concatenate all the values provided for suite name switch
     public String getSuiteName() {
