@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.output.ChorusOutputWriter;
+import org.chorusbdd.chorus.output.AbstractChorusOutputWriter;
 import org.junit.Test;
 
 import java.io.*;
@@ -55,7 +55,7 @@ public abstract class AbstractInterpreterTest extends Assert {
     }
 
     public static void setOutputWriterStepLength() {
-        System.setProperty(ChorusOutputWriter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
+        System.setProperty(AbstractChorusOutputWriter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
     }
 
     /**

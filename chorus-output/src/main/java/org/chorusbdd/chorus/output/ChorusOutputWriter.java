@@ -40,9 +40,6 @@ import org.chorusbdd.chorus.results.StepToken;
  */
 public interface ChorusOutputWriter {
 
-    String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusOutputFormatterStepLength";
-    String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
-
     void printFeature(FeatureToken feature);
 
     void printScenario(ScenarioToken scenario);

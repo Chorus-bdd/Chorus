@@ -48,8 +48,10 @@ import java.util.concurrent.TimeUnit;
  * Date: 12/02/14
  * Time: 19:06
  */
-abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
+public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
 
+    public static final String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusOutputFormatterStepLength";
+    public static final String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     private PrintStream printStream;
