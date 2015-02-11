@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -109,8 +109,8 @@ public class RemotingHandler {
     }
 
     private Properties getRemotingConfigForComponent(String configName) {
-        HandlerConfigLoad handlerConfigLoad = new HandlerConfigLoad();
-        return handlerConfigLoad.getPropertiesForConfigName(configurationManager, "remoting", configName);
+        HandlerConfigLoader handlerConfigLoader = new HandlerConfigLoader();
+        return handlerConfigLoader.getPropertiesForConfigName(configurationManager, "remoting", configName);
     }
 
  }

@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 
 import java.util.Properties;
 
@@ -78,7 +78,7 @@ public class ProfilePropertiesHandler {
     }
 
     Properties getProperties() {
-        return new HandlerConfigLoad().getHandlerProperties(configManager, "profilePropertiesHandler");
+        return new HandlerConfigLoader().getHandlerProperties(configManager, "profilePropertiesHandler");
     }
 
 }

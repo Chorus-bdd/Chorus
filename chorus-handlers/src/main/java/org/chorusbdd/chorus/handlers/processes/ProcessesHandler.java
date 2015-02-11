@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -101,7 +101,7 @@ public class ProcessesHandler {
     }
 
     private Properties getConfig(String configName) {
-        return new HandlerConfigLoad().getPropertiesForConfigName(configurationManager, "processes", configName);
+        return new HandlerConfigLoader().getPropertiesForConfigName(configurationManager, "processes", configName);
     }
 
     @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")
