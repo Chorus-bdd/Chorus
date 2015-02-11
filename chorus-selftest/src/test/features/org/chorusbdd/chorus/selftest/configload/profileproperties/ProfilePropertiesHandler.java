@@ -27,14 +27,17 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.configload;
+package org.chorusbdd.chorus.selftest.configload.profileproperties;
 
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoad;
 
-import java.io.File;
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,19 +45,40 @@ import java.io.File;
  * Date: 14/06/12
  * Time: 09:21
  */
-@Handler(value = "Load Config From Database", scope = Scope.FEATURE)
-public class LoadConfigFromDatabaseHandler {
+@Handler("Profile Properties")
+public class ProfilePropertiesHandler {
 
-    @ChorusResource("feature.dir")
-    File featureDir;
+    @ChorusResource("subsystem.configurationManager")
+    ConfigurationManager configManager;
 
 
-    @Step("I create a javadb database and insert processes config")
-    public void featureStart() throws Exception {
+    @Step("A profile property can be set")
+    public void profileIsSet() {
+        assertEquals("123", getProperties().getProperty("myProperty"));
     }
 
-    @Step("I insert a configuration for the myProcess process")
-    public void insertConfig() throws Exception {
+    @Step("A profile property overrides the base property")
+    public void profileOverrides() {
+        assertEquals("123", getProperties().getProperty("myPropertyTwo"));
+    }
+
+    @Step("A configuration property can be set")
+    public void configIsSet() {
+        assertEquals("configProperty", getProperties().getProperty("myConfigProperty"));
+    }
+
+    @Step("A configuration property overrides the base property")
+    public void configOverrides() {
+        assertEquals("configProperty", getProperties().getProperty("myConfigProperty2"));
+    }
+
+    @Step("A configuration property may prefix a profile property")
+    public void configPropertyMayHaveProfile() {
+        assertEquals("configWithProfile", getProperties().getProperty("myConfigPropertyWithProfile"));
+    }
+
+    Properties getProperties() {
+        return new HandlerConfigLoad().getHandlerProperties(configManager, "profilePropertiesHandler");
     }
 
 }

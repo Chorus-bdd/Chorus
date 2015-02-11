@@ -58,14 +58,25 @@ import java.lang.annotation.Target;
  * <td>The ScenarioToken with metadata relating to the current running scenario</td>
  * </tr>
  * <tr>
- * <td>process.manager</td>
+ * <tr>
+ * <td>profile</td>
+ * <td>Profile</td>
+ * <td>The Profile which is being used for the Chorus suite</td>
+ * </tr>
+ * <tr>
+ * <td>subsystem.processManager</td>
  * <td>ProcessManager</td>
  * <td>Chorus' ProcessManager subsystem</td>
  * </tr> 
  * <tr>
- * <td>remoting.manager</td>
+ * <td>subsystem.remotingManager</td>
  * <td>RemotingManager</td>
  * <td>Chorus' RemotingManager subsystem</td>
+ * </tr>
+ * <tr>
+ * <td>subsystem.configurationManager</td>
+ * <td>ConfigurationManager</td>
+ * <td>Chorus' ConfigurationManager subsystem</td>
  * </tr>
  * </table>
  *
@@ -89,8 +100,10 @@ public @interface ChorusResource {
     public static final String featureDir = "feature.dir";
     public static final String featureToken = "feature.token";
     public static final String scenarioToken = "scenario.token";
+    public static final String profile = "profile";
     public static final String processManager = "subsystem.processManager";
     public static final String remotingManager = "subsystem.remotingManager";
+    public static final String configurationManager = "subsystem.configurationManager";
 
     //append Handler name to inject a handler instance
     public static final String handlerPrefix = "handler.";

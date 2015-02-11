@@ -27,16 +27,10 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.configload;
+package org.chorusbdd.chorus.selftest.configload.profileproperties;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,9 +38,9 @@ import java.sql.Statement;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestLoadConfigFromDatabase extends AbstractInterpreterTest {
+public class TestProfileProperties extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/configload";
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/configload/profileproperties";
 
     final int expectedExitCode = 0;  //success
 
@@ -58,42 +52,11 @@ public class TestLoadConfigFromDatabase extends AbstractInterpreterTest {
         return featurePath;
     }
 
-    public void runTest(boolean runTestsInProcess, boolean runTestsForked) throws Exception {
-        createDb();
-        //we get problems with Derby locking the file if we try to run the test
-        //as a subprocess in addition to within jvm
-        super.runTest(true, false);
-    }
-
-    private void createDb() throws Exception {
-        File file = new File(new File(featurePath), "derby");
-        if ( file.exists() ) {
-            deleteRecursively(file);
-        }
-
-        file.mkdir();
-        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-        Class.forName(driver);
-        String url = "jdbc:derby:" + featurePath + "/derby/sampleDB;create=true";
-        Connection connection = DriverManager.getConnection(url);
-
-        Statement s = connection.createStatement();
-        s.executeUpdate("create table ProcessProperties ( \"property\" varchar(256), \"value\" varchar(256))");
-        s.executeUpdate("insert into ProcessProperties values('processes.myProcess.mainclass','" + ConfigLoadMain.class.getName() + "')");
-        s.executeUpdate("insert into ProcessProperties values('processes.myProcess.remotingPort','" + 12345 + "')");
-
-        s.close();
-        connection.close();
-    }
-
-    void deleteRecursively(File f) throws IOException {
-        if (f.isDirectory()) {
-            for (File c : f.listFiles())
-                deleteRecursively(c);
-        }
-        if (!f.delete()) {
-            throw new FileNotFoundException("Failed to delete file: " + f);
-        }
+    /**
+     * A test can override this method to modify the sys properties being used from the default set
+     */
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+        sysProps.put("chorusProfile", "profileOne");
     }
 
 }

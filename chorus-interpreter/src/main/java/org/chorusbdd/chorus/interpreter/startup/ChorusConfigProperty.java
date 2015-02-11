@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.chorusbdd.chorus.config.PropertySourceMode;
+import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.util.ChorusConstants;
 
 import java.util.ArrayList;
@@ -90,7 +91,9 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     
     OUTPUT_FORMATTER("-outputWriter", "-w", "chorusOutputWriter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputWriter"}, "[\\w\\.]+", "-w org.myorg.MyWriter", "The output writer used to write interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
-    CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE);
+    CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE),
+
+    PROFILE("-profile", "-p", "chorusProfile", false, 0, 1, new String[] {ExecutionToken.BASE_PROFILE}, "\\w+", "-p myProfile", "The configured profile may adjust behaviour, e.g. a handler might change settings based on the current profile", PropertySourceMode.OVERRIDE );
     
     
     private String switchName;

@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.selftest.configload;
+package org.chorusbdd.chorus.selftest.configload.dbproperties;
 
 /**
  * Created by nick on 08/10/2014.

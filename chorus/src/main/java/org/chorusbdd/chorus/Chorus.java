@@ -146,7 +146,9 @@ public class Chorus {
     }
 
     ExecutionToken createExecutionToken() {
-        return new ExecutionToken(getSuiteName());
+        ExecutionToken executionToken = new ExecutionToken(getSuiteName());
+        executionToken.setProfile(configReader.getValue(ChorusConfigProperty.PROFILE));
+        return executionToken;
     }
 
     void initializeInterpreter() {

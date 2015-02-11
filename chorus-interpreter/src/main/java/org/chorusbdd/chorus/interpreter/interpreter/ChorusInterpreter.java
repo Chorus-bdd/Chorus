@@ -124,7 +124,7 @@ public class ChorusInterpreter {
             log.debug("The following handlers will be used " + orderedHandlerClasses);
             List<ScenarioToken> scenarios = feature.getScenarios();
 
-            HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager);
+            HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager, executionToken.getProfile());
             handlerManager.createFeatureScopedHandlers();
             handlerManager.processStartOfFeature();
 

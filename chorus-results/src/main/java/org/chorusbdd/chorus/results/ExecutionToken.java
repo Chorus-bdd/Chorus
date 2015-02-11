@@ -68,6 +68,8 @@ import java.util.Map;
  */
 public class ExecutionToken extends AbstractToken implements PassPendingFailToken {
 
+    public static final String BASE_PROFILE = "base";
+
     private static final long serialVersionUID = 4;
 
     private static final ThreadLocal<SimpleDateFormat> formatThreadLocal = new ThreadLocal<SimpleDateFormat>() {
@@ -79,6 +81,8 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
     private final String testSuiteName;
     private final long executionStartTime;
     private String executionHost;
+
+    private String profile = BASE_PROFILE;
 
     private ResultsSummary resultsSummary = new ResultsSummary();
 
@@ -240,6 +244,14 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
 
     public void setExecutionHost(String executionHost) {
         this.executionHost = executionHost;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     /**

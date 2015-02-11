@@ -110,7 +110,7 @@ public class RemotingHandler {
 
     private Properties getRemotingConfigForComponent(String configName) {
         HandlerConfigLoad handlerConfigLoad = new HandlerConfigLoad();
-        return handlerConfigLoad.getConfigProperties(configurationManager, "remoting", configName);
+        return handlerConfigLoad.getPropertiesForConfigName(configurationManager, "remoting", configName);
     }
 
  }

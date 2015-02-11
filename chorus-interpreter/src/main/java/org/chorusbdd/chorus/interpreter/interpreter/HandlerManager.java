@@ -59,13 +59,15 @@ public class HandlerManager {
     private final List<Class> orderedHandlerClasses;
     private final SpringContextSupport springContextSupport;
     private SubsystemManager subsystemManager;
+    private String profile;
     private ScenarioToken currentScenario;
 
-    public HandlerManager(FeatureToken feature, List<Class> orderedHandlerClasses, SpringContextSupport springContextSupport, SubsystemManager subsystemManager) {
+    public HandlerManager(FeatureToken feature, List<Class> orderedHandlerClasses, SpringContextSupport springContextSupport, SubsystemManager subsystemManager, String profile) {
         this.feature = feature;
         this.orderedHandlerClasses = orderedHandlerClasses;
         this.springContextSupport = springContextSupport;
         this.subsystemManager = subsystemManager;
+        this.profile = profile;
     }
     
     public void createFeatureScopedHandlers() throws Exception {
@@ -278,6 +280,8 @@ public class HandlerManager {
             o = feature.getFeatureFile().getParentFile();
         } else if (ChorusResource.featureToken.equals(resourceName)) {
             o = feature;
+        } else if (ChorusResource.profile.equals(resourceName)) {
+            o = profile;
         } else if (resourceName.matches("subsystem.+")) {
             o = getSubsystemResource(resourceName);
         } else if ( resourceName.startsWith(ChorusResource.handlerPrefix)) {

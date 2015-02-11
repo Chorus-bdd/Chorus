@@ -35,22 +35,61 @@ public class ChorusProperties implements ConfigurationManager {
     private Properties featureProperties = new Properties();
 
     private FeatureToken currentFeature;
+    private String currentProfile;
 
     @Override
     public Properties getAllProperties() {
-        return expandVariables(
-                properties(sessionProperties).merge(properties(featureProperties)), currentFeature
-        ).loadProperties();
+        PropertyOperations sessionProps = getPropertiesForScope(sessionProperties);
+        PropertyOperations featureProps = getPropertiesForScope(featureProperties);
+
+        PropertyOperations sessionAndFeature = sessionProps.merge(featureProps);
+        return expandVariables(sessionAndFeature, currentFeature).loadProperties();
     }
 
     @Override
     public Properties getFeatureProperties() {
-        return expandVariables(properties(featureProperties), currentFeature).loadProperties();
+        return expandVariables(getPropertiesForScope(featureProperties), currentFeature).loadProperties();
     }
 
     @Override
     public Properties getSessionProperties() {
-        return expandVariables(properties(sessionProperties), currentFeature).loadProperties();
+        return expandVariables(getPropertiesForScope(sessionProperties), currentFeature).loadProperties();
+    }
+
+
+    private PropertyOperations getPropertiesForScope(Properties props) {
+        PropertyOperations scopedProps = properties(props);
+        scopedProps = mergeConfigurationAndProfileProperties(scopedProps);
+        return scopedProps;
+    }
+
+    /**
+     * Some property keys may be prefixed with the name of a configuration or the name of a profile
+     *
+     * If this matches the current configration/profile we strip this prefix and merge the new property over the top of any default ones
+     * This enables us to declare properties which are only active in a certain profile or configuration
+     *
+     * We do configurations first, so if we take it to the extreme we could have the below for a processes.myProcess.remotingPort property
+     *
+     * configurations.configA.profiles.profile1.processes.myProcess.remotingPort = 12345
+     *
+     * The above property would be only set while running feature configuration A in profile 1
+     */
+    private PropertyOperations mergeConfigurationAndProfileProperties(PropertyOperations props) {
+        PropertyOperations result;
+        result = mergeConfigurationProperites(props);
+        result = mergeProfileProperties(result);
+        return result;
+    }
+
+    private PropertyOperations mergeConfigurationProperites(PropertyOperations sessionProps) {
+        PropertyOperations sessionPropsForProfile = sessionProps.filterByAndRemoveKeyPrefix("configurations." + currentFeature.getConfigurationName() + ".");
+        return sessionProps.merge(sessionPropsForProfile).filterKeysNotStartingWith("configurations.");
+    }
+
+    private PropertyOperations mergeProfileProperties(PropertyOperations sessionProps) {
+        PropertyOperations sessionPropsForProfile = sessionProps.filterByAndRemoveKeyPrefix("profiles." + currentProfile + ".");
+        return sessionProps.merge(sessionPropsForProfile).filterKeysNotStartingWith("profiles.");
     }
 
     @Override
@@ -119,6 +158,7 @@ public class ChorusProperties implements ConfigurationManager {
      */
     private class PropertySubsystemExecutionListener extends ExecutionListenerAdapter {
         public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+            currentProfile = testExecutionToken.getProfile();
             loadSessionProperties();
         }
 

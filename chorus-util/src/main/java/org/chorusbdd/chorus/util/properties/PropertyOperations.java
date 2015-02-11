@@ -44,6 +44,15 @@ public class PropertyOperations implements PropertyLoader {
         });
     }
 
+    public PropertyOperations filterKeysNotStartingWith(final String keyPrefix) {
+        return filterKeys(new Predicate<String>() {
+            @Override
+            public boolean test(String key) {
+                return ! key.startsWith(keyPrefix);
+            }
+        });
+    }
+
     public PropertyOperations filter(final BiPredicate<String,String> keyAndValueFilter) {
         return new PropertyOperations(new FilteringPropertyLoader(propertyLoader, keyAndValueFilter));
     }
