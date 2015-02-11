@@ -80,7 +80,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     LOG_LEVEL("-logLevel", "-l", "chorusLogLevel", false, 0, 1, new String[] {"warn"}, "(?i)(trace|debug|info|warn|error|fatal)", "-l (trace|debug|info|warn|error|fatal)",
     "The log level to be used by Chorus' built in log provider", PropertySourceMode.OVERRIDE),
 
-    LOG_PROVIDER("-logProvider", "-p", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-p org.chorusbdd.chorus.logging.ChorusCommonsLogProvider",
+    LOG_PROVIDER("-logProvider", "-v", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-v org.chorusbdd.chorus.logging.ChorusCommonsLogProvider",
     "The log provider class to be used to instantiate Chorus loggers", PropertySourceMode.OVERRIDE),
 
     SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
