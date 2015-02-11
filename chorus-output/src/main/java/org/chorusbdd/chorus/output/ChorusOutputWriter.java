@@ -36,8 +36,7 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
 /**
- * Created by: Steve Neal
- * Date: 30/09/11
+ * Write the output for the Chrous interpreter
  */
 public interface ChorusOutputWriter {
 

@@ -39,11 +39,11 @@ import org.chorusbdd.chorus.results.StepToken;
  * A null implementation of OutputFormatter
  * This should never get used
  */
-class NullChorusOutputWriter implements ChorusOutputWriter {
+class NullOutputWriter implements ChorusOutputWriter {
 
-    static final NullChorusOutputWriter NULL_FORMATTER = new NullChorusOutputWriter();
+    static final NullOutputWriter NULL_FORMATTER = new NullOutputWriter();
 
-    private NullChorusOutputWriter() {
+    private NullOutputWriter() {
     }
 
     public void printFeature(FeatureToken feature) {

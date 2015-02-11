@@ -30,9 +30,9 @@
 package org.chorusbdd.chorus.interpreter.startup;
 
 import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.output.ConsoleChorusOutputWriter;
+import org.chorusbdd.chorus.output.ConsoleOutputWriter;
 import org.chorusbdd.chorus.output.ChorusOutputWriter;
-import org.chorusbdd.chorus.output.PlainChorusOutputWriter;
+import org.chorusbdd.chorus.output.PlainOutputWriter;
 
 /**
  * Created by nick on 04/02/14.
@@ -44,10 +44,10 @@ public class OutputWriterFactory {
         String formatterClass = configProperties.getValue(ChorusConfigProperty.OUTPUT_FORMATTER);
         
         if ( configProperties.isTrue(ChorusConfigProperty.CONSOLE_MODE)) {
-            formatterClass = ConsoleChorusOutputWriter.class.getName();
+            formatterClass = ConsoleOutputWriter.class.getName();
         }
 
-        ChorusOutputWriter formatter = new PlainChorusOutputWriter();
+        ChorusOutputWriter formatter = new PlainOutputWriter();
         if ( formatterClass != null) {
             try {
                 Class formatterClazz = Class.forName(formatterClass);
