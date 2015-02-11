@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.results.StepToken;
  * Long running steps have time logged every 10 seconds
  * Set the system property chorusOutputFormatterStepLogRate to -1 to turn this off, or to an alternative length in milliseconds
  */
-public final class PlainOutputFormatter extends AbstractOutputFormatter {
+public final class PlainChorusOutputWriter extends AbstractChorusOutputWriter {
 
     /**
      * Set to -1 to turn off progress step logging
@@ -59,7 +59,7 @@ public final class PlainOutputFormatter extends AbstractOutputFormatter {
      * Create a results formatter which outputs results
      * All OutputFormatter must have a no argument constructor
      */
-    public PlainOutputFormatter() {}
+    public PlainChorusOutputWriter() {}
 
     public void printStepStart(StepToken step, int depth) {
         StringBuilder depthPadding = getDepthPadding(depth);

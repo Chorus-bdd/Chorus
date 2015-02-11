@@ -27,56 +27,41 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.output;
+package org.chorusbdd.chorus.interpreter.startup;
 
-import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.config.ConfigProperties;
+import org.chorusbdd.chorus.output.ConsoleChorusOutputWriter;
+import org.chorusbdd.chorus.output.ChorusOutputWriter;
+import org.chorusbdd.chorus.output.PlainChorusOutputWriter;
 
 /**
- * A null implementation of OutputFormatter
- * This should never get used
+ * Created by nick on 04/02/14.
  */
-class NullOutputFormatter implements OutputFormatter {
+public class OutputWriterFactory {
 
-    static final NullOutputFormatter NULL_FORMATTER = new NullOutputFormatter();
+    public ChorusOutputWriter createOutputWriter(ConfigProperties configProperties) {
 
-    private NullOutputFormatter() {
+        String formatterClass = configProperties.getValue(ChorusConfigProperty.OUTPUT_FORMATTER);
+        
+        if ( configProperties.isTrue(ChorusConfigProperty.CONSOLE_MODE)) {
+            formatterClass = ConsoleChorusOutputWriter.class.getName();
+        }
+
+        ChorusOutputWriter formatter = new PlainChorusOutputWriter();
+        if ( formatterClass != null) {
+            try {
+                Class formatterClazz = Class.forName(formatterClass);
+                Object o = formatterClazz.newInstance();
+                if ( o instanceof ChorusOutputWriter) {
+                    formatter = (ChorusOutputWriter)o;
+                } else {
+                    System.out.println("The " + ChorusConfigProperty.OUTPUT_FORMATTER.getSystemProperty() + 
+                            " property must be a class which implements ChorusOutputWriter");
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to create results formatter " + formatterClass + " " + e);
+            }
+        }
+        return formatter;
     }
-
-    public void printFeature(FeatureToken feature) {
-    }
-
-    public void printScenario(ScenarioToken scenario) {
-    }
-
-    public void printStepStart(StepToken step, int depth) {
-    }
-
-    public void printStepEnd(StepToken step, int depth) {
-    }
-
-    public void printStackTrace(String stackTrace) {
-    }
-
-    public void printMessage(String message) {
-    }
-
-    public void printResults(ResultsSummary summary) {
-    }
-
-    public void log(LogLevel type, Object message) {
-    }
-
-    public void logError(LogLevel type, Throwable t) {
-    }
-
-    public void dispose() {}
-
-    private void logWarning() {
-        System.err.println("No OutputFormatter configured, ChorusLogFactory has not been initialized properly");
-    }
-
 }

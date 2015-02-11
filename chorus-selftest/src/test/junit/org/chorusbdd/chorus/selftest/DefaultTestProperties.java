@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
-import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.ChorusOutputWriter;
 
 import java.util.Properties;
 
@@ -48,7 +48,7 @@ public class DefaultTestProperties extends Properties {
         //test output at log level info
         //we need to use log4j logging for our testing since when we test Spring features, Spring logs via commons
         put(ChorusConfigProperty.HANDLER_PACKAGES.getSystemProperty(), "org.chorusbdd.chorus.selftest");
-        put(OutputFormatter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
+        put(ChorusOutputWriter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
         put(ChorusConfigProperty.LOG_LEVEL.getSystemProperty(), "info");
     }
 }

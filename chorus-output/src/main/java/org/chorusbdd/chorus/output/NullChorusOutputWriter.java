@@ -36,35 +36,44 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
 /**
- * Created by: Steve Neal
- * Date: 30/09/11
+ * A null implementation of OutputFormatter
+ * This should never get used
  */
-public interface OutputFormatter {
+class NullChorusOutputWriter implements ChorusOutputWriter {
 
-    String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusConsoleFormatterStepLength";
-    String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
+    static final NullChorusOutputWriter NULL_FORMATTER = new NullChorusOutputWriter();
+
+    private NullChorusOutputWriter() {
+    }
+
+    public void printFeature(FeatureToken feature) {
+    }
+
+    public void printScenario(ScenarioToken scenario) {
+    }
+
+    public void printStepStart(StepToken step, int depth) {
+    }
+
+    public void printStepEnd(StepToken step, int depth) {
+    }
+
+    public void printStackTrace(String stackTrace) {
+    }
+
+    public void printMessage(String message) {
+    }
+
+    public void printResults(ResultsSummary summary) {
+    }
+
+    public void log(LogLevel type, Object message) {
+    }
+
+    public void logError(LogLevel type, Throwable t) {
+    }
+
+    public void dispose() {}
 
 
-    void printFeature(FeatureToken feature);
-
-    void printScenario(ScenarioToken scenario);
-
-    void printStepStart(StepToken step, int depth);
-
-    void printStepEnd(StepToken step, int depth);
-
-    void printStackTrace(String stackTrace);
-
-    void printMessage(String message);
-
-    void printResults(ResultsSummary summary);
-
-    void log(LogLevel type, Object message);
-    
-    void logError(LogLevel type, Throwable t);
-
-    /**
-     * Called to allow cleanup when Chorus exits
-     */
-    void dispose();
 }

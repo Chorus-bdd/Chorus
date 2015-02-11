@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.selftest;
 import org.chorusbdd.chorus.config.ConfigurationProperty;
 import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilder;
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
-import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.ChorusOutputWriter;
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessCommandLineBuilder;
 
 import java.io.ByteArrayOutputStream;
@@ -55,8 +55,8 @@ public class ForkedRunner implements ChorusSelfTestRunner {
 
     //these are only ever set with a system property not a switch
     public static final List SYS_PROP_ONLY_PROPERTIES = Arrays.asList(
-            OutputFormatter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS,
-            OutputFormatter.OUTPUT_FORMATTER_STEP_LOG_RATE
+            ChorusOutputWriter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS,
+            ChorusOutputWriter.OUTPUT_FORMATTER_STEP_LOG_RATE
     );
 
     public ChorusSelfTestResults runChorusInterpreter(Properties sysPropsForTest) throws Exception {

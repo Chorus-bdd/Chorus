@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selftest;
 
 import junit.framework.Assert;
-import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.ChorusOutputWriter;
 import org.junit.Test;
 
 import java.io.*;
@@ -48,14 +48,14 @@ public abstract class AbstractInterpreterTest extends Assert {
     static {
         //since the tests were written the default char length for a step line has increased, set this back
         //rather than update all the expected stdout.txt, since it is easier to read when comparing output ath this length
-        setOutputFormatterStepLengthChars();
+        setOutputWriterStepLength();
 
         //for spring test spring tries to load log4j so we need a configuration to avoid a warning
         System.setProperty("log4j.configuration", "org/chorusbdd/chorus/selftest/chorus-selftest-log4j.xml");
     }
 
-    public static void setOutputFormatterStepLengthChars() {
-        System.setProperty(OutputFormatter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
+    public static void setOutputWriterStepLength() {
+        System.setProperty(ChorusOutputWriter.OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "100");
     }
 
     /**

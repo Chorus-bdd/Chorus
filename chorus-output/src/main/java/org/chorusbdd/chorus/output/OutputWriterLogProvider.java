@@ -42,24 +42,24 @@ import org.chorusbdd.chorus.logging.LogLevel;
 * Provides ChorusLog instances which use the configured OutputFormatter for their logging
 * The user may supply a custom OutputFormatter which changes the way Chorus output is displayed or handled
 */
-public class OutputFormatterLogProvider implements ChorusLogProvider {
+public class OutputWriterLogProvider implements ChorusLogProvider {
 
     private static volatile int logLevel = LogLevel.WARN.getLevel();
-    private OutputFormatter outputFormatter;
+    private ChorusOutputWriter chorusOutputWriter;
 
-    public OutputFormatterLogProvider() {
+    public OutputWriterLogProvider() {
     }
 
-    public void setOutputFormatter(OutputFormatter outputFormatter) {
-        this.outputFormatter = outputFormatter;
+    public void setChorusOutputWriter(ChorusOutputWriter chorusOutputWriter) {
+        this.chorusOutputWriter = chorusOutputWriter;
     }
 
     public void setLogLevel(LogLevel l) {
-        OutputFormatterLogProvider.logLevel = l.getLevel();
+        OutputWriterLogProvider.logLevel = l.getLevel();
     }
 
     public ChorusLog getLog(Class clazz) {
-        return new StandardOutLog(outputFormatter);
+        return new StandardOutLog(chorusOutputWriter);
     }
 
     /**
@@ -67,10 +67,10 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
      */
     private static class StandardOutLog implements ChorusLog {
 
-        private OutputFormatter outputFormatter;
+        private ChorusOutputWriter chorusOutputWriter;
 
-        public StandardOutLog(OutputFormatter outputFormatter) {
-            this.outputFormatter = outputFormatter;
+        public StandardOutLog(ChorusOutputWriter chorusOutputWriter) {
+            this.chorusOutputWriter = chorusOutputWriter;
         }
 
         public boolean isDebugEnabled() {
@@ -99,79 +99,79 @@ public class OutputFormatterLogProvider implements ChorusLogProvider {
 
         public void info(Object message) {
             if ( logLevel >= LogLevel.INFO.getLevel() ) {
-                outputFormatter.log(LogLevel.INFO, message);
+                chorusOutputWriter.log(LogLevel.INFO, message);
             }
         }
 
         public void info(Object message, Throwable t) {
             if ( logLevel >= LogLevel.INFO.getLevel() ) {
-                outputFormatter.log(LogLevel.INFO, message);
-                outputFormatter.logError(LogLevel.INFO, t);
+                chorusOutputWriter.log(LogLevel.INFO, message);
+                chorusOutputWriter.logError(LogLevel.INFO, t);
             }
         }
 
         public void warn(Object message) {
             if ( logLevel >= LogLevel.WARN.getLevel() ) {
-                outputFormatter.log(LogLevel.WARN, message);
+                chorusOutputWriter.log(LogLevel.WARN, message);
             }
         }
 
         public void warn(Object message, Throwable t) {
             if ( logLevel >= LogLevel.WARN.getLevel() ) {
-                outputFormatter.log(LogLevel.WARN, message);
-                outputFormatter.logError(LogLevel.WARN, t);
+                chorusOutputWriter.log(LogLevel.WARN, message);
+                chorusOutputWriter.logError(LogLevel.WARN, t);
             }
         }
 
         public void error(Object message) {
             if ( logLevel >= LogLevel.ERROR.getLevel() ) {
-                outputFormatter.log(LogLevel.ERROR, message);
+                chorusOutputWriter.log(LogLevel.ERROR, message);
             }
         }
 
         public void error(Object message, Throwable t) {
             if ( logLevel >= LogLevel.ERROR.getLevel() ) {
-                outputFormatter.log(LogLevel.ERROR, message);
-                outputFormatter.logError(LogLevel.ERROR, t);
+                chorusOutputWriter.log(LogLevel.ERROR, message);
+                chorusOutputWriter.logError(LogLevel.ERROR, t);
             }
         }
 
         public void fatal(Object message) {
             if ( logLevel >= LogLevel.FATAL.getLevel() ) {
-                outputFormatter.log(LogLevel.FATAL, message);
+                chorusOutputWriter.log(LogLevel.FATAL, message);
             }
         }
 
         public void fatal(Object message, Throwable t) {
             if ( logLevel >= LogLevel.FATAL.getLevel() ) {
-                outputFormatter.log(LogLevel.FATAL, message);
-                outputFormatter.logError(LogLevel.FATAL, t);
+                chorusOutputWriter.log(LogLevel.FATAL, message);
+                chorusOutputWriter.logError(LogLevel.FATAL, t);
             }
         }
 
         public void trace(Object message) {
             if ( logLevel >= LogLevel.TRACE.getLevel() ) {
-                outputFormatter.log(LogLevel.TRACE, message);
+                chorusOutputWriter.log(LogLevel.TRACE, message);
             }
         }
 
         public void trace(Object message, Throwable t) {
             if ( logLevel >= LogLevel.TRACE.getLevel() ) {
-                outputFormatter.log(LogLevel.TRACE, message);
-                outputFormatter.logError(LogLevel.TRACE, t);
+                chorusOutputWriter.log(LogLevel.TRACE, message);
+                chorusOutputWriter.logError(LogLevel.TRACE, t);
             }
         }
 
         public void debug(Object message) {
             if ( logLevel >= LogLevel.DEBUG.getLevel() ) {
-                outputFormatter.log(LogLevel.DEBUG, message);
+                chorusOutputWriter.log(LogLevel.DEBUG, message);
             }
         }
 
         public void debug(Object message, Throwable t) {
             if ( logLevel >= LogLevel.DEBUG.getLevel() ) {
-                outputFormatter.log(LogLevel.DEBUG, message);
-                outputFormatter.logError(LogLevel.DEBUG, t);
+                chorusOutputWriter.log(LogLevel.DEBUG, message);
+                chorusOutputWriter.logError(LogLevel.DEBUG, t);
             }
         }
     }

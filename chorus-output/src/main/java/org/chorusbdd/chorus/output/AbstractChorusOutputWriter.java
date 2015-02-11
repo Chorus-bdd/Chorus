@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  * Date: 12/02/14
  * Time: 19:06
  */
-abstract class AbstractOutputFormatter implements OutputFormatter {
+abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
 
     private static ScheduledExecutorService stepProgressExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -57,7 +57,7 @@ abstract class AbstractOutputFormatter implements OutputFormatter {
 
     private int STEP_LENGTH_CHARS;
 
-    public AbstractOutputFormatter() {
+    public AbstractChorusOutputWriter() {
         //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
         STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
     }

@@ -11,11 +11,11 @@ import org.chorusbdd.chorus.results.StepToken;
  *
  * A base class for decorators which forwards all calls
  */
-public abstract class AbstractOutputFormatterDecorator implements OutputFormatter {
+public abstract class AbstractChorusOutputWriterDecorator implements ChorusOutputWriter {
 
-    private OutputFormatter wrappedFormatter;
+    private ChorusOutputWriter wrappedFormatter;
 
-    public AbstractOutputFormatterDecorator(OutputFormatter wrappedFormatter) {
+    public AbstractChorusOutputWriterDecorator(ChorusOutputWriter wrappedFormatter) {
         this.wrappedFormatter = wrappedFormatter;
     }
 

@@ -32,30 +32,30 @@ package org.chorusbdd.chorus.interpreter.startup;
 import org.chorusbdd.chorus.config.ConfigProperties;
 import org.chorusbdd.chorus.logging.ChorusLogProvider;
 import org.chorusbdd.chorus.logging.ChorusOut;
-import org.chorusbdd.chorus.output.OutputFormatter;
-import org.chorusbdd.chorus.output.OutputFormatterLogProvider;
+import org.chorusbdd.chorus.output.ChorusOutputWriter;
+import org.chorusbdd.chorus.output.OutputWriterLogProvider;
 
 /**
  * Created by nick on 10/02/14.
  */
 public class ChorusLogProviderFactory {
 
-    public ChorusLogProvider createLogProvider(ConfigProperties configProperties, OutputFormatter outputFormatter) {
+    public ChorusLogProvider createLogProvider(ConfigProperties configProperties, ChorusOutputWriter chorusOutputWriter) {
         ChorusLogProvider result = createSystemPropertyProvider(configProperties);
         if ( result == null) {
-            result = createDefaultLogProvider(outputFormatter);
+            result = createDefaultLogProvider(chorusOutputWriter);
         }
 
-        if ( result instanceof OutputFormatterLogProvider) {
-            ((OutputFormatterLogProvider) result).setOutputFormatter(outputFormatter);
+        if ( result instanceof OutputWriterLogProvider) {
+            ((OutputWriterLogProvider) result).setChorusOutputWriter(chorusOutputWriter);
         }
         return result;
     }
 
-    private ChorusLogProvider createDefaultLogProvider(OutputFormatter outputFormatter) {
-        OutputFormatterLogProvider outputFormatterLogProvider = new OutputFormatterLogProvider();
-        outputFormatterLogProvider.setOutputFormatter(outputFormatter);
-        return outputFormatterLogProvider;
+    private ChorusLogProvider createDefaultLogProvider(ChorusOutputWriter chorusOutputWriter) {
+        OutputWriterLogProvider outputWriterLogProvider = new OutputWriterLogProvider();
+        outputWriterLogProvider.setChorusOutputWriter(chorusOutputWriter);
+        return outputWriterLogProvider;
     }
 
     private ChorusLogProvider createSystemPropertyProvider(ConfigProperties configProperties) {

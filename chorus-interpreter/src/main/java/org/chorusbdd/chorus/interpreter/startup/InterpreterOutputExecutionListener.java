@@ -31,8 +31,8 @@ package org.chorusbdd.chorus.interpreter.startup;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.output.AbstractOutputFormatterDecorator;
-import org.chorusbdd.chorus.output.OutputFormatter;
+import org.chorusbdd.chorus.output.AbstractChorusOutputWriterDecorator;
+import org.chorusbdd.chorus.output.ChorusOutputWriter;
 import org.chorusbdd.chorus.results.*;
 
 import java.util.Iterator;
@@ -45,10 +45,10 @@ import java.util.List;
  *
  * This execution listener is responsible for generating the console standard output for Chorus
  * 
- * It delegates to a wrapped OutputFormatter for the actual output
+ * It delegates to a wrapped OutputWriter for the actual output
  * It also captures any Chorus log output into the current
  */
-public class InterpreterOutputExecutionListener extends AbstractOutputFormatterDecorator implements ExecutionListener {
+public class InterpreterOutputExecutionListener extends AbstractChorusOutputWriterDecorator implements ExecutionListener {
 
     private boolean showSummary = true;
     private boolean verbose = false;
@@ -57,7 +57,7 @@ public class InterpreterOutputExecutionListener extends AbstractOutputFormatterD
 
     private TokenLogCapture tokenLogCapture = new TokenLogCapture();
 
-    public InterpreterOutputExecutionListener(boolean showSummary, boolean verbose, OutputFormatter chorusOutFormatter) {
+    public InterpreterOutputExecutionListener(boolean showSummary, boolean verbose, ChorusOutputWriter chorusOutFormatter) {
         super(chorusOutFormatter);
         this.showSummary = showSummary;
         this.verbose = verbose;

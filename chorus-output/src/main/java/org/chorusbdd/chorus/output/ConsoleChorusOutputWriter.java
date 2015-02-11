@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.results.StepToken;
 /**
  * Nick E
  */
-public final class ConsoleOutputFormatter extends AbstractOutputFormatter {
+public final class ConsoleChorusOutputWriter extends AbstractChorusOutputWriter {
 
     private static final int PROGRESS_CURSOR_FRAME_RATE = 400;
     

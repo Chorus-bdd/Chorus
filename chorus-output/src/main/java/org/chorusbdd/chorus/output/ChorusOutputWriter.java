@@ -27,41 +27,43 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.interpreter.startup;
+package org.chorusbdd.chorus.output;
 
-import org.chorusbdd.chorus.config.ConfigProperties;
-import org.chorusbdd.chorus.output.ConsoleOutputFormatter;
-import org.chorusbdd.chorus.output.OutputFormatter;
-import org.chorusbdd.chorus.output.PlainOutputFormatter;
+import org.chorusbdd.chorus.logging.LogLevel;
+import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ResultsSummary;
+import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.results.StepToken;
 
 /**
- * Created by nick on 04/02/14.
+ * Created by: Steve Neal
+ * Date: 30/09/11
  */
-public class OutputFormatterFactory {
+public interface ChorusOutputWriter {
 
-    public OutputFormatter createOutputFormatter(ConfigProperties configProperties) {
+    String OUTPUT_FORMATTER_STEP_LENGTH_CHARS = "chorusOutputFormatterStepLength";
+    String OUTPUT_FORMATTER_STEP_LOG_RATE = "chorusOutputFormatterStepLogRate";
 
-        String formatterClass = configProperties.getValue(ChorusConfigProperty.OUTPUT_FORMATTER);
-        
-        if ( configProperties.isTrue(ChorusConfigProperty.CONSOLE_MODE)) {
-            formatterClass = ConsoleOutputFormatter.class.getName();
-        }
+    void printFeature(FeatureToken feature);
 
-        OutputFormatter formatter = new PlainOutputFormatter();
-        if ( formatterClass != null) {
-            try {
-                Class formatterClazz = Class.forName(formatterClass);
-                Object o = formatterClazz.newInstance();
-                if ( o instanceof OutputFormatter) {
-                    formatter = (OutputFormatter)o;
-                } else {
-                    System.out.println("The " + ChorusConfigProperty.OUTPUT_FORMATTER.getSystemProperty() + 
-                            " property must be a class which implements OutputFormatter");
-                }
-            } catch (Exception e) {
-                System.err.println("Failed to create results formatter " + formatterClass + " " + e);
-            }
-        }
-        return formatter;
-    }
+    void printScenario(ScenarioToken scenario);
+
+    void printStepStart(StepToken step, int depth);
+
+    void printStepEnd(StepToken step, int depth);
+
+    void printStackTrace(String stackTrace);
+
+    void printMessage(String message);
+
+    void printResults(ResultsSummary summary);
+
+    void log(LogLevel type, Object message);
+    
+    void logError(LogLevel type, Throwable t);
+
+    /**
+     * Called to allow cleanup when Chorus exits
+     */
+    void dispose();
 }
