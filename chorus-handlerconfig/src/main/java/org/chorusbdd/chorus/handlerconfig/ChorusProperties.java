@@ -123,8 +123,8 @@ public class ChorusProperties implements ConfigurationManager {
 
     private void loadSessionProperties() {
         PropertyOperations sessionProps = PropertyOperations.emptyProperties();
-        sessionProps.merge(new ClassPathPropertyLoader("/chorus.properties"));
-        PropertyOperations withDbProps = addPropertiesFromDatabase(properties(sessionProps.loadProperties()));  //load the session props once then merge any db props
+        sessionProps = sessionProps.merge(new ClassPathPropertyLoader("/chorus.properties"));
+        PropertyOperations withDbProps = addPropertiesFromDatabase(sessionProps);  //load the session props once then merge any db props
         this.sessionProperties = withDbProps.loadProperties();
     }
 

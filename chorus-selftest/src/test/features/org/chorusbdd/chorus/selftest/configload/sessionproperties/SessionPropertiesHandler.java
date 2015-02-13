@@ -27,41 +27,47 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerconfig.configbean;
+package org.chorusbdd.chorus.selftest.configload.sessionproperties;
+
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+
+import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * Created by nick on 23/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public abstract class AbstractConfigBeanValidator<E extends HandlerConfigBean> implements ConfigBeanValidator<E> {
+@Handler("Session Properties")
+public class SessionPropertiesHandler {
 
-    private static StringBuilder validationErrors = new StringBuilder();
+    @ChorusResource("subsystem.configurationManager")
+    ConfigurationManager configManager;
 
-    public boolean isValid(E config) {
-        validationErrors.setLength(0);
-        boolean valid = true;
-        if ( ! isSet(config.getConfigName())) {
-            logInvalidConfig("configName was null or empty", config);
-            valid = false;
-        }
-
-        if ( valid ) {
-            valid = checkValid(config);
-        }
-        return valid;
+    @Step("A prop can be set in the main classpath chorus.properties")
+    public void configIsSet() {
+        assertEquals("global chorus.properties", getProperties().getProperty("prop1"));
     }
 
-    protected abstract boolean checkValid(E config);
-
-    protected void logInvalidConfig(String message, E config) {
-        validationErrors.append("Invalid config " + config.getConfigName() + " - " + message);
+    @Step("A prop from main classpath chorus.properties can be overridden in the local chorus.properties")
+    public void isOverridden() {
+        assertEquals("local chorus.properties", getProperties().getProperty("prop2"));
     }
 
-    protected boolean isSet(String propertyValue) {
-        return propertyValue != null && propertyValue.trim().length() > 0;
+    @Step("A prop from local chorus.properties can be overridden in feature.properties")
+    public void isOverriddenInFeature() {
+        assertEquals("local feature.properties", getProperties().getProperty("prop3"));
     }
 
-
-    public String getErrorDescription() {
-        return validationErrors.toString();
+    Properties getProperties() {
+        return new HandlerConfigLoader().getHandlerProperties(configManager, "sessionpropertiestest");
     }
+
 }

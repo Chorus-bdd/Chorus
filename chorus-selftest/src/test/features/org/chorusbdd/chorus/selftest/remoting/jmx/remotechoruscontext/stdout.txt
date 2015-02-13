@@ -21,8 +21,16 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Given I start a config1 process named Casablanca                                         PASSED  
     And I create a context map myMap in Casablanca                                           PASSED  
     Then the size of map myMap is 3                                                          PASSED  
+  Scenario: Can share a context variable between two remote processes
+Chorus --> INFO    - Processing scenario: Can share a context variable between two remote processes
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process named Casablanca                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Casablanca2                                          PASSED  
+    When I set the context variable theUsualSuspects to Nick in Casablanca                   PASSED  
+    Then I can access the context variable theUsualSuspects in Casablanca2                   PASSED  Nick:String
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:3) (passed:3) (failed:0)
-Steps     (total:11) (passed:11) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:4) (passed:4) (failed:0)
+Steps     (total:15) (passed:15) (failed:0) (undefined:0) (pending:0) (skipped:0)

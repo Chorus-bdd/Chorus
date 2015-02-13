@@ -103,10 +103,13 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         try {
             List<FeatureToken> features = chorus.getFeatureList(executionToken);
 
+            //we must ensure scenario string name is unique across all features
+            //due to problems with the Descripition equality in junit
+            HashSet<String> uniqueScenarioNames = new HashSet<>();
             tests = new ArrayList<>();
             for (FeatureToken f  : features) {
                 try {
-                    tests.add(new ChorusFeatureTest(f));
+                    tests.add(new ChorusFeatureTest(f, uniqueScenarioNames, true));
                 } catch (InitializationError initializationError) {
                     initializationError.printStackTrace();
                 }
@@ -114,10 +117,10 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
             if ( tests.size() > 0) {
                 ChorusFeatureTest t = tests.remove(0);
-                tests.add(0, new InitialFeature(t.featureToken, t, executionToken, features));
+                tests.add(0, new InitialFeature(t.featureToken, t, executionToken, features, uniqueScenarioNames));
 
                 t = tests.remove(tests.size() - 1);
-                tests.add(new FinalFeature(t.featureToken, t));
+                tests.add(new FinalFeature(t.featureToken, t, uniqueScenarioNames));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,8 +142,8 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         private ExecutionToken executionToken;
         private List<FeatureToken> features;
 
-        public InitialFeature(FeatureToken featureToken, ChorusFeatureTest wrappedFeature, ExecutionToken executionToken, List<FeatureToken> features) throws InitializationError {
-            super(featureToken);
+        public InitialFeature(FeatureToken featureToken, ChorusFeatureTest wrappedFeature, ExecutionToken executionToken, List<FeatureToken> features, Set<String> uniqueScenarioNames) throws InitializationError {
+            super(featureToken, uniqueScenarioNames, false);
             this.wrappedFeature = wrappedFeature;
             this.executionToken = executionToken;
             this.features = features;
@@ -167,14 +170,34 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             executionListener.awaitTestStart();
             wrappedFeature.run(notifier);
         }
+
+        @Override
+        public List<ChorusScenario> getChildren() {
+            return wrappedFeature.getChildren();
+        }
+
+        @Override
+        public Description getDescription() {
+            return wrappedFeature.getDescription();
+        }
+
+        @Override
+        public Description describeChild(ChorusScenario child) {
+            return wrappedFeature.describeChild(child);
+        }
+
+        @Override
+        public void runChild(ChorusScenario child, RunNotifier notifier) {
+            wrappedFeature.runChild(child, notifier);
+        }
     }
 
     public class FinalFeature extends ChorusFeatureTest {
 
         ChorusFeatureTest wrappedFeature;
 
-        public FinalFeature(FeatureToken featureToken, ChorusFeatureTest wrappedFeature) throws InitializationError {
-            super(featureToken);
+        public FinalFeature(FeatureToken featureToken, ChorusFeatureTest wrappedFeature, Set<String> uniqueScenarioNames) throws InitializationError {
+            super(featureToken, uniqueScenarioNames, false);
             this.wrappedFeature = wrappedFeature;
         }
 
@@ -188,6 +211,26 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
                 e.printStackTrace();
             }
             pauseForJUnitOutput();
+        }
+
+        @Override
+        public List<ChorusScenario> getChildren() {
+            return wrappedFeature.getChildren();
+        }
+
+        @Override
+        public Description getDescription() {
+            return wrappedFeature.getDescription();
+        }
+
+        @Override
+        public Description describeChild(ChorusScenario child) {
+            return wrappedFeature.describeChild(child);
+        }
+
+        @Override
+        public void runChild(ChorusScenario child, RunNotifier notifier) {
+            wrappedFeature.runChild(child, notifier);
         }
     }
 
@@ -205,13 +248,35 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     
     public class ChorusFeatureTest extends ParentRunner<ChorusSuite.ChorusScenario> {
         private final FeatureToken featureToken;
-        private final List<ChorusScenario> children;
+        private final Set<String> uniqueScenarioNames;
+        private List<ChorusScenario> children;
+        private Description description;
 
-        public ChorusFeatureTest(FeatureToken featureToken) throws InitializationError {
+        public ChorusFeatureTest(FeatureToken featureToken, Set<String> uniqueScenarioNames, boolean createChildren) throws InitializationError {
             super(ChorusFeatureTest.class);
             //To change body of created methods use File | Settings | File Templates.
             this.featureToken = featureToken;
-            this.children = createChildren();
+            this.uniqueScenarioNames = uniqueScenarioNames;
+            if ( createChildren) {
+                this.children = createChildren();
+                this.description = createDescription();
+            }
+        }
+
+        private List<ChorusScenario> createChildren() {
+            List<ChorusScenario> l = new ArrayList<>();
+            for (ScenarioToken s : featureToken.getScenarios()) {
+                l.add(new ChorusScenario(featureToken, s, uniqueScenarioNames));
+            }
+            return l;
+        }
+
+        private Description createDescription() {
+            Description description = Description.createSuiteDescription(featureToken.getNameWithConfiguration());
+            for (ChorusScenario s : children) {
+                description.addChild(s.getDescription());
+            }
+            return description;
         }
 
         public void run(RunNotifier notifier) {
@@ -225,21 +290,9 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             return children;
         }
 
-        private List<ChorusScenario> createChildren() {
-            List<ChorusScenario> l = new ArrayList<>();
-            HashSet<String> scenarioNames = new HashSet<>();  //used to guarantee unique scenario names
-            for (ScenarioToken s : featureToken.getScenarios()) {
-                l.add(new ChorusScenario(featureToken, s, scenarioNames));
-            }
-            return l;
-        }
 
         public Description getDescription() {
-            Description d = Description.createSuiteDescription(featureToken.getNameWithConfiguration());
-            for (ChorusScenario s : children) {
-                d.addChild(s.getDescription());
-            }
-            return d;
+            return description;
         }
 
         @Override
@@ -279,30 +332,33 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
     private class ChorusScenario {
 
-        private FeatureToken featureToken;
-        private ScenarioToken scenarioToken;
-        private String scenarioName;
+        private final FeatureToken featureToken;
+        private final ScenarioToken scenarioToken;
+        private final String scenarioName;
+        private final Description description;
 
         public ChorusScenario(FeatureToken featureToken, ScenarioToken scenarioToken, Set<String> scenarioNames) {
             this.featureToken = featureToken;
             this.scenarioToken = scenarioToken;
 
-            calculateName(featureToken, scenarioToken, scenarioNames);
+            scenarioName = calculateName(featureToken, scenarioToken, scenarioNames);
+            description = Description.createTestDescription(clazz, scenarioName);
         }
 
         //The JUnit description seems to require a class to be globally unique - we don't have a class so get problems
         //when scenarios have the same name within our features. In this case detect the problem and prepend the feature name to the string.
-        private void calculateName(FeatureToken featureToken, ScenarioToken scenarioToken, Set<String> scenarioNames) {
+        private String calculateName(FeatureToken featureToken, ScenarioToken scenarioToken, Set<String> scenarioNames) {
             String conf = featureToken.getConfigurationName().equals(FeatureToken.BASE_CONFIGURATION) ? "" : " [" + featureToken.getConfigurationName() + "]";
             String name = scenarioToken.getName() + conf;
-            if ( ! scenarioNames.add(name)) {
-                name = featureToken.getNameWithConfiguration() + " " + scenarioToken.getName();
+            int instance = 2;
+            while ( ! scenarioNames.add(name)) {
+                name = scenarioToken.getName() + " (" + instance++ + ")";
             }
-            this.scenarioName = name;
+            return name;
         }
 
         public Description getDescription() {
-            return Description.createTestDescription(clazz, scenarioName);
+            return description;
         }
 
         public void run() throws Exception {

@@ -1,0 +1,12 @@
+Feature: Session Properties                                                                          
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/configload/sessionproperties/sessionproperties.feature
+  Scenario: Session properties can be set and overridden
+Chorus --> INFO    - Processing scenario: Session properties can be set and overridden
+    Check A prop can be set in the main classpath chorus.properties                          PASSED  
+    Check A prop from main classpath chorus.properties can be overridden in the local chorus.propertiesPASSED  
+    Check A prop from local chorus.properties can be overridden in feature.properties        PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

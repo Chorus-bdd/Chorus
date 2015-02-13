@@ -27,6 +27,13 @@ Feature: JMX Remote Chorus Context
     And I create a context map myMap in Casablanca
     Then the size of map myMap is 3
 
+  Scenario: Can share a context variable between two remote processes
+    Given I start a config1 process named Casablanca
+    And I start a config1 process named Casablanca2
+    When I set the context variable theUsualSuspects to Nick in Casablanca
+    Then I can access the context variable theUsualSuspects in Casablanca2
+
+
 
 
 

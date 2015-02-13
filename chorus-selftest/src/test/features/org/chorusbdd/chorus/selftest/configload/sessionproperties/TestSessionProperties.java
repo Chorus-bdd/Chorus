@@ -27,41 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlerconfig.configbean;
+package org.chorusbdd.chorus.selftest.configload.sessionproperties;
+
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
- * Created by nick on 23/09/2014.
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public abstract class AbstractConfigBeanValidator<E extends HandlerConfigBean> implements ConfigBeanValidator<E> {
+public class TestSessionProperties extends AbstractInterpreterTest {
 
-    private static StringBuilder validationErrors = new StringBuilder();
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/configload/sessionproperties";
 
-    public boolean isValid(E config) {
-        validationErrors.setLength(0);
-        boolean valid = true;
-        if ( ! isSet(config.getConfigName())) {
-            logInvalidConfig("configName was null or empty", config);
-            valid = false;
-        }
+    final int expectedExitCode = 0;  //success
 
-        if ( valid ) {
-            valid = checkValid(config);
-        }
-        return valid;
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    protected abstract boolean checkValid(E config);
-
-    protected void logInvalidConfig(String message, E config) {
-        validationErrors.append("Invalid config " + config.getConfigName() + " - " + message);
-    }
-
-    protected boolean isSet(String propertyValue) {
-        return propertyValue != null && propertyValue.trim().length() > 0;
-    }
-
-
-    public String getErrorDescription() {
-        return validationErrors.toString();
+    protected String getFeaturePath() {
+        return featurePath;
     }
 }
