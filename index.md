@@ -6,77 +6,27 @@ layout: page
 
 Chorus is a BDD testing tool which makes it easy to test distributed systems
 
-BDD tests are written in non-technical prose:
+Chorus can orchestrate tests across many components in a distributed architecture
 
-{% highlight gherkin %}
-Scenario: Buy a Waffle
-  Given I am logged in
-  And I click 'buy a waffle'
-  Then a waffle is added to my basket
-{% endhighlight %}
+You can use Chorus just like you'd use any other BDD test framework, or you can use it like this:
 
-The developer has to implement the logic for each of the test steps.
-
-Doing this for the test above may not be trivial, but it looks possible.
-This is because all these steps on the test operate on the same web site or user interface
-We can write our test so that it starts the browser and logs in on the first step
-
-However, in a complex distributed system, with several user interfaces and components, things are not so simple...
-
-{% highlight gherkin %}
-Scenario: Book a trade
-  Given my position against Google is $50,000
-  And my quote to sell Google shares is $500
-  When a customer submits an order to 'Buy 100 Google'
-  Then the position for Google in my trader UI is 0
-{% endhighlight %}
+![Working With Chorus](/public/workingWithChorus.png)
 
 
-How might we implement a test like this?
+## What's different?
 
-There are at least two components involved, a trader client and a customer client - perhaps there is also a booking system and a pricing component.
+It can be very difficult to write full-system integration tests for a large project with many components.
 
-We'd need to connect to all these components to execute the steps.
+This is particularly the case in projects which have several user interfaces or websites, all of which interact.
+You can test each component individually - but then your tests won't document overall system behaviour.
 
-Worse still, we may need to create a testing environment with each of these processes running
-We'd have to write the code for all of this ourselves, and tie it in to the test lifecycle, somehow.
+To test such a system, you need a way to connect and run steps on several components involved in the test, and a way to manage the testing environment
+Perhaps you even want to build a virtualized environment for the test to run on..
 
-This is where Chorus can help.
+Chorus helps in the following ways:
 
-Chorus provides the ability for a developer to add technical directives to a test feature.
-
-{% highlight gherkin %}
-#! Processes: start traderClient, customerClient
-#! Processes: connect traderClient, customerClient
-Scenario: Book a trade
-  Given my position against Google is $50,000
-  And my quote to sell Google shares is $500
-  When a customer submits an order to 'Buy 100 Google'
-  Then the position for Google in my trader client is 0
-{% endhighlight %}
-
-In the above example we start two processes, and connect to them to run the steps in the test
-
-Perhaps we could create a virtualized environment to run the test by deploying Docker images?
-
-{% highlight gherkin %}
-#! Docker: deploy traderClient, customerClient
-#! Docker: connect traderClient, customerClient
-Scenario: Book a trade
-  Given my position against Google is $50,000
-  And my quote to sell Google is $500
-  When a customer submits an order to 'Buy 100 Google'
-  Then the position in my trader client is 0
-{% endhighlight %}
-
-
-These directives are implemented by special handler classes.
-
-Chorus provides some of these.
-You can easily add others (and share them!)
-
-
-
+* The developers can add test steps to components so they can be called over the network by Chorus
+* The developers can add directives to the test features to manage the testing environment
 
 
 

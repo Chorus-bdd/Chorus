@@ -10,5 +10,6 @@ Chorus is licensed under the MIT license
 ## Questions?
 
 Have questions or suggestions?
+
 Feel free to [open an issue on GitHub](https://github.com/Chorus-bdd/Chorus/issues) or [Use the forum](http://forum.chorusbdd.org/).
 
