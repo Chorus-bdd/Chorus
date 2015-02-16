@@ -1,4 +1,5 @@
 Uses: Processes
+Uses: Remoting
 
 Feature: Remoting With Local Process
 
@@ -21,6 +22,14 @@ Feature: Remoting With Local Process
     And I can get the debug port for Ben from processes manager
     Then I can call a step and get the jmx port from the 18808 handler
     And I can get the debug port for Flowerpot from processes manager
+
+  Scenario: I can run steps using the Remoting handler 'in componentName' suffix without a remoting config
+    Given I start a config1 process named Bill
+    And I start a config1 process named Ben
+    And I start a config1 process named Flowerpot
+    Then I can call a step and get the jmx port from the 18806 handler in Bill
+    Then I can call a step and get the jmx port from the 18807 handler in Ben
+    Then I can call a step and get the jmx port from the 18808 handler in Flowerpot
 
   Scenario: Remoting and debug ports do not auto-increment if no initial port set in template configuration
     Given I start a withoutRemotingOrDebug process named Bill
