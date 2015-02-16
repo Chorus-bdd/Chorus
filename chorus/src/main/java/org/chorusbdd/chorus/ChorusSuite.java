@@ -362,10 +362,8 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
         }
 
         public void run() throws Exception {
-            if ( ! executionListener.isCompleted(featureToken)) {
-                executionListener.awaitScenarioStart();
-                executionListener.awaitScenarioEnd();
-            }
+            executionListener.awaitScenarioStart();
+            executionListener.awaitScenarioEnd();
         }
 
         public boolean isSuccess() {
@@ -394,7 +392,8 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         private CyclicBarrier scenarioBarrier = new CyclicBarrier(2);
 
-        private Set<FeatureToken> completedFeatures = Collections.synchronizedSet(new HashSet<FeatureToken>());
+        private Set<ScenarioToken> completedScenarios = Collections.synchronizedSet(new HashSet<ScenarioToken>());
+
 
         private volatile boolean timedOut = false;
 
@@ -413,11 +412,15 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
             pauseForJUnitOutput();
-            completedFeatures.add(feature);
-            if ( scenarioBarrier.getNumberWaiting() > 1) {
-                //this feature terminated early, the scenario will not run,
-                //usually this happens when we can't find feature-level resources such as a handler class
-                await(scenarioBarrier, 1000, "interrupt scenario");
+            for ( ScenarioToken s : feature.getScenarios()) {
+               if ( ! completedScenarios.contains(s)) {
+                   //The feature terminated early and this scenario did not get run
+                   //usually this happens when we can't find feature-level resources such as a
+                   //handler class.
+                   // Since junit is waiting on the scenario we need to send a start and complete
+                   scenarioStarted(testExecutionToken, s);
+                   scenarioCompleted(testExecutionToken, s);
+               }
             }
             awaitFeatureEnd();
             pauseForJUnitOutput();
@@ -431,6 +434,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
             pauseForJUnitOutput();
+            completedScenarios.add(scenario);
             awaitScenarioEnd();
             pauseForJUnitOutput();
         }
@@ -448,11 +452,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
                 System.out.println("Timed out waiting for " + desc);
                 timedOut = true;
             }
-        }
-
-
-        public boolean isCompleted(FeatureToken featureToken) {
-            return completedFeatures.contains(featureToken);
         }
 
         public void awaitFeatureStart() {
