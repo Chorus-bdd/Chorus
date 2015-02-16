@@ -112,7 +112,7 @@ public class RemotingHandler {
     private Properties getRemotingConfigForComponent(String configName) {
         HandlerConfigLoader handlerConfigLoader = new HandlerConfigLoader();
         Properties p = handlerConfigLoader.getPropertiesForConfigName(configurationManager, "remoting", configName);
-        if ( ! p.containsKey("port")) {
+        if ( ! p.containsKey("port") && ! p.containsKey("connection")) {
             //there is not a full remoting configuration for this config
             //perhaps the process manager knows the details?
             getProcessManagerProperties(configName, p);

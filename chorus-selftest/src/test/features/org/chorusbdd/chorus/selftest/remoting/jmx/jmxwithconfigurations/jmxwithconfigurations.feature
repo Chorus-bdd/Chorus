@@ -5,7 +5,7 @@ Uses: Remoting
 
 Feature: Jmx With Configurations
 
-  Test that configurations work with remoting properties files
+  Test that configurations work with properties files
   In this case the base configuration (used for config1) should fail to connect, the override config2 should work
 
   Scenario: Config Properties Override Main Properties For Jmx Remoting
