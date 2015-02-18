@@ -382,8 +382,8 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     private class JUnitSuiteExecutionListener extends ExecutionListenerAdapter {
 
         long waitForTestStartLimit = Long.parseLong(System.getProperty("chorusJUnitScenarioTimeout", "10"));   //10 seconds
-        long waitForFeatureLimit = Long.parseLong(System.getProperty("chorusJUnitFeatureTimeout", "1200"));    //20 mins
-        long waitForScenarioLimit = Long.parseLong(System.getProperty("chorusJUnitScenarioTimeout", "300"));   //5 mins
+        long waitForFeatureLimit = Long.parseLong(System.getProperty("chorusJUnitFeatureTimeout", "300"));    //5 mins
+        long waitForScenarioLimit = Long.parseLong(System.getProperty("chorusJUnitScenarioTimeout", "600"));   //10 mins
 
         private CyclicBarrier startBarrier = new CyclicBarrier(2);
         private volatile List<FeatureToken> features;

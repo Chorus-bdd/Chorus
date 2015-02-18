@@ -48,11 +48,11 @@ public class JdbcPropertyLoader implements PropertyLoader {
 
     private ChorusLog log = ChorusLogFactory.getLog(JdbcPropertyLoader.class);
 
-    private final String JDBC_DRIVER = "jdbc_driver";
-    private final String JDBC_URL = "jdbc_url";
-    private final String JDBC_USER = "jdbc_user";
-    private final String JDBC_PASSWORD = "jdbc_password";
-    private final String JDBC_SQL = "jdbc_sql";
+    private final String JDBC_DRIVER = "jdbc.driverClassName";
+    private final String JDBC_URL = "jdbc.url";
+    private final String JDBC_USER = "jdbc.username";
+    private final String JDBC_PASSWORD = "jdbc.password";
+    private final String JDBC_SQL = "jdbc.sql";
 
     private Properties jdbcProperties;
 
