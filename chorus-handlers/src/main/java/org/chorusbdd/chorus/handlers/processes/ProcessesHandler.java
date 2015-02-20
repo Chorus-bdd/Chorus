@@ -101,7 +101,7 @@ public class ProcessesHandler {
     }
 
     private Properties getConfig(String configName) {
-        return new HandlerConfigLoader().getPropertiesForConfigName(configurationManager, "processes", configName);
+        return new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "processes", configName);
     }
 
     @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")

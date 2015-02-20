@@ -67,7 +67,7 @@ public class SessionPropertiesHandler {
     }
 
     Properties getProperties() {
-        return new HandlerConfigLoader().getHandlerProperties(configManager, "sessionpropertiestest");
+        return new HandlerConfigLoader().loadProperties(configManager, "sessionpropertiestest");
     }
 
 }

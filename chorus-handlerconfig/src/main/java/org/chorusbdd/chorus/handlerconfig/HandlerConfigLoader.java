@@ -18,7 +18,7 @@ public class HandlerConfigLoader {
      * myHandler.property1=val
      * myHandler.property2=val
      */
-    public Properties getHandlerProperties(ConfigurationManager configurationManager, String handlerPrefix) {
+    public Properties loadProperties(ConfigurationManager configurationManager, String handlerPrefix) {
         PropertyOperations allproperties = properties(configurationManager.getAllProperties());
 
         PropertyOperations handlerProps = allproperties.filterByAndRemoveKeyPrefix(handlerPrefix + ".");
@@ -39,11 +39,11 @@ public class HandlerConfigLoader {
      *
      * myHandler.default.property1=val
      */
-    public Properties getPropertiesForConfigName(ConfigurationManager configurationManager, String handlerPrefix, String configName) {
-        PropertyOperations handlerProps = properties(getHandlerProperties(configurationManager, handlerPrefix));
+    public Properties loadPropertiesForSubGroup(ConfigurationManager configurationManager, String handlerPrefix, String groupName) {
+        PropertyOperations handlerProps = properties(loadProperties(configurationManager, handlerPrefix));
 
         PropertyOperations defaultProps = handlerProps.filterByAndRemoveKeyPrefix(ChorusConstants.DEFAULT_PROPERTIES_GROUP + ".");
-        PropertyOperations configProps = handlerProps.filterByAndRemoveKeyPrefix(configName + ".");
+        PropertyOperations configProps = handlerProps.filterByAndRemoveKeyPrefix(groupName + ".");
 
         PropertyOperations merged = defaultProps.merge(configProps);
         return merged.loadProperties();

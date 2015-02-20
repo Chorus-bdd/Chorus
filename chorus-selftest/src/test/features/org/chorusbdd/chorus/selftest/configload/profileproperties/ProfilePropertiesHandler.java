@@ -78,7 +78,7 @@ public class ProfilePropertiesHandler {
     }
 
     Properties getProperties() {
-        return new HandlerConfigLoader().getHandlerProperties(configManager, "profilePropertiesHandler");
+        return new HandlerConfigLoader().loadProperties(configManager, "profilePropertiesHandler");
     }
 
 }
