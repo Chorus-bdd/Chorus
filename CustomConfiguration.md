@@ -5,40 +5,50 @@ title: Custom Configuration
 
 If you write your own handler classes you can configure them with property files in the same manner as Chorus' built in handlers
 
-There are two ways to do this:
+You can use the utility `HandlerConfigLoader` to load properties from the standard locations detailed in [HandlerConfiguration](/HandlerConfiguration)
 
-##Read a properties file directly##
+### ConfigurationManager ###
 
-Using this method you can read a standard Java properties file from the local directory where your feature file is.
+The properties are loaded using Chorus' ConfigurationManager subsystem.
+You need to obtain this by annotating a field in your Handler class:
 
-With this method you access the Java Properties object directly.
+    @ChorusResource("subsystem.configurationManager")
+    private ConfigurationManager configurationManager;
 
-The built in handler classes validate these properties and convert them to a handler-specific config class.
-The 2.0.x release will provide a documented way for you to leverage this mechanism, but it is not so easy in 1.6.x
+When Chorus initializes your handlers for a test feature it will inject the ConfigurationManager into your handler.
 
-This method also doesn't allow you to set default values in a chorus.properties file
 
-    @Handler("LoadMyPropertiesHandler")
-    public class LoadMyPropertiesHandler {
+### Getting properties for a custom Handler ###
 
-        private Properties myProperties = new Properties();
+Once you have the ConfigurationManager, getting properties is very simple:
 
-        //use the following annotation on a field in your handler
-        //Chorus will initialize this with the feature directory
-        @ChorusResource("feature.dir")
-        File featureDir;
+    Properties handlerProperties = new HandlerConfigLoader().loadProperties(configurationManager, "myHandlerName");
 
-        //when the handler is initialized, load the properties
-        @Initialize
-        public void readConfig() throws IOException {
-            myProperties.load(new FileInputStream(new File(featureDir, "myProperties.properties")));
-        }
-    }
+This would load any properties prefixed with 'myHandlerName.'
 
-##Full framework support##
+### Getting properties for a handler which supports sub-configurations ###
 
-Chorus 2.0.x allows you to provide your own handler config classes and have them initialized and validated in the same manner as the built in handlers.
-More documentation on this to follow with the 2.0.0 release
+Sometimes a handler requires sub-configurations or sub-groups of properties
+For example, the built in Processes handler supports setting a group of properties for each named process:
+
+    processes.processOne.mainClass=org.myorg.MyClass
+    processes.processOne.remotingPort = 2345
+
+    processes.processTwo.mainClass=org.myorg.MyClass2
+    processes.processTwo.remotingPort = 3456
+
+    #defaults for all processes
+    processes.default.logging = true
+
+It's very easy to load properties for a named group with the HandlerConfigLoader:
+
+e.g. to load process properties for myProcessOne:
+
+    Properties processOneProps = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "processes", "processOne');
+
+If you load properties this way, Chorus also takes care of applying any defaults set in a 'default' group if present
+
+
 
 
 
