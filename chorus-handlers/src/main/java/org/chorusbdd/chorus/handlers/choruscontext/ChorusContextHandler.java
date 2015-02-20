@@ -33,13 +33,11 @@ import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
-import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -58,7 +56,7 @@ public class ChorusContextHandler {
 
     @Initialize(scope = Scope.SCENARIO)
     public void initializeContextVariables() {
-        Properties p = new HandlerConfigLoader().getHandlerProperties(configurationManager, "context");
+        Properties p = new HandlerConfigLoader().loadProperties(configurationManager, "context");
         for ( Map.Entry e : p.entrySet()) {
             ChorusContext.getContext().put(e.getKey().toString(), e.getValue().toString());
         }
