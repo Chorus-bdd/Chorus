@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilder;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -209,18 +209,20 @@ public class ProcessesHandler {
      */
     Properties getRemotingConfig(String processName) {
         RemotingConfigBuilder result = null;
-        ProcessManagerConfig processInfo = processManager.getProcessInfo(processName);
-        if ( processInfo == null) {
+        Properties processProps = processManager.getProcessProperties(processName);
+        if ( processProps == null) {
             fail("Process " + processName + " is not running");
         }
 
-        if ( processInfo.getRemotingPort() == -1) {
+        int remotingPort = Integer.parseInt(processProps.getProperty(ProcessesConfigBeanFactory.remotingPort));
+        String scope = processProps.getProperty(ProcessesConfigBeanFactory.scope);
+
+        if ( remotingPort == -1) {
             fail("Cannot connect " + processName + " unknown remoting port");
         }
-
         Properties remotingProps = new Properties();
-        remotingProps.put("connection", "jmx:localhost:" + processInfo.getRemotingPort());
-        remotingProps.put("scope", processInfo.getProcessScope());
+        remotingProps.put("connection", "jmx:localhost:" + remotingPort);
+        remotingProps.put("scope", scope);
         return remotingProps;
     }
 

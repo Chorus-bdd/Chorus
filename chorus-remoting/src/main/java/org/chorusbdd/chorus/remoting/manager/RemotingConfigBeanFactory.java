@@ -60,19 +60,19 @@ public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory impleme
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
 
-            if ("protocol".equalsIgnoreCase(key)) {
+            if ("protocol".equals(key)) {
                 r.setProtocol(value);
-            } else if ("host".equalsIgnoreCase(key)) {
+            } else if ("host".equals(key)) {
                 r.setHost(value);
-            } else if ("port".equalsIgnoreCase(key)) {
+            } else if ("port".equals(key)) {
                 r.setPort(parseIntProperty(value, "port"));
-            } else if ("scope".equalsIgnoreCase(key)) {
+            } else if ("scope".equals(key)) {
                 r.setScope(parseScope(value));
-            } else if ("connectionAttempts".equalsIgnoreCase(key)) {
+            } else if ("connectionAttempts".equals(key)) {
                 r.setConnnectionAttempts(parseIntProperty(value, "connectionAttempts"));
-            } else if ("connectionAttemptMillis".equalsIgnoreCase(key)) {
+            } else if ("connectionAttemptMillis".equals(key)) {
                 r.setConnectionAttemptMillis(parseIntProperty(value, "connectionAttemptMillis"));
-            } else if ( "connection".equalsIgnoreCase(key)) {
+            } else if ( "connection".equals(key)) {
                 String[] vals = String.valueOf(value).split(":");
                 if (vals.length != 3) {
                     throw new ChorusException(

@@ -51,7 +51,13 @@ public interface ProcessManager extends Subsystem {
 
     void stopAllProcesses();
 
-    ProcessManagerConfig getProcessInfo(String processName);
+    /**
+     * Get a Properties object representing the configuration of a process
+     * This is a copy of the config in use, changing it will have no impact on the process
+     *
+     * @return a Properties object or null if the process manager is not managing processName
+     */
+    Properties getProcessProperties(String processName);
 
     void checkProcessHasStopped(String processName);
 

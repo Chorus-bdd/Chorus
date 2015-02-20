@@ -143,7 +143,7 @@ public class ChorusInterpreter {
                 executionToken.incrementFeaturesFailed();
             }
         } else {
-            log.warn("The following handlers were not available, failing feature " + feature.getName());
+            log.warn("The following handlers were not available, failing feature " + feature.getName() + " " + unavailableHandlersMessage);
             feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
             executionToken.incrementUnavailableHandlers();
             executionToken.incrementFeaturesFailed();

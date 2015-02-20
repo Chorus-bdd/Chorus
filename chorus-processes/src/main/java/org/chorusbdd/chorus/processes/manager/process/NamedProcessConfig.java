@@ -32,6 +32,9 @@ package org.chorusbdd.chorus.processes.manager.process;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
+
+import java.util.Properties;
 
 /**
  * Represents a running process
@@ -139,6 +142,10 @@ public class NamedProcessConfig implements ProcessManagerConfig {
 
     public boolean isJavaProcess() {
         return processManagerConfig.isJavaProcess();
+    }
+
+    public Properties getProperties() {
+        return new ProcessesConfigBeanFactory().getProperties(processManagerConfig);
     }
 
     @Override

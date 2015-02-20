@@ -59,8 +59,8 @@ public class ProcessesConfigBuilder implements ProcessManagerConfig {
     private String jvmargs;
     private String mainclass;
     private String args;
-    private OutputMode stdOutMode = OutputMode.INLINE;
-    private OutputMode stdErrMode = OutputMode.INLINE;
+    private OutputMode stdOutMode = OutputMode.FILE;
+    private OutputMode stdErrMode = OutputMode.FILE;
     private int terminateWaitTime = 30;
     private String logDirectory;
     private boolean appendToLogs;

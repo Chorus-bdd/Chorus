@@ -33,8 +33,9 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
+
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,8 +50,8 @@ public class RemotingWithLocalProcessHandler extends ChorusAssert{
     ProcessManager processManager;
 
     @Step("I can get the (debug port|jmx port) for (.*) from processes manager")
-    public int checkDebugPort(String property, String processName) {
-        ProcessManagerConfig processConfig = processManager.getProcessInfo(processName);
-        return "debug port".equals(property) ? processConfig.getDebugPort() : processConfig.getRemotingPort();
+    public String checkDebugPort(String property, String processName) {
+        Properties processConfig = processManager.getProcessProperties(processName);
+        return "debug port".equals(property) ? processConfig.getProperty("debugPort") : processConfig.getProperty("remotingPort");
     }
 }

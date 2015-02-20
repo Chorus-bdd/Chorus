@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 
@@ -112,7 +112,7 @@ public class RemotingHandler {
     private Properties getRemotingConfigForComponent(String configName) {
         HandlerConfigLoader handlerConfigLoader = new HandlerConfigLoader();
         Properties p = handlerConfigLoader.getPropertiesForConfigName(configurationManager, "remoting", configName);
-        if ( ! p.containsKey("port") && ! p.containsKey("connection")) {
+        if (! p.containsKey("port") && ! p.containsKey("connection")) {
             //there is not a full remoting configuration for this config
             //perhaps the process manager knows the details?
             getProcessManagerProperties(configName, p);
@@ -121,12 +121,12 @@ public class RemotingHandler {
     }
 
     private void getProcessManagerProperties(String configName, Properties p) {
-        ProcessManagerConfig processManagerConfig = processManager.getProcessInfo(configName);
+        Properties processManagerConfig = processManager.getProcessProperties(configName);
         if ( processManagerConfig != null) {
-            p.setProperty(
-                "connection",
-                "jmx:localhost:" + processManagerConfig.getRemotingPort()
-            );
+            String port = processManagerConfig.getProperty(ProcessesConfigBeanFactory.remotingPort);
+            if ( ! "-1".equals(port)) {
+                p.setProperty("connection","jmx:localhost:" + port);
+            }
         }
     }
 

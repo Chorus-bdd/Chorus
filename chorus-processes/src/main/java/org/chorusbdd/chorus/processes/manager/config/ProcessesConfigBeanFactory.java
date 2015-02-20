@@ -49,6 +49,26 @@ import java.util.Properties;
  */
 public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<ProcessesConfigBuilder> {
 
+    public static final String pathToExecutable = "pathToExecutable";
+    public static final String jre = "jre";
+    public static final String classpath = "classpath";
+    public static final String args = "args";
+    public static final String jvmargs = "jvmargs";
+    public static final String mainclass = "mainclass";
+    public static final String remotingPort = "remotingPort";
+    public static final String debugPort = "debugPort";
+    public static final String terminateWaitTime = "terminateWaitTime";
+    public static final String logging = "logging";
+    public static final String logDirectory = "logDirectory";
+    public static final String appendToLogs = "appendToLogs";
+    public static final String createLogDir = "createLogDir";
+    public static final String processCheckDelay = "processCheckDelay";
+    public static final String stdErrMode = "stdErrMode";
+    public static final String stdOutMode = "stdOutMode";
+    public static final String readTimeoutSeconds = "readTimeoutSeconds";
+    public static final String scope = "scope";
+
+
     private ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
 
     public ProcessesConfigBuilder createConfig(Properties p, String configName) {
@@ -66,66 +86,96 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-            if ("pathToExecutable".equalsIgnoreCase(key)) {
+            if (pathToExecutable.equals(key)) {
                 c.setPathToExecutable(value);
-            } else if ("jre".equalsIgnoreCase(key)) {
+            } else if (jre.equals(key)) {
                 c.setJre(value);
-            } else if ("classpath".equalsIgnoreCase(key)) {
+            } else if (classpath.equals(key)) {
                 c.setClasspath(value);
-            } else if ("args".equalsIgnoreCase(key)) {
+            } else if (args.equals(key)) {
                 c.setArgs(value);
-            } else if ("jvmargs".equalsIgnoreCase(key)) {
+            } else if (jvmargs.equals(key)) {
                 c.setJvmargs(value);
-            } else if ("mainclass".equalsIgnoreCase(key)) {
+            } else if (mainclass.equals(key)) {
                 c.setMainclass(value);
-            } else if ("jmxport".equalsIgnoreCase(key)) {
+            } else if ("jmxPort".equals(key)) {
                 //jmxport is is deprecated, use remotingPort
-                int jmxport = parseIntProperty(value, "jmxport");
+                int jmxport = parseIntProperty(value, "jmxPort");
                 c.setRemotingPort(jmxport);
-            } else if ("remotingPort".equalsIgnoreCase(key)) {
-                int remotingPort = parseIntProperty(value, "remotingPort");
-                c.setRemotingPort(remotingPort);
-            } else if ("debugport".equalsIgnoreCase(key)) {
-                int debugport = parseIntProperty(value, "debugport");
-                c.setDebugPort(debugport);
-            } else if ("terminateWaitTime".equalsIgnoreCase(key)) {
-                c.setTerminateWaitTime(parseIntProperty(value, "terminateWaitTime"));
-            } else if ("logging".equalsIgnoreCase(key)) {
+            } else if (remotingPort.equals(key)) {
+                int rp = parseIntProperty(value, remotingPort);
+                c.setRemotingPort(rp);
+            } else if (debugPort.equals(key)) {
+                int dp = parseIntProperty(value, debugPort);
+                c.setDebugPort(dp);
+            } else if (terminateWaitTime.equals(key)) {
+                c.setTerminateWaitTime(parseIntProperty(value, terminateWaitTime));
+            } else if (logging.equals(key)) {
                 //we still support logging property as an alternative to stdOutMode and stdErrMode
                 //if true, both process std out and error go to a file, if false inline
-                Boolean b = parseBooleanProperty(value, "logging");
+                Boolean b = parseBooleanProperty(value, logging);
                 OutputMode m = b ? OutputMode.FILE : OutputMode.INLINE;
                 c.setStdErrMode(m);
                 c.setStdOutMode(m);
-            } else if ("logDirectory".equalsIgnoreCase(key)) {
+            } else if (logDirectory.equals(key)) {
                 c.setLogDirectory(value);
-            } else if ("appendToLogs".equalsIgnoreCase(key)) {
-                c.setAppendToLogs(parseBooleanProperty(value, "appendToLogs"));
-            } else if ("createLogDir".equalsIgnoreCase(key)) {
-                c.setCreateLogDir(parseBooleanProperty(value, "createLogDir"));
-            } else if ( "processCheckDelay".equalsIgnoreCase(key)) {
-                c.setProcessCheckDelay(parseIntProperty(value, "processCheckDelay"));
-            } else if ( "stdErrMode".equalsIgnoreCase(key)) {
-                c.setStdErrMode(parseOutputMode(value, "stdErrMode"));
-            } else if ( "stdOutMode".equalsIgnoreCase(key)) {
-                c.setStdOutMode(parseOutputMode(value, "stdOutMode"));
-            } else if ("readAheadBufferSize".equalsIgnoreCase(key)) {
+            } else if (appendToLogs.equals(key)) {
+                c.setAppendToLogs(parseBooleanProperty(value, appendToLogs));
+            } else if (createLogDir.equals(key)) {
+                c.setCreateLogDir(parseBooleanProperty(value, createLogDir));
+            } else if ( processCheckDelay.equals(key)) {
+                c.setProcessCheckDelay(parseIntProperty(value, processCheckDelay));
+            } else if ( stdErrMode.equals(key)) {
+                c.setStdErrMode(parseOutputMode(value, stdErrMode));
+            } else if ( stdOutMode.equals(key)) {
+                c.setStdOutMode(parseOutputMode(value, stdOutMode));
+            } else if ("readAheadBufferSize".equals(key)) {
                 log.warn("Property readAheadBufferSize is no longer supported from version 2.x");
-            } else if ("readTimeoutSeconds".equalsIgnoreCase(key)) {
-                c.setReadTimeoutSeconds(parseIntProperty(value, "readTimeoutSeconds"));
-            } else if ("scope".equalsIgnoreCase(key)) {
+            } else if (readTimeoutSeconds.equals(key)) {
+                c.setReadTimeoutSeconds(parseIntProperty(value, readTimeoutSeconds));
+            } else if (scope.equals(key)) {
                 c.setProcessScope(parseScope(value));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }
         }
+
     }
+
+    public Properties getProperties(ProcessManagerConfig processConfig) {
+        Properties p = new Properties();
+        addIfSet(p, pathToExecutable, processConfig.getPathToExecutable());
+        addIfSet(p, jre, processConfig.getJre());
+        addIfSet(p, classpath, processConfig.getClasspath());
+        addIfSet(p, args, processConfig.getArgs());
+        addIfSet(p, jvmargs, processConfig.getJvmargs());
+        addIfSet(p, mainclass, processConfig.getMainclass());
+        p.setProperty(remotingPort, String.valueOf(processConfig.getRemotingPort()));
+        p.setProperty(debugPort, String.valueOf(processConfig.getDebugPort()));
+        p.setProperty(terminateWaitTime, String.valueOf(processConfig.getTerminateWaitTime()));
+        addIfSet(p, logDirectory, processConfig.getLogDirectory());
+        p.setProperty(appendToLogs, String.valueOf(processConfig.isAppendToLogs()));
+        p.setProperty(createLogDir, String.valueOf(processConfig.isCreateLogDir()));
+        p.setProperty(processCheckDelay, String.valueOf(processConfig.getProcessCheckDelay()));
+        p.setProperty(stdErrMode, processConfig.getStdErrMode().name());
+        p.setProperty(stdOutMode, processConfig.getStdOutMode().name());
+        p.setProperty(readTimeoutSeconds, String.valueOf(processConfig.getReadTimeoutSeconds()));
+        p.setProperty(scope, processConfig.getProcessScope().name());
+        return p;
+    }
+
+    private void addIfSet(Properties p, String propertyKey, String value) {
+        if ( value != null) {
+            p.setProperty(propertyKey, value);
+        }
+    }
+
 
     private static OutputMode parseOutputMode(String value, String propertyName) {
         OutputMode l = OutputMode.valueOf(value.toUpperCase().trim());
         if ( l == null) {
             throw new ChorusException(
-                "Failed to parse property " + propertyName + " with value '" + value + "', shoud be one of: " 
+                "Failed to parse property " + propertyName + " with value '" + value + "', should be one of: "
                 + Arrays.asList(OutputMode.values())
             );
         }

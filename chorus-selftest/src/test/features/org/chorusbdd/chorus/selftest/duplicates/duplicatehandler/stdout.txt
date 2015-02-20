@@ -1,6 +1,6 @@
 Feature: Duplicate Handlers                                                                          
 Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/duplicates/duplicatehandler/duplicatehandler.feature
-Chorus --> WARN    - The following handlers were not available, failing feature Duplicate Handlers
+Chorus --> WARN    - The following handlers were not available, failing feature Duplicate Handlers Duplicate Handlers [Duplicate Handlers] org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerTwo and org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerOne
 Duplicate Handlers [Duplicate Handlers] org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerTwo and org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerOne
 
 

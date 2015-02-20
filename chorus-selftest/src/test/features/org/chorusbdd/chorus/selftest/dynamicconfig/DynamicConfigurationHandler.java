@@ -54,7 +54,7 @@ public class DynamicConfigurationHandler {
     public void addProcessConfig(int port, String processConfigName)  {
         String mainclass = "org.chorusbdd.chorus.selftest.dynamicconfig.DynamicProcess";
         Properties p = new Properties();
-        p.setProperty("processes." + processConfigName + ".mainClass", mainclass);
+        p.setProperty("processes." + processConfigName + ".mainclass", mainclass);
         p.setProperty("processes." + processConfigName + ".remotingPort", String.valueOf(port));
         p.setProperty("processes." + processConfigName + ".stdOutMode", "FILE");
         p.setProperty("processes." + processConfigName + ".stdErrMode", "FILE");
