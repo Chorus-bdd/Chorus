@@ -28,7 +28,8 @@ This would load any properties prefixed with 'myHandlerName.'
 
 ### Getting properties for a handler which supports sub-configurations ###
 
-Sometimes a handler requires sub-configurations or sub-groups of properties
+Sometimes a handler requires sub-configurations or sub-groups of properties.
+
 For example, the built in Processes handler supports setting a group of properties for each named process:
 
     processes.processOne.mainClass=org.myorg.MyClass
