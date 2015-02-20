@@ -31,6 +31,8 @@ package org.chorusbdd.chorus.handlers.choruscontext;
 
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
@@ -38,6 +40,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -49,24 +53,15 @@ import java.util.concurrent.atomic.AtomicLong;
 @Handler(value = "Chorus Context", scope= Scope.FEATURE)
 public class ChorusContextHandler {
 
-    @ChorusResource("scenario.token")
-    ScenarioToken scenarioToken;
-
-    //store context variables from the feature start section and use these to seed each scenario
-    private HashMap<String, Object> featureStartVariables = new HashMap<String, Object>();
-
-    //when the special Feature-Start: scenario ends we preserve the variables in the context and use them to seed
-    //the context for each of the scenarios.
-    @Destroy(scope = Scope.SCENARIO)
-    public void captureFeatureStartVariablesOnFeatureStartEnd() {
-        if ( scenarioToken.isFeatureStartScenario() ) {
-            featureStartVariables.putAll(ChorusContext.getContext());
-        }
-    }
+    @ChorusResource("subsystem.configurationManager")
+    private ConfigurationManager configurationManager;
 
     @Initialize(scope = Scope.SCENARIO)
-    public void initializeWithFeatureStartVariables() {
-        ChorusContext.getContext().putAll(featureStartVariables);
+    public void initializeContextVariables() {
+        Properties p = new HandlerConfigLoader().getHandlerProperties(configurationManager, "context");
+        for ( Map.Entry e : p.entrySet()) {
+            ChorusContext.getContext().put(e.getKey().toString(), e.getValue().toString());
+        }
     }
 
     @Step("the context has no values in it")

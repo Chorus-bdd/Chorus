@@ -1,0 +1,11 @@
+Feature: Check Chorus Context Handler                                                                
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/choruscontext/contextproperties/contextproperties.feature
+  Scenario: Check I can set context variables from the property files
+Chorus --> INFO    - Processing scenario: Check I can set context variables from the property files
+    Check variable propertyOne has the value propertyOneValue                                PASSED  
+    Check variable propertyTwo has the value propertyTwoValue                                PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)
