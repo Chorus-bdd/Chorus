@@ -28,6 +28,8 @@ github:
 
 gems: [jekyll_github_sample]
 
-include:          ['_pages']
+include:          ['pages']
 
 nodename:         ChorusBDDNode
+servname:         ChorusBDDNode
+
