@@ -1,4 +1,4 @@
-Chorus provides a [[built in handler|BuiltInHandlers]] called `Timers`
+Chorus provides a [built in handler](BuiltInHandlers) called `Timers`
 
 You can use this by adding the following to the top of your feature file:
 
@@ -22,7 +22,7 @@ In most cases, where you are considering using a sleep, you would be better off 
 Using @PassesWithin you can annotate a step method to run repeatedly for a period of time, waiting for assertions to be satisfied.
 This approach can make your features run more quickly, and be less prone to make your tests fail due to timing-related issues.
 
-See [[Handler Classes|HandlerClasses]] for examples of @PassesWithin
+See [Handler Classes](HandlerClasses) for examples of @PassesWithin
 
 ##Some other examples##
 

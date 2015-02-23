@@ -190,7 +190,7 @@ This field will then have its value set at the start of each scenario:
 
 You can store values in the ChorusContext in step methods.
 These values are accessible ChorusContext to subsequent step methods, whether locally or remotely executed:
-See also [[Chorus Context|ChorusContext]]
+See also [Chorus Context](ChorusContext)
 
         @Step("I store the result") 
         public void storeTheResult() {
