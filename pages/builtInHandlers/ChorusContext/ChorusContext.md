@@ -1,4 +1,9 @@
-When you run a simple (i.e. not distributed) chorus feature, all your steps execute in the same java process. 
+---
+layout: page
+title: Chorus Context
+---
+
+When you run a simple (i.e. not distributed) chorus feature, all your steps execute in the same java process.
 This means you can make changes to field values during a step which are then visible when subsequent steps are executed.
 
 This doesn't work so well with distributed testing. Values in memory in the interpreter will not be visible to your remote components. Hence there is a need for a mechanism which allows state to be shared between handlers both locally and remotely - that mechanism is called the ChorusContext.  

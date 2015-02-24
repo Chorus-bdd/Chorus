@@ -5,7 +5,7 @@ title: Custom Configuration
 
 If you write your own handler classes you can configure them with property files in the same manner as Chorus' built in handlers
 
-You can use the utility `HandlerConfigLoader` to load properties from the standard locations detailed in [HandlerConfiguration](pages/handlers/HandlerConfiguration)
+You can use the utility `HandlerConfigLoader` to load properties from the standard locations detailed in [HandlerConfiguration](/pages/Handlers/HandlerConfiguration)
 
 ### ConfigurationManager ###
 
@@ -14,6 +14,7 @@ You need to obtain this by annotating a field in your Handler class:
 
     @ChorusResource("subsystem.configurationManager")
     private ConfigurationManager configurationManager;
+
 
 When Chorus initializes your handlers for a test feature it will inject the ConfigurationManager into your handler.
 

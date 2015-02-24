@@ -18,9 +18,9 @@ The best way to get started is to [download and run the tests in the demo projec
 At this point your tests will run, but they will fail because you have not yet provided an implementation.
 
 To make the features pass, supply java classes which implement the test steps in your feature files.
-These classes are called ['Handler' classes](pages/handlers/HandlerClasses)
+These classes are called ['Handler' classes](/pages/Handlers/HandlerClasses)
 
-Chorus also provides some [Built In Handlers](pages/builtInHandlers/BuiltInHandlers).
+Chorus also provides some [Built In Handlers](/pages/BuiltInHandlers/BuiltInHandlers).
 These provide support for local process control and connecting to run steps on components across the network
 
 You will need to provide your own `Handler` classes to implement your own test steps.

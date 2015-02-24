@@ -1,3 +1,8 @@
+---
+layout: page
+title: Feature Start and End
+---
+
 In an ideal world, all scenario should start from a clean slate with no previous set up performed.
 
 This is desirable to ensure there are no preconditions or ordering which can lead to the success and failure of any given scenario.  

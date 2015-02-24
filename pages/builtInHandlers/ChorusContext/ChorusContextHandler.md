@@ -1,6 +1,11 @@
-Chorus provides a [built in handler](pages/builtInHandlers/BuiltInHandlers) called `ChorusContext`
+---
+layout: page
+title: Chorus Context Handler
+---
 
-This handler is used to view or manipulate variables stored within the [Chorus Context](pages/builtInHandlers/ChorusContext/ChorusContext)
+Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) called `ChorusContext`
+
+This handler is used to view or manipulate variables stored within the [Chorus Context](/pages/BuiltInHandlers/ChorusContext/ChorusContext)
 
 To use the handler, add `Uses: ChorusContext` to the top of your feature file.
 
@@ -24,7 +29,7 @@ The ChorusContext handler gives you the ability to view and manipulate these dir
 
 ## Chorus Context with Feature-Start: ##
 
-The ChorusContext handler has some special support for [Feature-Start: scenarios](pages/LanguageExtensions/FeatureStartAndEnd)
+The ChorusContext handler has some special support for [Feature-Start: scenarios](/pages/LanguageExtensions/FeatureStartAndEnd)
 
 It is often useful to pre-populate the context with variables during Feature-Start: and have these made available
 to all subsequent scenarios.

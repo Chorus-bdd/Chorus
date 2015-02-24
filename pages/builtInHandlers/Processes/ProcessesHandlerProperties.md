@@ -1,6 +1,11 @@
+---
+layout: page
+title: Processes Handler Properties
+---
+
 The processes handler allows you to set the following properties for each of your processes
 
-You can also set defaults and override them locally for a specific feature, see [Handler Configuration](pages/handlers/HandlerConfiguration)
+You can also set defaults and override them locally for a specific feature, see [Handler Configuration](/pages/Handlers/HandlerConfiguration)
 
 These properties can be set in a chorus.properties file (or myfeature.properties file) in the same directory as your feature file, e.g.:
 

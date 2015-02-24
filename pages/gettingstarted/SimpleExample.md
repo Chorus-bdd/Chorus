@@ -67,7 +67,7 @@ Then the java handler class:
         }
     }
 
-Look here for some [notes on writing handler classes](pages/handlers/HandlerClasses)
+Look here for some [notes on writing handler classes](/pages/Handlers/HandlerClasses)
 
 Here's the Calculator class itself:
 

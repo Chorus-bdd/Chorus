@@ -41,4 +41,4 @@ I can override the default by setting a value for a specific component
 
 Chorus' built in handlers load their own properties, see the handler documentation for a description of these.
 
-If you want to load properties from your own handler classes, see [Custom Configuration](pages/handlers/CustomConfiguration)
+If you want to load properties from your own handler classes, see [Custom Configuration](/pages/Handlers/CustomConfiguration)

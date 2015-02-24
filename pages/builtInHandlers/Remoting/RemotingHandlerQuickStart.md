@@ -1,3 +1,8 @@
+---
+layout: page
+title: Remoting Handler Quick Start
+---
+
 Let's pretend we have an integration test environment all ready to run some tests. We wish to write a feature which tests components are interacting in the way we expect.
 
 One component is a user interface which traders user to Buy stocks. This component is called *traderUI*. We want Chorus to remotely click the 'Buy' button as a step in our test feature
@@ -86,7 +91,7 @@ Now we can click the buy button on testUI, we may wish to check the effect this 
 
 **More about Remoting properties**
 
-For all the supported RemotingHandler properties see [Remoting Handler Properties](pages/builtInHandlers/Remoting/RemotingHandlerProperties)
+For all the supported RemotingHandler properties see [Remoting Handler Properties](/pages/BuiltInHandlers/Remoting/RemotingHandlerProperties)
 
 If you want to share remoting properties between all your features you can add their connectivity details to a chorus.properties at the top level on your classpath. Here you could list all your UAT components, for example, so you don't need to keep repeating yourself.
 

@@ -1,3 +1,8 @@
+---
+layout: page
+title: Remoting Handler Example
+---
+
 Chorus is a futuristic test framework, so let's go with a fun and futuristic example..
 
 Let's assume I'm trying to test the systems on a spacecraft.
@@ -26,7 +31,7 @@ To call steps on each of these components we are using the built in Chorus 'Remo
 
 ### What do we need to do to make this work? ###
 
-The first thing is to [write Handler classes](pages/handlers/HandlerClasses) for each component, [and export them](pages/builtInHandlers/Remoting/RemotingHandlerQuickStart) 
+The first thing is to [write Handler classes](/pages/Handlers/HandlerClasses) for each component, [and export them](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart) 
 
 a) Write a NavigationHandler for the navigation process, and export it:
 
@@ -73,7 +78,7 @@ First we need to export the handlers from each of our components, and start up a
 
 What we will end up with is the feature file (e.g. cylonBaseShipAttack.feature) next to a properties file (e.g. cylonBaseShipAttack.properties). 
 
-See [Remoting Handler Quick Start](pages/builtInHandlers/Remoting/RemotingHandlerQuickStart) for the details of how to set this up
+See [Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart) for the details of how to set this up
 
 The properties file contains three properties which tell the Chorus interpreter which server and port to connect to for each of our distributed components:
 
@@ -88,6 +93,6 @@ This is a real-time distributed system we are testing and we assume there are me
 
 In our integration testing environment, we can test these responses are correct by sending a message to the navigation and tactical components, and asking them to temporarily change their published state. i.e. We are asking these components to publish mock data, to simulate a real condition occurring, so that we can test the outcome in the weapons control process.
 
-Since we are using message feeds there are latencies involved. The messages from the navigation and tactical components may take some time to arrive at weaponsControl. That's why we have used the [@PassesWithin](pages/builtInHandlers/Remoting/PassesWithinAnnotation) annotation in the weapons control step. This polls the method for a limited period, waiting for the assertion (shields are up) to be satisfied, instead of failing immediately if there is a small delay.
+Since we are using message feeds there are latencies involved. The messages from the navigation and tactical components may take some time to arrive at weaponsControl. That's why we have used the [@PassesWithin](/pages/BuiltInHandlers/Remoting/PassesWithinAnnotation) annotation in the weapons control step. This polls the method for a limited period, waiting for the assertion (shields are up) to be satisfied, instead of failing immediately if there is a small delay.
 
    

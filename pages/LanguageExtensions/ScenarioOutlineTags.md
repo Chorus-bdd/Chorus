@@ -1,3 +1,7 @@
+---
+layout: page
+title: Scenario Outline Tags
+---
 
 Chorus supports Scenario-Outline:, and this can be used in an identical way to the standard Gherkin usage in Cucumber and other frameworks.
 e.g.

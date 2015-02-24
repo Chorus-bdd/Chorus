@@ -1,4 +1,9 @@
-When testing a distributed system it is frequently necessary to wait for a message to be sent, received and processed in one or or more components before a step will pass. 
+---
+layout: page
+title: Passes Within Annotation
+---
+
+When testing a distributed system it is frequently necessary to wait for a message to be sent, received and processed in one or or more components before a step will pass.
 
 Have you seen features which look like this?
 

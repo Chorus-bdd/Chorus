@@ -1,3 +1,8 @@
+---
+layout: page
+title: Step Macro
+---
+
 There are times when you find yourself repeating yourself when writing features
 
 For example, I have a scenario in which I fill in a log in form, entering username, password and clicking the OK button  

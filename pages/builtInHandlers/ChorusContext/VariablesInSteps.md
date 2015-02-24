@@ -1,3 +1,8 @@
+---
+layout: page
+title: Variables In Steps
+---
+
 Once a variable has been stored in the ChorusContext you can refer to it in a test step
 To do this surround the variable name with ${ }, just like a variable in a shell script
 

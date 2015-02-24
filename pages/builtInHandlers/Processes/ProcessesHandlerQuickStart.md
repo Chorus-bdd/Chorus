@@ -1,4 +1,9 @@
-Let's imagine you are writing a feature called Publisher Test  
+---
+layout: page
+title: Processes Handler Quick Start
+---
+
+Let's imagine you are writing a feature called Publisher Test
 This has a scenario in which you want to start a publisher process, which publishes some messages.
 
 ###Create a feature file and import the Processes Handler###
@@ -39,7 +44,7 @@ For a Java process, you must set a property for the main class of your process a
 
 The new process will use the same JVM and classpath as the chorus interpreter, but you can override these by setting other properties.
 
-For a full list of processes properties see [Processes Properties](pages/builtInHandlers/Processes/ProcessesHandlerProperties)
+For a full list of processes properties see [Processes Properties](/pages/BuiltInHandlers/Processes/ProcessesHandlerProperties)
 
 
 ###Starting the same process under different names###
@@ -64,7 +69,7 @@ e.g. `processes.publisher.scope=feature`
 
 Then the process will not be stopped until feature end.
 
-If you do this it makes sense to start the process during Chorus' [Feature-Start:](pages/LanguageExtensions/FeatureStartAndEnd) section, which is a special scenario which always gets run before any others in the feature.
+If you do this it makes sense to start the process during Chorus' [Feature-Start:](/pages/LanguageExtensions/FeatureStartAndEnd) section, which is a special scenario which always gets run before any others in the feature.
 
 
 ###Waiting for a process to terminate###
@@ -144,7 +149,7 @@ If you want all your processes to log to the same directory, you could set a def
     processes.default.logDirectory=${user.dir}/test/chorus/logs
 
 Now all processes will log into the above directory, unless you override them with a configuration specific property.
-For full details on chorus properties files see [Handler Configuration](pages/handlers/HandlerConfiguration)
+For full details on chorus properties files see [Handler Configuration](/pages/Handlers/HandlerConfiguration)
 
 ###Enabling the Remoting Handler###
 
@@ -154,7 +159,7 @@ If you wish to use the Remoting handler to run steps on the processes you are st
 
     processes.publisher.jmxport=1234
 
-For more details on remoting see [Remoting Handler Quick Start](pages/builtInHandlers/Remoting/RemotingHandlerQuickStart)
+For more details on remoting see [Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart)
 
 
 ###Other Processes Handler steps###

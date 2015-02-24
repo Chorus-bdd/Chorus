@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by nick on 23/02/15.
@@ -49,7 +47,7 @@ public class UpdatePageLinks {
                        Path path = newPath.toPath();
                        String fileName = path.getFileName().toString() + ".md";
                        if ( paths.containsKey(fileName)) {
-                           address = paths.get(fileName).toString().replaceAll("\\\\", "/").replace(".md", "");
+                           address = "/" + paths.get(fileName).toString().replaceAll("\\\\", "/").replace(".md", "");
                        }
                    }
                    m.appendReplacement(sb, "[" + m.group(1) + "](" + address + ")");
