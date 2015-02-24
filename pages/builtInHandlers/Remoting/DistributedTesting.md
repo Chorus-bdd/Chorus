@@ -1,6 +1,6 @@
 ---
 layout: mainpage
-title: Distributed Testing Overview
+title: Distributed Testing
 ---
 
 Chorus has some unique capabilities for distributed testing:

@@ -5,8 +5,8 @@ title: Built In Handlers
 
 The Chorus interpreter supplies some built in [handler classes](/pages/Handlers/HandlerClasses) of its own to provide some extra capabilities:
 
-* [Testing distributed components](/pages/BuiltInHandlers/Remoting/DistributedTestingOverview) - The `Remoting` Handler
-* [Starting and stopping processes](/pages/BuiltInHandlers/Processes/ProcessesOverview) - The `Processes` Handler
+* [Testing distributed components](/pages/BuiltInHandlers/Remoting/DistributedTesting) - The `Remoting` Handler
+* [Starting and stopping processes](/pages/BuiltInHandlers/Processes/StartingProcesses) - The `Processes` Handler
 * [Manipulate a map of variables within each Scenario](/pages/BuiltInHandlers/ChorusContext/ChorusContextHandler) - The `ChorusContext` handler
 * [Timing and sleeping](/pages/BuiltInHandlers/Timers/TimersHandler) - The `Timers` Handler
 

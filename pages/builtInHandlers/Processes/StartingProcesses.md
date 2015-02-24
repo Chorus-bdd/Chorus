@@ -1,6 +1,6 @@
 ---
 layout: mainpage
-title: Processes Overview
+title: Starting Processes
 ---
 
 Chorus has a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) class which allows you to start and stop local processes during a test.
