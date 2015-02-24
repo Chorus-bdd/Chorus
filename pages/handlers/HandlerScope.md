@@ -39,7 +39,7 @@ it makes sense to do this work once rather than before every scenarios.
 An example might be starting up a process or establishing a connection to a server which requires extensive handshaking.
 Since Chorus is frequently used to test distributed systems, these requirements are quite common.
 
-The Handler scoping mechanism is especially useful in conjunction with Chorus' special [Feature-Start and Feature-End](FeatureStartAndEnd) scenarios
+The Handler scoping mechanism is especially useful in conjunction with Chorus' special [Feature-Start and Feature-End](pages/LanguageExtensions/FeatureStartAndEnd) scenarios
 
 
 **Lifecycle Methods on Handler classes**

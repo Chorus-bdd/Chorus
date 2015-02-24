@@ -86,7 +86,7 @@ Now we can click the buy button on testUI, we may wish to check the effect this 
 
 **More about Remoting properties**
 
-For all the supported RemotingHandler properties see [Remoting Handler Properties](RemotingHandlerProperties)
+For all the supported RemotingHandler properties see [Remoting Handler Properties](pages/builtInHandlers/Remoting/RemotingHandlerProperties)
 
 If you want to share remoting properties between all your features you can add their connectivity details to a chorus.properties at the top level on your classpath. Here you could list all your UAT components, for example, so you don't need to keep repeating yourself.
 

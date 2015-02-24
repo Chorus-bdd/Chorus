@@ -15,7 +15,7 @@ e.g. for a `myFeature.feature` create a `myFeature.properties` file in the same 
 
 If you want to share properties between features in the same directory, you can put them in a `chorus.properties`
 
-Lastly, if you add a `chorus.properites` to the top level of your classpath, this will be accessible for all features.
+Lastly, if you add a `chorus.properties` to the top level of your classpath, this will be accessible for all features.
 
 ## Setting Defaults ##
 
@@ -41,4 +41,4 @@ I can override the default by setting a value for a specific component
 
 Chorus' built in handlers load their own properties, see the handler documentation for a description of these.
 
-If you want to load properties from your own handler classes, see [Custom Configuration](/CustomConfiguration)
+If you want to load properties from your own handler classes, see [Custom Configuration](pages/handlers/CustomConfiguration)

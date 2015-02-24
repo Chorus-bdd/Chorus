@@ -111,7 +111,7 @@ If you want to fail a step, simply throw an exception from the step method  The 
 When testing distributed systems, you often need to allow some time for a condition to be satisfied  
 In this case, you can use the @PassesWithin annotation, to allow a certain amount of time within which your Assertion should succeed.
 
-See [Passes Within Annotation](/PassesWithinAnnotation)
+See [Passes Within Annotation](pages/builtInHandlers/Remoting/PassesWithinAnnotation)
 
 
 ### Marking steps Pending ###
@@ -162,7 +162,7 @@ You can add a method to your handler which is annotated `@Destroy` if you need t
             }
         }
         
-It is also [possible to scope a Handler class to Feature scope](/HandlerScope)
+It is also [possible to scope a Handler class to Feature scope](pages/handlers/HandlerScope)
 
 ### Accessing interpreter context ###
 
@@ -190,7 +190,7 @@ This field will then have its value set at the start of each scenario:
 
 You can store values in the ChorusContext in step methods.
 These values are accessible ChorusContext to subsequent step methods, whether locally or remotely executed:
-See also [Chorus Context](ChorusContext)
+See also [Chorus Context](pages/builtInHandlers/ChorusContext/ChorusContext)
 
         @Step("I store the result") 
         public void storeTheResult() {

@@ -24,7 +24,7 @@ and for chorus-spring
     
 A change list for the releases is here:
     
-[Changelist](/Changelist)
+[Changelist](pages/resources/Changelist)
 
 Alternatively, download links are below:
 

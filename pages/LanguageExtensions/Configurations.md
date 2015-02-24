@@ -16,7 +16,7 @@ With this added, the feature will be run once for each configuration name specif
 
 ###Using Configurations with Properties files###
 
-Some [built in handlers](BuiltInHandlers) use properties files for configuration.  
+Some [built in handlers](pages/builtInHandlers/BuiltInHandlers) use properties files for configuration.  
 When configurations are used:
 
 * Chorus will first read the properties from the standard locations
@@ -29,7 +29,7 @@ e.g. for a feature `myfeature.feature`:
     myfeature-confB.properties
 
 Properties in a configuration property file will override similar properties in the default config  
-See [Handler Configuration](HandlerConfiguration) for more details
+See [Handler Configuration](pages/handlers/HandlerConfiguration) for more details
 
 ###Using Configurations in a Handler class###
 
