@@ -55,21 +55,21 @@ At the top of our feature file we need to add `Uses: Remoting`, to tell Chorus t
 	Uses: Remoting
 
 	  Feature: Buy Button 
-          
+
+             #! Remoting connect traderUI
              Scenario: Buy stocks in traderUI
-                When I click the buy button in traderUI
+                When I click the buy button
                 ...
 
-**Terminating steps with 'in myComponent' or 'from myComponent'**
+**Adding a 'Connect Directive'**
 
-Note that in the scenario above, the step `I click the buy button` is suffixed with `in traderUI`
-This is very important..
+Note that the scenario above is prefixed with the following directive:
 
-Any step ending `in .*` or `from .*` will be matched by the `Remoting` Handler.
-  
-Here the suffix `in traderUI` tells the Remoting handler that you want to run the step 'I click the buy button' in a remote component named 'traderUI'.
- 
-Initially this step will fail, since we haven't yet told the Remoting handler where the traderUI process is running.
+    #! Remoting connect traderUI
+
+This tells Chorus' Remoting handler to connect to the traderUI so that we can match and run the steps which it exports.
+
+Initially this scenario will fail, since we haven't yet told the Remoting handler where the traderUI process is running.
 
 **Telling chorus where to connect to the remote process**
 
@@ -79,15 +79,12 @@ Do this by adding a properties file in the same directory as the feature.
  
 e.g. For a feature file named `clickbuy.feature`, we would add a `clickbuy.properties`
 
-This needs to contain a connection property for each networked component:
+This needs to contain a connection property for each networked component.
 
-	remoting.traderUI.connection=jmx:myserver.mydomain.com:18806
+If the traderUI was running on server myserver.mydomain on port 18806 then we'd need to add the following property:
 
-Now for any step with the suffix `in traderUI` the Chorus interpreter will connect to myserver.mydomain.com:18806 to find the exported handler
+	remoting.traderUI.connection=jmx:myserver.mydomain:18806
 
-**Adding steps to more components**
-
-Now we can click the buy button on testUI, we may wish to check the effect this has by adding extra steps to some of the other components in our UAT environment. Over time, we will build up a library of exported steps which can be reused between our features and scenarios.
 
 **More about Remoting properties**
 
