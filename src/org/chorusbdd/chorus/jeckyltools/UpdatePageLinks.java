@@ -32,7 +32,7 @@ public class UpdatePageLinks {
             paths.put(p.getFileName().toString(), p);
         });
 
-        markdownFiles = findMarkdownFiles(new File("."));
+        markdownFiles = findMarkdownFiles(new File(".")); //also need to update links on the index page which is not under pages dir
 
         markdownFiles.stream().forEach(p -> {
             try {
