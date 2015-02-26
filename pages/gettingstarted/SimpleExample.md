@@ -117,7 +117,7 @@ Here's the Calculator class itself:
 
 ## Running the test ##
 
-See [Running Chorus](RunningChorus)  
+See [Running Chorus](/pages/RunningChorus/RunningChorus)  
 
 First you need to compile the Handler and Calculator class
 Make sure they are in your java classpath, along with chorus-{version}.jar  
