@@ -1,3 +1,7 @@
+---
+layout: page
+title: Interpreter Parameters
+---
 
 When running the chorus interpreter, the following parameters are supported. 
  

@@ -1,30 +1,40 @@
-Chorus JUnit integration enables you to run your Chorus features as a suite of JUnit tests.  
+---
+layout: page
+title: JUnit Integration
+---
+
+Chorus JUnit integration enables you to run your Chorus features as a suite of JUnit tests.
 
 This means they can be executed by tools (such as IDE) which provide JUnit support.  
-All you need to do is make sure the chorus.jar is in the classpath
+All you need to do is make sure that junit is on your classpath along with chorus.jar
 
 ###JUnit4 ChorusSuite Runner###
 
-Chorus provides a junit4 compliant runner for Chorus test suites.  
-This will generate a junit test suite with one test for each of your feature files.
+Chorus provides a JUnit 4 compliant runner for Chorus test suites.
+
+This will generate a junit test suite with one test for each of your scenarios.
 
 Simply
 
 1. Annotate a test class with the @RunWith(ChorusSuite.class) annotation and 
-2. Implement the getChorusArgs static method to return the chorus interpreter parameters
+2. Implement the `getChorusArgs` static method to return the chorus interpreter parameters
 
 Your test suite class should look like this:
+
+    #in file: MyChorusTestSuite.java
 
 	import org.chorusbdd.chorus.ChorusSuite;
 	import org.junit.runner.RunWith;
 	
 	@RunWith(ChorusSuite.class)
-	public class ChorusTestSuite {
+	public class MyChorusTestSuite {
 	
         public static String getChorusArgs() {
           return "-f features -h com.mycompany.myapp";
         }
 	}
+
+You can use all the same [interpreter parameters](/pages/RunningChorus/InterpreterParameters) that you would use when running Chorus from the command line
 
 Most IDE should recognize the @RunWith annotation on this class, and allow you to run it as a JUnit suite with full IDE support.
 
@@ -66,36 +76,5 @@ are set up front:
          </fileset>
          <report format="frames" todir="${report.test.dir}"/>
      </junitreport>
-
-
-###Legacy JUnit 3 Suite Support###
-
-Running with junit 3 static suite methods is deprecated
-It is recommended to use the junit4 @RunWith(ChorusSuite.class) instead
-
-To create a JUnit test suite from your Chorus features, define a class with a static method `suite()`, as demonstrated below. JUnit tools should be able to recognize this class as a source for JUnit test cases.
-
-	import junit.framework.TestSuite;
-	import org.chorusbdd.chorus.ChorusJUnitRunner;
-	import org.junit.runner.RunWith;
-    import org.junit.runners.AllTests;
-
-    @RunWith(AllTests.class)
-	public class TestChorusTests {
-	
-	    public static TestSuite suite() {
-	
-	       return ChorusJUnitRunner.suite("-f ./features -h com.mycompany.myapp")
-	    }
-	}
-
-
-The above example will find any .feature files in the directory ‘./features’ and its subdirectories, and run each feature as a separate JUnit test.
-
-You can pass to the suite() method any parameters you would be able to pass to Chorus on the command line.
-
-Adding a JUnit test suite for your Chorus features is also the easiest way to make your test run as part of an Ant or or Maven build.
-
-
 
 

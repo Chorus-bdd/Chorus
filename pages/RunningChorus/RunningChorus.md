@@ -1,3 +1,8 @@
+---
+layout: page
+title: Running Chorus
+---
+
 The Chorus interpreter can be run as a standard Java process.
 
 In a lot of cases, you will be better off [running chorus tests as a JUnit suite](/pages/RunningChorus/JUnitIntegration)

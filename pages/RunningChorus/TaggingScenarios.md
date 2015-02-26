@@ -1,3 +1,8 @@
+---
+layout: page
+title: Tagging Scenarios
+---
+
 Chorus allows the features and scenarios tested to be filtered using a simple filtering expression that matches tags in the feature files
 
 ##Tagging Scenarios##
