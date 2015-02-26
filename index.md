@@ -32,7 +32,7 @@ On top of this, it provides several unique language extensions
 One of the most important language extensions is the ability to embed 'Directives' in your feature files
 Directives can provide technical instructions which indicate how a test should run, but keep these separate from the business language.
 
-Chorus provides some built in directives, but if these are not sufficient you can easily supply `handler` classes to implement your own
+Chorus provides some built in directives, but if these are not sufficient you can easily supply [handler classes](/pages/Handlers/HandlerClasses) to implement your own
 
 
 

@@ -32,6 +32,8 @@ public class UpdatePageLinks {
             paths.put(p.getFileName().toString(), p);
         });
 
+        markdownFiles = findMarkdownFiles(new File("."));
+
         markdownFiles.stream().forEach(p -> {
             try {
                 Charset charset = StandardCharsets.UTF_8;
