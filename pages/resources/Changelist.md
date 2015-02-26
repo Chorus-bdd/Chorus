@@ -3,8 +3,6 @@ layout: page
 title: Change List
 ---
 
-<?xml version="1.0" encoding="UTF-8"?>
-
 ### Version 2.0.0 ###
 
 *A major milestone release with a new modular chorus interpreter. This is not fully backwards compatible with major version 1.x.x due to some package renaming
