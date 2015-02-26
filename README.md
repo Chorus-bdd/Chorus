@@ -7,7 +7,7 @@ It is targeted at distributed system testing, which is more complex than testing
 Chorus allows a team to write plain English tests which can execute test steps on components running remotely.
 
 It supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
-The Gherkin extensions and other new features of the framework may be useful to you even if your project is not distributed.
+The Gherkin extensions and other features of the framework may be useful to you even if your project is not distributed.
 
 Chorus presently provides a solution to connect to and test Java (or JVM-based) components.
 We hope to add connectivity solutions for other languages in the near future
