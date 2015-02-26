@@ -15,7 +15,8 @@ For example, I have a scenario in which I fill in a log in form, entering userna
         And I click the OK button
         Then I am logged in as the user Nick
 
-I'd like to reuse these steps from other scenarios  
+I'd like to reuse these steps from other scenarios
+
 I could implement a step method for the whole login operation which combines the above steps, e.g.:
 
     @Step("I log in as user (.*) with password (.*)")
@@ -83,7 +84,7 @@ If you want to use a step macro across multiple features, you can place it in a 
             
 ###Step Macro FAQ###
 
-Q: Can I reference another step macro from a step macro step?  
+Q: Can I reference another step macro from within a step macro?
 A: Of course
  
  
