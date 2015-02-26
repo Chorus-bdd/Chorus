@@ -71,6 +71,7 @@ public class ProcessesConfigBuilder implements ProcessManagerConfig {
     private int debugPort = -1;
     //port on which to start the service which allows the process to export handlers across the network
     private int remotingPort = -1;
+    private boolean enabled = true;
 
 
     /**
@@ -98,7 +99,8 @@ public class ProcessesConfigBuilder implements ProcessManagerConfig {
             isCreateLogDir(),
             getProcessCheckDelay(),
             getReadTimeoutSeconds(),
-            getProcessScope()
+            getProcessScope(),
+            isEnabled()
         );
         return nextProcess;
     }
@@ -264,6 +266,15 @@ public class ProcessesConfigBuilder implements ProcessManagerConfig {
         return processScope;
     }
 
+    public ProcessesConfigBuilder setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public boolean isJavaProcess() {
         return ! isSet(pathToExecutable);
     }
@@ -288,4 +299,5 @@ public class ProcessesConfigBuilder implements ProcessManagerConfig {
             remotingPort += startedCount;
         }
     }
+
 }

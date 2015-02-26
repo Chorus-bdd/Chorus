@@ -27,53 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.processes.manager.config;
+package org.chorusbdd.chorus.selftest.processhandler.disableprocess;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by nick on 24/09/2014.
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public class TestDisableProcess extends AbstractInterpreterTest {
 
-    String getJre();
+    final String featurePath = "src/test/features/org/chorusbdd/chorus/selftest/processhandler/disableprocess";
 
-    String getClasspath();
+    final int expectedExitCode = 0;  //success
 
-    String getJvmargs();
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    String getMainclass();
+    protected String getFeaturePath() {
+        return featurePath;
+    }
 
-    String getPathToExecutable();
-
-    String getArgs();
-
-    OutputMode getStdErrMode();
-
-    OutputMode getStdOutMode();
-
-    int getRemotingPort();
-
-    boolean isRemotingConfigDefined();
-
-    int getDebugPort();
-
-    int getTerminateWaitTime();
-
-    String getLogDirectory();
-
-    boolean isAppendToLogs();
-
-    boolean isCreateLogDir();
-
-    int getProcessCheckDelay();
-
-    int getReadTimeoutSeconds();
-
-    Scope getProcessScope();
-
-    boolean isJavaProcess();
-
-    boolean isEnabled();
 }

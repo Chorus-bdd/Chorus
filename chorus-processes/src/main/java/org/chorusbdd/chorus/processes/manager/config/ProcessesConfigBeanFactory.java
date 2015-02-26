@@ -67,6 +67,7 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
     public static final String stdOutMode = "stdOutMode";
     public static final String readTimeoutSeconds = "readTimeoutSeconds";
     public static final String scope = "scope";
+    public static final String enabled = "enabled";
 
 
     private ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
@@ -135,6 +136,8 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
                 c.setReadTimeoutSeconds(parseIntProperty(value, readTimeoutSeconds));
             } else if (scope.equals(key)) {
                 c.setProcessScope(parseScope(value));
+            } else if (enabled.equals(key)) {
+                c.setEnabled(parseBooleanProperty(value, enabled));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported Processes handler property");
             }

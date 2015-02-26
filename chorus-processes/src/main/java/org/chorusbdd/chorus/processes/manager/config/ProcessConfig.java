@@ -1,8 +1,6 @@
 package org.chorusbdd.chorus.processes.manager.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 
 /**
  * An immutable runtime config for a process
@@ -27,11 +25,12 @@ public class ProcessConfig implements ProcessManagerConfig {
     private final int processCheckDelay;
     private final int readTimeoutSeconds;
     private final Scope processScope;
+    private boolean enabled;
 
     public ProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
                          String args, OutputMode stdOutMode, OutputMode stdErrMode, int remotingPort, int debugPort, int terminateWaitTime,
                          String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
-                         int readTimeoutSeconds, Scope processScope) {
+                         int readTimeoutSeconds, Scope processScope, boolean enabled) {
         this.groupName = groupName;
         this.pathToExecutable = pathToExecutable;
         this.jre = jre;
@@ -50,6 +49,7 @@ public class ProcessConfig implements ProcessManagerConfig {
         this.processCheckDelay = processCheckDelay;
         this.readTimeoutSeconds = readTimeoutSeconds;
         this.processScope = processScope;
+        this.enabled = enabled;
     }
 
     public String getConfigName() {
@@ -132,9 +132,12 @@ public class ProcessConfig implements ProcessManagerConfig {
         return ! isSet(pathToExecutable);
     }
 
+    public boolean isEnabled() { return enabled; }
+
     private boolean isSet(String propertyValue) {
         return propertyValue != null && propertyValue.trim().length() > 0;
     }
+
 
     @Override
     public String toString() {

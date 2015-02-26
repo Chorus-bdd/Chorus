@@ -144,6 +144,10 @@ public class NamedProcessConfig implements ProcessManagerConfig {
         return processManagerConfig.isJavaProcess();
     }
 
+    public boolean isEnabled() {
+        return processManagerConfig.isEnabled();
+    }
+
     public Properties getProperties() {
         return new ProcessesConfigBeanFactory().getProperties(processManagerConfig);
     }
