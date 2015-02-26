@@ -5,7 +5,7 @@ title: Context Variables
 
 ###Chorus Context###
 
-ChorusContext is a Map of key value pairs which is made available within each of your step methods.  
+ChorusContext is a Map of key value pairs which is managed by Chorus and accessible during each test scenario
 
 For remotely executed test steps, this Map is serialized and sent to your remote component when a step is invoked.  
 Any changes made to it in the remote process are propagated back to the interpreter process once the step has completed.
@@ -22,12 +22,8 @@ context.myPropertyOne=val1
 context.myPropertyTwo=val2
 
 If your feature is myFeature.feature, these usually go into a myFeature.properties in the same directory
-See [Handler Configuration](/HandlerConfiguration) for more details
+See [Handler Configuration](/pages/Handlers/HandlerConfiguration) for more details
 
-This can be a powerful feature, especially when combined with 'profiles' or 'configurations'
-
-* Configurations can allow you to run a feature more than once with a different set of variables
-* Profiles can select variables based on the environment (profile) you are running in
 
 ###Setting and retrieving variables in test steps###
 
@@ -84,7 +80,7 @@ So you don't even have to supply a name for the context variable to do the follo
 
 The keys in the context Map are always Strings, and the values may be any Java object.
 
-However, if you are using Chorus' Remoting, we recommend only storing the following values in the context,
+However, if you are using Chorus' Remoting, we recommend only storing the following value types in the context,
 
 These types will be compatible with language-neutral remoting protocols which are under development:
 

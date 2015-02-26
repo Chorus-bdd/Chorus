@@ -24,14 +24,14 @@ The top of your feature file may look like this:
 ###Now add a step to start the publisher process###
 
 The Processes handler provides built in steps to start and stop processes
-You can use these during the scenario to start and stop a 'publisher' process
+You can use these during the scenario to start a 'publisher' process
 
     Scenario: I start a publisher process
       When I start a publisher process named pub
       ...
-      Then I stop the process named pub
 
-Initially this will fail, since you have not yet provided any config to tell Chorus how to start a 'publisher'
+The process will automatically get stopped at the end of the scenario
+Initially this will fail, since you have not yet provided any config to tell Chorus how to start 'publisher'
 
 ###Configure the 'publisher' process###
 
@@ -109,16 +109,17 @@ You can also write input to a process which processes handler has started:
 
 ###Logging from your processes###
 
-The processes you are starting may write to their standard output and standard error streams. By default any output will be shown in the interpreter's standard out (this is called the 'inline' mode). 
+The processes you are starting may write to their standard output and standard error streams.
 
-It's generally better to set a log directory, and turn on logging. 
-Logging is configured independently for the process std out and error streams, using an output mode. 
+By default any output will written to a log file placed into a log directory under the feature file directory
+
+Alternatively you can write the process output to console (inline) with the interpreter output but this can make the test output hard to read
+
+Logging is configured independently for the process std out and error streams, using an output mode.
 Output mode is one of
 
-- inline (the default)
-- file (log to a file)
-- captured (buffer in chorus for pattern matching)
-- capturedwithlog (buffer in chorus and also write output to a log file)
+- inline
+- file (log to a file) (the default)
 
 The config below will write the std out of the publisher process process to a log file, and show error output inline
 n.b. the log file name will be calculated automatically from the feature and process name
@@ -151,22 +152,20 @@ If you want all your processes to log to the same directory, you could set a def
 Now all processes will log into the above directory, unless you override them with a configuration specific property.
 For full details on chorus properties files see [Handler Configuration](/pages/Handlers/HandlerConfiguration)
 
-###Enabling the Remoting Handler###
+###Calling exported steps on the processes you start###
 
-It's a very common requirement to start a process using the Processes Handler and then call exported steps on it using the Remoting Handler
+It's a very common requirement to start a process using the Processes Handler and then call exported test steps on it
 
-If you wish to use the Remoting handler to run steps on the processes you are starting, you need to turn the jmx management service on for any processes you start (and have your processes export handler classes). Turn jmx on by setting the jmxport property
+To do this you need to turn the jmx management service on for any processes you start (and have your processes export handler classes).
+this is accomplished simply by setting the remotingPort property
 
-    processes.publisher.jmxport=1234
+    processes.publisher.remotingPort=1234t
 
 For more details on remoting see [Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart)
 
+###Other processes handler steps###
 
-###Other Processes Handler steps###
-
-There are some other standard steps in your processes handler which are sometimes useful:
-
-    I wait for up to ${n} seconds for the process ${name} to terminate
+The other steps provided by the built in Processes handler [are documented here](/pages/BuiltInHandlers/BuiltInHandlerSteps)
 
 
 ###Starting a process which is not a java process###
