@@ -127,7 +127,7 @@
                         <include>src/test/features/**/*.java</include>
                     </includes>
                     <properties>
-                        <year>2014</year>
+                        <year>2015</year>
                     </properties>
                 </configuration>
             </plugin>

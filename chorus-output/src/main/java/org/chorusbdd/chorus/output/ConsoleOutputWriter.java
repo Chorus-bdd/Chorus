@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2000-2014 The Software Conservancy and Original Authors.
+ *  Copyright (C) 2000-2015 The Software Conservancy and Original Authors.
  *  All rights reserved.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
