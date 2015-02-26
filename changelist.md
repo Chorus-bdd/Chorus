@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 2.0.0 ###
+        
+*A major milestone release with a new modular chorus interpreter. This is not fully backwards compatible with major version 1.x.x due to some package renaming
+            which may require minor revisions to end user step logic, and a change to remoting jmx implementation. Additionally 2.x.x requires jdk 1.7+*
+        
+| Changes in 2.0.0 |
+| ------ |
+| Initial chorus 2.0.0 with modular structure |
+| New (pluggable) Subsystems for Remoting, Process management and Configuration |
+| @ChorusResource - Support for injecting chorus subsystems for process management, remoting and configuration into a handler |
+| @ChorusResource - Support for injecting handler instances |
+| Revised handler configuration with ConfigurationManager subsystem |
+| Support for directives #! |
+| Added support for running with a profile - each profile can have associated config properties/property overrides |
+| Refactored and improved jmx remoting and restructured remoting subsystem to permit new remoting protocols |
+| Support disabling a process in config so it doesn't get started |
+        
 ### Version 1.6.9 ###
         
 *Some improvements to Remoting logic and addition of ProcessManager*
@@ -247,7 +264,7 @@
 | Changes in 1.3.9 |
 | ------ |
 | Better error logging during feature run, don't log as a feature parsing error when the error occurs during feature processing |
-| StandardOutLogProvider is now the default even where apache commons logging is on the classpath. Use -DchorusLogProvider=org.chorusbdd.chorus.util.logging.ChorusCommonsLogProvider if you want Chorus to log using commons logging |
+| StandardOutLogProvider is now the default even where apache commons logging is on the classpath. Use -DchorusLogProvider=org.chorusbdd.chorus.logging.ChorusCommonsLogProvider if you want Chorus to log using commons logging |
 | ChorusJUnitRunner can now accept interpreter parameters as a String, as an alternative to setting sys props |
 | BUGFIX: Set log level correctly when executing chorus tests as a JUnit suite with ChorusJUnitRunner |
 | BUGFIX: Handle Runtime exceptions thrown by user defined handler @Destroy methods |
