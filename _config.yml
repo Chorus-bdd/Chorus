@@ -1,0 +1,35 @@
+# Dependencies
+markdown:         redcarpet
+redcarpet:
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
+
+highlighter:      pygments
+
+# Permalinks
+permalink:        pretty
+relative_permalinks: true
+
+# Setup
+title:            Chorus BDD
+tagline:          'BDD testing for distributed systems'
+description:      'BDD testing for distributed systems'
+url:              https://github.com/Chorus-bdd/
+baseurl:          /
+
+author:
+  name:           'Chorus BDD'
+  url:            https://github.com/Chorus-bdd/
+
+# Custom vars
+version:          2.1.0
+
+github:
+  repo:           https://github.com/Chorus-bdd/
+
+gems: [jekyll_github_sample]
+
+include:          ['pages']
+
+nodename:         ChorusBDDNode
+servname:         ChorusBDDNode
+

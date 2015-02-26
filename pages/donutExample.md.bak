@@ -1,0 +1,32 @@
+
+{% highlight gherkin %}
+#! Processes: start donutServer, donutClient
+#! Processes: connect donutServer, donutClient
+Scenario: Buy a Donut
+  Given I add one donut to inventory
+  When I navigate to the products page
+  And I buy a donut
+  Then a donut is added to my basket
+{% endhighlight %}
+
+
+{% highlight java %}
+
+
+@Step("I navigate to the products page")
+public void navigate() {
+    //implement logic here
+}
+
+
+
+public void main(String[] args) {
+
+
+
+    new ChorusHandlerJmxExporter(new DonutClientHandler()).export();
+
+
+}
+
+{% endhighlight %}
