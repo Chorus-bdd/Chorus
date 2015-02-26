@@ -1,3 +1,0 @@
-
-Step-Macro: I can call a macro from a different directory so long as it is in the feature path
-    Then the steps in the macro will be executed

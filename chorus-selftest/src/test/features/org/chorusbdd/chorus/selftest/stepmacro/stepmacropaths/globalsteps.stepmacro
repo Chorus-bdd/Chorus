@@ -1,4 +1,0 @@
-
-Step-Macro:  I can call a global macro with three variables <tom> <dick> and <harry>
-    Then I can call the macro from any feature file since macros are preparsed
-    And variables are all expanded within the macro steps for example <tom> <dick> <harry>
