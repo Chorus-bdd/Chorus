@@ -1,5 +1,5 @@
 ---
-layout: mainpage
+layout: page
 title: Language Extensions
 ---
 
