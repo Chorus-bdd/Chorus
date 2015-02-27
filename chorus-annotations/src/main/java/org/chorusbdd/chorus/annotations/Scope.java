@@ -60,13 +60,7 @@ public enum Scope {
     /**
      *  A new instance of the handler will be created for each feature and reused by all scenarios
      */
-    FEATURE,
-    
-    /**
-     * A single handler will be created and used for all scenarios, annotated lifecycle methods (@Initialize, @Destroy) 
-     * will not be called. This scope is supported as a legacy feature but not recommended for future use
-     */
-    @Deprecated
-    UNMANAGED
+    FEATURE
+
     
 }

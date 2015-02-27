@@ -42,6 +42,8 @@ import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
 import java.util.List;
@@ -80,6 +82,9 @@ public class RemotingHandler {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
+    @ChorusResource("scenario.token")
+    private ScenarioToken scenarioToken;
+
     @ChorusResource("subsystem.processManager")
     private ProcessManager processManager;
 
@@ -117,6 +122,7 @@ public class RemotingHandler {
             //perhaps the process manager knows the details?
             getProcessManagerProperties(configName, p);
         }
+        new ScopeUtils().setScopeForContextIfNotConfigured(scenarioToken, p);
         return p;
     }
 

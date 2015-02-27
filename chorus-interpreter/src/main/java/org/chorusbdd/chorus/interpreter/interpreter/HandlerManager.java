@@ -170,25 +170,22 @@ public class HandlerManager {
      * Run any lifecycle methods which match the targetMethodScope (.e.g at end of SCENARIO, run SCENARIO scoped methods)
      */
     private void runLifecycleMethods(Object handler, Scope scope, Scope targetMethodScope, boolean isDestroy) throws Exception {
-        if ( scope != Scope.UNMANAGED) { 
-           //HandlerScope.UNMANAGED handlers do not run closeAllConnections or init methods
-            String description = isDestroy ? "@Destroy" : "@Initialize";
-            log.debug("Running " + description + " methods for Handler " + handler);
-    
-            Class<?> handlerClass = handler.getClass();
-            for (Method method : handlerClass.getMethods()) {   //getMethods() includes inherited methods
-                if (method.getParameterTypes().length == 0) {
+        String description = isDestroy ? "@Destroy" : "@Initialize";
+        log.debug("Running " + description + " methods for Handler " + handler);
 
-                    Scope methodScope = getMethodScope(isDestroy, method);
-                    
-                    //if this lifecycle method is for the correct cope, then run it
-                    if (methodScope != null && methodScope == targetMethodScope) {
-                        log.trace("Found " + description + " annotation with scope " + targetMethodScope + " on handler method " + method + " and will now invoke it");
-                        try {
-                            method.invoke(handler);
-                        } catch ( Throwable t) {
-                            log.warn("Exception when calling " + description + " method [" + method + "] with scope " + targetMethodScope + " on handler " + handlerClass, t);
-                        }
+        Class<?> handlerClass = handler.getClass();
+        for (Method method : handlerClass.getMethods()) {   //getMethods() includes inherited methods
+            if (method.getParameterTypes().length == 0) {
+
+                Scope methodScope = getMethodScope(isDestroy, method);
+
+                //if this lifecycle method is for the correct cope, then run it
+                if (methodScope != null && methodScope == targetMethodScope) {
+                    log.trace("Found " + description + " annotation with scope " + targetMethodScope + " on handler method " + method + " and will now invoke it");
+                    try {
+                        method.invoke(handler);
+                    } catch ( Throwable t) {
+                        log.warn("Exception when calling " + description + " method [" + method + "] with scope " + targetMethodScope + " on handler " + handlerClass, t);
                     }
                 }
             }

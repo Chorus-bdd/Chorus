@@ -43,6 +43,8 @@ import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilder;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
 import java.util.List;
@@ -66,6 +68,9 @@ public class ProcessesHandler {
     @ChorusResource("feature.token")
     private FeatureToken featureToken;
 
+    @ChorusResource("scenario.token")
+    private ScenarioToken scenarioToken;
+
     @ChorusResource("subsystem.processManager")
     private ProcessManager processManager;
 
@@ -86,22 +91,10 @@ public class ProcessesHandler {
         processManager.startProcess(configName, processName, config);
     }
 
-    //for first process just use the config processName with no suffix
-    //this is so if we just start a single myconfig process, it will be called myconfig
-    //the second will be called myconfig-2
-    private synchronized String nextProcessName(String configName) {
-        int instancesStarted = processManager.getNumberOfInstancesStarted(configName);
-        return instancesStarted == 0 ? configName : String.format("%s-%d", configName, instancesStarted + 1);
-    }
-
     @Step(".*start an? (.+) process named " + HandlerPatterns.processNamePattern + ".*?")
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
         Properties config = getConfig(configName);
         processManager.startProcess(configName, processName, config);
-    }
-
-    private Properties getConfig(String configName) {
-        return new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "processes", configName);
     }
 
     @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")
@@ -204,10 +197,25 @@ public class ProcessesHandler {
         }
     }
 
+
+    //for first process just use the config processName with no suffix
+    //this is so if we just start a single myconfig process, it will be called myconfig
+    //the second will be called myconfig-2
+    private synchronized String nextProcessName(String configName) {
+        int instancesStarted = processManager.getNumberOfInstancesStarted(configName);
+        return instancesStarted == 0 ? configName : String.format("%s-%d", configName, instancesStarted + 1);
+    }
+
+    private Properties getConfig(String configName) {
+        Properties p = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "processes", configName);
+        new ScopeUtils().setScopeForContextIfNotConfigured(scenarioToken, p);
+        return p;
+    }
+
     /**
      * Generate a remoting config to connect to a running process
      */
-    Properties getRemotingConfig(String processName) {
+    private Properties getRemotingConfig(String processName) {
         RemotingConfigBuilder result = null;
         Properties processProps = processManager.getProcessProperties(processName);
         if ( processProps == null) {

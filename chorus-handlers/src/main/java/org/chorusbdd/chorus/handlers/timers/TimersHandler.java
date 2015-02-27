@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
  * Created by: Steve Neal
  * Date: 12/10/11
  */
-@Handler(value = "Timers", scope = Scope.UNMANAGED)
+@Handler(value = "Timers", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
 public class TimersHandler {
 
