@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
+### Version 2.0.1 ###
+        
+*Set scope to FEATURE automatically for processes and connections established during Feauture-Start:*
+        
+| Changes in 2.0.1 |
+| ------ |
+| Where a scope is not configured explicitly, Chorus can now intelligently set the scope to FEATURE for processes and remoting          connections established during the special Feauture-Start: scenario |
         
 ### Version 2.0.0 ###
         
