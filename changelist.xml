@@ -3,6 +3,12 @@
 <changes>
 
     <version>
+        <versionNumber>2.0.1</versionNumber>
+        <comment>Set scope to FEATURE automatically for processes and connections established during Feauture-Start:</comment>
+        <change desc="Where a scope is not configured explicitly, Chorus can now intelligently set the scope to FEATURE for processes and remoting
+         connections established during the special Feauture-Start: scenario"/>
+    </version>
+    <version>
         <versionNumber>2.0.0</versionNumber>
         <comment>A major milestone release with a new modular chorus interpreter. This is not fully backwards compatible with major version 1.x.x due to some package renaming
             which may require minor revisions to end user step logic, and a change to remoting jmx implementation. Additionally 2.x.x requires jdk 1.7+</comment>
