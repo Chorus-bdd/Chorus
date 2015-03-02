@@ -1,0 +1,20 @@
+Feature: Feature Start Scoping                                                                       
+Chorus --> INFO    - Running feature from file: src/test/features/org/chorusbdd/chorus/selftest/featurestartandend/featurestartscoping/featurestartscoping.feature
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    When I run feature start                                                                 PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a notScopedProcess process named myNotScoped                                 PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a scopedProcess process named myScopedToScenario                             PASSED  
+    And Remoting connect myNotScoped, myScopedToScenario                                     PASSED  
+  Scenario: Scenario One
+Chorus --> INFO    - Processing scenario: Scenario One
+    Then the process named myNotScoped is running                                            PASSED  
+    And the process named myScopedToScenario is not running                                  PASSED  
+    And I can call an exported method on myNotScoped                                         PASSED  OK
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)
