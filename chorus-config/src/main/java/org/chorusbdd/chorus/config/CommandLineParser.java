@@ -89,10 +89,14 @@ public class CommandLineParser extends AbstractConfigSource {
         return propertyMap;
     }
 
-    private void addPropertyValues(Map<ConfigurationProperty, List<String>> propertyMap, StringTokenizer st, ConfigurationProperty property) {
+    private void addPropertyValues(Map<ConfigurationProperty, List<String>> propertyMap, StringTokenizer st, ConfigurationProperty property) throws InterpreterPropertyException {
         List<String> l = getOrCreatePropertyList(propertyMap, property);
         if ( ! st.hasMoreTokens()) {
-            l.add("true"); //switches supplied with no value get set to the value true
+            throw new InterpreterPropertyException(
+                String.format("No value was given for switch -%s (-%s), and Chorus cannot provide a default",
+                    property.getSwitchShortName(),
+                    property.getSwitchName()
+                ));
         } else {
             while(st.hasMoreTokens()) {
                 l.add(st.nextToken());

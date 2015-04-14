@@ -89,7 +89,7 @@ public class ChorusInterpreter {
         allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(basePackages);
     }
 
-    public void runFeatures(ExecutionToken executionToken, List<FeatureToken> features) throws Exception {
+    public void runFeatures(ExecutionToken executionToken, List<FeatureToken> features) {
         //RUN EACH FEATURE
         for (FeatureToken feature : features) {
             try {
@@ -104,7 +104,7 @@ public class ChorusInterpreter {
         }    
     }
 
-    private void runFeature(ExecutionToken executionToken, FeatureToken feature) throws Exception {
+    private void runFeature(ExecutionToken executionToken, FeatureToken feature) {
 
         executionListenerSupport.notifyFeatureStarted(executionToken, feature);
         //notify we started, even if there are missing handlers
@@ -124,13 +124,17 @@ public class ChorusInterpreter {
             log.debug("The following handlers will be used " + orderedHandlerClasses);
             List<ScenarioToken> scenarios = feature.getScenarios();
 
-            HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager, executionToken.getProfile());
-            handlerManager.createFeatureScopedHandlers();
-            handlerManager.processStartOfFeature();
+            try {
+                HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager, executionToken.getProfile());
+                handlerManager.createFeatureScopedHandlers();
+                handlerManager.processStartOfFeature();
 
-            runScenarios(executionToken, feature, scenarios, handlerManager);
+                runScenarios(executionToken, feature, scenarios, handlerManager);
 
-            handlerManager.processEndOfFeature();
+                handlerManager.processEndOfFeature();
+            } catch (Exception e) {
+                log.error("Exception while running feature " + feature.getName(), e);
+            }
 
             String description = feature.getEndState() == EndState.PASSED ? " passed! " : feature.getEndState() == EndState.PENDING ? " pending! " : " failed! ";
             log.trace("The feature " + description);

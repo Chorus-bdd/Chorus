@@ -88,10 +88,11 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         try {
             chorus = new Chorus(args.split(" "));
-            chorus.addJUnitExecutionListener(executionListener);
         } catch (InterpreterPropertyException e) {
-            throw new RuntimeException("Unsupported property", e);
+            throw new RuntimeException("Error with Chorus command line " + e.getMessage());
         }
+
+        chorus.addJUnitExecutionListener(executionListener);
 
         ExecutionToken executionToken = chorus.createExecutionToken();
         List<ChorusFeatureTest> tests = getChorusFeatureTests(executionToken);
@@ -254,7 +255,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         public ChorusFeatureTest(FeatureToken featureToken, Set<String> uniqueScenarioNames, boolean createChildren) throws InitializationError {
             super(ChorusFeatureTest.class);
-            //To change body of created methods use File | Settings | File Templates.
             this.featureToken = featureToken;
             this.uniqueScenarioNames = uniqueScenarioNames;
             if ( createChildren) {

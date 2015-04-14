@@ -68,7 +68,7 @@ public class FeatureListBuilder {
             ExecutionToken executionToken,
             List<String> featurePaths,
             List<String> stepMacroPaths,
-            List<String> tagExpressions) throws Exception {
+            List<String> tagExpressions) {
 
         List<StepMacro> globalStepMacros = stepMacroBuilder.getGlobalStepMacro(stepMacroPaths, featurePaths);
 
@@ -82,7 +82,7 @@ public class FeatureListBuilder {
             ExecutionToken executionToken,
             List<File> featureFiles,
             List<StepMacro> globalStepMacro,
-            List<String> tagExpressions) throws Exception {
+            List<String> tagExpressions) {
 
         List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
 
