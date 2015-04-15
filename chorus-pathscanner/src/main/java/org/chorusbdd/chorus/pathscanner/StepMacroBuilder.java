@@ -35,9 +35,7 @@ import org.chorusbdd.chorus.parser.ChorusParser;
 import org.chorusbdd.chorus.parser.StepMacro;
 import org.chorusbdd.chorus.parser.StepMacroParser;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +93,7 @@ public class StepMacroBuilder {
         ChorusParser<StepMacro> parser = new StepMacroParser();
         try {
             log.info(String.format("Loading stepmacro from file: %s", stepMacroFile));
-            stepMacro = parser.parse(new BufferedReader(new FileReader(stepMacroFile)));
+            stepMacro = parser.parse(new FileReaderSupplier(stepMacroFile));
         } catch (Throwable t) {
             log.warn("Failed to parse stepmacro file " + stepMacroFile + " will skip this stepmacro file");
             if ( t.getMessage() != null ) {

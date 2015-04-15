@@ -38,9 +38,7 @@ import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -134,12 +132,13 @@ public class FeatureListBuilder {
         }
     }
 
-    private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken, List<StepMacro> globalStepMacro) {
+    private List<FeatureToken> parseFeatures(final File featureFile, ExecutionToken executionToken, List<StepMacro> globalStepMacro) {
         List<FeatureToken> features = null;
         ChorusParser<FeatureToken> parser = new FeatureFileParser(globalStepMacro);
         try {
             log.debug(String.format("Loading feature from file: %s", featureFile));
-            features = parser.parse(new BufferedReader(new FileReader(featureFile)));
+            features = parser.parse(new FileReaderSupplier(featureFile));
+
             for (FeatureToken f : features) {
                 f.setFeatureFile(featureFile);
             }
