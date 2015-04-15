@@ -184,7 +184,11 @@ public enum TestConfigProperty implements ConfigurationProperty {
      * @return default values for this property, or null if the property defaults to 'not set'
      */
     public String[] getDefaults() {
-        return defaults;
+        return defaults == null ?  new String[0] : defaults;
+    }
+
+    public boolean hasDefaults() {
+        return getDefaults().length > 0;
     }
 
     public static ConfigurationProperty getConfigPropertyForSysProp(String systemProperty) {

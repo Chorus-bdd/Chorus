@@ -91,17 +91,35 @@ public class CommandLineParser extends AbstractConfigSource {
 
     private void addPropertyValues(Map<ConfigurationProperty, List<String>> propertyMap, StringTokenizer st, ConfigurationProperty property) throws InterpreterPropertyException {
         List<String> l = getOrCreatePropertyList(propertyMap, property);
-        if ( ! st.hasMoreTokens()) {
-            throw new InterpreterPropertyException(
-                String.format("No value was given for switch -%s (-%s), and Chorus cannot provide a default",
-                    property.getSwitchShortName(),
-                    property.getSwitchName()
-                ));
+        if ( ! st.hasMoreTokens() ) {
+            if (isBooleanSwitchProperty(property)) {
+                l.add("true");
+            } else {
+                throw new InterpreterPropertyException(
+                    String.format("No value was given for switch -%s (-%s), and Chorus cannot provide a default",
+                        property.getSwitchShortName(),
+                        property.getSwitchName()
+                    )
+                );
+            }
         } else {
             while(st.hasMoreTokens()) {
                 l.add(st.nextToken());
             }
         }
+    }
+
+    /**
+     * This is a property with a boolean value which defaults to false
+     *
+     * The user can 'turn this option on' by passing a command line switch without a value (e.g. -d ) in which case we need to
+     * set the value to true
+     *
+     * @param property
+     * @return true if this is a boolean switch property
+     */
+    private boolean isBooleanSwitchProperty(ConfigurationProperty property) {
+        return property.hasDefaults() && property.getDefaults().length == 1 && property.getDefaults()[0].equals("false");
     }
 
     private ConfigurationProperty getProperty(String parameterList, StringTokenizer st) throws InterpreterPropertyException {

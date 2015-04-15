@@ -218,7 +218,11 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
      * @return default values for this property, or null if the property defaults to 'not set'
      */
     public String[] getDefaults() {
-        return defaults;
+        return defaults == null ? new String[]{} : defaults;
+    }
+
+    public boolean hasDefaults() {
+        return getDefaults().length > 0;
     }
 
     public static ConfigurationProperty getConfigPropertyForSysProp(String systemProperty) {
