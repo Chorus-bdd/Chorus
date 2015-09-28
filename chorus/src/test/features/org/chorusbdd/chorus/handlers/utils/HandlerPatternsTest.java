@@ -15,8 +15,6 @@ import static org.junit.Assert.*;
  */
 public class HandlerPatternsTest {
 
-    private HandlerPatterns handlerPatterns = new HandlerPatterns();
-
     @Test
     public void testPermissibleCharactersForProcessName() {
         Pattern p = Pattern.compile(HandlerPatterns.processNamePattern);
