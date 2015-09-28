@@ -44,9 +44,9 @@ public class HandlerPatternsTest {
         Map<String,String> allProcessNames = HandlerPatterns.getProcessNamesWithAliases(listOfProcessNames);
 
         HashMap<String,String> expected = new HashMap<>();
-        expected.put("processOne", "one");
-        expected.put("processTwo", "two");
-        expected.put("processThree", "three");
+        expected.put("one", "processOne");
+        expected.put("two", "processTwo");
+        expected.put("three", "processThree");
         assertEquals(expected, allProcessNames);
     }
 }
