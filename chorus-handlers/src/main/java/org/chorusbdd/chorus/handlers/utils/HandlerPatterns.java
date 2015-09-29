@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlers.utils;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +64,7 @@ public class HandlerPatterns {
      */
     public static Map<String,String> getProcessNamesWithAliases(String processNameList) {
         String[] processNames = processNameList.split(",");
-        Map<String,String> results = new HashMap<>();
+        Map<String,String> results = new LinkedHashMap<>();  //retain ordering / determinism
         for ( String p : processNames) {
             String processConfigName = p.trim();
 
