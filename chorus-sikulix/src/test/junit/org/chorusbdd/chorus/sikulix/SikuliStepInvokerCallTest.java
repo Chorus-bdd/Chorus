@@ -17,13 +17,13 @@ import static org.junit.Assert.assertNotNull;
 /**
  * TODO comments???
  *
- * @author ga2lakn
+ * @author Stephen Lake
  */
-public class SikuliCallTest {
+public class SikuliStepInvokerCallTest {
 
 	private ChorusLog log = ChorusLogFactory.getLog(this.getClass());
 
-	private final Path sikuliRoot = Paths.get("test", "sikulis");
+	private final Path sikuliRoot = Paths.get("src", "test", "sikulis");
 
 	@Test
 	public void canReturnValueFromStepInvoker() throws ReflectiveOperationException {
@@ -46,7 +46,7 @@ public class SikuliCallTest {
 		assertNotNull(stepInvoker);
 		Object returnValue = stepInvoker.invoke(Arrays.asList("Steve","Lake"));
 
-		assertEquals(30, returnValue);
+		assertEquals("SteveLake", returnValue);
 	}
 
 	private StepInvoker findById(List<StepInvoker> stepInvokers, String id) {

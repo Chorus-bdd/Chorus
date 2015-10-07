@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Step Invoker for Python Methods
+ * Step Invoker for Python Methods, using Jython
  *
- * @author ga2lakn
+ * @author Stephen Lake
  */
 public class JythonStepInvoker implements StepInvoker {
 

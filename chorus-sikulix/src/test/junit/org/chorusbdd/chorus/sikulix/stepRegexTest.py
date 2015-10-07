@@ -1,4 +1,4 @@
-class sendPanel():
+class stepRegexTest():
 
     def clickReject(self):
         print("clickReject")
