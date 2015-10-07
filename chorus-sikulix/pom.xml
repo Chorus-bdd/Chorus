@@ -40,15 +40,16 @@
                    <include>**/*.txt</include>
                    <include>**/*.py</include>
                  </includes>
+                <excludes>
+                    <exclude>**/__init__.py</exclude>
+                </excludes>
              </testResource>
 
             <testResource>
-                <directory>src/test/features</directory>
+                <directory>src/test/sikulis</directory>
                 <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.feature</include>
-                    <include>**/*.txt</include>
+                    <include>**/*.py</include>
+                    <include>**/*.png</include>
                 </includes>
             </testResource>
 
