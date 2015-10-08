@@ -11,6 +11,7 @@ import org.python.core.PyFunction;
 import org.python.core.PyObject;
 import org.python.core.PyStringMap;
 import org.python.util.PythonInterpreter;
+import org.sikuli.script.SikulixForJython;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Enumerate the xxxx.sikuli's and provide all the StepInvokers for each method within the sikuly python class.
+ *
  * @author Stephen Lake
  */
 public class SikuliManager implements StepInvokerProvider {
@@ -41,6 +44,11 @@ public class SikuliManager implements StepInvokerProvider {
     }
 
     private void populateSikuliPathFromRootsInPythonInterpretor(Set<Path> sikuliDirectories, PythonInterpreter interpreter) {
+        // This rather nasty construct finds the jar where the sikuli python files are embedded
+        // and includes it (offsetting to the /Lib directory). It is effectively an initialisation for Sikuli.
+        SikulixForJython.get();
+
+        interpreter.exec("import sys");
         interpreter.exec("from sikuli.Sikuli import *");
 
         for (Path sikuliDirectory : sikuliDirectories) {
