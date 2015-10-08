@@ -27,5 +27,6 @@
         <module>chorus</module>                   <!-- Assembly module to build the chorus release -->
         <module>chorus-spring</module>            <!-- Chorus extensions for Spring support -->
         <module>chorus-selftest</module>          <!-- Integration tests for the Chorus interpreter -->
+        <module>chorus-sikulix</module>            <!-- Chorus wrapper of the SikuliX UI testing library. http://www.sikulix.com/ -->
 	</modules>
 </project>
