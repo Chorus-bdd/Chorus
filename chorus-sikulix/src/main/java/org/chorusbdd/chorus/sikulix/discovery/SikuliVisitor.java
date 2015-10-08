@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO comments???
+ * A FileVisitor for locating the Sikuli's
  *
- * @author ga2lakn
+ * @author Stephen Lake
  */
 class SikuliVisitor implements FileVisitor<Path> {
 

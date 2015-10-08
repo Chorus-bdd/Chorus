@@ -5,9 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * TODO comments???
+ * Starting at some baseDirectory, use Files.walkFileTree to enumerate all the directories that
+ * contain a valid xxxx.sikuli. Separatly calculate the Sikuli roots and main class's.
  *
- * @author ga2lakn
+ * @author Stephen Lake
  */
 public class SikuliDiscoveryBuilder {
 
