@@ -24,4 +24,12 @@ public class SikuliPackage {
 	public List<String> getPackageNameElements() {
 		return packageNameElements;
 	}
+
+	@Override
+	public String toString() {
+		return "SikuliPackage{" +
+				"className='" + className + '\'' +
+				", packageNameElements=" + packageNameElements +
+				'}';
+	}
 }
