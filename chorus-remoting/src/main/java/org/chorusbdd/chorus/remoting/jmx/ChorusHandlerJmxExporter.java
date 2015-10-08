@@ -75,22 +75,36 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
         for ( Object handler : handlers) {
             //assert that this is a Handler
-            Class<?> handlerClass = handler.getClass();
-            if (handlerClass.getAnnotation(Handler.class) == null) {
-                throw new ChorusException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation", handlerClass.getName()));
-            }
+            checkValidHandlerType(handler);
 
             StepInvokerProvider invokerFactory = new HandlerClassInvokerFactory(handler);
             List<StepInvoker> invokers = invokerFactory.getStepInvokers();
 
             if (invokers.size() == 0) {
-                log.warn(String.format("Cannot export object of type (%s) it no methods that declare the @Step annotation", handlerClass.getName()));
+                Class<?> handlerClass = handler.getClass();
+                log.warn(String.format("Cannot export object of type (%s) it either 1) Has no methods that declare the @Step annotation, " +
+                                "2) Returns zero StepInvoker's from a StepInvokerProvider instance", handlerClass.getName()));
             }
 
             for ( StepInvoker i : invokers) {
                 addStepInvoker(i);
             }
         }
+    }
+
+    private void checkValidHandlerType(Object handler) {
+        Class<?> handlerClass = handler.getClass();
+        if (handlerClass.getAnnotation(Handler.class) != null) {
+            return;
+        }
+
+        if (handler instanceof StepInvokerProvider) {
+            return;
+        }
+
+        throw new ChorusException(String.format("Cannot export object of type (%s) it does not declare the @Handler annotation or implement type (StepInvokerProvider)",
+                handlerClass.getName()));
+
     }
 
     private void addStepInvoker(StepInvoker stepInvoker) {
