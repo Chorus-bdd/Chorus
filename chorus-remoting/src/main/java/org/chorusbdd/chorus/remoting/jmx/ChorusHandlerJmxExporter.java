@@ -82,7 +82,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
             if (invokers.size() == 0) {
                 Class<?> handlerClass = handler.getClass();
-                log.warn(String.format("Cannot export object of type (%s) it either 1) Has no methods that declare the @Step annotation, " +
+                log.warn(String.format("Cannot export object of type (%s) it either:  1) Has no methods that declare the @Step annotation  " +
                                 "2) Returns zero StepInvoker's from a StepInvokerProvider instance", handlerClass.getName()));
             }
 
