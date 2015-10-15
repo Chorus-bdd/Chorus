@@ -47,7 +47,7 @@ public class JythonStepRegexBuilder {
 			return buildNoArgWithReturnStepInvokerRegex(getValueMatcher, sikuliPackage.getPackageNameElements());
 		}
 
-		return "";
+		return "gui action " + QUALIFIED_WORD + " performed";
 	}
 
 

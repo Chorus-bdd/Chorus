@@ -6,6 +6,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.python.core.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -21,7 +22,6 @@ public class JythonStepInvoker implements StepInvoker {
 	private final PyFunction function;
 	private final PyObject instance;
 	private final String id;
-
 
 	public JythonStepInvoker(CharSequence stepRegex, PyFunction function, PyObject instance, String id) {
 		this.stepPattern = Pattern.compile(stepRegex.toString());
@@ -53,7 +53,13 @@ public class JythonStepInvoker implements StepInvoker {
 			pyArgs[argsIndex+1] = new PyString(args.get(argsIndex));
 		}
 
-		PyObject pyObject = function.__call__(pyArgs);
+		PyObject pyObject;
+		try {
+			pyObject = function.__call__(pyArgs);
+		}
+		catch (PyException py) {
+			throw new RuntimeException(mineErrorFromPyException(py));
+		}
 
 		if (pyObject == null) return null;
 
@@ -62,9 +68,19 @@ public class JythonStepInvoker implements StepInvoker {
 		if (pyObject instanceof PyLong) return ((PyLong)pyObject).getValue();
 		if (pyObject instanceof PyFloat) return ((PyFloat)pyObject).getValue();
 		if (pyObject instanceof PyBoolean) return ((PyBoolean)pyObject).getValue();
+		if (pyObject instanceof PyNone) return null;
 
 		log.info("Unhandled Python Type [" + pyObject + "]");
 		return null;
+	}
+
+	private String mineErrorFromPyException(PyException py) {
+		StringBuilder buff = new StringBuilder();
+		buff.append("Mined Python Error: ");
+		buff.append("Type [").append(Objects.toString(py.type)).append("]");
+		buff.append(Objects.toString(py.value)).append("  ").append(System.lineSeparator());
+		py.traceback.dumpStack(buff);
+		return buff.toString();
 	}
 
 	@Override
