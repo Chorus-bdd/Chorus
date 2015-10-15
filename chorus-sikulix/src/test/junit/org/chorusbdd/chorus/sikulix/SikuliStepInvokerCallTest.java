@@ -11,8 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * TODO comments???
@@ -38,15 +37,31 @@ public class SikuliStepInvokerCallTest {
 	}
 
 	@Test
-	public void canPassValueFromStepInvoker() throws ReflectiveOperationException {
+	public void canPassValueToStepInvoker() throws ReflectiveOperationException {
 		SikuliManager sikuliManager = new SikuliManager(sikuliRoot);
 		List<StepInvoker> stepInvokers = sikuliManager.getStepInvokers();
 
 		StepInvoker stepInvoker = findById(stepInvokers, "status.sumValues");
 		assertNotNull(stepInvoker);
-		Object returnValue = stepInvoker.invoke(Arrays.asList("Steve","Lake"));
+		Object returnValue = stepInvoker.invoke(Arrays.asList("Steve", "Lake"));
 
 		assertEquals("SteveLake", returnValue);
+	}
+
+	@Test
+	public void canRetrieveException() throws ReflectiveOperationException {
+		SikuliManager sikuliManager = new SikuliManager(sikuliRoot);
+		List<StepInvoker> stepInvokers = sikuliManager.getStepInvokers();
+
+		StepInvoker stepInvoker = findById(stepInvokers, "status.badCall");
+		assertNotNull(stepInvoker);
+		try {
+			Object returnValue = stepInvoker.invoke(Arrays.asList("Steve", "Lake"));
+			fail();
+		}
+		catch(RuntimeException re) {
+			assertTrue(re.getMessage().contains("line 17, in badCall"));
+		}
 	}
 
 	private StepInvoker findById(List<StepInvoker> stepInvokers, String id) {

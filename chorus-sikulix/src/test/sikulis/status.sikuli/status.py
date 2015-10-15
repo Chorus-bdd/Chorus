@@ -13,6 +13,8 @@ class status:
     def sumValues(self, val1, val2):
         return val1 + val2
 
+    def badCall(self, val1, val2):
+        return ProblemCall
 
 
 #status().clickStartAutoUpdate()
