@@ -94,14 +94,21 @@ public class HandlerClassDiscovery {
         return handlerNameToHandlerClass;
     }
 
-    public StringBuilder findHandlerClasses(HashMap<String, Class> allHandlerClasses, FeatureToken feature, List<Class> orderedHandlerClasses) {
+    public StringBuilder findHandlerClasses(
+            HashMap<String, Class> allHandlerClasses,
+            FeatureToken feature,
+            List<Class> orderedHandlerClasses) {
+
        StringBuilder unavailableHandlersMessage = new StringBuilder();
 
-        String implicitHandlerName = feature.getName(); //the handler which shares the feature name is the implicit handler
-        Class mainHandlerClass = allHandlerClasses.get(implicitHandlerName);
+       String implicitHandlerName = feature.getName(); //the handler which shares the feature name is the implicit handler
+       Class mainHandlerClass = allHandlerClasses.get(implicitHandlerName);
        if (mainHandlerClass == null) {
-           log.info(String.format("No default handler found for Feature: (%s), will use built-in handlers and Uses: statements",
-                   implicitHandlerName));
+           log.info(
+               String.format("No default handler found for Feature: (%s), " +
+                             "will use built-in handlers and Uses: statements",
+               implicitHandlerName)
+           );
        } else if (mainHandlerClass == DuplicateHandlers.class) {
            unavailableHandlersMessage.append(
                String.format("Duplicate Handlers [%s] %s", implicitHandlerName, duplicateNameToDescription.get(implicitHandlerName))
@@ -116,7 +123,9 @@ public class HandlerClassDiscovery {
 
        for (String usesHandler : feature.getUsesHandlers()) {
            Class usesHandlerClass = allHandlerClasses.get(usesHandler);
-           if (usesHandlerClass == null) {
+           if ( usesHandler.equals(implicitHandlerName)) {
+               continue;  //there's no need to declare the implicit handler with Uses: since it is there anyway
+           } else if (usesHandlerClass == null) {
                unavailableHandlersMessage.append(String.format("'%s' ", usesHandler));
            } else if (usesHandlerClass == DuplicateHandlers.class) {
                unavailableHandlersMessage.append(
