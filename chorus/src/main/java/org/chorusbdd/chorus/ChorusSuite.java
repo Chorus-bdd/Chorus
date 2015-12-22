@@ -31,6 +31,7 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.results.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -55,6 +56,10 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     private Chorus chorus;
     private JUnitSuiteExecutionListener executionListener = new JUnitSuiteExecutionListener();
     private Thread testThread;
+
+    static {
+        ChorusOut.initialize();
+    }
 
     public ChorusSuite(Class clazz) throws InitializationError {
         super(clazz);

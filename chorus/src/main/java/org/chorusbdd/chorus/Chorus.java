@@ -54,6 +54,10 @@ import java.util.List;
  */
 public class Chorus {
 
+    static {
+        ChorusOut.initialize();
+    }
+
     //there's a chicken and egg problem which means we can't use ChorusLog as a static in the main class since config properties
     //are used to set the log implementation in use and these need to be configured first.
     

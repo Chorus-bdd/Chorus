@@ -37,9 +37,27 @@ import java.io.PrintStream;
  * Date: 05/07/12
  * Time: 10:44
  *
- * Writing to ChorusOut.out rather than System.out enables us to
- * capture the output for testing, by interposing a
- * PrintStream which can feed the output to a local buffer
+ * ChorusOut.out and ChorusOut.err are used throughout Chorus instead of
+ * System.out and System.err
+ *
+ * On startup Chorus captures the initial System.out and System.err into
+ * ChorusOut.out and ChorusOut.err as early as possible
+ *
+ * This stops and third party libraries which modify System.out or System.err from
+ * suppressing Chorus output. (Otherwise we see problems for certain projects in which the Chorus tests don't produce
+ * output due to certain libraries on the classpath)
+ *
+ * ChorusOut.out and ChorusOut.err also let us interpose our own output streams, to capture
+ * Chorus output for self testing. Setting ChorusOut.out and ChorusOut.err is also a viable way for the user to redirect
+ * Chorus' output without changing System.out or System.err
+ *
+ * However, the recommended way to modify ChorusOutput is:
+ *
+ * 1. For interpreter output add your own customised ChorusOutputWriter class using -outputWriter or -o switch
+ *
+ * 2. For log level dependent ChorusLog output, provide a ChorusLogProvider using -logProvider or -v, e.g see the
+ * ChorusCommonsLogProvider which logs to commons API
+ *
  */
 public class ChorusOut {
 
@@ -52,5 +70,10 @@ public class ChorusOut {
 
     public static void setStdErrStream(PrintStream errStream) {
         err = errStream;
+    }
+
+    //Ensure class load for ChorusOut early to grab the System.out and System.err
+    //before they can be overwritten by 3rd party libraries
+    public static void initialize() {
     }
 }
