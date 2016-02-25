@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Chorus-bdd/Chorus.svg?branch=master)](https://travis-ci.org/Chorus-bdd/Chorus)
+
 ###Chorus is a BDD testing framework targeted at distributed architectures###
 
 Chorus is a Behaviour Driven Development (BDD) testing framework written in Java.
