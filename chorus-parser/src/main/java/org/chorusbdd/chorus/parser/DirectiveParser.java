@@ -126,7 +126,7 @@ public class DirectiveParser {
     }
 
     private void logErrorIfDirectivesExist(List<LineNumberAndDirective> directives) throws ParseException {
-        if ( directives.size() > 0) {
+        if (!directives.isEmpty()) {
             LineNumberAndDirective firstInvalidDirective = directives.get(0);
             throw new ParseException("Invalid location for directive " + firstInvalidDirective.getDirective(), firstInvalidDirective.getLine());
         }
@@ -153,11 +153,11 @@ public class DirectiveParser {
     }
 
     private boolean stepDirectivesExist() {
-        return bufferedStepDirectives.size() > 0;
+        return !bufferedStepDirectives.isEmpty();
     }
 
     private boolean keywordDirectivesExist() {
-        return bufferedKeyWordDirectives.size() > 0;
+        return !bufferedKeyWordDirectives.isEmpty();
     }
 
     private LineNumberAndDirective getFirstKeywordDirective() {
@@ -173,7 +173,7 @@ public class DirectiveParser {
         List<LineNumberAndDirective> remaining = new LinkedList<>();
         remaining.addAll(bufferedKeyWordDirectives);
         remaining.addAll(bufferedStepDirectives);
-        if ( remaining.size() > 0) {
+        if (!remaining.isEmpty()) {
             LineNumberAndDirective exampleError = remaining.get(0);
             throw new ParseException("Invalid trailing directive [" + exampleError.getDirective() + "]", exampleError.getLine());
         }

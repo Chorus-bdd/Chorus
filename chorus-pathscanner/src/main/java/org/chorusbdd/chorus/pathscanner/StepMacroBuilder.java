@@ -60,7 +60,7 @@ public class StepMacroBuilder {
 
     List<StepMacro> getGlobalStepMacro(List<String> stepMacroPaths, List<String> featurePaths) {
         List<String> paths = stepMacroPaths;
-        if ( stepMacroPaths.size() == 0) {
+        if (stepMacroPaths.isEmpty()) {
             //if step macro paths are not separately specified, we use the feature paths
             paths = featurePaths;
         }

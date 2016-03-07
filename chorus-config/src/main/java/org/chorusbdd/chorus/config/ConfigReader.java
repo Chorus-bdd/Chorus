@@ -112,7 +112,7 @@ public class ConfigReader implements ConfigProperties {
             Map<ConfigurationProperty, List<String>> properties = sourceToPropertiesMap.get(s);
             for ( ConfigurationProperty p : properties.keySet()) {
                 List<String> valuesFromSource = properties.get(p);
-                if ( valuesFromSource != null && valuesFromSource.size() > 0 ) {
+                if ( valuesFromSource != null && !valuesFromSource.isEmpty()) {
                     List<String> vals = getOrCreatePropertyValues(p);
                     mergeValues(valuesFromSource, p, vals);
                 }
