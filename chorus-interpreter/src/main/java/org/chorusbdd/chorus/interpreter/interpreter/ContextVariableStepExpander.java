@@ -55,7 +55,7 @@ public class ContextVariableStepExpander {
         String action = step.getAction();
 
         Matcher m = p.matcher(action);
-        List<String> variables = new LinkedList<String>();
+        List<String> variables = new LinkedList<>();
 
         while(m.find()) {
             variables.add(m.group());

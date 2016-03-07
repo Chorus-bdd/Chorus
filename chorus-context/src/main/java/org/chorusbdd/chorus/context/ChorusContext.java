@@ -50,9 +50,9 @@ public class ChorusContext implements Map<String, Object>, Serializable {
      */
     public static final String LAST_RESULT = "lastResult";
 
-    private static ThreadLocal<ChorusContext> threadLocal = new ThreadLocal<ChorusContext>();
+    private static ThreadLocal<ChorusContext> threadLocal = new ThreadLocal<>();
 
-    private Map<String, Object> state = new HashMap<String, Object>();
+    private Map<String, Object> state = new HashMap<>();
 
     private ChorusContext() {
     }

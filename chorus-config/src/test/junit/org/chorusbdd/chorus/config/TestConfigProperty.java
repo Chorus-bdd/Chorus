@@ -203,7 +203,7 @@ public enum TestConfigProperty implements ConfigurationProperty {
     }
 
     public static List<ConfigurationProperty> getAll() {
-        List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>();
+        List<ConfigurationProperty> l = new ArrayList<>();
         Collections.addAll(l, values());
         return l;
     }

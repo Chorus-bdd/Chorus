@@ -60,10 +60,10 @@ public class ConfigReader implements ConfigProperties {
     private String[] args;
 
     //the properties provided be each source
-    private Map<ConfigSource, Map<ConfigurationProperty, List<String>>> sourceToPropertiesMap = new HashMap<ConfigSource, Map<ConfigurationProperty, List<String>>>();
+    private Map<ConfigSource, Map<ConfigurationProperty, List<String>>> sourceToPropertiesMap = new HashMap<>();
 
     //the merged set of properties, after PropertySourceMode is applied
-    private Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<ConfigurationProperty, List<String>>();
+    private Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<>();
 
     //ordered list of property sources
     private ConfigSource[] propertySources;
@@ -96,7 +96,7 @@ public class ConfigReader implements ConfigProperties {
 
     public ConfigReader readConfiguration() throws InterpreterPropertyException {
         for ( ConfigSource s : propertySources) {
-            Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<ConfigurationProperty, List<String>>();
+            Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<>();
             propertyMap = s.parseProperties(propertyMap, args);
             sourceToPropertiesMap.put(s, propertyMap);
         }
@@ -137,7 +137,7 @@ public class ConfigReader implements ConfigProperties {
     private List<String> getOrCreatePropertyValues(ConfigurationProperty p) {
         List<String> vals = propertyMap.get(p);
         if ( vals == null) {
-            vals = new LinkedList<String>();
+            vals = new LinkedList<>();
             propertyMap.put(p, vals);
         }
         return vals;

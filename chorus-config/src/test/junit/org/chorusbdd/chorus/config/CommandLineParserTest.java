@@ -52,12 +52,12 @@ public class CommandLineParserTest {
 
     @Before
     public void doSetUp() {
-        propertyMap = new HashMap<ConfigurationProperty, List<String>>();
+        propertyMap = new HashMap<>();
     }
 
     @Test
     public void testArgWithNoValues() throws InterpreterPropertyException {
-        propertyMap = new HashMap<ConfigurationProperty, List<String>>();
+        propertyMap = new HashMap<>();
         Map<ConfigurationProperty, List<String>> parsedArgs = new CommandLineParser(TestConfigProperty.getAll()).parseProperties(propertyMap, TEST_ARGS);
         Assert.assertTrue("-showErrors flag not found", parsedArgs.containsKey(TestConfigProperty.SHOW_ERRORS));
     }

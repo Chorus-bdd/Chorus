@@ -69,7 +69,7 @@ public class ClasspathScanner {
     private static String[] classpathNames;
 
     public static Set<Class> doScan(ClassFilter classFilter) {
-        Set<Class> s = new HashSet<Class>();
+        Set<Class> s = new HashSet<>();
         try {
             for (String clazz : getClasspathClassNames()) {
                 //check the name/package first before we try class loading
@@ -113,7 +113,7 @@ public class ClasspathScanner {
 
     public static String[] getClasspathFileNames(FilenameFilter filter)
             throws ZipException, IOException {
-        final List<String> filenames = new ArrayList<String>();
+        final List<String> filenames = new ArrayList<>();
         for (String filename : getClasspathFileNames()) {
             if (filter.accept(filename)) {
                 filenames.add(filename);
@@ -145,7 +145,7 @@ public class ClasspathScanner {
 
     private static String[] findClassNames() throws IOException {
         final StringTokenizer tokenizer = new StringTokenizer(System.getProperty("java.class.path"), File.pathSeparator, false);
-        final Set<String> filenames = new LinkedHashSet<String>();
+        final Set<String> filenames = new LinkedHashSet<>();
 
         while (tokenizer.hasMoreTokens()) {
             final String classpathElement = tokenizer.nextToken();
@@ -165,8 +165,8 @@ public class ClasspathScanner {
 
                 } else if (classpathFile.isDirectory()) {
                     // lets go through and find all of the subfolders
-                    final Set<File> directoriesToSearch = new HashSet<File>();
-                    final Set<File> newDirectories = new HashSet<File>();
+                    final Set<File> directoriesToSearch = new HashSet<>();
+                    final Set<File> newDirectories = new HashSet<>();
                     directoriesToSearch.add(classpathFile);
                     final String basePath = classpathFile.getAbsolutePath();
 

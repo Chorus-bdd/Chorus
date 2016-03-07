@@ -54,7 +54,7 @@ import java.util.Map;
  */
 public class StepMacroBuilder {
 
-    private Map<List<String>, List<StepMacro>> stepMacroPathsToStepMacros = new HashMap<List<String>, List<StepMacro>>();
+    private Map<List<String>, List<StepMacro>> stepMacroPathsToStepMacros = new HashMap<>();
 
     private ChorusLog log = ChorusLogFactory.getLog(StepMacroBuilder.class);
 
@@ -81,7 +81,7 @@ public class StepMacroBuilder {
     }
 
     private List<StepMacro> loadStepMacros(List<File> stepMacroFiles) {
-        List<StepMacro> macros = new ArrayList<StepMacro>();
+        List<StepMacro> macros = new ArrayList<>();
         for ( File f : stepMacroFiles) {
             macros.addAll(parseStepMacro(f));
         }

@@ -50,7 +50,7 @@ public class StepToken extends AbstractToken {
     /**
      * Step macro are composite steps which contain child steps
      */
-    private List<StepToken> childSteps = new ArrayList<StepToken>();
+    private List<StepToken> childSteps = new ArrayList<>();
 
     private long timeTaken = 0;  //time taken to run the step
 
@@ -175,7 +175,7 @@ public class StepToken extends AbstractToken {
     }
 
     private List<StepToken> recursiveCopy(List<StepToken> childSteps) {
-        List<StepToken> l = new ArrayList<StepToken>();
+        List<StepToken> l = new ArrayList<>();
         for ( StepToken t : childSteps) {
             l.add(t.deepCopy());
         }

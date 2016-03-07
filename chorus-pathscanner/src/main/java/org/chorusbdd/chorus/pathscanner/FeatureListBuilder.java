@@ -82,7 +82,7 @@ public class FeatureListBuilder {
             List<StepMacro> globalStepMacro,
             List<String> tagExpressions) {
 
-        List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
+        List<FeatureToken> allFeatures = new ArrayList<>();
 
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {

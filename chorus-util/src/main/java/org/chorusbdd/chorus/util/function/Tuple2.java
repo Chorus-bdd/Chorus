@@ -51,6 +51,6 @@ public class Tuple2<K,V> {
     }
 
     public static <K,V> Tuple2<K,V> tuple2(K k, V v) {
-        return new Tuple2<K,V>(k, v);
+        return new Tuple2<>(k, v);
     }
 }
