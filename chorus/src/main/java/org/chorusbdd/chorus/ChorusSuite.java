@@ -83,7 +83,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             throw new RuntimeException("The getChorusArgs method does not return a String");
         }
 
-        String args = "";
+        String args;
         try {
             args = (String)method.invoke(null);
         } catch (Exception e) {

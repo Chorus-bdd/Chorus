@@ -84,7 +84,7 @@ class TailLogPatternMatcher implements ProcessOutputPatternMatcher {
     //read ahead without blocking and attempt to match the pattern
     private String waitForPattern(long timeout, TailLogBufferedReader bufferedReader, Pattern pattern, boolean searchWithinLines, long timeoutInSeconds) throws IOException {
         StringBuilder sb = new StringBuilder();
-        String result = null;
+        String result;
         label:
         while(true) {
             while ( bufferedReader.ready() ) {

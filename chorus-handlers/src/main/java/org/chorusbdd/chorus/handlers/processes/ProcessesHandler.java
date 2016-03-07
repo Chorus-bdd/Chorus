@@ -217,7 +217,6 @@ public class ProcessesHandler {
      * Generate a remoting config to connect to a running process
      */
     private Properties getRemotingConfig(String processName) {
-        RemotingConfigBuilder result = null;
         Properties processProps = processManager.getProcessProperties(processName);
         if ( processProps == null) {
             fail("Process " + processName + " is not running");
