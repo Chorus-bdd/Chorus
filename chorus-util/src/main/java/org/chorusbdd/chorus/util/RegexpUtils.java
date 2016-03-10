@@ -36,6 +36,9 @@ package org.chorusbdd.chorus.util;
 @SuppressWarnings("unchecked")
 public class RegexpUtils {
 
+    private RegexpUtils() {
+    }
+
     /**
      * Replace any special characters in a regex replacement string
      */
