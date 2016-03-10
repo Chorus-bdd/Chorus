@@ -98,7 +98,7 @@ public class FeatureListBuilder {
     private void filterFeaturesByScenarioTags(List<FeatureToken> features, List<String> tagExpressions) {
         log.debug("Filtering by scenario tags");
         //FILTER THE FEATURES AND SCENARIOS (scenarios have also inherited any tags on the feature)
-        if (tagExpressions.size() > 0) {
+        if (!tagExpressions.isEmpty()) {
 
             String filterExpression = tagExpressionEvaluator.getFilterExpression(tagExpressions);
             
@@ -143,7 +143,7 @@ public class FeatureListBuilder {
                 f.setFeatureFile(featureFile);
             }
             
-            if ( features.size() == 0 ) {
+            if (features.isEmpty()) {
                 log.warn("Did not find a feature definition in file " + featureFile + ", will be skipped");
             }
             //we can end up with more than one feature per file if using Chorus 'configurations'

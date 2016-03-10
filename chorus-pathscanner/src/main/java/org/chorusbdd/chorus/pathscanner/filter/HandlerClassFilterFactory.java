@@ -67,7 +67,7 @@ public class HandlerClassFilterFactory {
         DenyOtherChorusPackagesRule denyOtherChorusPackagesRule = new DenyOtherChorusPackagesRule(handlerAnnotationFilter);
 
         //if user has specified package prefixes, restrict to those
-        List<String> userPackageNames = userSpecifiedPrefixes.size() == 0 ? Arrays.asList(ChorusConstants.ANY_PACKAGE) : userSpecifiedPrefixes;
+        List<String> userPackageNames = userSpecifiedPrefixes.isEmpty() ? Arrays.asList(ChorusConstants.ANY_PACKAGE) : userSpecifiedPrefixes;
         ClassFilter packagePrefixFilter = new PackagePrefixFilter(denyOtherChorusPackagesRule, userPackageNames);
 
          //always permit built in handlers, deny other chorus packages

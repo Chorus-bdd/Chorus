@@ -152,7 +152,7 @@ public class StepToken extends AbstractToken {
     }
 
     public boolean isStepMacro() {
-        return childSteps.size() > 0;
+        return !childSteps.isEmpty();
     }
 
     public static StepToken createDirective(String action) {

@@ -121,7 +121,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
                 }
             }
 
-            if ( tests.size() > 0) {
+            if (!tests.isEmpty()) {
                 ChorusFeatureTest t = tests.remove(0);
                 tests.add(0, new InitialFeature(t.featureToken, t, executionToken, features, uniqueScenarioNames));
 

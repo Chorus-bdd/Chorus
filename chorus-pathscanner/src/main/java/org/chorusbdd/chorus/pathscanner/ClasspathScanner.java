@@ -170,7 +170,7 @@ public class ClasspathScanner {
                     directoriesToSearch.add(classpathFile);
                     final String basePath = classpathFile.getAbsolutePath();
 
-                    while (directoriesToSearch.size() > 0) {
+                    while (!directoriesToSearch.isEmpty()) {
                         for (File searchDirectory : directoriesToSearch) {
                             File[] directoryFiles = searchDirectory.listFiles();
                             for (File directoryFile : directoryFiles) {

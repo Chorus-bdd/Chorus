@@ -61,7 +61,7 @@ public class ContextVariableStepExpander {
             variables.add(m.group());
         }
 
-        if ( variables.size() > 0) {
+        if (!variables.isEmpty()) {
             replaceVariables(c, action, m, variables, step);
         }
 

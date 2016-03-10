@@ -141,7 +141,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     
     public boolean isFeatureStartScenarioFailed() {
         boolean result = false;
-        if ( scenarios.size() > 0 ) {
+        if (!scenarios.isEmpty()) {
             ScenarioToken scenarioToken = scenarios.get(0);
             result = scenarioToken.getName().equals("Feature-Start") &&
                      scenarioToken.getEndState() == EndState.FAILED;
