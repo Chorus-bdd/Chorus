@@ -162,7 +162,8 @@ public class ClasspathScanner {
                             filenames.add(entry.getName());
                         }
                     }
-
+                    zip.close();
+                    
                 } else if (classpathFile.isDirectory()) {
                     // lets go through and find all of the subfolders
                     final Set<File> directoriesToSearch = new HashSet<>();
