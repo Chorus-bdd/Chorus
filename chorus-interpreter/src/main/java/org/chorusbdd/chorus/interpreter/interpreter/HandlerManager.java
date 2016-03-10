@@ -53,7 +53,7 @@ public class HandlerManager {
     private ChorusLog log = ChorusLogFactory.getLog(HandlerManager.class);
     
     //retain ordering of handlers 
-    private final LinkedHashMap<Class, Object> featureScopedHandlers = new LinkedHashMap<Class, Object>();
+    private final LinkedHashMap<Class, Object> featureScopedHandlers = new LinkedHashMap<>();
     
     private final FeatureToken feature;
     private final List<Class> orderedHandlerClasses;
@@ -87,7 +87,7 @@ public class HandlerManager {
     }
     
     public List<Object> getOrCreateHandlersForScenario() throws Exception {
-        List<Object> handlerInstances = new ArrayList<Object>();
+        List<Object> handlerInstances = new ArrayList<>();
         
         for ( Class handlerClass : orderedHandlerClasses ) {
             Handler handlerAnnotation = (Handler) handlerClass.getAnnotation(Handler.class);
@@ -223,11 +223,11 @@ public class HandlerManager {
     private void injectResourceFields(Object handler, Iterable<Object> handlerInstances, Scope... scopes) {
         Class<?> featureClass = handler.getClass();
 
-        List<Field> allFields = new ArrayList<Field>();
+        List<Field> allFields = new ArrayList<>();
         addAllPublicFields(featureClass, allFields);
         log.trace("Now examining handler fields for ChorusResource annotation " + allFields);
 
-        HashSet<Scope> scopeSet = new HashSet<Scope>(Arrays.asList(scopes));
+        HashSet<Scope> scopeSet = new HashSet<>(Arrays.asList(scopes));
         for (Field field : allFields) {
             setChorusResource(handler, handlerInstances, field, scopeSet);
         }

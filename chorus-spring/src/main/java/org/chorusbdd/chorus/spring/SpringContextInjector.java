@@ -62,7 +62,7 @@ public class SpringContextInjector implements SpringInjector {
      * n.b. Nick, I am guessing the reason for storing in this map may be to retain a strong reference to the context until we
      * explicitly clear down after the scenario, since I couldn't find another obvious reason
      */
-    private Map<Object, ContextWithURL> springContextByCreatingHandler = new HashMap<Object, ContextWithURL>();
+    private Map<Object, ContextWithURL> springContextByCreatingHandler = new HashMap<>();
 
     public void injectSpringContext(Object handler, FeatureToken featureToken, String contextFileName) {
         Class handlerClass = handler.getClass();

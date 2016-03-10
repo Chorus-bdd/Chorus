@@ -61,7 +61,7 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
 
         try (BufferedReader reader = new BufferedReader(r.get())) {
 
-            List<StepMacro> result = new LinkedList<StepMacro>();
+            List<StepMacro> result = new LinkedList<>();
             reader.mark(MAX_LENGTH_CHARS);
 
             boolean readingStepMacro = false;

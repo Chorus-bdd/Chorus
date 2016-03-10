@@ -45,7 +45,7 @@ import java.util.*;
  */
 public class ExecutionListenerSupport {
 
-    private List<ExecutionListener> listeners = new ArrayList<ExecutionListener>();
+    private List<ExecutionListener> listeners = new ArrayList<>();
 
     //
     // Execution event methods
@@ -119,7 +119,7 @@ public class ExecutionListenerSupport {
     }
 
     public List<ExecutionListener> getListeners() {
-        return new ArrayList<ExecutionListener>(listeners);
+        return new ArrayList<>(listeners);
     }
 
 }

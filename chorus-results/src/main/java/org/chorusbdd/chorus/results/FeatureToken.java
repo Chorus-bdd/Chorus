@@ -57,7 +57,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     private List<String> allConfigurationNames = Collections.singletonList(BASE_CONFIGURATION);
 
     private StringBuilder description = new StringBuilder();
-    private List<ScenarioToken> scenarios = new ArrayList<ScenarioToken>();
+    private List<ScenarioToken> scenarios = new ArrayList<>();
     private transient File featureFile;
 
     private String unavailableHandlersMessage;
@@ -220,7 +220,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
         copy.name = this.name;
         copy.usesHandlers = usesHandlers.clone();
         copy.configurationName = this.configurationName;
-        copy.scenarios = new ArrayList<ScenarioToken>(this.scenarios.size());
+        copy.scenarios = new ArrayList<>(this.scenarios.size());
         copy.featureFile = featureFile;
         for (ScenarioToken scenario : this.scenarios) {
             copy.scenarios.add(scenario.deepCopy());

@@ -53,8 +53,8 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     private static final long serialVersionUID = 3;
 
     private String name;
-    private List<StepToken> steps = new ArrayList<StepToken>();
-    private List<String> tags = new ArrayList<String>();//all tags listed on this scenario and its parent feature
+    private List<StepToken> steps = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();//all tags listed on this scenario and its parent feature
 
     public ScenarioToken() {
         super(getNextId());
@@ -119,11 +119,11 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
         ScenarioToken copy = new ScenarioToken(getNextId());
         super.deepCopy(copy);
         copy.name = this.name;
-        copy.steps = new ArrayList<StepToken>();
+        copy.steps = new ArrayList<>();
         for (StepToken step : steps) {
             copy.steps.add(step.deepCopy());
         }
-        copy.tags = new ArrayList<String>();
+        copy.tags = new ArrayList<>();
         copy.tags.addAll(this.tags);
         return copy;
     }
