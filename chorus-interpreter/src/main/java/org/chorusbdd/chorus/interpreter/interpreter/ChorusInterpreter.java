@@ -114,7 +114,7 @@ public class ChorusInterpreter {
         log.info("Running feature from file: " + feature.getFeatureFile() + config);
 
         //check that the required handler classes are all available and list them in order of precedence
-        List<Class> orderedHandlerClasses = new ArrayList<Class>();
+        List<Class> orderedHandlerClasses = new ArrayList<>();
         StringBuilder unavailableHandlersMessage = handlerClassDiscovery.findHandlerClasses(allHandlerClasses, feature, orderedHandlerClasses);
         boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
 

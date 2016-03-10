@@ -93,12 +93,12 @@ public class StepMacro {
     private ChorusLog log = ChorusLogFactory.getLog(StepMacro.class);
 
     private Pattern pattern;
-    private List<StepToken> steps = new ArrayList<StepToken>();
+    private List<StepToken> steps = new ArrayList<>();
 
     private Pattern variablePattern = Pattern.compile("<[\\w\\-_]+>");
     private Pattern groupPattern = Pattern.compile("<\\$\\d+>");
 
-    private Map<String, Integer> variableToGroupNumber = new HashMap<String, Integer>();
+    private Map<String, Integer> variableToGroupNumber = new HashMap<>();
 
     public StepMacro(String pattern) {
         pattern = replaceVariablesWithPatterns(pattern);

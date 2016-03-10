@@ -95,11 +95,11 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         try (BufferedReader reader = new BufferedReader(r.get())) {
 
             //we need to run the feature using combined list of both global and feature local step macros
-            List<StepMacro> allStepMacro = new ArrayList<StepMacro>();
+            List<StepMacro> allStepMacro = new ArrayList<>();
             allStepMacro.addAll(globalStepMacro);
             allStepMacro.addAll(featureLocalStepMacro);
 
-            List<String> usingDeclarations = new ArrayList<String>();
+            List<String> usingDeclarations = new ArrayList<>();
             List<String> configurationNames = null;
 
             FeatureToken currentFeature = null;
@@ -115,7 +115,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             int examplesCounter = 0;
 
             int parserState = START;
-            String line = null;
+            String line;
 
             int lineNumber = 0;
 
@@ -384,7 +384,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         List<String> outlineVariableTags = findChorusTagsFromOutlineVariables(placeholders, values);
          
         //append the first paramter to the scenario name if there is one
-        String firstParam = " " + (values.size() > 0 ? values.get(0) : "");
+        String firstParam = " " + (!values.isEmpty() ? values.get(0) : "");
         scenarioName += firstParam.trim().length() > 0 ? firstParam : "";
         scenario.setName(scenarioName);
 
@@ -421,7 +421,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     private List<String> readTableRowData(String line, boolean blankValuesPermitted) {
         String[] tokens = line.trim().split("\\|");
-        List<String> rowData = new ArrayList<String>();
+        List<String> rowData = new ArrayList<>();
         for (int i = 0 ; i < tokens.length ; i ++) {
             String token = tokens[i].trim();
             //always skip any blank space before the first |
@@ -434,7 +434,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     private List<String> readConfigurationNames(String line) {
         String[] names = line.trim().substring(KeyWord.Configurations.stringVal().length() + 1).split(",");
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (String name : names) {
             if (name.trim().length() > 0) {
                 list.add(name.trim());
@@ -460,7 +460,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             return null;
         } else {
             String[] names = tags.trim().split(" ");
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             for (String name : names) {
                 String tagName = name.trim();
                 if (tagName.length() > 0 && tagName.startsWith("@")) {

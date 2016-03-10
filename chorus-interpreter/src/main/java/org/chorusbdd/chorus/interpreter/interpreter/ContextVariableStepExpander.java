@@ -55,13 +55,13 @@ public class ContextVariableStepExpander {
         String action = step.getAction();
 
         Matcher m = p.matcher(action);
-        List<String> variables = new LinkedList<String>();
+        List<String> variables = new LinkedList<>();
 
         while(m.find()) {
             variables.add(m.group());
         }
 
-        if ( variables.size() > 0) {
+        if (!variables.isEmpty()) {
             replaceVariables(c, action, m, variables, step);
         }
 

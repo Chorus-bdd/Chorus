@@ -87,7 +87,7 @@ public class HandlerPatterns {
      */
     public static List<String> getProcessNames(String processNameList) {
         String[] processNames = processNameList.split(",");
-        List<String> results = new LinkedList<String>();
+        List<String> results = new LinkedList<>();
         for ( String p : processNames) {
             String processConfigName = p.trim();
             if ( processConfigName.length() > 0) {

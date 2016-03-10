@@ -37,6 +37,9 @@ package org.chorusbdd.chorus.util;
  */
 public class HandlerUtils {
 
+    private HandlerUtils() {
+    }
+
     /**
      * Like Class.forName, but works for primitive types too
      *

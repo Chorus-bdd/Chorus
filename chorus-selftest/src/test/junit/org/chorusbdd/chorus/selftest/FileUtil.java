@@ -43,6 +43,9 @@ import java.io.InputStreamReader;
  */
 public class FileUtil {
 
+    private FileUtil() {
+    }
+
     public static String readToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         try {

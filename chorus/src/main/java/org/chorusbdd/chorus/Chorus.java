@@ -132,7 +132,7 @@ public class Chorus {
      * @return true, if all tests passed or were marked pending
      */
     public boolean run() {
-        boolean passed = false;
+        boolean passed;
         ExecutionToken t = createExecutionToken();
         List<FeatureToken> features = getFeatureList(t);
         startTests(t, features);
@@ -202,7 +202,7 @@ public class Chorus {
 
     private String concatenateName(List<String> name) {
         StringBuilder sb = new StringBuilder();
-        if ( name.size() > 0 ) {
+        if (!name.isEmpty()) {
             Iterator<String> i = name.iterator();
             sb.append(i.next());
             while (i.hasNext()) {

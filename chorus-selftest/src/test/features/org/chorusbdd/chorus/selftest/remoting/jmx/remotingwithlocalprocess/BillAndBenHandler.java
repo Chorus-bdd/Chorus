@@ -47,7 +47,7 @@ public class BillAndBenHandler implements StepInvokerProvider {
 
     @Override
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> l = new LinkedList<StepInvoker>();
+        List<StepInvoker> l = new LinkedList<>();
         StepInvoker one = new StepInvoker() {
 
             String regex = "I can call a step method exported by the " + jmxProperty + " handler";

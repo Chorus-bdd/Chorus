@@ -54,13 +54,13 @@ import java.util.Map;
  */
 public class StepMacroBuilder {
 
-    private Map<List<String>, List<StepMacro>> stepMacroPathsToStepMacros = new HashMap<List<String>, List<StepMacro>>();
+    private Map<List<String>, List<StepMacro>> stepMacroPathsToStepMacros = new HashMap<>();
 
     private ChorusLog log = ChorusLogFactory.getLog(StepMacroBuilder.class);
 
     List<StepMacro> getGlobalStepMacro(List<String> stepMacroPaths, List<String> featurePaths) {
         List<String> paths = stepMacroPaths;
-        if ( stepMacroPaths.size() == 0) {
+        if (stepMacroPaths.isEmpty()) {
             //if step macro paths are not separately specified, we use the feature paths
             paths = featurePaths;
         }
@@ -81,7 +81,7 @@ public class StepMacroBuilder {
     }
 
     private List<StepMacro> loadStepMacros(List<File> stepMacroFiles) {
-        List<StepMacro> macros = new ArrayList<StepMacro>();
+        List<StepMacro> macros = new ArrayList<>();
         for ( File f : stepMacroFiles) {
             macros.addAll(parseStepMacro(f));
         }

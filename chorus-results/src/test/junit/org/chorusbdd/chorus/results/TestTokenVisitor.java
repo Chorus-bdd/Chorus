@@ -84,11 +84,11 @@ public class TestTokenVisitor extends Assert {
 
         private int visitations;
 
-        private List<Token> expectedTokenOrder = new LinkedList<Token>(
-        Arrays.asList(
-            (Token)executionToken, executionToken.getResultsSummary(), featureToken, scenarioToken, stepOne, stepTwo,
-            scenarioTwo, stepThree, featureTwo
-        ));
+        private List<Token> expectedTokenOrder = new LinkedList<>(
+                Arrays.asList(
+                        (Token) executionToken, executionToken.getResultsSummary(), featureToken, scenarioToken, stepOne, stepTwo,
+                        scenarioTwo, stepThree, featureTwo
+                ));
 
         public void visit(ExecutionToken executionToken) {
             checkExpectedToken(executionToken);

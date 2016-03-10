@@ -56,7 +56,7 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
     }
 
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
+        List<StepInvoker> stepInvokers = new ArrayList<>();
 
         //if the handler implements StepInvokerProvider then get the step invokers directly
         //these invokers may change at any point in the scenario lifecycle, even between steps
@@ -93,7 +93,7 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
     }
 
     private List<StepInvoker> getStepInvokersForAnnotatedMethods() {
-        List<StepInvoker> stepInvokers = new ArrayList<StepInvoker>();
+        List<StepInvoker> stepInvokers = new ArrayList<>();
         Method[] methods = handlerInstance.getClass().getMethods();
         for (Method method : methods) {
             //only check methods with Step annotation

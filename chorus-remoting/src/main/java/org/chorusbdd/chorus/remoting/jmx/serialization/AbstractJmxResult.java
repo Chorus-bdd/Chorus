@@ -54,7 +54,7 @@ public class AbstractJmxResult implements Serializable {
 
     //Using a Map to store field data because it might help to support backwards compatibility
     //we may be able to add more fields and still deserialize earlier versions of JmxStepResult
-    private Map<String, Object> fieldMap = new HashMap<String, Object>();
+    private Map<String, Object> fieldMap = new HashMap<>();
 
     public Object get(Object key) {
         return fieldMap.get(key);

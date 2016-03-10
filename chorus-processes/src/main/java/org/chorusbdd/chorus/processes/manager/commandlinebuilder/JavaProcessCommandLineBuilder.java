@@ -69,7 +69,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         String mainClassToken = processInfo.getMainclass();
         List<String> argsTokens = getSpaceSeparatedTokens(processInfo.getArgs());
 
-        List<String> commandLineTokens = new ArrayList<String>();
+        List<String> commandLineTokens = new ArrayList<>();
         commandLineTokens.add(executableToken);
         commandLineTokens.addAll(jvmArgs);
         commandLineTokens.addAll(log4jTokens);
@@ -92,14 +92,14 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
     }
 
     private List<String> getClasspathTokens(ProcessManagerConfig processesConfig) {
-        List<String>  classPathTokens = new ArrayList<String>();
+        List<String>  classPathTokens = new ArrayList<>();
         classPathTokens.add("-classpath");
         classPathTokens.add(processesConfig.getClasspath());
         return classPathTokens;
     }
 
     private List<String> getDebugTokens(ProcessManagerConfig processesConfig) {
-        List<String> debugTokens = new ArrayList<String>();
+        List<String> debugTokens = new ArrayList<>();
         if (processesConfig.getDebugPort() > -1) {
             debugTokens.add("-Xdebug");
             debugTokens.add(String.format("-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=%s", processesConfig.getDebugPort()));
@@ -108,7 +108,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
     }
 
     private List<String> getJmxTokens(ProcessManagerConfig processesConfig) {
-        List<String> jmxTokens = new ArrayList<String>();
+        List<String> jmxTokens = new ArrayList<>();
         if (processesConfig.getRemotingPort() > -1) {
             jmxTokens.add("-Dcom.sun.management.jmxremote.ssl=false");
             jmxTokens.add("-Dcom.sun.management.jmxremote.authenticate=false");
@@ -119,7 +119,7 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
     }
 
     private List<String> getLog4jTokens(String featureProcessName) {
-        List<String> log4jTokens = new ArrayList<String>();
+        List<String> log4jTokens = new ArrayList<>();
         File log4jConfigFile = findLog4jConfigFile();
         if ( log4jConfigFile != null && log4jConfigFile.exists()) {
             log.debug("Found log4j config at " + log4jConfigFile.getPath() + " will set -Dlog4j.configuration when starting process");

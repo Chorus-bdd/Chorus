@@ -51,7 +51,7 @@ public class HandlerClassDiscovery {
 
     private ChorusLog log = ChorusLogFactory.getLog(HandlerClassDiscovery.class);
 
-    private Map<String, String> duplicateNameToDescription = new HashMap<String,String>();
+    private Map<String, String> duplicateNameToDescription = new HashMap<>();
 
     /**
      * Scans the classpath for handler classes
@@ -61,7 +61,7 @@ public class HandlerClassDiscovery {
      */
     public HashMap<String, Class> discoverHandlerClasses(List<String> basePackages) {
         //always include the Chorus handlers package
-        HashMap<String, Class> handlerNameToHandlerClass = new HashMap<String, Class>();
+        HashMap<String, Class> handlerNameToHandlerClass = new HashMap<>();
 
         HandlerClassFilterFactory filterFactory = new HandlerClassFilterFactory();
         ClassFilter chainStart = filterFactory.createClassFilters(basePackages);

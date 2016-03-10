@@ -132,7 +132,7 @@ public class InterpreterOutputExecutionListener extends AbstractChorusOutputWrit
         private AbstractToken lastToken;
 
         //cache any log output which we receive before the call to 'testsStarted', otherwise we'd miss some key startup output
-        private List<String> cachedLogOutput = new LinkedList<String>();
+        private List<String> cachedLogOutput = new LinkedList<>();
         private Throwable cachedThrowable;
 
         void setLastToken(AbstractToken lastToken) {
