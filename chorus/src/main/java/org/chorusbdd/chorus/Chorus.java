@@ -132,7 +132,7 @@ public class Chorus {
      * @return true, if all tests passed or were marked pending
      */
     public boolean run() {
-        boolean passed = false;
+        boolean passed;
         ExecutionToken t = createExecutionToken();
         List<FeatureToken> features = getFeatureList(t);
         startTests(t, features);

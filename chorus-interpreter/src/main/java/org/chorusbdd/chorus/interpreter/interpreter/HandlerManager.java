@@ -194,7 +194,7 @@ public class HandlerManager {
 
     //return the scope of a lifecycle method, or null if the method is not a lifecycle method
     private Scope getMethodScope(boolean isDestroy, Method method) {
-        Scope methodScope = null;
+        Scope methodScope;
         if ( isDestroy ) {
             Destroy annotation = method.getAnnotation(Destroy.class);
             methodScope = annotation != null ? annotation.scope() : null;

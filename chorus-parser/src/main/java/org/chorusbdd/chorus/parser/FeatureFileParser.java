@@ -115,7 +115,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             int examplesCounter = 0;
 
             int parserState = START;
-            String line = null;
+            String line;
 
             int lineNumber = 0;
 
