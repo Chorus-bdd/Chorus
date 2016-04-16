@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.chorusbdd'
+version = '2.0.2'
+
+description = """chorus-pathscanner"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+configurations.all {
+}
+
+repositories {
+        
+     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.chorusbdd', name: 'chorus-results', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-parser', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-annotations', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-logging', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-util', version:'2.0.2'
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+}

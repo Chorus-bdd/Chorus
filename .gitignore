@@ -9,3 +9,5 @@ logs
 *.iml
 *.log
 .DS_Store
+.gradle
+gradle

@@ -1,0 +1,28 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'org.chorusbdd'
+version = '2.0.2'
+
+description = """chorus"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+configurations.all {
+}
+
+repositories {
+        
+     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.chorusbdd', name: 'chorus-handlers', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-interpreter', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-processes', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-remoting', version:'2.0.2'
+    compile group: 'org.apache.ant', name: 'ant', version:'1.8.2'
+    compile group: 'junit', name: 'junit', version:'4.10'
+    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
+}
