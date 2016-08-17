@@ -31,6 +31,7 @@ package org.chorusbdd.chorus;
 
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.results.*;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -56,6 +57,10 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     private JUnitSuiteExecutionListener executionListener = new JUnitSuiteExecutionListener();
     private Thread testThread;
 
+    static {
+        ChorusOut.initialize();
+    }
+
     public ChorusSuite(Class clazz) throws InitializationError {
         super(clazz);
         this.clazz = clazz;
@@ -78,7 +83,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             throw new RuntimeException("The getChorusArgs method does not return a String");
         }
 
-        String args = "";
+        String args;
         try {
             args = (String)method.invoke(null);
         } catch (Exception e) {
@@ -88,10 +93,11 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         try {
             chorus = new Chorus(args.split(" "));
-            chorus.addJUnitExecutionListener(executionListener);
         } catch (InterpreterPropertyException e) {
-            throw new RuntimeException("Unsupported property", e);
+            throw new RuntimeException("Error with Chorus command line " + e.getMessage());
         }
+
+        chorus.addJUnitExecutionListener(executionListener);
 
         ExecutionToken executionToken = chorus.createExecutionToken();
         List<ChorusFeatureTest> tests = getChorusFeatureTests(executionToken);
@@ -115,7 +121,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
                 }
             }
 
-            if ( tests.size() > 0) {
+            if (!tests.isEmpty()) {
                 ChorusFeatureTest t = tests.remove(0);
                 tests.add(0, new InitialFeature(t.featureToken, t, executionToken, features, uniqueScenarioNames));
 
@@ -254,7 +260,6 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         public ChorusFeatureTest(FeatureToken featureToken, Set<String> uniqueScenarioNames, boolean createChildren) throws InitializationError {
             super(ChorusFeatureTest.class);
-            //To change body of created methods use File | Settings | File Templates.
             this.featureToken = featureToken;
             this.uniqueScenarioNames = uniqueScenarioNames;
             if ( createChildren) {

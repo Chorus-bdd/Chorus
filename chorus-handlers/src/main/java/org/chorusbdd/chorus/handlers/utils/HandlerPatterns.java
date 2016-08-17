@@ -29,8 +29,12 @@
  */
 package org.chorusbdd.chorus.handlers.utils;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by GA2EBBU on 07/01/2015.
@@ -49,6 +53,33 @@ public class HandlerPatterns {
      */
     public static final String processNameListPattern = "([" + processNamePermittedChars + ", ]+)";
 
+
+    private static final Pattern processWithAlias = Pattern.compile(processNamePattern + "\\s+" + "as" + "\\s+" + processNamePattern);
+
+    /**
+     * Get a Map of process name/alias to process config name
+     * A config may be reused under multiple aliases
+     *
+     * @param processNameList a list of process names conforming to the processNameListPattern
+     */
+    public static Map<String,String> getProcessNamesWithAliases(String processNameList) {
+        String[] processNames = processNameList.split(",");
+        Map<String,String> results = new LinkedHashMap<>();  //retain ordering / determinism
+        for ( String p : processNames) {
+            String processConfigName = p.trim();
+
+            if ( processConfigName.length() > 0) {
+                Matcher matcher = processWithAlias.matcher(processConfigName);
+                if (matcher.matches()) {
+                    results.put(matcher.group(2), matcher.group(1));
+                } else {
+                    results.put(processConfigName, processConfigName);
+                }
+            }
+        }
+        return results;
+    }
+
     /**
      * Get a List of process names from a comma separated list
      *
@@ -56,7 +87,7 @@ public class HandlerPatterns {
      */
     public static List<String> getProcessNames(String processNameList) {
         String[] processNames = processNameList.split(",");
-        List<String> results = new LinkedList<String>();
+        List<String> results = new LinkedList<>();
         for ( String p : processNames) {
             String processConfigName = p.trim();
             if ( processConfigName.length() > 0) {

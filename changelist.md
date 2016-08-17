@@ -1,4 +1,17 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
+        
+### Version 2.0.2 ###
+        
+*Minor patch release with some small fixes and improvements*
+        
+| Changes in 2.0.2 |
+| ------ |
+| Don't fail with duplicate steps if default handler is named in Uses list |
+| Allow aliases for processes started with ProcessesHandler directives |
+| Initialize Chorus output streams as early as possible to avoid other libraries on the classpath redirecting this |
+| Fix for boolean switch evaluation |
+| Patched feature file parsing to remove unnecessary limit on file size |
+        
 ### Version 2.0.1 ###
         
 *Set scope to FEATURE automatically for processes and connections established during Feauture-Start:*

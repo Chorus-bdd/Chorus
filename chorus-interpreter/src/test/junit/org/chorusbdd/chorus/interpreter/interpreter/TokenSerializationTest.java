@@ -30,15 +30,13 @@
 package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.parser.FeatureFileParser;
+import org.chorusbdd.chorus.pathscanner.FileReaderSupplier;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.junit.Test;
 
 import java.io.*;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,7 +53,7 @@ public class TokenSerializationTest extends ChorusParserTagsTest {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         FeatureFileParser p = new FeatureFileParser();
-        List<FeatureToken> features = p.parse(new FileReader(f));
+        List<FeatureToken> features = p.parse(new FileReaderSupplier(f));
 
         ExecutionToken t = new ExecutionToken("Larry");
 

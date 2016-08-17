@@ -50,7 +50,7 @@ public abstract class AbstractConfigSource implements ConfigSource {
     protected List<String> getOrCreatePropertyList(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty switchName) {
         List<String> tokens = propertyMap.get(switchName);
         if ( tokens == null) {
-            tokens = new ArrayList<String>();
+            tokens = new ArrayList<>();
             propertyMap.put(switchName, tokens);
         }
         return tokens;

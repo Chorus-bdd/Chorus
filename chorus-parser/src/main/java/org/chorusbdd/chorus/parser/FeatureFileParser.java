@@ -35,6 +35,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.util.RegexpUtils;
+import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -84,233 +85,251 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
      * we can return more than one feature here, one for each configuration detected
      *
      * @return List containing single feature, or multiple features where configurations are used
+     * @param r
      */
-    public List<FeatureToken> parse(Reader r) throws IOException, ParseException {
-
-        BufferedReader reader = new BufferedReader(r, 32768);
+    public List<FeatureToken> parse(Supplier<Reader> r) throws IOException, ParseException {
 
         //first pre-parse the step macros
-        List<StepMacro> featureLocalStepMacro = stepMacroParser.parse(reader);
+        List<StepMacro> featureLocalStepMacro = stepMacroParser.parse(r);
 
-        //we need to run the feature using combined list of both global and feature local step macros
-        List<StepMacro> allStepMacro = new ArrayList<StepMacro>();
-        allStepMacro.addAll(globalStepMacro);
-        allStepMacro.addAll(featureLocalStepMacro);
+        try (BufferedReader reader = new BufferedReader(r.get())) {
 
-        List<String> usingDeclarations = new ArrayList<String>();
-        List<String> configurationNames = null;
+            //we need to run the feature using combined list of both global and feature local step macros
+            List<StepMacro> allStepMacro = new ArrayList<>();
+            allStepMacro.addAll(globalStepMacro);
+            allStepMacro.addAll(featureLocalStepMacro);
 
-        FeatureToken currentFeature = null;
-        List<String> currentFeaturesTags = null;
+            List<String> usingDeclarations = new ArrayList<>();
+            List<String> configurationNames = null;
 
-        ScenarioToken currentScenario = null;
-        List<String> currentScenariosTags = null;
+            FeatureToken currentFeature = null;
+            List<String> currentFeaturesTags = null;
 
-        ScenarioToken outlineScenario = null;
+            ScenarioToken currentScenario = null;
+            List<String> currentScenariosTags = null;
 
-        ScenarioToken backgroundScenario = null;
-        List<String> examplesTableHeaders = null;
-        int examplesCounter = 0;
+            ScenarioToken outlineScenario = null;
 
-        int parserState = START;
-        String line = null;
+            ScenarioToken backgroundScenario = null;
+            List<String> examplesTableHeaders = null;
+            int examplesCounter = 0;
 
-        int lineNumber = 0;
+            int parserState = START;
+            String line;
 
-        DirectiveParser directiveParser = new DirectiveParser();
+            int lineNumber = 0;
 
-        while ((line = reader.readLine()) != null) {
-            line = line.trim();
-            lineNumber++;
+            DirectiveParser directiveParser = new DirectiveParser();
 
-            //remove commented portion
-            //any content after the first # which is not a #! (directive)
-            line = removeComments(line);
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                lineNumber++;
 
-            line = directiveParser.parseDirectives(line, lineNumber);
+                //remove commented portion
+                //any content after the first # which is not a #! (directive)
+                line = removeComments(line);
 
-            if (line.length() == 0) {
-                continue;//ignore blank lines and comments
-            }
+                line = directiveParser.parseDirectives(line, lineNumber);
 
-            if (line.startsWith("@")) {
-                lastTagsLine = line;
-                continue;
-            }
-
-            KeyWord keyWord = KeyWord.getKeyWord(line);
-            if ( keyWord != null ) {
-                directiveParser.checkDirectivesForKeyword(directiveParser, keyWord);
-            }
-
-            if (KeyWord.Uses.is(keyWord)) {
-                checkNoCurrentFeature(currentFeature, lineNumber, "Uses: declarations must precede Feature: declarations");
-                usingDeclarations.add(line.substring(6, line.length()).trim());
-                continue;
-            }
-
-            if (KeyWord.Configurations.is(keyWord)) {
-                configurationNames = readConfigurationNames(line);
-                continue;
-            }
-
-            if (KeyWord.Feature.is(keyWord)) {
-                checkNoCurrentFeature(currentFeature, lineNumber, "Cannot define more than one Feature: in a .feature file");
-                currentFeaturesTags = extractTagsAndResetLastTagsLineField();
-                currentFeature = createFeature(line, usingDeclarations);
-                parserState = READING_FEATURE_DESCRIPTION;
-                continue;
-            }
-
-            if (KeyWord.Background.is(keyWord)) {
-                backgroundScenario = createScenario("Background", backgroundScenario, currentFeaturesTags, currentScenariosTags);
-                parserState = READING_SCENARIO_BACKGROUND_STEPS;
-                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(backgroundScenario));
-                continue;
-            }
-
-            if (KeyWord.Scenario.is(keyWord)) {
-                if ( currentFeature == null) {
-                    throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.Scenario, lineNumber);
+                if (line.length() == 0) {
+                    continue;//ignore blank lines and comments
                 }
-                if ( endFeatureLineNumber > -1) {
-                    throw new ParseException(KeyWord.FeatureEnd + " statement must come after all " + KeyWord.Scenario, lineNumber);
+
+                if (line.startsWith("@")) {
+                    lastTagsLine = line;
+                    continue;
                 }
-                currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                String scenarioName = line.substring(KeyWord.Scenario.stringVal().length()).trim();
-                currentScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
-                currentFeature.addScenario(currentScenario);
-                parserState = READING_SCENARIO_STEPS;
-                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
-                continue;
-            }
 
-            //FeatureStart section is essentially just a scenario which must appear first and is not involved in tagging
-            //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
-            if (KeyWord.FeatureStart.is(keyWord)) {
-                if ( currentFeature == null) {
-                    throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureStart, lineNumber);
+                KeyWord keyWord = KeyWord.getKeyWord(line);
+                if (keyWord != null) {
+                    directiveParser.checkDirectivesForKeyword(directiveParser, keyWord);
                 }
-                if ( currentScenario != null ) {
-                    throw new ParseException(KeyWord.FeatureStart + " statement must precede all scenarios", lineNumber);
+
+                if (KeyWord.Uses.is(keyWord)) {
+                    checkNoCurrentFeature(currentFeature, lineNumber, "Uses: declarations must precede Feature: declarations");
+                    usingDeclarations.add(line.substring(6, line.length()).trim());
+                    continue;
                 }
-                resetLastTagsLine();
-                currentScenario = createScenario(KeyWord.FEATURE_START_SCENARIO_NAME, null, null, null);
-                currentFeature.addScenario(currentScenario);
-                parserState = READING_SCENARIO_STEPS;
-                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
-                continue;
-            }
 
-            //FeatureEnd section is essentially just a scenario which must appear last and is not involved in tagging
-            //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
-            if (KeyWord.FeatureEnd.is(keyWord)) {
-                if ( currentFeature == null) {
-                    throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureEnd, lineNumber);
+                if (KeyWord.Configurations.is(keyWord)) {
+                    configurationNames = readConfigurationNames(line);
+                    continue;
                 }
-                endFeatureLineNumber = lineNumber;
-                resetLastTagsLine();
-                currentScenario = createScenario(KeyWord.FEATURE_END_SCENARIO_NAME, null, null, null);
-                currentFeature.addScenario(currentScenario);
-                parserState = READING_SCENARIO_STEPS;
-                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
-                continue;
-            }
 
-            if (KeyWord.ScenarioOutline.is(keyWord)) {
-                currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                String scenarioName = line.substring(KeyWord.ScenarioOutline.stringVal().length()).trim();
-                outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
-                examplesTableHeaders = null;//reset the examples table
-                parserState = READING_SCENARIO_OUTLINE_STEPS;
-                directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(outlineScenario));
-                continue;
-            }
+                if (KeyWord.Feature.is(keyWord)) {
+                    checkNoCurrentFeature(currentFeature, lineNumber, "Cannot define more than one Feature: in a .feature file");
+                    currentFeaturesTags = extractTagsAndResetLastTagsLineField();
+                    currentFeature = createFeature(line, usingDeclarations);
+                    parserState = READING_FEATURE_DESCRIPTION;
+                    continue;
+                }
 
-            if (KeyWord.Examples.is(keyWord)) {
-                parserState = READING_EXAMPLES_TABLE;
-                continue;
-            }
+                if (KeyWord.Background.is(keyWord)) {
+                    backgroundScenario = createScenario("Background", backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                    parserState = READING_SCENARIO_BACKGROUND_STEPS;
+                    directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(backgroundScenario));
+                    continue;
+                }
 
-            if (KeyWord.StepMacro.is(keyWord)) {
-                parserState = READING_STEP_MACRO;
-                directiveParser.clearDirectives();
-                continue;
-            }
-
-            switch (parserState) {
-                case READING_FEATURE_DESCRIPTION:
-                    currentFeature.appendToDescription(line);
-                    break;
-                case READING_SCENARIO_BACKGROUND_STEPS:
-                    addStepAndStepDirectives(directiveParser, backgroundScenario, createStepToken(line), allStepMacro);
-                    break;
-                case READING_SCENARIO_OUTLINE_STEPS:
-                    //pass empty list of macros -
-                    //we don't want to expand macros upfront since the outline step contain placeholders which must be expanded first
-                    addStepAndStepDirectives(directiveParser, outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList());
-                    break;
-                case READING_SCENARIO_STEPS:
-                    addStepAndStepDirectives(directiveParser, currentScenario, createStepToken(line), allStepMacro);
-                    break;
-                case READING_EXAMPLES_TABLE:
-                    if (examplesTableHeaders == null) {
-                        //reading the headers row in the examples table
-                        examplesTableHeaders = readTableRowData(line, false);
-                        examplesCounter = 0;
-                        //read or reset the last tags line
-                    } else {
-                        //reading a data row in the examples table
-                        List<String> values = readTableRowData(line, true);
-                        ++examplesCounter;
-                        String scenarioName = String.format("%s [%s]", outlineScenario.getName(), examplesCounter);
-                        if ( values.size() != examplesTableHeaders.size()) {
-                            log.warn(
-                                "Wrong number of values for " + scenarioName + ", expecting " + examplesTableHeaders.size() +
-                                " but got " + values.size());
-                            log.warn(line);
-                            throw new ParseException("Failed to parse Scenario-Outline " + scenarioName, lineNumber);
-                        } else {
-                            ScenarioToken scenarioFromOutline = createScenarioFromOutline(
-                                   scenarioName,
-                                   outlineScenario,
-                                   examplesTableHeaders,
-                                   values,
-                                   currentFeaturesTags,
-                                   currentScenariosTags,
-                                   allStepMacro
-                            );
-                            currentFeature.addScenario(scenarioFromOutline);
-                        }
+                if (KeyWord.Scenario.is(keyWord)) {
+                    if (currentFeature == null) {
+                        throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.Scenario, lineNumber);
                     }
-                    break;
-                case READING_STEP_MACRO:
-                    //take no action since step macros are pre-parsed before we start main feature file parsing.
-                    directiveParser.clearDirectives();  //don't want to keep any directives associated with step macro
-                    break;
-                default:
-                    throw new ParseException("Parse error, unexpected text '" + line + "'", lineNumber);
-
-            }
-        }
-
-        directiveParser.checkForUnprocessedDirectives();
-
-        List<FeatureToken> results = new ArrayList<FeatureToken>();
-        if (currentFeature != null) {
-            if (configurationNames == null) {
-                results.add(currentFeature);
-            } else {
-                for (String name : configurationNames) {
-                    FeatureToken copy = currentFeature.deepCopy();
-                    copy.setConfigurationName(name);
-                    copy.setAllConfigurationNames(configurationNames);
-                    results.add(copy);
+                    if (endFeatureLineNumber > -1) {
+                        throw new ParseException(KeyWord.FeatureEnd + " statement must come after all " + KeyWord.Scenario, lineNumber);
+                    }
+                    currentScenariosTags = extractTagsAndResetLastTagsLineField();
+                    String scenarioName = line.substring(KeyWord.Scenario.stringVal().length()).trim();
+                    currentScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                    currentFeature.addScenario(currentScenario);
+                    parserState = READING_SCENARIO_STEPS;
+                    directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
+                    continue;
                 }
+
+                //FeatureStart section is essentially just a scenario which must appear first and is not involved in tagging
+                //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
+                if (KeyWord.FeatureStart.is(keyWord)) {
+                    if (currentFeature == null) {
+                        throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureStart, lineNumber);
+                    }
+                    if (currentScenario != null) {
+                        throw new ParseException(KeyWord.FeatureStart + " statement must precede all scenarios", lineNumber);
+                    }
+                    resetLastTagsLine();
+                    currentScenario = createScenario(KeyWord.FEATURE_START_SCENARIO_NAME, null, null, null);
+                    currentFeature.addScenario(currentScenario);
+                    parserState = READING_SCENARIO_STEPS;
+                    directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
+                    continue;
+                }
+
+                //FeatureEnd section is essentially just a scenario which must appear last and is not involved in tagging
+                //It always runs so long as any other scenario in the feature pass tag rules (interpreter should take care of this)
+                if (KeyWord.FeatureEnd.is(keyWord)) {
+                    if (currentFeature == null) {
+                        throw new ParseException(KeyWord.Feature + " statement must precede " + KeyWord.FeatureEnd, lineNumber);
+                    }
+                    endFeatureLineNumber = lineNumber;
+                    resetLastTagsLine();
+                    currentScenario = createScenario(KeyWord.FEATURE_END_SCENARIO_NAME, null, null, null);
+                    currentFeature.addScenario(currentScenario);
+                    parserState = READING_SCENARIO_STEPS;
+                    directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(currentScenario));
+                    continue;
+                }
+
+                if (KeyWord.ScenarioOutline.is(keyWord)) {
+                    currentScenariosTags = extractTagsAndResetLastTagsLineField();
+                    String scenarioName = line.substring(KeyWord.ScenarioOutline.stringVal().length()).trim();
+                    outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
+                    examplesTableHeaders = null;//reset the examples table
+                    parserState = READING_SCENARIO_OUTLINE_STEPS;
+                    directiveParser.addKeyWordDirectives(new ScenarioTokenStepConsumer(outlineScenario));
+                    continue;
+                }
+
+                if (KeyWord.Examples.is(keyWord)) {
+                    parserState = READING_EXAMPLES_TABLE;
+                    continue;
+                }
+
+                if (KeyWord.StepMacro.is(keyWord)) {
+                    parserState = READING_STEP_MACRO;
+                    directiveParser.clearDirectives();
+                    continue;
+                }
+
+                switch (parserState) {
+                    case READING_FEATURE_DESCRIPTION:
+                        currentFeature.appendToDescription(line);
+                        break;
+                    case READING_SCENARIO_BACKGROUND_STEPS:
+                        addStepAndStepDirectives(directiveParser, backgroundScenario, createStepToken(line), allStepMacro);
+                        break;
+                    case READING_SCENARIO_OUTLINE_STEPS:
+                        //pass empty list of macros -
+                        //we don't want to expand macros upfront since the outline step contain placeholders which must be expanded first
+                        addStepAndStepDirectives(directiveParser, outlineScenario, createStepToken(line), Collections.<StepMacro>emptyList());
+                        break;
+                    case READING_SCENARIO_STEPS:
+                        addStepAndStepDirectives(directiveParser, currentScenario, createStepToken(line), allStepMacro);
+                        break;
+                    case READING_EXAMPLES_TABLE:
+                        if (examplesTableHeaders == null) {
+                            //reading the headers row in the examples table
+                            examplesTableHeaders = readTableRowData(line, false);
+                            examplesCounter = 0;
+                            //read or reset the last tags line
+                        } else {
+                            //reading a data row in the examples table
+                            List<String> values = readTableRowData(line, true);
+                            ++examplesCounter;
+                            String scenarioName = String.format("%s [%s]", outlineScenario.getName(), examplesCounter);
+                            if (values.size() != examplesTableHeaders.size()) {
+                                log.warn(
+                                        "Wrong number of values for " + scenarioName + ", expecting " + examplesTableHeaders.size() +
+                                                " but got " + values.size());
+                                log.warn(line);
+                                throw new ParseException("Failed to parse Scenario-Outline " + scenarioName, lineNumber);
+                            } else {
+                                ScenarioToken scenarioFromOutline = createScenarioFromOutline(
+                                        scenarioName,
+                                        outlineScenario,
+                                        examplesTableHeaders,
+                                        values,
+                                        currentFeaturesTags,
+                                        currentScenariosTags,
+                                        allStepMacro
+                                );
+                                currentFeature.addScenario(scenarioFromOutline);
+                            }
+                        }
+                        break;
+                    case READING_STEP_MACRO:
+                        //take no action since step macros are pre-parsed before we start main feature file parsing.
+                        directiveParser.clearDirectives();  //don't want to keep any directives associated with step macro
+                        break;
+                    default:
+                        throw new ParseException("Parse error, unexpected text '" + line + "'", lineNumber);
+
+                }
+            }
+
+            directiveParser.checkForUnprocessedDirectives();
+
+            List<FeatureToken> results = getFeaturesWithConfigurations(configurationNames, currentFeature);
+            return results;
+        }
+    }
+
+    /**
+     * If parsedFeature has no configurations then we can return a single item list containg the parsedFeature
+     * If configurations are present we need to return a list with one feature per supported configuration
+     *
+     * @param configurationNames
+     * @param parsedFeature
+     * @return
+     */
+    private List<FeatureToken> getFeaturesWithConfigurations(List<String> configurationNames, FeatureToken parsedFeature) {
+        List<FeatureToken> results = new ArrayList<>();
+        if (parsedFeature != null) {
+            if (configurationNames == null) {
+                results.add(parsedFeature);
+            } else {
+                createFeaturesWithConfigurations(configurationNames, parsedFeature, results);
             }
         }
         return results;
+    }
 
+    private void createFeaturesWithConfigurations(List<String> configurationNames, FeatureToken currentFeature, List<FeatureToken> results) {
+        for (String name : configurationNames) {
+            FeatureToken copy = currentFeature.deepCopy();
+            copy.setConfigurationName(name);
+            copy.setAllConfigurationNames(configurationNames);
+            results.add(copy);
+        }
     }
 
     private void addStepAndStepDirectives(
@@ -365,7 +384,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
         List<String> outlineVariableTags = findChorusTagsFromOutlineVariables(placeholders, values);
          
         //append the first paramter to the scenario name if there is one
-        String firstParam = " " + (values.size() > 0 ? values.get(0) : "");
+        String firstParam = " " + (!values.isEmpty() ? values.get(0) : "");
         scenarioName += firstParam.trim().length() > 0 ? firstParam : "";
         scenario.setName(scenarioName);
 
@@ -402,7 +421,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     private List<String> readTableRowData(String line, boolean blankValuesPermitted) {
         String[] tokens = line.trim().split("\\|");
-        List<String> rowData = new ArrayList<String>();
+        List<String> rowData = new ArrayList<>();
         for (int i = 0 ; i < tokens.length ; i ++) {
             String token = tokens[i].trim();
             //always skip any blank space before the first |
@@ -415,7 +434,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
 
     private List<String> readConfigurationNames(String line) {
         String[] names = line.trim().substring(KeyWord.Configurations.stringVal().length() + 1).split(",");
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (String name : names) {
             if (name.trim().length() > 0) {
                 list.add(name.trim());
@@ -441,7 +460,7 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
             return null;
         } else {
             String[] names = tags.trim().split(" ");
-            List<String> list = new ArrayList<String>();
+            List<String> list = new ArrayList<>();
             for (String name : names) {
                 String tagName = name.trim();
                 if (tagName.length() > 0 && tagName.startsWith("@")) {

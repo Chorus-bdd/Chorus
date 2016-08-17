@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class CompositeStepInvokerProvider implements StepInvokerProvider {
 
-    private List<StepInvokerProvider> childInvokers = new LinkedList<StepInvokerProvider>();
+    private List<StepInvokerProvider> childInvokers = new LinkedList<>();
 
     public CompositeStepInvokerProvider() {
         this(Collections.EMPTY_LIST);
@@ -55,7 +55,7 @@ public class CompositeStepInvokerProvider implements StepInvokerProvider {
 
     @Override
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> invokerList = new LinkedList<StepInvoker>();
+        List<StepInvoker> invokerList = new LinkedList<>();
         for ( StepInvokerProvider p : childInvokers) {
             invokerList.addAll(p.getStepInvokers());
         }

@@ -61,7 +61,7 @@ public class NativeProcessCommandLineBuilder extends AbstractCommandLineBuilder 
         String executableToken = getExecutableToken(namedProcessConfig);
         List<String> argsTokens = getSpaceSeparatedTokens(namedProcessConfig.getArgs());
 
-        List<String> commandLineTokens = new ArrayList<String>();
+        List<String> commandLineTokens = new ArrayList<>();
         commandLineTokens.add(executableToken);
         commandLineTokens.addAll(argsTokens);
         return commandLineTokens;

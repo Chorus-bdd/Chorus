@@ -41,7 +41,7 @@ public class Calculator {
         ADD, SUBTRACT, MULTIPLY, DIVIDE
     }
 
-    private Stack<Double> stack = new Stack<Double>();
+    private Stack<Double> stack = new Stack<>();
 
     private double lastResult = 0;
 

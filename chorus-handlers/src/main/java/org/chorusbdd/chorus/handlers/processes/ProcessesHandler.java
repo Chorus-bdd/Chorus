@@ -48,6 +48,7 @@ import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
@@ -180,9 +181,9 @@ public class ProcessesHandler {
     //A Directive which can be used to start one or more processes using the config name
     @Step("Processes start " + HandlerPatterns.processNameListPattern)
     public void startProcessDirective(String processNameList) throws Exception {
-        List<String> processNames = HandlerPatterns.getProcessNames(processNameList);
-        for ( String p : processNames) {
-            startProcessFromConfig(p);
+        Map<String,String> processNames = HandlerPatterns.getProcessNamesWithAliases(processNameList);
+        for ( Map.Entry<String,String> e : processNames.entrySet()) {
+            startNamedProcessFromConfig(e.getValue(), e.getKey());
         }
     }
 
@@ -216,7 +217,6 @@ public class ProcessesHandler {
      * Generate a remoting config to connect to a running process
      */
     private Properties getRemotingConfig(String processName) {
-        RemotingConfigBuilder result = null;
         Properties processProps = processManager.getProcessProperties(processName);
         if ( processProps == null) {
             fail("Process " + processName + " is not running");

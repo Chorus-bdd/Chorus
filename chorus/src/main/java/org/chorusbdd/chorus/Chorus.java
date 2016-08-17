@@ -54,6 +54,10 @@ import java.util.List;
  */
 public class Chorus {
 
+    static {
+        ChorusOut.initialize();
+    }
+
     //there's a chicken and egg problem which means we can't use ChorusLog as a static in the main class since config properties
     //are used to set the log implementation in use and these need to be configured first.
     
@@ -66,7 +70,7 @@ public class Chorus {
     private ChorusInterpreter interpreter;
     private SubsystemManager subsystemManager;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         boolean success = false;
         try {
             Chorus chorus = new Chorus(args);
@@ -74,6 +78,9 @@ public class Chorus {
         } catch (InterpreterPropertyException e) {
             ChorusOut.err.println(e.getMessage());
             ChorusOut.err.print(ChorusConfigProperty.getHelpText());
+        } catch (Throwable t) {
+            ChorusOut.err.println("Chorus encountered an error and had to exit");
+            ChorusOut.err.print(t.toString());
         }
 
         //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
@@ -124,24 +131,16 @@ public class Chorus {
      * Run interpreter using just the base configuration and the listeners provided
      * @return true, if all tests passed or were marked pending
      */
-    public boolean run() throws Exception {
-        boolean passed = false;
-        try {
-            ExecutionToken t = createExecutionToken();
-            List<FeatureToken> features = getFeatureList(t);
-            startTests(t, features);
-            initializeInterpreter();
-            processFeatures(t, features);
-            endTests(t, features);
-            passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
-            dispose();
-        } catch (InterpreterPropertyException e) {
-            ChorusOut.err.println(e.getMessage());
-            ChorusOut.err.print(ChorusConfigProperty.getHelpText());
-        } catch (Throwable t) {
-            ChorusOut.err.println(t.getMessage());
-            t.printStackTrace(ChorusOut.err);
-        }
+    public boolean run() {
+        boolean passed;
+        ExecutionToken t = createExecutionToken();
+        List<FeatureToken> features = getFeatureList(t);
+        startTests(t, features);
+        initializeInterpreter();
+        processFeatures(t, features);
+        endTests(t, features);
+        passed = t.getEndState() == EndState.PASSED || t.getEndState() == EndState.PENDING;
+        dispose();
         return passed;
     }
 
@@ -155,11 +154,11 @@ public class Chorus {
         interpreter.initialize();
     }
 
-    void processFeatures(ExecutionToken t, List<FeatureToken> features) throws Exception {
+    void processFeatures(ExecutionToken t, List<FeatureToken> features) {
         interpreter.runFeatures(t, features);
     }
 
-    List<FeatureToken> getFeatureList(ExecutionToken executionToken) throws Exception {
+    List<FeatureToken> getFeatureList(ExecutionToken executionToken)  {
         return featureListBuilder.getFeatureList(
             executionToken,
             configReader.getValues(ChorusConfigProperty.FEATURE_PATHS),
@@ -203,7 +202,7 @@ public class Chorus {
 
     private String concatenateName(List<String> name) {
         StringBuilder sb = new StringBuilder();
-        if ( name.size() > 0 ) {
+        if (!name.isEmpty()) {
             Iterator<String> i = name.iterator();
             sb.append(i.next());
             while (i.hasNext()) {

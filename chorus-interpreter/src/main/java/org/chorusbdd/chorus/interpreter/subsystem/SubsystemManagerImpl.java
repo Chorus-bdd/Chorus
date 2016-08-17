@@ -118,7 +118,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private <E> E initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass) {
         String processManagerClass = System.getProperty(sysProp, defaultImplementingClass);
         log.debug("Implementation for " + subsystemId + " is " + processManagerClass);
-        E instance = null;
+        E instance;
         try {
             Class clazz = Class.forName(processManagerClass);
             instance = (E)clazz.newInstance();

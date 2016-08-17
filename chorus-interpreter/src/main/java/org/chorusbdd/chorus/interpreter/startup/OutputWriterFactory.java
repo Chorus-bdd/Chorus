@@ -41,7 +41,7 @@ public class OutputWriterFactory {
 
     public ChorusOutputWriter createOutputWriter(ConfigProperties configProperties) {
 
-        String formatterClass = configProperties.getValue(ChorusConfigProperty.OUTPUT_FORMATTER);
+        String formatterClass = configProperties.getValue(ChorusConfigProperty.OUTPUT_WRITER);
         
         if ( configProperties.isTrue(ChorusConfigProperty.CONSOLE_MODE)) {
             formatterClass = ConsoleOutputWriter.class.getName();
@@ -55,7 +55,7 @@ public class OutputWriterFactory {
                 if ( o instanceof ChorusOutputWriter) {
                     formatter = (ChorusOutputWriter)o;
                 } else {
-                    System.out.println("The " + ChorusConfigProperty.OUTPUT_FORMATTER.getSystemProperty() + 
+                    System.out.println("The " + ChorusConfigProperty.OUTPUT_WRITER.getSystemProperty() +
                             " property must be a class which implements ChorusOutputWriter");
                 }
             } catch (Exception e) {

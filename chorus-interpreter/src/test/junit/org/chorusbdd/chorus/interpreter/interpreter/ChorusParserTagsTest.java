@@ -30,12 +30,12 @@
 package org.chorusbdd.chorus.interpreter.interpreter;
 
 import org.chorusbdd.chorus.parser.FeatureFileParser;
+import org.chorusbdd.chorus.pathscanner.FileReaderSupplier;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileReader;
 import java.net.URL;
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class ChorusParserTagsTest {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         FeatureFileParser p = new FeatureFileParser();
-        List<FeatureToken> features = p.parse(new FileReader(f));
+        List<FeatureToken> features = p.parse(new FileReaderSupplier(f));
 
         assertEquals("Wrong number of features loaded", 1, features.size());
 
@@ -78,7 +78,7 @@ public class ChorusParserTagsTest {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         FeatureFileParser p = new FeatureFileParser();
-        List<FeatureToken> features = p.parse(new FileReader(f));
+        List<FeatureToken> features = p.parse(new FileReaderSupplier(f));
         FeatureToken feature = features.get(0);
 
         // the second scenario should inherit the two tags from the parent feature and declare three of its own too
@@ -99,7 +99,7 @@ public class ChorusParserTagsTest {
         File f = getFileResourceWithName(TEST_FEATURE_FILE);
 
         FeatureFileParser p = new FeatureFileParser();
-        List<FeatureToken> features = p.parse(new FileReader(f));
+        List<FeatureToken> features = p.parse(new FileReaderSupplier(f));
         FeatureToken feature = features.get(0);
 
         // remaining scenarios (created from an outline) should have 2 inherited tags from the parent feature and one of their own

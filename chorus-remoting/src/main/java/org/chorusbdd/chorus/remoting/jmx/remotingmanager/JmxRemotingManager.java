@@ -64,7 +64,7 @@ public class JmxRemotingManager implements RemotingManager {
     /**
      * Map: configName -> proxy
      */
-    private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<String, ChorusHandlerJmxProxy>();
+    private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<>();
 
     private final RemotingConfigBeanValidator configValidator = new RemotingConfigBeanValidator();
 
@@ -133,7 +133,7 @@ public class JmxRemotingManager implements RemotingManager {
 
     @Override
     public List<StepInvoker> getStepInvokers() {
-        List<StepInvoker> invokers = new LinkedList<StepInvoker>();
+        List<StepInvoker> invokers = new LinkedList<>();
         for ( List<StepInvoker> l : remoteInvokersToUse.values()) {
             invokers.addAll(l);
         }

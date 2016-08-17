@@ -55,8 +55,8 @@ public final class ConsoleOutputWriter extends AbstractChorusOutputWriter {
         if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
             StringBuilder depthPadding = getDepthPadding(depth);
             int stepLengthChars =  getStepLengthCharCount() - depthPadding.length();
-            getOutWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
-            getOutWriter().flush();
+            getPrintWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+            getPrintWriter().flush();
         }
     }
 
