@@ -24,7 +24,7 @@ public class JythonStepRegexBuilderTest {
 
 	@Before
 	public void setup() {
-		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("org\\chorusbdd\\chorus\\sikulix\\stepRegexTest.py");
+		InputStream resourceAsStream = this.getClass().getResourceAsStream("stepRegexTest.py");
 		interpreter.execfile(resourceAsStream);
 	}
 
