@@ -69,7 +69,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
     private ChorusLog log = ChorusLogFactory.getLog(ProcessManager.class);
 
-    private final Map<String, NamedProcessConfig> processes = new ConcurrentHashMap<String, NamedProcessConfig>();
+    private final Map<String, NamedProcessConfig> processes = new ConcurrentHashMap<>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
 
@@ -165,7 +165,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     public synchronized void stopAllProcesses() {
-        final Set<String> processNames = new HashSet<String>(processes.keySet());
+        final Set<String> processNames = new HashSet<>(processes.keySet());
         for (final String name : processNames) {
             stopProcess(name);
         }

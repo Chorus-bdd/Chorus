@@ -217,6 +217,10 @@ public class TestConfigReader extends ChorusAssert {
             return delegate.getDefaults();
         }
 
+        public boolean hasDefaults() {
+            return getDefaults().length > 0;
+        }
+
         public boolean matchesSwitch(String s) {
             return delegate.matchesSwitch(s);
         }

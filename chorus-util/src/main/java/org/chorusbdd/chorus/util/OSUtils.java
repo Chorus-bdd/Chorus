@@ -35,7 +35,10 @@ package org.chorusbdd.chorus.util;
  * Time: 09:02
  */
 public class OSUtils {
-    
+
+    private OSUtils() {
+    }
+
     public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
     }

@@ -37,6 +37,9 @@ import java.io.PrintStream;
  */
 public class StackTraceUtil {
 
+    private StackTraceUtil() {
+    }
+
     public static String getStackTraceAsString(Throwable t) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         PrintStream p = new PrintStream(bos);

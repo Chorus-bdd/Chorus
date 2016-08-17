@@ -43,6 +43,9 @@ import java.io.FileReader;
  */
 public class SelftestUtils {
 
+    private SelftestUtils() {
+    }
+
     public static void checkFileContainsLine(String line, String path) {
            BufferedReader r = null;
            try {

@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.parser;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.util.function.Supplier;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,78 +57,68 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
 
     public static final int MAX_LENGTH_CHARS = 1000000;
 
-    public List<StepMacro> parse(Reader r) throws IOException, ParseException {
+    public List<StepMacro> parse(Supplier<Reader> r) throws IOException, ParseException {
 
-        BufferedReader reader = r instanceof BufferedReader ? (BufferedReader)r : new BufferedReader(r, 32768);
+        try (BufferedReader reader = new BufferedReader(r.get())) {
 
-        List<StepMacro> result = new LinkedList<StepMacro>();
-        reader.mark(MAX_LENGTH_CHARS);
+            List<StepMacro> result = new LinkedList<>();
+            reader.mark(MAX_LENGTH_CHARS);
 
-        boolean readingStepMacro = false;
-        String line;
-        StepMacro currentMacro = null;
-        int lineNumber = 0;
-        DirectiveParser directiveParser = new DirectiveParser();
-        while ((line = reader.readLine()) != null) {
+            boolean readingStepMacro = false;
+            String line;
+            StepMacro currentMacro = null;
+            int lineNumber = 0;
+            DirectiveParser directiveParser = new DirectiveParser();
+            while ((line = reader.readLine()) != null) {
 
-            line = line.trim();
+                line = line.trim();
 
-            lineNumber++;
+                lineNumber++;
 
-            line = removeComments(line);
+                line = removeComments(line);
 
-            line = directiveParser.parseDirectives(line, lineNumber);
+                line = directiveParser.parseDirectives(line, lineNumber);
 
-            if (line.length() == 0) {
-                continue;//ignore blank lines and comments
-            }
+                if (line.length() == 0) {
+                    continue;//ignore blank lines and comments
+                }
 
-            if (line.startsWith("@")) {
-                readingStepMacro = false;
-                continue;
-            }
-
-            //ignore all key words and terminate current macro if encountered
-            for ( KeyWord w : KeyWord.values()) {
-                if (w.matchesLine(line) && w != KeyWord.StepMacro) {
+                if (line.startsWith("@")) {
                     readingStepMacro = false;
-                    directiveParser.clearDirectives();
                     continue;
                 }
+
+                //ignore all key words and terminate current macro if encountered
+                for (KeyWord w : KeyWord.values()) {
+                    if (w.matchesLine(line) && w != KeyWord.StepMacro) {
+                        readingStepMacro = false;
+                        directiveParser.clearDirectives();
+                        continue;
+                    }
+                }
+
+                if (KeyWord.StepMacro.matchesLine(line)) {
+                    readingStepMacro = true;
+                    currentMacro = new StepMacro(line.substring(KeyWord.StepMacro.stringVal().length()).trim());
+                    result.add(currentMacro);
+                    directiveParser.addKeyWordDirectives(new StepMacroStepConsumer(currentMacro));
+                    continue;
+                }
+
+                if (readingStepMacro) {
+                    StepToken s = createStepToken(line);
+                    directiveParser.addStepDirectives(new StepMacroStepConsumer(currentMacro));
+                    currentMacro.addStep(s);
+                }
+
+                //if we encounter any non-blank line (a step) which is not a StepMacro step and not a StepMacro definition
+                //then we need to clear any directives or they will end up being sucked into the following step macro
+                directiveParser.clearDirectives();
             }
 
-            if ( KeyWord.StepMacro.matchesLine(line)) {
-                readingStepMacro = true;
-                currentMacro = new StepMacro(line.substring(KeyWord.StepMacro.stringVal().length()).trim());
-                result.add(currentMacro);
-                directiveParser.addKeyWordDirectives(new StepMacroStepConsumer(currentMacro));
-                continue;
-            }
-
-            if ( readingStepMacro ) {
-                StepToken s = createStepToken(line);
-                directiveParser.addStepDirectives(new StepMacroStepConsumer(currentMacro));
-                currentMacro.addStep(s);
-            }
-
-            //if we encounter any non-blank line (a step) which is not a StepMacro step and not a StepMacro definition
-            //then we need to clear any directives or they will end up being sucked into the following step macro
-            directiveParser.clearDirectives();
+            removeEmptyMacros(result);
+            return result;
         }
-
-        removeEmptyMacros(result);
-
-        //since this is a pre-parser, we need to reset the buffered reader so that feature parsing takes place
-        //from the start of the stream
-        try {
-            reader.reset();
-        } catch (IOException e) {
-            String message = "Could not reset reader stream, the maximum character length of " + MAX_LENGTH_CHARS + " for " +
-                    "a .feature or .stepmacro file may have been exceeded, try splitting your feature files";
-            log.error(message, e);
-            throw new ParseException(message, e);
-        }
-        return result;
     }
 
     private void removeEmptyMacros(List<StepMacro> result) {

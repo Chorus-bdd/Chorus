@@ -60,6 +60,8 @@ public interface ConfigurationProperty {
 
     String[] getDefaults();
 
+    boolean hasDefaults();
+
     PropertySourceMode getPropertySourceMode();
 
     /**

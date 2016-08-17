@@ -50,7 +50,7 @@ public class FilePathScanner {
     public static final FileFilter STEP_MACRO_FILTER = new StepMacroFileFilter();
 
     public List<File> getFeatureFiles(List<String> paths, FileFilter fileFilter) {
-        List<File> result = new ArrayList<File>();
+        List<File> result = new ArrayList<>();
         for (String fileName : paths) {
             File f = new File(fileName);
             if (f.exists()) {

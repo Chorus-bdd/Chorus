@@ -52,6 +52,9 @@ public class NetworkUtils {
         }
     }
 
+    private NetworkUtils() {
+    }
+
     public static String getHostname() {
         return hostname;
     }

@@ -45,9 +45,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ExecutionListenerOne implements ExecutionListener {
     
-    public static AtomicBoolean isTestsStartedCalled = new AtomicBoolean();
-    public static AtomicBoolean isFeatureStartedCalled = new AtomicBoolean();
-    public static AtomicBoolean isScenarioStartedCalled = new AtomicBoolean();
+    public static final AtomicBoolean isTestsStartedCalled = new AtomicBoolean();
+    public static final AtomicBoolean isFeatureStartedCalled = new AtomicBoolean();
+    public static final AtomicBoolean isScenarioStartedCalled = new AtomicBoolean();
 
     /**
      * @param testExecutionToken a token representing the current suite of tests starting execution

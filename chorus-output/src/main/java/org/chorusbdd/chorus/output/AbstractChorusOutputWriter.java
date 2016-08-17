@@ -68,13 +68,13 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     protected Object printLock = new Object();
 
     public void printFeature(FeatureToken feature) {
-        getOutWriter().printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
-        getOutWriter().flush();
+        getPrintWriter().printf("Feature: %-84s%-7s %s%n", feature.getNameWithConfiguration(), "", "");
+        getPrintWriter().flush();
     }
 
     public void printScenario(ScenarioToken scenario) {
-        getOutWriter().printf("  Scenario: %s%n", scenario.getName());
-        getOutWriter().flush();
+        getPrintWriter().printf("  Scenario: %s%n", scenario.getName());
+        getPrintWriter().flush();
     }
 
     public abstract void printStepStart(StepToken step, int depth);
@@ -82,13 +82,13 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     public abstract void printStepEnd(StepToken step, int depth);
 
     protected void printStepWithoutEndState(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
-        getOutWriter().printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
-        getOutWriter().flush();
+        getPrintWriter().printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+        getPrintWriter().flush();
     }
 
     protected void printCompletedStep(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
-        getOutWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
-        getOutWriter().flush();
+        getPrintWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+        getPrintWriter().flush();
     }
 
     protected void startProgressTask(Runnable progress, int frameRate) {
@@ -159,13 +159,13 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     public void printStackTrace(String stackTrace) {
-        getOutWriter().print(stackTrace);
-        getOutWriter().flush();
+        getPrintWriter().print(stackTrace);
+        getPrintWriter().flush();
     }
 
     public void printMessage(String message) {
-        getOutWriter().printf("%s%n", message);
-        getOutWriter().flush();
+        getPrintWriter().printf("%s%n", message);
+        getPrintWriter().flush();
     }
 
     public void log(LogLevel level, Object message) {
@@ -180,23 +180,23 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
         if ( level == LogLevel.ERROR ) {
             t.printStackTrace(ChorusOut.err);
         } else {
-            t.printStackTrace(getOutWriter());
-            getOutWriter().flush();
+            t.printStackTrace(getPrintWriter());
+            getPrintWriter().flush();
         }
     }
 
     protected void logOut(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
-        getOutWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        getOutWriter().flush();
+        getPrintWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        getPrintWriter().flush();
     }
 
     protected void logErr(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
-        getOutWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
-        getOutWriter().flush();
+        getPrintWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        getPrintWriter().flush();
     }
 
     protected int getStepLengthCharCount() {
@@ -230,7 +230,20 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
 
-    protected PrintWriter getOutWriter() {
+    /**
+     * This is an extension point to change Chorus output
+     *
+     * The user can provider their own OutputWriter which extends the default and
+     * overrides getPrintWriter() to return a writer configured for a different output stream
+     *
+     * n.b. this method will be called frequently so it is expected that the PrintWriter returned
+     * will generally be cached and reused by the implementation, but in some circumstances it is
+     * useful to be able to change the PrintWriter during the testing process so the details are
+     * left to the implementation
+     *
+     * @return a PrintWriter to use for all logging
+     */
+    protected PrintWriter getPrintWriter() {
         if ( printWriter == null || printStream != ChorusOut.out) {
             printWriter = new PrintWriter(ChorusOut.out);
             printStream = ChorusOut.out;

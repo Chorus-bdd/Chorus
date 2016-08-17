@@ -56,7 +56,7 @@ import java.util.List;
 public class ChorusTask extends Task {
 
     private String handlerBasePackages;
-    private List<File> featureFiles = new ArrayList<File>();
+    private List<File> featureFiles = new ArrayList<>();
     private boolean verbose;
     private boolean failOnTestFailure;
 

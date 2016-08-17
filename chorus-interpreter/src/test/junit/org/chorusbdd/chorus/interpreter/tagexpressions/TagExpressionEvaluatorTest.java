@@ -53,7 +53,7 @@ public class TagExpressionEvaluatorTest {
     public void init() {
         evaluatorUnderTest = new TagExpressionEvaluator();
 
-        abcScenarioTags = new ArrayList<String>();
+        abcScenarioTags = new ArrayList<>();
         abcScenarioTags.add("@a");
         abcScenarioTags.add("@b");
         abcScenarioTags.add("@c");

@@ -103,7 +103,7 @@ public class TagExpressionEvaluator {
     }
 
     private Set<String> extractTagsFromSimpleExpression(String tagExpression) {
-        Set<String> tags = new HashSet<String>();
+        Set<String> tags = new HashSet<>();
         String[] tokens = tagExpression.split(" ");
         for (String token : tokens) {
             token = token.trim();

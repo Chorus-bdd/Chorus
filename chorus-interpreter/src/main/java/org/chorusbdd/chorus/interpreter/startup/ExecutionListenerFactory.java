@@ -54,7 +54,7 @@ public class ExecutionListenerFactory {
     private ChorusLog log = ChorusLogFactory.getLog(ExecutionListenerFactory.class);
 
     public List<ExecutionListener> createExecutionListeners(ConfigProperties config) {
-        List<ExecutionListener> result = new ArrayList<ExecutionListener>();
+        List<ExecutionListener> result = new ArrayList<>();
 
         //we can have zero to many remote jmx execution listeners available
         addProxyForRemoteJmxListener(config.getValues(ChorusConfigProperty.JMX_LISTENER), result);

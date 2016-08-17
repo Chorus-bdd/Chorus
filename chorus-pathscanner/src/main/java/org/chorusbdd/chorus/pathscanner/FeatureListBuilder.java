@@ -38,9 +38,7 @@ import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +66,7 @@ public class FeatureListBuilder {
             ExecutionToken executionToken,
             List<String> featurePaths,
             List<String> stepMacroPaths,
-            List<String> tagExpressions) throws Exception {
+            List<String> tagExpressions) {
 
         List<StepMacro> globalStepMacros = stepMacroBuilder.getGlobalStepMacro(stepMacroPaths, featurePaths);
 
@@ -82,9 +80,9 @@ public class FeatureListBuilder {
             ExecutionToken executionToken,
             List<File> featureFiles,
             List<StepMacro> globalStepMacro,
-            List<String> tagExpressions) throws Exception {
+            List<String> tagExpressions) {
 
-        List<FeatureToken> allFeatures = new ArrayList<FeatureToken>();
+        List<FeatureToken> allFeatures = new ArrayList<>();
 
         //FOR EACH FEATURE FILE
         for (File featureFile : featureFiles) {
@@ -100,7 +98,7 @@ public class FeatureListBuilder {
     private void filterFeaturesByScenarioTags(List<FeatureToken> features, List<String> tagExpressions) {
         log.debug("Filtering by scenario tags");
         //FILTER THE FEATURES AND SCENARIOS (scenarios have also inherited any tags on the feature)
-        if (tagExpressions.size() > 0) {
+        if (!tagExpressions.isEmpty()) {
 
             String filterExpression = tagExpressionEvaluator.getFilterExpression(tagExpressions);
             
@@ -134,17 +132,18 @@ public class FeatureListBuilder {
         }
     }
 
-    private List<FeatureToken> parseFeatures(File featureFile, ExecutionToken executionToken, List<StepMacro> globalStepMacro) {
+    private List<FeatureToken> parseFeatures(final File featureFile, ExecutionToken executionToken, List<StepMacro> globalStepMacro) {
         List<FeatureToken> features = null;
         ChorusParser<FeatureToken> parser = new FeatureFileParser(globalStepMacro);
         try {
             log.debug(String.format("Loading feature from file: %s", featureFile));
-            features = parser.parse(new BufferedReader(new FileReader(featureFile)));
+            features = parser.parse(new FileReaderSupplier(featureFile));
+
             for (FeatureToken f : features) {
                 f.setFeatureFile(featureFile);
             }
             
-            if ( features.size() == 0 ) {
+            if (features.isEmpty()) {
                 log.warn("Did not find a feature definition in file " + featureFile + ", will be skipped");
             }
             //we can end up with more than one feature per file if using Chorus 'configurations'

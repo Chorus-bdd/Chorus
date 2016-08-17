@@ -50,7 +50,7 @@ public class DefaultsConfigSource extends AbstractConfigSource {
 
     public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
         for ( ConfigurationProperty p : getProperties()) {
-            if (  p.getDefaults() != null && p.getDefaults().length > 0) {
+            if (  p.hasDefaults()) {
                 List<String> properties = getOrCreatePropertyList(propertyMap, p);
                 Collections.addAll(properties, p.getDefaults());
             }

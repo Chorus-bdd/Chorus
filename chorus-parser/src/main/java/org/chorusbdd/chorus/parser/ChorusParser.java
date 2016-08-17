@@ -29,6 +29,8 @@
  */
 package org.chorusbdd.chorus.parser;
 
+import org.chorusbdd.chorus.util.function.Supplier;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
@@ -38,5 +40,5 @@ import java.util.List;
  */
 public interface ChorusParser<E> {
 
-    List<E> parse(Reader reader) throws IOException, ParseException;
+    List<E> parse(Supplier<Reader> readerSupplier) throws IOException, ParseException;
 }

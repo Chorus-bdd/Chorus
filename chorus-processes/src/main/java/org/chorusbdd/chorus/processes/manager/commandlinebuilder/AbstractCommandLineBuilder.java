@@ -42,7 +42,7 @@ public abstract class AbstractCommandLineBuilder {
     public abstract List<String> buildCommandLine();
 
     protected List<String> getSpaceSeparatedTokens(String spaceSeparated) {
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         String[] j = spaceSeparated.split(" ");
         for ( String s : j ) {
             if ( s.trim().length() > 0) {

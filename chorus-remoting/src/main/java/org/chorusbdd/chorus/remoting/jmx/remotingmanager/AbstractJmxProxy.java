@@ -106,7 +106,7 @@ public class AbstractJmxProxy {
             while( ! found && shouldAttemptConnection(connectionAttempts, attempt)) {
                 attempt++;
                 Set<ObjectName> containsOne = mBeanServerConnection.queryNames(null, this.objectName);
-                found = containsOne.size() > 0;
+                found = !containsOne.isEmpty();
                 if ( ! found ) {
                     log.debug("No JMX Exporter MBean found on connection attempt " + attempt + " of " + connectionAttempts);
                     if ( shouldAttemptConnection(connectionAttempts, attempt)) {

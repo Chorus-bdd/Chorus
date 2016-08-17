@@ -89,7 +89,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     
     EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
     
-    OUTPUT_FORMATTER("-outputWriter", "-w", "chorusOutputWriter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputWriter"}, "[\\w\\.]+", "-w org.myorg.MyWriter", "The output writer used to write interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
+    OUTPUT_WRITER("-outputWriter", "-w", "chorusOutputWriter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputWriter"}, "[\\w\\.]+", "-w org.myorg.MyWriter", "The output writer used to write interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
     CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE),
 
@@ -218,7 +218,11 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
      * @return default values for this property, or null if the property defaults to 'not set'
      */
     public String[] getDefaults() {
-        return defaults;
+        return defaults == null ? new String[]{} : defaults;
+    }
+
+    public boolean hasDefaults() {
+        return getDefaults().length > 0;
     }
 
     public static ConfigurationProperty getConfigPropertyForSysProp(String systemProperty) {
@@ -233,7 +237,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     }
 
     public static List<ConfigurationProperty> getAll() {
-        List<ConfigurationProperty> l = new ArrayList<ConfigurationProperty>();
+        List<ConfigurationProperty> l = new ArrayList<>();
         Collections.addAll(l, values());
         return l;
     }

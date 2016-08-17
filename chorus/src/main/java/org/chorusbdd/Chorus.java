@@ -45,7 +45,7 @@ package org.chorusbdd;
  */
 public class Chorus {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         org.chorusbdd.chorus.Chorus.main(args);
     }
 }
