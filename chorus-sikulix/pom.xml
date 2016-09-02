@@ -7,10 +7,10 @@
         <version>7</version>
     </parent>
     <groupId>org.chorusbdd</groupId>
-    <artifactId>chorus-remoting</artifactId>
+    <artifactId>chorus-sikulix</artifactId>
     <packaging>jar</packaging>
     <version>2.0.2</version>
-    <name>chorus-remoting</name>
+    <name>chorus-sikulix</name>
     <url>http://www.chorus-bdd.org</url>
     <licenses>
         <license>
@@ -38,16 +38,18 @@
                    <include>**/*.properties</include>
                    <include>**/*.feature</include>
                    <include>**/*.txt</include>
+                   <include>**/*.py</include>
                  </includes>
+                <excludes>
+                    <exclude>**/__init__.py</exclude>
+                </excludes>
              </testResource>
 
             <testResource>
-                <directory>src/test/features</directory>
+                <directory>src/test/sikulis</directory>
                 <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.feature</include>
-                    <include>**/*.txt</include>
+                    <include>**/*.py</include>
+                    <include>**/*.png</include>
                 </includes>
             </testResource>
 
@@ -156,20 +158,21 @@
 
         <dependency>
             <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-subsystem</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.chorusbdd</groupId>
             <artifactId>chorus-stepinvoker</artifactId>
             <version>2.0.2</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.chorusbdd</groupId>
-            <artifactId>chorus-handlerconfig</artifactId>
-            <version>2.0.2</version>
+            <groupId>com.sikulix</groupId>
+            <artifactId>sikulixapi</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython-standalone</artifactId>
+            <version>2.7.0</version>
         </dependency>
 
         <!-- test dependencies -->
@@ -178,13 +181,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
 
