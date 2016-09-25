@@ -4,13 +4,13 @@
 
 Chorus is a Behaviour Driven Development (BDD) testing framework written in Java.
 
-Chorus is greate for testing microservice architectures, and for distributed systems testing in general
+Chorus is greate for testing microservice architectures and distributed systems
+It allows a team to write plain language tests with steps that can execute on components running remotely.
 
 ![Chorus Overview](/resources/ChorusOverview.png)
 
-Chorus allows a team to write plain English tests which can execute test steps on components running remotely.
 
-It supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
+Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
 The Gherkin extensions and other features of the framework may be useful to you even if your project is not distributed.
 
 Chorus presently provides a solution to connect to and test Java (or JVM-based) components.
