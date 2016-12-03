@@ -1,24 +1,235 @@
 allprojects  {
-  apply plugin: 'maven'
 
-  group = 'org.chorusbdd'
-version = '2.0.2'
+    apply plugin: 'maven'
+
+    group = 'org.chorusbdd'
+    version = '2.0.2'
+
 }
 
 subprojects {
   apply plugin: 'java'
-  sourceCompatibility = 1.5
-  targetCompatibility = 1.5
 
-  
-  repositories {
-    mavenLocal()
-    
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-  }
+      repositories {
+          mavenLocal()
 
-  
-  
-  
+          maven { url "http://repo.maven.apache.org/maven2" }
+          maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+      }
+
+
+    task createInterModuleDependencies {
+        doLast {
+            File file = new File("dependencies.txt")
+            file << "\n"
+            file << "project(':" + project.name + "') {\n"
+            file << "    dependencies {\n"
+
+            project.configurations.getByName("compile").allDependencies
+            //            .collectMany { it.allDependencies }
+            //            .findAll { it instanceof ProjectDependency }
+                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
+                    .stream()
+                    .map({ dep -> dep.name })
+                    .distinct()
+                    .forEach { d -> file << "        compile project (':" + d + "')\n" }
+
+            file << "    }\n"
+
+            file << "}\n"
+        }
+    }
+
 }
+
+task createDepFile {
+    File file = new File("dependencies.txt")
+//    file.write "// Dependencies\n"
+}
+
+
+//*** MODULE DEPENDENCIES
+
+
+project(':chorus') {
+    dependencies {
+        compile project (':chorus-handlers')
+        compile project (':chorus-interpreter')
+        compile project (':chorus-processes')
+        compile project (':chorus-remoting')
+    }
+}
+
+project(':chorus-annotations') {
+    dependencies {
+    }
+}
+
+project(':chorus-config') {
+    dependencies {
+    }
+}
+
+project(':chorus-context') {
+    dependencies {
+    }
+}
+
+project(':chorus-executionlistener') {
+    dependencies {
+        compile project (':chorus-results')
+    }
+}
+
+project(':chorus-handlerconfig') {
+    dependencies {
+        compile project (':chorus-results')
+        compile project (':chorus-logging')
+        compile project (':chorus-util')
+        compile project (':chorus-annotations')
+        compile project (':chorus-subsystem')
+    }
+}
+
+project(':chorus-handlers') {
+    dependencies {
+        compile project (':chorus-interpreter')
+        compile project (':chorus-remoting')
+        compile project (':chorus-processes')
+        compile project (':chorus-annotations')
+    }
+}
+
+project(':chorus-interpreter') {
+    dependencies {
+        compile project (':chorus-util')
+        compile project (':chorus-output')
+        compile project (':chorus-logging')
+        compile project (':chorus-parser')
+        compile project (':chorus-results')
+        compile project (':chorus-config')
+        compile project (':chorus-executionlistener')
+        compile project (':chorus-handlerconfig')
+        compile project (':chorus-annotations')
+        compile project (':chorus-stepinvoker')
+        compile project (':chorus-subsystem')
+        compile project (':chorus-pathscanner')
+    }
+}
+
+project(':chorus-logging') {
+    dependencies {
+    }
+}
+
+project(':chorus-output') {
+    dependencies {
+        compile project (':chorus-util')
+        compile project (':chorus-logging')
+        compile project (':chorus-results')
+    }
+}
+
+project(':chorus-parser') {
+    dependencies {
+        compile project (':chorus-results')
+        compile project (':chorus-logging')
+        compile project (':chorus-util')
+    }
+}
+
+project(':chorus-pathscanner') {
+    dependencies {
+        compile project (':chorus-results')
+        compile project (':chorus-parser')
+        compile project (':chorus-annotations')
+        compile project (':chorus-logging')
+        compile project (':chorus-util')
+    }
+}
+
+project(':chorus-processes') {
+    dependencies {
+        compile project (':chorus-subsystem')
+        compile project (':chorus-handlerconfig')
+    }
+}
+
+project(':chorus-remoting') {
+    dependencies {
+        compile project (':chorus-subsystem')
+        compile project (':chorus-stepinvoker')
+        compile project (':chorus-handlerconfig')
+    }
+}
+
+project(':chorus-results') {
+    dependencies {
+    }
+}
+
+project(':chorus-selftest') {
+    dependencies {
+        compile project (':chorus')
+        compile project (':chorus-spring')
+        compile project (':chorus-handlers')
+        compile project (':chorus-interpreter')
+        compile project (':chorus-processes')
+        compile project (':chorus-remoting')
+    }
+}
+
+project(':chorus-spring') {
+    dependencies {
+        compile project (':chorus')
+        compile project (':chorus-handlers')
+        compile project (':chorus-interpreter')
+        compile project (':chorus-processes')
+        compile project (':chorus-remoting')
+    }
+}
+
+project(':chorus-stepinvoker') {
+    dependencies {
+        compile project (':chorus-annotations')
+        compile project (':chorus-logging')
+        compile project (':chorus-util')
+    }
+}
+
+project(':chorus-subsystem') {
+    dependencies {
+        compile project (':chorus-util')
+        compile project (':chorus-output')
+        compile project (':chorus-logging')
+        compile project (':chorus-results')
+        compile project (':chorus-executionlistener')
+        compile project (':chorus-annotations')
+        compile project (':chorus-context')
+    }
+}
+
+project(':chorus-util') {
+    dependencies {
+    }
+}
+
+
+
+//
+
+//project(':ebond-fusion-rfq-app') {
+//    dependencies {
+//        compile project(':ebond-fusion-base')
+//        compile project(':ebond-fusion-comms-openfin')
+//        compile project(':ebond-fusion-identity-service-api')
+//        compile project(':ebond-fusion-nucleus-service-api')
+//        compile project(':ebond-fusion-tomcat')
+//        compile project(':ebond-fusion-rfq-service-api')
+//        compile project(':ebond-fusion-widgets')
+//        compile project(':ebond-fusion-nucleus-managed-app')
+//        compile project(':ebond-fusion-bbgapi-service-api')
+//        compile project(':ebond-fusion-external-stubs')
+//    }
+//}
+

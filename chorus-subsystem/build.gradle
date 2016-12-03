@@ -6,8 +6,7 @@ version = '2.0.2'
 
 description = """chorus-subsystem"""
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+
 
 configurations.all {
 }
@@ -17,6 +16,7 @@ repositories {
      maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
      maven { url "http://repo.maven.apache.org/maven2" }
 }
+
 dependencies {
     compile group: 'org.chorusbdd', name: 'chorus-util', version:'2.0.2'
     compile group: 'org.chorusbdd', name: 'chorus-output', version:'2.0.2'
