@@ -179,6 +179,12 @@ project(':chorus-selftest') {
     }
 }
 
+project(':chorus-sikulix') {
+    dependencies {
+        compile project (':chorus-stepinvoker')
+    }
+}
+
 project(':chorus-spring') {
     dependencies {
         compile project (':chorus')
@@ -213,23 +219,3 @@ project(':chorus-util') {
     dependencies {
     }
 }
-
-
-
-//
-
-//project(':ebond-fusion-rfq-app') {
-//    dependencies {
-//        compile project(':ebond-fusion-base')
-//        compile project(':ebond-fusion-comms-openfin')
-//        compile project(':ebond-fusion-identity-service-api')
-//        compile project(':ebond-fusion-nucleus-service-api')
-//        compile project(':ebond-fusion-tomcat')
-//        compile project(':ebond-fusion-rfq-service-api')
-//        compile project(':ebond-fusion-widgets')
-//        compile project(':ebond-fusion-nucleus-managed-app')
-//        compile project(':ebond-fusion-bbgapi-service-api')
-//        compile project(':ebond-fusion-external-stubs')
-//    }
-//}
-
