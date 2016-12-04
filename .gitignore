@@ -10,6 +10,5 @@ logs
 *.log
 .DS_Store
 .gradle
-gradle
 build
 /dependencies.txt
