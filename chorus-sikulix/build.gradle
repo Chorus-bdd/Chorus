@@ -8,9 +8,6 @@ version = '2.0.2'
 
 description = """chorus-sikulix"""
 
-def os = System.getProperty('os.name').toLowerCase()
-
-
 configurations.all {
 }
 
