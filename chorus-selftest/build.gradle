@@ -7,11 +7,7 @@ version = '2.0.2'
 description = "chorus-selftest"
 
 
-repositories {
-        
-     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-     maven { url "http://repo.maven.apache.org/maven2" }
-}
+
 dependencies {
     compile group: 'org.chorusbdd', name: 'chorus', version:'2.0.2'
     compile group: 'org.chorusbdd', name: 'chorus-spring', version:'2.0.2'
