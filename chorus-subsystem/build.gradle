@@ -4,12 +4,8 @@ apply plugin: 'maven'
 group = 'org.chorusbdd'
 version = '2.0.2'
 
-description = """chorus-subsystem"""
+description = "chorus-subsystem"
 
-
-
-configurations.all {
-}
 
 repositories {
         
