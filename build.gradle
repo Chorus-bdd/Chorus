@@ -42,13 +42,13 @@ subprojects {
 
 }
 
-task clearGradleModuleDependencies {
-    dependencyFile.write "// Dependencies\n"
-}
+//task clearGradleModuleDependencies {
+//   dependencyFile.write "// Dependencies\n"
+//}
 
-task recalculateGradleDependencies
+//task recalculateGradleDependencies
 
-recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
+//recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
 
 
 //*** MODULE DEPENDENCIES
