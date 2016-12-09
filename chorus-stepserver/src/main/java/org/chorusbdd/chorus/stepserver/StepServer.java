@@ -2,6 +2,8 @@ package org.chorusbdd.chorus.stepserver;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.logging.LogLevel;
+import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
 
 /**
@@ -13,17 +15,18 @@ public class StepServer {
 
     public static void main(String[] args) {
 
+        StdOutLogProvider.setLogLevel(LogLevel.INFO);
 
         StepServerMessageProcessor stepServerMessageProcessor = new StepServerMessageProcessor() {
             @Override
             public void processClientConnected(ConnectMessage connectMessage) {
-                log.info("Yea - received a connect message!");
+                log.info("Yes!! - received a connect message!");
                 log.info(connectMessage.toString());
             }
         };
 
         new ChorusWebSocketServer(9080, stepServerMessageProcessor).start();
 
-        log.info("Started!");
+        log.info("Socket Server Started!");
     }
 }
