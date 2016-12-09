@@ -41,13 +41,13 @@ subprojects {
     }
 
 }
-
+//
 //task clearGradleModuleDependencies {
 //   dependencyFile.write "// Dependencies\n"
 //}
-
+//
 //task recalculateGradleDependencies
-
+//
 //recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
 
 
