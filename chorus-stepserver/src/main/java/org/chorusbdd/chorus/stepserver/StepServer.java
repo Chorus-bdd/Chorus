@@ -6,6 +6,7 @@ import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
 import org.chorusbdd.chorus.stepserver.message.PublishStep;
+import org.chorusbdd.chorus.stepserver.message.StepsAlignedMessage;
 
 /**
  * Created by nick on 09/12/2016.
@@ -21,16 +22,21 @@ public class StepServer {
         StepServerMessageProcessor stepServerMessageProcessor = new StepServerMessageProcessor() {
 
             @Override
-            public void processClientConnected(ConnectMessage connectMessage) {
+            public void receiveClientConnected(ConnectMessage connectMessage) {
                 log.info("Yes!! - received a CONNECT message!");
                 log.info(connectMessage.toString());
             }
 
             @Override
-            public void processPublishStep(PublishStep publishStep) {
+            public void receivePublishStep(PublishStep publishStep) {
                 log.info("Yeeassss!! - received a PUBLISH_STEP message!");
                 log.info(publishStep.toString());
             }
+
+            @Override
+            public void receiveStepsAligned(StepsAlignedMessage stepsAlignedMessage) {
+                log.info("WhooHooo!! - received a PUBLISH_STEP message!");
+                log.info(stepsAlignedMessage.toString());            }
         };
 
         new ChorusWebSocketServer(9080, stepServerMessageProcessor).start();
