@@ -3,6 +3,7 @@ package org.chorusbdd.chorus.stepserver;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
+import org.chorusbdd.chorus.stepserver.message.PublishStep;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -50,8 +51,12 @@ public class ChorusWebSocketServer extends WebSocketServer {
                     ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
                     stepServerMessageProcessor.processClientConnected(connectMessage);
                     break;
+                case "PUBLISH_STEP" :
+                    PublishStep publishStep = JsonUtils.convertToObject(message, PublishStep.class);
+                    stepServerMessageProcessor.processPublishStep(publishStep);
+                    break;
                 default:
-
+                    log.warn("Received message with unsupported type " + type);
             }
         }
 

@@ -5,6 +5,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
+import org.chorusbdd.chorus.stepserver.message.PublishStep;
 
 /**
  * Created by nick on 09/12/2016.
@@ -18,10 +19,17 @@ public class StepServer {
         StdOutLogProvider.setLogLevel(LogLevel.INFO);
 
         StepServerMessageProcessor stepServerMessageProcessor = new StepServerMessageProcessor() {
+
             @Override
             public void processClientConnected(ConnectMessage connectMessage) {
-                log.info("Yes!! - received a connect message!");
+                log.info("Yes!! - received a CONNECT message!");
                 log.info(connectMessage.toString());
+            }
+
+            @Override
+            public void processPublishStep(PublishStep publishStep) {
+                log.info("Yeeassss!! - received a PUBLISH_STEP message!");
+                log.info(publishStep.toString());
             }
         };
 
