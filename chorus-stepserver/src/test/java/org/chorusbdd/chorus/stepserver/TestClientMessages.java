@@ -2,9 +2,7 @@ package org.chorusbdd.chorus.stepserver;
 
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
-import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
-import org.chorusbdd.chorus.stepserver.message.PublishStep;
-import org.chorusbdd.chorus.stepserver.message.StepsAlignedMessage;
+import org.chorusbdd.chorus.stepserver.message.*;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -12,11 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.net.URI;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by nick on 09/12/2016.
@@ -114,6 +111,38 @@ public class TestClientMessages {
         verify(mockProcessor, timeout(1000)).receiveStepsAligned(stepsAlignedMessage);
     }
 
+    @Test
+    public void iCanSendAStepSuccessMessage() {
+        StepSucceededMessage stepSucceededMessage = new StepSucceededMessage(
+            "executionId",
+            "chorusClientId",
+            "StringResult",
+            new HashMap<String, Object>(){{
+                put("key1", "value1");
+                put("key2", 1234.5678D);
+                put("key3", true);
+            }}
+        );
+        String json = JsonUtils.prettyFormat(stepSucceededMessage);
+        webSocketClient.send(json);
+
+        verify(mockProcessor, timeout(1000)).receiveStepSucceeded(stepSucceededMessage);
+    }
+
+    @Test
+    public void iCanSendAStepFailureMessage() {
+
+        StepFailedMessage stepsAlignedMessage = new StepFailedMessage(
+            "executionId",
+            "mockClient",
+            "Error while executing step",
+            "Execption at Class X line 7"
+        );
+        String json = JsonUtils.prettyFormat(stepsAlignedMessage);
+        webSocketClient.send(json);
+
+        verify(mockProcessor, timeout(1000)).receiveStepFailed(stepsAlignedMessage);
+    }
 
     private static class JUnitWebSocketClient extends WebSocketClient {
         public JUnitWebSocketClient(URI uri) {

@@ -4,6 +4,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
 import org.chorusbdd.chorus.stepserver.message.PublishStep;
+import org.chorusbdd.chorus.stepserver.message.StepSucceededMessage;
 import org.chorusbdd.chorus.stepserver.message.StepsAlignedMessage;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
 import org.java_websocket.WebSocket;
@@ -59,6 +60,10 @@ public class ChorusWebSocketServer extends WebSocketServer {
                 case "STEPS_ALIGNED" :
                     StepsAlignedMessage stepsAlignedMessage = JsonUtils.convertToObject(message, StepsAlignedMessage.class);
                     stepServerMessageProcessor.receiveStepsAligned(stepsAlignedMessage);
+                    break;
+                case "STEP_SUCCESS" :
+                    StepSucceededMessage stepSucceededMessage = JsonUtils.convertToObject(message, StepSucceededMessage.class);
+                    stepServerMessageProcessor.receiveStepSucceeded(stepSucceededMessage);
                     break;
                 default:
                     log.warn("Received message with unsupported type " + type);

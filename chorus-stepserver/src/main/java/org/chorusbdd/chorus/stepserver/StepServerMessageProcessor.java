@@ -1,8 +1,6 @@
 package org.chorusbdd.chorus.stepserver;
 
-import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
-import org.chorusbdd.chorus.stepserver.message.PublishStep;
-import org.chorusbdd.chorus.stepserver.message.StepsAlignedMessage;
+import org.chorusbdd.chorus.stepserver.message.*;
 
 /**
  * Created by nick on 09/12/2016.
@@ -14,4 +12,8 @@ public interface StepServerMessageProcessor {
     void receivePublishStep(PublishStep publishStep);
 
     void receiveStepsAligned(StepsAlignedMessage stepsAlignedMessage);
+
+    void receiveStepSucceeded(StepSucceededMessage stepSucceededMessage);
+
+    void receiveStepFailed(StepFailedMessage stepsAlignedMessage);
 }
