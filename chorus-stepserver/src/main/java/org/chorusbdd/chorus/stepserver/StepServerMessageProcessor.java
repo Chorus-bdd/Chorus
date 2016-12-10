@@ -15,5 +15,5 @@ public interface StepServerMessageProcessor {
 
     void receiveStepSucceeded(StepSucceededMessage stepSucceededMessage);
 
-    void receiveStepFailed(StepFailedMessage stepsAlignedMessage);
+    void receiveStepFailed(StepFailedMessage stepFailedMessage);
 }

@@ -8,13 +8,13 @@ public class StepFailedMessage extends AbstractTypedMessage {
     private String executionId;
     private String chorusClientId;
     private String description;
-    private String errorText = "";
+    private String errorText = "";  //optional so provide default
 
     /**
      * Nullary constructor required for deserialization
      */
     public StepFailedMessage() {
-        super("STEP_FAILED");
+        super(MessageType.STEP_FAILED.name());
     }
 
     public StepFailedMessage(String executionId, String chorusClientId, String description, String errorText) {

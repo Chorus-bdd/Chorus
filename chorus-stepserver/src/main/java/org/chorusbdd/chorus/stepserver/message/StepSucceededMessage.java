@@ -16,7 +16,7 @@ public class StepSucceededMessage extends AbstractTypedMessage {
      * Nullary constructor required for deserialization
      */
     public StepSucceededMessage() {
-        super("STEP_SUCCEEDED");
+        super(MessageType.STEP_SUCCEEDED.name());
     }
 
     public StepSucceededMessage(String executionId, String chorusClientId, Object result, Map<String, Object> contextVariables) {

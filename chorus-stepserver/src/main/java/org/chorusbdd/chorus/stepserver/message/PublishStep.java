@@ -9,11 +9,11 @@ public class PublishStep extends AbstractTypedMessage {
     private String chorusClientId;
     private String pattern;
     private boolean isPending;
-    private String pendingMessage = "";
+    private String pendingMessage = "";  //optional so provide default
     private String technicalDescription;
 
     public PublishStep() {
-        super("PUBLISH_STEP");
+        super(MessageType.PUBLISH_STEP.name());
     }
 
     public PublishStep(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription) {

@@ -11,7 +11,7 @@ public class StepsAlignedMessage extends AbstractTypedMessage {
      * Nullary constructor required for deserialization
      */
     public StepsAlignedMessage() {
-        super("STEPS_ALIGNED");
+        super(MessageType.STEPS_ALIGNED.name());
     }
 
     public StepsAlignedMessage(String chorusClientId) {

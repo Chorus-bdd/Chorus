@@ -132,16 +132,35 @@ public class TestClientMessages {
     @Test
     public void iCanSendAStepFailureMessage() {
 
-        StepFailedMessage stepsAlignedMessage = new StepFailedMessage(
+        StepFailedMessage stepFailedMessage = new StepFailedMessage(
             "executionId",
             "mockClient",
             "Error while executing step",
-            "Execption at Class X line 7"
+            "Exception at Class X line 7"
         );
-        String json = JsonUtils.prettyFormat(stepsAlignedMessage);
+        String json = JsonUtils.prettyFormat(stepFailedMessage);
         webSocketClient.send(json);
 
-        verify(mockProcessor, timeout(1000)).receiveStepFailed(stepsAlignedMessage);
+        verify(mockProcessor, timeout(1000)).receiveStepFailed(stepFailedMessage);
+    }
+
+    @Test
+    public void iCanSendAStepFailureMessageWithoutTheOptionalErrorText() {
+        String json = "{\n" +
+            "  \"chorusClientId\" : \"mockClient\",\n" +
+            "  \"description\" : \"Error while executing step\",\n" +
+            "  \"executionId\" : \"executionId\",\n" +
+            "  \"type\" : \"STEP_FAILED\"\n" +
+            "}";
+        webSocketClient.send(json);
+
+        StepFailedMessage stepFailedMessage = new StepFailedMessage(
+            "executionId",
+            "mockClient",
+            "Error while executing step",
+            ""
+        );
+        verify(mockProcessor, timeout(1000)).receiveStepFailed(stepFailedMessage);
     }
 
     private static class JUnitWebSocketClient extends WebSocketClient {

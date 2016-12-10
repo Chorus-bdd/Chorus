@@ -4,10 +4,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
-import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
-import org.chorusbdd.chorus.stepserver.message.PublishStep;
-import org.chorusbdd.chorus.stepserver.message.StepSucceededMessage;
-import org.chorusbdd.chorus.stepserver.message.StepsAlignedMessage;
+import org.chorusbdd.chorus.stepserver.message.*;
 
 /**
  * Created by nick on 09/12/2016.
@@ -42,8 +39,14 @@ public class StepServer {
 
             @Override
             public void receiveStepSucceeded(StepSucceededMessage stepSuccessMessage) {
-                log.info("Yeeeeaas!! - received a STEP_SUCCESS message!");
+                log.info("Yeeeeaas!! - received a STEP_SUCCEEDED message!");
                 log.info(stepSuccessMessage.toString());
+            }
+
+            @Override
+            public void receiveStepFailed(StepFailedMessage stepFailedMessage) {
+                log.info("Noooooo!! - received a STEP_FAILED message!");
+                log.info(stepFailedMessage.toString());
             }
         };
 

@@ -12,7 +12,7 @@ public class ConnectMessage extends AbstractTypedMessage {
      * Nullary constructor required for deserialization
      */
     public ConnectMessage() {
-        super("CONNECT");
+        super(MessageType.CONNECT.name());
     }
 
     public ConnectMessage(String chorusClientId, String description) {

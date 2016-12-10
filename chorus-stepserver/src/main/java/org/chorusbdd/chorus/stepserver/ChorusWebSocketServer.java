@@ -2,10 +2,7 @@ package org.chorusbdd.chorus.stepserver;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.stepserver.message.ConnectMessage;
-import org.chorusbdd.chorus.stepserver.message.PublishStep;
-import org.chorusbdd.chorus.stepserver.message.StepSucceededMessage;
-import org.chorusbdd.chorus.stepserver.message.StepsAlignedMessage;
+import org.chorusbdd.chorus.stepserver.message.*;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -43,33 +40,48 @@ public class ChorusWebSocketServer extends WebSocketServer {
 
         log.info("Received a message " + message + " from " + conn.getRemoteSocketAddress());
 
-        Map<String, Object> m = JsonUtils.convertToMap(message);
-        if ( m != null) {
-
-            String type = m.getOrDefault("type", "UNKNOWN").toString();
-
-            switch(type) {
-                case "CONNECT" :
-                    ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
-                    stepServerMessageProcessor.receiveClientConnected(connectMessage);
-                    break;
-                case "PUBLISH_STEP" :
-                    PublishStep publishStep = JsonUtils.convertToObject(message, PublishStep.class);
-                    stepServerMessageProcessor.receivePublishStep(publishStep);
-                    break;
-                case "STEPS_ALIGNED" :
-                    StepsAlignedMessage stepsAlignedMessage = JsonUtils.convertToObject(message, StepsAlignedMessage.class);
-                    stepServerMessageProcessor.receiveStepsAligned(stepsAlignedMessage);
-                    break;
-                case "STEP_SUCCESS" :
-                    StepSucceededMessage stepSucceededMessage = JsonUtils.convertToObject(message, StepSucceededMessage.class);
-                    stepServerMessageProcessor.receiveStepSucceeded(stepSucceededMessage);
-                    break;
-                default:
-                    log.warn("Received message with unsupported type " + type);
-            }
+        Map<String, Object> m = null;
+        try {
+            m = JsonUtils.convertToMap(message);
+        } catch (Exception e) {
+            log.error("Failed while converting message from JSON ", e);
         }
 
+        if ( m != null) {
+            processIncomingMessage(message, m);
+        } else {
+            log.debug("Failed to decode message \n" + message);
+        }
+    }
+
+    private void processIncomingMessage(String message, Map<String, Object> m) {
+        String type = m.getOrDefault("type", "UNKNOWN").toString();
+        MessageType t = MessageType.fromString(type);
+
+        switch(t) {
+            case CONNECT :
+                ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
+                stepServerMessageProcessor.receiveClientConnected(connectMessage);
+                break;
+            case PUBLISH_STEP :
+                PublishStep publishStep = JsonUtils.convertToObject(message, PublishStep.class);
+                stepServerMessageProcessor.receivePublishStep(publishStep);
+                break;
+            case STEPS_ALIGNED :
+                StepsAlignedMessage stepsAlignedMessage = JsonUtils.convertToObject(message, StepsAlignedMessage.class);
+                stepServerMessageProcessor.receiveStepsAligned(stepsAlignedMessage);
+                break;
+            case STEP_SUCCEEDED :
+                StepSucceededMessage stepSucceededMessage = JsonUtils.convertToObject(message, StepSucceededMessage.class);
+                stepServerMessageProcessor.receiveStepSucceeded(stepSucceededMessage);
+                break;
+            case STEP_FAILED :
+                StepFailedMessage stepFailedMessage = JsonUtils.convertToObject(message, StepFailedMessage.class);
+                stepServerMessageProcessor.receiveStepFailed(stepFailedMessage);
+                break;
+            default:
+                log.warn("Received message with unsupported type " + type);
+        }
     }
 
     @Override
