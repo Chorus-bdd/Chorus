@@ -16,4 +16,6 @@ public interface StepServerMessageProcessor {
     void receiveStepSucceeded(StepSucceededMessage stepSucceededMessage);
 
     void receiveStepFailed(StepFailedMessage stepFailedMessage);
+
+    void clientDisconnected(String clientId);
 }

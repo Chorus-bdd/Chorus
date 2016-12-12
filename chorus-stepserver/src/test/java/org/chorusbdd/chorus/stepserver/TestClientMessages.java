@@ -32,7 +32,8 @@ public class TestClientMessages {
 
         mockProcessor = mock(StepServerMessageProcessor.class);
 
-        ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080, mockProcessor);
+        ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080);
+        chorusWebSocketServer.setStepServerMessageProcessor(mockProcessor);
         chorusWebSocketServer.start();
         try {
             Thread.sleep(1500);

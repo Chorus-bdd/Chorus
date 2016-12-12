@@ -4,24 +4,31 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepserver.message.*;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by nick on 08/12/2016.
  */
-public class ChorusWebSocketServer extends WebSocketServer {
+public class ChorusWebSocketServer extends WebSocketServer implements StepServerMessageRouter {
 
     private ChorusLog log = ChorusLogFactory.getLog(ChorusWebSocketServer.class);
 
-    private StepServerMessageProcessor stepServerMessageProcessor;
+    private volatile StepServerMessageProcessor stepServerMessageProcessor;
 
-    public ChorusWebSocketServer(int port, StepServerMessageProcessor stepServerMessageProcessor ) {
+    private Map<String, WebSocket> clientIdToSocket = new ConcurrentHashMap<>();
+
+    public ChorusWebSocketServer(int port) {
         super( new InetSocketAddress( port ) );
+    }
+
+    public void setStepServerMessageProcessor(StepServerMessageProcessor stepServerMessageProcessor) {
         this.stepServerMessageProcessor = stepServerMessageProcessor;
     }
 
@@ -54,6 +61,22 @@ public class ChorusWebSocketServer extends WebSocketServer {
         }
     }
 
+    @Override
+    public void sendMessage(String clientId, AbstractTypedMessage message) {
+
+        WebSocket webSocket = clientIdToSocket.get(clientId);
+        if ( webSocket == null) {
+            throw new ChorusException("Cannot send a message to client " + clientId + " no websocket connection");
+        }
+
+        String messageAsString = JsonUtils.prettyFormat(message);
+        if ( log.isDebugEnabled()) {
+            log.debug(String.format("Sending message to web socket client %s [%s]", clientId, messageAsString));
+        }
+
+        webSocket.send(messageAsString);
+    }
+
     private void processIncomingMessage(WebSocket socket, String message, Map<String, Object> m) {
         String type = m.getOrDefault("type", "UNKNOWN").toString();
         MessageType t = MessageType.fromString(type);
@@ -62,6 +85,7 @@ public class ChorusWebSocketServer extends WebSocketServer {
             switch(t) {
                 case CONNECT :
                     ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
+                    clientIdToSocket.put(connectMessage.getChorusClientId(), socket);
                     stepServerMessageProcessor.receiveClientConnected(connectMessage);
                     break;
                 case PUBLISH_STEP :

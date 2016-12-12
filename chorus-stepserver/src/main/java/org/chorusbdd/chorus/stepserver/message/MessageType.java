@@ -10,6 +10,7 @@ public enum MessageType {
     STEP_FAILED,
     STEP_SUCCEEDED,
     STEPS_ALIGNED,
+    EXECUTE_STEP,
     UNKNOWN;
 
 

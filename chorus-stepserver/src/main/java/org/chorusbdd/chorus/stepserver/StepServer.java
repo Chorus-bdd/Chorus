@@ -24,12 +24,14 @@ public class StepServer implements StepServerManager {
 
     private static final int DEFAULT_PORT = 9080;
     private static final String DEFAULT_SERVER_NAME = "defaultStepServer";
+    private static final int DEFAULT_TIMEOUT_SECONDS = 30;
 
     private ChorusWebSocketServer webSocketServer;
     private final AtomicBoolean isRunning = new AtomicBoolean();
 
-    private final Map<String, WebSocketClientStepInvoker> steps = new ConcurrentHashMap<>();
+    private final Map<String, WebSocketClientStepInvoker> stepIdToInvoker = new ConcurrentHashMap<>();
 
+    private final Set<String> connectedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Set<String> alignedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public StepServer() {}
@@ -38,8 +40,9 @@ public class StepServer implements StepServerManager {
         if ( ! isRunning.getAndSet(true)) {
             //TODO implement configuration by server name
             log.info("Starting StepServer on port port");
-            MessageProcessor messageProcessor = new MessageProcessor();
-            webSocketServer = new ChorusWebSocketServer(DEFAULT_PORT, messageProcessor);
+            webSocketServer = new ChorusWebSocketServer(DEFAULT_PORT);
+            MessageProcessor messageProcessor = new MessageProcessor(webSocketServer);
+            webSocketServer.setStepServerMessageProcessor(messageProcessor);
             webSocketServer.start();
         } else {
             //when multiple configurations are supported this will change
@@ -54,7 +57,7 @@ public class StepServer implements StepServerManager {
 
     @Override
     public List<StepInvoker> getStepInvokers() {
-        return new ArrayList<>(steps.values());
+        return new ArrayList<>(stepIdToInvoker.values());
     }
 
     @Override
@@ -85,10 +88,18 @@ public class StepServer implements StepServerManager {
 
     private class MessageProcessor implements StepServerMessageProcessor {
 
+
+        private StepServerMessageRouter messageRouter;
+
+        public MessageProcessor(StepServerMessageRouter messageRouter) {
+            this.messageRouter = messageRouter;
+        }
+
         @Override
         public void receiveClientConnected(ConnectMessage connectMessage) {
             log.info("received a CONNECT message!");
             log.info(connectMessage.toString());
+            connectedClients.add(connectMessage.getChorusClientId());
         }
 
         @Override
@@ -98,8 +109,8 @@ public class StepServer implements StepServerManager {
 
             WebSocketClientStepInvoker stepInvoker;
             try {
-                stepInvoker = WebSocketClientStepInvoker.create(publishStep);
-                steps.put(publishStep.getStepId(), stepInvoker);
+                stepInvoker = WebSocketClientStepInvoker.create(messageRouter, publishStep, DEFAULT_TIMEOUT_SECONDS);
+                stepIdToInvoker.put(publishStep.getStepId(), stepInvoker);
             } catch (WebSocketClientStepInvoker.InvalidStepException e) {
                 log.warn("Invalid step sent by client " + publishStep.getChorusClientId(), e);
             }
@@ -117,7 +128,7 @@ public class StepServer implements StepServerManager {
             log.info("received a STEP_SUCCEEDED message!");
             log.info(stepSuccessMessage.toString());
 
-            WebSocketClientStepInvoker stepInvoker = steps.get(stepSuccessMessage.getStepId());
+            WebSocketClientStepInvoker stepInvoker = stepIdToInvoker.get(stepSuccessMessage.getStepId());
             stepInvoker.stepSucceeded(stepSuccessMessage);
         }
 
@@ -126,9 +137,15 @@ public class StepServer implements StepServerManager {
             log.info("received a STEP_FAILED message!");
             log.info(stepFailedMessage.toString());
 
-            WebSocketClientStepInvoker stepInvoker = steps.get(stepFailedMessage.getStepId());
+            WebSocketClientStepInvoker stepInvoker = stepIdToInvoker.get(stepFailedMessage.getStepId());
             stepInvoker.stepFailed(stepFailedMessage);
         }
+
+        @Override
+        public void clientDisconnected(String clientId) {
+
+        }
+
     }
 
     public static void main(String[] args) {
