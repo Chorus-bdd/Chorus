@@ -115,6 +115,7 @@ public class TestClientMessages {
     @Test
     public void iCanSendAStepSuccessMessage() {
         StepSucceededMessage stepSucceededMessage = new StepSucceededMessage(
+            "stepId",
             "executionId",
             "chorusClientId",
             "StringResult",
@@ -134,6 +135,7 @@ public class TestClientMessages {
     public void iCanSendAStepFailureMessage() {
 
         StepFailedMessage stepFailedMessage = new StepFailedMessage(
+            "stepId",
             "executionId",
             "mockClient",
             "Error while executing step",
@@ -148,6 +150,7 @@ public class TestClientMessages {
     @Test
     public void iCanSendAStepFailureMessageWithoutTheOptionalErrorText() {
         String json = "{\n" +
+            "  \"stepId\" : \"stepId\",\n" +
             "  \"chorusClientId\" : \"mockClient\",\n" +
             "  \"description\" : \"Error while executing step\",\n" +
             "  \"executionId\" : \"executionId\",\n" +
@@ -156,6 +159,7 @@ public class TestClientMessages {
         webSocketClient.send(json);
 
         StepFailedMessage stepFailedMessage = new StepFailedMessage(
+            "stepId",
             "executionId",
             "mockClient",
             "Error while executing step",

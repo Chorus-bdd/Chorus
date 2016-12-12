@@ -7,13 +7,13 @@ import org.chorusbdd.chorus.stepserver.message.*;
  */
 public interface StepServerMessageProcessor {
 
-    void receiveClientConnected(ClientDetails clientDetails, ConnectMessage connectMessage);
+    void receiveClientConnected(ConnectMessage connectMessage);
 
-    void receivePublishStep(ClientDetails clientDetails, PublishStepMessage publishStep);
+    void receivePublishStep(PublishStepMessage publishStep);
 
-    void receiveStepsAligned(ClientDetails clientDetails, StepsAlignedMessage stepsAlignedMessage);
+    void receiveStepsAligned(StepsAlignedMessage stepsAlignedMessage);
 
-    void receiveStepSucceeded(ClientDetails clientDetails, StepSucceededMessage stepSucceededMessage);
+    void receiveStepSucceeded(StepSucceededMessage stepSucceededMessage);
 
-    void receiveStepFailed(ClientDetails clientDetails, StepFailedMessage stepFailedMessage);
+    void receiveStepFailed(StepFailedMessage stepFailedMessage);
 }

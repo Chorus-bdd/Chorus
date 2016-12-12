@@ -11,9 +11,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepserver.message.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,7 +28,9 @@ public class StepServer implements StepServerManager {
     private ChorusWebSocketServer webSocketServer;
     private final AtomicBoolean isRunning = new AtomicBoolean();
 
-    private final Map<ClientDetails, ConnectedClient> connectedClients = new ConcurrentHashMap<>();
+    private final Map<String, WebSocketClientStepInvoker> steps = new ConcurrentHashMap<>();
+
+    private final Set<String> alignedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public StepServer() {}
 
@@ -54,8 +54,7 @@ public class StepServer implements StepServerManager {
 
     @Override
     public List<StepInvoker> getStepInvokers() {
-        //TODO
-        return Collections.emptyList();
+        return new ArrayList<>(steps.values());
     }
 
     @Override
@@ -87,46 +86,48 @@ public class StepServer implements StepServerManager {
     private class MessageProcessor implements StepServerMessageProcessor {
 
         @Override
-        public void receiveClientConnected(ClientDetails clientDetails, ConnectMessage connectMessage) {
+        public void receiveClientConnected(ConnectMessage connectMessage) {
             log.info("received a CONNECT message!");
             log.info(connectMessage.toString());
-            connectedClients.put(clientDetails, new ConnectedClient(clientDetails));
-
         }
 
         @Override
-        public void receivePublishStep(ClientDetails clientDetails, PublishStepMessage publishStep) {
+        public void receivePublishStep(PublishStepMessage publishStep) {
             log.info("received a PUBLISH_STEP message!");
             log.info(publishStep.toString());
 
-            ConnectedClient connectedClient = connectedClients.get(clientDetails);
-            connectedClient.addStep(publishStep);
+            WebSocketClientStepInvoker stepInvoker;
+            try {
+                stepInvoker = WebSocketClientStepInvoker.create(publishStep);
+                steps.put(publishStep.getStepId(), stepInvoker);
+            } catch (WebSocketClientStepInvoker.InvalidStepException e) {
+                log.warn("Invalid step sent by client " + publishStep.getChorusClientId(), e);
+            }
         }
 
         @Override
-        public void receiveStepsAligned(ClientDetails clientDetails, StepsAlignedMessage stepsAlignedMessage) {
+        public void receiveStepsAligned(StepsAlignedMessage stepsAlignedMessage) {
             log.info("received a STEPS_ALIGNED message!");
             log.info(stepsAlignedMessage.toString());
-            ConnectedClient connectedClient = connectedClients.get(clientDetails);
-            connectedClient.setAligned(true);
+            alignedClients.add(stepsAlignedMessage.getChorusClientId());
         }
 
         @Override
-        public void receiveStepSucceeded(ClientDetails clientDetails, StepSucceededMessage stepSuccessMessage) {
+        public void receiveStepSucceeded(StepSucceededMessage stepSuccessMessage) {
             log.info("received a STEP_SUCCEEDED message!");
             log.info(stepSuccessMessage.toString());
 
-            ConnectedClient connectedClient = connectedClients.get(clientDetails);
-//            connectedClient.stepSucceeded(stepSuccessMessage);
+            WebSocketClientStepInvoker stepInvoker = steps.get(stepSuccessMessage.getStepId());
+            stepInvoker.stepSucceeded(stepSuccessMessage);
         }
 
         @Override
-        public void receiveStepFailed(ClientDetails clientDetails, StepFailedMessage stepFailedMessage) {
+        public void receiveStepFailed(StepFailedMessage stepFailedMessage) {
             log.info("received a STEP_FAILED message!");
             log.info(stepFailedMessage.toString());
 
-            ConnectedClient connectedClient = connectedClients.get(clientDetails);
-//            connectedClient.stepFailed(stepSuccessMessage);
+            WebSocketClientStepInvoker stepInvoker = steps.get(stepFailedMessage.getStepId());
+            stepInvoker.stepFailed(stepFailedMessage);
         }
     }
 

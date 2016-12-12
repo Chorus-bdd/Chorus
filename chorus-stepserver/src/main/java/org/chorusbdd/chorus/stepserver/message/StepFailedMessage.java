@@ -5,6 +5,7 @@ package org.chorusbdd.chorus.stepserver.message;
  */
 public class StepFailedMessage extends AbstractTypedMessage {
 
+    private String stepId;
     private String executionId;
     private String chorusClientId;
     private String description;
@@ -17,12 +18,21 @@ public class StepFailedMessage extends AbstractTypedMessage {
         super(MessageType.STEP_FAILED.name());
     }
 
-    public StepFailedMessage(String executionId, String chorusClientId, String description, String errorText) {
+    public StepFailedMessage(String stepId, String executionId, String chorusClientId, String description, String errorText) {
         this();
+        this.stepId = stepId;
         this.executionId = executionId;
         this.chorusClientId = chorusClientId;
         this.description = description;
         this.errorText = errorText;
+    }
+
+    public String getStepId() {
+        return stepId;
+    }
+
+    public void setStepId(String stepId) {
+        this.stepId = stepId;
     }
 
     public String getExecutionId() {
@@ -64,6 +74,7 @@ public class StepFailedMessage extends AbstractTypedMessage {
 
         StepFailedMessage that = (StepFailedMessage) o;
 
+        if (!stepId.equals(that.stepId)) return false;
         if (!executionId.equals(that.executionId)) return false;
         if (!chorusClientId.equals(that.chorusClientId)) return false;
         if (!description.equals(that.description)) return false;
@@ -73,7 +84,8 @@ public class StepFailedMessage extends AbstractTypedMessage {
 
     @Override
     public int hashCode() {
-        int result = executionId.hashCode();
+        int result = stepId.hashCode();
+        result = 31 * result + executionId.hashCode();
         result = 31 * result + chorusClientId.hashCode();
         result = 31 * result + description.hashCode();
         result = 31 * result + errorText.hashCode();
@@ -84,6 +96,7 @@ public class StepFailedMessage extends AbstractTypedMessage {
     public String toString() {
         return "StepFailureMessage{" +
             "type='" + type + '\'' +
+            ", stepId='" + stepId + '\'' +
             ", executionId='" + executionId + '\'' +
             ", chorusClientId='" + chorusClientId + '\'' +
             ", description='" + description + '\'' +
