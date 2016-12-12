@@ -10,6 +10,8 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by nick on 08/12/2016.
@@ -19,6 +21,8 @@ public class ChorusWebSocketServer extends WebSocketServer {
     private ChorusLog log = ChorusLogFactory.getLog(ChorusWebSocketServer.class);
 
     private StepServerMessageProcessor stepServerMessageProcessor;
+
+    private ConcurrentMap<WebSocket, ClientDetails> connectedClientDetails = new ConcurrentHashMap<>();
 
     public ChorusWebSocketServer(int port, StepServerMessageProcessor stepServerMessageProcessor ) {
         super( new InetSocketAddress( port ) );
@@ -48,39 +52,65 @@ public class ChorusWebSocketServer extends WebSocketServer {
         }
 
         if ( m != null) {
-            processIncomingMessage(message, m);
+            processIncomingMessage(conn, message, m);
         } else {
             log.debug("Failed to decode message \n" + message);
         }
     }
 
-    private void processIncomingMessage(String message, Map<String, Object> m) {
+    private void processIncomingMessage(WebSocket socket, String message, Map<String, Object> m) {
         String type = m.getOrDefault("type", "UNKNOWN").toString();
         MessageType t = MessageType.fromString(type);
 
-        switch(t) {
-            case CONNECT :
-                ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
-                stepServerMessageProcessor.receiveClientConnected(connectMessage);
-                break;
-            case PUBLISH_STEP :
-                PublishStep publishStep = JsonUtils.convertToObject(message, PublishStep.class);
-                stepServerMessageProcessor.receivePublishStep(publishStep);
-                break;
-            case STEPS_ALIGNED :
-                StepsAlignedMessage stepsAlignedMessage = JsonUtils.convertToObject(message, StepsAlignedMessage.class);
-                stepServerMessageProcessor.receiveStepsAligned(stepsAlignedMessage);
-                break;
-            case STEP_SUCCEEDED :
-                StepSucceededMessage stepSucceededMessage = JsonUtils.convertToObject(message, StepSucceededMessage.class);
-                stepServerMessageProcessor.receiveStepSucceeded(stepSucceededMessage);
-                break;
-            case STEP_FAILED :
-                StepFailedMessage stepFailedMessage = JsonUtils.convertToObject(message, StepFailedMessage.class);
-                stepServerMessageProcessor.receiveStepFailed(stepFailedMessage);
-                break;
-            default:
-                log.warn("Received message with unsupported type " + type);
+        ClientDetails clientDetails;
+        try {
+            switch(t) {
+                case CONNECT :
+                    ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
+                    clientDetails = addConnectedClient(socket, connectMessage.getChorusClientId());
+                    stepServerMessageProcessor.receiveClientConnected(clientDetails, connectMessage);
+                    break;
+                case PUBLISH_STEP :
+                    PublishStepMessage publishStep = JsonUtils.convertToObject(message, PublishStepMessage.class);
+                    clientDetails = getConnectedClient(socket, publishStep.getChorusClientId(), "send " + MessageType.PUBLISH_STEP);
+                    stepServerMessageProcessor.receivePublishStep(clientDetails, publishStep);
+                    break;
+                case STEPS_ALIGNED :
+                    StepsAlignedMessage stepsAlignedMessage = JsonUtils.convertToObject(message, StepsAlignedMessage.class);
+                    clientDetails = getConnectedClient(socket, stepsAlignedMessage.getChorusClientId(), "send " + MessageType.STEPS_ALIGNED);
+                    stepServerMessageProcessor.receiveStepsAligned(clientDetails, stepsAlignedMessage);
+                    break;
+                case STEP_SUCCEEDED :
+                    StepSucceededMessage stepSucceededMessage = JsonUtils.convertToObject(message, StepSucceededMessage.class);
+                    clientDetails = getConnectedClient(socket, stepSucceededMessage.getChorusClientId(), "send " + MessageType.STEP_SUCCEEDED);
+                    stepServerMessageProcessor.receiveStepSucceeded(clientDetails, stepSucceededMessage);
+                    break;
+                case STEP_FAILED :
+                    StepFailedMessage stepFailedMessage = JsonUtils.convertToObject(message, StepFailedMessage.class);
+                    clientDetails = getConnectedClient(socket, stepFailedMessage.getChorusClientId(), "send " + MessageType.STEP_FAILED);
+                    stepServerMessageProcessor.receiveStepFailed(clientDetails, stepFailedMessage);
+                    break;
+                default:
+                    log.warn("Received message with unsupported type " + type);
+            }
+        } catch (Exception e) {
+            log.error("Failed to process message from client", e);
+        }
+    }
+
+    private ClientDetails getConnectedClient(WebSocket socket, String clientId, String actionDescription) throws ClientConnectionException {
+        ClientDetails clientDetails = connectedClientDetails.get(socket);
+        if ( clientDetails == null) {
+            throw new ClientConnectionException("The client " + clientId + " is not connected and cannot " + actionDescription);
+        }
+        return clientDetails;
+    }
+
+    private ClientDetails addConnectedClient(WebSocket socket, String chorusClientId) throws ClientConnectionException {
+        if ( connectedClientDetails.containsKey(socket)) {
+            throw new ClientConnectionException("Client " + connectedClientDetails.get(socket) + " is already connected");
+        } else {
+            return new ClientDetails(socket.getRemoteSocketAddress(), chorusClientId);
         }
     }
 

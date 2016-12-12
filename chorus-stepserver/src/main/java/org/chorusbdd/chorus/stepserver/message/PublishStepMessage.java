@@ -1,22 +1,24 @@
 package org.chorusbdd.chorus.stepserver.message;
 
+import org.chorusbdd.chorus.annotations.Step;
+
 /**
  * Created by nick on 09/12/2016.
  */
-public class PublishStep extends AbstractTypedMessage {
+public class PublishStepMessage extends AbstractTypedMessage {
 
     private String stepId;
     private String chorusClientId;
     private String pattern;
     private boolean isPending;
-    private String pendingMessage = "";  //optional so provide default
+    private String pendingMessage = Step.NO_PENDING_MESSAGE;  //optional so provide default
     private String technicalDescription;
 
-    public PublishStep() {
+    public PublishStepMessage() {
         super(MessageType.PUBLISH_STEP.name());
     }
 
-    public PublishStep(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription) {
+    public PublishStepMessage(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription) {
         this();
         this.stepId = stepId;
         this.chorusClientId = chorusClientId;
@@ -79,7 +81,7 @@ public class PublishStep extends AbstractTypedMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PublishStep that = (PublishStep) o;
+        PublishStepMessage that = (PublishStepMessage) o;
 
         if (isPending != that.isPending) return false;
         if (!stepId.equals(that.stepId)) return false;

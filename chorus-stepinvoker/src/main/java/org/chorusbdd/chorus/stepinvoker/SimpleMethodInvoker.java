@@ -29,7 +29,6 @@
  */
 package org.chorusbdd.chorus.stepinvoker;
 
-import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
@@ -43,43 +42,20 @@ import java.util.regex.Pattern;
 * Date: 24/09/13
 * Time: 18:46
 */
-public class SimpleMethodInvoker implements StepInvoker {
+public class SimpleMethodInvoker extends SkeletalStepInvoker {
 
     private ChorusLog log = ChorusLogFactory.getLog(SimpleMethodInvoker.class);
 
     private static AtomicLong idGenerator = new AtomicLong();
 
     private Long id = SimpleMethodInvoker.idGenerator.incrementAndGet();
-    private final String pendingMessage;
-    private final boolean isPending;
-    private final Pattern stepPattern;
     private Object handlerInstance;
     private Method method;
 
     public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage) {
+        super(pendingMessage, stepPattern);
         this.handlerInstance = handlerInstance;
         this.method = method;
-        this.stepPattern = stepPattern;
-        this.pendingMessage = pendingMessage;
-        this.isPending = pendingMessage != null && ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
-    }
-
-    /**
-     * @return a Pattern which is matched against step text/action to determine whether this invoker matches a scenario step
-     */
-    public Pattern getStepPattern() {
-        return stepPattern;
-    }
-
-    /**
-     * @return true if this step is 'pending' (a placeholder for future implementation) and should not be invoked
-     */
-    public boolean isPending() {
-        return isPending;
-    }
-
-    public String getPendingMessage() {
-        return pendingMessage;
     }
 
 

@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.stepserver;
 
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.stepserver.message.*;
@@ -63,7 +64,7 @@ public class TestClientMessages {
 
     @Test
     public void iCanSendAPublishStepMessage() {
-        PublishStep publishStep = new PublishStep(
+        PublishStepMessage publishStep = new PublishStepMessage(
             "stepId",
             "chorusClientId",
             "click the (.*) button",
@@ -90,12 +91,12 @@ public class TestClientMessages {
 
         webSocketClient.send(json);
 
-        PublishStep expectedPublishStep = new PublishStep(
+        PublishStepMessage expectedPublishStep = new PublishStepMessage(
             "stepId",
             "chorusClientId",
             "click the (.*) button",
             false,
-            "",
+            Step.NO_PENDING_MESSAGE,
             "tech description"
         );
 

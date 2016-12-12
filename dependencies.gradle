@@ -155,6 +155,9 @@ project(':chorus-stepinvoker') {
 project(':chorus-stepserver') {
     dependencies {
         compile project (':chorus-logging')
+        compile project (':chorus-subsystem')
+        compile project (':chorus-stepinvoker')
+        compile project (':chorus-handlerconfig')
     }
 }
 

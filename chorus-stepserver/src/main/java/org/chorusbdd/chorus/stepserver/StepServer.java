@@ -13,6 +13,8 @@ import org.chorusbdd.chorus.stepserver.message.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -28,14 +30,16 @@ public class StepServer implements StepServerManager {
     private ChorusWebSocketServer webSocketServer;
     private final AtomicBoolean isRunning = new AtomicBoolean();
 
+    private final Map<ClientDetails, ConnectedClient> connectedClients = new ConcurrentHashMap<>();
+
     public StepServer() {}
 
     public void startServer(String serverName) {
         if ( ! isRunning.getAndSet(true)) {
             //TODO implement configuration by server name
             log.info("Starting StepServer on port port");
-            StepServerMessageProcessor stepServerMessageProcessor = new StepServerMessageProcessor();
-            webSocketServer = new ChorusWebSocketServer(DEFAULT_PORT, stepServerMessageProcessor);
+            MessageProcessor messageProcessor = new MessageProcessor();
+            webSocketServer = new ChorusWebSocketServer(DEFAULT_PORT, messageProcessor);
             webSocketServer.start();
         } else {
             //when multiple configurations are supported this will change
@@ -80,36 +84,49 @@ public class StepServer implements StepServerManager {
         };
     }
 
-    private class StepServerMessageProcessor implements org.chorusbdd.chorus.stepserver.StepServerMessageProcessor {
+    private class MessageProcessor implements StepServerMessageProcessor {
 
         @Override
-        public void receiveClientConnected(ConnectMessage connectMessage) {
-            log.info("Yes!! - received a CONNECT message!");
+        public void receiveClientConnected(ClientDetails clientDetails, ConnectMessage connectMessage) {
+            log.info("received a CONNECT message!");
             log.info(connectMessage.toString());
+            connectedClients.put(clientDetails, new ConnectedClient(clientDetails));
+
         }
 
         @Override
-        public void receivePublishStep(PublishStep publishStep) {
-            log.info("Yeeassss!! - received a PUBLISH_STEP message!");
+        public void receivePublishStep(ClientDetails clientDetails, PublishStepMessage publishStep) {
+            log.info("received a PUBLISH_STEP message!");
             log.info(publishStep.toString());
+
+            ConnectedClient connectedClient = connectedClients.get(clientDetails);
+            connectedClient.addStep(publishStep);
         }
 
         @Override
-        public void receiveStepsAligned(StepsAlignedMessage stepsAlignedMessage) {
-            log.info("WhooHooo!! - received a PUBLISH_STEP message!");
+        public void receiveStepsAligned(ClientDetails clientDetails, StepsAlignedMessage stepsAlignedMessage) {
+            log.info("received a STEPS_ALIGNED message!");
             log.info(stepsAlignedMessage.toString());
+            ConnectedClient connectedClient = connectedClients.get(clientDetails);
+            connectedClient.setAligned(true);
         }
 
         @Override
-        public void receiveStepSucceeded(StepSucceededMessage stepSuccessMessage) {
-            log.info("Yeeeeaas!! - received a STEP_SUCCEEDED message!");
+        public void receiveStepSucceeded(ClientDetails clientDetails, StepSucceededMessage stepSuccessMessage) {
+            log.info("received a STEP_SUCCEEDED message!");
             log.info(stepSuccessMessage.toString());
+
+            ConnectedClient connectedClient = connectedClients.get(clientDetails);
+//            connectedClient.stepSucceeded(stepSuccessMessage);
         }
 
         @Override
-        public void receiveStepFailed(StepFailedMessage stepFailedMessage) {
-            log.info("Noooooo!! - received a STEP_FAILED message!");
+        public void receiveStepFailed(ClientDetails clientDetails, StepFailedMessage stepFailedMessage) {
+            log.info("received a STEP_FAILED message!");
             log.info(stepFailedMessage.toString());
+
+            ConnectedClient connectedClient = connectedClients.get(clientDetails);
+//            connectedClient.stepFailed(stepSuccessMessage);
         }
     }
 
