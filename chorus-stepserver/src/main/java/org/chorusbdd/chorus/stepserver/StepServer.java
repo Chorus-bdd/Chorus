@@ -143,7 +143,7 @@ public class StepServer implements StepServerManager {
 
         @Override
         public void clientDisconnected(String clientId) {
-
+            //TODO
         }
 
     }
