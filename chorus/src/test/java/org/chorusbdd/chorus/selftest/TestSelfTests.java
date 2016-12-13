@@ -43,6 +43,6 @@ public class TestSelfTests {
 
     public static String getChorusArgs() {
 
-        return "-f src/test/features -h org.chorusbdd.chorus.selftest -l info";
+        return "-f src/test/java -h org.chorusbdd.chorus.selftest -l info";
     }
 }

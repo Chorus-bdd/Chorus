@@ -15,6 +15,14 @@ repositories {
     maven { url "http://mvn.is.inf.uni-due.de:8081/nexus/content/repositories/atunes-dependencies"}
 }
 
+sourceSets {
+    test {
+        resources {
+            srcDirs = ['src/test/resources', 'src/test/java']
+        }
+    }
+}
+
 dependencies {
     compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version:'2.0.2'
 

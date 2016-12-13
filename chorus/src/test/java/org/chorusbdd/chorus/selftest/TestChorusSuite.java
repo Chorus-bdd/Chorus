@@ -27,23 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.handlers.configurations_for_processes;
+package org.chorusbdd.chorus.selftest;
 
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.ChorusSuite;
+import org.junit.runner.RunWith;
 
 /**
- * Simple main class which will terminate itself after the number of seconds specified in the first
- * command line argument.
- * <p/>
- * Created by: Steve Neal
- * Date: 11/01/12
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 13/06/12
+ * Time: 20:02
  */
-public class Lemming {
+@RunWith(ChorusSuite.class)
+public class TestChorusSuite {
 
-    static ChorusLog log = ChorusLogFactory.getLog(Lemming.class);
+    public static String getChorusArgs() {
 
-    public static void main(String[] args) throws Exception {
-        log.info("Lemming was called with arg " + args[0]);
+        return "-f src/test/java -h org.chorusbdd.chorus.selftest -t @ChorusSuiteTag";
     }
 }

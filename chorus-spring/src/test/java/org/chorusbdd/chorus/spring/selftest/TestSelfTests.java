@@ -27,8 +27,9 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest;
+package org.chorusbdd.chorus.spring.selftest;
 
+import junit.framework.TestCase;
 import org.chorusbdd.chorus.ChorusSuite;
 import org.junit.runner.RunWith;
 
@@ -39,10 +40,10 @@ import org.junit.runner.RunWith;
  * Time: 20:02
  */
 @RunWith(ChorusSuite.class)
-public class TestChorusSuite {
+public class TestSelfTests extends TestCase {
 
     public static String getChorusArgs() {
+        return "-f src/test/java -h org.chorusbdd.chorus.spring.selftest";
 
-        return "-f src/test/features -h org.chorusbdd.chorus.selftest -t @ChorusSuiteTag";
     }
 }

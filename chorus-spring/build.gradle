@@ -6,7 +6,13 @@ version = '2.0.2'
 
 description = "chorus-spring"
 
-
+sourceSets {
+    test {
+        resources {
+            srcDirs = ['src/test/resources', 'src/test/java']
+        }
+    }
+}
 
 dependencies {
     compile group: 'org.chorusbdd', name: 'chorus', version:'2.0.2'
