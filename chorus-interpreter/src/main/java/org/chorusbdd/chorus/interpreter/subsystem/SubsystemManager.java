@@ -43,6 +43,8 @@ public interface SubsystemManager {
 
     Object getRemotingManager();
 
+    Object getStepServerManager();
+
     Object getConfigurationManager();
 
     Subsystem getSubsystemById(String id);

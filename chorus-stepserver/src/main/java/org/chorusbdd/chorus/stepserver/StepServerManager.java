@@ -42,7 +42,11 @@ import java.util.List;
  */
 public interface StepServerManager extends Subsystem, StepInvokerProvider {
 
+    String DEFAULT_SERVER_NAME = "defaultStepServer";
+
     void startServer(String serverName);
+
+    void stopServer(String serverName);
 
     /**
      * Wait for a client to become connected to the StepServer, publish its steps and send a STEPS_ALIGNED
@@ -57,5 +61,4 @@ public interface StepServerManager extends Subsystem, StepInvokerProvider {
 
     List<StepInvoker> getStepInvokers();
 
-    void stopServer(String serverName);
 }

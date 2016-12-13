@@ -215,6 +215,7 @@ public class ChorusInterpreter {
             stepInvokerProvider.addChild(f);
         }
         stepInvokerProvider.addChild((StepInvokerProvider)subsystemManager.getRemotingManager());
+        stepInvokerProvider.addChild((StepInvokerProvider)subsystemManager.getStepServerManager());
         return stepInvokerProvider;
     }
 

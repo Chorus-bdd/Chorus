@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.handlerconfig.ChorusProperties;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.stepserver.StepServerManager;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -53,6 +54,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private final Subsystem processManager;
     private final Subsystem remotingManager;
     private final ConfigurationManager configurationManager;
+    private final Subsystem stepServerManager;
 
     private Map<String, Subsystem> subsystems = new HashMap<>();
 
@@ -62,6 +64,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         processManager = initializeProcessManager();
         remotingManager = initializeRemotingManager();
         configurationManager = initializeConfigurationManager();
+        stepServerManager = initializeStepServerManager();
     }
 
     public Subsystem getProcessManager() {
@@ -70,6 +73,10 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
     public Subsystem getRemotingManager() {
         return remotingManager;
+    }
+
+    public Subsystem getStepServerManager() {
+        return stepServerManager;
     }
 
     @Override
@@ -112,7 +119,14 @@ public class SubsystemManagerImpl implements SubsystemManager {
             "chorusConfigurationManager",
             "org.chorusbdd.chorus.handlerconfig.ChorusProperties"
         );
+    }
 
+    private StepServerManager initializeStepServerManager() {
+        return initializeSubsystem(
+            "stepServerManager",
+            "chorusStepServerManager",
+            "org.chorusbdd.chorus.stepserver.StepServer"
+        );
     }
 
     private <E> E initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass) {

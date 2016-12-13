@@ -27,7 +27,6 @@ public class StepServer implements StepServerManager {
     private static ChorusLog log = ChorusLogFactory.getLog(StepServer.class);
 
     private static final int DEFAULT_PORT = 9080;
-    private static final String DEFAULT_SERVER_NAME = "defaultStepServer";
     private static final int DEFAULT_TIMEOUT_SECONDS = 30;
 
     private ChorusWebSocketServer webSocketServer;
