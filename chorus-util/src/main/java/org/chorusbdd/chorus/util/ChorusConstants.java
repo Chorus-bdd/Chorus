@@ -48,6 +48,8 @@ public class ChorusConstants {
 
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
 
+    public static final String STEP_PUBLISHER_ENABLED_PROPERTY = "org.chorusbdd.chorus.steppublisher.enabled";
+
     public static final String CHORUS_ROOT_PACKAGE = "org.chorusbdd.chorus";
     public static final String[] ANY_PACKAGE = new String[] {".*"};
     /**
