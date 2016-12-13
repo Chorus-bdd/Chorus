@@ -34,18 +34,18 @@ public class ChorusWebSocketServer extends WebSocketServer implements StepServer
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake ) {
-        log.info("Opened a connection from " + conn.getRemoteSocketAddress());
+        log.debug("Opened a connection from " + conn.getRemoteSocketAddress());
     }
 
     @Override
     public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
-        log.info("Closed a connection from " + conn.getRemoteSocketAddress() + ", code " + code + ", reason " + reason);
+        log.debug("Closed a connection from " + conn.getRemoteSocketAddress() + ", code " + code + ", reason " + reason);
     }
 
     @Override
     public void onMessage( WebSocket conn, String message ) {
 
-        log.info("Received a message " + message + " from " + conn.getRemoteSocketAddress());
+        log.debug("Received a message " + message + " from " + conn.getRemoteSocketAddress());
 
         Map<String, Object> m = null;
         try {
@@ -115,9 +115,9 @@ public class ChorusWebSocketServer extends WebSocketServer implements StepServer
 
     @Override
     public void onError( WebSocket conn, Exception ex ) {
-        ex.printStackTrace();
         if( conn != null ) {
-            log.error("Error on connection " + conn.getRemoteSocketAddress() + " ", ex);
+            //TODO these happen on disconnect, review how to log
+            log.debug("Error on connection " + conn.getRemoteSocketAddress() + " ", ex);
         }
     }
 }

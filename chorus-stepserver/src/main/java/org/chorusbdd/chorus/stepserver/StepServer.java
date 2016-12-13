@@ -113,15 +113,15 @@ public class StepServer implements StepServerManager {
 
         @Override
         public void receiveClientConnected(ConnectMessage connectMessage) {
-            log.info("received a CONNECT message!");
-            log.info(connectMessage.toString());
+            log.debug("received a CONNECT message!");
+            log.debug(connectMessage.toString());
             connectedClients.add(connectMessage.getChorusClientId());
         }
 
         @Override
         public void receivePublishStep(PublishStepMessage publishStep) {
-            log.info("received a PUBLISH_STEP message!");
-            log.info(publishStep.toString());
+            log.debug("received a PUBLISH_STEP message!");
+            log.debug(publishStep.toString());
 
             WebSocketClientStepInvoker stepInvoker;
             try {
@@ -134,15 +134,15 @@ public class StepServer implements StepServerManager {
 
         @Override
         public void receiveStepsAligned(StepsAlignedMessage stepsAlignedMessage) {
-            log.info("received a STEPS_ALIGNED message!");
-            log.info(stepsAlignedMessage.toString());
+            log.debug("received a STEPS_ALIGNED message!");
+            log.debug(stepsAlignedMessage.toString());
             alignedClients.add(stepsAlignedMessage.getChorusClientId());
         }
 
         @Override
         public void receiveStepSucceeded(StepSucceededMessage stepSuccessMessage) {
-            log.info("received a STEP_SUCCEEDED message!");
-            log.info(stepSuccessMessage.toString());
+            log.debug("received a STEP_SUCCEEDED message!");
+            log.debug(stepSuccessMessage.toString());
 
             WebSocketClientStepInvoker stepInvoker = stepIdToInvoker.get(stepSuccessMessage.getStepId());
             stepInvoker.stepSucceeded(stepSuccessMessage);
@@ -150,8 +150,8 @@ public class StepServer implements StepServerManager {
 
         @Override
         public void receiveStepFailed(StepFailedMessage stepFailedMessage) {
-            log.info("received a STEP_FAILED message!");
-            log.info(stepFailedMessage.toString());
+            log.debug("received a STEP_FAILED message!");
+            log.debug(stepFailedMessage.toString());
 
             WebSocketClientStepInvoker stepInvoker = stepIdToInvoker.get(stepFailedMessage.getStepId());
             stepInvoker.stepFailed(stepFailedMessage);
@@ -178,7 +178,7 @@ public class StepServer implements StepServerManager {
     }
 
     public static void main(String[] args) {
-        StdOutLogProvider.setLogLevel(LogLevel.INFO);
+        StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
         StepServer stepServer = new StepServer();
         stepServer.startServer(DEFAULT_SERVER_NAME);
         log.info("Socket Server Started!");
