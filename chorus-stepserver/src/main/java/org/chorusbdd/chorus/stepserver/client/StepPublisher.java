@@ -1,6 +1,7 @@
 package org.chorusbdd.chorus.stepserver.client;
 
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -129,7 +130,7 @@ public class StepPublisher {
             chorusClientId,
             invoker.getStepPattern().toString(),
             invoker.isPending(),
-            invoker.getPendingMessage() == null ? "" : invoker.getPendingMessage(),
+            invoker.getPendingMessage() == null ? Step.NO_PENDING_MESSAGE : invoker.getPendingMessage(),
             invoker.getTechnicalDescription()
         );
         chorusWebSocketClient.sendMessage(publishStepMessage);

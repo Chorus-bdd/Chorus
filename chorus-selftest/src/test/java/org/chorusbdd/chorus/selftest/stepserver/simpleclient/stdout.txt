@@ -1,0 +1,53 @@
+Feature: Simple Step Server Client
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepserver/simpleclient/simplestepserver.feature
+Chorus --> INFO    - No default handler found for Feature: (Simple Step Server Client), will use built-in handlers and Uses: statements
+  Scenario: Call a simple step
+Chorus --> INFO    - Processing scenario: Call a simple step
+Chorus --> INFO    - Starting StepServer on port port
+    #! StepServer start server                                                               PASSED
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - Opened a connection from /127.0.0.1:60107
+    #! Processes start simplestepclient                                                      PASSED
+Chorus --> INFO    - Received a message {
+  "chorusClientId" : "SimpleStepServerClient",
+  "description" : "SimpleStepServerClient",
+  "type" : "CONNECT"
+} from /127.0.0.1:60107
+Chorus --> INFO    - received a CONNECT message!
+Chorus --> INFO    - Connect{type='CONNECT', chorusClientId='SimpleStepServerClient', description='SimpleStepServerClient'}
+Chorus --> INFO    - Received a message {
+  "chorusClientId" : "SimpleStepServerClient",
+  "pattern" : ".* call a step with a result",
+  "pending" : false,
+  "pendingMessage" : "org.chorusbdd.chorus.annotations.Step.NO_PENDING_MESSAGE",
+  "stepId" : "1:SimpleStepServerClientHandler:callAStepWithAResult",
+  "technicalDescription" : "SimpleStepServerClientHandler:callAStepWithAResult",
+  "type" : "PUBLISH_STEP"
+} from /127.0.0.1:60107
+Chorus --> INFO    - received a PUBLISH_STEP message!
+Chorus --> INFO    - PublishStep{type='PUBLISH_STEP', stepId='1:SimpleStepServerClientHandler:callAStepWithAResult', chorusClientId='SimpleStepServerClient', pattern='.* call a step with a result', isPending=false, pendingMessage='org.chorusbdd.chorus.annotations.Step.NO_PENDING_MESSAGE', technicalDescription='SimpleStepServerClientHandler:callAStepWithAResult'}
+Chorus --> INFO    - Received a message {
+  "chorusClientId" : "SimpleStepServerClient",
+  "type" : "STEPS_ALIGNED"
+} from /127.0.0.1:60107
+Chorus --> INFO    - received a STEPS_ALIGNED message!
+Chorus --> INFO    - StepsAligned{type='STEPS_ALIGNED', chorusClientId='SimpleStepServerClient'}
+    #! StepServer wait for client SimpleStepServerClient                                     PASSED
+Chorus --> INFO    - Received a message {
+  "chorusClientId" : "SimpleStepServerClient",
+  "contextVariables" : { },
+  "executionId" : "ec65c9bc-ff90-4c12-be69-cf1ab0fe8cf2",
+  "result" : "Hello!",
+  "stepId" : "1:SimpleStepServerClientHandler:callAStepWithAResult",
+  "type" : "STEP_SUCCEEDED"
+} from /127.0.0.1:60107
+Chorus --> INFO    - received a STEP_SUCCEEDED message!
+Chorus --> INFO    - StepSuccessMessage{type='STEP_SUCCEEDED', stepId='1:SimpleStepServerClientHandler:callAStepWithAResult', executionId='ec65c9bc-ff90-4c12-be69-cf1ab0fe8cf2', chorusClientId='SimpleStepServerClient', result='Hello!', contextVariables={}}
+    Check I can call a step with a result                                                    PASSED  Hello!
+Chorus --> ERROR   - Error on connection /127.0.0.1:60107
+Chorus --> INFO    - Closed a connection from /127.0.0.1:60107, code 1006, reason An existing connection was forcibly closed by the remote host
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
