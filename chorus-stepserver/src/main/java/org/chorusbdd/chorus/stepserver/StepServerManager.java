@@ -50,10 +50,10 @@ public interface StepServerManager extends Subsystem, StepInvokerProvider {
      * @param clientName, name of the client which the client should send when connecting
      * @param timeoutSeconds, number of seconds to wait for a STEPS_ALIGNED
      *
-     * @throws ClientConnectionException if a the named client is not connected or has not published
+     * @return true if the client is connected and aligned, false if not connected or has not published
      * STEPS_ALIGNED by the end of the timeout period
      */
-    void waitForClientConnection(String clientName, int timeoutSeconds) throws ClientConnectionException;
+    boolean waitForClientConnection(String clientName, int timeoutSeconds) throws ClientConnectionException;
 
     List<StepInvoker> getStepInvokers();
 

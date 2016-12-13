@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by nick on 09/12/2016.
  */
@@ -53,14 +55,21 @@ public class StepServer implements StepServerManager {
     }
 
     @Override
-    public void waitForClientConnection(String clientName, int timeoutSeconds) throws ClientConnectionException {
+    public boolean waitForClientConnection(String clientName, int timeoutSeconds) throws ClientConnectionException {
         PolledAssertion polledAssertion = new PolledAssertion() {
             @Override
             protected void validate() throws Exception {
-                alignedClients.contains(clientName);
+                assertTrue(alignedClients.contains(clientName));
             }
         };
-        polledAssertion.await(TimeUnit.SECONDS, timeoutSeconds);
+
+        boolean result = true;
+        try {
+            polledAssertion.await(TimeUnit.SECONDS, timeoutSeconds);
+        } catch (AssertionError assertionError) {
+            result = false;
+        }
+        return result;
     }
 
     @Override
