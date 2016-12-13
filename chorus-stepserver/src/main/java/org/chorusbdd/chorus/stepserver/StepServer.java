@@ -128,7 +128,7 @@ public class StepServer implements StepServerManager {
             try {
                 stepInvoker = WebSocketClientStepInvoker.create(messageRouter, publishStep, DEFAULT_TIMEOUT_SECONDS);
                 stepIdToInvoker.put(publishStep.getStepId(), stepInvoker);
-            } catch (WebSocketClientStepInvoker.InvalidStepException e) {
+            } catch (InvalidStepException e) {
                 log.warn("Invalid step sent by client " + publishStep.getChorusClientId(), e);
             }
         }

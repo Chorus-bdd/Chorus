@@ -137,7 +137,6 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     public void stepFailed(StepFailedMessage stepFailedMessage) {
         ExecutingStep s = executingStep.get();
         if ( s == NO_STEP_EXECUTING ) {
-            //this is called by web socket thread not Chorus interpreter so log don't throw ChorusException
             log.error("StepServer invalid state, a step which is not executing cannot fail");
         } else {
 
@@ -154,35 +153,6 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
                 );
                 s.getCompletableFuture().completeExceptionally(stepFailedException);
             }
-        }
-    }
-
-
-    public static final class InvalidStepException extends Exception {
-
-        public InvalidStepException(String description, Exception e) {
-            super(description, e);
-        }
-    }
-
-    public static final class StepFailedException extends Exception {
-
-        private String description;
-        private String errorText;
-
-        public StepFailedException(String description, String errorText) {
-            super(description);
-            this.description = description;
-            this.errorText = errorText;
-        }
-
-        public String getErrorText() {
-            return errorText;
-        }
-
-        @Override
-        public String toString() {
-            return "Step failed in remote StepServer client, " + description + " [" + errorText + "]";
         }
     }
 
