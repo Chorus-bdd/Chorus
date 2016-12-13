@@ -10,9 +10,11 @@ import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepserver.message.*;
+import org.chorusbdd.chorus.util.PolledAssertion;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -52,7 +54,13 @@ public class StepServer implements StepServerManager {
 
     @Override
     public void waitForClientConnection(String clientName, int timeoutSeconds) throws ClientConnectionException {
-        //TODO
+        PolledAssertion polledAssertion = new PolledAssertion() {
+            @Override
+            protected void validate() throws Exception {
+                alignedClients.contains(clientName);
+            }
+        };
+        polledAssertion.await(TimeUnit.SECONDS, timeoutSeconds);
     }
 
     @Override
@@ -143,9 +151,22 @@ public class StepServer implements StepServerManager {
 
         @Override
         public void clientDisconnected(String clientId) {
-            //TODO
+            removeClient(clientId);
         }
 
+    }
+
+    private void removeClient(String clientId) {
+        connectedClients.remove(clientId);
+        alignedClients.remove(clientId);
+
+        Iterator<WebSocketClientStepInvoker> i = stepIdToInvoker.values().iterator();
+        while(i.hasNext()) {
+            WebSocketClientStepInvoker stepInvoker = i.next();
+            if ( stepInvoker.getClientId().equals(clientId)) {
+                i.remove();
+            }
+        }
     }
 
     public static void main(String[] args) {
