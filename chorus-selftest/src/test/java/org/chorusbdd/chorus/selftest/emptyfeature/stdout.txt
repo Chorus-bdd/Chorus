@@ -1,0 +1,15 @@
+Chorus --> WARN    - Did not find a feature definition in file src/test/java/org/chorusbdd/chorus/selftest/emptyfeature/blankfeature.feature, will be skipped
+Feature: Empty Feature                                                                               
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/emptyfeature/emptyfeature.feature
+Chorus --> INFO    - No default handler found for Feature: (Empty Feature), will use built-in handlers and Uses: statements
+
+Feature: Empty Scenario                                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/emptyfeature/emptyscenario.feature
+Chorus --> INFO    - No default handler found for Feature: (Empty Scenario), will use built-in handlers and Uses: statements
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)

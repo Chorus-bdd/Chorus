@@ -1,0 +1,16 @@
+Feature: Capture With Log                                                                            
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/process_capturewithlog/capturewithlog.feature
+  Scenario: When in capturewithlog mode log files are written
+Chorus --> INFO    - Processing scenario: When in capturewithlog mode log files are written
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a capturewithlog process                                                   PASSED  
+    When I read the line 'and another longer line' from the capturewithlog process           PASSED  
+    And I read the line 'an error has occurred' from the capturewithlog process std error    PASSED  
+    Then the std out log contains the string let's match a line                              PASSED  
+    Then the std out log contains the string and another longer line                         PASSED  
+    And the std err log contains the string an error has occurred                            PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)

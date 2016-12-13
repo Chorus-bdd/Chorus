@@ -1,0 +1,125 @@
+Feature: Lifecycle Methods                                                                           
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/lifecyclemethods/lifecyclemethods.feature
+Chorus --> INFO    - No default handler found for Feature: (Lifecycle Methods), will use built-in handlers and Uses: statements
+Feature Init for Feature scoped handler ---->
+LifecycleMethodsFeatureScopedHandler{
+name='Feature Scoped Handler'
+, instanceCreationCount=1
+, initFeatureCount=1
+, initScenarioCount=0
+, destroyFeatureCount=0
+, destroyScenarioCount=0
+}
+Feature Init for Feature scoped handler ---->
+LifecycleMethodsFeatureScopedHandler{
+name='Multiple Methods Handler'
+, instanceCreationCount=1
+, initFeatureCount=2
+, initScenarioCount=0
+, destroyFeatureCount=0
+, destroyScenarioCount=0
+}
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    Given I can run a feature start scenario                                                 PASSED  
+LifecycleMethodsFeatureScopedHandler{
+name='Scenario Scoped Handler'
+, instanceCreationCount=1
+, initFeatureCount=0
+, initScenarioCount=1
+, destroyFeatureCount=0
+, destroyScenarioCount=1
+}
+LifecycleMethodsFeatureScopedHandler{
+name='Feature Scoped Handler'
+, instanceCreationCount=1
+, initFeatureCount=1
+, initScenarioCount=1
+, destroyFeatureCount=0
+, destroyScenarioCount=1
+}
+LifecycleMethodsFeatureScopedHandler{
+name='Multiple Methods Handler'
+, instanceCreationCount=1
+, initFeatureCount=2
+, initScenarioCount=2
+, destroyFeatureCount=0
+, destroyScenarioCount=1
+}
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Check Chorus is working properly                                                         PASSED  
+LifecycleMethodsFeatureScopedHandler{
+name='Scenario Scoped Handler'
+, instanceCreationCount=2
+, initFeatureCount=0
+, initScenarioCount=1
+, destroyFeatureCount=0
+, destroyScenarioCount=1
+}
+LifecycleMethodsFeatureScopedHandler{
+name='Feature Scoped Handler'
+, instanceCreationCount=1
+, initFeatureCount=1
+, initScenarioCount=2
+, destroyFeatureCount=0
+, destroyScenarioCount=2
+}
+LifecycleMethodsFeatureScopedHandler{
+name='Multiple Methods Handler'
+, instanceCreationCount=1
+, initFeatureCount=2
+, initScenarioCount=4
+, destroyFeatureCount=0
+, destroyScenarioCount=2
+}
+  Scenario: Feature-End
+Chorus --> INFO    - Processing scenario: Feature-End
+    Given I can run a feature end scenario                                                   PASSED  
+LifecycleMethodsFeatureScopedHandler{
+name='Scenario Scoped Handler'
+, instanceCreationCount=3
+, initFeatureCount=0
+, initScenarioCount=1
+, destroyFeatureCount=0
+, destroyScenarioCount=1
+}
+LifecycleMethodsFeatureScopedHandler{
+name='Feature Scoped Handler'
+, instanceCreationCount=1
+, initFeatureCount=1
+, initScenarioCount=3
+, destroyFeatureCount=0
+, destroyScenarioCount=3
+}
+LifecycleMethodsFeatureScopedHandler{
+name='Multiple Methods Handler'
+, instanceCreationCount=1
+, initFeatureCount=2
+, initScenarioCount=6
+, destroyFeatureCount=0
+, destroyScenarioCount=3
+}
+Feature Destroy for Feature scoped handler ---->
+LifecycleMethodsFeatureScopedHandler{
+name='Feature Scoped Handler'
+, instanceCreationCount=1
+, initFeatureCount=1
+, initScenarioCount=3
+, destroyFeatureCount=1
+, destroyScenarioCount=3
+}
+Feature Destroy for Feature scoped handler ---->
+LifecycleMethodsFeatureScopedHandler{
+name='Multiple Methods Handler'
+, instanceCreationCount=1
+, initFeatureCount=2
+, initScenarioCount=6
+, destroyFeatureCount=1
+, destroyScenarioCount=3
+}
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

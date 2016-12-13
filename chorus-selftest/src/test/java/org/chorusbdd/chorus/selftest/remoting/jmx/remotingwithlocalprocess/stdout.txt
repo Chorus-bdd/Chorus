@@ -1,0 +1,49 @@
+Feature: Remoting With Local Process                                                                 
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/remoting/jmx/remotingwithlocalprocess/remotingwithlocalprocess.feature
+  Scenario: I don't need to define a remoting config for a locally started process
+Chorus --> INFO    - Processing scenario: I don't need to define a remoting config for a locally started process
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    #! Processes start config1                                                               PASSED  
+    #! Processes connect config1                                                             PASSED  
+    Check I can call a step method exported by the 18806 handler                             PASSED  
+  Scenario: I can connect to multiple config1 processes and the remoting ports auto-increment
+Chorus --> INFO    - Processing scenario: I can connect to multiple config1 processes and the remoting ports auto-increment
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process named Bill                                               PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Ben                                                  PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Flowerpot                                            PASSED  
+    #! Processes connect Bill, Ben, Flowerpot                                                PASSED  
+    Then I can call a step and get the jmx port from the 18806 handler                       PASSED  18806
+    And I can get the debug port for Bill from processes manager                             PASSED  19806
+    Then I can call a step and get the jmx port from the 18807 handler                       PASSED  18807
+    And I can get the debug port for Ben from processes manager                              PASSED  19807
+    Then I can call a step and get the jmx port from the 18808 handler                       PASSED  18808
+    And I can get the debug port for Flowerpot from processes manager                        PASSED  19808
+  Scenario: I can run steps using the Remoting handler 'in componentName' suffix without a remoting config
+Chorus --> INFO    - Processing scenario: I can run steps using the Remoting handler 'in componentName' suffix without a remoting config
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process named Bill                                               PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Ben                                                  PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Flowerpot                                            PASSED  
+    Then I can call a step and get the jmx port from the 18806 handler in Bill               PASSED  18806
+    Then I can call a step and get the jmx port from the 18807 handler in Ben                PASSED  18807
+    Then I can call a step and get the jmx port from the 18808 handler in Flowerpot          PASSED  18808
+  Scenario: Remoting and debug ports do not auto-increment if no initial port set in template configuration
+Chorus --> INFO    - Processing scenario: Remoting and debug ports do not auto-increment if no initial port set in template configuration
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a withoutRemotingOrDebug process named Bill                                PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a withoutRemotingOrDebug process named Ben                                   PASSED  
+    Then I can get the debug port for Bill from processes manager                            PASSED  -1
+    And I can get the debug port for Ben from processes manager                              PASSED  -1
+    And I can get the jmx port for Bill from processes manager                               PASSED  -1
+    And I can get the jmx port for Ben from processes manager                                PASSED  -1
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:4) (passed:4) (failed:0)
+Steps     (total:25) (passed:25) (failed:0) (undefined:0) (pending:0) (skipped:0)

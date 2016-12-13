@@ -1,0 +1,11 @@
+Feature: Inclusive Tag                                                                               
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/taggedscenario/inclusion/inclusivetag.feature
+  Scenario: Scenario Two
+Chorus --> INFO    - Processing scenario: Scenario Two
+    Given Chorus is working properly                                                         PASSED  
+    Then this scenario will run                                                              PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

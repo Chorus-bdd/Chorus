@@ -1,0 +1,26 @@
+Feature: Process With Log4j                                                                          
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/processwithlog4jconfig/processwithlog4jconfig.feature
+  Scenario: Start a Process with log4j logging
+Chorus --> INFO    - Processing scenario: Start a Process with log4j logging
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    When I start a config1 process                                                           PASSED  
+    And I wait for config1 to stop                                                           PASSED  
+    Then log4j has written to the processwithlog4jconfig-config1.log file                    PASSED  
+    And I can delete the log file processwithlog4jconfig-config1.log                         PASSED  
+  Scenario: Start two Processes with log4j logging
+Chorus --> INFO    - Processing scenario: Start two Processes with log4j logging
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    When I start a config1 process                                                           PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process                                                            PASSED  
+    And I wait for config1 to terminate                                                      PASSED  
+    And I wait for config1-2 to terminate                                                    PASSED  
+    Then log4j has written to the processwithlog4jconfig-config1.log file                    PASSED  
+    And I can delete the log file processwithlog4jconfig-config1.log                         PASSED  
+    And log4j has written to the processwithlog4jconfig-config1-2.log file                   PASSED  
+    And I can delete the log file processwithlog4jconfig-config1-2.log                       PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:12) (passed:12) (failed:0) (undefined:0) (pending:0) (skipped:0)

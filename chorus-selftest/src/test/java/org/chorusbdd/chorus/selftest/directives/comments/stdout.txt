@@ -1,0 +1,19 @@
+Feature: Directives With Comments                                                                    
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/comments/directiveswithcomments.feature
+  Scenario: Directive Before Scenario
+Chorus --> INFO    - Processing scenario: Directive Before Scenario
+    #! Directive One                                                                         PASSED  
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Two Directives Before Scenario
+Chorus --> INFO    - Processing scenario: Two Directives Before Scenario
+    #! Directive One                                                                         PASSED  
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:8) (passed:8) (failed:0) (undefined:0) (pending:0) (skipped:0)

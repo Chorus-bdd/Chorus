@@ -1,0 +1,23 @@
+Feature: Named Processes                                                                             
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/namedprocess/namedprocesses.feature
+Chorus --> INFO    - No default handler found for Feature: (Named Processes), will use built-in handlers and Uses: statements
+  Scenario: Start a process with an alias
+Chorus --> INFO    - Processing scenario: Start a process with an alias
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a namedprocess process named Timothy                                       PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a namedprocess process named Roberto                                         PASSED  
+    Then the process named Timothy is running                                                PASSED  
+    And the process named Roberto is running                                                 PASSED  
+  Scenario: Start a process without process check delay
+Chorus --> INFO    - Processing scenario: Start a process without process check delay
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    #! Processes start namedprocess as Timothy, namedprocess as Roberto                      PASSED  
+    Check the process named Timothy is running                                               PASSED  
+    And the process named Roberto is running                                                 PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)

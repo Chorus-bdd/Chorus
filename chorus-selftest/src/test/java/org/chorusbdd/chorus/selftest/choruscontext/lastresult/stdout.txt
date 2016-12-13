@@ -1,0 +1,43 @@
+Feature: Store Last Result                                                                           
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/choruscontext/lastresult/storelastresult.feature
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    First I start a storelastremote process                                                  PASSED  
+  Scenario: Test Last Result With No Intervening Step
+Chorus --> INFO    - Processing scenario: Test Last Result With No Intervening Step
+    When I call a step which returns a String myTestString                                   PASSED  myTestString
+    Then the type of variable lastResult is String                                           PASSED  
+    And variable lastResult has the value myTestString                                       PASSED  
+  Scenario: Test Last Result With Intervening Step With void Return Type
+Chorus --> INFO    - Processing scenario: Test Last Result With Intervening Step With void Return Type
+    When I call a step which returns a String myTestString                                   PASSED  myTestString
+    And I call a step with a void return type                                                PASSED  
+    Then the type of variable lastResult is String                                           PASSED  
+    And variable lastResult has the value myTestString                                       PASSED  
+  Scenario: Test Last Result With Intervening Step Which returns null
+Chorus --> INFO    - Processing scenario: Test Last Result With Intervening Step Which returns null
+    When I call a step which returns a String myTestString                                   PASSED  myTestString
+    And I call a step which returns a null value                                             PASSED  
+    Then variable lastResult has the value null                                              PASSED  
+  Scenario: Test Last Result for Remote Process
+Chorus --> INFO    - Processing scenario: Test Last Result for Remote Process
+    When I call a step which returns a String myTestString in storelastremote                PASSED  myTestString
+    Then the type of variable lastResult is String                                           PASSED  
+    And variable lastResult has the value myTestString                                       PASSED  
+  Scenario: Test Last Result With Intervening Step With void Return Type in Remote Process
+Chorus --> INFO    - Processing scenario: Test Last Result With Intervening Step With void Return Type in Remote Process
+    When I call a step which returns a String myTestString in storelastremote                PASSED  myTestString
+    And I call a step with a void return type in storelastremote                             PASSED  
+    Then the type of variable lastResult is String                                           PASSED  
+    And variable lastResult has the value myTestString                                       PASSED  
+  Scenario: Test Last Result With Intervening Step Which returns null in Remote Process
+Chorus --> INFO    - Processing scenario: Test Last Result With Intervening Step Which returns null in Remote Process
+    When I call a step which returns a String myTestString in storelastremote                PASSED  myTestString
+    And I call a step which returns a null value in storelastremote                          PASSED  
+    Then variable lastResult has the value null                                              PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:6) (passed:6) (failed:0)
+Steps     (total:21) (passed:21) (failed:0) (undefined:0) (pending:0) (skipped:0)

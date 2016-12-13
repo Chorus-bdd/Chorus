@@ -1,0 +1,13 @@
+Feature: Undefined Step                                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/undefinedstep/undefinedstep.feature
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+    And if a step is undefined                                                               UNDEFINED 
+    Then the subsequent step is skipped                                                      SKIPPED 
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:1) (passed:0) (failed:1)
+Steps     (total:4) (passed:2) (failed:0) (undefined:1) (pending:0) (skipped:1)

@@ -1,0 +1,11 @@
+Feature: Simple Feature                                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/simplefeature/simplefeature.feature
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

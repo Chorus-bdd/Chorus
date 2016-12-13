@@ -1,0 +1,24 @@
+Feature: Profile Properties [configOne]                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/configload/profileproperties/profileproperties.feature in config configOne
+  Scenario: Profile and Configuration Properties Can Be Set
+Chorus --> INFO    - Processing scenario: Profile and Configuration Properties Can Be Set
+    Check A profile property can be set                                                      PASSED  
+    Check A profile property overrides the base property                                     PASSED  
+    Check A configuration property can be set                                                PASSED  
+    Check A configuration property overrides the base property                               PASSED  
+    Check A configuration property may prefix a profile property                             PASSED  
+
+Feature: Profile Properties [configTwo]                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/configload/profileproperties/profileproperties.feature in config configTwo
+  Scenario: Profile and Configuration Properties Can Be Set
+Chorus --> INFO    - Processing scenario: Profile and Configuration Properties Can Be Set
+    Check A profile property can be set                                                      PASSED  
+    Check A profile property overrides the base property                                     PASSED  
+    Check A configuration property can be set                                                PASSED  
+    Check A configuration property overrides the base property                               PASSED  
+    Check A configuration property may prefix a profile property                             PASSED  
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:10) (passed:10) (failed:0) (undefined:0) (pending:0) (skipped:0)

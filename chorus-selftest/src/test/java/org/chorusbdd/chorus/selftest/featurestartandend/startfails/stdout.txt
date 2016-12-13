@@ -1,0 +1,22 @@
+Feature: Feature Start Fails                                                                         
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/featurestartandend/startfails/statfails.feature
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    First I run feature start                                                                PASSED  
+    With a step that fails                                                                   UNDEFINED 
+Chorus --> WARN    - Skipping scenario Scenario: Scenario One since Feature-Start failed
+  Scenario: Scenario One
+Chorus --> INFO    - Processing scenario: Scenario One
+    Then the scenarios are skipped                                                           SKIPPED 
+Chorus --> WARN    - Skipping scenario Scenario: Scenario Two since Feature-Start failed
+  Scenario: Scenario Two
+Chorus --> INFO    - Processing scenario: Scenario Two
+    Then the scenarios are skipped                                                           SKIPPED 
+  Scenario: Feature-End
+Chorus --> INFO    - Processing scenario: Feature-End
+    But I run feature end                                                                    PASSED  
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:2) (passed:0) (failed:2)
+Steps     (total:5) (passed:2) (failed:0) (undefined:1) (pending:0) (skipped:2)

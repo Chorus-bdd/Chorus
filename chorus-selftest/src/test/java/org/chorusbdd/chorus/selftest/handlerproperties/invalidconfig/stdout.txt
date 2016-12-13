@@ -1,0 +1,17 @@
+Feature: Invalid Handler Config                                                                      
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/handlerproperties/invalidconfig/invalidhandlerconfig.feature
+Chorus --> INFO    - No default handler found for Feature: (Invalid Handler Config), will use built-in handlers and Uses: statements
+  Scenario: Invalid config1 Processes Properties
+Chorus --> INFO    - Processing scenario: Invalid config1 Processes Properties
+Chorus --> WARN    - Invalid config config1 - main class was null or empty
+    I can start a config1 process                                                            FAILED  (ProcessManagerImpl:linenumber)-ChorusAssertionError The config for config1 must be valid
+    And wait for config1 to terminate                                                        SKIPPED 
+  Scenario: Invalid config1 Remoting Properties
+Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties
+Chorus --> WARN    - Invalid config config1 - host was not set
+    I can call an exported method in config1                                                 FAILED  (JmxRemotingManager:linenumber)-ChorusAssertionError Remoting config must be valid for config1
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:2) (passed:0) (failed:2)
+Steps     (total:3) (passed:0) (failed:2) (undefined:0) (pending:0) (skipped:1)

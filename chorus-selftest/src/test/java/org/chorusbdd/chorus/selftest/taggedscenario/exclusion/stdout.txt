@@ -1,0 +1,15 @@
+Feature: Exclusive Tag                                                                               
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/taggedscenario/exclusion/exclusivetag.feature
+  Scenario: Scenario One
+Chorus --> INFO    - Processing scenario: Scenario One
+    Given Chorus is working properly                                                         PASSED  
+    Then this scenario will run                                                              PASSED  
+  Scenario: Scenario Three
+Chorus --> INFO    - Processing scenario: Scenario Three
+    Given Chorus is working properly                                                         PASSED  
+    Then this scenario will run                                                              PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
