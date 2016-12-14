@@ -34,23 +34,15 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
-import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
-import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepserver.StepServerManager;
-import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
 import java.util.List;
-import java.util.Properties;
-
-import static org.chorusbdd.chorus.annotations.ChorusResource.remotingManager;
 
 /**
  * This handler can be used to invoke steps on components running remotely across the network.
@@ -114,7 +106,7 @@ public class StepServerHandler {
         startServer(StepServerManager.DEFAULT_SERVER_NAME);
     }
 
-    @Step("StepServer stop")
+    @Step("StepServer stop (.*)")
     public void stopServer(String serverName) throws Exception {
         stepServerManager.stopServer(serverName);
     }

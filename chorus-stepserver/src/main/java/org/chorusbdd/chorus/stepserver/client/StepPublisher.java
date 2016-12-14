@@ -136,6 +136,13 @@ public class StepPublisher {
         chorusWebSocketClient.sendMessage(publishStepMessage);
     }
 
+    public void disconnect() {
+        if ( connected.getAndSet(false)) {
+            log.debug("StepPublisher disconnecting");
+            chorusWebSocketClient.close();
+        }
+    }
+
     private class MessageProcessor implements StepClientMessageProcessor {
 
         @Override

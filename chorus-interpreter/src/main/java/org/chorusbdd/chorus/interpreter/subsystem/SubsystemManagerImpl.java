@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.interpreter.subsystem;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.handlerconfig.ChorusProperties;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -38,10 +37,10 @@ import org.chorusbdd.chorus.stepserver.StepServerManager;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.ChorusException;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 /**
  * Some of Chorus' subsystems are pluggable, we depend only on the abstractions
@@ -55,6 +54,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private final Subsystem remotingManager;
     private final ConfigurationManager configurationManager;
     private final Subsystem stepServerManager;
+    private final List<Subsystem> subsystemList;
 
     private Map<String, Subsystem> subsystems = new HashMap<>();
 
@@ -65,6 +65,10 @@ public class SubsystemManagerImpl implements SubsystemManager {
         remotingManager = initializeRemotingManager();
         configurationManager = initializeConfigurationManager();
         stepServerManager = initializeStepServerManager();
+
+        subsystemList = Collections.unmodifiableList(
+            new ArrayList<>(asList(processManager, remotingManager, configurationManager, stepServerManager))
+        );
     }
 
     public Subsystem getProcessManager() {
@@ -89,11 +93,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     }
 
     public List<ExecutionListener> getExecutionListeners() {
-        return Arrays.asList(
-            configurationManager.getExecutionListener(),
-            processManager.getExecutionListener(),
-            remotingManager.getExecutionListener()
-        );
+        return subsystemList.stream().map(Subsystem::getExecutionListener).collect(Collectors.toList());
     }
 
     private Subsystem initializeProcessManager() {

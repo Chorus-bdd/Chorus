@@ -1,13 +1,13 @@
-Feature: Simple Step Server Client
+Feature: Simple Step Server Client                                                                   
 Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepserver/simpleclient/simplestepserver.feature
 Chorus --> INFO    - No default handler found for Feature: (Simple Step Server Client), will use built-in handlers and Uses: statements
   Scenario: Call a simple step
 Chorus --> INFO    - Processing scenario: Call a simple step
 Chorus --> INFO    - Starting StepServer on port port
-    #! StepServer start server                                                               PASSED
+    #! StepServer start server                                                               PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    #! Processes start simplestepclient                                                      PASSED
-    #! StepServer wait for client SimpleStepServerClient                                     PASSED
+    #! Processes start simplestepclient                                                      PASSED  
+    #! StepServer wait for client SimpleStepServerClient                                     PASSED  
     Check I can call a step with a result                                                    PASSED  Hello!
 
 

@@ -1,15 +1,17 @@
 package org.chorusbdd.chorus.stepserver;
 
+import com.pusher.java_websocket.client.WebSocketClient;
+import com.pusher.java_websocket.handshake.ServerHandshake;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.stepserver.message.*;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 
@@ -24,6 +26,7 @@ public class TestClientMessages {
 
     private static WebSocketClient webSocketClient;
     private static StepServerMessageProcessor mockProcessor;
+    private static final ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080);
 
     @BeforeClass
     public static void startTestServer() {
@@ -32,7 +35,6 @@ public class TestClientMessages {
 
         mockProcessor = mock(StepServerMessageProcessor.class);
 
-        ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080);
         chorusWebSocketServer.setStepServerMessageProcessor(mockProcessor);
         chorusWebSocketServer.start();
         try {
@@ -51,6 +53,13 @@ public class TestClientMessages {
             e.printStackTrace();
         }
         assertTrue(success);
+    }
+
+    @AfterClass
+    public static void stopTestServer() throws IOException, InterruptedException {
+        webSocketClient.close();
+        webSocketClient = null;
+        chorusWebSocketServer.stop();
     }
 
 

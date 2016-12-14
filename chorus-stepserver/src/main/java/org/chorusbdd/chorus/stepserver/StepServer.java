@@ -79,7 +79,7 @@ public class StepServer implements StepServerManager {
     @Override
     public void stopServer(String serverName) {
         if ( isRunning.getAndSet(false) ) {
-            log.info("Stopping StepServer");
+            log.debug("Stopping StepServer");
             //TODO implement configuration by server name
             try {
                 webSocketServer.stop();

@@ -1,13 +1,13 @@
 package org.chorusbdd.chorus.stepserver;
 
+import com.pusher.java_websocket.WebSocket;
+import com.pusher.java_websocket.handshake.ClientHandshake;
+import com.pusher.java_websocket.server.WebSocketServer;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepserver.message.*;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
 import org.chorusbdd.chorus.util.ChorusException;
-import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
