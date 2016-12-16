@@ -3,7 +3,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - No default handler found for Feature: (Simple Step Server Client), will use built-in handlers and Uses: statements
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
-Chorus --> INFO    - Starting StepServer on port port
+Chorus --> INFO    - Starting StepServer on port 9080
     #! StepServer start server                                                               PASSED  
   Scenario: I can call steps with and without a result
 Chorus --> INFO    - Processing scenario: I can call steps with and without a result
