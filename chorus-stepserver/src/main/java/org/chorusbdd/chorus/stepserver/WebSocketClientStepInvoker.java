@@ -69,6 +69,9 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             try {
                 result = s.getCompletableFuture().get(timeoutSeconds, TimeUnit.SECONDS);
             } catch (Exception e) {
+                if ( e.getCause() instanceof StepFailedException) {
+                    throw (StepFailedException)e.getCause();
+                }
                throw new ChorusException("Failed while executing a Step Server step", e);
             }
             return result;

@@ -41,7 +41,7 @@ public class TestSimpleStepServerClient extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/stepserver/simpleclient/simplestepserver.feature";
 
-    final int expectedExitCode = 0;  //pass
+    final int expectedExitCode = 1;  //fail
 
     protected int getExpectedExitCode() {
         return expectedExitCode;

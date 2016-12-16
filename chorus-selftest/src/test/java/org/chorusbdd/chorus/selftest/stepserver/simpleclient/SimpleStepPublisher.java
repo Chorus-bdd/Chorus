@@ -6,15 +6,17 @@ import org.chorusbdd.chorus.stepserver.client.StepPublisher;
 
 import java.net.URI;
 
+import static org.junit.Assert.assertFalse;
+
 /**
  * Created by nick on 28/09/15.
  */
-public class SimpleStepServerClient {
+public class SimpleStepPublisher {
 
 
     public static void main(String[] args) throws InterruptedException {
 
-        StepPublisher stepPublisher = new StepPublisher("SimpleStepServerClient", URI.create("ws://localhost:9080"), new SimpleStepServerClientHandler());
+        StepPublisher stepPublisher = new StepPublisher("SimpleStepPublisher", URI.create("ws://localhost:9080"), new SimpleStepServerClientHandler());
         stepPublisher.publish();
 
         Thread.sleep(30000);
@@ -27,6 +29,15 @@ public class SimpleStepServerClient {
         public String callAStepWithAResult() {
             return "Hello!";
         }
+
+        @Step(".* call a step without a result")
+        public void callAStepWithoutAResult() {}
+
+        @Step(".* call a step which fails")
+        public void callAStepWhichFails() {
+            assertFalse("Whooa steady on there sailor", true);
+        }
+
 
     }
 }

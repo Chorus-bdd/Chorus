@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
 import java.nio.channels.Selector;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -43,6 +44,23 @@ public class ChorusWebSocketServer extends WebSocketServer implements StepServer
     @Override
     public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
         log.debug("Closed a connection from " + conn.getRemoteSocketAddress() + ", code " + code + ", reason " + reason);
+        Optional<String> clientId = findClientIdForWebSocket(conn);
+
+        clientId.ifPresent(id -> {
+            log.debug("Removing web socket for client id " + id);
+            clientIdToSocket.remove(id);
+            stepServerMessageProcessor.clientDisconnected(id);
+        });
+    }
+
+    /**
+     * Unless a client has sent a CONNECT message we will not have a client Id associated with the socket
+     */
+    private Optional<String> findClientIdForWebSocket(WebSocket conn) {
+        return clientIdToSocket.entrySet().stream()
+                .filter(e -> e.getValue() == conn)
+                .map(Map.Entry::getKey)
+                .findFirst();
     }
 
     @Override

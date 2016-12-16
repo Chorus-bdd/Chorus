@@ -159,6 +159,7 @@ public class StepServer implements StepServerManager {
 
         @Override
         public void clientDisconnected(String clientId) {
+            log.debug("StepServer client " + clientId + " disconnected, removing client");
             removeClient(clientId);
         }
 
