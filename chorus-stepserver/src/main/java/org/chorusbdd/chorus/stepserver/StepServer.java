@@ -42,7 +42,7 @@ public class StepServer implements StepServerManager {
     public void startServer(String serverName) {
         if ( ! isRunning.getAndSet(true)) {
             //TODO implement configuration by server name
-            log.info("Starting StepServer on port port");
+            log.info("Starting StepServer on port " + DEFAULT_PORT);
             webSocketServer = new ChorusWebSocketServer(DEFAULT_PORT);
             MessageProcessor messageProcessor = new MessageProcessor(webSocketServer);
             webSocketServer.setStepServerMessageProcessor(messageProcessor);
