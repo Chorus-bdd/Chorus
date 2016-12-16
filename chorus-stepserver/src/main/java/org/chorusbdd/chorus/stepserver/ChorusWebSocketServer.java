@@ -9,7 +9,10 @@ import org.chorusbdd.chorus.stepserver.message.*;
 import org.chorusbdd.chorus.stepserver.util.JsonUtils;
 import org.chorusbdd.chorus.util.ChorusException;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
+import java.nio.channels.Selector;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -109,6 +112,30 @@ public class ChorusWebSocketServer extends WebSocketServer implements StepServer
             }
         } catch (Exception e) {
             log.error("Failed to process message from client", e);
+        }
+    }
+
+
+    public void stop() throws IOException, InterruptedException {
+        super.stop();
+
+        //workaround for server socket left open on Windows
+        closeSelector();
+    }
+
+    /**
+     * A bug with ServerSocketChannel server.close() causes the server socket to be left open on Windows platform
+     * Here we use reflection to access the selector and close this, which is a workaround for the issue
+     * https://stackoverflow.com/questions/39656477/serversocketchannel-in-non-blocking-mode-is-not-closing-properly
+     */
+    private void closeSelector() {
+        try {
+            Field field = WebSocketServer.class.getDeclaredField("selector");
+            field.setAccessible(true);
+            Selector selector = (Selector)field.get(this);
+            selector.close();
+        } catch (Exception e) {
+            log.error("Failed to close selector", e);
         }
     }
 
