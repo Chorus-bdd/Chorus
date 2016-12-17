@@ -144,7 +144,7 @@ public class StepPublisher {
 
     private class MessageProcessor implements StepClientMessageProcessor {
 
-        private StepExecutor stepExecutor = new StepExecutor();
+        private StepExecutor stepExecutor = new StepExecutor(this::sendFailure);
 
         @Override
         public void executeStep(final ExecuteStepMessage executeStepMessage) {
@@ -152,12 +152,10 @@ public class StepPublisher {
 
             StepInvoker stepInvoker = stepInvokers.get(stepId);
 
-            int timeout = executeStepMessage.getTimeoutPeriodSeconds();
             if ( stepInvoker == null) {
-                //best to use the executor to do this too so thread sending messages back is always consistent
-                stepExecutor.doActionWithinPeriodOrLogFailure(() -> sendFailure("No step with id " + stepId, executeStepMessage), timeout);
+                sendFailure("No step with id " + stepId, executeStepMessage);
             } else {
-                stepExecutor.doActionWithinPeriodOrLogFailure(() -> runStep(executeStepMessage, stepId, stepInvoker), timeout);
+                stepExecutor.runWithinPeriod(() -> runStep(executeStepMessage, stepId, stepInvoker), executeStepMessage);
             }
         }
 
@@ -186,7 +184,6 @@ public class StepPublisher {
                 chorusWebSocketClient.sendMessage(stepSucceededMessage);
             }
         }
-
         private void sendFailure(String message, ExecuteStepMessage executeStepMessage) {
             StepFailedMessage stepFailedMessage = new StepFailedMessage(
                     executeStepMessage.getStepId(),
