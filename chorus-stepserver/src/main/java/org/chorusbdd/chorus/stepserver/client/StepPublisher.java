@@ -15,7 +15,6 @@ import org.chorusbdd.chorus.util.PolledAssertion;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -156,9 +155,9 @@ public class StepPublisher {
             int timeout = executeStepMessage.getTimeoutPeriodSeconds();
             if ( stepInvoker == null) {
                 //best to use the executor to do this too so thread sending messages back is always consistent
-                stepExecutor.doActionOrLogFailure(() -> sendFailure("No step with id " + stepId, executeStepMessage), timeout);
+                stepExecutor.doActionWithinPeriodOrLogFailure(() -> sendFailure("No step with id " + stepId, executeStepMessage), timeout);
             } else {
-                stepExecutor.doActionOrLogFailure(() -> runStep(executeStepMessage, stepId, stepInvoker), timeout);
+                stepExecutor.doActionWithinPeriodOrLogFailure(() -> runStep(executeStepMessage, stepId, stepInvoker), timeout);
             }
         }
 

@@ -2,6 +2,9 @@ package org.chorusbdd.chorus.stepserver.client;
 
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.*;
 
 /**
@@ -10,8 +13,23 @@ import static org.junit.Assert.*;
 public class StepExecutorTest {
 
     @Test
-    public void doActionOrLogFailure() throws Exception {
+    public void testAStepExecutionCanBeInterrupted() throws Exception {
 
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        StepExecutor stepExecutor = new StepExecutor();
+        stepExecutor.doActionWithinPeriodOrLogFailure(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                countDownLatch.countDown();
+            }
+        }, 10, TimeUnit.MILLISECONDS);
+
+        boolean ok = countDownLatch.await(1, TimeUnit.SECONDS);
+        if ( ! ok) {
+            fail("Not interrupted");
+        }
     }
 
 }
