@@ -1,5 +1,5 @@
 Feature: Simple Step Server Client                                                                   
-Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepserver/simpleclient/simplestepserver.feature
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepserver/simplepublisher/simplestepserver.feature
 Chorus --> INFO    - No default handler found for Feature: (Simple Step Server Client), will use built-in handlers and Uses: statements
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start

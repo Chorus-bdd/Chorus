@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selftest.stepserver.simpleclient;
+package org.chorusbdd.chorus.selftest.stepserver.simplepublisher;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
@@ -37,9 +37,9 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestSimpleStepServerClient extends AbstractInterpreterTest {
+public class TestSimpleStepPublisher extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/stepserver/simpleclient/simplestepserver.feature";
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/stepserver/simplepublisher/simplestepserver.feature";
 
     final int expectedExitCode = 1;  //fail
 

@@ -15,6 +15,7 @@ import org.chorusbdd.chorus.util.PolledAssertion;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -28,7 +29,7 @@ public class StepPublisher {
     private static AtomicBoolean connected = new AtomicBoolean(false);
 
     //synchronized since may be accessed by application thread for export and jmx thread for step invoker retrieval
-    //Linked map for reproducible ordering which is a nice property to have although shouldn't affect test pass/fail
+    //Linked map for reproducible ordering which is a nice property to have for unit testing although shouldn't affect test pass/fail
     private static Map<String, StepInvoker> stepInvokers = Collections.synchronizedMap(
         new LinkedHashMap<String, StepInvoker>()
     );
@@ -36,7 +37,6 @@ public class StepPublisher {
     private String chorusClientId;
     private final ChorusWebSocketClient chorusWebSocketClient;
     private volatile String description = "";
-
 
     public StepPublisher(String chorusClientId, URI stepServerURI, Object... handlers) {
         this.chorusClientId = chorusClientId;
@@ -145,111 +145,58 @@ public class StepPublisher {
 
     private class MessageProcessor implements StepClientMessageProcessor {
 
-        @Override
-        public void executeStep(ExecuteStepMessage executeStepMessage) {
-            StepInvoker stepInvoker = stepInvokers.get(executeStepMessage.getStepId());
+        private StepExecutor stepExecutor = new StepExecutor();
 
+        @Override
+        public void executeStep(final ExecuteStepMessage executeStepMessage) {
+            final String stepId = executeStepMessage.getStepId();
+
+            StepInvoker stepInvoker = stepInvokers.get(stepId);
+
+            int timeout = executeStepMessage.getTimeoutPeriodSeconds();
+            if ( stepInvoker == null) {
+                //best to use the executor to do this too so thread sending messages back is always consistent
+                stepExecutor.doActionOrLogFailure(() -> sendFailure("No step with id " + stepId, executeStepMessage), timeout);
+            } else {
+                stepExecutor.doActionOrLogFailure(() -> runStep(executeStepMessage, stepId, stepInvoker), timeout);
+            }
+        }
+
+        private void runStep(ExecuteStepMessage executeStepMessage, String stepId, StepInvoker stepInvoker) {
             Object result = null;
             try {
                 result = stepInvoker.invoke(executeStepMessage.getArguments());
             } catch (PolledAssertion.PolledAssertionError e) { //typically AssertionError propagated by PolledInvoker
-                sendFailure(e.getCause(), executeStepMessage);
+                sendFailure(e.getCause().getMessage(), executeStepMessage);
             } catch (InvocationTargetException e) {
                 Throwable t = e.getTargetException();
-                sendFailure(t, executeStepMessage);
+                sendFailure(t.getMessage(), executeStepMessage);
             } catch (Throwable t) {
-                sendFailure(t, executeStepMessage);
+                sendFailure(t.getMessage(), executeStepMessage);
             }
 
-            if ( result != null) {
+            //nb result will be the String "VOID_RESULT" if return type of step method is void
+            if (result != null) {
                 StepSucceededMessage stepSucceededMessage = new StepSucceededMessage(
-                    executeStepMessage.getStepId(),
-                    executeStepMessage.getExecutionId(),
-                    chorusClientId,
-                    result,
-                    ChorusContext.getContext()
+                        stepId,
+                        executeStepMessage.getExecutionId(),
+                        chorusClientId,
+                        result,
+                        ChorusContext.getContext()
                 );
                 chorusWebSocketClient.sendMessage(stepSucceededMessage);
             }
-
         }
 
-        private void sendFailure(Throwable cause, ExecuteStepMessage executeStepMessage) {
+        private void sendFailure(String message, ExecuteStepMessage executeStepMessage) {
             StepFailedMessage stepFailedMessage = new StepFailedMessage(
                     executeStepMessage.getStepId(),
                     executeStepMessage.getExecutionId(),
                     chorusClientId,
-                    cause.getMessage(),
+                    message,
                     "stackTrace" //TODO
             );
             chorusWebSocketClient.sendMessage(stepFailedMessage);
         }
     }
-
-
-
-//    public JmxStepResult invokeStep(String stepId, Map chorusContext, List<String> args) throws Exception {
-//
-//        //log debug messages
-//        if (log.isDebugEnabled()) {
-//            StringBuilder builder = new StringBuilder("About to invoke method (");
-//            builder.append(stepId);
-//            builder.append(") with parameters (");
-//            for (int i = 0; i < args.size(); i++) {
-//                builder.append(args.get(i));
-//                if (i > 0) {
-//                    builder.append(", ");
-//                }
-//            }
-//            builder.append(")");
-//            log.debug(builder.toString());
-//        }
-//
-//        try {
-//            //reset the local context for the calling thread
-//            ChorusContext.resetContext(chorusContext);
-//            StepInvoker i = stepInvokers.get(stepId);
-//            if ( i == null) {
-//                throw new ChorusException("Cannot find a step invoker for remote method with id " + stepId);
-//            }
-//            Object result = i.invoke(args);
-//
-//            //return the updated context
-//            return new JmxStepResult(ChorusContext.getContext().getSnapshot(), result);
-//        } catch (PolledAssertion.PolledAssertionError e) { //typically AssertionError propagated by PolledInvoker
-//            throw createRemotingException(e.getCause());
-//        } catch (InvocationTargetException e) {
-//            Throwable t = e.getTargetException();
-//            throw createRemotingException(t);
-//        } catch (Throwable t) {
-//            throw createRemotingException(t);
-//        }
-//    }
-
-//    @Override
-//    public float getApiVersion() {
-//        return ApiVersion.API_VERSION;
-//    }
-//
-//    private JmxRemotingException createRemotingException(Throwable t) {
-//        //here we are sending the exception name and the stack trace elements, but not the exception instance itself
-//        //in case it is a user exception class which is not known to the chorus interpreter and would not deserialize
-//        String message = "remote " + t.getClass().getSimpleName() +
-//                ( t.getMessage() == null ? " " : " - " + t.getMessage() );
-//
-//        StackTraceElement[] stackTrace = t.getStackTrace();
-//        return new JmxRemotingException(message, t.getClass().getSimpleName(), stackTrace);
-//    }
-//
-//    public List<JmxInvokerResult> getStepInvokers() {
-//        List<JmxInvokerResult> invokers = new ArrayList<>();
-//        for ( StepInvoker s : stepInvokers.values() ) {
-//            JmxInvokerResult jmxInvoker = new JmxInvokerResult(s);
-//            invokers.add(jmxInvoker);
-//        }
-//        return invokers;
-//    }
-
-
-
 }

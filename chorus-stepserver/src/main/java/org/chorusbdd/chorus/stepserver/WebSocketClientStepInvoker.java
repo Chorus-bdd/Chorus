@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
@@ -69,7 +70,9 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             try {
                 result = s.getCompletableFuture().get(timeoutSeconds, TimeUnit.SECONDS);
             } catch (Exception e) {
-                if ( e.getCause() instanceof StepFailedException) {
+                if ( e instanceof TimeoutException ) {
+                    throw new ChorusException("Timed out waiting for client " + clientId + " to execute the step");
+                } else if ( e.getCause() instanceof StepFailedException) {
                     throw (StepFailedException)e.getCause();
                 }
                throw new ChorusException("Failed while executing a Step Server step", e);

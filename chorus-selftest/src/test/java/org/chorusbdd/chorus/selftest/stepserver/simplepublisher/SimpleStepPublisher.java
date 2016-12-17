@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.selftest.stepserver.simpleclient;
+package org.chorusbdd.chorus.selftest.stepserver.simplepublisher;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
@@ -6,6 +6,7 @@ import org.chorusbdd.chorus.stepserver.client.StepPublisher;
 
 import java.net.URI;
 
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -19,7 +20,7 @@ public class SimpleStepPublisher {
         StepPublisher stepPublisher = new StepPublisher("SimpleStepPublisher", URI.create("ws://localhost:9080"), new SimpleStepServerClientHandler());
         stepPublisher.publish();
 
-        Thread.sleep(30000);
+        sleep(30000);
     }
 
     @Handler("SimpleStepServerClientHandler")
@@ -38,6 +39,10 @@ public class SimpleStepPublisher {
             assertFalse("Whooa steady on there sailor", true);
         }
 
+        @Step(".*call a step which blocks indefinitely")
+        public void blockIndefinitely() throws InterruptedException {
+            sleep(100000); //ok so it's not indefinite but close enough for our purposes and at least this will end eventually
+        }
 
     }
 }

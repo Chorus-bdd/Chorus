@@ -97,7 +97,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
         ProcessManagerConfig runtimeConfig = getRuntimeConfig(configName, processProperties);
 
-        if ( runtimeConfig.isEnabled()) {
+        if ( runtimeConfig.isEnabled()) {  //could be disabled in some profiles
             doStart(processName, runtimeConfig);
         } else {
             log.info("Not starting process " + processName + " since enabled=false");
