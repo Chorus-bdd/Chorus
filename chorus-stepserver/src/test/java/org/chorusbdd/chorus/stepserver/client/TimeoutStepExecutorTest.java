@@ -11,14 +11,14 @@ import static org.junit.Assert.*;
 /**
  * Created by nick on 17/12/2016.
  */
-public class StepExecutorTest {
+public class TimeoutStepExecutorTest {
 
     @Test
     public void testAStepExecutionCanBeInterrupted() throws Exception {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        StepExecutor stepExecutor = new StepExecutor((a,b) -> {});
+        TimeoutStepExecutor stepExecutor = new TimeoutStepExecutor((a, b) -> {});
         stepExecutor.runWithinPeriod(() -> {
             try {
                 Thread.sleep(1000);

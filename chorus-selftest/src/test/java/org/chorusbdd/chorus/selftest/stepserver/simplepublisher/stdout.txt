@@ -5,22 +5,24 @@ Chorus --> INFO    - No default handler found for Feature: (Simple Step Server C
 Chorus --> INFO    - Processing scenario: Feature-Start
 Chorus --> INFO    - Starting StepServer on port 9080
     #! StepServer start server                                                               PASSED  
-  Scenario: I can call steps with and without a result
-Chorus --> INFO    - Processing scenario: I can call steps with and without a result
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start simpleStepPublisher                                                   PASSED  
     #! StepServer wait for client SimpleStepPublisher                                        PASSED  
+  Scenario: I can call steps with and without a result
+Chorus --> INFO    - Processing scenario: I can call steps with and without a result
     Check I can call a step with a result                                                    PASSED  Hello!
     And I can call a step without a result                                                   PASSED  
   Scenario: I can call steps which fail
 Chorus --> INFO    - Processing scenario: I can call steps which fail
-Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    #! Processes start simpleStepPublisher                                                   PASSED  
-    #! StepServer wait for client SimpleStepPublisher                                        PASSED  
     Check I can call a step with a result                                                    PASSED  Hello!
     And I can call a step which fails                                                        FAILED  (WebSocketClientStepInvoker:linenumber)-StepFailedException Whooa steady on there sailor
+  Scenario: I can call steps which fail
+Chorus --> INFO    - Processing scenario: I can call steps which fail
+    Given I can call a step with a result                                                    PASSED  Hello!
+    When I call a step which blocks indefinitely                                             FAILED  (WebSocketClientStepInvoker:linenumber)-ChorusException Timed out waiting for client SimpleStepPublisher to execute the step
+    Then the next step is skipped but the interpreter timed out                              SKIPPED 
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:2) (passed:1) (failed:1)
-Steps     (total:9) (passed:8) (failed:1) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:3) (passed:1) (failed:2)
+Steps     (total:10) (passed:7) (failed:2) (undefined:0) (pending:0) (skipped:1)

@@ -144,7 +144,7 @@ public class StepPublisher {
 
     private class MessageProcessor implements StepClientMessageProcessor {
 
-        private StepExecutor stepExecutor = new StepExecutor(this::sendFailure);
+        private TimeoutStepExecutor stepExecutor = new TimeoutStepExecutor(this::sendFailure);
 
         @Override
         public void executeStep(final ExecuteStepMessage executeStepMessage) {

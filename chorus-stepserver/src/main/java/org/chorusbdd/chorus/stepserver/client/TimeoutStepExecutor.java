@@ -10,10 +10,13 @@ import java.util.function.BiConsumer;
 
 /**
  * Created by nick on 17/12/2016.
+ *
+ * Allow only one step at a time to be executed and time out/interrupt an executing step
+ * once the timeout period allotted expired
  */
-class StepExecutor {
+class TimeoutStepExecutor {
 
-    private ChorusLog log = ChorusLogFactory.getLog(StepExecutor.class);
+    private ChorusLog log = ChorusLogFactory.getLog(TimeoutStepExecutor.class);
 
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -21,7 +24,7 @@ class StepExecutor {
     private ExecuteStepMessage currentlyExecutingStep;
     private BiConsumer<String, ExecuteStepMessage> stepFailureConsumer;
 
-    public StepExecutor(BiConsumer<String, ExecuteStepMessage> stepFailureConsumer) {
+    public TimeoutStepExecutor(BiConsumer<String, ExecuteStepMessage> stepFailureConsumer) {
         this.stepFailureConsumer = stepFailureConsumer;
     }
 
@@ -41,7 +44,7 @@ class StepExecutor {
             this.currentlyExecutingStep = executeStepMessage;
             Future<String> future = null;
             try {
-                future = scheduledExecutorService.submit(runnable, "OK");
+                future = scheduledExecutorService.submit(runStepAndResetIsRunning(runnable), "OK");
                 future.get(timeout, unit);
             } catch (TimeoutException e) {
                 //Timed out waiting for the step to run
@@ -54,8 +57,6 @@ class StepExecutor {
                 String ms = "Exception while executing step [" + e.getMessage() + "]";
                 log.error(ms, e);
                 stepFailureConsumer.accept(ms, executeStepMessage);
-            } finally {
-                isRunningAStep.getAndSet(false);
             }
         } else {
             //server will time out this step
@@ -63,5 +64,22 @@ class StepExecutor {
             log.error(message);
             stepFailureConsumer.accept(message, executeStepMessage);
         }
+    }
+
+    /**
+     * Wrap the runnable which executed the step, and only unset currentlyExecutingStep when it has completed
+     * If the step blocks and can't be interrupted, then we don't want to start any other steps
+     */
+    private Runnable runStepAndResetIsRunning(Runnable runnable) {
+        return () -> {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                //we're in control of the runnable and it should catch it's own execeptions, but just in case it doesn't
+                log.error("Exeception while running a step", t);
+            } finally {
+                isRunningAStep.getAndSet(false);
+            }
+        };
     }
 }
