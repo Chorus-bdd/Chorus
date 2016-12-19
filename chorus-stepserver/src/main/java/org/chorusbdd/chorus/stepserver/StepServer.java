@@ -9,7 +9,12 @@ import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepserver.config.StepServerConfig;
+import org.chorusbdd.chorus.stepserver.config.StepServerConfigBeanFactory;
+import org.chorusbdd.chorus.stepserver.config.StepServerConfigBeanValidator;
+import org.chorusbdd.chorus.stepserver.config.StepServerConfigBuilder;
 import org.chorusbdd.chorus.stepserver.message.*;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.PolledAssertion;
 
 import java.util.*;
@@ -24,10 +29,17 @@ import static org.junit.Assert.assertTrue;
  */
 public class StepServer implements StepServerManager {
 
+    /**
+     * time to wait for a client to connect
+     * TODO make this configurable
+     */
+    private static final int DEFAULT_CLIENT_WAIT_TIME_SECONDS = 60;
+    
     private static ChorusLog log = ChorusLogFactory.getLog(StepServer.class);
 
-    private static final int DEFAULT_PORT = 9080;
-    private static final int DEFAULT_TIMEOUT_SECONDS = 5;
+    private final StepServerConfigBeanFactory stepServerConfigBeanFactory = new StepServerConfigBeanFactory();
+    private final StepServerConfigBeanValidator stepServerConfigBeanValidator = new StepServerConfigBeanValidator();
+
 
     private ChorusWebSocketServer webSocketServer;
     private final AtomicBoolean isRunning = new AtomicBoolean();
@@ -37,13 +49,22 @@ public class StepServer implements StepServerManager {
     private final Set<String> connectedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Set<String> alignedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
+    /**
+     * At present we only support one step server instance, the 'default', and this is the config
+     */
+    private StepServerConfig stepServerConfig;
+
     public StepServer() {}
 
-    public void startServer(String serverName) {
+    public void startServer(Properties properties) {
         if ( ! isRunning.getAndSet(true)) {
-            //TODO implement configuration by server name
-            log.info("Starting StepServer on port " + DEFAULT_PORT);
-            webSocketServer = new ChorusWebSocketServer(DEFAULT_PORT);
+
+            stepServerConfig = getStepServerConfig(DEFAULT_SERVER_NAME, properties);
+
+            int port = stepServerConfig.getPort();
+            log.info("Starting StepServer on port " + port);
+            webSocketServer = new ChorusWebSocketServer(port);
+
             MessageProcessor messageProcessor = new MessageProcessor(webSocketServer);
             webSocketServer.setStepServerMessageProcessor(messageProcessor);
             webSocketServer.start();
@@ -54,21 +75,25 @@ public class StepServer implements StepServerManager {
     }
 
     @Override
-    public boolean waitForClientConnection(String clientName, int timeoutSeconds) throws ClientConnectionException {
-        PolledAssertion polledAssertion = new PolledAssertion() {
-            @Override
-            protected void validate() throws Exception {
-                assertTrue(alignedClients.contains(clientName));
-            }
-        };
+    public boolean waitForClientConnection(String clientName) throws ClientConnectionException {
+        if ( isRunning.get() ) {
+            PolledAssertion polledAssertion = new PolledAssertion() {
+                @Override
+                protected void validate() throws Exception {
+                    assertTrue(alignedClients.contains(clientName));
+                }
+            };
 
-        boolean result = true;
-        try {
-            polledAssertion.await(TimeUnit.SECONDS, timeoutSeconds);
-        } catch (AssertionError assertionError) {
-            result = false;
+            boolean result = true;
+            try {
+                polledAssertion.await(TimeUnit.SECONDS, DEFAULT_CLIENT_WAIT_TIME_SECONDS);
+            } catch (AssertionError assertionError) {
+                result = false;
+            }
+            return result;
+        } else {
+            throw new ChorusException("Step Server is not running");
         }
-        return result;
     }
 
     @Override
@@ -77,7 +102,7 @@ public class StepServer implements StepServerManager {
     }
 
     @Override
-    public void stopServer(String serverName) {
+    public void stopServer() {
         if ( isRunning.getAndSet(false) ) {
             log.debug("Stopping StepServer");
             //TODO implement configuration by server name
@@ -97,7 +122,7 @@ public class StepServer implements StepServerManager {
             //allow step server to be scoped to feature or scenario (or session) in config
 
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
-                stopServer(DEFAULT_SERVER_NAME);
+                stopServer();
             }
         };
     }
@@ -125,7 +150,9 @@ public class StepServer implements StepServerManager {
 
             WebSocketClientStepInvoker stepInvoker;
             try {
-                stepInvoker = WebSocketClientStepInvoker.create(messageRouter, publishStep, DEFAULT_TIMEOUT_SECONDS);
+                stepInvoker = WebSocketClientStepInvoker.create(
+                    messageRouter, publishStep, stepServerConfig.getStepTimeoutSeconds()
+                );
                 stepIdToInvoker.put(publishStep.getStepId(), stepInvoker);
             } catch (InvalidStepException e) {
                 log.warn("Invalid step sent by client " + publishStep.getChorusClientId(), e);
@@ -178,10 +205,19 @@ public class StepServer implements StepServerManager {
         }
     }
 
+    private StepServerConfig getStepServerConfig(String configName, Properties stepServerProperties) {
+        StepServerConfigBuilder config = stepServerConfigBeanFactory.createConfig(stepServerProperties, configName);
+        return config.build();
+    }
+
     public static void main(String[] args) {
         StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
         StepServer stepServer = new StepServer();
-        stepServer.startServer(DEFAULT_SERVER_NAME);
+        Properties properties = new Properties();
+        properties.put("port", "9080");
+        properties.put("stepTimeoutSeconds", 30);
+        stepServer.startServer(properties);
+
         log.info("Socket Server Started!");
     }
 

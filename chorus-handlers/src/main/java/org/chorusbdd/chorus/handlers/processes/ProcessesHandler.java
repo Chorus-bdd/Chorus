@@ -40,7 +40,6 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
 import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilder;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
@@ -92,105 +91,105 @@ public class ProcessesHandler {
         processManager.startProcess(configName, processName, config);
     }
 
-    @Step(".*start an? (.+) process named " + HandlerPatterns.processNamePattern + ".*?")
+    @Step(".*start an? (.+) process named " + HandlerPatterns.namePattern + ".*?")
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
         Properties config = getConfig(configName);
         processManager.startProcess(configName, processName, config);
     }
 
-    @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.processNamePattern + ".*?")
+    @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.namePattern + ".*?")
     public void stopProcess(String processName) {
         processManager.stopProcess(processName);
     }
 
-    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " (?:is |has )(?:stopped|terminated).*?")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " (?:is |has )(?:stopped|terminated).*?")
     public void checkProcessHasStopped(String processName) {
         processManager.checkProcessHasStopped(processName);
     }
 
-    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " is running")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " is running")
     public void checkProcessIsRunning(String processName) {
         processManager.checkProcessIsRunning(processName);
     }
 
-    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " is not running")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " is not running")
     public void checkProcessIsNotRunning(String processName) {
         processManager.checkProcessIsNotRunning(processName);
     }
 
-    @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " to (?:stop|terminate).*?")
+    @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?" + HandlerPatterns.namePattern + " to (?:stop|terminate).*?")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
         processManager.waitForProcessToTerminate(processName, waitSeconds);
     }
 
-    @Step(".*wait for (?:the process )?(?:named )?" + HandlerPatterns.processNamePattern + " to (?:stop|terminate).*?")
+    @Step(".*wait for (?:the process )?(?:named )?" + HandlerPatterns.namePattern + " to (?:stop|terminate).*?")
     public void waitForProcessToTerminate(String processName) {
         processManager.waitForProcessToTerminate(processName);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process")
     public void readLineFromProcess(String pattern, String processName) {
         processManager.readFromProcess(pattern, processName, false);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error")
     public void readLineFromProcessStdError(String pattern, String processName) {
         processManager.readFromProcessStdError(pattern, processName, false);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process within (\\d+) second(?:s)?")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process within (\\d+) second(?:s)?")
     public void readLineFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessWithinNSeconds(pattern, processName, false, seconds);
     }
 
-    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error within (\\d+) second(?:s)?")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error within (\\d+) second(?:s)?")
     public void readLineFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessStdErrorWithinNSeconds(pattern, processName, false, seconds);
     }
 
-    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process")
     public void readFromProcess(String pattern, String processName) {
         processManager.readFromProcess(pattern, processName, true);
     }
 
-    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error")
     public void readFromProcessStdError(String pattern, String processName) {
         processManager.readFromProcessStdError(pattern, processName, true);
     }
 
-    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process within (\\d+) second(?:s)?")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process within (\\d+) second(?:s)?")
     public void readFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessWithinNSeconds(pattern, processName, true, seconds);
     }
 
-    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.processNamePattern + " process std error within (\\d+) second(?:s)?")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error within (\\d+) second(?:s)?")
     public void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessStdErrorWithinNSeconds(pattern, processName, true, seconds);
     }
 
-    @Step(".*write the line '(.*)' to (?:the )?" + HandlerPatterns.processNamePattern + " process")
+    @Step(".*write the line '(.*)' to (?:the )?" + HandlerPatterns.namePattern + " process")
     public void writeLineToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, true);
     }
 
-    @Step(".*write '(.*)' to (?:the )?" + HandlerPatterns.processNamePattern + " process")
+    @Step(".*write '(.*)' to (?:the )?" + HandlerPatterns.namePattern + " process")
     public void writeToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, false);
     }
 
     //A Directive which can be used to start one or more processes using the config name
-    @Step("Processes start " + HandlerPatterns.processNameListPattern)
+    @Step("Processes start " + HandlerPatterns.nameListPattern)
     public void startProcessDirective(String processNameList) throws Exception {
-        Map<String,String> processNames = HandlerPatterns.getProcessNamesWithAliases(processNameList);
+        Map<String,String> processNames = HandlerPatterns.getNamesWithAliases(processNameList);
         for ( Map.Entry<String,String> e : processNames.entrySet()) {
             startNamedProcessFromConfig(e.getValue(), e.getKey());
         }
     }
 
     //A Directive which can be used to connect to one or more processes using the config name so we an run steps on them
-    @Step("Processes connect " + HandlerPatterns.processNameListPattern)
+    @Step("Processes connect " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
-        List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
+        List<String> componentNames = HandlerPatterns.getNames(processNameList);
         for ( String componentName : componentNames) {
             processManager.checkProcessIsRunning(componentName);
             Properties remotingProperties = getRemotingConfig(componentName);

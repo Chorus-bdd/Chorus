@@ -97,17 +97,17 @@ public class RemotingHandler {
     /**
      * Will delegate calls to a remote Handler exported as a JMX MBean
      */
-    @Step("(.*) (?:in|from) " + HandlerPatterns.processNamePattern + "$")
+    @Step("(.*) (?:in|from) " + HandlerPatterns.namePattern + "$")
     public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
         Properties remotingProperties = getRemotingConfigForComponent(componentName);
         return remotingManager.performActionInRemoteComponent(componentName, remotingProperties, action);
     }
 
     //A Directive which can be used to connect to one or more processes
-    @Step("Remoting connect " + HandlerPatterns.processNameListPattern)
+    @Step("Remoting connect " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
 
-        List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
+        List<String> componentNames = HandlerPatterns.getNames(processNameList);
         for ( String componentName : componentNames) {
             Properties remotingProperties = getRemotingConfigForComponent(componentName);
             remotingManager.connect(componentName, remotingProperties);

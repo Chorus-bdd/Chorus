@@ -27,38 +27,19 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.stepserver;
+package org.chorusbdd.chorus.stepserver.config;
 
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.subsystem.Subsystem;
-
-import java.util.List;
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
 
 /**
- * Created by nick on 30/08/2014.
- * 
- * A StepServerManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
+ * Created by nick on 24/09/2014.
  */
-public interface StepServerManager extends Subsystem, StepInvokerProvider {
+public interface StepServerConfig extends HandlerConfigBean {
 
-    String DEFAULT_SERVER_NAME = "default";
+    int getStepTimeoutSeconds();
 
-    void startServer(Properties properties);
+    int getPort();
 
-    void stopServer();
-
-    /**
-     * Wait for a client to become connected to the StepServer, publish its steps and send a STEPS_ALIGNED
-     *
-     * @param clientName, name of the client which the client should send when connecting
-     *
-     * @return true if the client is connected and aligned, false if not connected or has not published
-     * STEPS_ALIGNED by the end of the timeout period
-     */
-    boolean waitForClientConnection(String clientName) throws ClientConnectionException;
-
-    List<StepInvoker> getStepInvokers();
-
+    Scope getScope();
 }

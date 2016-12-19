@@ -34,15 +34,18 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepserver.StepServerManager;
+import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * This handler can be used to invoke steps on components running remotely across the network.
@@ -87,33 +90,29 @@ public class StepServerHandler {
     private ConfigurationManager configurationManager;
 
     //A Directive which can be used to connect to one or more processes
-    @Step("StepServer wait for client " + HandlerPatterns.processNameListPattern)
+    @Step("StepServer wait for client " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
 
-        List<String> componentNames = HandlerPatterns.getProcessNames(processNameList);
+        List<String> componentNames = HandlerPatterns.getNames(processNameList);
         for ( String componentName : componentNames) {
-            stepServerManager.waitForClientConnection(componentName, 30);
+            stepServerManager.waitForClientConnection(componentName);
         }
-    }
-
-    @Step("StepServer start (.*)")
-    public void startServer(String serverName) throws Exception {
-        stepServerManager.startServer(serverName);
     }
 
     @Step("StepServer start")
     public void startServer() throws Exception {
-        startServer(StepServerManager.DEFAULT_SERVER_NAME);
-    }
-
-    @Step("StepServer stop (.*)")
-    public void stopServer(String serverName) throws Exception {
-        stepServerManager.stopServer(serverName);
+        stepServerManager.startServer(getConfig(StepServerManager.DEFAULT_SERVER_NAME));
     }
 
     @Step("StepServer stop")
-    public void sstopServer() throws Exception {
-        stopServer(StepServerManager.DEFAULT_SERVER_NAME);
+    public void stopServer() throws Exception {
+        stepServerManager.stopServer();
+    }
+
+    private Properties getConfig(String configName) {
+        Properties p = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "stepserver", configName);
+        new ScopeUtils().setScopeForContextIfNotConfigured(scenarioToken, p);
+        return p;
     }
 
 }

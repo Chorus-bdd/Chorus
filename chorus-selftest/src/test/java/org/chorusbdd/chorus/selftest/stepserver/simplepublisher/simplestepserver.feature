@@ -5,7 +5,7 @@ Feature: Simple Step Server Client
 
   I can connect and publish steps over a web socket with a simple step server client
 
-  #! StepServer start server
+  #! StepServer start
   #! Processes start simpleStepPublisher
   #! StepServer wait for client SimpleStepPublisher
   Feature-Start:

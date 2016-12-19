@@ -27,38 +27,27 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.stepserver;
+package org.chorusbdd.chorus.stepserver.config;
 
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.subsystem.Subsystem;
-
-import java.util.List;
-import java.util.Properties;
+import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
 
 /**
- * Created by nick on 30/08/2014.
- * 
- * A StepServerManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
+ * Created by nick on 23/09/2014.
  */
-public interface StepServerManager extends Subsystem, StepInvokerProvider {
+public class StepServerConfigBeanValidator extends AbstractConfigBeanValidator<StepServerConfig> {
 
-    String DEFAULT_SERVER_NAME = "default";
+    protected boolean checkValid(StepServerConfig stepServerConfig) {
+        boolean valid = true;
 
-    void startServer(Properties properties);
-
-    void stopServer();
-
-    /**
-     * Wait for a client to become connected to the StepServer, publish its steps and send a STEPS_ALIGNED
-     *
-     * @param clientName, name of the client which the client should send when connecting
-     *
-     * @return true if the client is connected and aligned, false if not connected or has not published
-     * STEPS_ALIGNED by the end of the timeout period
-     */
-    boolean waitForClientConnection(String clientName) throws ClientConnectionException;
-
-    List<StepInvoker> getStepInvokers();
+        //some properties are mandatory for java processes
+        if ( stepServerConfig.getPort() == 0) {
+            logInvalidConfig("port not set or 0", stepServerConfig);
+            valid = false;
+        } else if ( stepServerConfig.getStepTimeoutSeconds() < 1) {
+            logInvalidConfig("stepTimeoutSeconds was less than 1", stepServerConfig);
+            valid = false;
+        }
+        return valid;
+    }
 
 }

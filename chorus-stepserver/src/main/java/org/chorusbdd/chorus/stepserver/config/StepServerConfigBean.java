@@ -27,38 +27,52 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.stepserver;
+package org.chorusbdd.chorus.stepserver.config;
 
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.subsystem.Subsystem;
-
-import java.util.List;
-import java.util.Properties;
+import org.chorusbdd.chorus.annotations.Scope;
 
 /**
- * Created by nick on 30/08/2014.
- * 
- * A StepServerManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
+ * An immutable runtime config for a process
  */
-public interface StepServerManager extends Subsystem, StepInvokerProvider {
+public class StepServerConfigBean implements StepServerConfig {
 
-    String DEFAULT_SERVER_NAME = "default";
+    private final String configName;
+    private final int stepTimeoutSeconds;
+    private final int port;
+    private final Scope scope;
 
-    void startServer(Properties properties);
+    public StepServerConfigBean(String configName, int stepTimeoutSeconds, int port, Scope scope) {
+        this.configName = configName;
+        this.stepTimeoutSeconds = stepTimeoutSeconds;
+        this.port = port;
+        this.scope = scope;
+    }
 
-    void stopServer();
+    public int getStepTimeoutSeconds() {
+        return stepTimeoutSeconds;
+    }
 
-    /**
-     * Wait for a client to become connected to the StepServer, publish its steps and send a STEPS_ALIGNED
-     *
-     * @param clientName, name of the client which the client should send when connecting
-     *
-     * @return true if the client is connected and aligned, false if not connected or has not published
-     * STEPS_ALIGNED by the end of the timeout period
-     */
-    boolean waitForClientConnection(String clientName) throws ClientConnectionException;
+    @Override
+    public int getPort() {
+        return port;
+    }
 
-    List<StepInvoker> getStepInvokers();
+    public String getConfigName() {
+        return configName;
+    }
 
+    @Override
+    public Scope getScope() {
+        return scope;
+    }
+
+    @Override
+    public String toString() {
+        return "StepServerConfigBean{" +
+            "configName='" + configName + '\'' +
+            ", stepTimeoutSeconds=" + stepTimeoutSeconds +
+            ", port=" + port +
+            ", scope=" + scope +
+            '}';
+    }
 }
