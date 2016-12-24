@@ -1,24 +1,25 @@
 
+apply plugin: 'java-library-distribution'
+
 def dependencyFile = new File("dependencies.gradle")
 
 allprojects  {
-
+    apply plugin: 'java'
     apply plugin: 'maven'
 
-    group = 'org.chorusbdd'
-    version = '2.0.2'
+    repositories {
+        mavenLocal()
 
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+
+    group = "org.chorusbdd"
+    version = '2.0.2'
 }
 
 subprojects {
-  apply plugin: 'java'
 
-      repositories {
-          mavenLocal()
-
-          maven { url "http://repo.maven.apache.org/maven2" }
-          maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-      }
 
 
     task updateGradleModuleDependencies {
@@ -41,7 +42,7 @@ subprojects {
     }
 
 }
-//
+
 //task clearGradleModuleDependencies {
 //   dependencyFile.write "// Dependencies\n"
 //}
@@ -55,5 +56,17 @@ subprojects {
 
 apply from: 'dependencies.gradle'
 
+dependencies {
+    compile project (':chorus')
+}
 
 //*** END MODULE DEPENENCIES
+
+
+
+distributions {
+    main{
+        baseName = 'chorus'
+    }
+}
+

@@ -6,6 +6,7 @@ project(':chorus') {
         compile project (':chorus-interpreter')
         compile project (':chorus-processes')
         compile project (':chorus-remoting')
+        compile project (':chorus-selenium')
     }
 }
 
@@ -116,6 +117,12 @@ project(':chorus-remoting') {
 
 project(':chorus-results') {
     dependencies {
+    }
+}
+
+project(':chorus-selenium') {
+    dependencies {
+        compile project (':chorus-handlers')
     }
 }
 

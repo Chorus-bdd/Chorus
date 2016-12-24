@@ -1,16 +1,14 @@
-apply plugin: 'java'
-apply plugin: 'maven'
 
-group = 'org.chorusbdd'
-version = '2.0.2'
+
+
 
 description = "chorus-stepserver"
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus-logging', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-subsystem', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-handlerconfig', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-logging', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-subsystem', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-handlerconfig', version: "${version}"
 
 //    compile group: 'org.java-websocket', name: 'Java-WebSocket', version:'1.3.0'
 

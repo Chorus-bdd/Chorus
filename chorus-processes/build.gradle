@@ -1,15 +1,13 @@
-apply plugin: 'java'
-apply plugin: 'maven'
 
-group = 'org.chorusbdd'
-version = '2.0.2'
+
+
 
 description = "chorus-processes"
 
 
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus-subsystem', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-handlerconfig', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-subsystem', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-handlerconfig', version: "${version}"
     testCompile group: 'junit', name: 'junit', version:'4.10'
 }

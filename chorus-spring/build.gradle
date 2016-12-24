@@ -1,8 +1,6 @@
-apply plugin: 'java'
-apply plugin: 'maven'
 
-group = 'org.chorusbdd'
-version = '2.0.2'
+
+
 
 description = "chorus-spring"
 
@@ -15,11 +13,11 @@ sourceSets {
 }
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-handlers', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-interpreter', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-processes', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-remoting', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-handlers', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-interpreter', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-processes', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-remoting', version: "${version}"
     compile group: 'javax.annotation', name: 'jsr250-api', version:'1.0'
     compile group: 'org.springframework', name: 'spring-beans', version:'3.0.7.RELEASE'
     compile group: 'org.springframework', name: 'spring-context', version:'3.0.7.RELEASE'

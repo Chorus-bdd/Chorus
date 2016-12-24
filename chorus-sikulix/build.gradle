@@ -1,10 +1,8 @@
 import org.gradle.internal.os.OperatingSystem;
 
-apply plugin: 'java'
-apply plugin: 'maven'
 
-group = 'org.chorusbdd'
-version = '2.0.2'
+
+
 
 description = "chorus-sikulix"
 repositories {
@@ -24,7 +22,7 @@ sourceSets {
 }
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version: "${version}"
 
 
     // Sikuli makes use of a maven profile based on activation os family to set

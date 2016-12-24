@@ -1,8 +1,6 @@
-apply plugin: 'java'
-apply plugin: 'maven'
 
-group = 'org.chorusbdd'
-version = '2.0.2'
+
+
 
 description = "chorus-interpreter"
 
@@ -15,19 +13,19 @@ sourceSets {
 }
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus-util', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-output', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-logging', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-parser', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-results', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-config', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-executionlistener', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-handlerconfig', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-annotations', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-subsystem', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-pathscanner', version:'2.0.2'
-    compile group: 'org.chorusbdd', name: 'chorus-stepserver', version:'2.0.2'
+    compile group: 'org.chorusbdd', name: 'chorus-util', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-output', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-logging', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-parser', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-results', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-config', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-executionlistener', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-handlerconfig', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-annotations', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-stepinvoker', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-subsystem', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-pathscanner', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-stepserver', version: "${version}"
     compile group: 'org.apache.ant', name: 'ant', version:'1.8.2'
     compile group: 'junit', name: 'junit', version:'4.10'
     testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
