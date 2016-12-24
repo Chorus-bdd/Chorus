@@ -1,11 +1,13 @@
-Feature: Simple Feature                                                                              
-Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/simplefeature/simplefeature.feature
-  Scenario: Simple Scenario
-Chorus --> INFO    - Processing scenario: Simple Scenario
-    Given Chorus is working properly                                                         PASSED  
-    Then I can run a feature with a single scenario                                          PASSED  
+Feature: Selenium Integration                                                                        
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/selenium/openBrowser.feature
+Chorus --> INFO    - No default handler found for Feature: (Selenium Integration), will use built-in handlers and Uses: statements
+  Scenario: I can open Chrome and navigate to a page
+Chorus --> INFO    - Processing scenario: I can open Chrome and navigate to a page
+    Given I open Chrome                                                                      PASSED  
+    When I navigate to http://www.bbc.co.uk                                                  PASSED  
+    Then the url is http://www.bbc.co.uk                                                     PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

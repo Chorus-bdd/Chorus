@@ -1,17 +1,18 @@
 package org.chorusbdd.chorus.selenium;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
 /**
  * Created by nick on 23/12/2016.
@@ -26,23 +27,25 @@ public class SeleniumHandler {
 
     private WebDriver driver;
 
-    @Step(".*open Firefox")
+    @Step(".*open Chrome")
     public void openABrowserWindow() {
         // Create a new instance of the Firefox driver
-        driver = new FirefoxDriver();
-        log.warn("Finished creating FirefoxDriver");
+//        driver = new FirefoxDriver();
+//        log.warn("Finished creating FirefoxDriver");
 
-//        System.setProperty("webdriver.chrome.driver", "src/assembly/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+        System.setProperty("webdriver.chrome.args", "--disable-logging");
+        System.setProperty("webdriver.chrome.silentOutput", "true");
 
         //Make sure ChromeDriver is in your path on your OS to get this to run
         //https://sites.google.com/a/chromium.org/chromedriver/downloads
-//        driver = new ChromeDriver();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        driver = new ChromeDriver(chromeOptions);
     }
 
     @Step(".*navigate to ([\\w\\./:]+)")
-    public void navigateTo(String uri) {
+    public void navigateTo(String url) {
         // Find the text input element by its name
-        String url = "http://localhost:8080/" + uri;
         driver.navigate().to(url);
     }
 
@@ -58,11 +61,32 @@ public class SeleniumHandler {
         });
     }
 
+    @Step(".*the url is (.*)")
+    @PassesWithin(length =  2)
+    public void checkCurrentUrl(String url) {
+        String currentUrl = driver.getCurrentUrl();
+        //ChromeDriver adds a trailing /
+        if ( currentUrl.endsWith("/")) {
+            currentUrl = currentUrl.substring(0, currentUrl.length() - 1);
+        }
+        assertEquals(url, currentUrl);
+    }
+
     @Step(".*close the browser")
     public void close() {
         new WebDriverWait(driver, 10).until((WebDriver d) -> {
             d.close();
             return true;
         });
+    }
+
+
+    @Destroy(scope = Scope.FEATURE)
+    public void destroy() {
+
+        //Close the browser but leave it open if the test failed so we can take a look
+        if ( feature.getEndState() != EndState.FAILED) {
+            driver.quit();
+        }
     }
 }
