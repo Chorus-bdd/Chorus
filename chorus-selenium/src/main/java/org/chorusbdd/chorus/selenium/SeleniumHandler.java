@@ -5,9 +5,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.FeatureToken;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -30,10 +28,11 @@ public class SeleniumHandler {
     @Step(".*open Chrome")
     public void openABrowserWindow() {
         // Create a new instance of the Firefox driver
-//        driver = new FirefoxDriver();
-//        log.warn("Finished creating FirefoxDriver");
+        //        driver = new FirefoxDriver();
+        //        log.warn("Finished creating FirefoxDriver");
 
-        System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+        // Assume chromedriver will be in user PATH so non need to set it here
+        //        System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
         System.setProperty("webdriver.chrome.args", "--disable-logging");
         System.setProperty("webdriver.chrome.silentOutput", "true");
 
@@ -43,23 +42,23 @@ public class SeleniumHandler {
         driver = new ChromeDriver(chromeOptions);
     }
 
-    @Step(".*navigate to ([\\w\\./:]+)")
+    @Step(".*navigate to (.*)")
     public void navigateTo(String url) {
         // Find the text input element by its name
         driver.navigate().to(url);
     }
 
-    @Step(".*I click the button with id (.*)")
-    public void clickAButton(String id) {
-
-        new WebDriverWait(driver, 10).until((WebDriver d) -> {
-            // Find the text input element by its name
-            WebElement element = driver.findElement(By.id(id));
-            System.out.println("Clicking " + element);
-            element.click();
-            return true;
-        });
-    }
+//    @Step(".*I click the element with id (.*)")
+//    public void clickAButton(String id) {
+//
+//        new WebDriverWait(driver, 10).until((WebDriver d) -> {
+//            // Find the text input element by its name
+//            WebElement element = driver.findElement(By.id(id));
+//            System.out.println("Clicking " + element);
+//            element.click();
+//            return true;
+//        });
+//    }
 
     @Step(".*the url is (.*)")
     @PassesWithin(length =  2)
@@ -73,13 +72,12 @@ public class SeleniumHandler {
     }
 
     @Step(".*close the browser")
-    public void close() {
+    public void quit() {
         new WebDriverWait(driver, 10).until((WebDriver d) -> {
-            d.close();
+            d.quit();
             return true;
         });
     }
-
 
     @Destroy(scope = Scope.FEATURE)
     public void destroy() {
