@@ -30,6 +30,9 @@
 package org.chorusbdd.chorus.selftest.selenium;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.junit.Before;
+
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,6 +45,15 @@ public class TestSelenium extends AbstractInterpreterTest {
     final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/selenium";
 
     final int expectedExitCode = 0;  //success
+
+    //Selenium tests will not work for Travis CI build at present since no ChromeDriver
+    //Enable them here
+    final boolean runSelenimumTests = false;
+
+    @Before
+    public void doBefore() {
+        assumeTrue(runSelenimumTests);
+    }
 
     protected int getExpectedExitCode() {
         return expectedExitCode;
