@@ -19,11 +19,16 @@ if [[ "${ARGS}" != *"-c"* ]] ; then
   ARGS="${ARGS} -console"
 fi
 
-java -cp './lib/*' org.chorusbdd.chorus.Chorus ${ARGS}
+# Find the directory containg the chorus script being called
+# We need this to set the classpath to contain the libs
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 
-
-
-
-
+java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS}
 
