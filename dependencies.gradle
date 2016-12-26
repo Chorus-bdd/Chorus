@@ -3,10 +3,10 @@
 project(':chorus') {
     dependencies {
         compile project (':chorus-handlers')
+        compile project (':chorus-selenium')
         compile project (':chorus-interpreter')
         compile project (':chorus-processes')
         compile project (':chorus-remoting')
-        compile project (':chorus-selenium')
     }
 }
 
@@ -17,11 +17,13 @@ project(':chorus-annotations') {
 
 project(':chorus-config') {
     dependencies {
+        compile project (':chorus-util')
     }
 }
 
 project(':chorus-context') {
     dependencies {
+        compile project (':chorus-util')
     }
 }
 

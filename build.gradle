@@ -28,7 +28,15 @@ subprojects {
             dependencyFile << "project(':" + project.name + "') {\n"
             dependencyFile << "    dependencies {\n"
 
-            project.configurations.getByName("compile").allDependencies
+//            project.configurations.getByName("compile").allDependencies
+//                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
+//                    .stream()
+//                    .map({ dep -> dep.name })
+//                    .distinct()
+//                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
+
+            //TODO deal correctly with test vs compile classpath
+            project.configurations.getByName("testCompile").allDependencies
                     .findAll { depend -> depend.group.equals('org.chorusbdd') }
                     .stream()
                     .map({ dep -> dep.name })
