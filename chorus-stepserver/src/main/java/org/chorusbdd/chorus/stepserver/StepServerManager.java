@@ -61,4 +61,5 @@ public interface StepServerManager extends Subsystem, StepInvokerProvider {
 
     List<StepInvoker> getStepInvokers();
 
+    void showAllSteps();
 }

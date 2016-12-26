@@ -7,11 +7,12 @@ Feature: Simple Step Server Client
 
   #! StepServer start
   #! Processes start simpleStepPublisher
-  #! StepServer wait for client SimpleStepPublisher
+  #! StepServer wait for the client SimpleStepPublisher
   Feature-Start:
 
   Scenario: I can call steps with and without a result
-    Check I can call a step with a result
+    Given StepServer client SimpleStepPublisher is connected
+    Then I can call a step with a result
     And I can call a step without a result
 
   Scenario: I can call steps which fail
@@ -20,8 +21,12 @@ Feature: Simple Step Server Client
 
   Scenario: I can call steps which fail
     Given I can call a step with a result
-    When I call a step which blocks indefinitely
-    Then the next step is skipped but the interpreter timed out
+    When I call a step which blocks
+    Then the next step is skipped because the interpreter timed out
+
+  Scenario: I can show all steps
+    Given StepServer client SimpleStepPublisher is connected
+    Then I can show all StepServer steps
 
 
 

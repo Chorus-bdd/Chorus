@@ -40,6 +40,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.stepserver.ClientConnectionException;
 import org.chorusbdd.chorus.stepserver.StepServerManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
 
@@ -89,15 +90,6 @@ public class StepServerHandler {
     @ChorusResource("subsystem.configurationManager")
     private ConfigurationManager configurationManager;
 
-    //A Directive which can be used to connect to one or more processes
-    @Step("StepServer wait for client " + HandlerPatterns.nameListPattern)
-    public void remotingUseDirective(String processNameList) throws Exception {
-
-        List<String> componentNames = HandlerPatterns.getNames(processNameList);
-        for ( String componentName : componentNames) {
-            stepServerManager.waitForClientConnection(componentName);
-        }
-    }
 
     @Step("StepServer start")
     public void startServer() throws Exception {
@@ -107,6 +99,29 @@ public class StepServerHandler {
     @Step("StepServer stop")
     public void stopServer() throws Exception {
         stepServerManager.stopServer();
+    }
+
+    //A Directive which can be used to connect to one or more processes
+    @Step("StepServer wait for the clients? " + HandlerPatterns.nameListPattern)
+    public void waitForClientsDirective(String processNameList) throws Exception {
+        waitForClients(processNameList);
+    }
+
+    @Step(".*StepServer clients? " + HandlerPatterns.nameListPattern + " (?:are|is) connected")
+    public void waitForClientsToConnect(String processNameList) throws Exception {
+        waitForClients(processNameList);
+    }
+
+    @Step(".*show all StepServer steps")
+    public void showAllSteps() {
+        stepServerManager.showAllSteps();
+    }
+
+    private void waitForClients(String processNameList) throws ClientConnectionException {
+        List<String> componentNames = HandlerPatterns.getNames(processNameList);
+        for ( String componentName : componentNames) {
+            stepServerManager.waitForClientConnection(componentName);
+        }
     }
 
     private Properties getConfig(String configName) {

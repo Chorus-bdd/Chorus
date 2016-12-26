@@ -7,10 +7,11 @@ Chorus --> INFO    - Starting StepServer on port 9080
     #! StepServer start                                                                      PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start simpleStepPublisher                                                   PASSED  
-    #! StepServer wait for client SimpleStepPublisher                                        PASSED  
+    #! StepServer wait for the client SimpleStepPublisher                                    PASSED  
   Scenario: I can call steps with and without a result
 Chorus --> INFO    - Processing scenario: I can call steps with and without a result
-    Check I can call a step with a result                                                    PASSED  Hello!
+    Given StepServer client SimpleStepPublisher is connected                                 PASSED  
+    Then I can call a step with a result                                                     PASSED  Hello!
     And I can call a step without a result                                                   PASSED  
   Scenario: I can call steps which fail
 Chorus --> INFO    - Processing scenario: I can call steps which fail
@@ -19,10 +20,19 @@ Chorus --> INFO    - Processing scenario: I can call steps which fail
   Scenario: I can call steps which fail
 Chorus --> INFO    - Processing scenario: I can call steps which fail
     Given I can call a step with a result                                                    PASSED  Hello!
-    When I call a step which blocks indefinitely                                             FAILED  (WebSocketClientStepInvoker:linenumber)-ChorusException Timed out waiting for client SimpleStepPublisher to execute the step
-    Then the next step is skipped but the interpreter timed out                              SKIPPED 
+    When I call a step which blocks                                                          FAILED  (WebSocketClientStepInvoker:linenumber)-ChorusException Timed out waiting for client SimpleStepPublisher to execute the step
+    Then the next step is skipped because the interpreter timed out                          SKIPPED 
+  Scenario: I can show all steps
+Chorus --> INFO    - Processing scenario: I can show all steps
+    Given StepServer client SimpleStepPublisher is connected                                 PASSED  
+Steps:
+ .* call a step which blocks
+ .* call a step which fails
+ .* call a step with a result
+ .* call a step without a result
+    Then I can show all StepServer steps                                                     PASSED  
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:3) (passed:1) (failed:2)
-Steps     (total:10) (passed:7) (failed:2) (undefined:0) (pending:0) (skipped:1)
+Scenarios (total:4) (passed:2) (failed:2)
+Steps     (total:13) (passed:10) (failed:2) (undefined:0) (pending:0) (skipped:1)

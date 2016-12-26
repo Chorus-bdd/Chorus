@@ -39,9 +39,9 @@ public class SimpleStepPublisher {
             assertFalse("Whooa steady on there sailor", true);
         }
 
-        @Step(".*call a step which blocks indefinitely")
-        public void blockIndefinitely() throws InterruptedException {
-            sleep(100000); //ok so it's not indefinite but close enough for our purposes and at least this will end eventually
+        @Step(".* call a step which blocks")
+        public void blockForAWhile() throws InterruptedException {
+            sleep(100000);
         }
 
     }

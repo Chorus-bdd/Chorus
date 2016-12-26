@@ -2,10 +2,7 @@ package org.chorusbdd.chorus.stepserver;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
-import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.logging.StdOutLogProvider;
+import org.chorusbdd.chorus.logging.*;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
@@ -99,6 +96,17 @@ public class StepServer implements StepServerManager {
     @Override
     public List<StepInvoker> getStepInvokers() {
         return new ArrayList<>(stepIdToInvoker.values());
+    }
+
+    @Override
+    public void showAllSteps() {
+        ChorusOut.out.println("Steps:");
+         stepIdToInvoker.values().stream()
+            .map(i -> i.getStepPattern().toString())
+            .sorted()
+            .map(s -> " " + s + "\n")
+            .forEach(ChorusOut.out::print);
+
     }
 
     @Override
