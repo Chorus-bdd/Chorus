@@ -28,6 +28,9 @@ Feature: Simple Step Server Client
     Given StepServer client SimpleStepPublisher is connected
     Then I can show all StepServer steps
 
+  Scenario: Fail nicely if client is not connected
+    Given StepServer client DoesNotExist is connected
+
 
 
 

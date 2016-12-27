@@ -26,12 +26,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class StepServer implements StepServerManager {
 
-    /**
-     * time to wait for a client to connect
-     * TODO make this configurable
-     */
-    private static final int DEFAULT_CLIENT_WAIT_TIME_SECONDS = 60;
-    
     private static ChorusLog log = ChorusLogFactory.getLog(StepServer.class);
 
     private final StepServerConfigBeanFactory stepServerConfigBeanFactory = new StepServerConfigBeanFactory();
@@ -83,7 +77,7 @@ public class StepServer implements StepServerManager {
 
             boolean result = true;
             try {
-                polledAssertion.await(TimeUnit.SECONDS, DEFAULT_CLIENT_WAIT_TIME_SECONDS);
+                polledAssertion.await(TimeUnit.SECONDS, stepServerConfig.getClientConnectTimeoutSeconds());
             } catch (AssertionError assertionError) {
                 result = false;
             }

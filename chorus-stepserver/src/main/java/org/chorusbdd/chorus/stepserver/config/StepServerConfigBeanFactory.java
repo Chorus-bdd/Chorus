@@ -48,6 +48,7 @@ import java.util.Properties;
 public class StepServerConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<StepServerConfigBuilder> {
 
     private static final String stepTimeoutSeconds = "stepTimeoutSeconds";
+    private static final String clientConnectTimeoutSeconds = "clientConnectTimeoutSeconds";
     private static final String port = "port";
     private static final String scope = "scope";
 
@@ -70,6 +71,8 @@ public class StepServerConfigBeanFactory extends AbstractConfigBeanFactory imple
             String value = prop.getValue().toString();
             if (stepTimeoutSeconds.equals(key)) {
                 c.setStepTimeoutSeconds(parseIntProperty(value, stepTimeoutSeconds));
+            } else if (clientConnectTimeoutSeconds.equals(key)) {
+                c.setClientConnectTimeoutSeconds(parseIntProperty(value, clientConnectTimeoutSeconds));
             } else if (port.equals(key)) {
                 c.setPort(parseIntProperty(value, port));
             } else if (scope.equals(key)) {

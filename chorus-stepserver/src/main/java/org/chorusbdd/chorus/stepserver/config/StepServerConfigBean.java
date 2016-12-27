@@ -40,16 +40,23 @@ public class StepServerConfigBean implements StepServerConfig {
     private final int stepTimeoutSeconds;
     private final int port;
     private final Scope scope;
+    private final int clientConnectTimeoutSeconds;
 
-    public StepServerConfigBean(String configName, int stepTimeoutSeconds, int port, Scope scope) {
+    public StepServerConfigBean(String configName, int stepTimeoutSeconds, int clientConnectTimeoutSeconds, int port, Scope scope) {
         this.configName = configName;
         this.stepTimeoutSeconds = stepTimeoutSeconds;
+        this.clientConnectTimeoutSeconds = clientConnectTimeoutSeconds;
         this.port = port;
         this.scope = scope;
     }
 
     public int getStepTimeoutSeconds() {
         return stepTimeoutSeconds;
+    }
+
+    @Override
+    public int getClientConnectTimeoutSeconds() {
+        return clientConnectTimeoutSeconds;
     }
 
     @Override
@@ -70,6 +77,7 @@ public class StepServerConfigBean implements StepServerConfig {
     public String toString() {
         return "StepServerConfigBean{" +
             "configName='" + configName + '\'' +
+            ", clientConnectTimeoutSeconds=" + clientConnectTimeoutSeconds +
             ", stepTimeoutSeconds=" + stepTimeoutSeconds +
             ", port=" + port +
             ", scope=" + scope +

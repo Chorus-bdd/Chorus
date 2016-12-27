@@ -8,6 +8,7 @@ public class StepServerConfigBuilder implements StepServerConfig {
     private int stepTimeoutSeconds = 60;
     private int port = 9080;
     private Scope scope = Scope.SCENARIO;
+    private int clientConnectTimeoutSeconds = 60;
 
     @Override
     public String getConfigName() {
@@ -25,6 +26,15 @@ public class StepServerConfigBuilder implements StepServerConfig {
 
     public void setStepTimeoutSeconds(int stepTimeoutSeconds) {
         this.stepTimeoutSeconds = stepTimeoutSeconds;
+    }
+
+    @Override
+    public int getClientConnectTimeoutSeconds() {
+        return clientConnectTimeoutSeconds;
+    }
+
+    public void setClientConnectTimeoutSeconds(int clientConnectTimeoutSeconds) {
+        this.clientConnectTimeoutSeconds = clientConnectTimeoutSeconds;
     }
 
     @Override
@@ -46,6 +56,7 @@ public class StepServerConfigBuilder implements StepServerConfig {
     }
 
     public StepServerConfigBean build() {
-        return new StepServerConfigBean(configName, stepTimeoutSeconds, port, scope);
+        return new StepServerConfigBean(configName, stepTimeoutSeconds, clientConnectTimeoutSeconds, port, scope);
     }
+
 }

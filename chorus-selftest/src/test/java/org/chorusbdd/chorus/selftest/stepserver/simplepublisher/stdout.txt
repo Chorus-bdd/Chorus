@@ -31,8 +31,11 @@ Steps:
  .* call a step with a result
  .* call a step without a result
     Then I can show all StepServer steps                                                     PASSED  
+  Scenario: Fail nicely if client is not connected
+Chorus --> INFO    - Processing scenario: Fail nicely if client is not connected
+    Given StepServer client DoesNotExist is connected                                        FAILED  (StepServerHandler:linenumber)-ChorusException Client DoesNotExist is not connected
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:4) (passed:2) (failed:2)
-Steps     (total:13) (passed:10) (failed:2) (undefined:0) (pending:0) (skipped:1)
+Scenarios (total:5) (passed:2) (failed:3)
+Steps     (total:14) (passed:10) (failed:3) (undefined:0) (pending:0) (skipped:1)

@@ -15,9 +15,10 @@ if [[ "${ARGS}" != *"-h"* ]] ; then
   ARGS="${ARGS} -h no.user.handler.packages"
 fi
 
-if [[ "${ARGS}" != *"-c"* ]] ; then
-  ARGS="${ARGS} -console"
-fi
+# Console mode doesn't work very well on OSX terminal at present
+#if [[ "${ARGS}" != *"-c"* ]] ; then
+#  ARGS="${ARGS} -console"
+#fi
 
 # Find the directory containg the chorus script being called
 # We need this to set the classpath to contain the libs

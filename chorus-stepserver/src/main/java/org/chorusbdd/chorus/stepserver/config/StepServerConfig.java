@@ -37,6 +37,8 @@ import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
  */
 public interface StepServerConfig extends HandlerConfigBean {
 
+    int getClientConnectTimeoutSeconds();
+
     int getStepTimeoutSeconds();
 
     int getPort();

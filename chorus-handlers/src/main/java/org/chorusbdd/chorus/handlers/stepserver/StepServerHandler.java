@@ -42,6 +42,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepserver.ClientConnectionException;
 import org.chorusbdd.chorus.stepserver.StepServerManager;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
@@ -120,7 +121,10 @@ public class StepServerHandler {
     private void waitForClients(String processNameList) throws ClientConnectionException {
         List<String> componentNames = HandlerPatterns.getNames(processNameList);
         for ( String componentName : componentNames) {
-            stepServerManager.waitForClientConnection(componentName);
+            boolean success = stepServerManager.waitForClientConnection(componentName);
+            if ( ! success) {
+               throw new ChorusException("Client " + componentName + " is not connected");
+            }
         }
     }
 
