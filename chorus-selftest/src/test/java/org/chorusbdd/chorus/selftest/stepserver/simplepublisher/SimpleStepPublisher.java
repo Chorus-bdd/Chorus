@@ -17,7 +17,12 @@ public class SimpleStepPublisher {
 
     public static void main(String[] args) throws InterruptedException {
 
-        StepPublisher stepPublisher = new StepPublisher("SimpleStepPublisher", URI.create("ws://localhost:9080"), new SimpleStepServerClientHandler());
+        StepPublisher stepPublisher = new StepPublisher(
+            "SimpleStepPublisher",
+            URI.create("ws://localhost:9080"),
+            new SimpleStepServerClientHandler()
+        );
+
         stepPublisher.publish();
 
         sleep(30000);
