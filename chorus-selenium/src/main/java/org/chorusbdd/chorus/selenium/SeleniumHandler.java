@@ -8,7 +8,10 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
@@ -18,6 +21,13 @@ import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 @Handler(value = "Selenium", scope = Scope.FEATURE)
 public class SeleniumHandler {
 
+    static {
+        //Selenium uses JDK logging and logs quite noisily
+        //We don't want that in the Chorus output by default
+        //TODO make Selenium logging configurable
+        Logger.getLogger("").setLevel(Level.OFF);
+    }
+
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumHandler.class);
 
     @ChorusResource(value="feature.token")
@@ -26,39 +36,35 @@ public class SeleniumHandler {
     private WebDriver driver;
 
     @Step(".*open Chrome")
-    public void openABrowserWindow() {
-        // Create a new instance of the Firefox driver
-        //        driver = new FirefoxDriver();
-        //        log.warn("Finished creating FirefoxDriver");
+    public void openABrowserWindow() throws IOException {
 
         // Assume chromedriver will be in user PATH so non need to set it here
-        //        System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
-        System.setProperty("webdriver.chrome.args", "--disable-logging");
+        // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+
+
+        // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
+        // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
+
         System.setProperty("webdriver.chrome.silentOutput", "true");
 
         //Make sure ChromeDriver is in your path on your OS to get this to run
         //https://sites.google.com/a/chromium.org/chromedriver/downloads
         ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--disable-logging");
+        chromeOptions.addArguments("--silent");
+
         driver = new ChromeDriver(chromeOptions);
     }
 
     @Step(".*navigate to (.*)")
     public void navigateTo(String url) {
-        // Find the text input element by its name
         driver.navigate().to(url);
     }
 
-//    @Step(".*I click the element with id (.*)")
-//    public void clickAButton(String id) {
-//
-//        new WebDriverWait(driver, 10).until((WebDriver d) -> {
-//            // Find the text input element by its name
-//            WebElement element = driver.findElement(By.id(id));
-//            System.out.println("Clicking " + element);
-//            element.click();
-//            return true;
-//        });
-//    }
+    @Step(".*refresh the page")
+    public void refresh() {
+        driver.navigate().refresh();
+    }
 
     @Step(".*the url is (.*)")
     @PassesWithin(length =  2)
@@ -73,10 +79,7 @@ public class SeleniumHandler {
 
     @Step(".*close the browser")
     public void quit() {
-        new WebDriverWait(driver, 10).until((WebDriver d) -> {
-            d.quit();
-            return true;
-        });
+        driver.quit();
     }
 
     @Destroy(scope = Scope.FEATURE)
@@ -87,4 +90,10 @@ public class SeleniumHandler {
             driver.quit();
         }
     }
+
+//        new WebDriverWait(driver, 10).until((WebDriver d) -> {
+//            d.quit();
+//            return true;
+//        });
+
 }
