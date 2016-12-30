@@ -1,6 +1,9 @@
 package org.chorusbdd.chorus.selenium;
 
+import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,8 +28,10 @@ public class SeleniumLoggingSuppression {
     //Apache httpcomponents uses log4j
     //We don't want this in the Chorus interpreter output by default
     private void suppressLog4jLogging() {
-        if ( ! seleniumLoggingSuppressed.getAndSet(true) ) {
-            org.apache.log4j.Logger.getLogger("org.apache.http").setLevel(Level.ERROR);
+        if ( ! log4jLoggingSuppressed.getAndSet(true) ) {
+            Logger logger = Logger.getLogger("org.apache.http");
+            logger.setLevel(Level.ERROR);
+            logger.addAppender(new ConsoleAppender());
         }
     }
 
