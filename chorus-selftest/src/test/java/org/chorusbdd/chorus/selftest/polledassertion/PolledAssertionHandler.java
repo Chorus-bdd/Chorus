@@ -102,7 +102,7 @@ public class PolledAssertionHandler {
     }
 
     @Step("the value is (\\d) for half a second")
-    @PassesWithin(length = 500, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
+    @PassesWithin(length = 525, timeUnit = TimeUnit.MILLISECONDS, pollFrequencyInMilliseconds = 50, pollMode = PollMode.PASS_THROUGHOUT_PERIOD)
     public void passesForHalfASecond(int expectCount) {
         passesForPollCount++;
         assertEquals("Expect " + expectCount, expectCount, timeCount);

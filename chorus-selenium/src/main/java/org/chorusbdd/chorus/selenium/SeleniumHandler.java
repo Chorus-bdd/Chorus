@@ -3,15 +3,12 @@ package org.chorusbdd.chorus.selenium;
 import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
@@ -21,19 +18,21 @@ import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 @Handler(value = "Selenium", scope = Scope.FEATURE)
 public class SeleniumHandler {
 
-    static {
-        //Selenium uses JDK logging and logs quite noisily
-        //We don't want that in the Chorus output by default
-        //TODO make Selenium logging configurable
-        Logger.getLogger("").setLevel(Level.OFF);
-    }
-
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumHandler.class);
+
+    private SeleniumLoggingSuppression seleniumLogging = new SeleniumLoggingSuppression();
 
     @ChorusResource(value="feature.token")
     private FeatureToken feature;
 
     private WebDriver driver;
+    private boolean closeBrowserAtEndOfFeature = true;
+
+
+    @Initialize(scope = Scope.FEATURE)
+    public void init() {
+        seleniumLogging.suppressLogging();
+    }
 
     @Step(".*open Chrome")
     public void openABrowserWindow() throws IOException {
@@ -41,7 +40,7 @@ public class SeleniumHandler {
         // Assume chromedriver will be in user PATH so non need to set it here
         // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
 
-
+        //TODO support config to enable selenium log?
         // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
         // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
 
@@ -82,18 +81,18 @@ public class SeleniumHandler {
         driver.quit();
     }
 
+    //Can be added to a feature when we want to investigate a test failure
+    @Step(".*leave the browser open(?: at the end of the feature)")
+    public void leaveTheBrowserOpen() {
+        closeBrowserAtEndOfFeature = false;
+    }
+
     @Destroy(scope = Scope.FEATURE)
     public void destroy() {
 
-        //Close the browser but leave it open if the test failed so we can take a look
-        if ( feature.getEndState() != EndState.FAILED) {
+        if ( closeBrowserAtEndOfFeature) {
             driver.quit();
         }
     }
-
-//        new WebDriverWait(driver, 10).until((WebDriver d) -> {
-//            d.quit();
-//            return true;
-//        });
 
 }
