@@ -3,7 +3,6 @@ package org.chorusbdd.chorus.selenium;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.varia.NullAppender;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
