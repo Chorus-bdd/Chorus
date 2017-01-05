@@ -1,16 +1,14 @@
 import org.gradle.internal.os.OperatingSystem;
 
-
-
-
-
 description = "chorus-sikulix"
+
 repositories {
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 
     //jxgrabree for sikulix
-    maven { url "http://mvn.is.inf.uni-due.de:8081/nexus/content/repositories/atunes-dependencies"}
+    //repo for jxgrabtree server is unreliable so use a local jar
+    flatDir {
+        dirs 'externalLibs'
+    }
 }
 
 sourceSets {
