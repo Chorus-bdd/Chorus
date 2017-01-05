@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.stepserver.StepServerManager;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.ChorusException;
 
@@ -55,6 +55,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private final ConfigurationManager configurationManager;
     private final Subsystem stepServerManager;
     private final List<Subsystem> subsystemList;
+    private final List<StepInvokerProvider> stepProviderSubsystems;
 
     private Map<String, Subsystem> subsystems = new HashMap<>();
 
@@ -69,6 +70,19 @@ public class SubsystemManagerImpl implements SubsystemManager {
         subsystemList = Collections.unmodifiableList(
             new ArrayList<>(asList(processManager, remotingManager, configurationManager, stepServerManager))
         );
+
+        this.stepProviderSubsystems = setInvokerProviderSubsystems();
+    }
+
+    private List<StepInvokerProvider> setInvokerProviderSubsystems() {
+        List<StepInvokerProvider> stepInvokerSubsystemList = new LinkedList<>();
+        for ( Subsystem s : subsystemList) {
+            if ( StepInvokerProvider.class.isAssignableFrom(s.getClass())) {
+                log.debug("Adding Subsystem " + s.getClass().getName() + " as a Step provider");
+                stepInvokerSubsystemList.add((StepInvokerProvider)s);
+            }
+        }
+        return Collections.unmodifiableList(stepInvokerSubsystemList);
     }
 
     public Subsystem getProcessManager() {
@@ -90,6 +104,11 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
     public Subsystem getSubsystemById(String id) {
         return subsystems.get(id);
+    }
+
+    @Override
+    public List<StepInvokerProvider> getStepProviderSubsystems() {
+        return stepProviderSubsystems;
     }
 
     public List<ExecutionListener> getExecutionListeners() {
@@ -121,7 +140,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         );
     }
 
-    private StepServerManager initializeStepServerManager() {
+    private Subsystem initializeStepServerManager() {
         return initializeSubsystem(
             "stepServerManager",
             "chorusStepServerManager",

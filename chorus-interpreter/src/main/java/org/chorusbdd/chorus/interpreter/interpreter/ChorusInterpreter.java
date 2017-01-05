@@ -209,14 +209,29 @@ public class ChorusInterpreter {
     }
 
     private StepInvokerProvider getStepInvokers(List<Object> handlerInstances) {
-        CompositeStepInvokerProvider stepInvokerProvider = new CompositeStepInvokerProvider();
+        CompositeStepInvokerProvider compositeStepProvider = new CompositeStepInvokerProvider();
+
+        //Add a step provider for any local handler classes
+        addLocalHandlerClassSteps(handlerInstances, compositeStepProvider);
+
+        //Add a step provider for each subsystem which provides steps
+        addSubsystemSteps(compositeStepProvider);
+
+        return compositeStepProvider;
+    }
+
+    private void addSubsystemSteps(CompositeStepInvokerProvider compositeStepProvider) {
+        List<StepInvokerProvider> stepProviderSubsystems = subsystemManager.getStepProviderSubsystems();
+        for ( StepInvokerProvider s : stepProviderSubsystems ) {
+            compositeStepProvider.addChild(s);
+        }
+    }
+
+    private void addLocalHandlerClassSteps(List<Object> handlerInstances, CompositeStepInvokerProvider compositeStepProvider) {
         for ( Object handler : handlerInstances) {
             HandlerClassInvokerFactory f = new HandlerClassInvokerFactory(handler);
-            stepInvokerProvider.addChild(f);
+            compositeStepProvider.addChild(f);
         }
-        stepInvokerProvider.addChild((StepInvokerProvider)subsystemManager.getRemotingManager());
-        stepInvokerProvider.addChild((StepInvokerProvider)subsystemManager.getStepServerManager());
-        return stepInvokerProvider;
     }
 
     private void updateExecutionStats(ExecutionToken executionToken, ScenarioToken scenario) {
