@@ -82,7 +82,7 @@ public class SeleniumHandler {
     }
 
     //Can be added to a feature when we want to investigate a test failure
-    @Step(".*leave the browser open(?: at the end of the feature)")
+    @Step(".*leave the browser open(?: at the end of the feature)?")
     public void leaveTheBrowserOpen() {
         closeBrowserAtEndOfFeature = false;
     }
