@@ -76,6 +76,13 @@ project(':chorus-logging') {
     }
 }
 
+project(':chorus-mocksuite') {
+    dependencies {
+        compile project (':chorus-annotations')
+        compile project (':chorus-stepinvoker')
+    }
+}
+
 project(':chorus-output') {
     dependencies {
         compile project (':chorus-util')

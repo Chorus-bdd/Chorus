@@ -22,4 +22,5 @@ include 'chorus',
         'chorus-stepinvoker',
         'chorus-subsystem',
         'chorus-stepserver',
-        'chorus-util'
+        'chorus-util',
+        'chorus-mocksuite'
