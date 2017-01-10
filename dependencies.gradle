@@ -195,3 +195,11 @@ project(':chorus-util') {
     dependencies {
     }
 }
+
+project(':chorus-xml') {
+    dependencies {
+        compile project (':chorus')
+        compile project (':chorus-mocksuite')
+        compile project (':chorus-results')
+    }
+}
