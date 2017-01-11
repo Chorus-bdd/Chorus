@@ -1,0 +1,13 @@
+Feature: Disable a process                                                                           
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/disableprocess/disableProcess.feature
+Chorus --> INFO    - No default handler found for Feature: (Disable a process), will use built-in handlers and Uses: statements
+  Scenario: Start a Disabled Process
+Chorus --> INFO    - Processing scenario: Start a Disabled Process
+Chorus --> INFO    - Not starting process disabled since enabled=false
+    Given I start a disabled process                                                         PASSED  
+    Then the process named disabled is not running                                           PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

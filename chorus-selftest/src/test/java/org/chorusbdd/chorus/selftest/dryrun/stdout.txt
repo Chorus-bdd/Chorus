@@ -1,0 +1,29 @@
+Feature: Dry Run                                                                                     
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/dryrun/dryrun.feature
+  Scenario: Simple Scenario One
+Chorus --> INFO    - Processing scenario: Simple Scenario One
+    Given Chorus is working properly                                                         DRYRUN  This step is OK
+    Then I can run a step in scenario one                                                    DRYRUN  This step is OK
+    And if a step fails                                                                      DRYRUN  This step is OK
+    Then the subsequent steps are skipped                                                    DRYRUN  This step is OK
+    But the next scenario still runs                                                         UNDEFINED 
+  Scenario: Simple Scenario Two
+Chorus --> INFO    - Processing scenario: Simple Scenario Two
+    Given Chorus is working properly                                                         DRYRUN  This step is OK
+    Then I can run a step in scenario two                                                    DRYRUN  This step is OK
+    And if a step is not implemented                                                         UNDEFINED 
+    Then the subsequent steps are skipped                                                    SKIPPED 
+    But the next scenario still runs                                                         SKIPPED 
+  Scenario: Simple Scenario Three
+Chorus --> INFO    - Processing scenario: Simple Scenario Three
+    Given Chorus is working properly                                                         DRYRUN  This step is OK
+    Then I can run a step in scenario three                                                  DRYRUN  This step is OK
+  Scenario: Simple Scenario Four
+Chorus --> INFO    - Processing scenario: Simple Scenario Four
+    Given Chorus is working properly                                                         DRYRUN  This step is OK
+    Then I can run a step in scenario four                                                   DRYRUN  This step is OK
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:4) (passed:2) (failed:2)
+Steps     (total:14) (passed:10) (failed:0) (undefined:2) (pending:0) (skipped:2)

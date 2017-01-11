@@ -1,0 +1,112 @@
+Feature: Background Directives                                                                       
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/simple/backgrounddirectives.feature
+Chorus --> INFO    - No default handler found for Feature: (Background Directives), will use built-in handlers and Uses: statements
+  Scenario: Directive With Background
+Chorus --> INFO    - Processing scenario: Directive With Background
+    #! Directive One                                                                         PASSED  
+    #! Directive Two                                                                         PASSED  OK
+    #! Directive Three                                                                       PASSED  Three
+    Given I can run a Background Step                                                        PASSED  
+    #! Directive Four                                                                        PASSED  Four
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Directive With Background And Secnario Directives
+Chorus --> INFO    - Processing scenario: Directive With Background And Secnario Directives
+    #! Directive One                                                                         PASSED  
+    #! Directive Two                                                                         PASSED  OK
+    #! Directive Three                                                                       PASSED  Three
+    Given I can run a Background Step                                                        PASSED  
+    #! Directive Four                                                                        PASSED  Four
+    #! Directive Five                                                                        PASSED  Five
+    #! Directive Six                                                                         PASSED  Six
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+
+Feature: Directives With Context Variables                                                           
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/simple/directiveswithcontextvariables.feature
+Chorus --> INFO    - No default handler found for Feature: (Directives With Context Variables), will use built-in handlers and Uses: statements
+  Scenario: Directives can expand context variables
+Chorus --> INFO    - Processing scenario: Directives can expand context variables
+    Given I create a context variable myVar with the value One                               PASSED  
+    #! Directive One                                                                         PASSED  
+    Then I can run a Step                                                                    PASSED  
+
+Feature: Directives Without Any Steps                                                                
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/simple/directiveswithoutsteps.feature
+Chorus --> INFO    - No default handler found for Feature: (Directives Without Any Steps), will use built-in handlers and Uses: statements
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    #! Directive One Feature Start                                                           PASSED  
+    #! Directive Two Feature Start Two                                                       PASSED  OK
+  Scenario: Directives But No Steps
+Chorus --> INFO    - Processing scenario: Directives But No Steps
+    #! Directive Three Background                                                            PASSED  Three
+    #! Directive Four Scenario                                                               PASSED  Four
+  Scenario: Feature-End
+Chorus --> INFO    - Processing scenario: Feature-End
+    #! Directive Five Feature End                                                            PASSED  Five
+
+Feature: Directives With Scenario Outline                                                            
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/simple/directiveswithscenariooutiline.feature
+Chorus --> INFO    - No default handler found for Feature: (Directives With Scenario Outline), will use built-in handlers and Uses: statements
+  Scenario: A Scenario Outline can use directives [1] One
+Chorus --> INFO    - Processing scenario: A Scenario Outline can use directives [1] One
+    #! Directive One                                                                         PASSED  
+    #! Directive One                                                                         PASSED  
+    Given I can run a Step One                                                               PASSED  
+  Scenario: A Scenario Outline can use directives [2] Two
+Chorus --> INFO    - Processing scenario: A Scenario Outline can use directives [2] Two
+    #! Directive Two                                                                         PASSED  OK
+    #! Directive Two                                                                         PASSED  OK
+    Given I can run a Step Two                                                               PASSED  
+
+Feature: Simple Directives                                                                           
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/simple/simpledirectives.feature
+  Scenario: Directive Before Scenario
+Chorus --> INFO    - Processing scenario: Directive Before Scenario
+    #! Directive One                                                                         PASSED  
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Two Directives Before Scenario
+Chorus --> INFO    - Processing scenario: Two Directives Before Scenario
+    #! Directive One                                                                         PASSED  
+    #! Directive Two                                                                         PASSED  OK
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Two Directives Before Scenario combined in a line
+Chorus --> INFO    - Processing scenario: Two Directives Before Scenario combined in a line
+    #! Directive One                                                                         PASSED  
+    #! Directive Two                                                                         PASSED  OK
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Two Directives Before Scenario with intervening blank line and comment
+Chorus --> INFO    - Processing scenario: Two Directives Before Scenario with intervening blank line and comment
+    #! Directive One                                                                         PASSED  
+    #! Directive Two                                                                         PASSED  OK
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Directives after a step get run before the step
+Chorus --> INFO    - Processing scenario: Directives after a step get run before the step
+    #! Directive One                                                                         PASSED  
+    Given I can run a Step                                                                   PASSED  
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+  Scenario: Two Directives after a step get inserted before the step
+Chorus --> INFO    - Processing scenario: Two Directives after a step get inserted before the step
+    #! Directive One                                                                         PASSED  
+    Given I can run a Step                                                                   PASSED  
+    #! Directive One                                                                         PASSED  
+    #! Directive Two                                                                         PASSED  OK
+    When I can run a Step                                                                    PASSED  
+    Then I can run a Step                                                                    PASSED  
+
+
+Features  (total:5) (passed:5) (failed:0)
+Scenarios (total:12) (passed:12) (failed:0)
+Steps     (total:61) (passed:61) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -1,0 +1,22 @@
+Feature: Pending Steps                                                                               
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/pendingsteps/pendingwithnofailures/pendingsteps.feature
+  Scenario: Pending Annotations
+Chorus --> INFO    - Processing scenario: Pending Annotations
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with three scenario                                             PASSED  
+    And a pending step gets a pending status                                                 PENDING bonjour, mes amis, I am a pending step
+    While subsequent steps are skipped                                                       SKIPPED 
+  Scenario: Pending Exceptions Are Handled
+Chorus --> INFO    - Processing scenario: Pending Exceptions Are Handled
+    Given Chorus is working properly                                                         PASSED  
+    If I throw a PendingException then that step is shown pending with the exception message PENDING Hola?
+    And subsequent steps are skipped                                                         SKIPPED 
+  Scenario: Scenario Which Passes
+Chorus --> INFO    - Processing scenario: Scenario Which Passes
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with three scenario                                             PASSED  
+
+
+Features  (total:1) (passed:0) (pending:1) (failed:0)
+Scenarios (total:3) (passed:1) (pending:2) (failed:0)
+Steps     (total:9) (passed:5) (failed:0) (undefined:0) (pending:2) (skipped:2)

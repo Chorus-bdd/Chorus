@@ -36,7 +36,7 @@ import org.chorusbdd.chorus.annotations.Scope;
  */
 public class ProcessConfig implements ProcessManagerConfig {
 
-    private final String groupName;
+    private final String configName;
     private final String pathToExecutable;
     private final String jre;
     private final String classpath;
@@ -56,11 +56,11 @@ public class ProcessConfig implements ProcessManagerConfig {
     private final Scope processScope;
     private boolean enabled;
 
-    public ProcessConfig(String groupName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
+    public ProcessConfig(String configName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
                          String args, OutputMode stdOutMode, OutputMode stdErrMode, int remotingPort, int debugPort, int terminateWaitTime,
                          String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
                          int readTimeoutSeconds, Scope processScope, boolean enabled) {
-        this.groupName = groupName;
+        this.configName = configName;
         this.pathToExecutable = pathToExecutable;
         this.jre = jre;
         this.classpath = classpath;
@@ -82,7 +82,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     public String getConfigName() {
-        return groupName;
+        return configName;
     }
 
     public String getJre() {
@@ -171,7 +171,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     @Override
     public String toString() {
         return "RuntimeProcessConfig{" +
-                "groupName='" + groupName + '\'' +
+                "groupName='" + configName + '\'' +
                 ", pathToExecutable='" + pathToExecutable + '\'' +
                 ", jre='" + jre + '\'' +
                 ", classpath='" + classpath + '\'' +

@@ -1,0 +1,14 @@
+Feature: Spring Context                                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/springcontext/springcontext.feature
+  Scenario: Spring Context Resources Injected
+Chorus --> INFO    - Processing scenario: Spring Context Resources Injected
+Chorus --> INFO    - Created new SpringContext for handler class org.chorusbdd.chorus.selftest.springcontext.SpringContextHandler at testSpringContext.xml
+    Given Chorus is working properly                                                         PASSED  
+    Then a spring context can be created                                                     PASSED  
+    And resource fields are injected into springcontext handler                              PASSED  
+    And resource fields are injected into contextconfiguration handler                       PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -9,3 +9,6 @@ logs
 *.iml
 *.log
 .DS_Store
+.gradle
+build
+/dependencies.txt

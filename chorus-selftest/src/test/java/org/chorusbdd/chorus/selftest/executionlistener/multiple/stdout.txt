@@ -1,0 +1,16 @@
+Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne
+Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerTwo
+Chorus --> ERROR   - Failed while instantiating user ExecutionListener org.my.NonExistentClass,class java.lang.ClassNotFoundException, this listener will not be used
+Chorus --> ERROR   - Failed while instantiating user ExecutionListener org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerNoNullaryConstructor, no public nullary constructor available, this listener will not be used
+Chorus --> ERROR   - User specified ExecutionListener java.util.Date does not implement ExecutionListener interface, will not be used
+Feature: Multiple User Execution Listener                                                            
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/executionlistener/multiple/multipleuserexecutionlistener.feature
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then all User Execution Listener get their lifecycle methods invoked                     PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

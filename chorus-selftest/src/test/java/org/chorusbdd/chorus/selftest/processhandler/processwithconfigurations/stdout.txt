@@ -1,0 +1,24 @@
+Feature: Process With Configurations [confA]                                                         
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/processwithconfigurations/processwithconfigurations.feature in config confA
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Frodo                                                PASSED  
+    And I wait for up to 10 seconds for the process Frodo to terminate                       PASSED  
+    Then the process named Frodo has stopped                                                 PASSED  
+
+Feature: Process With Configurations [confB]                                                         
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/processwithconfigurations/processwithconfigurations.feature in config confB
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Frodo                                                PASSED  
+    And I wait for up to 10 seconds for the process Frodo to terminate                       PASSED  
+    Then the process named Frodo has stopped                                                 PASSED  
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:8) (passed:8) (failed:0) (undefined:0) (pending:0) (skipped:0)

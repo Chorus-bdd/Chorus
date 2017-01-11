@@ -1,0 +1,16 @@
+Feature: Remoting Directives                                                                         
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/remoting/jmx/remotingdirectives/remotingdirectives.feature
+Chorus --> INFO    - No default handler found for Feature: (Remoting Directives), will use built-in handlers and Uses: statements
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    #! Processes start SingleHandlerExport                                                   PASSED  
+    #! Remoting connect SingleHandlerExport                                                  PASSED  
+  Scenario: Call An Exported Method
+Chorus --> INFO    - Processing scenario: Call An Exported Method
+    Check I can call a step method exported by the handler                                   PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:3) (passed:3) (failed:0) (undefined:0) (pending:0) (skipped:0)

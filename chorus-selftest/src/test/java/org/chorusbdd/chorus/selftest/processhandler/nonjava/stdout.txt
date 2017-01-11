@@ -1,0 +1,33 @@
+Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.processhandler.nonjava.PropertyWritingExecutionListener
+Feature: Start Non Java Processes                                                                    
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/nonjava/startnonjava.feature
+  Scenario: Start a relative path process
+Chorus --> INFO    - Processing scenario: Start a relative path process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a relativePath process named Relative                                        PASSED  
+    And I write the line 'continue' to the Relative process                                  PASSED  
+    And I wait for the process named Relative to terminate                                   PASSED  
+    Then the process named Relative has terminated                                           PASSED  
+  Scenario: Write and Read to relative path process with argument
+Chorus --> INFO    - Processing scenario: Write and Read to relative path process with argument
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a capturedOutput process named Cap                                           PASSED  
+    And I read the line 'Started' from the Cap process                                       PASSED  
+    And I write the line 'continue' to the Cap process                                       PASSED  
+    And I wait for the process named Cap to terminate                                        PASSED  
+    Then the process named Cap has terminated                                                PASSED  
+  Scenario: Start an absolute path process
+Chorus --> INFO    - Processing scenario: Start an absolute path process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a absolutePath process named Absolute                                        PASSED  
+    And I write the line 'continue' to the Absolute process                                  PASSED  
+    And I wait for the process named Absolute to terminate                                   PASSED  
+    Then the process named Absolute has terminated                                           PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:3) (passed:3) (failed:0)
+Steps     (total:16) (passed:16) (failed:0) (undefined:0) (pending:0) (skipped:0)

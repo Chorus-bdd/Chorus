@@ -1,0 +1,12 @@
+Chorus --> WARN    - Failed to parse feature file src/test/java/org/chorusbdd/chorus/selftest/directives/parsingerror/nodirectivebeforeexamples.feature will skip this feature file
+Chorus --> WARN    - Cannot add directive [#! This directive should cause a parser error] before the keyword Examples: (at line:13)
+Chorus --> WARN    - Failed to parse feature file src/test/java/org/chorusbdd/chorus/selftest/directives/parsingerror/nodirectivebeforefeaturestatement.feature will skip this feature file
+Chorus --> WARN    - Cannot add directive [#! This directive should cause a parser error] before the keyword Feature: (at line:3)
+Chorus --> WARN    - Failed to parse feature file src/test/java/org/chorusbdd/chorus/selftest/directives/parsingerror/nokeyworddirectivesinscenario.feature will skip this feature file
+Chorus --> WARN    - Invalid location for directive #! Directive Three This should cause a parser error since it is a keyword directive on its own line (at line:12)
+Chorus --> WARN    - Failed to parse feature file src/test/java/org/chorusbdd/chorus/selftest/directives/parsingerror/trailingdirective.feature will skip this feature file
+Chorus --> WARN    - Invalid trailing directive [#! This directive should cause a parsing error] (at line:15)
+
+Features  (total:4) (passed:0) (failed:4)
+Scenarios (total:0) (passed:0) (failed:0)
+Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)

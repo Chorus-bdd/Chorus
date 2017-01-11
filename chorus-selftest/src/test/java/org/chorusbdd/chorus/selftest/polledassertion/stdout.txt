@@ -1,0 +1,56 @@
+Feature: Polled Assertion                                                                            
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/polledassertion/polledassertion.feature
+  Scenario: Passes Within Invoker Is Working
+Chorus --> INFO    - Processing scenario: Passes Within Invoker Is Working
+    Given I increment a value with a timer task                                              PASSED  
+    And the value is 1 within default period                                                 PASSED  
+    When I increment a value with a timer task                                               PASSED  
+    Then the value is 2 within 2 seconds                                                     PASSED  
+    When I increment a value with a timer task                                               PASSED  
+    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  (PolledAssertionHandler:linenumber)-AssertionError Expect 3 expected:<3> but was:<2>
+  Scenario: Passes For Invoker Is Working
+Chorus --> INFO    - Processing scenario: Passes For Invoker Is Working
+    Given I increment a value                                                                PASSED  
+    And the value is 1 for half a second                                                     PASSED  
+    And the check method was polled 10 times                                                 PASSED  
+    When I increment a value                                                                 PASSED  
+    Then the value is 2 for half a second                                                    PASSED  
+    Then the value is 3 for half a second                                                    FAILED  (PolledAssertionHandler:linenumber)-AssertionError Expect 3 expected:<3> but was:<2>
+  Scenario: Remoting with Polled Assertions
+Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    When I start a timer in remotePolled                                                     PASSED  
+    Then test condition eventually passes in remotePolled                                    PASSED  
+    And another test condition fails with AssertionError in remotePolled                     FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote ChorusAssertionError - Failed condition
+  Scenario: Remoting with Polled Assertions with Exception
+Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions with Exception
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    Then another test condition fails with Exception in remotePolled                         FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote Exception - My Exception Message
+  Scenario: Remoting with Polled Assertions with RuntimeException
+Chorus --> INFO    - Processing scenario: Remoting with Polled Assertions with RuntimeException
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote RuntimeException - My Runtime Exception Message
+  Scenario: Long running step method overruns passes within period
+Chorus --> INFO    - Processing scenario: Long running step method overruns passes within period
+    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  (PolledAssertionHandler:linenumber)-AssertionError Whoops
+    Then the next step runs 1 second later                                                   SKIPPED 
+  Scenario: Long running step method overruns passes throughout period
+Chorus --> INFO    - Processing scenario: Long running step method overruns passes throughout period
+    When I call a 1 second to run step method with passes throughout 1 second annotation     PASSED  
+    Then the next step runs 1 second later                                                   PASSED  
+  Scenario: I can immediately break out of a passes within by throwing FailImmediatelyException
+Chorus --> INFO    - Processing scenario: I can immediately break out of a passes within by throwing FailImmediatelyException
+    When call a passes within step method it can be terminated immediately by FailImmediatelyExceptionFAILED  (PolledAssertionHandler:linenumber)-FailImmediatelyException Fail this step immediately - time elapsed 0 seconds
+  Scenario: I can immediately break out of a remote passes within by throwing FailImmediatelyException
+Chorus --> INFO    - Processing scenario: I can immediately break out of a remote passes within by throwing FailImmediatelyException
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a remotePolled process                                                     PASSED  
+    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolledFAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:9) (passed:1) (failed:8)
+Steps     (total:27) (passed:18) (failed:8) (undefined:0) (pending:0) (skipped:1)

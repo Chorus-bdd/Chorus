@@ -1,0 +1,80 @@
+
+apply plugin: 'java-library-distribution'
+
+def dependencyFile = new File("dependencies.gradle")
+
+allprojects  {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    repositories {
+        mavenLocal()
+
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+
+    group = "org.chorusbdd"
+    version = '3.0.0.DEV8'
+}
+
+subprojects {
+
+
+
+    task updateGradleModuleDependencies {
+        doLast {
+            dependencyFile << "\n"
+            dependencyFile << "project(':" + project.name + "') {\n"
+            dependencyFile << "    dependencies {\n"
+
+//            project.configurations.getByName("compile").allDependencies
+//                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
+//                    .stream()
+//                    .map({ dep -> dep.name })
+//                    .distinct()
+//                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
+
+            //TODO deal correctly with test vs compile classpath
+            project.configurations.getByName("testCompile").allDependencies
+                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
+                    .stream()
+                    .map({ dep -> dep.name })
+                    .distinct()
+                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
+
+            dependencyFile << "    }\n"
+
+            dependencyFile << "}\n"
+        }
+    }
+
+}
+
+//task clearGradleModuleDependencies {
+//   dependencyFile.write "// Dependencies\n"
+//}
+//
+//task recalculateGradleDependencies
+//
+//recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
+
+
+//*** MODULE DEPENDENCIES
+
+apply from: 'dependencies.gradle'
+
+dependencies {
+    compile project (':chorus')
+}
+
+//*** END MODULE DEPENENCIES
+
+
+
+distributions {
+    main{
+        baseName = 'chorus'
+    }
+}
+

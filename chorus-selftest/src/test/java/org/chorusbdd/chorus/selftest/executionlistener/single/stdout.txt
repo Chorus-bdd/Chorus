@@ -1,0 +1,12 @@
+Chorus --> INFO    - Created user ExecutionListener of type org.chorusbdd.chorus.selftest.executionlistener.ExecutionListenerOne
+Feature: User Execution Listener                                                                     
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/executionlistener/single/userexecutionlistener.feature
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then a User Execution Listener gets its lifecycle methods invoked                        PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

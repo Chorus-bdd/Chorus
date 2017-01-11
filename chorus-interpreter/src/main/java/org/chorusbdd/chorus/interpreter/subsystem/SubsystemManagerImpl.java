@@ -30,17 +30,17 @@
 package org.chorusbdd.chorus.interpreter.subsystem;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.handlerconfig.ChorusProperties;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.chorusbdd.chorus.util.ChorusException;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 
 /**
  * Some of Chorus' subsystems are pluggable, we depend only on the abstractions
@@ -53,6 +53,9 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private final Subsystem processManager;
     private final Subsystem remotingManager;
     private final ConfigurationManager configurationManager;
+    private final Subsystem stepServerManager;
+    private final List<Subsystem> subsystemList;
+    private final List<StepInvokerProvider> stepProviderSubsystems;
 
     private Map<String, Subsystem> subsystems = new HashMap<>();
 
@@ -62,6 +65,24 @@ public class SubsystemManagerImpl implements SubsystemManager {
         processManager = initializeProcessManager();
         remotingManager = initializeRemotingManager();
         configurationManager = initializeConfigurationManager();
+        stepServerManager = initializeStepServerManager();
+
+        subsystemList = Collections.unmodifiableList(
+            new ArrayList<>(asList(processManager, remotingManager, configurationManager, stepServerManager))
+        );
+
+        this.stepProviderSubsystems = setInvokerProviderSubsystems();
+    }
+
+    private List<StepInvokerProvider> setInvokerProviderSubsystems() {
+        List<StepInvokerProvider> stepInvokerSubsystemList = new LinkedList<>();
+        for ( Subsystem s : subsystemList) {
+            if ( StepInvokerProvider.class.isAssignableFrom(s.getClass())) {
+                log.debug("Adding Subsystem " + s.getClass().getName() + " as a Step provider");
+                stepInvokerSubsystemList.add((StepInvokerProvider)s);
+            }
+        }
+        return Collections.unmodifiableList(stepInvokerSubsystemList);
     }
 
     public Subsystem getProcessManager() {
@@ -70,6 +91,10 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
     public Subsystem getRemotingManager() {
         return remotingManager;
+    }
+
+    public Subsystem getStepServerManager() {
+        return stepServerManager;
     }
 
     @Override
@@ -81,12 +106,13 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return subsystems.get(id);
     }
 
+    @Override
+    public List<StepInvokerProvider> getStepProviderSubsystems() {
+        return stepProviderSubsystems;
+    }
+
     public List<ExecutionListener> getExecutionListeners() {
-        return Arrays.asList(
-            configurationManager.getExecutionListener(),
-            processManager.getExecutionListener(),
-            remotingManager.getExecutionListener()
-        );
+        return subsystemList.stream().map(Subsystem::getExecutionListener).collect(Collectors.toList());
     }
 
     private Subsystem initializeProcessManager() {
@@ -112,7 +138,14 @@ public class SubsystemManagerImpl implements SubsystemManager {
             "chorusConfigurationManager",
             "org.chorusbdd.chorus.handlerconfig.ChorusProperties"
         );
+    }
 
+    private Subsystem initializeStepServerManager() {
+        return initializeSubsystem(
+            "stepServerManager",
+            "chorusStepServerManager",
+            "org.chorusbdd.chorus.stepserver.StepServer"
+        );
     }
 
     private <E> E initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass) {

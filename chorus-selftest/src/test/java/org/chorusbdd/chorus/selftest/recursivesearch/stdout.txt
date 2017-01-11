@@ -1,0 +1,18 @@
+Feature: Recursive Search                                                                            
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/recursivesearch/recursivesearch.feature
+  Scenario: Top Level Scenario
+Chorus --> INFO    - Processing scenario: Top Level Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+
+Feature: Sub Package Discovery                                                                       
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/recursivesearch/subpackage/subpackage.feature
+  Scenario: Child Level Scenario
+Chorus --> INFO    - Processing scenario: Child Level Scenario
+    Given Chorus is working properly                                                         PASSED  
+    Then I can run a feature with a single scenario                                          PASSED  
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -1,0 +1,15 @@
+Feature: Properties In Feature Directory                                                             
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/handlerproperties/propertiesinfeaturedir/propertiesinfeaturedir.feature
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process                                                            PASSED  
+    And I wait for config1 to terminate                                                      PASSED  
+    Then there are logs in the local feature directory                                       PASSED  
+    And the std out log contains the string spacewombats                                     PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:5) (passed:5) (failed:0) (undefined:0) (pending:0) (skipped:0)

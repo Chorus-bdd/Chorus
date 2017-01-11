@@ -1,0 +1,14 @@
+Feature: Start A Process With Classpath                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/processhandler/processwithclasspath/processwithclasspath.feature
+  Scenario: Start a Single Java Process
+Chorus --> INFO    - Processing scenario: Start a Single Java Process
+    Given Chorus is working properly                                                         PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a config1 process named Frodo                                                PASSED  
+    And I wait for the process named Frodo to stop                                           PASSED  
+    Then the process named Frodo is stopped                                                  PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

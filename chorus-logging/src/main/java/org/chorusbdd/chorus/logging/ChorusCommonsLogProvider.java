@@ -38,14 +38,18 @@ import org.apache.commons.logging.LogFactory;
  * Date: 14/05/12
  * Time: 18:38
  *
- * We should have already determined that commons is on the classpath before loading this
- * class by reflection.
+ * This ChorusCommonsLogProvider can be configured to make Chorus log using Commons Logging / Log4j rather that to Std. Output
  *
- * Then we can use this provider to instantiate commons loggers, and wrap the resulting
- * Log as a ChorusLog, protecting the interpreter from a mandatory runtime dependency on commons
+ * To use this you need to pass the -v logProvider switch to Chorus or set the chorusLogProvider system property to this class
+ * e.g. -DchorusLogProvider=org.chorusbdd.chorus.logging.ChorusCommonsLogProvider
+ * and ensure Commons logging (and Log4J) are on the classpath
  *
- * This class should not be directly referenced from any other class, to avoid the mandatory
- * dependency (and then we can make commons logging optional)
+ * Note this will not affect primary interpreter output which goes to Std. Out / Console, but only the info, warn, debug, error logging
+ * You can change the primary output destination by calling
+ * ChorusOut.setStdOutStream and ChorusOut.setStdErrStream
+ *
+ * This class should not be directly imported from any other Chorus class, to avoid a mandatory
+ * dependency (and then we can make commons logging an optional / compileOnly dependency)
  */
 public class ChorusCommonsLogProvider implements ChorusLogProvider {
 

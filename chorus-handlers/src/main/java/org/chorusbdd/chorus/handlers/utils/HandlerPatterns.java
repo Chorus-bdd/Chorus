@@ -41,39 +41,39 @@ import java.util.regex.Pattern;
  */
 public class HandlerPatterns {
 
-    public static final String processNamePermittedChars = "a-zA-Z0-9-_";
+    public static final String namePermittedChars = "a-zA-Z0-9-_";
 
     /**
      * A single process name
      */
-    public static final String processNamePattern = "([" + processNamePermittedChars +"]+)";
+    public static final String namePattern = "([" + namePermittedChars +"]+)";
 
     /**
      * A comma separated list of process names processName1, processName2,  processName3
      */
-    public static final String processNameListPattern = "([" + processNamePermittedChars + ", ]+)";
+    public static final String nameListPattern = "([" + namePermittedChars + ", ]+)";
 
 
-    private static final Pattern processWithAlias = Pattern.compile(processNamePattern + "\\s+" + "as" + "\\s+" + processNamePattern);
+    private static final Pattern nameWithAlias = Pattern.compile(namePattern + "\\s+" + "as" + "\\s+" + namePattern);
 
     /**
      * Get a Map of process name/alias to process config name
      * A config may be reused under multiple aliases
      *
-     * @param processNameList a list of process names conforming to the processNameListPattern
+     * @param nameList a list of process names conforming to the processNameListPattern
      */
-    public static Map<String,String> getProcessNamesWithAliases(String processNameList) {
-        String[] processNames = processNameList.split(",");
+    public static Map<String,String> getNamesWithAliases(String nameList) {
+        String[] names = nameList.split(",");
         Map<String,String> results = new LinkedHashMap<>();  //retain ordering / determinism
-        for ( String p : processNames) {
-            String processConfigName = p.trim();
+        for ( String p : names) {
+            String configName = p.trim();
 
-            if ( processConfigName.length() > 0) {
-                Matcher matcher = processWithAlias.matcher(processConfigName);
+            if ( configName.length() > 0) {
+                Matcher matcher = nameWithAlias.matcher(configName);
                 if (matcher.matches()) {
                     results.put(matcher.group(2), matcher.group(1));
                 } else {
-                    results.put(processConfigName, processConfigName);
+                    results.put(configName, configName);
                 }
             }
         }
@@ -83,15 +83,15 @@ public class HandlerPatterns {
     /**
      * Get a List of process names from a comma separated list
      *
-     * @param processNameList a list of process names conforming to the processNameListPattern
+     * @param nameList a list of process names conforming to the processNameListPattern
      */
-    public static List<String> getProcessNames(String processNameList) {
-        String[] processNames = processNameList.split(",");
+    public static List<String> getNames(String nameList) {
+        String[] names = nameList.split(",");
         List<String> results = new LinkedList<>();
-        for ( String p : processNames) {
-            String processConfigName = p.trim();
-            if ( processConfigName.length() > 0) {
-                results.add(processConfigName);
+        for ( String p : names) {
+            String configName = p.trim();
+            if ( configName.length() > 0) {
+                results.add(configName);
             }
         }
         return results;

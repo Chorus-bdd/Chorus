@@ -1,0 +1,12 @@
+
+
+
+
+description = "chorus-context"
+
+
+
+dependencies {
+    testCompile group: 'org.chorusbdd', name: 'chorus-util', version: "${version}"
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+}

@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.interpreter.subsystem;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
 import java.util.List;
@@ -43,9 +44,13 @@ public interface SubsystemManager {
 
     Object getRemotingManager();
 
+    Object getStepServerManager();
+
     Object getConfigurationManager();
 
     Subsystem getSubsystemById(String id);
+
+    List<StepInvokerProvider> getStepProviderSubsystems();
 
     List<ExecutionListener> getExecutionListeners();
 }

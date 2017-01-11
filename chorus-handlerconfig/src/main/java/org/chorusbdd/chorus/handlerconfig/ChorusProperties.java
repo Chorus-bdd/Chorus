@@ -106,12 +106,12 @@ public class ChorusProperties implements ConfigurationManager {
      */
     private PropertyOperations mergeConfigurationAndProfileProperties(PropertyOperations props) {
         PropertyOperations result;
-        result = mergeConfigurationProperites(props);
+        result = mergeConfigurationProperties(props);
         result = mergeProfileProperties(result);
         return result;
     }
 
-    private PropertyOperations mergeConfigurationProperites(PropertyOperations sessionProps) {
+    private PropertyOperations mergeConfigurationProperties(PropertyOperations sessionProps) {
         PropertyOperations sessionPropsForProfile = sessionProps.filterByAndRemoveKeyPrefix("configurations." + currentFeature.getConfigurationName() + ".");
         return sessionProps.merge(sessionPropsForProfile).filterKeysNotStartingWith("configurations.");
     }

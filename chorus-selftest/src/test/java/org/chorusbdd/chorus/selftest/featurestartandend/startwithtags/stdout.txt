@@ -1,0 +1,34 @@
+Feature: Feature Start With Tags                                                                     
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/featurestartandend/startwithtags/featurestartwithtags.feature
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    First I run feature start                                                                PASSED  
+  Scenario: Scenario Two
+Chorus --> INFO    - Processing scenario: Scenario Two
+    Then I run a scenario                                                                    PASSED  
+  Scenario: Feature-End
+Chorus --> INFO    - Processing scenario: Feature-End
+    But I run feature end                                                                    PASSED  
+
+Feature: Feature Start With Background                                                               
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/featurestartandend/startwithtags/startandendwithbackground.feature
+Chorus --> INFO    - No default handler found for Feature: (Feature Start With Background), will use built-in handlers and Uses: statements
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    First I run feature start                                                                PASSED  
+  Scenario: Scenario One
+Chorus --> INFO    - Processing scenario: Scenario One
+    Then I run a background section for each scenario                                        PASSED  
+    Then I run a scenario                                                                    PASSED  
+  Scenario: Scenario Three
+Chorus --> INFO    - Processing scenario: Scenario Three
+    Then I run a background section for each scenario                                        PASSED  
+    Then I run a scenario                                                                    PASSED  
+  Scenario: Feature-End
+Chorus --> INFO    - Processing scenario: Feature-End
+    Finally I run feature end                                                                PASSED  
+
+
+Features  (total:2) (passed:2) (failed:0)
+Scenarios (total:3) (passed:3) (failed:0)
+Steps     (total:9) (passed:9) (failed:0) (undefined:0) (pending:0) (skipped:0)

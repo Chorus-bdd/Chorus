@@ -1,0 +1,17 @@
+Feature: Test Background                                                                             
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/background/background.feature
+  Scenario: Scenario With Background One
+Chorus --> INFO    - Processing scenario: Scenario With Background One
+    Given Chorus is working properly                                                         PASSED  
+    And I have some background steps                                                         PASSED  
+    Then my background steps should appear in Scenario One                                   PASSED  
+  Scenario: Scenario With Background Two
+Chorus --> INFO    - Processing scenario: Scenario With Background Two
+    Given Chorus is working properly                                                         PASSED  
+    And I have some background steps                                                         PASSED  
+    Then my background steps should appear in Scenario Two                                   PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)
