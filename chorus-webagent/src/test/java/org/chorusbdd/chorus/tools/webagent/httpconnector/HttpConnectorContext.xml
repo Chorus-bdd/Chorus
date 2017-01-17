@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="properties" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg value="org/chorusbdd/chorus/tools/webagent/httpconnector/chorus-webagent-httpconnector.properties"/>
+    </bean>
+
+    <!-- Configurer that replaces ${...} placeholders with values from properties files or from sys props -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" ref="properties"/>
+    </bean>
+
+    <bean id="mainTestSuiteListener" class="org.chorusbdd.chorus.tools.webagent.WebAgentSuiteListener" init-method="start" destroy-method="stop">
+        <constructor-arg value="${webagent.mainTestSuiteListener.listenPort}"/>
+        <constructor-arg value="true"/>
+    </bean>
+
+    <bean id="mainFeatureCache" class="org.chorusbdd.chorus.tools.webagent.WebAgentFeatureCache">
+        <constructor-arg value="Main Cache"/>
+        <constructor-arg value="500"/>
+    </bean>
+
+    <bean id="mainContext" class="org.chorusbdd.chorus.tools.webagent.WebAgentContext" init-method="start">
+        <constructor-arg ref="mainFeatureCache"/>
+        <constructor-arg>
+            <list>
+                <ref bean="mainTestSuiteListener"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="httpConnector" class="org.chorusbdd.chorus.tools.webagent.WebAgentHttpConnector" init-method="start" destroy-method="stop">
+        <constructor-arg value="${webagent.httpConnector.port}"/>
+        <constructor-arg><list><ref bean="mainFeatureCache"/></list></constructor-arg>
+    </bean>
+
+</beans>

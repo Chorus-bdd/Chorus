@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type='text/xsl' href='/suiteListResponse.xsl'?>
+<suiteList title="All Test Suites in Main Cache">
+    <suite suiteId="Test Suite-{TIMESTAMP}" title="Test Suite {DATETIME}" name="Test Suite" startTime="{DATETIME}" endState="Passed" executionHost="{EXECUTIONHOST}" link="http://{HOSTNAME}:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-{TIMESTAMP}">
+        <resultSummaryBean endState="PASSED" featuresFailed="0" featuresPassed="1" featuresPending="0" scenariosFailed="0" scenariosPassed="1" scenariosPending="0" stepsFailed="0" stepsPassed="1" stepsPending="0" stepsSkipped="0" stepsUndefined="0" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" unavailableHandlers="0"></resultSummaryBean>
+    </suite>
+    <suite suiteId="Test Suite-{TIMESTAMP}" title="Test Suite {DATETIME}" name="Test Suite" startTime="{DATETIME}" endState="Passed" executionHost="{EXECUTIONHOST}" link="http://{HOSTNAME}:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-{TIMESTAMP}">
+        <resultSummaryBean endState="PASSED" featuresFailed="0" featuresPassed="1" featuresPending="0" scenariosFailed="0" scenariosPassed="1" scenariosPending="0" stepsFailed="0" stepsPassed="1" stepsPending="0" stepsSkipped="0" stepsUndefined="0" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" unavailableHandlers="0"></resultSummaryBean>
+    </suite>
+    <suite suiteId="Test Suite-{TIMESTAMP}" title="Test Suite {DATETIME}" name="Test Suite" startTime="{DATETIME}" endState="Passed" executionHost="{EXECUTIONHOST}" link="http://{HOSTNAME}:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-{TIMESTAMP}">
+        <resultSummaryBean endState="PASSED" featuresFailed="0" featuresPassed="1" featuresPending="0" scenariosFailed="0" scenariosPassed="1" scenariosPending="0" stepsFailed="0" stepsPassed="1" stepsPending="0" stepsSkipped="0" stepsUndefined="0" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" unavailableHandlers="0"></resultSummaryBean>
+</suite>
+</suiteList>

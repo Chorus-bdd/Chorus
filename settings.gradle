@@ -24,4 +24,5 @@ include 'chorus',
         'chorus-stepserver',
         'chorus-util',
         'chorus-mocksuite',
-        'chorus-xml'
+        'chorus-xml',
+        'chorus-webagent'

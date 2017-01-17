@@ -196,6 +196,15 @@ project(':chorus-util') {
     }
 }
 
+project(':chorus-webagent') {
+    dependencies {
+        compile project (':chorus')
+        compile project (':chorus-mocksuite')
+        compile project (':chorus-spring')
+        compile project (':chorus-xml')
+    }
+}
+
 project(':chorus-xml') {
     dependencies {
         compile project (':chorus')

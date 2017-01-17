@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <title>All Test Suites in Main Cache</title>
+    <link>http://{HOSTNAME}:9080//Main+Cache/allTestSuites.xml</link>
+    <description>All the test suites which are available from ChorusWebAgent Main Cache cache</description>
+    <item>
+      <title>Test Suite {DATETIME}</title>
+      <link>http://{HOSTNAME}:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-{TIMESTAMP}</link>
+      <description>Test suite named Test Suite run at {DATETIME} status Passed</description>
+    </item>
+    <item>
+      <title>Test Suite {DATETIME}</title>
+      <link>http://{HOSTNAME}:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-{TIMESTAMP}</link>
+      <description>Test suite named Test Suite run at {DATETIME} status Passed</description>
+    </item>
+    <item>
+      <title>Test Suite {DATETIME}</title>
+      <link>http://{HOSTNAME}:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-{TIMESTAMP}</link>
+      <description>Test suite named Test Suite run at {DATETIME} status Passed</description>
+    </item>
+  </channel>
+</rss>

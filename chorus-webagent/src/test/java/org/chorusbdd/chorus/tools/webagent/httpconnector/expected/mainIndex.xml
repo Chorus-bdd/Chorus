@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type='text/xsl' href='/indexResponse.xsl'?>
+<index>
+  <featureCache name="Main Cache" numberOfTestSuites="1" maxHistory="500" suitesReceived="1" indexLink="/Main+Cache/index.xml"/>
+</index>
