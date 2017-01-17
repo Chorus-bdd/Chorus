@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type='text/xsl' href='/suiteListResponse.xsl'?>
+<suiteList title="All Test Suites in Main Cache">
+    <suite suiteId="Test Suite-1357857832470" title="Test Suite 10 Jan 2013 22:43:52 GMT" name="Test Suite" startTime="10 Jan 2013 22:43:52 GMT" endState="Passed" executionHost="STUDIOXPS_435MT" link="http://localhost:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-1357857832470">
+        <resultSummaryBean endState="PASSED" featuresFailed="0" featuresPassed="1" featuresPending="0" scenariosFailed="0" scenariosPassed="1" scenariosPending="0" stepsFailed="0" stepsPassed="1" stepsPending="0" stepsSkipped="0" stepsUndefined="0" timeTaken="1997" timeTakenSeconds="2" unavailableHandlers="0"></resultSummaryBean>
+    </suite>
+    <suite suiteId="Test Suite-1357857832538" title="Test Suite 10 Jan 2013 22:43:52 GMT" name="Test Suite" startTime="10 Jan 2013 22:43:52 GMT" endState="Passed" executionHost="STUDIOXPS_435MT" link="http://localhost:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-1357857832538">
+        <resultSummaryBean endState="PASSED" featuresFailed="0" featuresPassed="1" featuresPending="0" scenariosFailed="0" scenariosPassed="1" scenariosPending="0" stepsFailed="0" stepsPassed="1" stepsPending="0" stepsSkipped="0" stepsUndefined="0" timeTaken="2031" timeTakenSeconds="2" unavailableHandlers="0"></resultSummaryBean>
+    </suite>
+    <suite suiteId="Test Suite-1357857832551" title="Test Suite 10 Jan 2013 22:43:52 GMT" name="Test Suite" startTime="10 Jan 2013 22:43:52 GMT" endState="Passed" executionHost="STUDIOXPS_435MT" link="http://localhost:9080/Main+Cache/testSuite.xml?suiteId=Test+Suite-1357857832551">
+        <resultSummaryBean endState="PASSED" featuresFailed="0" featuresPassed="1" featuresPending="0" scenariosFailed="0" scenariosPassed="1" scenariosPending="0" stepsFailed="0" stepsPassed="1" stepsPending="0" stepsSkipped="0" stepsUndefined="0" timeTaken="2028" timeTakenSeconds="2" unavailableHandlers="0"></resultSummaryBean>
+    </suite>
+</suiteList>

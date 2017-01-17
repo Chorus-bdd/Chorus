@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type='text/xsl' href='testSuiteResponse.xsl'?>
+<testSuite suiteName="Test Suite">
+    <execution executionHost="{EXECUTIONHOST}" executionStartTime="{STARTTIME}" executionStartTimestamp="{STARTTIMSTAMP}">
+        <resultsSummary endState="FAILED" featuresFailed="5" featuresPassed="3" featuresPending="1" scenariosFailed="7" scenariosPassed="5" scenariosPending="4" stepsFailed="2" stepsPassed="21" stepsPending="4" stepsSkipped="19" stepsUndefined="5" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" unavailableHandlers="0"/>
+        <testSuiteName>Test Suite</testSuiteName>
+    </execution>
+    <features>
+        <feature configurationName="base" endState="FAILED" name="Feature Which Fails" tokenId="{TOKENID}">
+            <description>This is a test feature with two scenarios which fail</description>
+            <scenarios>
+                <scenario endState="FAILED" name="Scenario Which Fails With Undefined Steps" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="at least one step is undefined" endState="UNDEFINED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the scenario will fail horribly" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="show up in red in the web agent html" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="FAILED" name="Scenario Which Fails Due To Step Failure" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="a step fails an assertion" endState="FAILED" message="(WebAgentSelfTestHandler:23)-AssertionFailedError Fail an assertion" stackTrace="{STACKTRACE}" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                            <exception>junit.framework.AssertionFailedError: Fail an assertion</exception>
+                        </step>
+                        <step type="Then" action="the scenario will be failed" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="the feature will be failed" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="subsequent steps are skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="the web agent html will be a sea of red" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="base" endState="FAILED" name="Feature With Long Description" tokenId="{TOKENID}">
+            <description>This is a first test feature with very long description and steps designed to check the suite html degrades gracefully. This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully. This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully. This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully. This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully. This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.
+                This is a first test feature with very long description and steps designed to check the suite html degrades gracefully. This is a first test feature with very long description and steps designed to check the suite html degrades gracefully.</description>
+            <scenarios>
+                <scenario endState="FAILED" name="Scenario With Unfeasibly Long Steps" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a feature with an unfeasibly long step which nobody in their right mind would ever implement in a month of sundays with extra toffee sauce and hundreds and thousands" endState="UNDEFINED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="I run a feature with an unfeasibly long step which nobody in their right mind would ever implement in a month of sundays with extra toffee sauce and hundreds and thousands" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="I run a feature with an unfeasibly long step which nobody in their right mind would ever implement in a month of sundays with extra toffee sauce and hundreds and thousands" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+        </feature>
+        <feature configurationName="base" endState="FAILED" name="Feature With Pending Passed And Failed Scenario" tokenId="{TOKENID}">
+            <description>This is a test feature a pending, passed and failed scenario. Feature state should end as Failed</description>
+            <scenarios>
+                <scenario endState="FAILED" name="Scenario Which Passes" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with a single test step which passes" endState="UNDEFINED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="PENDING" name="Scenario Which Is Pending" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="one of the steps is marked pending" endState="PENDING" message="here be a pending message" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the subsequent steps are skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="the scenario and feature finish in pending state" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="FAILED" name="Scenario Which Fails With Undefined Steps" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="at least one step is undefined" endState="UNDEFINED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the scenario will fail horribly" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="show up in red in the web agent html" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="base" endState="FAILED" name="Feature With Step Macro" tokenId="{TOKENID}">
+            <description>Test the behaviour when a scenario references a step macro</description>
+            <scenarios>
+                <scenario endState="PASSED" name="Single Step Macro" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I call a step macro with two steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                            <step type="Given" action="I run step one" endState="PASSED" message="one" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                            <step type="And" action="I run step two" endState="PASSED" message="two" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        </step>
+                        <step type="Then" action="I run step three" endState="PASSED" message="three" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="PASSED" name="Nested Step Macro" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I call a step macro with a nested macro call" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                            <step type="Given" action="I call a step macro with two steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                                <step type="Given" action="I run step one" endState="PASSED" message="one" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                                <step type="And" action="I run step two" endState="PASSED" message="two" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                            </step>
+                            <step type="And" action="I run step three" endState="PASSED" message="three" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        </step>
+                        <step type="Then" action="I run step four" endState="PASSED" message="four" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="FAILED" name="Step Macro With Failing Step" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I call a step macro with a failing step" endState="FAILED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                            <step type="Given" action="I run step one" endState="PASSED" message="one" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                            <step type="And" action="a step fails an assertion" endState="FAILED" message="(WebAgentSelfTestHandler:23)-AssertionFailedError Fail an assertion" stackTrace="{STACKTRACE}" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                                <exception>junit.framework.AssertionFailedError: Fail an assertion</exception>
+                            </step>
+                            <step type="Then" action="the next macro step is skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        </step>
+                        <step type="Then" action="subsequent steps are skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="Config1" endState="PASSED" name="Feature with Configurations" tokenId="{TOKENID}">
+            <description></description>
+            <scenarios>
+                <scenario endState="PASSED" name="Scenario Which Passes" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a feature with a single test scenario which passes" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the scenario passes and the feature passes" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="Config2" endState="PASSED" name="Feature with Configurations" tokenId="{TOKENID}">
+            <description></description>
+            <scenarios>
+                <scenario endState="PASSED" name="Scenario Which Passes" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a feature with a single test scenario which passes" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the scenario passes and the feature passes" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="base" endState="PENDING" name="Feature Which Is Pending" tokenId="{TOKENID}">
+            <description>This is a test feature with a scenario which has pending steps. The scenario and feature should take on pending
+                state</description>
+            <scenarios>
+                <scenario endState="PENDING" name="Scenario Which Has Pending Steps" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="one of the steps is marked pending" endState="PENDING" message="here be a pending message" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the subsequent steps are skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="the scenario and feature finish in pending state" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="PENDING" name="Scenario Which Throws Pending Exception" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="one of the steps throws a pending exception" endState="PENDING" message="This one Pending" stackTrace="{STACKTRACE}" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                            <exception>org.chorusbdd.chorus.stepinvoker.StepPendingException: This one Pending</exception>
+                        </step>
+                        <step type="Then" action="the subsequent steps are skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="base" endState="PASSED" name="Feature One" tokenId="{TOKENID}">
+            <description>This is a first test feature</description>
+            <scenarios>
+                <scenario endState="PASSED" name="Scenario Which Passes" tags="@MyTag,@MySecondTag" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a feature with a single test scenario which passes" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the scenario passes and the feature passes" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+        <feature configurationName="base" endState="FAILED" name="Feature With Pending And Passed" tokenId="{TOKENID}">
+            <description>This is a test feature a pending and a passed scenario. Feature state should end as Pending</description>
+            <scenarios>
+                <scenario endState="FAILED" name="Scenario Which Passes" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with a single test step which passes" endState="UNDEFINED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+                <scenario endState="PENDING" name="Scenario Which Is Pending" tokenId="{TOKENID}">
+                    <steps>
+                        <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="one of the steps is marked pending" endState="PENDING" message="here be a pending message" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="Then" action="the subsequent steps are skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                        <step type="And" action="the scenario and feature finish in pending state" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
+                    </steps>
+                </scenario>
+            </scenarios>
+            <usesHandlers>Timers,Web Agent Self Test</usesHandlers>
+        </feature>
+    </features>
+</testSuite>

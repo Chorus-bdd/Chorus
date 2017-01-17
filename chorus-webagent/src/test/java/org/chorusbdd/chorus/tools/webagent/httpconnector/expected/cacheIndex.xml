@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type='text/xsl' href='/cacheIndexResponse.xsl'?>
+<cache name="Main Cache">
+  <resources>
+    <resource name="List Of All Test Suites" rssLink="./allTestSuites.rss" xmlLink="./allTestSuites.xml"/>
+    <resource name="List Of Failed Test Suites" rssLink="./allTestSuites.rss?suiteEndState=FAILED" xmlLink="./allTestSuites.xml?suiteEndState=FAILED"/>
+  </resources>
+</cache>
