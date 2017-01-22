@@ -5,14 +5,11 @@
 Chorus is great for testing microservice architectures and distributed systems
 It allows a team to write plain language tests with steps that can execute on components running remotely.
 
-![Chorus Overview](/resources/ChorusOverview.png)
-
-
 Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
 The Gherkin extensions and other features of the framework may be useful to you even if your project is not distributed.
 
 Chorus presently provides a solution to connect to and test Java (or JVM-based) components.
-We hope to add connectivity solutions for other languages in the near future
+We are presently developing connectivity solutions for other languages as part of a new major version of Chorus expected out later in 2017
 
 **Getting Started:**
 
