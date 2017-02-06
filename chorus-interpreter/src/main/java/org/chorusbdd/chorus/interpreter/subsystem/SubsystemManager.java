@@ -44,7 +44,7 @@ public interface SubsystemManager {
 
     Object getRemotingManager();
 
-    Object getStepServerManager();
+//    Object getStepServerManager();
 
     Object getConfigurationManager();
 
