@@ -3,7 +3,6 @@
 project(':chorus') {
     dependencies {
         compile project (':chorus-handlers')
-        compile project (':chorus-selenium')
         compile project (':chorus-interpreter')
         compile project (':chorus-processes')
         compile project (':chorus-remoting')
@@ -48,7 +47,6 @@ project(':chorus-handlers') {
         compile project (':chorus-interpreter')
         compile project (':chorus-remoting')
         compile project (':chorus-processes')
-        compile project (':chorus-stepserver')
         compile project (':chorus-annotations')
     }
 }
@@ -67,7 +65,6 @@ project(':chorus-interpreter') {
         compile project (':chorus-stepinvoker')
         compile project (':chorus-subsystem')
         compile project (':chorus-pathscanner')
-        compile project (':chorus-stepserver')
     }
 }
 
@@ -139,10 +136,8 @@ project(':chorus-selftest') {
     dependencies {
         compile project (':chorus')
         compile project (':chorus-spring')
-        compile project (':chorus-handlers')
-        compile project (':chorus-interpreter')
-        compile project (':chorus-processes')
-        compile project (':chorus-remoting')
+        compile project (':chorus-selenium')
+        compile project (':chorus-stepserver')
     }
 }
 

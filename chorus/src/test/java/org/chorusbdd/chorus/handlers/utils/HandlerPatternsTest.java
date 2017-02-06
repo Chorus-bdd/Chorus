@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlers.utils;
 
+import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.junit.Test;
 
 import java.util.Arrays;
