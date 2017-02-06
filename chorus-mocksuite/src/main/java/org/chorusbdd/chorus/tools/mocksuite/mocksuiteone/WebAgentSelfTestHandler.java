@@ -1,9 +1,9 @@
 package org.chorusbdd.chorus.tools.mocksuite.mocksuiteone;
 
-import junit.framework.Assert;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.stepinvoker.StepPendingException;
+import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 /**
  * User: nick
@@ -20,7 +20,7 @@ public class WebAgentSelfTestHandler {
 
     @Step("a step fails an assertion")
     public void failAnAssertion() {
-        Assert.assertTrue("Fail an assertion", false);
+        ChorusAssert.assertTrue("Fail an assertion", false);
     }
 
     @Step("chorus scenario timeout is set to 2 seconds")

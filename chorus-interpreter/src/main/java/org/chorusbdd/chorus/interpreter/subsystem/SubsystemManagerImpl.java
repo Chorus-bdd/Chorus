@@ -53,7 +53,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private final Subsystem processManager;
     private final Subsystem remotingManager;
     private final ConfigurationManager configurationManager;
-    private final Subsystem stepServerManager;
+//    private final Subsystem stepServerManager;
     private final List<Subsystem> subsystemList;
     private final List<StepInvokerProvider> stepProviderSubsystems;
 
@@ -65,10 +65,17 @@ public class SubsystemManagerImpl implements SubsystemManager {
         processManager = initializeProcessManager();
         remotingManager = initializeRemotingManager();
         configurationManager = initializeConfigurationManager();
-        stepServerManager = initializeStepServerManager();
+
+        //TODO dynamic creation of step server manager
+//        stepServerManager = initializeStepServerManager();
 
         subsystemList = Collections.unmodifiableList(
-            new ArrayList<>(asList(processManager, remotingManager, configurationManager, stepServerManager))
+            new ArrayList<>(asList(
+                processManager,
+                remotingManager,
+                configurationManager
+//                stepServerManager
+            ))
         );
 
         this.stepProviderSubsystems = setInvokerProviderSubsystems();
@@ -93,9 +100,9 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return remotingManager;
     }
 
-    public Subsystem getStepServerManager() {
-        return stepServerManager;
-    }
+//    public Subsystem getStepServerManager() {
+//        return stepServerManager;
+//    }
 
     @Override
     public Object getConfigurationManager() {
