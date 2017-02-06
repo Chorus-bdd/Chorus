@@ -27,7 +27,7 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.handlers.stepserver;
+package org.chorusbdd.chorus.stepserver.handler;
 
 import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
@@ -35,7 +35,6 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
-import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -44,6 +43,7 @@ import org.chorusbdd.chorus.stepserver.ClientConnectionException;
 import org.chorusbdd.chorus.stepserver.StepServerManager;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ScopeUtils;
+import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 
 import java.io.File;
 import java.util.List;

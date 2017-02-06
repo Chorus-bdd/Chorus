@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
-import org.chorusbdd.chorus.handlers.utils.HandlerPatterns;
+import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;

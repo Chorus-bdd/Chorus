@@ -20,8 +20,6 @@ allprojects  {
 
 subprojects {
 
-
-
     task updateGradleModuleDependencies {
         doLast {
             dependencyFile << "\n"
@@ -50,14 +48,16 @@ subprojects {
     }
 
 }
-//
-//task clearGradleModuleDependencies {
-//   dependencyFile.write "// Dependencies\n"
-//}
-//
-//task recalculateGradleDependencies
-//
-//recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
+
+task clearGradleModuleDependencies {
+    doLast {
+        dependencyFile.write "// Dependencies\n"
+    }
+}
+
+task recalculateGradleDependencies
+
+recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
 
 
 //*** MODULE DEPENDENCIES

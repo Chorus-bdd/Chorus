@@ -14,7 +14,7 @@ dependencies {
 
     compile group: 'com.pusher', name: 'java-websocket', version:'1.4.1'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.7.5'
-    compile group: 'log4j', name: 'log4j', version:'1.2.16'
+    compileOnly group: 'log4j', name: 'log4j', version:'1.2.16'
 
     testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
     testCompile group: 'junit', name: 'junit', version:'4.10'
