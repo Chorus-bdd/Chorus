@@ -39,10 +39,13 @@ public class ChorusConstants {
 
     public static final String DEFAULT_SUITE_NAME = "Test Suite";
 
+    //TODO review - it seems wrong to hardcode the package prefixes for optional extension
+    //packages such as selenium or stepserver
     public static final String[] BUILT_IN_HANDLER_PACKAGE_PREFIXES = new String[] {
         "org.chorusbdd.chorus.handlers",
         "org.chorusbdd.chorus.selftest",
-        "org.chorusbdd.chorus.selenium"
+        "org.chorusbdd.chorus.selenium",
+        "org.chorusbdd.chorus.stepserver"
     };
 
     public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";

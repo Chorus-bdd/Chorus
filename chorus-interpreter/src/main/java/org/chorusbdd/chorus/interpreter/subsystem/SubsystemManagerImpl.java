@@ -30,7 +30,6 @@
 package org.chorusbdd.chorus.interpreter.subsystem;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
@@ -40,8 +39,6 @@ import org.chorusbdd.chorus.util.ChorusException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-
 /**
  * Some of Chorus' subsystems are pluggable, we depend only on the abstractions
  *
@@ -50,33 +47,23 @@ import static java.util.Arrays.asList;
  */
 public class SubsystemManagerImpl implements SubsystemManager {
 
-    private final Subsystem processManager;
-    private final Subsystem remotingManager;
-    private final ConfigurationManager configurationManager;
-//    private final Subsystem stepServerManager;
     private final List<Subsystem> subsystemList;
     private final List<StepInvokerProvider> stepProviderSubsystems;
 
-    private Map<String, Subsystem> subsystems = new HashMap<>();
+    //Use Linked map to maintain ordering for consistent behaviour
+    private Map<String, Subsystem> subsystems = new LinkedHashMap<>();
 
     private ChorusLog log = ChorusLogFactory.getLog(SubsystemManagerImpl.class);
 
     public SubsystemManagerImpl() {
-        processManager = initializeProcessManager();
-        remotingManager = initializeRemotingManager();
-        configurationManager = initializeConfigurationManager();
 
-        //TODO dynamic creation of step server manager
-//        stepServerManager = initializeStepServerManager();
+        //initialize subsystems in order of priority
+        initializeProcessManager();
+        initializeRemotingManager();
+        initializeConfigurationManager();
+        initializeStepServerManager();
 
-        subsystemList = Collections.unmodifiableList(
-            new ArrayList<>(asList(
-                processManager,
-                remotingManager,
-                configurationManager
-//                stepServerManager
-            ))
-        );
+        subsystemList = Collections.unmodifiableList(new ArrayList<>(subsystems.values()));
 
         this.stepProviderSubsystems = setInvokerProviderSubsystems();
     }
@@ -92,23 +79,6 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return Collections.unmodifiableList(stepInvokerSubsystemList);
     }
 
-    public Subsystem getProcessManager() {
-        return processManager;
-    }
-
-    public Subsystem getRemotingManager() {
-        return remotingManager;
-    }
-
-//    public Subsystem getStepServerManager() {
-//        return stepServerManager;
-//    }
-
-    @Override
-    public Object getConfigurationManager() {
-        return configurationManager;
-    }
-
     public Subsystem getSubsystemById(String id) {
         return subsystems.get(id);
     }
@@ -122,53 +92,65 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return subsystemList.stream().map(Subsystem::getExecutionListener).collect(Collectors.toList());
     }
 
-    private Subsystem initializeProcessManager() {
-        return initializeSubsystem(
+    private void initializeProcessManager() {
+        initializeSubsystem(
             "processManager",
             "chorusProcessManager",
-            "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl"
+            "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl",
+            false
         );
 
     }
 
-    private Subsystem initializeRemotingManager() {
-        return initializeSubsystem(
+    private void initializeRemotingManager() {
+        initializeSubsystem(
             "remotingManager",
             "chorusRemotingManager",
-            "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager"
+            "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager",
+            false
         );
     }
 
-    private ConfigurationManager initializeConfigurationManager() {
-        return initializeSubsystem(
+    private void initializeConfigurationManager() {
+        initializeSubsystem(
             "configurationManager",
             "chorusConfigurationManager",
-            "org.chorusbdd.chorus.handlerconfig.ChorusProperties"
+            "org.chorusbdd.chorus.handlerconfig.ChorusProperties",
+            false
         );
     }
 
-    private Subsystem initializeStepServerManager() {
-        return initializeSubsystem(
+    private void initializeStepServerManager() {
+        initializeSubsystem(
             "stepServerManager",
             "chorusStepServerManager",
-            "org.chorusbdd.chorus.stepserver.StepServer"
+            "org.chorusbdd.chorus.stepserver.StepServer",
+            true
         );
     }
 
-    private <E> E initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass) {
+    private void initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass, boolean optional) {
         String processManagerClass = System.getProperty(sysProp, defaultImplementingClass);
         log.debug("Implementation for " + subsystemId + " is " + processManagerClass);
-        E instance;
+        Optional<Subsystem> instance = createSubsystem(subsystemId, optional, processManagerClass);
+        instance.ifPresent(s -> subsystems.put(subsystemId, s));
+    }
+
+    private Optional<Subsystem> createSubsystem(String subsystemId, boolean optional, String processManagerClass) {
+        Optional<Subsystem> instance = Optional.empty();
         try {
             Class clazz = Class.forName(processManagerClass);
-            instance = (E)clazz.newInstance();
+            instance = Optional.of((Subsystem)clazz.newInstance());
         } catch (Exception e) {
-            log.error("Failed to initialize  " + subsystemId +
+            if ( ! optional ) {
+                log.error("Failed to initialize  " + subsystemId +
                     " is class " + processManagerClass + " in the classpath, " +
                     "does it have a nullary constructor?", e);
-            throw new ChorusException("Failed to initialize " + subsystemId, e);
+                throw new ChorusException("Failed to initialize " + subsystemId, e);
+            } else {
+                log.trace("Did not create subsystem " + subsystemId + " because an instance of " + processManagerClass + " could not be instantiated", e);
+            }
         }
-        subsystems.put(subsystemId, (Subsystem)instance);
         return instance;
     }
 }

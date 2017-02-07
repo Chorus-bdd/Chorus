@@ -40,14 +40,6 @@ import java.util.List;
  */
 public interface SubsystemManager {
 
-    Object getProcessManager();
-
-    Object getRemotingManager();
-
-//    Object getStepServerManager();
-
-    Object getConfigurationManager();
-
     Subsystem getSubsystemById(String id);
 
     List<StepInvokerProvider> getStepProviderSubsystems();
