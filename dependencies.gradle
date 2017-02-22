@@ -128,7 +128,7 @@ project(':chorus-results') {
 
 project(':chorus-selenium') {
     dependencies {
-        compile project (':chorus-handlers')
+        compile project (':chorus')
     }
 }
 

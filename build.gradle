@@ -15,7 +15,7 @@ allprojects  {
     }
 
     group = "org.chorusbdd"
-    version = '3.0.0.DEV8'
+    version = '3.0.0.DEV8-SNAPSHOT'
 }
 
 subprojects {
@@ -68,7 +68,7 @@ dependencies {
     compile project (':chorus')
 }
 
-//*** END MODULE DEPENENCIES
+//*** END MODULE DEPENDENCIES
 
 
 

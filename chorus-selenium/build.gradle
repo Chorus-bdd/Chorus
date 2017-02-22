@@ -1,12 +1,14 @@
 
 
-
+// http://central.sonatype.org/pages/gradle.html#releasing-the-deployment-to-the-central-repository
+// Apply the plugin to allow gradle to sign jars for Sonatype Maven central distribution
+apply plugin: 'signing'
 
 description = "chorus-selenium"
 
 dependencies {
 
-    compile group: 'org.chorusbdd', name: 'chorus-handlers', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
 
     compile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version:'3.0.1'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:'3.0.1'
@@ -15,3 +17,70 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version:'4.10'
 }
+
+
+
+////// Maven publication
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'chorus-selenium'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Chorus Open Source BDD Interpreter'
+                url 'http://www.chorus-bdd.org'
+
+                scm {
+                    connection 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                    developerConnection 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                    url 'http://github.com/Chorus-bdd/Chorus'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'nick'
+                        name 'Nick Ebbutt'
+                        email 'NickAtEbbutt.net'
+                    }
+                }
+            }
+        }
+    }
+}
+
