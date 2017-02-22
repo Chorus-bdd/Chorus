@@ -1,0 +1,24 @@
+rootProject.name = 'chorus-interpreter-project'
+
+include 'chorus',
+        'chorus-annotations',
+        'chorus-config',
+        'chorus-context',
+        'chorus-executionlistener',
+        'chorus-handlerconfig',
+        'chorus-handlers',
+        'chorus-interpreter',
+        'chorus-logging',
+        'chorus-output',
+        'chorus-parser',
+        'chorus-pathscanner',
+        'chorus-processes',
+        'chorus-remoting',
+        'chorus-results',
+        'chorus-sikulix',
+        'chorus-selftest',
+        'chorus-spring',
+        'chorus-stepinvoker',
+        'chorus-subsystem',
+        'chorus-util'
+

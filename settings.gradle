@@ -7,7 +7,6 @@ include 'chorus',
         'chorus-executionlistener',
         'chorus-handlerconfig',
         'chorus-handlers',
-        'chorus-selenium',
         'chorus-interpreter',
         'chorus-logging',
         'chorus-output',
@@ -16,13 +15,38 @@ include 'chorus',
         'chorus-processes',
         'chorus-remoting',
         'chorus-results',
-        'chorus-sikulix',
-        'chorus-selftest',
-        'chorus-spring',
         'chorus-stepinvoker',
         'chorus-subsystem',
-        'chorus-stepserver',
         'chorus-util',
+        'chorus-selenium',
+        'chorus-sikulix',
+        'chorus-spring',
+        'chorus-stepserver',
         'chorus-mocksuite',
+        'chorus-webagent',
         'chorus-xml',
-        'chorus-webagent'
+        'chorus-selftest'
+
+project(':chorus').projectDir = file("interpreter/chorus")
+project(':chorus-annotations').projectDir = file("interpreter/chorus-annotations")
+project(':chorus-config').projectDir = file("interpreter/chorus-config")
+project(':chorus-context').projectDir = file("interpreter/chorus-context")
+project(':chorus-executionlistener').projectDir = file("interpreter/chorus-executionlistener")
+project(':chorus-handlerconfig').projectDir = file("interpreter/chorus-handlerconfig")
+project(':chorus-handlers').projectDir = file("interpreter/chorus-handlers")
+project(':chorus-interpreter').projectDir = file("interpreter/chorus-interpreter")
+project(':chorus-logging').projectDir = file("interpreter/chorus-logging")
+project(':chorus-output').projectDir = file("interpreter/chorus-output")
+project(':chorus-parser').projectDir = file("interpreter/chorus-parser")
+project(':chorus-pathscanner').projectDir = file("interpreter/chorus-pathscanner")
+project(':chorus-processes').projectDir = file("interpreter/chorus-processes")
+project(':chorus-remoting').projectDir = file("interpreter/chorus-remoting")
+project(':chorus-results').projectDir = file("interpreter/chorus-results")
+project(':chorus-stepinvoker').projectDir = file("interpreter/chorus-stepinvoker")
+project(':chorus-subsystem').projectDir = file("interpreter/chorus-subsystem")
+project(':chorus-util').projectDir = file("interpreter/chorus-util")
+project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")
+project(':chorus-sikulix').projectDir = file("extensions/chorus-sikulix")
+project(':chorus-spring').projectDir = file("extensions/chorus-spring")
+project(':chorus-stepserver').projectDir = file("extensions/chorus-stepserver")
+
