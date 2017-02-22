@@ -131,7 +131,7 @@ project(':chorus-selenium') {
     }
 }
 
-project(':chorus-selftest') {
+project(':integrationtest') {
     dependencies {
         compile project (':chorus')
         compile project (':chorus-spring')
