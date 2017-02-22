@@ -18,6 +18,47 @@ allprojects  {
     version = '3.0.0.DEV8-SNAPSHOT'
 }
 
+subprojects {
+
+    task updateGradleModuleDependencies {
+        doLast {
+            dependencyFile << "\n"
+            dependencyFile << "project(':" + project.name + "') {\n"
+            dependencyFile << "    dependencies {\n"
+
+//            project.configurations.getByName("compile").allDependencies
+//                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
+//                    .stream()
+//                    .map({ dep -> dep.name })
+//                    .distinct()
+//                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
+
+            //TODO deal correctly with test vs compile classpath
+            project.configurations.getByName("testCompile").allDependencies
+                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
+                    .stream()
+                    .map({ dep -> dep.name })
+                    .distinct()
+                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
+
+            dependencyFile << "    }\n"
+
+            dependencyFile << "}\n"
+        }
+    }
+
+}
+
+task clearGradleModuleDependencies {
+    doLast {
+        dependencyFile.write "// Dependencies\n"
+    }
+}
+
+task recalculateGradleDependencies
+
+recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
+
 //*** MODULE DEPENDENCIES
 
 apply from: 'dependencies.gradle'

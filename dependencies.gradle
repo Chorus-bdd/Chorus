@@ -75,8 +75,7 @@ project(':chorus-logging') {
 
 project(':chorus-mocksuite') {
     dependencies {
-        compile project (':chorus-annotations')
-        compile project (':chorus-stepinvoker')
+        compile project (':chorus')
     }
 }
 
@@ -143,17 +142,13 @@ project(':chorus-selftest') {
 
 project(':chorus-sikulix') {
     dependencies {
-        compile project (':chorus-stepinvoker')
+        compile project (':chorus')
     }
 }
 
 project(':chorus-spring') {
     dependencies {
         compile project (':chorus')
-        compile project (':chorus-handlers')
-        compile project (':chorus-interpreter')
-        compile project (':chorus-processes')
-        compile project (':chorus-remoting')
     }
 }
 
@@ -167,10 +162,7 @@ project(':chorus-stepinvoker') {
 
 project(':chorus-stepserver') {
     dependencies {
-        compile project (':chorus-logging')
-        compile project (':chorus-subsystem')
-        compile project (':chorus-stepinvoker')
-        compile project (':chorus-handlerconfig')
+        compile project (':chorus')
     }
 }
 
@@ -204,6 +196,5 @@ project(':chorus-xml') {
     dependencies {
         compile project (':chorus')
         compile project (':chorus-mocksuite')
-        compile project (':chorus-results')
     }
 }
