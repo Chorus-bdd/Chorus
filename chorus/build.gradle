@@ -51,7 +51,9 @@ artifacts {
 }
 
 signing {
-    sign configurations.archives
+    if (signArtifactsForPublication.toBoolean()) {
+        sign configurations.archives
+    }
 }
 
 uploadArchives {
