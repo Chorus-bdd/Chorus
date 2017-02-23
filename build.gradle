@@ -15,7 +15,7 @@ allprojects  {
     }
 
     group = "org.chorusbdd"
-    version = '3.0.0.DEV8-SNAPSHOT'
+    version = '3.0.0.DEV9'
 }
 
 subprojects {
@@ -63,8 +63,14 @@ recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojec
 
 apply from: 'dependencies.gradle'
 
+//The dependencies from this project determine which jars get included in the
+//distribution
 dependencies {
     compile project ('chorus')
+    compile project ('chorus-spring')
+    compile project ('chorus-selenium')
+    compile project ('chorus-sikulix')
+    compile project ('chorus-stepserver')
 }
 
 //*** END MODULE DEPENDENCIES
