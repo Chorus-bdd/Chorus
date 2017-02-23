@@ -1,0 +1,25 @@
+
+
+
+
+description = "chorus-selftest"
+
+sourceSets {
+    test {
+        resources {
+            srcDirs = ['src/test/resources', 'src/test/java']
+        }
+    }
+}
+
+
+dependencies {
+    compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-spring', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-selenium', version: "${version}"
+    compile group: 'org.chorusbdd', name: 'chorus-stepserver', version: "${version}"
+
+    compile group: 'log4j', name: 'log4j', version:'1.2.16'
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+    testCompile group: 'org.apache.derby', name: 'derby', version:'10.11.1.1'
+}

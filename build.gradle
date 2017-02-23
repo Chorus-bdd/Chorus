@@ -15,12 +15,10 @@ allprojects  {
     }
 
     group = "org.chorusbdd"
-    version = '3.0.0.DEV8'
+    version = '3.0.0.DEV9'
 }
 
 subprojects {
-
-
 
     task updateGradleModuleDependencies {
         doLast {
@@ -51,26 +49,34 @@ subprojects {
 
 }
 
-//task clearGradleModuleDependencies {
-//   dependencyFile.write "// Dependencies\n"
-//}
-//
-//task recalculateGradleDependencies
-//
-//recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
+task clearGradleModuleDependencies {
+    doLast {
+        dependencyFile.write "// Dependencies\n"
+    }
+}
 
+task recalculateGradleDependencies
+
+recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
 
 //*** MODULE DEPENDENCIES
 
 apply from: 'dependencies.gradle'
 
+//The dependencies from this project determine which jars get included in the
+//distribution
 dependencies {
-    compile project (':chorus')
+    compile project ('chorus')
+    compile project ('chorus-spring')
+    compile project ('chorus-selenium')
+    compile project ('chorus-stepserver')
+
+    //TODO Sikuli is omitted for now. It needs different jars for different OS and so would
+    //require us to create distributions with differing contents
+    //compile project ('chorus-sikulix')
 }
 
-//*** END MODULE DEPENENCIES
-
-
+//*** END MODULE DEPENDENCIES
 
 distributions {
     main{

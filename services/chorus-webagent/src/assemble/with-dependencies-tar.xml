@@ -1,0 +1,34 @@
+<assembly>
+  <id>nix</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+          <include>start.sh</include>
+          <include>start.bat</include>
+          <include>*.xml</include>      
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*.xml</include>
+        <include>*.properties</include>                              
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>src/etc/assemblydir</directory>
+       <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <scope>runtime</scope>
+    </dependencySet>
+  </dependencySets>
+</assembly>

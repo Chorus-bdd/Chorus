@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="properties" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg value="/chorus-webagent.properties"/>
+    </bean>
+
+    <!-- Configurer that replaces ${...} placeholders with values from properties files or from sys props -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="chorus-webagent.properties"/>
+    </bean>
+
+    <bean id="mainTestSuiteListener" class="org.chorusbdd.chorus.tools.webagent.WebAgentSuiteListener" init-method="start" destroy-method="stop">
+        <constructor-arg value="${webagent.mainTestSuiteListener.listenPort}"/>
+        <constructor-arg value="true"/>
+    </bean>
+
+    <bean id="mainSuiteStore" class="org.chorusbdd.chorus.tools.webagent.store.FileSystemXmlStore">
+        <constructor-arg value="${user.home}${file.separator}chorus-webagent"/>
+    </bean>
+
+    <bean id="mainFeatureCache" class="org.chorusbdd.chorus.tools.webagent.WebAgentFeatureCache">
+        <constructor-arg ref="mainSuiteStore"/>
+        <constructor-arg value="${webagent.mainCache.title}"/>
+        <constructor-arg value="${webagent.mainCache.size}"/>
+    </bean>
+
+    <bean id="mainContext" class="org.chorusbdd.chorus.tools.webagent.WebAgentContext" init-method="start">
+        <constructor-arg ref="mainFeatureCache"/>
+        <constructor-arg>
+            <list>
+                <ref bean="mainTestSuiteListener"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="httpConnector" class="org.chorusbdd.chorus.tools.webagent.WebAgentHttpConnector" init-method="start" destroy-method="stop">
+        <constructor-arg value="${webagent.httpConnector.port}"/>
+        <constructor-arg><list><ref bean="mainFeatureCache"/></list></constructor-arg>
+        <property name="maxRssFeedItems" value="${webagent.rssFeed.maxItems}"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,31 @@
+<assembly>
+  <id>windows</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>${basedir}/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+          <include>start.sh</include>
+          <include>start.bat</include>
+          <include>*.xml</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>src/etc/assemblydir</directory>
+       <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory></outputDirectory>
+      <useProjectArtifact>true</useProjectArtifact>
+      <scope>runtime</scope>
+      <unpack>false</unpack>
+    </dependencySet>
+  </dependencySets>
+</assembly>
+
+
