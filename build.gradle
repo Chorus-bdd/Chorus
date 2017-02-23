@@ -15,7 +15,7 @@ allprojects  {
     }
 
     group = "org.chorusbdd"
-    version = '3.0.0.DEV10'
+    version = '3.0.0.DEV11'
 }
 
 subprojects {
