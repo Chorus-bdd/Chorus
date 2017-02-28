@@ -47,6 +47,8 @@ public class StepToken extends AbstractToken {
     private StepEndState endState = StepEndState.NOT_RUN;
     private String message = "";
 
+    private int retryAttempts;
+
     /**
      * Step macro are composite steps which contain child steps
      */
@@ -115,6 +117,20 @@ public class StepToken extends AbstractToken {
 
     public void setTimeTaken(long timeTaken) {
         this.timeTaken = timeTaken;
+    }
+
+    /**
+     * Some step which check assertions may be configured to re-run in case of initial failure
+     * This can be used to avoid failures due to latency / asynchronous behaviour in the system under test
+     *
+     * @return the number of times a step was re-run before the step was failed
+     */
+    public int getRetryAttempts() {
+        return retryAttempts;
+    }
+
+    public void setRetryAttempts(int retryAttempts) {
+        this.retryAttempts = retryAttempts;
     }
 
     public void addChildStep(StepToken childToken) {
