@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.selftest.remoting.jmx.remotingwithlocalprocess;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.StepRetry;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -72,6 +73,11 @@ public class BillAndBenHandler implements StepInvokerProvider {
             }
 
             @Override
+            public StepRetry getRetry() {
+                return StepRetry.NO_RETRY;
+            }
+
+            @Override
             public String getId() {
                 return String.valueOf(System.identityHashCode(this));
             }
@@ -104,6 +110,11 @@ public class BillAndBenHandler implements StepInvokerProvider {
             public Object invoke(List<String> args) throws ReflectiveOperationException {
                 Integer port = Integer.valueOf(jmxProperty);
                 return port;
+            }
+
+            @Override
+            public StepRetry getRetry() {
+                return StepRetry.NO_RETRY;
             }
 
             @Override

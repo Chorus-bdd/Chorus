@@ -143,10 +143,10 @@ public class RemoteStepInvoker implements StepInvoker {
         String technicalDescription = (String)jmxInvokerResult.get(JmxInvokerResult.TECHNICAL_DESCRIPTION);
         Boolean isPending=(Boolean)jmxInvokerResult.get(JmxInvokerResult.IS_PENDING);
 
-        Integer retryInterval = (Integer)jmxInvokerResult.get(JmxInvokerResult.RETRY_INTERVAL);
+        Long retryInterval = (Long)jmxInvokerResult.get(JmxInvokerResult.RETRY_INTERVAL);
         retryInterval = retryInterval == null ? 0 : retryInterval;  //Chorus 2.0.x did not support retryInterval so it may be null
 
-        Integer retryDuration = (Integer)jmxInvokerResult.get(JmxInvokerResult.RETRY_DURATION);
+        Long retryDuration = (Long)jmxInvokerResult.get(JmxInvokerResult.RETRY_DURATION);
         retryDuration = retryDuration == null ? 0 : retryDuration;  //Chorus 2.0.x did not support retryDuration so it may be null
 
         StepRetry stepRetry = createStepRetry(retryDuration, retryInterval);
