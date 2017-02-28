@@ -93,7 +93,7 @@ uploadArchives {
                     developer {
                         id 'nick'
                         name 'Nick Ebbutt'
-                        email 'NickAtEbbutt.net'
+                        email 'chorusbdd@objectdefinitions.com'
                     }
                 }
 
@@ -102,7 +102,7 @@ uploadArchives {
                     //jars, and all others are optional anyway (TODO should we include these as Maven 'Optional' dependencies?
                     //All chorus internal jars are not required since they are subsumed into the shadow jar by shadow plugin
                     p -> p.dependencies = p.dependencies.findAll {
-                        dep -> dep.artifactId == "none" //filter all dependencies
+                        dep -> dep.artifactId =x= "none" //filter all dependencies
                     }
                 }
             }
