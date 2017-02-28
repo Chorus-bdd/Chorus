@@ -41,27 +41,12 @@ import java.util.concurrent.TimeUnit;
 */
 class UntilFirstPassInvoker extends PolledInvoker {
 
-    private PassesWithin passesWithin;
-
-    public UntilFirstPassInvoker(StepInvoker wrappedInvoker, PassesWithin passesWithin) {
-        super(wrappedInvoker);
-        this.passesWithin = passesWithin;
+    public UntilFirstPassInvoker(StepInvoker wrappedInvoker, long length, TimeUnit timeUnit, long pollFrequency) {
+        super(wrappedInvoker, length, timeUnit, pollFrequency);
     }
 
-    protected int getCount() {
-        return passesWithin.length();
-    }
-
-    protected TimeUnit getTimeUnit() {
-        return passesWithin.timeUnit();
-    }
-
-    protected int getPollFrequency() {
-        return passesWithin.pollFrequencyInMilliseconds();
-    }
-
-    protected void doTest(PolledAssertion p, TimeUnit timeUnit, int count) {
-        p.await(timeUnit, count);
+    protected void doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
+        p.await(timeUnit, length);
     }
 
 }

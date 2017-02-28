@@ -29,8 +29,6 @@
  */
 package org.chorusbdd.chorus.stepinvoker;
 
-import com.sun.corba.se.spi.protocol.RetryType;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -78,11 +76,11 @@ public interface StepInvoker {
 
 
     /**
-     * Get the period in milliseconds during which Chorus interpreter should retry a step periodically, before failing the step
+     * Get the StepRetry, which defines whether a step should fail instantly or be retried for a period if a failure occurs
      *
-     * @return 0 if no retry is configured, or a period in milliseconds >= 1
+     * @return StepRetry
      */
-    Retry getRetry();
+    StepRetry getRetry();
 
     /**
      * The id is used to uniquely identify a step invoker, since it's possible the Pattern is duplicated by several step providers

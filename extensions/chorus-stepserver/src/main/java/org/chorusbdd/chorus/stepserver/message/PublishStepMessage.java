@@ -13,6 +13,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
     private boolean isPending;
     private String pendingMessage = Step.NO_PENDING_MESSAGE;  //optional so provide default
     private String technicalDescription;
+    private int retryInterval;
+    private int retryDuration;
 
     public PublishStepMessage() {
         super(MessageType.PUBLISH_STEP.name());
@@ -76,6 +78,22 @@ public class PublishStepMessage extends AbstractTypedMessage {
         this.technicalDescription = technicalDescription;
     }
 
+    public int getRetryInterval() {
+        return retryInterval;
+    }
+
+    public void setRetryInterval(int retryInterval) {
+        this.retryInterval = retryInterval;
+    }
+
+    public int getRetryDuration() {
+        return retryDuration;
+    }
+
+    public void setRetryDuration(int retryDuration) {
+        this.retryDuration = retryDuration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,6 +102,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
         PublishStepMessage that = (PublishStepMessage) o;
 
         if (isPending != that.isPending) return false;
+        if (retryInterval != that.retryInterval) return false;
+        if (retryDuration != that.retryDuration) return false;
         if (!stepId.equals(that.stepId)) return false;
         if (!chorusClientId.equals(that.chorusClientId)) return false;
         if (!pattern.equals(that.pattern)) return false;
@@ -100,20 +120,22 @@ public class PublishStepMessage extends AbstractTypedMessage {
         result = 31 * result + (isPending ? 1 : 0);
         result = 31 * result + pendingMessage.hashCode();
         result = 31 * result + technicalDescription.hashCode();
+        result = 31 * result + retryInterval;
+        result = 31 * result + retryDuration;
         return result;
     }
 
     @Override
     public String toString() {
-        return "PublishStep{" +
-            "type='" + type + "\'" +
-            ", stepId='" + stepId + '\'' +
-            ", chorusClientId='" + chorusClientId + '\'' +
-            ", pattern='" + pattern + '\'' +
-            ", isPending=" + isPending +
-            ", pendingMessage='" + pendingMessage + '\'' +
-            ", technicalDescription='" + technicalDescription + '\'' +
-            '}';
+        return "PublishStepMessage{" +
+                "stepId='" + stepId + '\'' +
+                ", chorusClientId='" + chorusClientId + '\'' +
+                ", pattern='" + pattern + '\'' +
+                ", isPending=" + isPending +
+                ", pendingMessage='" + pendingMessage + '\'' +
+                ", technicalDescription='" + technicalDescription + '\'' +
+                ", retryInterval=" + retryInterval +
+                ", retryDuration=" + retryDuration +
+                '}';
     }
-
 }

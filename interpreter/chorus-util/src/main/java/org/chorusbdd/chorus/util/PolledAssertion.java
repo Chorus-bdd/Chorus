@@ -113,10 +113,10 @@ public abstract class PolledAssertion {
      * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
      * errors will be propagated and will cause test failure
      */
-    public void await(TimeUnit unit, int count) {
+    public void await(TimeUnit unit, long length) {
         
         int pollPeriodMillis = getPollPeriodMillis();
-        long expireTime = System.currentTimeMillis() + unit.toMillis(count);
+        long expireTime = System.currentTimeMillis() + unit.toMillis(length);
 
         boolean success = false;
         while(true) {
@@ -164,7 +164,7 @@ public abstract class PolledAssertion {
     /**
      * check that the assertions pass for the whole duration of the period specified
      */
-    public void check(TimeUnit timeUnit, int count) {
+    public void check(TimeUnit timeUnit, long count) {
         
         int pollPeriodMillis = getPollPeriodMillis();
         long expireTime = System.currentTimeMillis() + timeUnit.toMillis(count);

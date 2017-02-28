@@ -116,7 +116,8 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
         String pendingText = stepAnnotation.pending();
         pendingText = ( Step.NO_PENDING_MESSAGE.equals(pendingText)) ? null : pendingText;
 
-        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(handlerInstance, method, stepPattern, pendingText);
+        StepRetry stepRetry = DefaultStepRetry.fromStepAnnotation(stepAnnotation);
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(handlerInstance, method, stepPattern, pendingText, stepRetry);
 
         //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
         //PolledInvoker
@@ -125,10 +126,20 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
                 PassesWithin passesWithin = (PassesWithin) a;
                 switch(passesWithin.pollMode()) {
                     case UNTIL_FIRST_PASS:
-                        simpleMethodInvoker = new UntilFirstPassInvoker(simpleMethodInvoker, passesWithin);
+                        simpleMethodInvoker = new UntilFirstPassInvoker(
+                            simpleMethodInvoker,
+                            passesWithin.length(),
+                            passesWithin.timeUnit(),
+                            passesWithin.pollFrequencyInMilliseconds()
+                        );
                         break;
                     case PASS_THROUGHOUT_PERIOD:
-                        simpleMethodInvoker =  new PassesThroughoutInvoker(simpleMethodInvoker, passesWithin);
+                        simpleMethodInvoker =  new PassesThroughoutInvoker(
+                            simpleMethodInvoker,
+                            passesWithin.length(),
+                            passesWithin.timeUnit(),
+                            passesWithin.pollFrequencyInMilliseconds()
+                        );
                         break;
                     default:
                         throw new UnsupportedOperationException("Unknown mode " + passesWithin.pollMode());

@@ -11,12 +11,14 @@ public abstract class SkeletalStepInvoker implements StepInvoker {
 
     private final String pendingMessage;
     private final boolean isPending;
+    private final StepRetry stepRetry;
     private final Pattern stepPattern;
 
-    public SkeletalStepInvoker(String pendingMessage, Pattern stepPattern) {
+    public SkeletalStepInvoker(String pendingMessage, Pattern stepPattern, StepRetry stepRetry) {
         this.pendingMessage = pendingMessage;
         this.stepPattern = stepPattern;
         this.isPending = pendingMessage != null && ! Step.NO_PENDING_MESSAGE.equals(pendingMessage);
+        this.stepRetry = stepRetry;
     }
 
     /**
@@ -35,5 +37,9 @@ public abstract class SkeletalStepInvoker implements StepInvoker {
 
     public String getPendingMessage() {
         return pendingMessage;
+    }
+
+    public StepRetry getRetry() {
+        return stepRetry;
     }
 }

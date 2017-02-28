@@ -49,10 +49,16 @@ import java.util.regex.Pattern;
  */
 public abstract class PolledInvoker implements StepInvoker {
 
-    private StepInvoker wrappedInvoker;
+    private final StepInvoker wrappedInvoker;
+    private final long length;
+    private final TimeUnit timeUnit;
+    private final long pollFrequency;
 
-    public PolledInvoker(StepInvoker wrappedInvoker) {
+    public PolledInvoker(StepInvoker wrappedInvoker, long length, TimeUnit timeUnit, long pollFrequency) {
         this.wrappedInvoker = wrappedInvoker;
+        this.length = length;
+        this.timeUnit = timeUnit;
+        this.pollFrequency = pollFrequency;
     }
 
     /**
@@ -69,13 +75,11 @@ public abstract class PolledInvoker implements StepInvoker {
             }
 
             protected int getPollPeriodMillis() {
-                return getPollFrequency();
+                return (int)pollFrequency;
             }
         };
 
-        TimeUnit timeUnit = getTimeUnit();
-        int count = getCount();
-        doTest(p, timeUnit, count);
+        doTest(p, timeUnit, length);
 
         Object result = resultRef.get();
         return result;
@@ -100,13 +104,7 @@ public abstract class PolledInvoker implements StepInvoker {
         return wrappedInvoker.getId();
     }
 
-    protected abstract int getCount();
-
-    protected abstract TimeUnit getTimeUnit();
-
-    protected abstract int getPollFrequency();
-
-    protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, int count);
+    protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, long length);
 
     public String getTechnicalDescription() {
         return wrappedInvoker.getTechnicalDescription();
@@ -115,5 +113,7 @@ public abstract class PolledInvoker implements StepInvoker {
     public String toString() {
         return "Polled:" + wrappedInvoker.toString();
     }
+
+    public StepRetry getRetry() { return wrappedInvoker.getRetry(); };
 
 }

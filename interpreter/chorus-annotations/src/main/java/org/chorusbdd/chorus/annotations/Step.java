@@ -33,6 +33,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by: Steve Neal
@@ -54,4 +55,20 @@ public @interface Step {
     String value(); //regexp to match the step
 
     String pending() default NO_PENDING_MESSAGE;//for pending state messages
+
+    /**
+     * A duration in the retry time unit over which to retry a failing step
+     */
+    int retryDuration() default 0;
+
+    /**
+     * Retry time unit
+     */
+    TimeUnit retryTimeUnit() default TimeUnit.SECONDS;
+
+    /**
+     * An interval in milliseconds at which to poll/retry the step during the retry duration period
+     */
+    int retryInterval() default 100;
+
 }

@@ -40,27 +40,12 @@ import java.util.concurrent.TimeUnit;
 * Time: 18:47
 */
 class PassesThroughoutInvoker extends PolledInvoker {
-    
-    private PassesWithin passesWithin;
 
-    public PassesThroughoutInvoker(StepInvoker wrappedInvoker, PassesWithin passesWithin) {
-        super(wrappedInvoker);
-        this.passesWithin = passesWithin;
+    public PassesThroughoutInvoker(StepInvoker wrappedInvoker, long length, TimeUnit timeUnit, long pollFrequency) {
+        super(wrappedInvoker, length, timeUnit, pollFrequency);
     }
 
-    protected int getCount() {
-        return passesWithin.length();
-    }
-
-    protected TimeUnit getTimeUnit() {
-        return passesWithin.timeUnit();
-    }
-
-    protected int getPollFrequency() {
-        return passesWithin.pollFrequencyInMilliseconds();
-    }
-
-    protected void doTest(PolledAssertion p, TimeUnit timeUnit, int count) {
-        p.check(timeUnit, count);
+    protected void doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
+        p.check(timeUnit, length);
     }
 }
