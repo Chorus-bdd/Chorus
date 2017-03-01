@@ -37,5 +37,5 @@ public class ApiVersion {
     /**
      * Version of the JMX remoting API in use
      */
-    public static final int API_VERSION = 1;
+    public static final int API_VERSION = 2;
 }
