@@ -80,7 +80,9 @@ public class TestClientMessages {
             "click the (.*) button",
             true,
             "pending message",
-            "tech description"
+            "tech description",
+            0,
+            0
         );
 
         String json = JsonUtils.prettyFormat(publishStep);
@@ -107,7 +109,9 @@ public class TestClientMessages {
             "click the (.*) button",
             false,
             Step.NO_PENDING_MESSAGE,
-            "tech description"
+            "tech description",
+            0,
+            0
         );
 
         verify(mockProcessor, timeout(1000)).receivePublishStep(expectedPublishStep);
