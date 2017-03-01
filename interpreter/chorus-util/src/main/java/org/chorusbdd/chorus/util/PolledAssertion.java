@@ -116,10 +116,13 @@ public abstract class PolledAssertion {
     public void await(TimeUnit unit, long length) {
         
         int pollPeriodMillis = getPollPeriodMillis();
-        long expireTime = System.currentTimeMillis() + unit.toMillis(length);
+        long startTime = System.currentTimeMillis();
+        long expireTime = startTime + unit.toMillis(length);
 
+        int iteration = 0;
         boolean success = false;
         while(true) {
+            iteration++;
             try {
                 validate();
                 //no assertion errors? condition passes, we can continue
@@ -134,7 +137,7 @@ public abstract class PolledAssertion {
                 //ignore failures up until the last check
             }
             
-            doSleep(pollPeriodMillis);
+            sleepUntil(startTime + (pollPeriodMillis * iteration));
 
             if ( System.currentTimeMillis() >= expireTime) {
                 break;
@@ -167,16 +170,18 @@ public abstract class PolledAssertion {
     public void check(TimeUnit timeUnit, long count) {
         
         int pollPeriodMillis = getPollPeriodMillis();
-        long expireTime = System.currentTimeMillis() + timeUnit.toMillis(count);
-        
+        long startTime = System.currentTimeMillis();
+        long expireTime = startTime + timeUnit.toMillis(count);
+        int iteration = 0;
         while(true) {
+            iteration++;
             try {
                 validate();
             } catch (Throwable t) {
                 propagateAsError(t);
             }
             
-            doSleep(pollPeriodMillis);
+            sleepUntil(startTime + (pollPeriodMillis * iteration));
 
             if ( System.currentTimeMillis() >= expireTime) {
                 break;
@@ -184,11 +189,14 @@ public abstract class PolledAssertion {
         }
     }
 
-    private void doSleep(int pollPeriodMillis) {
-        try {
-            Thread.sleep(pollPeriodMillis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void sleepUntil(long time) {
+        long sleepTime = time - System.currentTimeMillis();
+        if ( sleepTime > 0) {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
