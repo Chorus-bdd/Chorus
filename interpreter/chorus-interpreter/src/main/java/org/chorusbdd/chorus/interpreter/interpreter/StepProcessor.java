@@ -226,7 +226,11 @@ public class StepProcessor {
         long startTime = System.currentTimeMillis();
         try {
             //call the step method using reflection
-            Object result = stepMatcher.getFoundStepInvoker().invoke(
+            StepInvoker foundStepInvoker = stepMatcher.getFoundStepInvoker();
+
+            //This may return a decorated invoker which manages the retry, or the original
+            StepInvoker retryInvoker = new StepRetryDecorator().getRetryInvoker(foundStepInvoker);
+            Object result = retryInvoker.invoke(
                 stepMatcher.getInvokerArgs()
             );
             log.debug("Finished executing the step, step passed, result was " + result);

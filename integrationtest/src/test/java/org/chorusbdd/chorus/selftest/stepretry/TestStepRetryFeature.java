@@ -27,26 +27,32 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.stepinvoker;
+package org.chorusbdd.chorus.selftest.stepretry;
 
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.util.PolledAssertion;
-
-import java.util.concurrent.TimeUnit;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
 /**
-* User: nick
-* Date: 24/09/13
-* Time: 18:47
-*/
-class UntilFirstPassInvoker extends PolledInvoker {
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
+ */
+public class TestStepRetryFeature extends AbstractInterpreterTest {
 
-    public UntilFirstPassInvoker(StepInvoker wrappedInvoker, long length, TimeUnit timeUnit, long pollFrequency) {
-        super(wrappedInvoker, length, timeUnit, pollFrequency);
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/stepretry";
+
+    final int expectedExitCode = 1;  //fail
+
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    protected void doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
-        p.await(timeUnit, length);
+    protected String getFeaturePath() {
+        return featurePath;
     }
 
+    protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
+//        sysProps.put("chorusTagExpression", "@CHOOSE");
+    }
 }

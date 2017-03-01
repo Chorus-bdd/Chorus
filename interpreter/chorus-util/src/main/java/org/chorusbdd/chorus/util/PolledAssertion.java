@@ -113,13 +113,16 @@ public abstract class PolledAssertion {
      * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
      * errors will be propagated and will cause test failure
      */
-    public void await(TimeUnit unit, int count) {
+    public void await(TimeUnit unit, long length) {
         
         int pollPeriodMillis = getPollPeriodMillis();
-        long expireTime = System.currentTimeMillis() + unit.toMillis(count);
+        long startTime = System.currentTimeMillis();
+        long expireTime = startTime + unit.toMillis(length);
 
+        int iteration = 0;
         boolean success = false;
         while(true) {
+            iteration++;
             try {
                 validate();
                 //no assertion errors? condition passes, we can continue
@@ -134,7 +137,7 @@ public abstract class PolledAssertion {
                 //ignore failures up until the last check
             }
             
-            doSleep(pollPeriodMillis);
+            sleepUntil(startTime + (pollPeriodMillis * iteration));
 
             if ( System.currentTimeMillis() >= expireTime) {
                 break;
@@ -164,19 +167,21 @@ public abstract class PolledAssertion {
     /**
      * check that the assertions pass for the whole duration of the period specified
      */
-    public void check(TimeUnit timeUnit, int count) {
+    public void check(TimeUnit timeUnit, long count) {
         
         int pollPeriodMillis = getPollPeriodMillis();
-        long expireTime = System.currentTimeMillis() + timeUnit.toMillis(count);
-        
+        long startTime = System.currentTimeMillis();
+        long expireTime = startTime + timeUnit.toMillis(count);
+        int iteration = 0;
         while(true) {
+            iteration++;
             try {
                 validate();
             } catch (Throwable t) {
                 propagateAsError(t);
             }
             
-            doSleep(pollPeriodMillis);
+            sleepUntil(startTime + (pollPeriodMillis * iteration));
 
             if ( System.currentTimeMillis() >= expireTime) {
                 break;
@@ -184,11 +189,14 @@ public abstract class PolledAssertion {
         }
     }
 
-    private void doSleep(int pollPeriodMillis) {
-        try {
-            Thread.sleep(pollPeriodMillis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void sleepUntil(long time) {
+        long sleepTime = time - System.currentTimeMillis();
+        if ( sleepTime > 0) {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

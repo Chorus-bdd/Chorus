@@ -30,12 +30,16 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
+import org.chorusbdd.chorus.stepinvoker.DefaultStepRetry;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepRetry;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import javax.management.RuntimeMBeanException;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static org.chorusbdd.chorus.stepinvoker.DefaultStepRetry.createStepRetry;
 
 /**
  * Created by nick on 02/09/2014.
@@ -50,6 +54,7 @@ public class RemoteStepInvoker implements StepInvoker {
     private String pendingMessage;
     private String technicalDescription;
     private final Pattern pattern;
+    private StepRetry stepRetry;
 
     private RemoteStepInvoker(
             String regex,
@@ -57,13 +62,15 @@ public class RemoteStepInvoker implements StepInvoker {
             String remoteStepId,
             Boolean isPending,
             String pendingMessage,
-            String technicalDescription) {
+            String technicalDescription,
+            StepRetry stepRetry) {
         this.proxy = proxy;
         this.remoteStepId = remoteStepId;
         this.isPending = isPending;
         this.pendingMessage = pendingMessage;
         this.technicalDescription = technicalDescription;
         this.pattern = Pattern.compile(regex);
+        this.stepRetry = stepRetry;
     }
 
     /**
@@ -106,6 +113,11 @@ public class RemoteStepInvoker implements StepInvoker {
         return result;
     }
 
+    @Override
+    public StepRetry getRetry() {
+        return stepRetry;
+    }
+
     /**
      * @return a String id for this step invoker, which should be unique and final
      */
@@ -131,9 +143,17 @@ public class RemoteStepInvoker implements StepInvoker {
         String technicalDescription = (String)jmxInvokerResult.get(JmxInvokerResult.TECHNICAL_DESCRIPTION);
         Boolean isPending=(Boolean)jmxInvokerResult.get(JmxInvokerResult.IS_PENDING);
 
+        Long retryInterval = (Long)jmxInvokerResult.get(JmxInvokerResult.RETRY_INTERVAL);
+        retryInterval = retryInterval == null ? 0 : retryInterval;  //Chorus 2.0.x did not support retryInterval so it may be null
+
+        Long retryDuration = (Long)jmxInvokerResult.get(JmxInvokerResult.RETRY_DURATION);
+        retryDuration = retryDuration == null ? 0 : retryDuration;  //Chorus 2.0.x did not support retryDuration so it may be null
+
+        StepRetry stepRetry = createStepRetry(retryDuration, retryInterval);
+
         //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
         //to actually invoke the remote method with it
-        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, isPending, pending, technicalDescription);
+        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, isPending, pending, technicalDescription, stepRetry);
         return stepInvoker;
     }
 }

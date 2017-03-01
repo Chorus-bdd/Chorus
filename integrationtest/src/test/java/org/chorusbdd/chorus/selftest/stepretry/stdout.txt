@@ -1,0 +1,40 @@
+Feature: Step Retry                                                                                  
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepretry/stepretry.feature
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    First I start a remotePolled process                                                     PASSED  
+  Scenario: Step Retry Is Working In Local Handler
+Chorus --> INFO    - Processing scenario: Step Retry Is Working In Local Handler
+    Given I increment a value with a timer task                                              PASSED  
+    And the value is 1 within default period                                                 PASSED  
+    When I increment a value with a timer task                                               PASSED  
+    Then the value is 2 within 2 seconds                                                     PASSED  
+    When I increment a value with a timer task                                               PASSED  
+    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  (StepRetryHandler:linenumber)-AssertionError Expect 3 expected:<3> but was:<2>
+  Scenario: Long running step method overruns passes within period
+Chorus --> INFO    - Processing scenario: Long running step method overruns passes within period
+    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  (StepRetryHandler:linenumber)-AssertionError Whoops
+    Then the next step runs 1 second later                                                   SKIPPED 
+  Scenario: I can immediately break out of a Step Retry by throwing FailImmediatelyException
+Chorus --> INFO    - Processing scenario: I can immediately break out of a Step Retry by throwing FailImmediatelyException
+    When call a passes within step method it can be terminated immediately by FailImmediatelyExceptionFAILED  (StepRetryHandler:linenumber)-FailImmediatelyException Fail this step immediately - time elapsed 0 seconds
+  Scenario: Remoting with Step Retry
+Chorus --> INFO    - Processing scenario: Remoting with Step Retry
+    When I start a timer in remotePolled                                                     PASSED  
+    Then test condition eventually passes in remotePolled                                    PASSED  
+    And another test condition fails with AssertionError in remotePolled                     FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote ChorusAssertionError - Failed condition
+  Scenario: Exceptions fail tests with remote Step Retry
+Chorus --> INFO    - Processing scenario: Exceptions fail tests with remote Step Retry
+    Then another test condition fails with Exception in remotePolled                         FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote Exception - My Exception Message
+  Scenario: Runtime Exceptions fail tests with remote Step Retry
+Chorus --> INFO    - Processing scenario: Runtime Exceptions fail tests with remote Step Retry
+    Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote RuntimeException - My Runtime Exception Message
+  Scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
+Chorus --> INFO    - Processing scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
+    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolledFAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:7) (passed:0) (failed:7)
+Steps     (total:16) (passed:8) (failed:7) (undefined:0) (pending:0) (skipped:1)

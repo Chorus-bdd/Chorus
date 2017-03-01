@@ -34,7 +34,7 @@ public class SikuliStepInvokerCallTest {
     }
 
     @Test
-    public void canReturnValueFromStepInvoker() throws ReflectiveOperationException {
+    public void canReturnValueFromStepInvoker() throws Exception {
         SikuliManager sikuliManager = new SikuliManager(sikuliRoot);
         List<StepInvoker> stepInvokers = sikuliManager.getStepInvokers();
 
@@ -46,7 +46,7 @@ public class SikuliStepInvokerCallTest {
     }
 
     @Test
-    public void canPassValueToStepInvoker() throws ReflectiveOperationException {
+    public void canPassValueToStepInvoker() throws Exception {
         SikuliManager sikuliManager = new SikuliManager(sikuliRoot);
         List<StepInvoker> stepInvokers = sikuliManager.getStepInvokers();
 
@@ -58,7 +58,7 @@ public class SikuliStepInvokerCallTest {
     }
 
     @Test
-    public void canRetrieveException() throws ReflectiveOperationException {
+    public void canRetrieveException() throws Exception {
         SikuliManager sikuliManager = new SikuliManager(sikuliRoot);
         List<StepInvoker> stepInvokers = sikuliManager.getStepInvokers();
 

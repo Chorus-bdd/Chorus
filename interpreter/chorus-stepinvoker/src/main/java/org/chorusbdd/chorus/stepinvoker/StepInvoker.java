@@ -72,7 +72,15 @@ public interface StepInvoker {
      *
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    Object invoke(List<String> args) throws ReflectiveOperationException;
+    Object invoke(List<String> args) throws Exception;
+
+
+    /**
+     * Get the StepRetry, which defines whether a step should fail instantly or be retried for a period if a failure occurs
+     *
+     * @return StepRetry
+     */
+    StepRetry getRetry();
 
     /**
      * The id is used to uniquely identify a step invoker, since it's possible the Pattern is duplicated by several step providers

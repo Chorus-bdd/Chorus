@@ -48,6 +48,9 @@ public class JmxInvokerResult extends AbstractJmxResult {
     public static final String IS_PENDING = "IS_PENDING";
     public static final String PATTERN = "PATTERN";
     public static final String TECHNICAL_DESCRIPTION = "TECHNICAL_DESCRIPTION";
+    public static final String RETRY_DURATION = "RETRY_DURATION";
+    public static final String RETRY_INTERVAL = "RETRY_INTERVAL";
+
 
     /**
      * @return a map of properties representing a step invoker exported over the network using RMI protocol,
@@ -60,6 +63,8 @@ public class JmxInvokerResult extends AbstractJmxResult {
         put(IS_PENDING, i.isPending());
         put(PATTERN, i.getStepPattern().toString());
         put(TECHNICAL_DESCRIPTION, i.getTechnicalDescription());
+        put(RETRY_DURATION, i.getRetry().getDuration());
+        put(RETRY_INTERVAL, i.getRetry().getInterval());
     }
 
 }

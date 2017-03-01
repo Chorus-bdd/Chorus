@@ -3,6 +3,7 @@ package org.chorusbdd.chorus.remoting.jmx;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.StepRetry;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -27,6 +28,7 @@ public class ChorusHandlerJmxExporterTest {
 
 		StepInvoker mockStepInvoker = mock(StepInvoker.class);
 		when(mockStepInvoker.getStepPattern()).thenReturn(Pattern.compile(EXPECTED_PATTERN));
+		when(mockStepInvoker.getRetry()).thenReturn(StepRetry.NO_RETRY);
 
 		StepInvokerProvider mockStepInvokerProvider = mock(StepInvokerProvider.class);
 		when(mockStepInvokerProvider.getStepInvokers()).thenReturn(Arrays.asList(mockStepInvoker));

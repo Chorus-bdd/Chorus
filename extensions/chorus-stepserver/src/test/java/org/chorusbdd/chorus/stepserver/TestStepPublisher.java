@@ -79,7 +79,9 @@ public class TestStepPublisher {
             "call a test step",
             false,
             "org.chorusbdd.chorus.annotations.Step.NO_PENDING_MESSAGE",
-            "MockHandler:callATestStep"
+            "MockHandler:callATestStep",
+            0,
+            0
         );
         verify(mockProcessor, timeout(1000)).receivePublishStep(publishStepMessage);
 

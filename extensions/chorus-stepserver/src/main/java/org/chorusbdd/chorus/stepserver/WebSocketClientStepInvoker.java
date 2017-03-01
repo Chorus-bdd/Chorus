@@ -3,7 +3,9 @@ package org.chorusbdd.chorus.stepserver;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.stepinvoker.DefaultStepRetry;
 import org.chorusbdd.chorus.stepinvoker.SkeletalStepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepRetry;
 import org.chorusbdd.chorus.stepserver.message.ExecuteStepMessage;
 import org.chorusbdd.chorus.stepserver.message.PublishStepMessage;
 import org.chorusbdd.chorus.stepserver.message.StepFailedMessage;
@@ -36,8 +38,16 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
 
     private final AtomicReference<ExecutingStep> executingStep = new AtomicReference<>(NO_STEP_EXECUTING);
 
-    private WebSocketClientStepInvoker(StepServerMessageRouter messageRouter, String clientId, String stepId, Pattern stepPattern, String technicalDescription, String pendingMessage, int timeoutSeconds) throws InvalidStepException {
-        super(pendingMessage, stepPattern);
+    private WebSocketClientStepInvoker(
+            StepServerMessageRouter messageRouter,
+            String clientId,
+            String stepId,
+            Pattern stepPattern,
+            String technicalDescription,
+            String pendingMessage,
+            int timeoutSeconds,
+            StepRetry stepRetry) throws InvalidStepException {
+        super(pendingMessage, stepPattern, stepRetry);
         this.messageRouter = messageRouter;
         this.clientId = clientId;
         this.stepId = stepId;
@@ -109,6 +119,11 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             throw new InvalidStepException("Could not compile step pattern", e);
         }
 
+        StepRetry stepRetry = new DefaultStepRetry(
+            publishStepMessage.getRetryDuration(),
+            publishStepMessage.getRetryInterval()
+        );
+
         return new WebSocketClientStepInvoker(
             messageRouter,
             publishStepMessage.getChorusClientId(),
@@ -116,7 +131,8 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             pattern,
             publishStepMessage.getTechnicalDescription(),
             publishStepMessage.getPendingMessage(),
-            timeoutSeconds
+            timeoutSeconds,
+                stepRetry
         );
     }
 

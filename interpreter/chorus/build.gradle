@@ -93,7 +93,7 @@ uploadArchives {
                     developer {
                         id 'nick'
                         name 'Nick Ebbutt'
-                        email 'NickAtEbbutt.net'
+                        email 'chorusbdd@objectdefinitions.com'
                     }
                 }
 

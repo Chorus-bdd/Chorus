@@ -130,7 +130,9 @@ public class StepPublisher {
             invoker.getStepPattern().toString(),
             invoker.isPending(),
             invoker.getPendingMessage() == null ? Step.NO_PENDING_MESSAGE : invoker.getPendingMessage(),
-            invoker.getTechnicalDescription()
+            invoker.getTechnicalDescription(),
+            invoker.getRetry().getDuration(),
+            invoker.getRetry().getInterval()
         );
         chorusWebSocketClient.sendMessage(publishStepMessage);
     }

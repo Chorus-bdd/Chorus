@@ -177,9 +177,13 @@ public class JmxRemotingManager implements RemotingManager {
         try {
             result = remoteStepInvoker.invoke(args);
 
-        //let any runtime exceptions propagate
-        } catch (ReflectiveOperationException e) {
-            throw new ChorusException(e);
+        //let any runtime exceptions propagate otherwise wrap as RuntimeException
+        } catch (Exception e) {
+            if ( ! (e instanceof RuntimeException)) {
+                throw new ChorusException(e);
+            } else {
+                throw (RuntimeException)e;
+            }
         }
         return result;
     }

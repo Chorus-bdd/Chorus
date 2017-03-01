@@ -52,8 +52,8 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
     private Object handlerInstance;
     private Method method;
 
-    public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage) {
-        super(pendingMessage, stepPattern);
+    public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage, StepRetry stepRetry) {
+        super(pendingMessage, stepPattern, stepRetry);
         this.handlerInstance = handlerInstance;
         this.method = method;
     }

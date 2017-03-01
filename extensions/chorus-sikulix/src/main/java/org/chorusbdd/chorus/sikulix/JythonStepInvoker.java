@@ -3,6 +3,7 @@ package org.chorusbdd.chorus.sikulix;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepRetry;
 import org.python.core.*;
 
 import java.util.List;
@@ -72,6 +73,13 @@ public class JythonStepInvoker implements StepInvoker {
 
 		log.info("Unhandled Python Type [" + pyObject + "]");
 		return null;
+	}
+
+	@Override
+	// It's not clear how we'd parse retry parameters from sikuli function -
+	// we will not support step retry at present
+	public StepRetry getRetry() {
+		return StepRetry.NO_RETRY;
 	}
 
 	private String mineErrorFromPyException(PyException py) {

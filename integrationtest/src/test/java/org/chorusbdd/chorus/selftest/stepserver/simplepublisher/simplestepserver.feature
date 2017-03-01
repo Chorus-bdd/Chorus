@@ -28,8 +28,13 @@ Feature: Simple Step Server Client
     Given StepServer client SimpleStepPublisher is connected
     Then I can show all StepServer steps
 
+  Scenario: I can call a step with a step retry
+    Given StepServer client SimpleStepPublisher is connected
+    Then I can call a step with a step retry and the step is polled until it passes
+
   Scenario: Fail nicely if client is not connected
     Given StepServer client DoesNotExist is connected
+
 
 
 

@@ -15,8 +15,96 @@ allprojects  {
     }
 
     group = "org.chorusbdd"
-    version = '3.0.0.DEV9'
+    version = '3.0.0.DEV12'
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Signing and Publication to Maven Central
+
+configure([
+        project(':chorus-selenium'),
+        project(':chorus-sikulix'),
+        project(':chorus-spring'),
+        project(':chorus-stepserver')]) {
+
+    println "Configuring extension... $project.name"
+
+    // http://central.sonatype.org/pages/gradle.html#releasing-the-deployment-to-the-central-repository
+    // Apply the plugin to allow gradle to sign jars for Sonatype Maven central distribution
+    // All child projects will be independently signed and released
+    apply plugin: 'signing'
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        if (signArtifactsForPublication.toBoolean()) {
+            sign configurations.archives
+        }
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name description
+                    packaging 'jar'
+                    // optionally artifactId can be defined here
+                    description mavenDescription
+                    url 'http://www.chorus-bdd.org'
+
+                    scm {
+                        connection 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                        developerConnection 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                        url 'http://github.com/Chorus-bdd/Chorus'
+                    }
+
+                    licenses {
+                        license {
+                            name 'MIT'
+                            url 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'nick'
+                            name 'Nick Ebbutt'
+                            email 'chorusbdd@objectdefinitions.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Dependencies
+
+//Add to all sub-projects a task which lets us calculate on demand the inter-module dependencies and create
+//the dependencies file this project then consumes
 
 subprojects {
 
@@ -59,9 +147,11 @@ task recalculateGradleDependencies
 
 recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
 
-//*** MODULE DEPENDENCIES
-
 apply from: 'dependencies.gradle'
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Distribution
 
 //The dependencies from this project determine which jars get included in the
 //distribution
@@ -75,8 +165,6 @@ dependencies {
     //require us to create distributions with differing contents
     //compile project ('chorus-sikulix')
 }
-
-//*** END MODULE DEPENDENCIES
 
 distributions {
     main{
