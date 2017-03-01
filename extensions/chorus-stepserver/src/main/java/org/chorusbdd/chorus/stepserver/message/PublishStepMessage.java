@@ -13,7 +13,11 @@ public class PublishStepMessage extends AbstractTypedMessage {
     private boolean isPending;
     private String pendingMessage = Step.NO_PENDING_MESSAGE;  //optional so provide default
     private String technicalDescription;
-    private long retryInterval;
+
+    //These defaults should match those in Step annotation
+    //Usually the interval will not be specified - usually only in rare cases where the remote assertion is expensive
+    //the user may wish to increase
+    private long retryInterval = 100;
     private long retryDuration;
 
     public PublishStepMessage() {
