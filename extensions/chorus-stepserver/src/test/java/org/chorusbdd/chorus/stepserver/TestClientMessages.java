@@ -111,7 +111,7 @@ public class TestClientMessages {
             Step.NO_PENDING_MESSAGE,
             "tech description",
             0,
-            0
+            100
         );
 
         verify(mockProcessor, timeout(1000)).receivePublishStep(expectedPublishStep);
