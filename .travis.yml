@@ -5,7 +5,7 @@ deploy:
   provider: releases
   api_key:
     secure: LOEDuGgxRmPrPVNO8dr5Y7UeFlcoxD2QIZHlDDzAPVdXqP9SXqYgO3rh+3U3B2wMIZOZTDFCejEwAKEU2Lo3STKamKbBJBcQPmDh6B+sdlS+bxMeJ985pjQYlDsNgjmm68c1ukTJ5yOsqI0MggbZrnRpE8gzMMEzZy80wtGI2XEw1bgHByfemlhjwFNxjo5W3RaTNXLm5bMIYb6XuC8apW0LGb7GSu7XEnVzk5hxrIIEa6mXQwfleY8HRY6ie+bw/kygklIo2H50JfRSfPNduMpcxZpjK9RPL9oGdEwsR80ZmF0B0gyOcvLf22bTKukLACLCeNnw98J/q+IJ3tlhqVPfu5K49bu7/IahLZxxWBFmFbiR89bKt1VpFLoSqUOobeqR8K2Txs05EZDpoD+nq6CZ9MzebyfltgievGkOq6TCa+B2UnIv/XEHydXrDPneP8ExXnlZP9qbXlWaTr2n4uMMESqo0Cc6OXZhah3IaeTNo/Q8zFOyzTU9l20WrKoBzUU9fWRG7JONy4uvbpcxKAl0pcZ0nvr6tuIqcUz7fNDsanZLAnf4RIzyaibeQyNL0WyR+rOk5bgrRvSjR2yIl/2D7lsN7bFMXxGDJR+3D+Fj3UKcIvMr/WK0rjU/vfrxV+k0rsdqgGZWivvmM7Scaf2o7NEDonXV9X+YanFYGzw=
-  file: build/distributions/chorus-3.0.0.DEV11.tar
+  file_glob: true
+  file: build/distributions/chorus*.tar
   on:
-    repo: nickebbutt/Chorus
     tags: true
