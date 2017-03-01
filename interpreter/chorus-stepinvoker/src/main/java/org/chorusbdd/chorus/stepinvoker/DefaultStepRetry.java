@@ -32,7 +32,7 @@ public class DefaultStepRetry implements StepRetry {
 
     public static StepRetry fromStepAnnotation(Step step) {
         long durationInMillis = TimeUnit.MILLISECONDS.convert(step.retryDuration(), step.retryTimeUnit());
-        return createStepRetry(durationInMillis, step.retryInterval());
+        return createStepRetry(durationInMillis, step.retryIntervalMillis());
     }
 
     public static StepRetry createStepRetry(long retryDuration, long retryInterval) {

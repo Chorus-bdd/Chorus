@@ -30,8 +30,6 @@
 package org.chorusbdd.chorus.selftest.stepretry;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.annotations.PollMode;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.util.FailImmediatelyException;
 
@@ -90,10 +88,10 @@ public class StepRetryHandler {
         assertEquals("Expect " + expectCount + " but was " + timeCount, expectCount, timeCount);
         
         //after 300ms the timer task should set the value, first poll should fail second should pass
-        assertTrue("Expect to have been polled at least 2 times", passesWithinPollCount >= 2 && passesWithinPollCount < 5);
+        assertTrue("Expect to have been polled at least 2 times but was " + passesWithinPollCount, passesWithinPollCount >= 2);
     }
 
-    @Step(value = "the value is not (\\d) within 0.2 seconds so this step should fail", retryDuration = 200, retryTimeUnit = TimeUnit.MILLISECONDS, retryInterval = 50)
+    @Step(value = "the value is not (\\d) within 0.2 seconds so this step should fail", retryDuration = 200, retryTimeUnit = TimeUnit.MILLISECONDS, retryIntervalMillis = 50)
     public void passesWithinPointTwoSeconds(int expectCount) {
         assertEquals("Expect " + expectCount, expectCount, timeCount);
     }

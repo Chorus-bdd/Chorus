@@ -30,8 +30,6 @@
 package org.chorusbdd.chorus.selftest.stepretry;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.PassesWithin;
-import org.chorusbdd.chorus.annotations.PollMode;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 import org.chorusbdd.chorus.util.FailImmediatelyException;
@@ -80,7 +78,7 @@ public class RemoteProcessWithStepRetry {
             assertTrue("polled several times", pollCount > 1);
         }
         
-        @Step(value = ".* test condition fails with AssertionError", retryDuration = 200000, retryTimeUnit = TimeUnit.MILLISECONDS, retryInterval = 50)
+        @Step(value = ".* test condition fails with AssertionError", retryDuration = 200000, retryTimeUnit = TimeUnit.MILLISECONDS, retryIntervalMillis = 50)
         public void testFails() {
             ChorusAssert.fail("Failed condition");
         }

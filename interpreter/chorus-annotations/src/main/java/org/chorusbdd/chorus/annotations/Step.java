@@ -69,6 +69,6 @@ public @interface Step {
     /**
      * An interval in milliseconds at which to poll/retry the step during the retry duration period
      */
-    int retryInterval() default 100;
+    int retryIntervalMillis() default 100;
 
 }

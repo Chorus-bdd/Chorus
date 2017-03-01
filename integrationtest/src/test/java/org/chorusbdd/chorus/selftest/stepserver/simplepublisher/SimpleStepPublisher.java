@@ -52,7 +52,7 @@ public class SimpleStepPublisher {
             sleep(100000);
         }
 
-        @Step(value = ".* call a step with a step retry and the step is polled until it passes", retryDuration = 1, retryInterval = 100)
+        @Step(value = ".* call a step with a step retry and the step is polled until it passes", retryDuration = 1, retryIntervalMillis = 100)
         public int stepWhichFailsAtFirst() throws InterruptedException {
             tryCount ++;
             if ( tryCount < 10) {
