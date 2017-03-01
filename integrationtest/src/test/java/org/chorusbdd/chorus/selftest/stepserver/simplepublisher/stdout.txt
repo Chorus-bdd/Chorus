@@ -29,13 +29,18 @@ Steps:
  .* call a step which blocks
  .* call a step which fails
  .* call a step with a result
+ .* call a step with a step retry and the step is polled until it passes
  .* call a step without a result
     Then I can show all StepServer steps                                                     PASSED  
+  Scenario: I can call a step with a step retry
+Chorus --> INFO    - Processing scenario: I can call a step with a step retry
+    Given StepServer client SimpleStepPublisher is connected                                 PASSED  
+    Then I can call a step with a step retry and the step is polled until it passes          PASSED  10
   Scenario: Fail nicely if client is not connected
 Chorus --> INFO    - Processing scenario: Fail nicely if client is not connected
     Given StepServer client DoesNotExist is connected                                        FAILED  (StepServerHandler:linenumber)-ChorusException Client DoesNotExist is not connected
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:5) (passed:2) (failed:3)
-Steps     (total:14) (passed:10) (failed:3) (undefined:0) (pending:0) (skipped:1)
+Scenarios (total:6) (passed:3) (failed:3)
+Steps     (total:16) (passed:12) (failed:3) (undefined:0) (pending:0) (skipped:1)

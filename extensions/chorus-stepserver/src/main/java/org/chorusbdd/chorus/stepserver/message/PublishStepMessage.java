@@ -13,14 +13,14 @@ public class PublishStepMessage extends AbstractTypedMessage {
     private boolean isPending;
     private String pendingMessage = Step.NO_PENDING_MESSAGE;  //optional so provide default
     private String technicalDescription;
-    private int retryInterval;
-    private int retryDuration;
+    private long retryInterval;
+    private long retryDuration;
 
     public PublishStepMessage() {
         super(MessageType.PUBLISH_STEP.name());
     }
 
-    public PublishStepMessage(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription) {
+    public PublishStepMessage(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription, long retryDuration, long retryInterval) {
         this();
         this.stepId = stepId;
         this.chorusClientId = chorusClientId;
@@ -28,6 +28,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
         this.isPending = isPending;
         this.pendingMessage = pendingMessage;
         this.technicalDescription = technicalDescription;
+        this.retryDuration = retryDuration;
+        this.retryInterval = retryInterval;
     }
 
     public String getStepId() {
@@ -78,19 +80,19 @@ public class PublishStepMessage extends AbstractTypedMessage {
         this.technicalDescription = technicalDescription;
     }
 
-    public int getRetryInterval() {
+    public long getRetryInterval() {
         return retryInterval;
     }
 
-    public void setRetryInterval(int retryInterval) {
+    public void setRetryInterval(long retryInterval) {
         this.retryInterval = retryInterval;
     }
 
-    public int getRetryDuration() {
+    public long getRetryDuration() {
         return retryDuration;
     }
 
-    public void setRetryDuration(int retryDuration) {
+    public void setRetryDuration(long retryDuration) {
         this.retryDuration = retryDuration;
     }
 
@@ -109,7 +111,6 @@ public class PublishStepMessage extends AbstractTypedMessage {
         if (!pattern.equals(that.pattern)) return false;
         if (!pendingMessage.equals(that.pendingMessage)) return false;
         return technicalDescription.equals(that.technicalDescription);
-
     }
 
     @Override
@@ -120,8 +121,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
         result = 31 * result + (isPending ? 1 : 0);
         result = 31 * result + pendingMessage.hashCode();
         result = 31 * result + technicalDescription.hashCode();
-        result = 31 * result + retryInterval;
-        result = 31 * result + retryDuration;
+        result = 31 * result + (int) (retryInterval ^ (retryInterval >>> 32));
+        result = 31 * result + (int) (retryDuration ^ (retryDuration >>> 32));
         return result;
     }
 
