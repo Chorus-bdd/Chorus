@@ -61,7 +61,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         initializeProcessManager();
         initializeRemotingManager();
         initializeConfigurationManager();
-        initializeStepServerManager();
+        initializeStepRegistryManager();
 
         subsystemList = Collections.unmodifiableList(new ArrayList<>(subsystems.values()));
 
@@ -120,11 +120,11 @@ public class SubsystemManagerImpl implements SubsystemManager {
         );
     }
 
-    private void initializeStepServerManager() {
+    private void initializeStepRegistryManager() {
         initializeSubsystem(
-            "stepServerManager",
-            "chorusStepServerManager",
-            "org.chorusbdd.chorus.stepserver.StepServer",
+            "stepRegistryManager",
+            "chorusStepRegistryManager",
+            "org.chorusbdd.chorus.stepregistry.StepRegistry",
             true
         );
     }

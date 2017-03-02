@@ -136,7 +136,7 @@ project(':integrationtest') {
         compile project (':chorus')
         compile project (':chorus-spring')
         compile project (':chorus-selenium')
-        compile project (':chorus-stepserver')
+        compile project (':chorus-stepregistry')
     }
 }
 
@@ -160,7 +160,7 @@ project(':chorus-stepinvoker') {
     }
 }
 
-project(':chorus-stepserver') {
+project(':chorus-stepregistry') {
     dependencies {
         compile project (':chorus')
     }

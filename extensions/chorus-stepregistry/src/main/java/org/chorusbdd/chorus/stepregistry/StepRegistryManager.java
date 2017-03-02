@@ -27,42 +27,39 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.stepregistry;
+
+import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
+import org.chorusbdd.chorus.subsystem.Subsystem;
+
+import java.util.List;
+import java.util.Properties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 19/06/12
- * Time: 08:05
+ * Created by nick on 30/08/2014.
+ * 
+ * A StepRegistryManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
  */
-public class ChorusConstants {
+public interface StepRegistryManager extends Subsystem, StepInvokerProvider {
 
-    public static final String DEFAULT_SUITE_NAME = "Test Suite";
+    String DEFAULT_REGISTRY_NAME = "default";
 
-    //TODO review - it seems wrong to hardcode the package prefixes for optional extension
-    //packages such as selenium or stepregistry
-    public static final String[] BUILT_IN_HANDLER_PACKAGE_PREFIXES = new String[] {
-        "org.chorusbdd.chorus.handlers",
-        "org.chorusbdd.chorus.selftest",
-        "org.chorusbdd.chorus.selenium",
-        "org.chorusbdd.chorus.stepregistry"
-    };
+    void startRegistry(Properties properties);
 
-    public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
+    void stopRegistry();
 
-    public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
-
-    public static final String STEP_PUBLISHER_ENABLED_PROPERTY = "org.chorusbdd.chorus.steppublisher.enabled";
-
-    public static final String CHORUS_ROOT_PACKAGE = "org.chorusbdd.chorus";
-    public static final String[] ANY_PACKAGE = new String[] {".*"};
     /**
-     * A special config name which is used to define database connection properties to
-     * load configs from the database
+     * Wait for a client to become connected to the StepRegistry, publish its steps and send a STEPS_ALIGNED
+     *
+     * @param clientName, name of the client which the client should send when connecting
+     *
+     * @return true if the client is connected and aligned, false if not connected or has not published
+     * STEPS_ALIGNED by the end of the timeout period
      */
-    public static final String DATABASE_CONFIGS_PROPERTY_GROUP  = "dbproperties";
-    /**
-     * The name of the properties group which may be defined to supply default settings for other configs
-     */
-    public static final String DEFAULT_PROPERTIES_GROUP = "default";
+    boolean waitForClientConnection(String clientName) throws ClientConnectionException;
+
+    List<StepInvoker> getStepInvokers();
+
+    void showAllSteps();
 }

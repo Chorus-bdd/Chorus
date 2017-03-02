@@ -25,7 +25,7 @@ configure([
         project(':chorus-selenium'),
         project(':chorus-sikulix'),
         project(':chorus-spring'),
-        project(':chorus-stepserver')]) {
+        project(':chorus-stepregistry')]) {
 
     println "Configuring extension... $project.name"
 
@@ -159,7 +159,7 @@ dependencies {
     compile project ('chorus')
     compile project ('chorus-spring')
     compile project ('chorus-selenium')
-    compile project ('chorus-stepserver')
+    compile project ('chorus-stepregistry')
 
     //TODO Sikuli is omitted for now. It needs different jars for different OS and so would
     //require us to create distributions with differing contents
