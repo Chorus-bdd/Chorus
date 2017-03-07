@@ -2,12 +2,14 @@ package org.chorusbdd.chorus.selftest.stepregistry.simplepublisher;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.stepregistry.client.StepPublisher;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.net.URI;
 
 import static java.lang.Thread.sleep;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -29,7 +31,7 @@ public class SimpleStepPublisher {
         sleep(30000);
     }
 
-    @Handler("SimpleStepRegistryClientHandler")
+    @Handler("SimpleStepPublisherClientHandler")
     public static class SimpleStepRegistryClientHandler {
 
         private int tryCount = 0;
@@ -59,6 +61,17 @@ public class SimpleStepPublisher {
                 throw new ChorusException("Simulate Failure");
             }
             return tryCount;
+        }
+
+        @Step(".*in the step publisher (.*) has the value (.*)")
+        public void checkValue(String variable, String value) {
+            String currentValue = (String)ChorusContext.getContext().get(variable);
+            assertEquals(value, currentValue);
+        }
+
+        @Step(".*set the (.*) variable to (.*) in the step publisher")
+        public void setContextValue(String variable, String value) {
+            ChorusContext.getContext().put(variable, value);
         }
 
     }
