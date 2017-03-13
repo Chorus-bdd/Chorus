@@ -1,5 +1,6 @@
 Uses: Processes
 Uses: StepRegistry
+Uses: Chorus Context
 
 Feature: Simple Step Publisher
 
@@ -34,6 +35,20 @@ Feature: Simple Step Publisher
 
   Scenario: Fail nicely if client is not connected
     Given StepRegistry client DoesNotExist is connected
+
+  Scenario: I can read a variable from the Chorus Context in the step publisher
+    Given I create a variable outbound with the value do
+    Then in the step publisher outbound has the value do
+
+  Scenario: I can set a variable in the ChorusContext in the step publisher
+    When I set the outbound variable to re in the step publisher
+    Then the variable outbound has the value re
+
+  Scenario: I can overwrite a variable in the ChorusContext in the step publisher
+    Given I create a variable outbound with the value re
+    When I set the outbound variable to mi in the step publisher
+    Then the variable outbound has the value mi
+
 
 
 

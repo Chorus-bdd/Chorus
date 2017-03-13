@@ -13,6 +13,7 @@ import org.chorusbdd.chorus.stepregistry.message.StepSucceededMessage;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -76,9 +77,9 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             log.debug("Executing step " + s + " and waiting " + timeoutSeconds + " seconds");
             messageRouter.sendMessage(clientId, executeStepMessage);
 
-            Object result;
+            StepSucceededMessage stepSucceededMessage;
             try {
-                result = s.getCompletableFuture().get(timeoutSeconds, TimeUnit.SECONDS);
+                stepSucceededMessage = s.getCompletableFuture().get(timeoutSeconds, TimeUnit.SECONDS);
             } catch (Exception e) {
                 if ( e instanceof TimeoutException ) {
                     throw new ChorusException("Timed out waiting for client " + clientId + " to execute the step");
@@ -87,7 +88,13 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
                 }
                throw new ChorusException("Failed while executing a Step Server step", e);
             }
-            return result;
+
+            //Update local ChorusContext with state returned from remote client
+            //update the local context with any changes made remotely
+            Map newContextState = stepSucceededMessage.getContextVariables();
+            ChorusContext.resetContext(newContextState);
+
+            return stepSucceededMessage.getResult();
 
         } else {
             throw new ChorusException(String.format("Step %s is already being executed, cannot execute again", stepId));
@@ -132,7 +139,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             publishStepMessage.getTechnicalDescription(),
             publishStepMessage.getPendingMessage(),
             timeoutSeconds,
-                stepRetry
+            stepRetry
         );
     }
 
@@ -150,7 +157,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
                 if ( ! result) {
                     log.error("Failed to set NO_STEP_EXECUTING");
                 }
-                s.getCompletableFuture().complete(stepSuccessMessage.getResult());
+                s.getCompletableFuture().complete(stepSuccessMessage);
             }
         }
     }
@@ -182,7 +189,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     private static class ExecutingStep {
 
         private final String executionUUID;
-        private final CompletableFuture<Object> completableFuture = new CompletableFuture<>();
+        private final CompletableFuture<StepSucceededMessage> completableFuture = new CompletableFuture<>();
 
 
         public ExecutingStep(String executionUUID) {
@@ -193,7 +200,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             return executionUUID;
         }
 
-        public CompletableFuture<Object> getCompletableFuture() {
+        public CompletableFuture<StepSucceededMessage> getCompletableFuture() {
             return completableFuture;
         }
     }

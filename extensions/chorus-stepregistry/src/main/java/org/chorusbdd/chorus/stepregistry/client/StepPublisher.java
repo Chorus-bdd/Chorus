@@ -162,6 +162,10 @@ public class StepPublisher {
         }
 
         private void runStep(ExecuteStepMessage executeStepMessage, String stepId, StepInvoker stepInvoker) {
+
+            //Set the context variables for the invocation thread
+            ChorusContext.resetContext(executeStepMessage.getContextVariables());
+
             Object result = null;
             try {
                 result = stepInvoker.invoke(executeStepMessage.getArguments());
