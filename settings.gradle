@@ -21,7 +21,7 @@ include 'chorus',
         'chorus-selenium',
         'chorus-sikulix',
         'chorus-spring',
-        'chorus-stepserver',
+        'chorus-stepregistry',
         'chorus-mocksuite',
         'chorus-webagent',
         'chorus-xml',
@@ -48,7 +48,7 @@ project(':chorus-util').projectDir = file("interpreter/chorus-util")
 project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")
 project(':chorus-sikulix').projectDir = file("extensions/chorus-sikulix")
 project(':chorus-spring').projectDir = file("extensions/chorus-spring")
-project(':chorus-stepserver').projectDir = file("extensions/chorus-stepserver")
+project(':chorus-stepregistry').projectDir = file("extensions/chorus-stepregistry")
 project(':chorus-mocksuite').projectDir = file("services/chorus-mocksuite")
 project(':chorus-webagent').projectDir = file("services/chorus-webagent")
 project(':chorus-xml').projectDir = file("services/chorus-xml")

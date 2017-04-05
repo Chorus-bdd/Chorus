@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/Chorus-bdd/Chorus.svg?branch=master)](https://travis-ci.org/Chorus-bdd/Chorus)
 
-###Chorus is a BDD test interpreter targeted at distributed architectures###
+### Chorus is a BDD test interpreter targeted at distributed architectures
 
 Chorus is great for testing microservice architectures and distributed systems
 It allows a team to write plain language tests with steps that can execute on components running remotely.
@@ -13,10 +13,10 @@ We are presently developing connectivity solutions for other languages as part o
 
 **Getting Started:**
 
-####See [The Chorus Website](http://chorus-bdd.github.io) for documentation ####
-####See [Chorus Demo Project](https://github.com/Chorus-bdd/Chorus-demo) ####
-####The [User Forum](http://forum.chorusbdd.org/) for help ####
-####The [Issue Tracking](https://github.com/Chorus-bdd/Chorus/issues?state=open) page, for issue tracking!####
+#### See [The Chorus Website](http://chorus-bdd.github.io) for documentation
+#### See [Chorus Demo Project](https://github.com/Chorus-bdd/Chorus-demo)
+#### The [User Forum](http://forum.chorusbdd.org/) for help
+#### The [Issue Tracking](https://github.com/Chorus-bdd/Chorus/issues?state=open) page, for issue tracking!
 
 Chorus is available under the open source MIT license
 

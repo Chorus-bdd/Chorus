@@ -100,6 +100,7 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
             String[] signature = {"java.lang.String", "java.util.Map", "java.util.List"};
             log.debug(String.format("About to invoke step (%s) on MBean (%s)", stepId, objectName));
             JmxStepResult r = (JmxStepResult) mBeanServerConnection.invoke(objectName, "invokeStep", args, signature);
+
             //update the local context with any changes made remotely
             Map newContextState = r.getChorusContext();
             ChorusContext.resetContext(newContextState);

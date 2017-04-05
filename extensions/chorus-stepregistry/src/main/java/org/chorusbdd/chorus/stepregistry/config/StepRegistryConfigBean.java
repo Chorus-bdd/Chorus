@@ -27,42 +27,60 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.stepregistry.config;
+
+import org.chorusbdd.chorus.annotations.Scope;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 19/06/12
- * Time: 08:05
+ * An immutable runtime config for a process
  */
-public class ChorusConstants {
+public class StepRegistryConfigBean implements StepRegistryConfig {
 
-    public static final String DEFAULT_SUITE_NAME = "Test Suite";
+    private final String configName;
+    private final int stepTimeoutSeconds;
+    private final int port;
+    private final Scope scope;
+    private final int clientConnectTimeoutSeconds;
 
-    //TODO review - it seems wrong to hardcode the package prefixes for optional extension
-    //packages such as selenium or stepregistry
-    public static final String[] BUILT_IN_HANDLER_PACKAGE_PREFIXES = new String[] {
-        "org.chorusbdd.chorus.handlers",
-        "org.chorusbdd.chorus.selftest",
-        "org.chorusbdd.chorus.selenium",
-        "org.chorusbdd.chorus.stepregistry"
-    };
+    public StepRegistryConfigBean(String configName, int stepTimeoutSeconds, int clientConnectTimeoutSeconds, int port, Scope scope) {
+        this.configName = configName;
+        this.stepTimeoutSeconds = stepTimeoutSeconds;
+        this.clientConnectTimeoutSeconds = clientConnectTimeoutSeconds;
+        this.port = port;
+        this.scope = scope;
+    }
 
-    public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
+    public int getStepTimeoutSeconds() {
+        return stepTimeoutSeconds;
+    }
 
-    public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";
+    @Override
+    public int getClientConnectTimeoutSeconds() {
+        return clientConnectTimeoutSeconds;
+    }
 
-    public static final String STEP_PUBLISHER_ENABLED_PROPERTY = "org.chorusbdd.chorus.steppublisher.enabled";
+    @Override
+    public int getPort() {
+        return port;
+    }
 
-    public static final String CHORUS_ROOT_PACKAGE = "org.chorusbdd.chorus";
-    public static final String[] ANY_PACKAGE = new String[] {".*"};
-    /**
-     * A special config name which is used to define database connection properties to
-     * load configs from the database
-     */
-    public static final String DATABASE_CONFIGS_PROPERTY_GROUP  = "dbproperties";
-    /**
-     * The name of the properties group which may be defined to supply default settings for other configs
-     */
-    public static final String DEFAULT_PROPERTIES_GROUP = "default";
+    public String getConfigName() {
+        return configName;
+    }
+
+    @Override
+    public Scope getScope() {
+        return scope;
+    }
+
+    @Override
+    public String toString() {
+        return "StepRegistryConfigBean{" +
+            "configName='" + configName + '\'' +
+            ", clientConnectTimeoutSeconds=" + clientConnectTimeoutSeconds +
+            ", stepTimeoutSeconds=" + stepTimeoutSeconds +
+            ", port=" + port +
+            ", scope=" + scope +
+            '}';
+    }
 }

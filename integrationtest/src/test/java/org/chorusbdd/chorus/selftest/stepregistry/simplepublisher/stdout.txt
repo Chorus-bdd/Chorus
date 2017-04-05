@@ -1,0 +1,61 @@
+Feature: Simple Step Publisher                                                                       
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepregistry/simplepublisher/simplesteppublisher.feature
+Chorus --> INFO    - No default handler found for Feature: (Simple Step Publisher), will use built-in handlers and Uses: statements
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+Chorus --> INFO    - Starting StepRegistry on port 9080
+    #! StepRegistry start                                                                    PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    #! Processes start simpleStepPublisher                                                   PASSED  
+    #! StepRegistry wait for the client SimpleStepPublisher                                  PASSED  
+  Scenario: I can call steps with and without a result
+Chorus --> INFO    - Processing scenario: I can call steps with and without a result
+    Given StepRegistry client SimpleStepPublisher is connected                               PASSED  
+    Then I can call a step with a result                                                     PASSED  Hello!
+    And I can call a step without a result                                                   PASSED  
+  Scenario: I can call steps which fail
+Chorus --> INFO    - Processing scenario: I can call steps which fail
+    Check I can call a step with a result                                                    PASSED  Hello!
+    And I can call a step which fails                                                        FAILED  (WebSocketClientStepInvoker:linenumber)-StepFailedException Whooa steady on there sailor
+  Scenario: I can call steps which fail
+Chorus --> INFO    - Processing scenario: I can call steps which fail
+    Given I can call a step with a result                                                    PASSED  Hello!
+    When I call a step which blocks                                                          FAILED  (WebSocketClientStepInvoker:linenumber)-ChorusException Timed out waiting for client SimpleStepPublisher to execute the step
+    Then the next step is skipped because the interpreter timed out                          SKIPPED 
+  Scenario: I can show all steps
+Chorus --> INFO    - Processing scenario: I can show all steps
+    Given StepRegistry client SimpleStepPublisher is connected                               PASSED  
+Steps:
+ .* call a step which blocks
+ .* call a step which fails
+ .* call a step with a result
+ .* call a step with a step retry and the step is polled until it passes
+ .* call a step without a result
+ .*in the step publisher (.*) has the value (.*)
+ .*set the (.*) variable to (.*) in the step publisher
+    Then I can show all StepRegistry steps                                                   PASSED  
+  Scenario: I can call a step with a step retry
+Chorus --> INFO    - Processing scenario: I can call a step with a step retry
+    Given StepRegistry client SimpleStepPublisher is connected                               PASSED  
+    Then I can call a step with a step retry and the step is polled until it passes          PASSED  10
+  Scenario: Fail nicely if client is not connected
+Chorus --> INFO    - Processing scenario: Fail nicely if client is not connected
+    Given StepRegistry client DoesNotExist is connected                                      FAILED  (StepRegistryHandler:linenumber)-ChorusException Client DoesNotExist is not connected
+  Scenario: I can read a variable from the Chorus Context in the step publisher
+Chorus --> INFO    - Processing scenario: I can read a variable from the Chorus Context in the step publisher
+    Given I create a variable outbound with the value do                                     PASSED  
+    Then in the step publisher outbound has the value do                                     PASSED  
+  Scenario: I can set a variable in the Chorus Context in the step publisher
+Chorus --> INFO    - Processing scenario: I can set a variable in the Chorus Context in the step publisher
+    When I set the inbound variable to re in the step publisher                              PASSED  
+    Then the variable inbound has the value re                                               PASSED  
+  Scenario: I can overwrite a variable in the Chorus Context in the step publisher
+Chorus --> INFO    - Processing scenario: I can overwrite a variable in the Chorus Context in the step publisher
+    Given I create a variable outbound with the value re                                     PASSED  
+    When I set the outbound variable to mi in the step publisher                             PASSED  
+    Then the variable outbound has the value mi                                              PASSED  
+
+
+Features  (total:1) (passed:0) (failed:1)
+Scenarios (total:9) (passed:6) (failed:3)
+Steps     (total:23) (passed:19) (failed:3) (undefined:0) (pending:0) (skipped:1)
