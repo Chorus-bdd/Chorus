@@ -284,32 +284,22 @@ public class StepProcessor {
         StepEndState endState;
         step.setThrowable(cause);
 
-        String exceptionMessage = cause.getMessage();
-        log.debug("Step failed due to exception " + exceptionMessage);
+        String causeMessage = cause.getMessage();
+        log.debug("Step failed due to exception " + cause);
 
-        String stepMessage = getStepMessage(cause, exceptionMessage);
-        step.setMessage(stepMessage);
+        String errorDetails = getErrorDetails(cause);
+        step.setMessage(causeMessage);
+        step.setErrorDetails(errorDetails);
 
         endState = StepEndState.FAILED;
         executionToken.incrementStepsFailed();
         return endState;
     }
 
-    private String getStepMessage(Throwable cause, String exceptionMessage) {
+    private String getErrorDetails(Throwable cause) {
         String location = ExceptionHandling.getExceptionLocation(cause);
-
         String exceptionSimpleName = cause.getClass().getSimpleName();
-        String message;
-        if( exceptionMessage == null ) {
-            message = exceptionSimpleName;
-        } else {
-            message = exceptionMessage;
-            //ensure we have the name of an exception included
-            if ( ! message.contains("Exception") && ! message.contains("Error")) {
-                message = exceptionSimpleName + " " + message;
-            }
-        }
-        return location + message;
+        return location + exceptionSimpleName;
     }
 
     private StepEndState handleThreadDeath() {
@@ -329,7 +319,8 @@ public class StepProcessor {
             endState = StepEndState.FAILED;
         }
         executionToken.incrementStepsFailed();
-        step.setMessage(cause.getClass().getSimpleName());
+        step.setMessage("Interrupted");
+        step.setErrorDetails(getErrorDetails(cause));
         Thread.currentThread().isInterrupted(); //clear the interrupted status
         return endState;
     }

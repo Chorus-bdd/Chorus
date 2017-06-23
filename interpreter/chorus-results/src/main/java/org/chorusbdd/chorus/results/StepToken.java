@@ -46,6 +46,7 @@ public class StepToken extends AbstractToken {
 
     private StepEndState endState = StepEndState.NOT_RUN;
     private String message = "";
+    private String errorDetails = "";
 
     private int retryAttempts;
 
@@ -94,6 +95,17 @@ public class StepToken extends AbstractToken {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    /**
+     * Provides technical details which supplement the message if a step has failed
+     */
+    public String getErrorDetails() {
+        return errorDetails;
+    }
+
+    public void setErrorDetails(String errorDetails) {
+        this.errorDetails = errorDetails;
     }
 
     public boolean inOneOf(StepEndState... states) {

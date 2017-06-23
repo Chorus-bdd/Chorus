@@ -50,16 +50,6 @@ public final class ConsoleOutputWriter extends AbstractChorusOutputWriter {
         }
     }
 
-    public void printStepEnd(StepToken step, int depth) {
-        cancelStepAnimation();
-        if ( ! step.isStepMacro()) { //we don't print results for the step macro step itself but show it for each child step
-            StringBuilder depthPadding = getDepthPadding(depth);
-            int stepLengthChars =  getStepLengthCharCount() - depthPadding.length();
-            getPrintWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
-            getPrintWriter().flush();
-        }
-    }
-
     /**
      * Show step progress with a carriage return to overwrite the previously written line and an animated cursor
      */

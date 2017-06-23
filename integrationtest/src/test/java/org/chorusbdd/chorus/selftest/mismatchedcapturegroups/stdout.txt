@@ -4,13 +4,13 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params One
     Given Chorus is working properly                                                         PASSED  
 Chorus --> WARN    - Number of method parameters does not match regex groups
-    And I pass a parameter 10 matched by a regex with one capture group but no method params FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Number of method parameters does not match regex groups
+    And I pass a parameter 10 matched by a regex with one capture group but no method params FAILED  Number of method parameters does not match regex groups (SimpleMethodInvoker:linenumber)-IllegalArgumentException
     Then the subsequent steps fail                                                           SKIPPED 
   Scenario: Mismatched Capture Groups Params Two
 Chorus --> INFO    - Processing scenario: Mismatched Capture Groups Params Two
     Given Chorus is working properly                                                         PASSED  
 Chorus --> WARN    - Number of method parameters does not match regex groups
-    And I pass a parameter 10 matched by a regex with 2 capture groups but just one param    FAILED  (SimpleMethodInvoker:linenumber)-IllegalArgumentException Number of method parameters does not match regex groups
+    And I pass a parameter 10 matched by a regex with 2 capture groups but just one param    FAILED  Number of method parameters does not match regex groups (SimpleMethodInvoker:linenumber)-IllegalArgumentException
     Then the subsequent steps fail                                                           SKIPPED 
 
 

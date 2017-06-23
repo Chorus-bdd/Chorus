@@ -3,7 +3,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
   Scenario: Session properties can be set and overridden
 Chorus --> INFO    - Processing scenario: Session properties can be set and overridden
     Check A prop can be set in the main classpath chorus.properties                          PASSED  
-    Check A prop from main classpath chorus.properties can be overridden in the local chorus.propertiesPASSED  
+    Check A prop from main classpath chorus.properties can be overridden in the local chorus.properties PASSED  
     Check A prop from local chorus.properties can be overridden in feature.properties        PASSED  
 
 

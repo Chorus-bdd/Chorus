@@ -2,7 +2,7 @@ Starting Remote JMX execution listener
 Feature: Jmx Execution Listener                                                                      
   Scenario: Test a Remote Jmx Execution Listener
     Given Chorus is working properly                                                         PASSED  
-    Then the remote jmx listener should be able to generate the same output as the local execution listenerPASSED  
+    Then the remote jmx listener should be able to generate the same output as the local execution listener PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)

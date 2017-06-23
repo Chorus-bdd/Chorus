@@ -4,7 +4,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - Processing scenario: Start a process with process check delay
     Given Chorus is working properly                                                         PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    And I start a withchecking process named Frodo                                           FAILED  (ProcessManagerProcess:linenumber)-ProcessCheckFailedException Process terminated with a non-zero exit code during processCheckDelay period, step fails
+    And I start a withchecking process named Frodo                                           FAILED  Process terminated with a non-zero exit code during processCheckDelay period, step fails (ProcessManagerProcess:linenumber)-ProcessCheckFailedException
   Scenario: Start a process without process check delay
 Chorus --> INFO    - Processing scenario: Start a process without process check delay
     Given Chorus is working properly                                                         PASSED  
@@ -14,7 +14,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 Chorus --> INFO    - Processing scenario: Start a process with checking using directives
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    #! Processes start withoutchecking, withchecking                                         FAILED  (ProcessManagerProcess:linenumber)-ProcessCheckFailedException Process terminated with a non-zero exit code during processCheckDelay period, step fails
+    #! Processes start withoutchecking, withchecking                                         FAILED  Process terminated with a non-zero exit code during processCheckDelay period, step fails (ProcessManagerProcess:linenumber)-ProcessCheckFailedException
     Given Chorus is working properly                                                         SKIPPED 
     Then these steps will be skipped                                                         SKIPPED 
 

@@ -19,7 +19,7 @@
                 <scenario endState="FAILED" name="Scenario Which Fails Due To Step Failure" tokenId="9">
                     <steps>
                         <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="1" timeTakenSeconds="0" tokenId="10"/>
-                        <step type="And" action="a step fails an assertion" endState="FAILED" message="(WebAgentSelfTestHandler:23)-AssertionFailedError Fail an assertion" stackTrace="junit.framework.AssertionFailedError: Fail an assertion
+                        <step type="And" action="a step fails an assertion" endState="FAILED" message="Fail an assertion" stackTrace="junit.framework.AssertionFailedError: Fail an assertion
 	at junit.framework.Assert.fail(Assert.java:50)
 	at junit.framework.Assert.assertTrue(Assert.java:20)
 	at org.chorusbdd.chorus.tools.mocksuite.mocksuiteone.WebAgentSelfTestHandler.failAnAssertion(WebAgentSelfTestHandler.java:23)
@@ -143,7 +143,7 @@
                     <steps>
                         <step type="Given" action="I call a step macro with a failing step" endState="FAILED" message="" timeTaken="0" timeTakenSeconds="0" tokenId="55">
                             <step type="Given" action="I run step one" endState="PASSED" message="one" timeTaken="0" timeTakenSeconds="0" tokenId="56"/>
-                            <step type="And" action="a step fails an assertion" endState="FAILED" message="(WebAgentSelfTestHandler:23)-AssertionFailedError Fail an assertion" stackTrace="junit.framework.AssertionFailedError: Fail an assertion
+                            <step type="And" action="a step fails an assertion" endState="FAILED" message="Fail an assertion" stackTrace="junit.framework.AssertionFailedError: Fail an assertion
 	at junit.framework.Assert.fail(Assert.java:50)
 	at junit.framework.Assert.assertTrue(Assert.java:20)
 	at org.chorusbdd.chorus.tools.mocksuite.mocksuiteone.WebAgentSelfTestHandler.failAnAssertion(WebAgentSelfTestHandler.java:23)

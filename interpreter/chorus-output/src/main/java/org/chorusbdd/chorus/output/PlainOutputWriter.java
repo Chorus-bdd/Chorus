@@ -78,15 +78,6 @@ public final class PlainOutputWriter extends AbstractChorusOutputWriter {
         }
     }
 
-    public void printStepEnd(StepToken step, int depth) {
-        cancelStepAnimation();
-        if ( ! step.isStepMacro() ) {
-            StringBuilder depthPadding = getDepthPadding(depth);
-            int stepLengthChars = getStepLengthCharCount() - depthPadding.length();
-            printCompletedStep(step, depthPadding, stepLengthChars);
-        }
-    }
-
     /**
      * Show step progress but only if a step does not complete after 5 seconds
      * (this helps to make it clearer which step is blocked)
