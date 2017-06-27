@@ -57,7 +57,7 @@
 	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:76)
 	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:195)
 	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:63)
-" timeTaken="13" timeTakenSeconds="0" tokenId="11">
+" errorDetails="(WebAgentSelfTestHandler:{LINENUMBER})-AssertionFailedError" timeTaken="13" timeTakenSeconds="0" tokenId="11">
                             <exception>junit.framework.AssertionFailedError: Fail an assertion</exception>
                         </step>
                         <step type="Then" action="the scenario will be failed" endState="SKIPPED" message="" timeTaken="0" timeTakenSeconds="0" tokenId="12"/>
@@ -183,7 +183,7 @@
 	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:76)
 	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:195)
 	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:63)
-" timeTaken="6" timeTakenSeconds="0" tokenId="57">
+" errorDetails="(WebAgentSelfTestHandler:{LINENUMBER})-AssertionFailedError" timeTaken="6" timeTakenSeconds="0" tokenId="57">
                                 <exception>junit.framework.AssertionFailedError: Fail an assertion</exception>
                             </step>
                             <step type="Then" action="the next macro step is skipped" endState="SKIPPED" message="" timeTaken="0" timeTakenSeconds="0" tokenId="58"/>

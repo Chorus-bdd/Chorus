@@ -40,23 +40,30 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlType(propOrder = {"type", "action", "endState", "message", "exception", "stackTrace", "childSteps"})
+@XmlType(propOrder = {"type", "action", "endState", "message", "exception", "stackTrace", "childSteps", "errorDetails"})
 public class StepTokenBean {
 	private String type;
     private String action;
 
     private StepEndState endState;
+
+    /**
+     * Default message tp "" since we always want the message attribute to appear
+     */
     private String message = "";
+    
+    //These attributes are null by default and if not set will not be appear in XML element
     private String exception;
     private String stackTrace;
-    private String timeTakenSeconds;
+    private String errorDetails;
 
+    private String timeTakenSeconds;
     private long timeTaken;
 
     private boolean isStepMacro;
     private List<StepToken> childSteps = new ArrayList<StepToken>();
     private long tokenId;
-    
+
     public StepTokenBean() {}
 
     @XmlAttribute
@@ -103,6 +110,13 @@ public class StepTokenBean {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+    @XmlAttribute
+    public String getErrorDetails() { return errorDetails; }
+
+    public void setErrorDetails(String errorDetails) {
+        this.errorDetails = errorDetails;
+    }
 
 	public String getException() {
 		return exception;

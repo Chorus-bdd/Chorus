@@ -46,6 +46,12 @@ public class StepTokenAdapter extends XmlAdapter<StepTokenBean, StepToken>{
 	    toRet.setAction(v.getAction());
 	    toRet.setEndState(v.getEndState());
 	    toRet.setMessage(v.getMessage());
+	    
+	    //we don't want to add an error details attribute unless there's a real value
+        if ( ! "".equals(v.getErrorDetails().trim())) {
+            toRet.setErrorDetails(v.getErrorDetails());
+        }
+        
 	    if (v.getException()!=null){
 	    	toRet.setException(v.getException());
             toRet.setStackTrace(v.getStackTrace());
@@ -64,6 +70,11 @@ public class StepTokenAdapter extends XmlAdapter<StepTokenBean, StepToken>{
         stepToken.setException(v.getException());
         stepToken.setStackTrace(v.getStackTrace());
         stepToken.setTimeTaken(v.getTimeTaken());
+        
+        if ( v.getErrorDetails() != null ) {
+            stepToken.setErrorDetails(v.getErrorDetails());
+        }
+        
         for ( StepToken c : v.getChildSteps()) {
             stepToken.addChildStep(c);
         }

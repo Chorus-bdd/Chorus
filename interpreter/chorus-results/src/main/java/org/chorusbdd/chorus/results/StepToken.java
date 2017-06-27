@@ -31,6 +31,7 @@ package org.chorusbdd.chorus.results;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a Scenario step
@@ -62,6 +63,8 @@ public class StepToken extends AbstractToken {
      */
     private StepToken(long id, String type, String action) {
         super(id);
+        Objects.requireNonNull(action, "action cannot be null");
+        Objects.requireNonNull(type, "type cannot be null");
         this.type = type;
         this.action = action;
     }
@@ -75,6 +78,7 @@ public class StepToken extends AbstractToken {
     }
 
     public void setAction(String action) {
+        Objects.requireNonNull(action, "action cannot be null");
         this.action = action;
     }
 
@@ -86,25 +90,35 @@ public class StepToken extends AbstractToken {
         this.endState = endState;
     }
 
+    /**
+     * @return The message associated with the step post step-execution, or an empty string if no message exists
+     */
     public String getMessage() {
         return message;
     }
 
     /**
-     * This is a String representation of any value returned by the step method
+     * Set the message which describes the result of executing the step
+     * 
+     * If the step was successful this will be either an empty String, or the String representation of a result value returned from the step implementation
+     * If the step failed, this will be the 'error cause' 
      */
     public void setMessage(String message) {
+        Objects.requireNonNull(message, "message cannot be null");
         this.message = message;
     }
 
     /**
      * Provides technical details which supplement the message if a step has failed
+     * 
+     * @return error details description or an empty string if there are no error details available
      */
     public String getErrorDetails() {
         return errorDetails;
     }
 
     public void setErrorDetails(String errorDetails) {
+        Objects.requireNonNull(errorDetails, "error details cannot be null");
         this.errorDetails = errorDetails;
     }
 
