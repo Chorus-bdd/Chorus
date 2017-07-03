@@ -11,28 +11,28 @@ Chorus --> INFO    - Processing scenario: Step Retry Is Working In Local Handler
     When I increment a value with a timer task                                               PASSED  
     Then the value is 2 within 2 seconds                                                     PASSED  
     When I increment a value with a timer task                                               PASSED  
-    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  (StepRetryHandler:linenumber)-AssertionError Expect 3 expected:<3> but was:<2>
+    Then the value is not 3 within 0.2 seconds so this step should fail                      FAILED  Expect 3 expected:<3> but was:<2> (StepRetryHandler:linenumber)-AssertionError
   Scenario: Long running step method overruns passes within period
 Chorus --> INFO    - Processing scenario: Long running step method overruns passes within period
-    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  (StepRetryHandler:linenumber)-AssertionError Whoops
+    When I call a 1 second to run step method with passes within 1 second annotation         FAILED  Whoops (StepRetryHandler:linenumber)-AssertionError
     Then the next step runs 1 second later                                                   SKIPPED 
   Scenario: I can immediately break out of a Step Retry by throwing FailImmediatelyException
 Chorus --> INFO    - Processing scenario: I can immediately break out of a Step Retry by throwing FailImmediatelyException
-    When call a passes within step method it can be terminated immediately by FailImmediatelyExceptionFAILED  (StepRetryHandler:linenumber)-FailImmediatelyException Fail this step immediately - time elapsed 0 seconds
+    When call a passes within step method it can be terminated immediately by FailImmediatelyException FAILED  Fail this step immediately - time elapsed 0 seconds (StepRetryHandler:linenumber)-FailImmediatelyException
   Scenario: Remoting with Step Retry
 Chorus --> INFO    - Processing scenario: Remoting with Step Retry
     When I start a timer in remotePolled                                                     PASSED  
     Then test condition eventually passes in remotePolled                                    PASSED  
-    And another test condition fails with AssertionError in remotePolled                     FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote ChorusAssertionError - Failed condition
+    And another test condition fails with AssertionError in remotePolled                     FAILED  remote ChorusAssertionError - Failed condition (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
   Scenario: Exceptions fail tests with remote Step Retry
 Chorus --> INFO    - Processing scenario: Exceptions fail tests with remote Step Retry
-    Then another test condition fails with Exception in remotePolled                         FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote Exception - My Exception Message
+    Then another test condition fails with Exception in remotePolled                         FAILED  remote Exception - My Exception Message (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
   Scenario: Runtime Exceptions fail tests with remote Step Retry
 Chorus --> INFO    - Processing scenario: Runtime Exceptions fail tests with remote Step Retry
-    Then another test condition fails with RuntimeException in remotePolled                  FAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote RuntimeException - My Runtime Exception Message
+    Then another test condition fails with RuntimeException in remotePolled                  FAILED  remote RuntimeException - My Runtime Exception Message (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
   Scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
 Chorus --> INFO    - Processing scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
-    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolledFAILED  (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds
+    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolled FAILED  remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
 
 
 Features  (total:1) (passed:0) (failed:1)

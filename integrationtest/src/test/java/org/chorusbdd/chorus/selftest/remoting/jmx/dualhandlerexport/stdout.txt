@@ -13,7 +13,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Given I start a config1 process named DualHandlerExport                                  PASSED  
     And I call a step method exported by handler one in DualHandlerExport                    PASSED  One
     And I call a step method exported by handler two in DualHandlerExport                    PASSED  two
-    And I call a step method exported by both handlers in DualHandlerExport                  FAILED  (StepMatcher:linenumber)-DuplicateStepMatchException Ambiguous step [I call a step method exported by both handlers], more than one implementation (RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth / RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth)
+    And I call a step method exported by both handlers in DualHandlerExport                  FAILED  Ambiguous step [I call a step method exported by both handlers], more than one implementation (RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth / RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth) (StepMatcher:linenumber)-DuplicateStepMatchException
     Then a ChorusException is thrown with a message which reports the ambiguity              SKIPPED 
 
 

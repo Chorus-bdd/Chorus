@@ -3,21 +3,21 @@ Feature: Step Macro Directives
 Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/directives/stepmacro/stepmacrodirectives.feature
   Scenario: Directive Before Scenario
 Chorus --> INFO    - Processing scenario: Directive Before Scenario
-    First I run a Step Macro Standalone                                                      
+    First I run a Step Macro Standalone                                                     
     .. #! Directive One                                                                      PASSED  
     .. #! Directive Two                                                                      PASSED  OK
     .. Given macro step 1                                                                    PASSED  
     .. #! Directive Three                                                                    PASSED  Three
     .. #! Directive Four                                                                     PASSED  Four
     .. Then macro step 2                                                                     PASSED  
-    Then I run a Step Macro In Feature                                                       
+    Then I run a Step Macro In Feature                                                      
     .. #! Directive One                                                                      PASSED  
     .. #! Directive Two                                                                      PASSED  OK
     .. Given macro step 1                                                                    PASSED  
     .. #! Directive Three                                                                    PASSED  Three
     .. #! Directive Four                                                                     PASSED  Four
     .. When macro step 2                                                                     PASSED  
-    .. Then I run a Step Macro Standalone                                                    
+    .. Then I run a Step Macro Standalone                                                   
     .... #! Directive One                                                                    PASSED  
     .... #! Directive Two                                                                    PASSED  OK
     .... Given macro step 1                                                                  PASSED  

@@ -60,8 +60,8 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     private int STEP_LENGTH_CHARS;
 
     public AbstractChorusOutputWriter() {
-        //why -11? we are aiming for max of 120 chars, allow for a 7 char state and a 4 char leading indent
-        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 11;
+        //why -12? we are aiming for 120 chars, allow for a 7 char state and a 4 char leading indent and a single space between step text and result
+        STEP_LENGTH_CHARS = Integer.parseInt(System.getProperty(OUTPUT_FORMATTER_STEP_LENGTH_CHARS, "120")) - 12;
     }
     
     protected ScheduledFuture progressFuture;
@@ -78,8 +78,15 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     public abstract void printStepStart(StepToken step, int depth);
-
-    public abstract void printStepEnd(StepToken step, int depth);
+    
+    public void printStepEnd(StepToken step, int depth) {
+        cancelStepAnimation();
+        if ( ! step.isStepMacro() ) {
+            StringBuilder depthPadding = getDepthPadding(depth);
+            int stepLengthChars = getStepLengthCharCount() - depthPadding.length();
+            printCompletedStep(step, depthPadding, stepLengthChars);
+        }
+    }
 
     protected void printStepWithoutEndState(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
         getPrintWriter().printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
@@ -87,7 +94,12 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     protected void printCompletedStep(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
-        getPrintWriter().printf("    " + depthPadding + "%-" + stepLengthChars + "s%-7s %s%n", step.toString(), step.getEndState(), step.getMessage());
+        StringBuilder output = new StringBuilder(String.format("    " + depthPadding + "%-" + stepLengthChars + "s %-7s %s", step.toString(), step.getEndState(), step.getMessage()));
+        if ( step.getErrorDetails().length() > 0) {
+            output.append(" ").append(step.getErrorDetails());
+        }
+        output.append(System.lineSeparator());
+        getPrintWriter().print(output);
         getPrintWriter().flush();
     }
 

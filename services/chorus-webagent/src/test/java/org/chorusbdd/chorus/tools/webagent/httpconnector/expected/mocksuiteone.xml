@@ -20,7 +20,7 @@
                 <scenario endState="FAILED" name="Scenario Which Fails Due To Step Failure" tokenId="{TOKENID}">
                     <steps>
                         <step type="Given" action="I run a scenario with several steps" endState="PASSED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
-                        <step type="And" action="a step fails an assertion" endState="FAILED" message="(WebAgentSelfTestHandler:23)-AssertionFailedError Fail an assertion" stackTrace="{STACKTRACE}" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                        <step type="And" action="a step fails an assertion" endState="FAILED" message="Fail an assertion" stackTrace="{STACKTRACE}" errorDetails="(WebAgentSelfTestHandler:23)-AssertionFailedError" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
                             <exception>junit.framework.AssertionFailedError: Fail an assertion</exception>
                         </step>
                         <step type="Then" action="the scenario will be failed" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
@@ -106,7 +106,7 @@
                     <steps>
                         <step type="Given" action="I call a step macro with a failing step" endState="FAILED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
                             <step type="Given" action="I run step one" endState="PASSED" message="one" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
-                            <step type="And" action="a step fails an assertion" endState="FAILED" message="(WebAgentSelfTestHandler:23)-AssertionFailedError Fail an assertion" stackTrace="{STACKTRACE}" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
+                            <step type="And" action="a step fails an assertion" endState="FAILED" message="Fail an assertion" stackTrace="{STACKTRACE}" errorDetails="(WebAgentSelfTestHandler:23)-AssertionFailedError" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}">
                                 <exception>junit.framework.AssertionFailedError: Fail an assertion</exception>
                             </step>
                             <step type="Then" action="the next macro step is skipped" endState="SKIPPED" message="" timeTaken="{TIMETAKEN}" timeTakenSeconds="{TIMETAKEN_SECONDS}" tokenId="{TOKENID}"/>
