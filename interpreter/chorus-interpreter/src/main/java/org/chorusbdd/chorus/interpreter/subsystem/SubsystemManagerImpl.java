@@ -47,16 +47,16 @@ import java.util.stream.Collectors;
  */
 public class SubsystemManagerImpl implements SubsystemManager {
 
-    private final List<Subsystem> subsystemList;
-    private final List<StepInvokerProvider> stepProviderSubsystems;
+    private List<Subsystem> subsystemList = Collections.emptyList();
+    private List<StepInvokerProvider> stepProviderSubsystems = Collections.emptyList();
 
     //Use Linked map to maintain ordering for consistent behaviour
     private Map<String, Subsystem> subsystems = new LinkedHashMap<>();
 
     private ChorusLog log = ChorusLogFactory.getLog(SubsystemManagerImpl.class);
 
-    public SubsystemManagerImpl() {
-
+    @Override
+    public void initializeSubsystems() {
         //initialize subsystems in order of priority
         initializeProcessManager();
         initializeRemotingManager();

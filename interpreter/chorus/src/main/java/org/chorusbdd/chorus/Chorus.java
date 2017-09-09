@@ -37,7 +37,7 @@ import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.interpreter.startup.ExecutionListenerFactory;
 import org.chorusbdd.chorus.interpreter.startup.InterpreterBuilder;
-import org.chorusbdd.chorus.interpreter.startup.OutputConfigurer;
+import org.chorusbdd.chorus.interpreter.startup.OutputAndLoggingConfigurer;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManagerImpl;
 import org.chorusbdd.chorus.logging.ChorusOut;
@@ -62,13 +62,12 @@ public class Chorus {
     //are used to set the log implementation in use and these need to be configured first.
     
     private final ExecutionListenerSupport listenerSupport = new ExecutionListenerSupport();
-    private InterpreterBuilder interpreterBuilder;
-
-    private OutputConfigurer outputConfigurer;
+    private final InterpreterBuilder interpreterBuilder;
+    private final OutputAndLoggingConfigurer outputAndLoggingConfigurer;
     private final FeatureListBuilder featureListBuilder;
     private final ConfigReader configReader;
-    private ChorusInterpreter interpreter;
-    private SubsystemManager subsystemManager;
+    private final ChorusInterpreter interpreter;
+    private final SubsystemManager subsystemManager;
 
     public static void main(String[] args) {
         boolean success = false;
@@ -91,12 +90,21 @@ public class Chorus {
     }
 
     public Chorus(String[] args) throws InterpreterPropertyException {
-        outputConfigurer = new OutputConfigurer();
+
+        //*********  To set up config and logging / output
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
 
-        configureOutput();
-        addExecutionListeners();
+        outputAndLoggingConfigurer = new OutputAndLoggingConfigurer();
+        configureOutputAndLogging();
+
+        //*********  After config and logging / output is set up
+        subsystemManager = new SubsystemManagerImpl();
+
+        //add custom execution listeners before subsystem listeners
+        //guarantees user listener will have their callbacks before subsystems
+        addCustomExecutionListeners();
+        configureSubsystems();
 
         //configure logging first
         interpreterBuilder = new InterpreterBuilder(listenerSupport);
@@ -104,21 +112,14 @@ public class Chorus {
         featureListBuilder = new FeatureListBuilder();
     }
 
-    private void addExecutionListeners() {
-        //add custom execution listeners before subsystem listeners
-        //guarantees user listener will have their callbacks before subsystems
-        addCustomExecutionListeners();
-        configureSubsystems();
-    }
-
     private void configureSubsystems() {
-        subsystemManager = new SubsystemManagerImpl();
+        subsystemManager.initializeSubsystems();
         listenerSupport.addExecutionListener(subsystemManager.getExecutionListeners());
     }
 
-    private void configureOutput() {
-        outputConfigurer.configureOutput(configReader);
-        ExecutionListener l = outputConfigurer.getOutputExecutionListener();
+    private void configureOutputAndLogging() {
+        outputAndLoggingConfigurer.configureOutputAndLogging(configReader);
+        ExecutionListener l = outputAndLoggingConfigurer.getOutputExecutionListener();
         listenerSupport.addExecutionListener(l);
     }
 
@@ -190,7 +191,7 @@ public class Chorus {
     }
 
     void dispose() {
-        outputConfigurer.dispose();
+        outputAndLoggingConfigurer.dispose();
     }
 
     //to get the suite name we concatenate all the values provided for suite name switch

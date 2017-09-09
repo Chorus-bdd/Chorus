@@ -108,7 +108,6 @@ public class StepRegistryHandler {
         stepRegistryManager.startRegistry(getConfig(StepRegistryManager.DEFAULT_REGISTRY_NAME));
     }
 
-    //A Directive which can be used to connect to one or more processes
     @Step("StepRegistry wait for the clients? " + HandlerPatterns.nameListPattern)
     public void waitForClientsDirective(String processNameList) throws Exception {
         waitForClients(processNameList);

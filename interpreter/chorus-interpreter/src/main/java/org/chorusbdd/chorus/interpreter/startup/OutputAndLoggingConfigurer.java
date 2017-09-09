@@ -43,12 +43,12 @@ import org.chorusbdd.chorus.output.OutputWriterLogProvider;
  *
  * Initialize the Chorus output and logging subsystems according to the configured properties of the interpreter
  */
-public class OutputConfigurer {
+public class OutputAndLoggingConfigurer {
 
     private InterpreterOutputExecutionListener outputExecutionListener;
     private ChorusOutputWriter chorusOutputWriter;
 
-    public void configureOutput(ConfigReader config) {
+    public void configureOutputAndLogging(ConfigReader config) {
         chorusOutputWriter = createOutputWriter(config);
 
         //the interpreter output execution listener implements OutputFormatter

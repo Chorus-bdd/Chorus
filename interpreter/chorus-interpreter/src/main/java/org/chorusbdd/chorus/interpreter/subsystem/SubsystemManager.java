@@ -40,9 +40,15 @@ import java.util.List;
  */
 public interface SubsystemManager {
 
+    /**
+     * Called once by the interpreter during startup to initialize all confugurable subsystems
+     */
+    void initializeSubsystems();
+
     Subsystem getSubsystemById(String id);
 
     List<StepInvokerProvider> getStepProviderSubsystems();
 
     List<ExecutionListener> getExecutionListeners();
+
 }
