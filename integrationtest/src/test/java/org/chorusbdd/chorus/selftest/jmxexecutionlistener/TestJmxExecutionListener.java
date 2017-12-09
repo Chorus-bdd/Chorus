@@ -70,6 +70,7 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         try {
             outStream = new PrintStream(new FileOutputStream(actualOutFile));
             startJmxExecutionListenerProcess(f, outStream);
+            
             //now actually run the test, with the chorusJmxListener property set
             super.runTest(true, false);
         } finally {
@@ -94,7 +95,7 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         sysPropsForTest.put("com.sun.management.jmxremote.ssl", "false");
         f.runForked(sysPropsForTest, "org.chorusbdd.chorus.selftest.jmxexecutionlistener.ExecutionListenerMain", outStream, 0);
 
-        Thread.sleep(3000);  //let the forked listener start up and create its MBeans, no easy way to poll for this
+        Thread.sleep(4000);  //let the forked listener start up and create its MBeans, no easy way to poll for this
     }
 
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
