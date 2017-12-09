@@ -85,17 +85,18 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         String expectedOut = readToString(new FileInputStream(expectedOutFile));
         String actualOut = readToString(new FileInputStream(actualOutFile));
         
-        Thread.sleep(500);
+        if ( actualOut.contains(expectedOut))
+        
         //help with debugging failure in Travis
-        if ( ! expectedOut.equals(actualOut)) {
+        if ( ! actualOut.endsWith(expectedOut)) {
             System.out.println("Expected -->>>>");
             System.out.println(expectedOut);
             System.out.println("Actual -->>>>");
             System.out.println(actualOut);
         }
         
-        
-        assertEquals("The remote JMX listener produced the expected output", expectedOut, actualOut);
+        //On Travis runs / Open JDK we are getting an extra 'Picked up _JAVA_OPTIONS:' at the start of actual
+        assertTrue("The remote JMX listener produced the expected output", actualOut.endsWith(expectedOut));
     }
 
     private void startJmxExecutionListenerProcess(ForkedRunner f, PrintStream outStream) throws Exception {
@@ -106,7 +107,7 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         sysPropsForTest.put("com.sun.management.jmxremote.ssl", "false");
         f.runForked(sysPropsForTest, "org.chorusbdd.chorus.selftest.jmxexecutionlistener.ExecutionListenerMain", outStream, 0);
 
-        Thread.sleep(3500);  //let the forked listener start up and create its MBeans, no easy way to poll for this
+        Thread.sleep(3000);  //let the forked listener start up and create its MBeans, no easy way to poll for this
     }
 
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
