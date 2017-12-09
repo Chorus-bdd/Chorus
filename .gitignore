@@ -12,3 +12,4 @@ logs
 .gradle
 build
 /dependencies.txt
+/classes/

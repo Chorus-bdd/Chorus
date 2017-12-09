@@ -8,5 +8,5 @@ deploy:
   file_glob: true
   file: build/distributions/chorus*.tar
   on:
-    repo: nickebbutt/Chorus
+    repo: Chorus-bdd/Chorus
     tags: true
