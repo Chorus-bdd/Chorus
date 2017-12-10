@@ -28,7 +28,7 @@ public class SimpleStepPublisher {
 
         stepPublisher.publish();
 
-        sleep(30000);
+        sleep(60000);
     }
 
     @Handler("SimpleStepPublisherClientHandler")
