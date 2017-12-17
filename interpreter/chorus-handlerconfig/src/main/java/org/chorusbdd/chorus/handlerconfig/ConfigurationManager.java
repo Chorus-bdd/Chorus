@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.subsystem.Subsystem;
 import java.util.Properties;
 
 /**
- * Created by GA2EBBU on 03/02/2015.
+ * Created by Nick E on 03/02/2015.
  */
 public interface ConfigurationManager extends Subsystem {
 

@@ -39,25 +39,35 @@ import java.util.Properties;
 /**
  * Created by nick on 30/08/2014.
  * 
- * A StepRegistryManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
+ * A WebSocketsManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
  */
-public interface StepRegistryManager extends Subsystem, StepInvokerProvider {
+public interface WebSocketsManager extends Subsystem, StepInvokerProvider {
 
     String DEFAULT_REGISTRY_NAME = "default";
 
-    void startRegistry(Properties properties);
+    void startWebSocketServer(Properties properties);
 
-    void stopRegistry();
+    void stopWebSocketServer();
 
     /**
-     * Wait for a client to become connected to the StepRegistry, publish its steps and send a STEPS_ALIGNED
+     * Wait for a client to become connected to the WebSocketsManagerImpl, publish its steps and send a STEPS_ALIGNED
      *
-     * @param clientName, name of the client which the client should send when connecting
+     * @param clientName, name of the client - this is received from the client when it connects
      *
      * @return true if the client is connected and aligned, false if not connected or has not published
      * STEPS_ALIGNED by the end of the timeout period
      */
-    boolean waitForClientConnection(String clientName) throws ClientConnectionException;
+    boolean waitForClientConnection(String clientName);
+
+    /**
+     * Check if a web socket client is already connected and has sent a STEPS_ALIGNED message
+     * 
+     * @param clientName, name of the client - this is received from the client when it connects
+     *
+     * @return true if the client is connected and aligned, false if not connected or has not published
+     * STEPS_ALIGNED
+     */
+    boolean isClientConnected(String clientName);
 
     List<StepInvoker> getStepInvokers();
 

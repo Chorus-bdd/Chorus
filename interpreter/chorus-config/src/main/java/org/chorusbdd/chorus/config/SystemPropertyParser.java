@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 12/06/12
  * Time: 10:04
  * To change this template use File | Settings | File Templates.

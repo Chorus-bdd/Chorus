@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.logging;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 16/09/14
  * Time: 15:13
  *

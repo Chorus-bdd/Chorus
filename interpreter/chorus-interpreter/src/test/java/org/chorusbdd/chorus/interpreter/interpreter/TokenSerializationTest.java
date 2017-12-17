@@ -40,7 +40,7 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 11/07/12
  * Time: 17:24
  * To change this template use File | Settings | File Templates.

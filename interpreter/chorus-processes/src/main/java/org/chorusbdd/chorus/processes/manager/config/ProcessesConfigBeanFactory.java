@@ -42,7 +42,7 @@ import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 21/09/12
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
@@ -77,10 +77,6 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
         setProperties(p, c);
         c.setConfigName(configName);
         return c;
-    }
-
-    public ConfigBeanValidator<ProcessManagerConfig> createValidator(ProcessesConfigBuilder config) {
-        return new ProcessManagerConfigBeanValidator();
     }
 
     private void setProperties(Properties p, ProcessesConfigBuilder c) {

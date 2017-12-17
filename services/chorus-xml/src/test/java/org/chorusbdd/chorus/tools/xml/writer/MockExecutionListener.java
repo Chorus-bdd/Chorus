@@ -9,7 +9,7 @@ import org.chorusbdd.chorus.results.StepToken;
 import java.util.List;
 
 /**
-* Created by GA2EBBU on 19/02/2015.
+* Created by Nick E on 19/02/2015.
 */
 public class MockExecutionListener implements ExecutionListener {
 

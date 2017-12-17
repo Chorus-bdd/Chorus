@@ -41,7 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by GA2EBBU on 09/01/2015.
+ * Created by Nick E on 09/01/2015.
  */
 public class VariableExpandingPropertyLoader implements PropertyLoader {
 

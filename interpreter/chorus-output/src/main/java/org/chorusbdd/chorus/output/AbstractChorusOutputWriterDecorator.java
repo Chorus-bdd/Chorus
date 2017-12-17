@@ -36,7 +36,7 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
 /**
- * Created by GA2EBBU on 14/01/2015.
+ * Created by Nick E on 14/01/2015.
  *
  * A base class for decorators which forwards all calls
  */

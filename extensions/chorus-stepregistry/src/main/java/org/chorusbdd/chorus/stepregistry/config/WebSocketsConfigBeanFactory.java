@@ -40,32 +40,28 @@ import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 21/09/12
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class StepRegistryConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<StepRegistryConfigBuilder> {
+public class WebSocketsConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<WebSocketsConfigBuilder> {
 
     private static final String stepTimeoutSeconds = "stepTimeoutSeconds";
     private static final String clientConnectTimeoutSeconds = "clientConnectTimeoutSeconds";
     private static final String port = "port";
     private static final String scope = "scope";
 
-    private ChorusLog log = ChorusLogFactory.getLog(StepRegistryConfigBeanFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(WebSocketsConfigBeanFactory.class);
 
-    public StepRegistryConfigBuilder createConfig(Properties p, String configName) {
-        StepRegistryConfigBuilder c = new StepRegistryConfigBuilder();
+    public WebSocketsConfigBuilder createConfig(Properties p, String configName) {
+        WebSocketsConfigBuilder c = new WebSocketsConfigBuilder();
         setProperties(p, c);
         c.setConfigName(configName);
         return c;
     }
 
-    public ConfigBeanValidator<StepRegistryConfig> createValidator(StepRegistryConfigBuilder config) {
-        return new StepRegistryConfigBeanValidator();
-    }
-
-    private void setProperties(Properties p, StepRegistryConfigBuilder c) {
+    private void setProperties(Properties p, WebSocketsConfigBuilder c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
@@ -78,12 +74,12 @@ public class StepRegistryConfigBeanFactory extends AbstractConfigBeanFactory imp
             } else if (scope.equals(key)) {
                 c.setScope(parseScope(value));
             } else {
-                log.warn("Ignoring property " + key + " which is not a supported StepRegistry handler property");
+                log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
             }
         }
     }
 
-    public Properties getProperties(StepRegistryConfig processConfig) {
+    public Properties getProperties(WebSocketsConfig processConfig) {
         Properties p = new Properties();
         p.setProperty(port, String.valueOf(processConfig.getPort()));
         p.setProperty(stepTimeoutSeconds, String.valueOf(processConfig.getStepTimeoutSeconds()));

@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.parser;
 import org.chorusbdd.chorus.results.StepToken;
 
 /**
-* Created by GA2EBBU on 08/01/2015.
+* Created by Nick E on 08/01/2015.
 */
 public class LineNumberAndDirective {
 

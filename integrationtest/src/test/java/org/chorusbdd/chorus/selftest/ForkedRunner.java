@@ -45,7 +45,7 @@ import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 05/07/12
  * Time: 11:44
  *

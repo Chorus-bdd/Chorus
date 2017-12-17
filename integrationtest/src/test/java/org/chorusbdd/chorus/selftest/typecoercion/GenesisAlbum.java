@@ -31,7 +31,7 @@ package org.chorusbdd.chorus.selftest.typecoercion;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 28/06/12
  * Time: 13:59
  *

@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 21/09/12
  * Time: 11:08
  *

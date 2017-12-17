@@ -6,10 +6,10 @@ import org.chorusbdd.chorus.logging.*;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepregistry.config.StepRegistryConfig;
-import org.chorusbdd.chorus.stepregistry.config.StepRegistryConfigBeanFactory;
-import org.chorusbdd.chorus.stepregistry.config.StepRegistryConfigBeanValidator;
-import org.chorusbdd.chorus.stepregistry.config.StepRegistryConfigBuilder;
+import org.chorusbdd.chorus.stepregistry.config.WebSocketsConfig;
+import org.chorusbdd.chorus.stepregistry.config.WebSocketsConfigBeanFactory;
+import org.chorusbdd.chorus.stepregistry.config.WebSocketsConfigBeanValidator;
+import org.chorusbdd.chorus.stepregistry.config.WebSocketsConfigBuilder;
 import org.chorusbdd.chorus.stepregistry.message.*;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.PolledAssertion;
@@ -19,15 +19,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
+
 /**
  * Created by nick on 09/12/2016.
  */
-public class StepRegistry implements StepRegistryManager {
+public class WebSocketsManagerImpl implements WebSocketsManager {
 
-    private static ChorusLog log = ChorusLogFactory.getLog(StepRegistry.class);
+    private static ChorusLog log = ChorusLogFactory.getLog(WebSocketsManagerImpl.class);
 
-    private final StepRegistryConfigBeanFactory stepRegistryConfigBeanFactory = new StepRegistryConfigBeanFactory();
-    private final StepRegistryConfigBeanValidator stepRegistryConfigBeanValidator = new StepRegistryConfigBeanValidator();
+    private final WebSocketsConfigBeanFactory webSocketsConfigBeanFactory = new WebSocketsConfigBeanFactory();
+    private final WebSocketsConfigBeanValidator webSocketsConfigBeanValidator = new WebSocketsConfigBeanValidator();
 
 
     private ChorusWebSocketRegistry webSocketServer;
@@ -41,17 +43,18 @@ public class StepRegistry implements StepRegistryManager {
     /**
      * At present we only support one step server instance, the 'default', and this is the config
      */
-    private StepRegistryConfig stepRegistryConfig;
+    private WebSocketsConfig webSocketsConfig;
 
-    public StepRegistry() {}
+    public WebSocketsManagerImpl() {}
 
-    public void startRegistry(Properties properties) {
+    public void startWebSocketServer(Properties properties) {
         if ( ! isRunning.getAndSet(true)) {
 
-            stepRegistryConfig = getStepRegistryConfig(DEFAULT_REGISTRY_NAME, properties);
+            webSocketsConfig = getWebSocketsConfig(DEFAULT_REGISTRY_NAME, properties);
+            checkConfig(webSocketsConfig);
 
-            int port = stepRegistryConfig.getPort();
-            log.info("Starting StepRegistry on port " + port);
+            int port = webSocketsConfig.getPort();
+            log.info("Starting Web Socket server on port " + port);
             webSocketServer = new ChorusWebSocketRegistry(port);
 
             MessageProcessor messageProcessor = new MessageProcessor(webSocketServer);
@@ -63,21 +66,29 @@ public class StepRegistry implements StepRegistryManager {
         }
     }
 
+    private void checkConfig(WebSocketsConfig config) {
+        boolean validConfig = webSocketsConfigBeanValidator.isValid(config);
+        if ( ! validConfig) {
+            log.warn(webSocketsConfigBeanValidator.getErrorDescription());
+            fail("Remoting config must be valid for " + config.getConfigName());
+        }
+    }
+
     @Override
-    public boolean waitForClientConnection(String clientName) throws ClientConnectionException {
+    public boolean waitForClientConnection(String clientName) {
         if ( isRunning.get() ) {
             PolledAssertion polledAssertion = new PolledAssertion() {
                 @Override
                 protected void validate() throws Exception {
-                    if ( ! alignedClients.contains(clientName)) {
-                        throw new ChorusException("Client " + clientName + " did not connect");
-                    }
+                if ( ! alignedClients.contains(clientName)) {
+                    throw new ChorusException("Client " + clientName + " did not connect");
+                }
                 }
             };
 
             boolean result = true;
             try {
-                polledAssertion.await(TimeUnit.SECONDS, stepRegistryConfig.getClientConnectTimeoutSeconds());
+                polledAssertion.await(TimeUnit.SECONDS, webSocketsConfig.getClientConnectTimeoutSeconds());
             } catch (AssertionError assertionError) {
                 result = false;
             }
@@ -85,6 +96,11 @@ public class StepRegistry implements StepRegistryManager {
         } else {
             throw new ChorusException("Step Server is not running");
         }
+    }
+
+    @Override
+    public boolean isClientConnected(String clientName) {
+       return alignedClients.contains(clientName);
     }
 
     @Override
@@ -104,9 +120,9 @@ public class StepRegistry implements StepRegistryManager {
     }
 
     @Override
-    public void stopRegistry() {
+    public void stopWebSocketServer() {
         if ( isRunning.getAndSet(false) ) {
-            log.debug("Stopping StepRegistry");
+            log.debug("Stopping Web Sockets server");
             //TODO implement configuration by server name
             try {
                 webSocketServer.stop();
@@ -124,7 +140,7 @@ public class StepRegistry implements StepRegistryManager {
             //allow step server to be scoped to feature or scenario (or session) in config
 
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
-                stopRegistry();
+                stopWebSocketServer();
             }
         };
     }
@@ -153,7 +169,7 @@ public class StepRegistry implements StepRegistryManager {
             WebSocketClientStepInvoker stepInvoker;
             try {
                 stepInvoker = WebSocketClientStepInvoker.create(
-                    messageRouter, publishStep, stepRegistryConfig.getStepTimeoutSeconds()
+                    messageRouter, publishStep, webSocketsConfig.getStepTimeoutSeconds()
                 );
                 stepIdToInvoker.put(publishStep.getStepId(), stepInvoker);
             } catch (InvalidStepException e) {
@@ -188,7 +204,7 @@ public class StepRegistry implements StepRegistryManager {
 
         @Override
         public void clientDisconnected(String clientId) {
-            log.debug("StepRegistry client " + clientId + " disconnected, removing client");
+            log.debug("WebSocketsManagerImpl client " + clientId + " disconnected, removing client");
             removeClient(clientId);
         }
 
@@ -207,18 +223,18 @@ public class StepRegistry implements StepRegistryManager {
         }
     }
 
-    private StepRegistryConfig getStepRegistryConfig(String configName, Properties stepRegistryProperties) {
-        StepRegistryConfigBuilder config = stepRegistryConfigBeanFactory.createConfig(stepRegistryProperties, configName);
+    private WebSocketsConfig getWebSocketsConfig(String configName, Properties webSocketsProperties) {
+        WebSocketsConfigBuilder config = webSocketsConfigBeanFactory.createConfig(webSocketsProperties, configName);
         return config.build();
     }
 
     public static void main(String[] args) {
         StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
-        StepRegistry stepRegistry = new StepRegistry();
+        WebSocketsManagerImpl webSocketsManager = new WebSocketsManagerImpl();
         Properties properties = new Properties();
         properties.put("port", "9080");
         properties.put("stepTimeoutSeconds", 30);
-        stepRegistry.startRegistry(properties);
+        webSocketsManager.startWebSocketServer(properties);
 
         log.info("Socket Server Started!");
     }

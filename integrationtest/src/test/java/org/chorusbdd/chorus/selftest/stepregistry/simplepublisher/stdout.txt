@@ -3,7 +3,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - No default handler found for Feature: (Simple Step Publisher), will use built-in handlers and Uses: statements
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
-Chorus --> INFO    - Starting StepRegistry on port 9080
+Chorus --> INFO    - Starting Web Socket server on port 9080
     #! StepRegistry start                                                                    PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start simpleStepPublisher                                                   PASSED  

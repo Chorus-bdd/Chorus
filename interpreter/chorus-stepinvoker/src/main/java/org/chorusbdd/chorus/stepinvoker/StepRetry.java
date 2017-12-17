@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.stepinvoker;
 
 /**
- * Created by GA2EBBU on 28/02/2017.
+ * Created by Nick E on 28/02/2017.
  */
 public interface StepRetry {
 

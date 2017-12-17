@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
- * Created by GA2EBBU on 13/12/2016.
+ * Created by Nick E on 13/12/2016.
  */
 public class StepPublisher {
 
@@ -99,7 +99,7 @@ public class StepPublisher {
 
                 boolean connected = chorusWebSocketClient.connectBlocking();
                 if ( ! connected) {
-                    throw new StepPublisherException("Failed to connect to StepRegistry");
+                    throw new StepPublisherException("Failed to connect to WebSocketsManagerImpl");
                 }
 
                 ConnectMessage connect = new ConnectMessage(chorusClientId, "".equals(description) ? chorusClientId : description);

@@ -6,7 +6,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
- * Created by GA2EBBU on 28/02/2017.
+ * Created by Nick E on 28/02/2017.
  *
  * Decorate a StepInvoker as an UntilFirstPassInvoker if a StepRetry is configured
  */

@@ -41,7 +41,7 @@ import java.io.File;
 
 /**
 * Created with IntelliJ IDEA.
-* User: GA2EBBU
+* User: Nick E
 * Date: 12/11/12
 * Time: 14:25
 *

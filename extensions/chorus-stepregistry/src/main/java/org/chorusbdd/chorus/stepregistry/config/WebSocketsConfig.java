@@ -29,25 +29,19 @@
  */
 package org.chorusbdd.chorus.stepregistry.config;
 
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
 
 /**
- * Created by nick on 23/09/2014.
+ * Created by nick on 24/09/2014.
  */
-public class StepRegistryConfigBeanValidator extends AbstractConfigBeanValidator<StepRegistryConfig> {
+public interface WebSocketsConfig extends HandlerConfigBean {
 
-    protected boolean checkValid(StepRegistryConfig stepRegistryConfig) {
-        boolean valid = true;
+    int getClientConnectTimeoutSeconds();
 
-        //some properties are mandatory for java processes
-        if ( stepRegistryConfig.getPort() == 0) {
-            logInvalidConfig("port not set or 0", stepRegistryConfig);
-            valid = false;
-        } else if ( stepRegistryConfig.getStepTimeoutSeconds() < 1) {
-            logInvalidConfig("stepTimeoutSeconds was less than 1", stepRegistryConfig);
-            valid = false;
-        }
-        return valid;
-    }
+    int getStepTimeoutSeconds();
 
+    int getPort();
+
+    Scope getScope();
 }

@@ -58,7 +58,7 @@ public interface RemotingManager extends Subsystem, StepInvokerProvider {
      **/
     Object performActionInRemoteComponent(String configName, Properties remotingConfig, String action);
 
-    public void connect(String configName, Properties remotingProperties);
+    void connect(String configName, Properties remotingProperties);
 
     List<StepInvoker> getStepInvokers();
 

@@ -39,7 +39,7 @@ import java.util.Properties;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 21/09/12
  * Time: 10:21
  * To change this template use File | Settings | File Templates.

@@ -1,7 +1,7 @@
 package org.chorusbdd.chorus.stepregistry.client;
 
 /**
- * Created by GA2EBBU on 13/12/2016.
+ * Created by Nick E on 13/12/2016.
  */
 public class StepPublisherException extends Exception {
 

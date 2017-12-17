@@ -1,18 +1,18 @@
 Uses: Processes
-Uses: StepRegistry
+Uses: Web Sockets
 Uses: Chorus Context
 
 Feature: Simple Step Publisher
 
   I can connect and publish steps over a web socket with a simple step server client
-
-  #! StepRegistry start
-  #! Processes start simpleStepPublisher
-  #! StepRegistry wait for the client SimpleStepPublisher
+  
   Feature-Start:
+    Given I start the web socket server
+    And I start a simpleStepPublisher process
+    And I wait for the web socket client SimpleStepPublisher to connect
 
   Scenario: I can call steps with and without a result
-    Given StepRegistry client SimpleStepPublisher is connected
+    Given the web socket client SimpleStepPublisher is connected
     Then I can call a step with a result
     And I can call a step without a result
 
@@ -26,15 +26,15 @@ Feature: Simple Step Publisher
     Then the next step is skipped because the interpreter timed out
 
   Scenario: I can show all steps
-    Given StepRegistry client SimpleStepPublisher is connected
-    Then I can show all StepRegistry steps
+    Given web socket client SimpleStepPublisher is connected
+    Then I show all the steps published by connected web socket clients
 
   Scenario: I can call a step with a step retry
-    Given StepRegistry client SimpleStepPublisher is connected
+    Given web socket client SimpleStepPublisher is connected
     Then I can call a step with a step retry and the step is polled until it passes
 
   Scenario: Fail nicely if client is not connected
-    Given StepRegistry client DoesNotExist is connected
+    Given web socket client DoesNotExist is connected
 
   Scenario: I can read a variable from the Chorus Context in the step publisher
     Given I create a variable outbound with the value do

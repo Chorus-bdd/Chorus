@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 /**
  * An immutable runtime config for a process
  */
-public class StepRegistryConfigBean implements StepRegistryConfig {
+public class WebSocketsConfigBean implements WebSocketsConfig {
 
     private final String configName;
     private final int stepTimeoutSeconds;
@@ -42,7 +42,7 @@ public class StepRegistryConfigBean implements StepRegistryConfig {
     private final Scope scope;
     private final int clientConnectTimeoutSeconds;
 
-    public StepRegistryConfigBean(String configName, int stepTimeoutSeconds, int clientConnectTimeoutSeconds, int port, Scope scope) {
+    public WebSocketsConfigBean(String configName, int stepTimeoutSeconds, int clientConnectTimeoutSeconds, int port, Scope scope) {
         this.configName = configName;
         this.stepTimeoutSeconds = stepTimeoutSeconds;
         this.clientConnectTimeoutSeconds = clientConnectTimeoutSeconds;
@@ -75,7 +75,7 @@ public class StepRegistryConfigBean implements StepRegistryConfig {
 
     @Override
     public String toString() {
-        return "StepRegistryConfigBean{" +
+        return "WebSocketsConfigBean{" +
             "configName='" + configName + '\'' +
             ", clientConnectTimeoutSeconds=" + clientConnectTimeoutSeconds +
             ", stepTimeoutSeconds=" + stepTimeoutSeconds +

@@ -147,7 +147,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     public void stepSucceeded(StepSucceededMessage stepSuccessMessage) {
         ExecutingStep s = executingStep.get();
         if ( s == NO_STEP_EXECUTING ) {
-            log.error("StepRegistry invalid state, a step which is not executing cannot succeed");
+            log.error("Web Socket server invalid state, a step which is not executing cannot succeed");
         } else {
 
             if ( ! s.getExecutionUUID().equals(stepSuccessMessage.getExecutionId())) {
@@ -166,7 +166,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     public void stepFailed(StepFailedMessage stepFailedMessage) {
         ExecutingStep s = executingStep.get();
         if ( s == NO_STEP_EXECUTING ) {
-            log.error("StepRegistry invalid state, a step which is not executing cannot fail");
+            log.error("Web Socket server invalid state, a step which is not executing cannot fail");
         } else {
 
             if ( ! s.getExecutionUUID().equals(stepFailedMessage.getExecutionId())) {

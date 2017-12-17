@@ -61,7 +61,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         initializeProcessManager();
         initializeRemotingManager();
         initializeConfigurationManager();
-        initializeStepRegistryManager();
+        initializeWebSocketsManager();
 
         subsystemList = Collections.unmodifiableList(new ArrayList<>(subsystems.values()));
 
@@ -120,11 +120,11 @@ public class SubsystemManagerImpl implements SubsystemManager {
         );
     }
 
-    private void initializeStepRegistryManager() {
+    private void initializeWebSocketsManager() {
         initializeSubsystem(
-            "stepRegistryManager",
-            "chorusStepRegistryManager",
-            "org.chorusbdd.chorus.stepregistry.StepRegistry",
+            "webSocketsManager",
+            "chorusWebSocketsManager",
+            "org.chorusbdd.chorus.stepregistry.WebSocketsManagerImpl",
             true
         );
     }

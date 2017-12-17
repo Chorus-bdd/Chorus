@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by GA2EBBU on 09/01/2015.
+ * Created by Nick E on 09/01/2015.
  *
  * Apply a function to convert the keys from a source Properties object into a Properties instance
  * with modified keys

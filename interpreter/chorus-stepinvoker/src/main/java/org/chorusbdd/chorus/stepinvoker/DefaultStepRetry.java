@@ -5,7 +5,7 @@ import org.chorusbdd.chorus.annotations.Step;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by GA2EBBU on 28/02/2017.
+ * Created by Nick E on 28/02/2017.
  *
  * A configurable retry on a Chorus step - if this is set to
  */

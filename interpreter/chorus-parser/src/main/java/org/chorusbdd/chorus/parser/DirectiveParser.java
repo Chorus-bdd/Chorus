@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.results.StepToken;
 import java.util.*;
 
 /**
- * Created by GA2EBBU on 08/01/2015.
+ * Created by Nick E on 08/01/2015.
  *
  * <pre>
  * This class contains the logic to parse and process directives

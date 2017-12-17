@@ -52,7 +52,7 @@ import static org.chorusbdd.chorus.handlerconfig.properties.VariableExpandingPro
 import static org.chorusbdd.chorus.util.properties.PropertyOperations.properties;
 
 /**
- * Created by GA2EBBU on 03/02/2015.
+ * Created by Nick E on 03/02/2015.
  *
  * The default ConfigurationManager for chorus
  */

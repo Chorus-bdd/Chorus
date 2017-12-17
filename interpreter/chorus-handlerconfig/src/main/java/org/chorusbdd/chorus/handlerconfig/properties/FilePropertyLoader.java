@@ -39,7 +39,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
- * Created by GA2EBBU on 09/01/2015.
+ * Created by Nick E on 09/01/2015.
  */
 public class FilePropertyLoader implements PropertyLoader {
 

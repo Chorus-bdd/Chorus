@@ -38,7 +38,7 @@ import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 12/06/12
  * Time: 11:58
  *

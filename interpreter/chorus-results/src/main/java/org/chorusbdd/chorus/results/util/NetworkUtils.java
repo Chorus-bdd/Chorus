@@ -34,7 +34,7 @@ import java.net.UnknownHostException;
 
 /**
  * Created by IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 28/03/12
  * Time: 11:31
  *

@@ -36,7 +36,7 @@ import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 21/09/12
  * Time: 11:09
  * To change this template use File | Settings | File Templates.

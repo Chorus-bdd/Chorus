@@ -2,7 +2,7 @@ package org.chorusbdd.chorus.stepregistry.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
 
-public class StepRegistryConfigBuilder implements StepRegistryConfig {
+public class WebSocketsConfigBuilder implements WebSocketsConfig {
 
     private String configName;
     private int stepTimeoutSeconds = 60;
@@ -55,8 +55,8 @@ public class StepRegistryConfigBuilder implements StepRegistryConfig {
         this.scope = scope;
     }
 
-    public StepRegistryConfigBean build() {
-        return new StepRegistryConfigBean(configName, stepTimeoutSeconds, clientConnectTimeoutSeconds, port, scope);
+    public WebSocketsConfigBean build() {
+        return new WebSocketsConfigBean(configName, stepTimeoutSeconds, clientConnectTimeoutSeconds, port, scope);
     }
 
 }

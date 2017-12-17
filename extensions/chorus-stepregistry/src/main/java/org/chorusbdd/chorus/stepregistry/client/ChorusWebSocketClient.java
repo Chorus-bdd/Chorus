@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.Map;
 
 /**
- * Created by GA2EBBU on 13/12/2016.
+ * Created by Nick E on 13/12/2016.
  */
 public class ChorusWebSocketClient extends WebSocketClient implements StepClientMessageRouter {
 
@@ -79,12 +79,12 @@ public class ChorusWebSocketClient extends WebSocketClient implements StepClient
     public void sendMessage(AbstractTypedMessage message) {
         WebSocket webSocket = getConnection();
         if ( webSocket == null) {
-            throw new ChorusException("Cannot send a message to StepRegistry no websocket connection");
+            throw new ChorusException("Cannot send a message to WebSocketsManagerImpl no websocket connection");
         }
 
         String messageAsString = JsonUtils.prettyFormat(message);
         if ( log.isDebugEnabled()) {
-            log.debug(String.format("Sending message to StepRegistry [%s]", messageAsString));
+            log.debug(String.format("Sending message to WebSocketsManagerImpl [%s]", messageAsString));
         }
 
         webSocket.send(messageAsString);

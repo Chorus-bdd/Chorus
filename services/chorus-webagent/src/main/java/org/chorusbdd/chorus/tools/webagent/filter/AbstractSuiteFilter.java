@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.tools.webagent.WebAgentTestSuite;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 23/01/13
  * Time: 10:29
  * To change this template use File | Settings | File Templates.

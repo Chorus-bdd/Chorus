@@ -35,7 +35,7 @@ import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
- * User: GA2EBBU
+ * User: Nick E
  * Date: 12/06/12
  * Time: 10:15
  */
