@@ -90,17 +90,17 @@ public class WebSocketsHandler {
         stop();
     }
 
-    @Step(".*start the web socket server")
+    @Step(".*start (?:a|the) web socket server")
     public void startWebSocketServer() {
         start();
     }
 
-    @Step(".*stop the web socket server")
+    @Step(".*stop (?:a|the) web socket server")
     public void stopWebSocketServer() {
         start();
     }
 
-    @Step(".*wait for (?:the )web socket clients? " + HandlerPatterns.nameListPattern + " to connect")
+    @Step(".*wait for (?:the )web socket clients? " + HandlerPatterns.nameListPattern)
     public void waitForClientsToConnect(String processNameList) throws Exception {
         checkConnection(processNameList, clientName -> webSocketsManager.waitForClientConnection(clientName));
     }
