@@ -9,7 +9,7 @@ Feature: Simple Step Publisher
   Feature-Start:
     Given I start the web socket server
     And I start a simpleStepPublisher process
-    And I wait for the web socket client SimpleStepPublisher to connect
+    And I wait for the web socket client SimpleStepPublisher
 
   Scenario: I can call steps with and without a result
     Given the web socket client SimpleStepPublisher is connected
