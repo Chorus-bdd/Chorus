@@ -69,7 +69,6 @@ public interface WebSocketsManager extends Subsystem, StepInvokerProvider {
      */
     boolean isClientConnected(String clientName);
 
-    List<StepInvoker> getStepInvokers();
 
     void showAllSteps();
 }
