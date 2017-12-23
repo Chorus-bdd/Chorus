@@ -17,6 +17,8 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     Given I start a config1 process named SingleHandlerExport                                PASSED  
     Then I can call a step method exported by the handler in SingleHandlerExport             PASSED  
 
+Features failed:
+  Jmx With Configurations [config1]
 
 Features  (total:2) (passed:1) (failed:1)
 Scenarios (total:2) (passed:1) (failed:1)

@@ -31,13 +31,11 @@ package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -127,8 +125,18 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
         return sb;
     }
 
-    public void printResults(ResultsSummary s) {
+    @Override
+    public void printResults(ResultsSummary s, List<FeatureToken> featuresList) {
         if (s != null) {
+            
+            //If there's more than one feature and at least one failed, list the name(s)
+            if ( s.getFeaturesFailed() > 0 && s.getTotalFeatures() > 1 ) {
+                printMessage("Features failed:");
+                featuresList.stream().filter(f -> f.getEndState() == EndState.FAILED).forEachOrdered(f ->
+                    printMessage("  " + f.getNameWithConfiguration())
+                );
+            }
+            
             //only show the pending count if there were pending steps, makes the summary more legible
             if ( s.getFeaturesPending() > 0) {
                 printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",

@@ -35,6 +35,8 @@ import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
+import java.util.List;
+
 /**
  * Write the output for the Chrous interpreter
  */
@@ -52,7 +54,7 @@ public interface ChorusOutputWriter {
 
     void printMessage(String message);
 
-    void printResults(ResultsSummary summary);
+    void printResults(ResultsSummary summary, List<FeatureToken> features);
 
     void log(LogLevel type, Object message);
     

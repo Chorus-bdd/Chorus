@@ -35,6 +35,8 @@ import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
+import java.util.List;
+
 /**
  * Created by Nick E on 14/01/2015.
  *
@@ -79,8 +81,8 @@ public abstract class AbstractChorusOutputWriterDecorator implements ChorusOutpu
     }
 
     @Override
-    public void printResults(ResultsSummary summary) {
-        wrappedFormatter.printResults(summary);
+    public void printResults(ResultsSummary summary, List<FeatureToken> featureList) {
+        wrappedFormatter.printResults(summary, featureList);
     }
 
     @Override

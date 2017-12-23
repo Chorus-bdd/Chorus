@@ -107,7 +107,7 @@ public class InterpreterOutputExecutionListener extends AbstractChorusOutputWrit
 
     public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         if (showSummary) {
-            printResults(testExecutionToken.getResultsSummary());
+            printResults(testExecutionToken.getResultsSummary(), features);
         }
     }
 

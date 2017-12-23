@@ -35,6 +35,8 @@ import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.results.StepToken;
 
+import java.util.List;
+
 /**
  * A null implementation of OutputFormatter
  * This should never get used
@@ -64,7 +66,7 @@ class NullOutputWriter implements ChorusOutputWriter {
     public void printMessage(String message) {
     }
 
-    public void printResults(ResultsSummary summary) {
+    public void printResults(ResultsSummary summary, List<FeatureToken> featureList) {
     }
 
     public void log(LogLevel type, Object message) {

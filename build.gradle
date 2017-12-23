@@ -15,7 +15,7 @@ allprojects  {
     }
 
     group = "org.chorusbdd"
-    version = '3.0.0.DEV27'
+    version = '3.0.0.DEV28'
 
     test {
         testLogging {
