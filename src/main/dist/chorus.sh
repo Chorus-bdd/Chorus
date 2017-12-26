@@ -54,8 +54,13 @@ TIMEOUT_HL="s/TIMEOUT/${RED}TIMEOUT${COLOR_NC}/g"
 
 HIGHLIGHT_RULES="${PASSED_HL};${FAILED_HL};${PENDING_HL};${SKIPPED_HL};${UNDEFINED_HL};${DRYRUN_HL};${TIMEOUT_HL}"
 
+#If output to console then use color highlighting otherwise omit this
+if [ -t 1 ] ; then
+  java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS} | sed "${HIGHLIGHT_RULES}"
+else
+  java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS} 
+fi
 
-java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS} | sed "${HIGHLIGHT_RULES}"
 
 
 
