@@ -124,7 +124,7 @@ public class SubsystemManagerImpl implements SubsystemManager {
         initializeSubsystem(
             "webSocketsManager",
             "chorusWebSocketsManager",
-            "org.chorusbdd.chorus.stepregistry.WebSocketsManagerImpl",
+            "org.chorusbdd.chorus.websockets.WebSocketsManagerImpl",
             true
         );
     }
