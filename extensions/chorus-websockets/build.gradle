@@ -2,7 +2,7 @@
 
 
 
-description = "chorus-stepregistry"
+description = "chorus-websockets"
 
 dependencies {
     compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
