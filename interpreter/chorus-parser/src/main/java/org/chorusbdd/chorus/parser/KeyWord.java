@@ -44,7 +44,9 @@ public enum KeyWord {
     Feature("Feature:", false),
     Background("Background:", true),
     Scenario("Scenario:", true),
-    ScenarioOutline("Scenario-Outline:", true),
+    ScenarioOutline("Scenario Outline:", true),
+    @Deprecated
+    ScenarioOutlineDeprecated("Scenario-Outline:", true),   //with a hyphen which was old Chorus style but does not match Gherkin standard
     Examples("Examples:", false),
     StepMacro("Step-Macro:", true),
     FeatureStart("Feature-Start:", true),

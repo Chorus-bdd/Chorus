@@ -219,9 +219,9 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
                     continue;
                 }
 
-                if (KeyWord.ScenarioOutline.is(keyWord)) {
+                if (KeyWord.ScenarioOutline.is(keyWord) || KeyWord.ScenarioOutlineDeprecated.is(keyWord)) {
                     currentScenariosTags = extractTagsAndResetLastTagsLineField();
-                    String scenarioName = line.substring(KeyWord.ScenarioOutline.stringVal().length()).trim();
+                    String scenarioName = line.substring(keyWord.stringVal().length()).trim();
                     outlineScenario = createScenario(scenarioName, backgroundScenario, currentFeaturesTags, currentScenariosTags);
                     examplesTableHeaders = null;//reset the examples table
                     parserState = READING_SCENARIO_OUTLINE_STEPS;
