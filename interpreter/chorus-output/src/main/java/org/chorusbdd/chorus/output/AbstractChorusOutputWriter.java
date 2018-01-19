@@ -87,12 +87,12 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     protected void printStepWithoutEndState(StepToken step, StringBuilder depthPadding, int maxStepTextChars, String terminator) {
-        getPrintWriter().printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, step.toString());
+        getPrintWriter().printf("    " + depthPadding + "%-" + maxStepTextChars + "s" + terminator, getStepText(step));
         getPrintWriter().flush();
     }
 
     protected void printCompletedStep(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
-        StringBuilder output = new StringBuilder(String.format("    " + depthPadding + "%-" + stepLengthChars + "s %-7s %s", step.toString(), step.getEndState(), step.getMessage()));
+        StringBuilder output = new StringBuilder(String.format("    " + depthPadding + "%-" + stepLengthChars + "s %-7s %s", getStepText(step), getEndState(step), getMessage(step)));
         if ( step.getErrorDetails().length() > 0) {
             output.append(" ").append(step.getErrorDetails());
         }
@@ -250,6 +250,28 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
 
+    /**
+     * May be overridden (e.g. to add control codes for colouring terminal output)
+     */
+    protected String getStepText(StepToken step) {
+        return step.toString();
+    }
+
+    /**
+     * May be overridden (e.g. to add control codes for colouring terminal output)
+     */
+    protected String getMessage(StepToken step) {
+        return step.getMessage();
+    }
+
+    /**
+     * May be overridden (e.g. to add control codes for colouring terminal output)
+     */
+    protected String getEndState(StepToken step) {
+        return step.getEndState().toString();
+    }
+    
+    
     /**
      * This is an extension point to change Chorus output
      *

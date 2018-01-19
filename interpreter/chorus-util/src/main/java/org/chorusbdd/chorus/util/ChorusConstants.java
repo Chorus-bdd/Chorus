@@ -48,6 +48,8 @@ public class ChorusConstants {
         "org.chorusbdd.chorus.websockets"
     };
 
+    public static final String CONSOLE_COLOUR_OUTPUT_DISABLED_PROPERTY = "org.chorusbdd.chorus.console.colouroutput";
+
     public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
 
     public static final String JMX_EXPORTER_ENABLED_PROPERTY = "org.chorusbdd.chorus.jmxexporter.enabled";

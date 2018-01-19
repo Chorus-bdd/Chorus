@@ -15,10 +15,11 @@ if [[ "${ARGS}" != *"-h"* ]] ; then
   ARGS="${ARGS} -h no.user.handler.packages"
 fi
 
-# Console mode doesn't work very well on OSX terminal at present
-#if [[ "${ARGS}" != *"-c"* ]] ; then
-#  ARGS="${ARGS} -console"
-#fi
+#Detect if user passed a console arg, so that passing '-c false' , or '-console false' can be used to turn off console mode, even if running within a terminal
+NO_CONSOLE_IN_ARGS=true
+if [[ "${ARGS}" == *"-c"* ]] ; then
+  NO_CONSOLE_IN_ARGS=false
+fi
 
 # Find the directory containg the chorus script being called
 # We need this to set the classpath to contain the libs
@@ -32,33 +33,11 @@ SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 
 
-# Define some colour highlights to colourise Chorus std out
-
-RED=$(printf '\033[0;31m')
-GREEN=$(printf '\033[0;32m')
-YELLOW=$(printf '\033[0;33m')
-BLUE=$(printf '\033[0;34m')
-PURPLE=$(printf '\033[0;35m')
-CYAN=$(printf '\033[1;34m')
-WHITE=$(printf '\033[1;37m')
-COLOR_NC=$(printf '\033[0m')
-
-
-PASSED_HL="s/PASSED/${GREEN}PASSED${COLOR_NC}/g"
-FAILED_HL="s/FAILED/${RED}FAILED${COLOR_NC}/g"
-PENDING_HL="s/PENDING/${YELLOW}PENDING${COLOR_NC}/g"
-SKIPPED_HL="s/SKIPPED/${YELLOW}SKIPPED${COLOR_NC}/g"
-UNDEFINED_HL="s/UNDEFINED/${RED}UNDEFINED${COLOR_NC}/g"
-DRYRUN_HL="s/DRYRUN/${GREEN}DRYRUN${COLOR_NC}/g"
-TIMEOUT_HL="s/TIMEOUT/${RED}TIMEOUT${COLOR_NC}/g"
-
-HIGHLIGHT_RULES="${PASSED_HL};${FAILED_HL};${PENDING_HL};${SKIPPED_HL};${UNDEFINED_HL};${DRYRUN_HL};${TIMEOUT_HL}"
-
-#If output to console then use color highlighting otherwise omit this
-if [ -t 1 ] ; then
-  java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS} | sed "${HIGHLIGHT_RULES}"
+#If the output stream is directed to a terminal and the user didn't specify a console mode explicitly, then use console mode, -c
+if [[ -t 1 && "${NO_CONSOLE_IN_ARGS}" = true ]] ; then
+  java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus -console ${ARGS}
 else
-  java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS} 
+  java -cp "${SCRIPTDIR}/lib/*" org.chorusbdd.chorus.Chorus ${ARGS}
 fi
 
 
