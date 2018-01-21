@@ -31,6 +31,7 @@ Steps:
  .* call a step with a result
  .* call a step with a step retry and the step is polled until it passes
  .* call a step without a result
+ .*disconnect the web socket publisher
  .*in the step publisher (.*) has the value (.*)
  .*set the (.*) variable to (.*) in the step publisher
     Then I show all the steps published by connected web socket clients                      PASSED  
