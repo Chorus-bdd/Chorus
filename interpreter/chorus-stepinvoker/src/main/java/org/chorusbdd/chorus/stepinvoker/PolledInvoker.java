@@ -53,6 +53,7 @@ public abstract class PolledInvoker implements StepInvoker {
     private final long length;
     private final TimeUnit timeUnit;
     private final long pollFrequency;
+    private int retryAttempts;
 
     public PolledInvoker(StepInvoker wrappedInvoker, long length, TimeUnit timeUnit, long pollFrequency) {
         this.wrappedInvoker = wrappedInvoker;
@@ -79,7 +80,7 @@ public abstract class PolledInvoker implements StepInvoker {
             }
         };
 
-        doTest(p, timeUnit, length);
+        retryAttempts = doTest(p, timeUnit, length);
 
         Object result = resultRef.get();
         return result;
@@ -104,7 +105,10 @@ public abstract class PolledInvoker implements StepInvoker {
         return wrappedInvoker.getId();
     }
 
-    protected abstract void doTest(PolledAssertion p, TimeUnit timeUnit, long length);
+    /**
+     * @return the number of times the test condition was retried, if the initial test failed
+     */
+    protected abstract int doTest(PolledAssertion p, TimeUnit timeUnit, long length);
 
     public String getTechnicalDescription() {
         return wrappedInvoker.getTechnicalDescription();
@@ -116,4 +120,7 @@ public abstract class PolledInvoker implements StepInvoker {
 
     public StepRetry getRetry() { return wrappedInvoker.getRetry(); };
 
+    public int getRetryAttempts() {
+        return retryAttempts;
+    }
 }

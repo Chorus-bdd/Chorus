@@ -99,12 +99,12 @@ public abstract class PolledAssertion {
      * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
      * errors will be propagated and will cause test failure
      */
-    public void await() {
-        await(getTimeoutSeconds());
+    public int await() {
+        return await(getTimeoutSeconds());
     }
 
-    public void await(float seconds) {
-        await(TimeUnit.MILLISECONDS, (int)(seconds * 1000));
+    public int await(float seconds) {
+        return await(TimeUnit.MILLISECONDS, (int)(seconds * 1000));
     }
         
     /**
@@ -112,8 +112,10 @@ public abstract class PolledAssertion {
      *
      * Validation will be attempted and errors handled silently until the timeout period expires after which assertion
      * errors will be propagated and will cause test failure
+     *
+     * @return number of times validation was retried if it failed the first time
      */
-    public void await(TimeUnit unit, long length) {
+    public int await(TimeUnit unit, long length) {
         
         int pollPeriodMillis = getPollPeriodMillis();
         long startTime = System.currentTimeMillis();
@@ -151,23 +153,28 @@ public abstract class PolledAssertion {
                 propagateAsError(e);
             }
         }
+        
+        return iteration;
     }
 
     /**
      * check that the assertions pass for the whole duration of the timeout period
      */
-    public void check() {
-        check(getTimeoutSeconds());
+    public int check() {
+        return check(getTimeoutSeconds());
     }
 
-    public void check(float seconds) {
-        check(TimeUnit.MILLISECONDS, (int) (seconds * 1000));    
+    
+    public int check(float seconds) {
+        return check(TimeUnit.MILLISECONDS, (int) (seconds * 1000));    
     }
     
     /**
      * check that the assertions pass for the whole duration of the period specified
+     * 
+     * @return number of times validation was retried if it failed the first time
      */
-    public void check(TimeUnit timeUnit, long count) {
+    public int check(TimeUnit timeUnit, long count) {
         
         int pollPeriodMillis = getPollPeriodMillis();
         long startTime = System.currentTimeMillis();
@@ -187,6 +194,8 @@ public abstract class PolledAssertion {
                 break;
             }
         }
+        
+        return iteration;
     }
 
     private void sleepUntil(long time) {

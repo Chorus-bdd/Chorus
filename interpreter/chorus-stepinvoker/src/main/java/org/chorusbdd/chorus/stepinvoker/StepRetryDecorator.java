@@ -3,30 +3,50 @@ package org.chorusbdd.chorus.stepinvoker;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
+import java.util.List;
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.chorusbdd.chorus.stepinvoker.ResultWithRetryCount.createResult;
 
 /**
  * Created by Nick E on 28/02/2017.
  *
- * Decorate a StepInvoker as an UntilFirstPassInvoker if a StepRetry is configured
+ * Invoke a stepInvoker using an UntilFirstPassInvoker if the StepRetry settings require it
  */
 public class StepRetryDecorator {
 
     private ChorusLog log = ChorusLogFactory.getLog(StepRetryDecorator.class);
 
-    public StepInvoker getRetryInvoker(StepInvoker plainInvoker) {
+    private StepInvoker foundStepInvoker;
 
-        StepRetry retry = plainInvoker.getRetry();
-        long duration = retry.getDuration();
-        long interval = plainInvoker.getRetry().getInterval();
+    public StepRetryDecorator(StepInvoker foundStepInvoker) {
+        this.foundStepInvoker = foundStepInvoker;
+    }
 
-        boolean isRetryConfigured = retry.isValid();
+    public ResultWithRetryCount invoke(List<String> args) throws Exception {
+        ResultWithRetryCount result;
+        StepRetry retry = foundStepInvoker.getRetry();
+        if ( retry.isValid()) {
+            result = invokeWithRetry(args, retry);
+        } else {
+            result = createResult(foundStepInvoker.invoke(args), 0);
+        }
+        return result;
+    }
 
-        if ( log.isTraceEnabled() && isRetryConfigured ) {
-            log.trace("Wrapping step " + plainInvoker.getStepPattern() + " with a StepRetry decorator");
+    private ResultWithRetryCount invokeWithRetry(List<String> args, StepRetry retry) {
+        Object result;
+        if ( log.isTraceEnabled()) {
+            log.trace("Wrapping step " + foundStepInvoker.getStepPattern() + " with a StepRetry decorator");
         }
 
-        return isRetryConfigured ? new UntilFirstPassInvoker(plainInvoker, duration, MILLISECONDS, interval) : plainInvoker;
+        long duration = retry.getDuration();
+        long interval = retry.getInterval();
+        
+        UntilFirstPassInvoker i = new UntilFirstPassInvoker(foundStepInvoker, duration, MILLISECONDS, interval);
+        result = i.invoke(args);
+        
+        return createResult(result, i.getRetryAttempts());
     }
 }
 

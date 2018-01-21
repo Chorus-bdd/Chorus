@@ -1,4 +1,4 @@
-package org.chorusbdd.chorus.selftest.websockets.simplepublisher;
+package org.chorusbdd.chorus.selftest.websockets.simplewebsocketpublisher;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
@@ -15,15 +15,15 @@ import static org.junit.Assert.assertFalse;
 /**
  * Created by nick on 28/09/15.
  */
-public class SimpleStepPublisher {
+public class SimpleWebSocketStepPublisher {
 
 
     public static void main(String[] args) throws InterruptedException {
 
         StepPublisher stepPublisher = new StepPublisher(
-            "SimpleStepPublisher",
+            "SimpleWebSocketStepPublisher",
             URI.create("ws://localhost:9080"),
-            new SimpleStepRegistryClientHandler()
+            new SimpleWebSocketStepPublisherHandler()
         );
 
         stepPublisher.publish();
@@ -31,8 +31,8 @@ public class SimpleStepPublisher {
         sleep(60000);
     }
 
-    @Handler("SimpleStepPublisherClientHandler")
-    public static class SimpleStepRegistryClientHandler {
+    @Handler("SimpleWebSocketStepPublisherHandler")
+    public static class SimpleWebSocketStepPublisherHandler {
 
         private int tryCount = 0;
 

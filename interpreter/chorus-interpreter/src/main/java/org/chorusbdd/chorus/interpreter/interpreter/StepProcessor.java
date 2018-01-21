@@ -228,11 +228,7 @@ public class StepProcessor {
             //call the step method using reflection
             StepInvoker foundStepInvoker = stepMatcher.getFoundStepInvoker();
 
-            //This may return a decorated invoker which manages the retry, or the original
-            StepInvoker retryInvoker = new StepRetryDecorator().getRetryInvoker(foundStepInvoker);
-            Object result = retryInvoker.invoke(
-                stepMatcher.getInvokerArgs()
-            );
+            Object result = invokeAndGetResult(step, stepMatcher, foundStepInvoker);
             log.debug("Finished executing the step, step passed, result was " + result);
 
             //n.b. for remote components using old versions of chorus to export steps we will not receive VOID_RESULT
@@ -261,6 +257,15 @@ public class StepProcessor {
             step.setTimeTaken(System.currentTimeMillis() - startTime);
         }
         return endState;
+    }
+
+    private Object invokeAndGetResult(StepToken step, StepMatcher stepMatcher, StepInvoker foundStepInvoker) throws Exception {
+        StepRetryDecorator retryInvoker = new StepRetryDecorator(foundStepInvoker);
+        ResultWithRetryCount resultWithRetryCount = retryInvoker.invoke(
+            stepMatcher.getInvokerArgs()
+        );
+        step.setRetryAttempts(resultWithRetryCount.getRetryAttempts());
+        return resultWithRetryCount.getResult();
     }
 
     private StepEndState handleRootCause(ExecutionToken executionToken, StepToken step, Throwable cause) {

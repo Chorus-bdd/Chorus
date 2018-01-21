@@ -1,0 +1,22 @@
+Feature: Two Web Socket Step Publishers                                                              
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/websockets/twowebsocketpublishers/twowebsocketpublishers.feature
+Chorus --> INFO    - No default handler found for Feature: (Two Web Socket Step Publishers), will use built-in handlers and Uses: statements
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+Chorus --> INFO    - Starting Web Socket server on port 9080
+    Given I start the web socket server                                                      PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a simpleStepPublisher process                                                PASSED  
+    And I wait for the web socket client SimpleWebSocketStepPublisher                        PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a secondStepPublisher process                                                PASSED  
+    And I wait for the web socket client SecondWebSocketStepPublisher                        PASSED  
+  Scenario: I can call steps on both publisher processes
+Chorus --> INFO    - Processing scenario: I can call steps on both publisher processes
+    Check I can call a step with a result                                                    PASSED  Hello!
+    And I can call a step on the second publisher                                            PASSED  Hello!
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)

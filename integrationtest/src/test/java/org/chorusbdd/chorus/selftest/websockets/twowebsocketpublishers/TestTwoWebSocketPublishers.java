@@ -27,62 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.annotations;
+package org.chorusbdd.chorus.selftest.websockets.twowebsocketpublishers;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.concurrent.TimeUnit;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by: Steve Neal
- * Date: 29/09/11
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Step {
+public class TestTwoWebSocketPublishers extends AbstractInterpreterTest {
 
-    /*
-     * Constants
-     */
-    String NO_PENDING_MESSAGE = "org.chorusbdd.chorus.annotations.Step.NO_PENDING_MESSAGE";
-    
-    String AUTO_GENERATE_ID = "org.chorusbdd.chorus.annotations.Step.AUTO_GENERATE_ID";
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/websockets/twowebsocketpublishers/twowebsocketpublishers.feature";
 
-    /*
-     * Attributes
-     */
+    final int expectedExitCode = 0;  //pass
 
-    String value(); //regexp to match the step
-    
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    String pending() default NO_PENDING_MESSAGE;//for pending state messages
+    protected String getFeaturePath() {
+        return featurePath;
+    }
 
-    /**
-     * A duration in the retry time unit over which to retry a failing step
-     */
-    int retryDuration() default 0;
-
-    /**
-     * Retry time unit
-     */
-    TimeUnit retryTimeUnit() default TimeUnit.SECONDS;
-
-    /**
-     * An interval in milliseconds at which to poll/retry the step during the retry duration period
-     */
-    int retryIntervalMillis() default 100;
-
-    
-    /**
-     * Technical id used by the Chorus interpreter to uniquely identify the step
-     * 
-     * If this is set to the default value (AUTO_GENERATE_ID) Chorus will generate its own UUID based ID for the step 
-     * It is generally not useful for an end user to set a custom id (but this can be useful for testing the interpreter)
-     * 
-     * @return A unique id for the step
-     */
-    String id() default AUTO_GENERATE_ID;
-    
 }

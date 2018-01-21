@@ -9,10 +9,10 @@ Feature: Simple Step Publisher
   Feature-Start:
     Given I start the web socket server
     And I start a simpleStepPublisher process
-    And I wait for the web socket client SimpleStepPublisher
+    And I wait for the web socket client SimpleWebSocketStepPublisher
 
   Scenario: I can call steps with and without a result
-    Given the web socket client SimpleStepPublisher is connected
+    Given the web socket client SimpleWebSocketStepPublisher is connected
     Then I can call a step with a result
     And I can call a step without a result
 
@@ -26,11 +26,11 @@ Feature: Simple Step Publisher
     Then the next step is skipped because the interpreter timed out
 
   Scenario: I can show all steps
-    Given web socket client SimpleStepPublisher is connected
+    Given web socket client SimpleWebSocketStepPublisher is connected
     Then I show all the steps published by connected web socket clients
 
   Scenario: I can call a step with a step retry
-    Given web socket client SimpleStepPublisher is connected
+    Given web socket client SimpleWebSocketStepPublisher is connected
     Then I can call a step with a step retry and the step is polled until it passes
 
   Scenario: Fail nicely if client is not connected

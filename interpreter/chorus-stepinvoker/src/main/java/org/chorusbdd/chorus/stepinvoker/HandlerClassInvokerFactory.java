@@ -117,7 +117,7 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
         pendingText = ( Step.NO_PENDING_MESSAGE.equals(pendingText)) ? null : pendingText;
 
         StepRetry stepRetry = DefaultStepRetry.fromStepAnnotation(stepAnnotation);
-        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(handlerInstance, method, stepPattern, pendingText, stepRetry);
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(stepAnnotation, handlerInstance, method, stepPattern, pendingText, stepRetry);
 
         //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
         //PolledInvoker

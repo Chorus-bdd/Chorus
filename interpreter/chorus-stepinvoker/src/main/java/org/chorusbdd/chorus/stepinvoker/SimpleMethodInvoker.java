@@ -29,12 +29,13 @@
  */
 package org.chorusbdd.chorus.stepinvoker;
 
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -45,19 +46,24 @@ import java.util.regex.Pattern;
 public class SimpleMethodInvoker extends SkeletalStepInvoker {
 
     private ChorusLog log = ChorusLogFactory.getLog(SimpleMethodInvoker.class);
+    
+    private final Object handlerInstance;
+    private final Method method;
+    private final String id;
 
-    private static AtomicLong idGenerator = new AtomicLong();
-
-    private Long id = SimpleMethodInvoker.idGenerator.incrementAndGet();
-    private Object handlerInstance;
-    private Method method;
-
-    public SimpleMethodInvoker(Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage, StepRetry stepRetry) {
+    public SimpleMethodInvoker(Step step, Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage, StepRetry stepRetry) {
         super(pendingMessage, stepPattern, stepRetry);
         this.handlerInstance = handlerInstance;
         this.method = method;
+                
+        String stepId = step.id();
+        
+        //If the user has set a custom id in the Step annotation, we can use that, otherwise use a UUID based identifier
+        //which includes the class name and method as prefix to help with debugging
+        this.id = Step.AUTO_GENERATE_ID.equals(stepId) ? 
+                handlerInstance.getClass().getSimpleName() + ":" + method.getName() + ":" + UUID.randomUUID() : 
+                stepId;
     }
-
 
     public Object invoke(List<String> args) throws ReflectiveOperationException {
         Class<?>[] parameterTypes = getMethod().getParameterTypes();
@@ -113,10 +119,7 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
      * @return a String id for this step invoker, which should be unique and final
      */
     public String getId() {
-        //here I use the generated id to guarantee uniqueness if the same handler class is reloaded in a new classloader
-        //or if the two handler instances of the same handler class are processed (in error?)
-        //plus the fully qualified class name and method name for clarity
-        return id + ":" + handlerInstance.getClass().getSimpleName() + ":" + method.getName();
+        return id;
     }
 
     public Object getHandlerInstance() {

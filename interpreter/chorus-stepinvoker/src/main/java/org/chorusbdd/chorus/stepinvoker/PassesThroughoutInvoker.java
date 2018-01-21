@@ -45,7 +45,7 @@ class PassesThroughoutInvoker extends PolledInvoker {
         super(wrappedInvoker, length, timeUnit, pollFrequency);
     }
 
-    protected void doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
-        p.check(timeUnit, length);
+    protected int doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
+        return p.check(timeUnit, length);
     }
 }

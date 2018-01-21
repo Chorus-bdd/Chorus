@@ -45,8 +45,8 @@ class UntilFirstPassInvoker extends PolledInvoker {
         super(wrappedInvoker, length, timeUnit, pollFrequency);
     }
 
-    protected void doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
-        p.await(timeUnit, length);
+    protected int doTest(PolledAssertion p, TimeUnit timeUnit, long length) {
+        return p.await(timeUnit, length);
     }
 
 }

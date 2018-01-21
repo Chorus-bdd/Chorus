@@ -38,7 +38,7 @@ import java.util.Objects;
  */
 public class StepToken extends AbstractToken {
 
-    private static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 4;
 
     public static final String DIRECTIVE_TYPE = "#!";
 
@@ -146,8 +146,8 @@ public class StepToken extends AbstractToken {
     }
 
     /**
-     * Some step which check assertions may be configured to re-run in case of initial failure
-     * This can be used to avoid failures due to latency / asynchronous behaviour in the system under test
+     * Some steps which check conditions may be configured to be retried if they fail on first attempt
+     * This can be used to avoid failures occurring due to latency / asynchronous behaviour in the system under test
      *
      * @return the number of times a step was re-run before the step was failed
      */

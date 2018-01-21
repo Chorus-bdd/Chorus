@@ -59,7 +59,7 @@ public class TestStepPublisher {
     @Handler("Test Step Publisher Handler")
     public static class MockHandler {
 
-        @Step("call a test step")
+        @Step(value = "call a test step", id = "step1")
         public void callATestStep() {
             System.out.println("Hello!");
             stepCalled.set(true);
@@ -74,7 +74,7 @@ public class TestStepPublisher {
         stepPublisher.publish();
 
         PublishStepMessage publishStepMessage = new PublishStepMessage(
-            "1:MockHandler:callATestStep",
+            "step1",
             "testPublisher",
             "call a test step",
             false,
@@ -87,7 +87,7 @@ public class TestStepPublisher {
 
         chorusWebSocketServer.sendMessage("testPublisher", new ExecuteStepMessage(
             "testPublisher",
-            "1:MockHandler:callATestStep",
+            "step1",
             UUID.randomUUID().toString(),
             "call a test step",
             30,
