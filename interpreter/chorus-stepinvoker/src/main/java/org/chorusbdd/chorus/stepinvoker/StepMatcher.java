@@ -86,7 +86,9 @@ public class StepMatcher {
     }
 
     private void checkForMatch(StepInvoker invoker) throws DuplicateStepMatchException {
-        log.debug("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + stepAction + "]");
+        if ( log.isTraceEnabled()) {
+            log.trace("Regex to match is [" + invoker.getStepPattern() + "] and action is [" + stepAction + "]");
+        }
         Matcher matcher = invoker.getStepPattern().matcher(stepAction);
         if (matcher.matches()) {
             int groupCount = matcher.groupCount();
@@ -101,7 +103,9 @@ public class StepMatcher {
     }
 
     private void foundStepInvoker(StepInvoker stepInvoker, List<String> stepArguments) throws DuplicateStepMatchException {
-        if ( log.isTraceEnabled() ) log.trace("Matched! " + stepInvoker + "," + stepArguments);
+        if ( log.isTraceEnabled() ) {
+            log.trace("Matched! " + stepInvoker + "," + stepArguments);
+        }
         if (chosenStepInvoker == null) {
             this.invokerArgs = stepArguments;
             this.chosenStepInvoker = stepInvoker;

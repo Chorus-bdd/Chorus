@@ -3,10 +3,15 @@ package org.chorusbdd.chorus.selftest.websockets.simplewebsocketpublisher;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.logging.LogLevel;
+import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.websockets.client.StepPublisher;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.net.URI;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
@@ -20,11 +25,15 @@ public class SimpleWebSocketStepPublisher {
 
     public static void main(String[] args) throws InterruptedException {
 
+        StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
+        
         StepPublisher stepPublisher = new StepPublisher(
             "SimpleWebSocketStepPublisher",
-            URI.create("ws://localhost:9080"),
-            new SimpleWebSocketStepPublisherHandler()
+            URI.create("ws://localhost:9080")
         );
+        
+        SimpleWebSocketStepPublisherHandler simpleWebSocketStepPublisherHandler = new SimpleWebSocketStepPublisherHandler(stepPublisher);
+        stepPublisher.addHandlers(simpleWebSocketStepPublisherHandler);
 
         stepPublisher.publish();
 
@@ -33,8 +42,15 @@ public class SimpleWebSocketStepPublisher {
 
     @Handler("SimpleWebSocketStepPublisherHandler")
     public static class SimpleWebSocketStepPublisherHandler {
+        
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         private int tryCount = 0;
+        private StepPublisher stepPublisher;
+
+        public SimpleWebSocketStepPublisherHandler(StepPublisher stepPublisher) {
+            this.stepPublisher = stepPublisher;
+        }
 
         @Step(".* call a step with a result")
         public String callAStepWithAResult() {
@@ -74,5 +90,16 @@ public class SimpleWebSocketStepPublisher {
             ChorusContext.getContext().put(variable, value);
         }
 
+        
+        @Step(".*disconnect the web socket publisher")
+        public void disconnectAndReconnect() {
+            scheduledExecutorService.schedule(() -> {
+                try {
+                    stepPublisher.disconnect();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }, 200, TimeUnit.MILLISECONDS);
+        }
     }
 }

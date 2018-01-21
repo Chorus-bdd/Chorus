@@ -99,7 +99,9 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
             //only check methods with Step annotation
             Step stepAnnotationInstance = method.getAnnotation(Step.class);
             if (stepAnnotationInstance != null) {
-                log.debug("Found @Step annotated method " + method + " on handler " + handlerInstance);
+                if ( log.isTraceEnabled()) {
+                    log.trace("Found @Step annotated method " + method + " on handler " + handlerInstance);
+                }
                 StepInvoker invoker = createInvoker(handlerInstance, method);
                 stepInvokers.add(invoker);
             }

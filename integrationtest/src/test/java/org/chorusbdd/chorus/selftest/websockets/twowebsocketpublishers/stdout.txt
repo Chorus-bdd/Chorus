@@ -15,8 +15,30 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 Chorus --> INFO    - Processing scenario: I can call steps on both publisher processes
     Check I can call a step with a result                                                    PASSED  Hello!
     And I can call a step on the second publisher                                            PASSED  Hello!
+  Scenario: I can disconnect then restart a publisher
+Chorus --> INFO    - Processing scenario: I can disconnect then restart a publisher
+    Given I disconnect the web socket publisher                                              PASSED  
+    And I wait for 500 milliseconds                                                          PASSED  
+    And I stop the process simpleStepPublisher                                               PASSED  
+    And I wait for 1 seconds for the disconnection                                           PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a simpleStepPublisher process                                                PASSED  
+    And I wait for the web socket client SimpleWebSocketStepPublisher                        PASSED  
+    And the web socket client SimpleWebSocketStepPublisher is connected                      PASSED  
+    Then I can call a step with a result                                                     PASSED  Hello!
+    And I can call a step on the second publisher                                            PASSED  Hello!
+  Scenario: I can stop without disconnecting then restart a publisher
+Chorus --> INFO    - Processing scenario: I can stop without disconnecting then restart a publisher
+    Given I stop the process simpleStepPublisher                                             PASSED  
+    And I wait for 1 seconds for the disconnection                                           PASSED  
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    And I start a simpleStepPublisher process                                                PASSED  
+    And I wait for the web socket client SimpleWebSocketStepPublisher                        PASSED  
+    And the web socket client SimpleWebSocketStepPublisher is connected                      PASSED  
+    Then I can call a step with a result                                                     PASSED  Hello!
+    And I can call a step on the second publisher                                            PASSED  Hello!
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:7) (passed:7) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:3) (passed:3) (failed:0)
+Steps     (total:23) (passed:23) (failed:0) (undefined:0) (pending:0) (skipped:0)

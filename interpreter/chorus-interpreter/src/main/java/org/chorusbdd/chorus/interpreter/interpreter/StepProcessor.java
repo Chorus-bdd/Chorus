@@ -290,6 +290,7 @@ public class StepProcessor {
         step.setThrowable(cause);
 
         String causeMessage = cause.getMessage();
+        causeMessage = causeMessage == null ? "" : causeMessage;
         log.debug("Step failed due to exception " + cause);
 
         String errorDetails = getErrorDetails(cause);

@@ -40,7 +40,10 @@ public class StepPublisher {
     public StepPublisher(String chorusClientId, URI stepRegistryURI, Object... handlers) {
         this.chorusClientId = chorusClientId;
         this.chorusWebSocketClient = new ChorusWebSocketClient(stepRegistryURI, new MessageProcessor());
-
+        addHandlers(handlers);
+    }
+    
+    public void addHandlers(Object... handlers) {
         for ( Object handler : handlers) {
             //assert that this is a Handler
             checkValidHandlerType(handler);
@@ -137,10 +140,11 @@ public class StepPublisher {
         chorusWebSocketClient.sendMessage(publishStepMessage);
     }
 
-    public void disconnect() {
+    public void disconnect() throws InterruptedException {
         if ( connected.getAndSet(false)) {
             log.debug("StepPublisher disconnecting");
-            chorusWebSocketClient.close();
+            chorusWebSocketClient.closeBlocking();
+            log.debug("StepPublisher disconnected");
         }
     }
 
