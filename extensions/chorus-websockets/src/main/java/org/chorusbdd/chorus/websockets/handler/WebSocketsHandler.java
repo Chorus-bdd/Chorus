@@ -122,7 +122,7 @@ public class WebSocketsHandler {
     }
 
     private void start() {
-        webSocketsManager.startWebSocketServer(getConfig(WebSocketsManager.DEFAULT_REGISTRY_NAME));
+        webSocketsManager.startWebSocketServer(getConfig(WebSocketsManager.DEFAULT_WEB_SOCKET_SERVER_NAME));
     }
     
     private void checkConnection(String processNameList, Function<String, Boolean> checkToPerform) throws ClientConnectionException {

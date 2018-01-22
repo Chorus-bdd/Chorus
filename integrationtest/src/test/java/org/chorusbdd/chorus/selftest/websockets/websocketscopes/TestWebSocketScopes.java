@@ -27,46 +27,28 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.websockets;
+package org.chorusbdd.chorus.selftest.websockets.websocketscopes;
 
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.subsystem.Subsystem;
-
-import java.util.Properties;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by nick on 30/08/2014.
- * 
- * A WebSocketsManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public interface WebSocketsManager extends Subsystem, StepInvokerProvider {
+public class TestWebSocketScopes extends AbstractInterpreterTest {
 
-    String DEFAULT_WEB_SOCKET_SERVER_NAME = "default";
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/websockets/websocketscopes/websocketscope.feature";
 
-    void startWebSocketServer(Properties properties);
+    final int expectedExitCode = 0;  //pass
 
-    void stopWebSocketServer();
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
+    }
 
-    /**
-     * Wait for a client to become connected to the WebSocketsManagerImpl, publish its steps and send a STEPS_ALIGNED
-     *
-     * @param clientName, name of the client - this is received from the client when it connects
-     *
-     * @return true if the client is connected and aligned, false if not connected or has not published
-     * STEPS_ALIGNED by the end of the timeout period
-     */
-    boolean waitForClientConnection(String clientName);
+    protected String getFeaturePath() {
+        return featurePath;
+    }
 
-    /**
-     * Check if a web socket client is already connected and has sent a STEPS_ALIGNED message
-     * 
-     * @param clientName, name of the client - this is received from the client when it connects
-     *
-     * @return true if the client is connected and aligned, false if not connected or has not published
-     * STEPS_ALIGNED
-     */
-    boolean isClientConnected(String clientName);
-
-
-    void showAllSteps();
 }

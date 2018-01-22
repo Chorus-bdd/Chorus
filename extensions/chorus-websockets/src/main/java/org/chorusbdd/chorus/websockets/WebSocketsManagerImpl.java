@@ -1,10 +1,12 @@
 package org.chorusbdd.chorus.websockets;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.*;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.websockets.config.WebSocketsConfig;
 import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBeanFactory;
@@ -50,7 +52,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     public void startWebSocketServer(Properties properties) {
         if ( ! isRunning.getAndSet(true)) {
 
-            webSocketsConfig = getWebSocketsConfig(DEFAULT_REGISTRY_NAME, properties);
+            webSocketsConfig = getWebSocketsConfig(DEFAULT_WEB_SOCKET_SERVER_NAME, properties);
             checkConfig(webSocketsConfig);
 
             int port = webSocketsConfig.getPort();
@@ -135,12 +137,17 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     @Override
     public ExecutionListener getExecutionListener() {
         return new ExecutionListenerAdapter() {
-
-            //TODO here we are assuming scope by feature
-            //allow step server to be scoped to feature or scenario (or session) in config
-
+            
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
-                stopWebSocketServer();
+                if ( isRunning.get() && webSocketsConfig.getScope() == Scope.FEATURE) {
+                    stopWebSocketServer();
+                }
+            }
+
+            public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenarioToken) {
+                if ( isRunning.get() && webSocketsConfig.getScope() == Scope.SCENARIO) {
+                    stopWebSocketServer();
+                }
             }
         };
     }
