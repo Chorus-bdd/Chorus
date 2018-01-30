@@ -68,13 +68,13 @@ public class ClasspathScanner {
 
     private static String[] classpathNames;
 
-    public static Set<Class> doScan(ClassFilter classFilter) {
+    static Set<Class> doScan(ClassFilter classFilter) {
         Set<Class> s = new HashSet<>();
         try {
             for (String clazz : getClasspathClassNames()) {
                 //check the name/package first before we try class loading
                 //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
-                if ( classFilter.acceptByName(clazz)) {
+                if (classFilter.acceptByName(clazz)) {
                     Class c = Class.forName(clazz);
                     if (classFilter.acceptByClass(c)) {
                         s.add(c);
@@ -94,7 +94,7 @@ public class ClasspathScanner {
      * in that the slashes will be changed to dots
      * and the .class file extension will be removed.
      */
-    public static String[] getClasspathClassNames()
+    static String[] getClasspathClassNames()
             throws ZipException, IOException {
         final String[] classes = getClasspathFileNamesWithExtension(".class");
         for (int i = 0; i < classes.length; i++) {
@@ -103,7 +103,7 @@ public class ClasspathScanner {
         return classes;
     }
 
-    public static String[] getClasspathFileNamesWithExtension(final String extension) throws ZipException, IOException {
+    static String[] getClasspathFileNamesWithExtension(final String extension) throws ZipException, IOException {
         return getClasspathFileNames(new FilenameFilter() {
             public boolean accept(String filename) {
                 return filename.endsWith(extension);
@@ -111,7 +111,7 @@ public class ClasspathScanner {
         });
     }
 
-    public static String[] getClasspathFileNames(FilenameFilter filter)
+    static String[] getClasspathFileNames(FilenameFilter filter)
             throws ZipException, IOException {
         final List<String> filenames = new ArrayList<>();
         for (String filename : getClasspathFileNames()) {
@@ -130,15 +130,15 @@ public class ClasspathScanner {
      * zip files and the directories. In other words,
      * the filter will not be used to sort directories.
      */
-    public static String[] getClasspathFileNames() throws IOException {
+    static String[] getClasspathFileNames() throws IOException {
         //for performance we most likely only want to do this once for each interpreter session,
         //classpath should not change dynamically
         ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
         log.debug("Getting file names " + Thread.currentThread().getName());
         long start = System.currentTimeMillis();
-        if ( classpathNames == null ) {
+        if (classpathNames == null) {
             classpathNames = findClassNames();
-            log.debug("Getting file names took " + (System.currentTimeMillis() - start) + " millis" );
+            log.debug("Getting file names took " + (System.currentTimeMillis() - start) + " millis");
         }
         return classpathNames;
     }
@@ -163,7 +163,7 @@ public class ClasspathScanner {
                         }
                     }
                     zip.close();
-                    
+
                 } else if (classpathFile.isDirectory()) {
                     // lets go through and find all of the subfolders
                     final Set<File> directoriesToSearch = new HashSet<>();
@@ -199,15 +199,16 @@ public class ClasspathScanner {
 
         return uniqueNames;
     }
-
-    public static void main(String[] args) throws Exception {
-        final String[] names = getClasspathClassNames();
-        final BufferedWriter writer = new BufferedWriter(new FileWriter("allClasses.txt"));
-        for (String name : names) {
-            writer.write(name);
-            writer.write("\n");
-        }
-        writer.close();
-        ChorusOut.out.println("All done.");
-    }
 }
+//
+//    public static void main(String[] args) throws Exception {
+//        final String[] names = getClasspathClassNames();
+//        final BufferedWriter writer = new BufferedWriter(new FileWriter("allClasses.txt"));
+//        for (String name : names) {
+//            writer.write(name);
+//            writer.write("\n");
+//        }
+//        writer.close();
+//        ChorusOut.out.println("All done.");
+//    }
+//}

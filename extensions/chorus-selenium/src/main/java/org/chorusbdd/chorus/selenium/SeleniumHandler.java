@@ -1,14 +1,19 @@
 package org.chorusbdd.chorus.selenium;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
+import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
+import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.util.ScopeUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
@@ -29,13 +34,20 @@ public class SeleniumHandler {
     private boolean closeBrowserAtEndOfFeature = true;
 
 
+    @ChorusResource("subsystem.configurationManager")
+    private ConfigurationManager configurationManager;
+    
+    @ChorusResource("scenario.token")
+    private ScenarioToken scenarioToken;
+
+
     @Initialize(scope = Scope.FEATURE)
     public void init() {
         seleniumLogging.suppressLogging();
     }
 
     @Step(".*open Chrome")
-    public void openABrowserWindow() throws IOException {
+    public void openChrome() throws IOException {
 
         // Assume chromedriver will be in user PATH so non need to set it here
         // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
@@ -53,6 +65,21 @@ public class SeleniumHandler {
         chromeOptions.addArguments("--silent");
 
         driver = new ChromeDriver(chromeOptions);
+    }
+
+    @Step(".*open RemoteWebDriver")
+    public void openRemoteWebDriver() throws IOException {
+
+        // Assume chromedriver will be in user PATH so non need to set it here
+        // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+
+        //TODO support config to enable selenium log?
+        // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
+        // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
+
+//        System.setProperty("webdriver.chrome.silentOutput", "true");
+        
+//        driver = new ChromeDriver(chromeOptions);
     }
 
     @Step(".*navigate to (.*)")
@@ -95,4 +122,10 @@ public class SeleniumHandler {
         }
     }
 
+
+    private Properties getConfig(String configName) {
+        Properties p = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "selenium", configName);
+        new ScopeUtils().setScopeForContextIfNotConfigured(scenarioToken, p);
+        return p;
+    }
 }

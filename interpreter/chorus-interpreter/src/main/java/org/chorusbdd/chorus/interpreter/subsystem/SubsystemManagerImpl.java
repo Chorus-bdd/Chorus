@@ -65,10 +65,10 @@ public class SubsystemManagerImpl implements SubsystemManager {
 
         subsystemList = Collections.unmodifiableList(new ArrayList<>(subsystems.values()));
 
-        this.stepProviderSubsystems = setInvokerProviderSubsystems();
+        this.stepProviderSubsystems = getStepInvokerProviderSubsystems();
     }
 
-    private List<StepInvokerProvider> setInvokerProviderSubsystems() {
+    private List<StepInvokerProvider> getStepInvokerProviderSubsystems() {
         List<StepInvokerProvider> stepInvokerSubsystemList = new LinkedList<>();
         for ( Subsystem s : subsystemList) {
             if ( StepInvokerProvider.class.isAssignableFrom(s.getClass())) {

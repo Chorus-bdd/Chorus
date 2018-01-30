@@ -94,7 +94,7 @@ public class HandlerClassDiscovery {
         return handlerNameToHandlerClass;
     }
 
-    public StringBuilder findHandlerClasses(
+    public StringBuilder findHandlerClassesForFeature(
             HashMap<String, Class> allHandlerClasses,
             FeatureToken feature,
             List<Class> orderedHandlerClasses) {
