@@ -51,6 +51,5 @@ public @interface SubsystemConfig {
      * to be used instead of the default implementation
      */
     String overrideImplementationClassSystemProperty();
-    
 
 }

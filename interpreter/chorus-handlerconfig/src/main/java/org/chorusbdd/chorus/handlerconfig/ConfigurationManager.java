@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.handlerconfig;
 
+import org.chorusbdd.chorus.annotations.SubsystemConfig;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
 import java.util.Properties;
@@ -36,6 +37,10 @@ import java.util.Properties;
 /**
  * Created by Nick E on 03/02/2015.
  */
+@SubsystemConfig(
+    id = "configurationManager",
+    implementationClass = "org.chorusbdd.chorus.handlerconfig.ChorusProperties",
+    overrideImplementationClassSystemProperty = "chorusConfigurationManager")
 public interface ConfigurationManager extends Subsystem {
 
    /**

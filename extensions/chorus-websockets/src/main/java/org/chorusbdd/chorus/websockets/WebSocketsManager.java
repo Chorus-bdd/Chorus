@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.websockets;
 
+import org.chorusbdd.chorus.annotations.SubsystemConfig;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
@@ -39,6 +40,10 @@ import java.util.Properties;
  * 
  * A WebSocketsManager starts a WebSocketServer to listen for WebSocket clients to connect and publish test steps
  */
+@SubsystemConfig(
+    id = "webSocketsManager", 
+    implementationClass = "org.chorusbdd.chorus.websockets.WebSocketsManagerImpl",
+    overrideImplementationClassSystemProperty = "chorusWebSocketsManager")
 public interface WebSocketsManager extends Subsystem, StepInvokerProvider {
 
     String DEFAULT_WEB_SOCKET_SERVER_NAME = "default";

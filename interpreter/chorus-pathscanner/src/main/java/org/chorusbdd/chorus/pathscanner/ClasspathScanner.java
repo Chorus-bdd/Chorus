@@ -29,16 +29,13 @@
  */
 package org.chorusbdd.chorus.pathscanner;
 
-import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
-import org.chorusbdd.chorus.pathscanner.filter.FilenameFilter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
+import org.chorusbdd.chorus.pathscanner.filter.FilenameFilter;
 import org.chorusbdd.chorus.util.ChorusException;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -68,10 +65,18 @@ public class ClasspathScanner {
 
     private static String[] classpathNames;
 
-    static Set<Class> doScan(ClassFilter classFilter) {
+    public static Set<Class> doScan(ClassFilter classFilter) {
         Set<Class> s = new HashSet<>();
+        
+        String[] classNames;
         try {
-            for (String clazz : getClasspathClassNames()) {
+            classNames = getClasspathClassNames();
+        } catch (Throwable t) {
+            throw new ChorusException("Failed during classpath scanning", t);
+        }
+        
+        for (String clazz : classNames) {
+            try {
                 //check the name/package first before we try class loading
                 //this may exclude interpreter classes which would otherwise load unwanted optional dependencies
                 if (classFilter.acceptByName(clazz)) {
@@ -80,9 +85,9 @@ public class ClasspathScanner {
                         s.add(c);
                     }
                 }
+            } catch (Throwable t) {
+                throw new ChorusException("Failed during classpath scanning could not load class " + clazz, t);
             }
-        } catch (Exception e) {
-            throw new ChorusException("Failed during classpath scanning", e);
         }
         return s;
     }

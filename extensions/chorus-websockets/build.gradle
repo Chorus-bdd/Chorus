@@ -16,7 +16,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version:'4.10'
 }
 
-task runStepRegistry(group: 'webosockets.run', type: JavaExec) {
+task runStepRegistry(group: 'websockets.run', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.chorusbdd.chorus.websockets.WebSocketsManagerImpl'
 }

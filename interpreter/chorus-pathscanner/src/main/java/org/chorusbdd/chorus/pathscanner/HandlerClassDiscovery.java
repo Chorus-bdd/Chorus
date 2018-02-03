@@ -31,9 +31,10 @@ package org.chorusbdd.chorus.pathscanner;
 
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
-import org.chorusbdd.chorus.pathscanner.filter.HandlerClassFilterFactory;
+import org.chorusbdd.chorus.pathscanner.filter.ClassFilterDecorator;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.pathscanner.filter.HandlerAnnotationFilter;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.util.HashMap;
@@ -63,10 +64,10 @@ public class HandlerClassDiscovery {
         //always include the Chorus handlers package
         HashMap<String, Class> handlerNameToHandlerClass = new HashMap<>();
 
-        HandlerClassFilterFactory filterFactory = new HandlerClassFilterFactory();
-        ClassFilter chainStart = filterFactory.createClassFilters(basePackages);
+        HandlerAnnotationFilter handlerAnnotationFilter = new HandlerAnnotationFilter();
+        ClassFilter filter = new ClassFilterDecorator().decorateWithPackageFilters(handlerAnnotationFilter, basePackages);
 
-        Set<Class> classes = ClasspathScanner.doScan(chainStart);
+        Set<Class> classes = ClasspathScanner.doScan(filter);
         for (Class handlerClass : classes) {
             Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
             String handlerName = f.value();
@@ -79,9 +80,11 @@ public class HandlerClassDiscovery {
                         newHandler + " and " + currentHandler :
                         currentHandler + " and " + newHandler;
 
-                log.debug("More than one handler class is defined with the name [" + handlerName + "]");
-                log.debug("The value of the @Handler annotation is [" + handlerName + "] for both " + handlerTxt);
-                log.debug("Any features which attempt to use handler [" + handlerName + "] will fail");
+                if ( log.isDebugEnabled()) {
+                    log.debug("More than one handler class is defined with the name [" + handlerName + "]");
+                    log.debug("The value of the @Handler annotation is [" + handlerName + "] for both " + handlerTxt);
+                    log.debug("Any features which attempt to use handler [" + handlerName + "] will fail");
+                }
 
                 //put a special class into the map which tells the interpreter to fail any features
                 handlerNameToHandlerClass.put(handlerName, DuplicateHandlers.class);
@@ -90,7 +93,10 @@ public class HandlerClassDiscovery {
                 handlerNameToHandlerClass.put(handlerName, handlerClass);
             }
         }
-        log.trace("These were the handler classes discovered by handler class scanning " + handlerNameToHandlerClass);
+        
+        if ( log.isTraceEnabled()) {
+            log.trace("These were the handler classes discovered by handler class scanning " + handlerNameToHandlerClass);
+        }
         return handlerNameToHandlerClass;
     }
 

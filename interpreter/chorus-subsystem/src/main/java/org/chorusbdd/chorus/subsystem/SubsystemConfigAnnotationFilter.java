@@ -27,45 +27,26 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.manager;
+package org.chorusbdd.chorus.subsystem;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
-import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.subsystem.Subsystem;
-
-import java.util.List;
-import java.util.Properties;
+import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
 
 /**
- * Created by nick on 30/08/2014.
- * 
- * A RemotingManager implements the remoting/network handling for a remoting protocol supported by the Chorus 
- * interpreter
- * 
- * A new instance of the RemotingManager for each supported protocol is created at the start of each scenario 
- * which uses RemotingHandler
- */
-@SubsystemConfig(
-    id = "remotingManager", 
-    implementationClass = "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager",
-    overrideImplementationClassSystemProperty = "chorusRemotingManager")
-public interface RemotingManager extends Subsystem, StepInvokerProvider {
+* Created with IntelliJ IDEA.
+* User: nick
+* Date: 11/05/12
+* Time: 15:36
+*
+* Filter out classes with the SubsystemConfig annotation
+*/
+public class SubsystemConfigAnnotationFilter implements ClassFilter {
 
-    /**
-     * Find a step method in the remote component which matches the 'action' String
-     *
-     * @param configName
-     * @param remotingConfig
-     * @param action            - the step text from the scenario which we want to match to a remote step
-     * @return                    the value returned by the remote component when invoking the remote step implementation
-     * @throws org.chorusbdd.chorus.util.ChorusException if executing the step fails
-     **/
-    Object performActionInRemoteComponent(String configName, Properties remotingConfig, String action);
+    public boolean acceptByName(String className) {
+        return true;
+    }
 
-    void connect(String configName, Properties remotingProperties);
-
-    List<StepInvoker> getStepInvokers();
-
-    void closeAllConnections();
+    public boolean acceptByClass(Class clazz) {
+        return clazz.getAnnotation(SubsystemConfig.class) != null;
+    }
 }

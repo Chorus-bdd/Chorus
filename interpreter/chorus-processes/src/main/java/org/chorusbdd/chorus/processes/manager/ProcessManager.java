@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.annotations.SubsystemConfig;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
 import java.util.Properties;
@@ -37,6 +38,10 @@ import java.util.Properties;
 /**
  * Created by nick on 26/09/2014.
  */
+@SubsystemConfig(
+    id = "processManager", 
+    implementationClass = "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl",
+    overrideImplementationClassSystemProperty = "chorusProcessManager")
 public interface ProcessManager extends Subsystem {
 
     void startProcess(String configName, String processName, Properties processProperties) throws Exception;

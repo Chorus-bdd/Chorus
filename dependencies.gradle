@@ -131,15 +131,6 @@ project(':chorus-selenium') {
     }
 }
 
-project(':integrationtest') {
-    dependencies {
-        compile project (':chorus')
-        compile project (':chorus-spring')
-        compile project (':chorus-selenium')
-        compile project (':chorus-websockets')
-    }
-}
-
 project(':chorus-sikulix') {
     dependencies {
         compile project (':chorus')
@@ -160,12 +151,6 @@ project(':chorus-stepinvoker') {
     }
 }
 
-project(':chorus-websockets') {
-    dependencies {
-        compile project (':chorus')
-    }
-}
-
 project(':chorus-subsystem') {
     dependencies {
         compile project (':chorus-util')
@@ -175,6 +160,7 @@ project(':chorus-subsystem') {
         compile project (':chorus-executionlistener')
         compile project (':chorus-annotations')
         compile project (':chorus-context')
+        compile project (':chorus-pathscanner')
     }
 }
 
@@ -192,9 +178,24 @@ project(':chorus-webagent') {
     }
 }
 
+project(':chorus-websockets') {
+    dependencies {
+        compile project (':chorus')
+    }
+}
+
 project(':chorus-xml') {
     dependencies {
         compile project (':chorus')
         compile project (':chorus-mocksuite')
+    }
+}
+
+project(':integrationtest') {
+    dependencies {
+        compile project (':chorus')
+        compile project (':chorus-spring')
+        compile project (':chorus-selenium')
+        compile project (':chorus-websockets')
     }
 }

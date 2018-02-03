@@ -41,7 +41,7 @@ public class ChorusConstants {
 
     //TODO review - it seems wrong to hardcode the package prefixes for optional extension
     //packages such as selenium or stepregistry
-    public static final String[] BUILT_IN_HANDLER_PACKAGE_PREFIXES = new String[] {
+    public static final String[] BUILT_IN_PACKAGE_PREFIXES = new String[] {
         "org.chorusbdd.chorus.handlers",
         "org.chorusbdd.chorus.selftest",
         "org.chorusbdd.chorus.selenium",
