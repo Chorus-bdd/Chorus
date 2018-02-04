@@ -113,7 +113,8 @@ public class Chorus {
     }
 
     private void configureSubsystems() {
-        subsystemManager.initializeSubsystems();
+        List<String> handlerPackages = configReader.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
+        subsystemManager.initializeSubsystems(handlerPackages);
         listenerSupport.addExecutionListener(subsystemManager.getExecutionListeners());
     }
 

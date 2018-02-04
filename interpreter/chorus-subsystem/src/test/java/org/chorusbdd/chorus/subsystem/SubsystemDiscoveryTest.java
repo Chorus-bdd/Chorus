@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -24,14 +25,12 @@ public class SubsystemDiscoveryTest {
     private SubsystemDiscovery subsystemDiscovery = new SubsystemDiscovery();
     
     @Test
-    public void testASybsystemCanBeLoaded() throws Exception {
+    public void testASubsystemCanBeLoaded() throws Exception {
         
         HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.mock"), chorusLog); 
-        assertEquals("There should be one subsystem", 1, scanResult.size());
         
-        Map<String, Class> expectedResult = new HashMap<>();
-        expectedResult.put("mockSubsystemId", MockSubsystemImpl.class);
-        assertEquals(expectedResult, scanResult);
+        assertTrue(scanResult.containsKey("mockSubsystemId"));
+        assertEquals(scanResult.get("mockSubsystemId"), MockSubsystemImpl.class);
     }
 
     @Test

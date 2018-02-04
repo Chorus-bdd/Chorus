@@ -59,7 +59,7 @@ public class InterpreterBuilder {
      */
     public ChorusInterpreter buildAndConfigure(ConfigProperties config, SubsystemManager subsystemManager) {
         ChorusInterpreter chorusInterpreter = new ChorusInterpreter(listenerSupport);
-        chorusInterpreter.setBasePackages(config.getValues(ChorusConfigProperty.HANDLER_PACKAGES));
+        chorusInterpreter.setHandlerClassPackages(config.getValues(ChorusConfigProperty.HANDLER_PACKAGES));
         chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
         chorusInterpreter.setSubsystemManager(subsystemManager);

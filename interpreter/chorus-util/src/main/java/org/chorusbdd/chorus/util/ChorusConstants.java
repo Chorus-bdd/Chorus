@@ -43,6 +43,9 @@ public class ChorusConstants {
     //packages such as selenium or stepregistry
     public static final String[] BUILT_IN_PACKAGE_PREFIXES = new String[] {
         "org.chorusbdd.chorus.handlers",
+        "org.chorusbdd.chorus.processes",
+        "org.chorusbdd.chorus.remoting",
+        "org.chorusbdd.chorus.handlerconfig",
         "org.chorusbdd.chorus.selftest",
         "org.chorusbdd.chorus.selenium",
         "org.chorusbdd.chorus.websockets"

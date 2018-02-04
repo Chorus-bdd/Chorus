@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
+import org.chorusbdd.chorus.subsystem.SubsystemDiscovery;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.*;
@@ -54,15 +55,14 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private Map<String, Subsystem> subsystems = new LinkedHashMap<>();
 
     private ChorusLog log = ChorusLogFactory.getLog(SubsystemManagerImpl.class);
+    
+    private SubsystemDiscovery subsystemDiscovery = new SubsystemDiscovery();
 
     @Override
-    public void initializeSubsystems() {
-        //initialize subsystems in order of priority
-        initializeProcessManager();
-        initializeRemotingManager();
-        initializeConfigurationManager();
-        initializeWebSocketsManager();
-
+    public void initializeSubsystems(List<String> handlerPackages) {
+        Map<String, Class> subsystemsDiscovered = subsystemDiscovery.discoverSubsystems(handlerPackages);
+        subsystemsDiscovered.forEach(this::initializeSubsystem);
+        
         subsystemList = Collections.unmodifiableList(new ArrayList<>(subsystems.values()));
 
         this.stepProviderSubsystems = getStepInvokerProviderSubsystems();
@@ -92,64 +92,19 @@ public class SubsystemManagerImpl implements SubsystemManager {
         return subsystemList.stream().map(Subsystem::getExecutionListener).collect(Collectors.toList());
     }
 
-    private void initializeProcessManager() {
-        initializeSubsystem(
-            "processManager",
-            "chorusProcessManager",
-            "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl",
-            false
-        );
-
-    }
-
-    private void initializeRemotingManager() {
-        initializeSubsystem(
-            "remotingManager",
-            "chorusRemotingManager",
-            "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager",
-            false
-        );
-    }
-
-    private void initializeConfigurationManager() {
-        initializeSubsystem(
-            "configurationManager",
-            "chorusConfigurationManager",
-            "org.chorusbdd.chorus.handlerconfig.ChorusProperties",
-            false
-        );
-    }
-
-    private void initializeWebSocketsManager() {
-        initializeSubsystem(
-            "webSocketsManager",
-            "chorusWebSocketsManager",
-            "org.chorusbdd.chorus.websockets.WebSocketsManagerImpl",
-            true
-        );
-    }
-
-    private void initializeSubsystem(String subsystemId, String sysProp, String defaultImplementingClass, boolean optional) {
-        String processManagerClass = System.getProperty(sysProp, defaultImplementingClass);
-        log.debug("Implementation for " + subsystemId + " is " + processManagerClass);
-        Optional<Subsystem> instance = createSubsystem(subsystemId, optional, processManagerClass);
+    private void initializeSubsystem(String subsystemId, Class subsystemClass) {
+        log.debug("Initializing subsystem " + subsystemId + " using class [" + subsystemClass.getName() + "]");
+        Optional<Subsystem> instance = createSubsystem(subsystemId, subsystemClass);
         instance.ifPresent(s -> subsystems.put(subsystemId, s));
     }
 
-    private Optional<Subsystem> createSubsystem(String subsystemId, boolean optional, String processManagerClass) {
+    private Optional<Subsystem> createSubsystem(String subsystemId, Class subsystemClass) {
         Optional<Subsystem> instance = Optional.empty();
         try {
-            Class clazz = Class.forName(processManagerClass);
-            instance = Optional.of((Subsystem)clazz.newInstance());
+            instance = Optional.of((Subsystem)subsystemClass.newInstance());
         } catch (Exception e) {
-            if ( ! optional ) {
-                log.error("Failed to initialize  " + subsystemId +
-                    " is class " + processManagerClass + " in the classpath, " +
-                    "does it have a nullary constructor?", e);
-                throw new ChorusException("Failed to initialize " + subsystemId, e);
-            } else {
-                log.trace("Did not create subsystem " + subsystemId + " because an instance of " + processManagerClass + " could not be instantiated", e);
-            }
+            log.warn("Could not create subsystem " + subsystemId + " because an instance of " +
+                    "[" + subsystemClass.getName() + "] could not be instantiated", e);
         }
         return instance;
     }

@@ -36,7 +36,6 @@ import org.chorusbdd.chorus.pathscanner.ClasspathScanner;
 import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
 import org.chorusbdd.chorus.pathscanner.filter.ClassFilterDecorator;
 
-import javax.swing.plaf.synth.SynthButtonUI;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -50,9 +49,7 @@ import static java.lang.String.format;
 public class SubsystemDiscovery {
 
     private ChorusLog log = ChorusLogFactory.getLog(SubsystemDiscovery.class);
-
-    private Map<String, String> duplicateNameToDescription = new HashMap<>();
-
+    
     /**
      * Scans the classpath for handler classes
      *
@@ -64,7 +61,10 @@ public class SubsystemDiscovery {
     }
 
 
-    public HashMap<String, Class> discoverSubsystems(List<String> basePackages, ChorusLog log) {
+    /**
+     * Allow a custom log impl to be passed for unit testing
+     */
+    HashMap<String, Class> discoverSubsystems(List<String> basePackages, ChorusLog log) {
         
         HashMap<String, Class> result = new HashMap<>();
 
