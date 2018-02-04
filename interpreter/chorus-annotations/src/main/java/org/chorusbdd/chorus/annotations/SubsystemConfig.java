@@ -15,10 +15,11 @@ import java.lang.annotation.Target;
  * Chorus scans the following packages for subsystems, and their descendants:
  *
  * 1) Packages which are part of the core Chorus interpreter
- * 2) Packages selected by the user using the -h handler package interpreter switch
+ * 2) Packages selected by the user using the -h handler base package interpreter switch to the interpreter
  * 
  * Chorus will create a subsystem instance for each Interface it discovers which is both annotated with {@link SubsystemConfig},
- * and also extends the interface Subsystem
+ * and also extends the interface Subsystem. The annotation defines a default implementation class which will be instantiated.
+ * A user can override this default, by setting a system property
  * 
  * Each subsystem will receive interpreter lifecycle events (e.g. when the suite starts, 
  * or features and scenarios are started and stopped). Since the lifecycle of the subsystem is tied to the interpreter

@@ -43,7 +43,7 @@ public interface SubsystemManager {
     /**
      * Called once by the interpreter during startup to initialize all confugurable subsystems
      */
-    void initializeSubsystems(List<String> handlerPackages);
+    void initializeSubsystems(List<String> handlerClassBasePackages);
 
     Subsystem getSubsystemById(String id);
 

@@ -63,7 +63,7 @@ public class ChorusInterpreter {
     private static final ScheduledExecutorService timeoutExcecutor = NamedExecutors.newSingleThreadScheduledExecutor("TimeoutExecutor");
 
     private long scenarioTimeoutMillis = 360000;
-    private List<String> handlerClassPackages = Collections.emptyList();
+    private List<String> handlerClassBasePackages = Collections.emptyList();
 
     private ExecutionListenerSupport executionListenerSupport;
 
@@ -86,7 +86,7 @@ public class ChorusInterpreter {
 
     public void initialize() {
         //load all available handler classes
-        allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(handlerClassPackages);
+        allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(handlerClassBasePackages);
     }
 
     public void runFeatures(ExecutionToken executionToken, List<FeatureToken> features) {
@@ -293,8 +293,8 @@ public class ChorusInterpreter {
         }
     }
 
-    public void setHandlerClassPackages(List<String> handlerClassPackages) {
-        this.handlerClassPackages = handlerClassPackages;
+    public void setHandlerClassBasePackages(List<String> handlerClassBasePackages) {
+        this.handlerClassBasePackages = handlerClassBasePackages;
     }
 
     public void setDryRun(boolean dryRun) {

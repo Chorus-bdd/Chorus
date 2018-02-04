@@ -41,7 +41,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Some of Chorus' subsystems are pluggable, we depend only on the abstractions
+ * 
+ * Chorus uses subsystems to support various aspects of handler functionality
+ * 
+ * See {@link org.chorusbdd.chorus.annotations.SubsystemConfig} for a more complete description of the capabilities
+ * 
+ * Some of Chorus' subsystems are pluggable, we depend only on the interface and a user can override this 
+ * with their own implementation by setting a system property
+ * 
+ * Subsystems can also be created by a user t
  *
  * Created by nick on 26/09/2014.
  *
@@ -59,8 +67,11 @@ public class SubsystemManagerImpl implements SubsystemManager {
     private SubsystemDiscovery subsystemDiscovery = new SubsystemDiscovery();
 
     @Override
-    public void initializeSubsystems(List<String> handlerPackages) {
-        Map<String, Class> subsystemsDiscovered = subsystemDiscovery.discoverSubsystems(handlerPackages);
+    public void initializeSubsystems(List<String> handlerClassBasePackages) {
+        Map<String, Class> subsystemsDiscovered = subsystemDiscovery.discoverSubsystems(handlerClassBasePackages);
+        log.trace("Subsystems discovered:");
+        log.trace(subsystemsDiscovered);
+        
         subsystemsDiscovered.forEach(this::initializeSubsystem);
         
         subsystemList = Collections.unmodifiableList(new ArrayList<>(subsystems.values()));
