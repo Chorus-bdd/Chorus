@@ -82,14 +82,13 @@ public class SubsystemDiscovery {
             
             if (subsystemId.trim().length() == 0) {
                 log.warn(format(
-                        "SubsystemConfig annotation has empty id, the SubsystemConfig annotation on [%s] will be ignored",
+                        "The SubsystemConfig annotation on [%s] has an empty id and will be ignored",
                         subsystemInterface.getName())
                 );
             } else if (implementationClassName.trim().length() == 0) {
                 log.warn(format(
-                        "Implementation class [%s] for subsystem is an empty String, " +
-                                "the SubsystemConfig annotation on [%s] will be ignored",
-                        implementationClassName,
+                        "The SubsystemConfig annotation on [%s] " +
+                        "does not declare an implementation class and will be ignored",
                         subsystemInterface.getName())
                 );
             } else if (!subsystemInterface.isInterface()) {
@@ -110,16 +109,15 @@ public class SubsystemDiscovery {
 
                     if (! subsystemInterface.isAssignableFrom(implementationClass)) {
                         log.warn(format(
-                                "The implementation class [%s] for subsystem [%s] does not impleent the annotated subsystem interface [%s], " +
-                                        "this subsystem will not be instantiated",
+                                "The implementation class [%s] does not implement the annotated subsystem interface [%s], " +
+                                        "this subsystem will not be initialized",
                                 implementationClassName,
-                                subsystemId,
                                 subsystemInterface.getName())
                         );
                     } else if (implementationClass.isInterface()) {
                         log.warn(format(
                                 "The implementation class [%s] for subsystem [%s] is an interface not a concrete class, " +
-                                        "this subsystem will not be instantiated",
+                                        "this subsystem will not be initialized",
                                 implementationClassName,
                                 subsystemId)
                         );
@@ -135,7 +133,7 @@ public class SubsystemDiscovery {
                     }
                 } catch (ClassNotFoundException e) {
                     log.warn(format(
-                            "The implementation class [%s] for subsystem [%s] could not be loaded, this subsystem will not be instantiated",
+                            "The implementation class [%s] for subsystem [%s] could not be loaded, this subsystem will not be initialized",
                             implementationClassName,
                             subsystemId));
                 }
