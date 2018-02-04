@@ -5,14 +5,11 @@ import org.chorusbdd.chorus.subsystem.mock.MockSubsystemImpl;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
