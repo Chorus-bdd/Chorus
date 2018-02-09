@@ -1,8 +1,9 @@
 package org.chorusbdd.chorus.websockets.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBuilder;
 
-public class WebSocketsConfigBuilder implements WebSocketsConfig {
+public class WebSocketsConfigBuilder implements HandlerConfigBuilder<WebSocketsConfigBuilder, WebSocketsConfig>, WebSocketsConfig {
 
     private String configName;
     private int stepTimeoutSeconds = 60;
@@ -15,8 +16,9 @@ public class WebSocketsConfigBuilder implements WebSocketsConfig {
         return configName;
     }
 
-    public void setConfigName(String configName) {
+    public WebSocketsConfigBuilder setConfigName(String configName) {
         this.configName = configName;
+        return this;
     }
 
     @Override

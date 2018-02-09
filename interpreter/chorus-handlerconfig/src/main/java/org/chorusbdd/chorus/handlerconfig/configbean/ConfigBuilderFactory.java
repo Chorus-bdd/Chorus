@@ -39,7 +39,7 @@ import java.util.Properties;
  *
  * Create a handler configuration and a validator from the supplied properties
  */
-public interface ConfigBeanFactory<E extends HandlerConfigBean> {
+public interface ConfigBuilderFactory<E extends HandlerConfigBean> {
 
     /**
      * Create a config, initializing with Properties in the order supplied in the List
@@ -50,6 +50,6 @@ public interface ConfigBeanFactory<E extends HandlerConfigBean> {
      *  @param p
      * @param configName
      */
-    E createConfig(Properties p, String configName);
+    E createConfigBuilder(Properties p, String configName);
 
 }

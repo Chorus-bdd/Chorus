@@ -117,7 +117,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     private ProcessManagerConfig getRuntimeConfig(String configName, Properties processProperties) {
-        ProcessesConfigBuilder config = processesConfigBeanFactory.createConfig(processProperties, configName);
+        ProcessesConfigBuilder config = processesConfigBeanFactory.createConfigBuilder(processProperties, configName);
         int startedCount = getNumberOfInstancesStarted(configName);
         config.incrementDebugPort(startedCount);       //auto increment if multiple instances
         config.incrementRemotingPort(startedCount); //auto increment if multiple instances

@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBuilder;
 
 /**
 * Created by IntelliJ IDEA.
@@ -39,8 +40,10 @@ import org.chorusbdd.chorus.annotations.Scope;
 *
 * Configuration for a remote component used by the RemotingHandler
 * A builder for RemotingInfo used by the RemotingManager to control remoting
+ * 
+ * https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 */
-public class RemotingConfigBuilder implements RemotingManagerConfig {
+public class RemotingConfigBuilder implements HandlerConfigBuilder<RemotingConfigBuilder, RemotingManagerConfig>, RemotingManagerConfig {
 
     //default protocol to jmx so we don't have to specify it if loading props from db
     private String protocol = "jmx";
@@ -76,6 +79,7 @@ public class RemotingConfigBuilder implements RemotingManagerConfig {
         return configName;
     }
 
+    @Override
     public RemotingConfigBuilder setConfigName(String configName) {
         this.configName = configName;
         return this;

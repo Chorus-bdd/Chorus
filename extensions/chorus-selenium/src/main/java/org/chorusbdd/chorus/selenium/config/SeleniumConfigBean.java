@@ -37,32 +37,13 @@ import org.chorusbdd.chorus.annotations.Scope;
 public class SeleniumConfigBean implements SeleniumConfig {
 
     private final String configName;
-    private final int stepTimeoutSeconds;
-    private final int port;
     private final Scope scope;
-    private final int clientConnectTimeoutSeconds;
 
-    public SeleniumConfigBean(String configName, int stepTimeoutSeconds, int clientConnectTimeoutSeconds, int port, Scope scope) {
+    public SeleniumConfigBean(String configName, Scope scope) {
         this.configName = configName;
-        this.stepTimeoutSeconds = stepTimeoutSeconds;
-        this.clientConnectTimeoutSeconds = clientConnectTimeoutSeconds;
-        this.port = port;
         this.scope = scope;
     }
 
-    public int getStepTimeoutSeconds() {
-        return stepTimeoutSeconds;
-    }
-
-    @Override
-    public int getClientConnectTimeoutSeconds() {
-        return clientConnectTimeoutSeconds;
-    }
-
-    @Override
-    public int getPort() {
-        return port;
-    }
 
     public String getConfigName() {
         return configName;
@@ -73,14 +54,4 @@ public class SeleniumConfigBean implements SeleniumConfig {
         return scope;
     }
 
-    @Override
-    public String toString() {
-        return "SeleniumConfigBean{" +
-            "configName='" + configName + '\'' +
-            ", clientConnectTimeoutSeconds=" + clientConnectTimeoutSeconds +
-            ", stepTimeoutSeconds=" + stepTimeoutSeconds +
-            ", port=" + port +
-            ", scope=" + scope +
-            '}';
-    }
 }

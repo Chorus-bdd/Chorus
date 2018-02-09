@@ -128,7 +128,7 @@ public class JmxRemotingManager implements RemotingManager {
     }
 
     private RemotingManagerConfig buildRemotingConfig(String configName, Properties remotingProperties) {
-        return remotingConfigBeanFactory.createConfig(remotingProperties, configName).build();
+        return remotingConfigBeanFactory.createConfigBuilder(remotingProperties, configName).build();
     }
 
     @Override

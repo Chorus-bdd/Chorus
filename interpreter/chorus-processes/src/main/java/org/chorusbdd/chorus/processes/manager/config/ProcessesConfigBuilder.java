@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.processes.manager.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBuilder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +51,7 @@ import org.chorusbdd.chorus.annotations.Scope;
  * process, can be built. Where multiple processes are launched from the same ProcessesConfig we derive a new jmx port
  * or debug port for each ProcessInfo by auto-incrementing the ports
  */
-public class ProcessesConfigBuilder implements ProcessManagerConfig {
+public class ProcessesConfigBuilder implements HandlerConfigBuilder<ProcessesConfigBuilder, ProcessManagerConfig>, ProcessManagerConfig {
 
     private String configName;
     private String pathToExecutable;

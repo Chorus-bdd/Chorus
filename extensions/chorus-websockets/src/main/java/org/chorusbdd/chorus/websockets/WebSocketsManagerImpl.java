@@ -231,7 +231,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     }
 
     private WebSocketsConfig getWebSocketsConfig(String configName, Properties webSocketsProperties) {
-        WebSocketsConfigBuilder config = webSocketsConfigBeanFactory.createConfig(webSocketsProperties, configName);
+        WebSocketsConfigBuilder config = webSocketsConfigBeanFactory.createConfigBuilder(webSocketsProperties, configName);
         return config.build();
     }
 

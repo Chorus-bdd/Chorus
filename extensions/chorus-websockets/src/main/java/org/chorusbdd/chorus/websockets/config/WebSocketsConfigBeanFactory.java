@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.websockets.config;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
-import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
@@ -44,7 +44,7 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class WebSocketsConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<WebSocketsConfigBuilder> {
+public class WebSocketsConfigBeanFactory extends AbstractConfigBeanFactory<WebSocketsConfigBuilder> implements ConfigBuilderFactory<WebSocketsConfigBuilder> {
 
     private static final String stepTimeoutSeconds = "stepTimeoutSeconds";
     private static final String clientConnectTimeoutSeconds = "clientConnectTimeoutSeconds";
@@ -53,14 +53,11 @@ public class WebSocketsConfigBeanFactory extends AbstractConfigBeanFactory imple
 
     private ChorusLog log = ChorusLogFactory.getLog(WebSocketsConfigBeanFactory.class);
 
-    public WebSocketsConfigBuilder createConfig(Properties p, String configName) {
-        WebSocketsConfigBuilder c = new WebSocketsConfigBuilder();
-        setProperties(p, c);
-        c.setConfigName(configName);
-        return c;
+    public WebSocketsConfigBuilder createBuilder() {
+        return new WebSocketsConfigBuilder();
     }
 
-    private void setProperties(Properties p, WebSocketsConfigBuilder c) {
+    protected void setProperties(Properties p, WebSocketsConfigBuilder c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
@@ -77,12 +74,5 @@ public class WebSocketsConfigBeanFactory extends AbstractConfigBeanFactory imple
             }
         }
     }
-
-    public Properties getProperties(WebSocketsConfig processConfig) {
-        Properties p = new Properties();
-        p.setProperty(port, String.valueOf(processConfig.getPort()));
-        p.setProperty(stepTimeoutSeconds, String.valueOf(processConfig.getStepTimeoutSeconds()));
-        return p;
-    }
-
+    
 }

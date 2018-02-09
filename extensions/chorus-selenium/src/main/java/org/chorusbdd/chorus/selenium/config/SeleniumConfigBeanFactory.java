@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
-import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 
@@ -44,45 +44,26 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class SeleniumConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<SeleniumConfigBuilder> {
+public class SeleniumConfigBeanFactory extends AbstractConfigBeanFactory<SeleniumConfigBuilder> implements ConfigBuilderFactory<SeleniumConfigBuilder> {
 
-    private static final String stepTimeoutSeconds = "stepTimeoutSeconds";
-    private static final String clientConnectTimeoutSeconds = "clientConnectTimeoutSeconds";
-    private static final String port = "port";
     private static final String scope = "scope";
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBeanFactory.class);
 
-    public SeleniumConfigBuilder createConfig(Properties p, String configName) {
-        SeleniumConfigBuilder c = new SeleniumConfigBuilder();
-        setProperties(p, c);
-        c.setConfigName(configName);
-        return c;
+    protected SeleniumConfigBuilder createBuilder() {
+        return new SeleniumConfigBuilder();
     }
 
-    private void setProperties(Properties p, SeleniumConfigBuilder c) {
+    protected void setProperties(Properties p, SeleniumConfigBuilder c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-            if (stepTimeoutSeconds.equals(key)) {
-                c.setStepTimeoutSeconds(parseIntProperty(value, stepTimeoutSeconds));
-            } else if (clientConnectTimeoutSeconds.equals(key)) {
-                c.setClientConnectTimeoutSeconds(parseIntProperty(value, clientConnectTimeoutSeconds));
-            } else if (port.equals(key)) {
-                c.setPort(parseIntProperty(value, port));
-            } else if (scope.equals(key)) {
+            if (scope.equals(key)) {
                 c.setScope(parseScope(value));
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
             }
         }
-    }
-
-    public Properties getProperties(SeleniumConfig processConfig) {
-        Properties p = new Properties();
-        p.setProperty(port, String.valueOf(processConfig.getPort()));
-        p.setProperty(stepTimeoutSeconds, String.valueOf(processConfig.getStepTimeoutSeconds()));
-        return p;
     }
 
 }

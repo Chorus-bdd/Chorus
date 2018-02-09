@@ -30,7 +30,7 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
-import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -44,18 +44,15 @@ import java.util.Properties;
  * Date: 21/09/12
  * Time: 08:51
  */
-public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<RemotingConfigBuilder> {
+public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory<RemotingConfigBuilder> implements ConfigBuilderFactory<RemotingConfigBuilder> {
 
     private ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBeanFactory.class);
 
-    public RemotingConfigBuilder createConfig(Properties p, String configName) {
-        RemotingConfigBuilder r = new RemotingConfigBuilder();
-        setProperties(p, r);
-        r.setConfigName(configName);
-        return r;
+    protected RemotingConfigBuilder createBuilder() {
+        return new RemotingConfigBuilder();
     }
 
-    private void setProperties(Properties p, RemotingConfigBuilder r) {
+    protected void setProperties(Properties p, RemotingConfigBuilder r) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();

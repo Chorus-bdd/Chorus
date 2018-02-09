@@ -7,10 +7,14 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -36,6 +40,9 @@ public class SeleniumHandler {
 
     @ChorusResource("subsystem.configurationManager")
     private ConfigurationManager configurationManager;
+    
+    @ChorusResource("subsystem.seleniumManager")
+    private SeleniumManager seleniumManager;
     
     @ChorusResource("scenario.token")
     private ScenarioToken scenarioToken;
@@ -80,6 +87,9 @@ public class SeleniumHandler {
 //        System.setProperty("webdriver.chrome.silentOutput", "true");
         
 //        driver = new ChromeDriver(chromeOptions);
+
+        Capabilities capabilities = DesiredCapabilities.chrome();
+        RemoteWebDriver remoteWebDriver = new RemoteWebDriver(capabilities);
     }
 
     @Step(".*navigate to (.*)")

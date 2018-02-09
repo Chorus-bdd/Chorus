@@ -27,27 +27,22 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selenium.config;
-
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
+package org.chorusbdd.chorus.handlerconfig.configbean;
 
 /**
- * Created by nick on 23/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 21/09/12
+ * Time: 08:44
+ *
+ * Interface for a handler config bean which supports validation rules
  */
-public class SelenkumConfigBeanValidator extends AbstractConfigBeanValidator<SeleniumConfig> {
+public interface HandlerConfigBuilder<Builder extends HandlerConfigBuilder, E extends HandlerConfigBean> {
 
-    protected boolean checkValid(SeleniumConfig seleniumConfig) {
-        boolean valid = true;
+    /**
+     * @return a new config built using this builder
+     */
+    E build();
 
-//        //some properties are mandatory for java processes
-//        if ( seleniumConfig.getPort() == 0) {
-//            logInvalidConfig("port not set or 0", seleniumConfig);
-//            valid = false;
-//        } else if ( seleniumConfig.getStepTimeoutSeconds() < 1) {
-//            logInvalidConfig("stepTimeoutSeconds was less than 1", seleniumConfig);
-//            valid = false;
-//        }
-        return valid;
-    }
-
+    Builder setConfigName(String configName);
 }

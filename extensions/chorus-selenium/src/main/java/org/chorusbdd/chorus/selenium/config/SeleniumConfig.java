@@ -36,12 +36,6 @@ import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
  * Created by nick on 24/09/2014.
  */
 public interface SeleniumConfig extends HandlerConfigBean {
-
-    int getClientConnectTimeoutSeconds();
-
-    int getStepTimeoutSeconds();
-
-    int getPort();
-
+    
     Scope getScope();
 }

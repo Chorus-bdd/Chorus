@@ -30,8 +30,7 @@
 package org.chorusbdd.chorus.processes.manager.config;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
-import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanValidator;
-import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -47,7 +46,7 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implements ConfigBeanFactory<ProcessesConfigBuilder> {
+public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory<ProcessesConfigBuilder> implements ConfigBuilderFactory<ProcessesConfigBuilder> {
 
     public static final String pathToExecutable = "pathToExecutable";
     public static final String jre = "jre";
@@ -72,14 +71,11 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory implem
 
     private ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
 
-    public ProcessesConfigBuilder createConfig(Properties p, String configName) {
-        ProcessesConfigBuilder c = new ProcessesConfigBuilder();
-        setProperties(p, c);
-        c.setConfigName(configName);
-        return c;
+    public ProcessesConfigBuilder createBuilder() {
+        return new ProcessesConfigBuilder();
     }
 
-    private void setProperties(Properties p, ProcessesConfigBuilder c) {
+    protected void setProperties(Properties p, ProcessesConfigBuilder c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
