@@ -36,7 +36,7 @@ import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 import org.chorusbdd.chorus.processes.manager.patternmatching.PatternMatcherFactory;
 import org.chorusbdd.chorus.processes.manager.patternmatching.ProcessOutputPatternMatcher;
 import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
-import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
 import java.io.*;
@@ -66,11 +66,11 @@ class ProcessManagerProcess implements ChorusProcess {
     private OutputStream outputStream;
     private BufferedWriter outputWriter;
     private ProcessOutputConfiguration outputConfig;
-    private NamedProcessConfig namedProcessConfig;
+    private NamedProcess namedProcess;
 
-    public ProcessManagerProcess(NamedProcessConfig namedProcessConfig, List<String> command, ProcessOutputConfiguration outputConfig) throws Exception {
-        this.namedProcessConfig = namedProcessConfig;
-        this.name = namedProcessConfig.getProcessName();
+    public ProcessManagerProcess(NamedProcess namedProcess, List<String> command, ProcessOutputConfiguration outputConfig) throws Exception {
+        this.namedProcess = namedProcess;
+        this.name = namedProcess.getProcessName();
         this.outputConfig = outputConfig;
         processBuilder = new ProcessBuilder(command);
     }
@@ -194,7 +194,7 @@ class ProcessManagerProcess implements ChorusProcess {
     }
 
     public ProcessManagerConfig getConfiguration() {
-        return namedProcessConfig;
+        return namedProcess;
     }
 
     public boolean isExitWithFailureCode() {

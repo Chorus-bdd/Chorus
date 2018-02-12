@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.LogFileAndMode;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 
@@ -60,7 +60,7 @@ public class ProcessOutputConfiguration {
     private FeatureToken featureToken;
     private File featureDir;
     private String logFileBaseName;
-    private NamedProcessConfig processesConfig;
+    private NamedProcess processesConfig;
 
     private LogFileAndMode stdOutFileAndMode;
     private LogFileAndMode stdErrFileAndMode;
@@ -68,7 +68,7 @@ public class ProcessOutputConfiguration {
     private File logDirectory;  //calculated but may or may not exist
     private boolean isAppendToLogs;
 
-    public ProcessOutputConfiguration(FeatureToken featureToken, NamedProcessConfig processesConfig) {
+    public ProcessOutputConfiguration(FeatureToken featureToken, NamedProcess processesConfig) {
         this.featureDir = featureToken.getFeatureDir();
         this.logFileBaseName = calculateLogFileBaseName(featureToken, featureToken.getFeatureFile(), processesConfig.getProcessName());
         this.processesConfig = processesConfig;

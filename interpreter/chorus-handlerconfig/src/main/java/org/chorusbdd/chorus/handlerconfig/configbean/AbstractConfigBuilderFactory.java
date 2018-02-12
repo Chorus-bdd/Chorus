@@ -42,7 +42,7 @@ import java.util.Properties;
  * Time: 11:09
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractConfigBeanFactory<Builder extends HandlerConfigBuilder> {
+public abstract class AbstractConfigBuilderFactory<Builder extends HandlerConfigBuilder> {
 
     public Builder createConfigBuilder(Properties p, String configName) {
         Builder c = createBuilder();

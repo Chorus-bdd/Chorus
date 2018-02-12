@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.processes.manager.commandlinebuilder.AbstractCommand
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.JavaProcessCommandLineBuilder;
 import org.chorusbdd.chorus.processes.manager.commandlinebuilder.NativeProcessCommandLineBuilder;
 import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
-import org.chorusbdd.chorus.processes.manager.process.NamedProcessConfig;
+import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
@@ -52,26 +52,26 @@ public class ChorusProcessFactory {
 
     private ChorusLog log = ChorusLogFactory.getLog(ChorusProcessFactory.class);
 
-    public ChorusProcess startChorusProcess(NamedProcessConfig namedProcessConfig, FeatureToken featureToken) throws Exception {
+    public ChorusProcess startChorusProcess(NamedProcess namedProcess, FeatureToken featureToken) throws Exception {
 
-        String name = namedProcessConfig.getProcessName();
+        String name = namedProcess.getProcessName();
 
         //work out where the process std out and err should go
-        ProcessOutputConfiguration outputConfig = new ProcessOutputConfiguration(featureToken, namedProcessConfig);
+        ProcessOutputConfiguration outputConfig = new ProcessOutputConfiguration(featureToken, namedProcess);
 
-        List<String> commandLineTokens = buildCommandLine(namedProcessConfig, featureToken, outputConfig.getLogFileBaseName());
+        List<String> commandLineTokens = buildCommandLine(namedProcess, featureToken, outputConfig.getLogFileBaseName());
 
-        ProcessManagerProcess processManagerProcess = new ProcessManagerProcess(namedProcessConfig, commandLineTokens, outputConfig);
+        ProcessManagerProcess processManagerProcess = new ProcessManagerProcess(namedProcess, commandLineTokens, outputConfig);
         processManagerProcess.start();
 
         return processManagerProcess;
     }
 
-    private List<String> buildCommandLine(NamedProcessConfig namedProcessConfig, FeatureToken featureToken, String logFileBaseName) {
+    private List<String> buildCommandLine(NamedProcess namedProcess, FeatureToken featureToken, String logFileBaseName) {
         File featureDir = featureToken.getFeatureDir();
-        AbstractCommandLineBuilder b = namedProcessConfig.isJavaProcess() ?
-                new JavaProcessCommandLineBuilder(featureDir, namedProcessConfig, logFileBaseName) :
-                new NativeProcessCommandLineBuilder(namedProcessConfig, featureDir);
+        AbstractCommandLineBuilder b = namedProcess.isJavaProcess() ?
+                new JavaProcessCommandLineBuilder(featureDir, namedProcess, logFileBaseName) :
+                new NativeProcessCommandLineBuilder(namedProcess, featureDir);
 
         List<String> commandTokens = b.buildCommandLine();
         logCommandLine(commandTokens);

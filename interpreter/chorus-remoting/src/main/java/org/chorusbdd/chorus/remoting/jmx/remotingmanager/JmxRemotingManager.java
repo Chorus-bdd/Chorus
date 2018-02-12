@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanFactory;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilderFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
@@ -71,7 +71,7 @@ public class JmxRemotingManager implements RemotingManager {
     private final List<RemotingManagerConfig> remotingConfigs = new LinkedList<>();
 
     private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
-    private final RemotingConfigBeanFactory remotingConfigBeanFactory = new RemotingConfigBeanFactory();
+    private final RemotingConfigBuilderFactory remotingConfigBeanFactory = new RemotingConfigBuilderFactory();
 
     /**
      *

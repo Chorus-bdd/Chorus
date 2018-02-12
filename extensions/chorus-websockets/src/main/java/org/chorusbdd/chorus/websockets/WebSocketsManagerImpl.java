@@ -9,7 +9,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.websockets.config.WebSocketsConfig;
-import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBeanFactory;
+import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBuilderFactory;
 import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBeanValidator;
 import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBuilder;
 import org.chorusbdd.chorus.websockets.message.*;
@@ -30,7 +30,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(WebSocketsManagerImpl.class);
 
-    private final WebSocketsConfigBeanFactory webSocketsConfigBeanFactory = new WebSocketsConfigBeanFactory();
+    private final WebSocketsConfigBuilderFactory webSocketsConfigBeanFactory = new WebSocketsConfigBuilderFactory();
     private final WebSocketsConfigBeanValidator webSocketsConfigBeanValidator = new WebSocketsConfigBeanValidator();
 
 

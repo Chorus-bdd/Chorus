@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.selenium.config;
 
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBuilderFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -44,11 +44,11 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class SeleniumConfigBeanFactory extends AbstractConfigBeanFactory<SeleniumConfigBuilder> implements ConfigBuilderFactory<SeleniumConfigBuilder> {
+public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<SeleniumConfigBuilder> implements ConfigBuilderFactory<SeleniumConfigBuilder> {
 
     private static final String scope = "scope";
 
-    private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBeanFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBuilderFactory.class);
 
     protected SeleniumConfigBuilder createBuilder() {
         return new SeleniumConfigBuilder();

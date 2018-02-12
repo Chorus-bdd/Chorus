@@ -27,63 +27,52 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.remoting.manager;
+package org.chorusbdd.chorus.websockets.config;
 
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBuilderFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Map;
 import java.util.Properties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
+ * Created with IntelliJ IDEA.
+ * User: Nick E
  * Date: 21/09/12
- * Time: 08:51
+ * Time: 11:22
+ * To change this template use File | Settings | File Templates.
  */
-public class RemotingConfigBeanFactory extends AbstractConfigBeanFactory<RemotingConfigBuilder> implements ConfigBuilderFactory<RemotingConfigBuilder> {
+public class WebSocketsConfigBuilderFactory extends AbstractConfigBuilderFactory<WebSocketsConfigBuilder> implements ConfigBuilderFactory<WebSocketsConfigBuilder> {
 
-    private ChorusLog log = ChorusLogFactory.getLog(RemotingConfigBeanFactory.class);
+    private static final String stepTimeoutSeconds = "stepTimeoutSeconds";
+    private static final String clientConnectTimeoutSeconds = "clientConnectTimeoutSeconds";
+    private static final String port = "port";
+    private static final String scope = "scope";
 
-    protected RemotingConfigBuilder createBuilder() {
-        return new RemotingConfigBuilder();
+    private ChorusLog log = ChorusLogFactory.getLog(WebSocketsConfigBuilderFactory.class);
+
+    public WebSocketsConfigBuilder createBuilder() {
+        return new WebSocketsConfigBuilder();
     }
 
-    protected void setProperties(Properties p, RemotingConfigBuilder r) {
+    protected void setProperties(Properties p, WebSocketsConfigBuilder c) {
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-
-            if ("protocol".equals(key)) {
-                r.setProtocol(value);
-            } else if ("host".equals(key)) {
-                r.setHost(value);
-            } else if ("port".equals(key)) {
-                r.setPort(parseIntProperty(value, "port"));
-            } else if ("scope".equals(key)) {
-                r.setScope(parseScope(value));
-            } else if ("connectionAttempts".equals(key)) {
-                r.setConnnectionAttempts(parseIntProperty(value, "connectionAttempts"));
-            } else if ("connectionAttemptMillis".equals(key)) {
-                r.setConnectionAttemptMillis(parseIntProperty(value, "connectionAttemptMillis"));
-            } else if ( "connection".equals(key)) {
-                String[] vals = String.valueOf(value).split(":");
-                if (vals.length != 3) {
-                    throw new ChorusException(
-                        "Could not parse remoting property 'connection', " +
-                        "expecting a value in the form protocol:host:port"
-                    );
-                }
-                r.setProtocol(vals[0]);
-                r.setHost(vals[1]);
-                r.setPort(parseIntProperty(vals[2], "connection:port"));
+            if (stepTimeoutSeconds.equals(key)) {
+                c.setStepTimeoutSeconds(parseIntProperty(value, stepTimeoutSeconds));
+            } else if (clientConnectTimeoutSeconds.equals(key)) {
+                c.setClientConnectTimeoutSeconds(parseIntProperty(value, clientConnectTimeoutSeconds));
+            } else if (port.equals(key)) {
+                c.setPort(parseIntProperty(value, port));
+            } else if (scope.equals(key)) {
+                c.setScope(parseScope(value));
             } else {
-                log.warn("Ignoring property " + key + " which is not a supported Remoting handler property");
+                log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
             }
         }
     }
-
+    
 }

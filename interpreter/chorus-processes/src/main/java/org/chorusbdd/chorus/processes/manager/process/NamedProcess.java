@@ -32,7 +32,7 @@ package org.chorusbdd.chorus.processes.manager.process;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
-import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilderFactory;
 
 import java.util.Properties;
 
@@ -41,13 +41,13 @@ import java.util.Properties;
  *
  * The process has a name and a configuration
  */
-public class NamedProcessConfig implements ProcessManagerConfig {
+public class NamedProcess implements ProcessManagerConfig {
 
     private final String processName;
     private final ProcessManagerConfig processManagerConfig;
     private ChorusProcess process;
 
-    public NamedProcessConfig(String processName, ProcessManagerConfig processManagerConfig) {
+    public NamedProcess(String processName, ProcessManagerConfig processManagerConfig) {
         this.processName = processName;
         this.processManagerConfig = processManagerConfig;
     }
@@ -149,7 +149,7 @@ public class NamedProcessConfig implements ProcessManagerConfig {
     }
 
     public Properties getProperties() {
-        return new ProcessesConfigBeanFactory().getProperties(processManagerConfig);
+        return new ProcessesConfigBuilderFactory().getProperties(processManagerConfig);
     }
 
     @Override

@@ -34,7 +34,7 @@ import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator
 /**
  * Created by nick on 23/09/2014.
  */
-public class SelenkumConfigBeanValidator extends AbstractConfigBeanValidator<SeleniumConfig> {
+public class SeleniumConfigBeanValidator extends AbstractConfigBeanValidator<SeleniumConfig> {
 
     protected boolean checkValid(SeleniumConfig seleniumConfig) {
         boolean valid = true;

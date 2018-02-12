@@ -39,7 +39,7 @@ import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBeanFactory;
+import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilderFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
@@ -221,8 +221,8 @@ public class ProcessesHandler {
             fail("Process " + processName + " is not running");
         }
 
-        int remotingPort = Integer.parseInt(processProps.getProperty(ProcessesConfigBeanFactory.remotingPort));
-        String scope = processProps.getProperty(ProcessesConfigBeanFactory.scope);
+        int remotingPort = Integer.parseInt(processProps.getProperty(ProcessesConfigBuilderFactory.remotingPort));
+        String scope = processProps.getProperty(ProcessesConfigBuilderFactory.scope);
 
         if ( remotingPort == -1) {
             fail("Cannot connect " + processName + " unknown remoting port");

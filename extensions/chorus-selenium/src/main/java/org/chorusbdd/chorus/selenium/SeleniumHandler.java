@@ -7,14 +7,13 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
 import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
-import org.openqa.selenium.Capabilities;
+import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -74,64 +73,80 @@ public class SeleniumHandler {
         driver = new ChromeDriver(chromeOptions);
     }
 
-    @Step(".*open RemoteWebDriver")
-    public void openRemoteWebDriver() throws IOException {
+//    @Step(".*open RemoteWebDriver")
+//    public void openRemoteWebDriver() throws IOException {
+//
+//        // Assume chromedriver will be in user PATH so non need to set it here
+//        // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+//
+//        //TODO support config to enable selenium log?
+//        // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
+//        // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
+//
+////        System.setProperty("webdriver.chrome.silentOutput", "true");
+//        
+////        driver = new ChromeDriver(chromeOptions);
+//
+//        Capabilities capabilities = DesiredCapabilities.chrome();
+//        RemoteWebDriver remoteWebDriver = new RemoteWebDriver(capabilities);
+//    }
+    
+    @Step(".*open the " + HandlerPatterns.namePattern + " browser")
+    public void openNamedBrowser(String configName) {
+        Properties properties = getConfig(configName);
+        seleniumManager.openABrowser(properties, configName);
+    }
 
-        // Assume chromedriver will be in user PATH so non need to set it here
-        // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
-
-        //TODO support config to enable selenium log?
-        // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
-        // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
-
-//        System.setProperty("webdriver.chrome.silentOutput", "true");
-        
-//        driver = new ChromeDriver(chromeOptions);
-
-        Capabilities capabilities = DesiredCapabilities.chrome();
-        RemoteWebDriver remoteWebDriver = new RemoteWebDriver(capabilities);
+    @Step(".*navigate the " + HandlerPatterns.namePattern + " browser to (.*)")
+    public void navigateTo(String configName, String url) {
+        seleniumManager.navigateTo(configName, url);
     }
 
     @Step(".*navigate to (.*)")
-    public void navigateTo(String url) {
-        driver.navigate().to(url);
+    public void navigateNamedBrowserTo(String url) {
+        navigateTo(SeleniumManager.DEFAULT_BROWSER, url);
     }
 
     @Step(".*refresh the page")
     public void refresh() {
-        driver.navigate().refresh();
+        refreshNamedBrowser(SeleniumManager.DEFAULT_BROWSER);
+    }
+    
+    @Step(".*refresh the page in the " + HandlerPatterns.namePattern + " browser") 
+    public void refreshNamedBrowser(String configName) {
+        seleniumManager.refreshThePage(configName);
     }
 
-    @Step(".*the url is (.*)")
-    @PassesWithin(length =  2)
+    @Step(value = ".*the url is (.*)", retryDuration = 2)
     public void checkCurrentUrl(String url) {
-        String currentUrl = driver.getCurrentUrl();
-        //ChromeDriver adds a trailing /
-        if ( currentUrl.endsWith("/")) {
-            currentUrl = currentUrl.substring(0, currentUrl.length() - 1);
-        }
-        assertEquals(url, currentUrl);
+        checkCurrentUrlInNamedBrowser(SeleniumManager.DEFAULT_BROWSER, url);
+    }
+
+    @Step(value = ".*the url in the " + HandlerPatterns.namePattern + " browser is (.*)", retryDuration = 2)
+    public void checkCurrentUrlInNamedBrowser(String configName, String url) {
+       seleniumManager.checkCurrentURL(configName, url);
     }
 
     @Step(".*close the browser")
     public void quit() {
-        driver.quit();
+        quitNamedBrowser(SeleniumManager.DEFAULT_BROWSER);
+    }
+
+    @Step(".*close the " + HandlerPatterns.namePattern + " browser")
+    public void quitNamedBrowser(String configName) {
+        seleniumManager.quitBrowser(configName);
     }
 
     //Can be added to a feature when we want to investigate a test failure
     @Step(".*leave the browser open(?: at the end of the feature)?")
     public void leaveTheBrowserOpen() {
-        closeBrowserAtEndOfFeature = false;
+        leaveTheNamedBrowserOpen(SeleniumManager.DEFAULT_BROWSER);
     }
 
-    @Destroy(scope = Scope.FEATURE)
-    public void destroy() {
-
-        if ( closeBrowserAtEndOfFeature) {
-            driver.quit();
-        }
+    @Step(".*leave the " + HandlerPatterns.namePattern + " browser open(?: at the end of the feature)?")
+    public void leaveTheNamedBrowserOpen(String configName) {
+        seleniumManager.leaveBrowserOpenAtFeatureEnd(configName);
     }
-
 
     private Properties getConfig(String configName) {
         Properties p = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "selenium", configName);

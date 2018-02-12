@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.processes.manager.config;
 
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanFactory;
+import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBuilderFactory;
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Time: 11:22
  * To change this template use File | Settings | File Templates.
  */
-public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory<ProcessesConfigBuilder> implements ConfigBuilderFactory<ProcessesConfigBuilder> {
+public class ProcessesConfigBuilderFactory extends AbstractConfigBuilderFactory<ProcessesConfigBuilder> implements ConfigBuilderFactory<ProcessesConfigBuilder> {
 
     public static final String pathToExecutable = "pathToExecutable";
     public static final String jre = "jre";
@@ -69,7 +69,7 @@ public class ProcessesConfigBeanFactory extends AbstractConfigBeanFactory<Proces
     public static final String enabled = "enabled";
 
 
-    private ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBeanFactory.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ProcessesConfigBuilderFactory.class);
 
     public ProcessesConfigBuilder createBuilder() {
         return new ProcessesConfigBuilder();
