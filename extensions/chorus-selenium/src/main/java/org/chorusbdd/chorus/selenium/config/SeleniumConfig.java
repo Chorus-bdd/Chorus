@@ -32,10 +32,17 @@ package org.chorusbdd.chorus.selenium.config;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
 
+import java.util.Optional;
+
 /**
  * Created by nick on 24/09/2014.
  */
 public interface SeleniumConfig extends HandlerConfigBean {
     
     Scope getScope();
+
+    SeleniumDriverType getSeleniumDriverType();
+
+    Optional<String> getChromeArgs();
+    
 }

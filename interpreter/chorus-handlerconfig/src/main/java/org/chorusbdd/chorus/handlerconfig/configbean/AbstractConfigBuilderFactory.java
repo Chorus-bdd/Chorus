@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Properties;
 
 /**
@@ -80,5 +81,17 @@ public abstract class AbstractConfigBuilderFactory<Builder extends HandlerConfig
             );
         }
         return processScope;
+    }
+    
+    protected static <T extends Enum<T>> T getEnumValue(Class<T> enumType, String propertyKey, String value) {
+        T result;
+        try {
+            result = Enum.valueOf(enumType, value);
+        } catch (Exception e) {
+            EnumSet<T> enumVals = EnumSet.allOf(enumType);
+            throw new ChorusException("Failed to parse property " + propertyKey +  " which should be one of " +
+                    "[" + enumVals + "] but was [" + value + "]");
+        }
+        return result;
     }
 }

@@ -31,6 +31,8 @@ package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
 
+import java.util.Optional;
+
 /**
  * An immutable runtime config for a process
  */
@@ -38,12 +40,15 @@ public class SeleniumConfigBean implements SeleniumConfig {
 
     private final String configName;
     private final Scope scope;
+    private final SeleniumDriverType seleniumDriverType;
+    private final String chromeArgs;
 
-    public SeleniumConfigBean(String configName, Scope scope) {
+    public SeleniumConfigBean(String configName, Scope scope, SeleniumDriverType seleniumDriverType, String chromeArgs) {
         this.configName = configName;
         this.scope = scope;
+        this.seleniumDriverType = seleniumDriverType;
+        this.chromeArgs = chromeArgs;
     }
-
 
     public String getConfigName() {
         return configName;
@@ -54,4 +59,13 @@ public class SeleniumConfigBean implements SeleniumConfig {
         return scope;
     }
 
+    @Override
+    public SeleniumDriverType getSeleniumDriverType() {
+        return seleniumDriverType;
+    }
+
+    @Override
+    public Optional<String> getChromeArgs() {
+        return Optional.ofNullable(chromeArgs);
+    }
 }

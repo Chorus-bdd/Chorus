@@ -8,6 +8,8 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
+import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
+import org.chorusbdd.chorus.selenium.config.SeleniumDriverType;
 import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
@@ -53,6 +55,7 @@ public class SeleniumHandler {
     }
 
     @Step(".*open Chrome")
+    @Deprecated
     public void openChrome() throws IOException {
 
         // Assume chromedriver will be in user PATH so non need to set it here
@@ -61,16 +64,27 @@ public class SeleniumHandler {
         //TODO support config to enable selenium log?
         // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
         // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
+        
+        
+        //Set some sensible default properties for Chrome if not already set
+        String chromeArgsKey = "selenium.Chrome.chromeArguments";
+        Properties properties = new Properties();
 
-        System.setProperty("webdriver.chrome.silentOutput", "true");
+        if ( ! configurationManager.getFeatureProperties().containsKey(chromeArgsKey)) {
+            properties.setProperty(chromeArgsKey, "--disable-logging --silent");
+        }
+        properties.setProperty("selenium.Chrome." + SeleniumConfigBuilderFactory.driverType, SeleniumDriverType.CHROME.name());
+        configurationManager.addFeatureProperties(properties);
+        
 
         //Make sure ChromeDriver is in your path on your OS to get this to run
         //https://sites.google.com/a/chromium.org/chromedriver/downloads
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--disable-logging");
-        chromeOptions.addArguments("--silent");
+//        ChromeOptions chromeOptions = new ChromeOptions();
+//        chromeOptions.addArguments("--disable-logging");
+//        chromeOptions.addArguments("--silent");
 
-        driver = new ChromeDriver(chromeOptions);
+        openNamedBrowser("Chrome");
+//        driver = new ChromeDriver(chromeOptions);
     }
 
 //    @Step(".*open RemoteWebDriver")

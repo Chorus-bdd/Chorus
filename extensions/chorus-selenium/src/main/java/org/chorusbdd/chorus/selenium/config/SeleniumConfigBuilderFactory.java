@@ -47,6 +47,9 @@ import java.util.Properties;
 public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<SeleniumConfigBuilder> implements ConfigBuilderFactory<SeleniumConfigBuilder> {
 
     private static final String scope = "scope";
+    private static final String chromeArguments = "chromeArguments";
+    public static final String driverType = "driverType";
+
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBuilderFactory.class);
 
@@ -58,12 +61,19 @@ public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<S
         for (Map.Entry prop : p.entrySet()) {
             String key = prop.getKey().toString();
             String value = prop.getValue().toString();
-            if (scope.equals(key)) {
+            if (driverType.equals(key)) {  
+                SeleniumDriverType t = getEnumValue(SeleniumDriverType.class, key, value);
+                c.setSeleniumDriverType(t);
+            } else if (scope.equals(key)) {
                 c.setScope(parseScope(value));
+            } else if (chromeArguments.equals(key)) {
+                c.setChromeArgs(value);
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
             }
         }
     }
+    
+    
 
 }
