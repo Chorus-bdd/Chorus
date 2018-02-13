@@ -19,7 +19,7 @@ public interface SeleniumManager extends Subsystem {
      * Used to indicate that the user didn't name a browser.
      * We will run the action on the first browser which was opened
      */
-    String DEFAULT_BROWSER = "CHORUS_SELENIUM_MANAGER_MAIN_BROWSER";
+    String LAST_OPENED_BROWSER = "SELENIUM_MANAGER_LAST_OPENED_BROWSER";
 
     void openABrowser(Properties properties, String configName);
 

@@ -34,6 +34,8 @@ public class SeleniumManagerImpl implements SeleniumManager {
     
     private Map<String, NamedWebDriver> webDriverMap = new LinkedHashMap<>();
     
+    private String lastOpenedBrowserConfigName = "N/A";
+    
     @Override
     public void openABrowser(Properties properties, String configName) {
         SeleniumConfig seleniumConfig = createAndValidateConfig(properties, configName);
@@ -53,6 +55,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     private void addNamedWebDriver(String configName, NamedWebDriver namedWebDriver) {
         log.debug("Adding named web driver " + namedWebDriver);
         webDriverMap.put(configName, namedWebDriver);
+        this.lastOpenedBrowserConfigName = configName;
     }
 
     private void removeWebDriver(String configName) {
@@ -117,13 +120,15 @@ public class SeleniumManagerImpl implements SeleniumManager {
         }
     }
     
-    private WebDriver getWebDriver(String name) {
-        return getNamedWebDriver(name).getWebDriver();
+    private WebDriver getWebDriver(String configName) {
+        return getNamedWebDriver(configName).getWebDriver();
     }
 
     private NamedWebDriver getNamedWebDriver(String name) {
-        Optional<NamedWebDriver> n = Optional.ofNullable(webDriverMap.get(name));
-        return n.orElseThrow(() -> new ChorusAssertionError("A WebDriver for a browser with the config name " + name + " does not exist"));
+        String c = SeleniumManager.LAST_OPENED_BROWSER.equals(name) ? lastOpenedBrowserConfigName : name;
+        
+        Optional<NamedWebDriver> n = Optional.ofNullable(webDriverMap.get(c));
+        return n.orElseThrow(() -> new ChorusAssertionError("A WebDriver for a browser with the config name " + c + " does not exist"));
     }
 
 

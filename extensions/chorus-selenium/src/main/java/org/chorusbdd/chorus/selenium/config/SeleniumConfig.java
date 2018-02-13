@@ -45,4 +45,6 @@ public interface SeleniumConfig extends HandlerConfigBean {
 
     Optional<String> getChromeArgs();
     
+    String getRemoteWebDriverURL();
+    
 }

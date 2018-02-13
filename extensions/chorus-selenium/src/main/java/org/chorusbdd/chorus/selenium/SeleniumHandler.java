@@ -7,15 +7,12 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
 import org.chorusbdd.chorus.selenium.config.SeleniumDriverType;
 import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -118,12 +115,12 @@ public class SeleniumHandler {
 
     @Step(".*navigate to (.*)")
     public void navigateNamedBrowserTo(String url) {
-        navigateTo(SeleniumManager.DEFAULT_BROWSER, url);
+        navigateTo(SeleniumManager.LAST_OPENED_BROWSER, url);
     }
 
     @Step(".*refresh the page")
     public void refresh() {
-        refreshNamedBrowser(SeleniumManager.DEFAULT_BROWSER);
+        refreshNamedBrowser(SeleniumManager.LAST_OPENED_BROWSER);
     }
     
     @Step(".*refresh the page in the " + HandlerPatterns.namePattern + " browser") 
@@ -133,7 +130,7 @@ public class SeleniumHandler {
 
     @Step(value = ".*the url is (.*)", retryDuration = 2)
     public void checkCurrentUrl(String url) {
-        checkCurrentUrlInNamedBrowser(SeleniumManager.DEFAULT_BROWSER, url);
+        checkCurrentUrlInNamedBrowser(SeleniumManager.LAST_OPENED_BROWSER, url);
     }
 
     @Step(value = ".*the url in the " + HandlerPatterns.namePattern + " browser is (.*)", retryDuration = 2)
@@ -143,7 +140,7 @@ public class SeleniumHandler {
 
     @Step(".*close the browser")
     public void quit() {
-        quitNamedBrowser(SeleniumManager.DEFAULT_BROWSER);
+        quitNamedBrowser(SeleniumManager.LAST_OPENED_BROWSER);
     }
 
     @Step(".*close the " + HandlerPatterns.namePattern + " browser")
@@ -154,7 +151,7 @@ public class SeleniumHandler {
     //Can be added to a feature when we want to investigate a test failure
     @Step(".*leave the browser open(?: at the end of the feature)?")
     public void leaveTheBrowserOpen() {
-        leaveTheNamedBrowserOpen(SeleniumManager.DEFAULT_BROWSER);
+        leaveTheNamedBrowserOpen(SeleniumManager.LAST_OPENED_BROWSER);
     }
 
     @Step(".*leave the " + HandlerPatterns.namePattern + " browser open(?: at the end of the feature)?")

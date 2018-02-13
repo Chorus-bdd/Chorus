@@ -49,6 +49,7 @@ public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<S
     private static final String scope = "scope";
     private static final String chromeArguments = "chromeArguments";
     public static final String driverType = "driverType";
+    public static final String remoteWebDriverURL = "remoteWebDriverURL";
 
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBuilderFactory.class);
@@ -68,6 +69,8 @@ public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<S
                 c.setScope(parseScope(value));
             } else if (chromeArguments.equals(key)) {
                 c.setChromeArgs(value);
+            } else if ( remoteWebDriverURL.equals(key)) {
+                c.setRemoteWebDriverURL(value);
             } else {
                 log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
             }

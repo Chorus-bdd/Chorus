@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
+import org.chorusbdd.chorus.util.ChorusException;
 
 /**
  * Created by nick on 23/09/2014.
@@ -38,16 +39,32 @@ public class SeleniumConfigBeanValidator extends AbstractConfigBeanValidator<Sel
 
     protected boolean checkValid(SeleniumConfig seleniumConfig) {
         boolean valid = true;
-
-//        //some properties are mandatory for java processes
-//        if ( seleniumConfig.getPort() == 0) {
-//            logInvalidConfig("port not set or 0", seleniumConfig);
-//            valid = false;
-//        } else if ( seleniumConfig.getStepTimeoutSeconds() < 1) {
-//            logInvalidConfig("stepTimeoutSeconds was less than 1", seleniumConfig);
-//            valid = false;
-//        }
+        
+        switch(seleniumConfig.getSeleniumDriverType()) {
+            case CHROME:
+                valid = checkChromeProperties(seleniumConfig);
+                break;
+            case REMOTE_WEB_DRIVER:
+                valid = checkRemoteWebDriverProperites(seleniumConfig);
+                break;
+            default:
+                throw new ChorusException("Selenium Driver Type " + seleniumConfig.getSeleniumDriverType() + 
+                        " config cannot be validated");
+        }
         return valid;
+    }
+
+    private boolean checkRemoteWebDriverProperites(SeleniumConfig seleniumConfig) {
+        boolean result = true;
+        if ( seleniumConfig.getRemoteWebDriverURL() == null) {
+            logInvalidConfig(SeleniumConfigBuilderFactory.remoteWebDriverURL + " cannot be null", seleniumConfig);
+            result = false;
+        }
+        return result;
+    }
+
+    private boolean checkChromeProperties(SeleniumConfig seleniumConfig) {
+        return true;        
     }
 
 }

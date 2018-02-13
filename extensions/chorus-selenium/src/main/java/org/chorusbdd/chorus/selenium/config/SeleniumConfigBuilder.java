@@ -10,7 +10,8 @@ public class SeleniumConfigBuilder implements HandlerConfigBuilder<SeleniumConfi
     private String configName;
     private Scope scope = Scope.SCENARIO;
     private String chromeArgs;
-    private SeleniumDriverType seleniumDriverType;
+    private SeleniumDriverType seleniumDriverType = SeleniumDriverType.REMOTE_WEB_DRIVER;
+    private String remoteWebDriverURL = "http://localhost:4444/wd/hub";
 
     @Override
     public String getConfigName() {
@@ -36,6 +37,15 @@ public class SeleniumConfigBuilder implements HandlerConfigBuilder<SeleniumConfi
         return Optional.ofNullable(chromeArgs);
     }
 
+    @Override
+    public String getRemoteWebDriverURL() {
+        return remoteWebDriverURL;
+    }
+
+    public void setRemoteWebDriverURL(String remoteWebDriverURL) {
+        this.remoteWebDriverURL = remoteWebDriverURL;
+    }
+
     public void setChromeArgs(String chromeArgs) {
         this.chromeArgs = chromeArgs;
     }
@@ -50,7 +60,13 @@ public class SeleniumConfigBuilder implements HandlerConfigBuilder<SeleniumConfi
 
     @Override
     public SeleniumConfigBean build() {
-        return new SeleniumConfigBean(configName, scope, seleniumDriverType, chromeArgs);
+        return new SeleniumConfigBean(
+            configName, 
+            scope, 
+            seleniumDriverType, 
+            chromeArgs, 
+            remoteWebDriverURL
+        );
     }
 
 }

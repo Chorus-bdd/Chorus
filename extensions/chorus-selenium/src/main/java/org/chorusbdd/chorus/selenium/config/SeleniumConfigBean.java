@@ -42,12 +42,14 @@ public class SeleniumConfigBean implements SeleniumConfig {
     private final Scope scope;
     private final SeleniumDriverType seleniumDriverType;
     private final String chromeArgs;
+    private final String remoteWebDriverURL;
 
-    public SeleniumConfigBean(String configName, Scope scope, SeleniumDriverType seleniumDriverType, String chromeArgs) {
+    public SeleniumConfigBean(String configName, Scope scope, SeleniumDriverType seleniumDriverType, String chromeArgs, String remoteWebDriverURL) {
         this.configName = configName;
         this.scope = scope;
         this.seleniumDriverType = seleniumDriverType;
         this.chromeArgs = chromeArgs;
+        this.remoteWebDriverURL = remoteWebDriverURL;
     }
 
     public String getConfigName() {
@@ -67,5 +69,10 @@ public class SeleniumConfigBean implements SeleniumConfig {
     @Override
     public Optional<String> getChromeArgs() {
         return Optional.ofNullable(chromeArgs);
+    }
+
+    @Override
+    public String getRemoteWebDriverURL() {
+        return remoteWebDriverURL;
     }
 }
