@@ -77,7 +77,7 @@ public class ChorusContextHandler {
         ChorusAssert.assertTrue("The context has values: " + context, context.isEmpty());
     }
 
-    @Step("the context is enmpty")
+    @Step("the context is empty")
     public void contextIsEmpty() {
         ChorusContext context = ChorusContext.getContext();
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
