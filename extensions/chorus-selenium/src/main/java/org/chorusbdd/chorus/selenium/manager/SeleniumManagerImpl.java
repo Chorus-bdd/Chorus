@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.selenium.manager;
 
+import org.chorusbdd.chorus.Chorus;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -12,13 +13,20 @@ import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilder;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBeanValidator;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.assertion.ChorusAssertionError;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
 /**
@@ -35,7 +43,10 @@ public class SeleniumManagerImpl implements SeleniumManager {
     private Map<String, NamedWebDriver> webDriverMap = new LinkedHashMap<>();
     
     private String lastOpenedBrowserConfigName = "N/A";
-    
+
+    private FeatureToken feature;
+
+
     @Override
     public void openABrowser(Properties properties, String configName) {
         SeleniumConfig seleniumConfig = createAndValidateConfig(properties, configName);
@@ -110,7 +121,26 @@ public class SeleniumManagerImpl implements SeleniumManager {
         NamedWebDriver webDriver = getNamedWebDriver(configName);
         webDriver.setLeaveOpen(true);
     }
-    
+
+    @Override
+    public void executeScriptFile(String configName, String scriptPath) {
+        //Resolve the script path relative to the feature file
+        File script = feature.getFeatureDir().toPath().resolve(scriptPath).toFile();
+        if ( script.canRead()) {
+            try {
+                log.debug(format("About to execute script at %s in browser %s", script.getAbsolutePath(), configName ));
+                String fileContents = Files.lines(script.toPath()).collect(Collectors.joining());
+                log.trace(format("About to execute script on web driver %s: [%n%s%n]", configName, fileContents));
+                ((JavascriptExecutor)getWebDriver(configName)).executeScript(fileContents);
+                log.debug("Finished executing script from " + scriptPath);
+            } catch (IOException e) {
+                throw new ChorusException("Failed while reading script file", e);
+            }
+        } else {
+            throw new ChorusException("Cannot find a script file [" + scriptPath + "] at [" + script.getAbsolutePath() + "], or it is not readable");
+        }
+    }
+
     private void quitBrowser(NamedWebDriver d) {
         if (d.isLeaveOpen()) {
             log.debug("Not Quitting the browser for config named " + d.getName() + " since leave open is set true");
@@ -135,7 +165,11 @@ public class SeleniumManagerImpl implements SeleniumManager {
     @Override
     public ExecutionListener getExecutionListener() {
         return new ExecutionListenerAdapter() {
-
+            
+            public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+                SeleniumManagerImpl.this.feature = feature;
+            }
+            
             public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
                 removeWebDriversForScope(Scope.SCENARIO);
             }

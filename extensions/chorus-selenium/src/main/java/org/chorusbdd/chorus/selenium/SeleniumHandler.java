@@ -54,14 +54,6 @@ public class SeleniumHandler {
     @Step(".*open Chrome")
     @Deprecated
     public void openChrome() throws IOException {
-
-        // Assume chromedriver will be in user PATH so non need to set it here
-        // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
-
-        //TODO support config to enable selenium log?
-        // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
-        // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
-        
         
         //Set some sensible default properties for Chrome if not already set
         String chromeArgsKey = "selenium.Chrome.chromeArguments";
@@ -72,35 +64,9 @@ public class SeleniumHandler {
         }
         properties.setProperty("selenium.Chrome." + SeleniumConfigBuilderFactory.driverType, SeleniumDriverType.CHROME.name());
         configurationManager.addFeatureProperties(properties);
-        
-
-        //Make sure ChromeDriver is in your path on your OS to get this to run
-        //https://sites.google.com/a/chromium.org/chromedriver/downloads
-//        ChromeOptions chromeOptions = new ChromeOptions();
-//        chromeOptions.addArguments("--disable-logging");
-//        chromeOptions.addArguments("--silent");
 
         openNamedBrowser("Chrome");
-//        driver = new ChromeDriver(chromeOptions);
     }
-
-//    @Step(".*open RemoteWebDriver")
-//    public void openRemoteWebDriver() throws IOException {
-//
-//        // Assume chromedriver will be in user PATH so non need to set it here
-//        // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
-//
-//        //TODO support config to enable selenium log?
-//        // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
-//        // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
-//
-////        System.setProperty("webdriver.chrome.silentOutput", "true");
-//        
-////        driver = new ChromeDriver(chromeOptions);
-//
-//        Capabilities capabilities = DesiredCapabilities.chrome();
-//        RemoteWebDriver remoteWebDriver = new RemoteWebDriver(capabilities);
-//    }
     
     @Step(".*open the " + HandlerPatterns.namePattern + " browser")
     public void openNamedBrowser(String configName) {
@@ -146,6 +112,16 @@ public class SeleniumHandler {
     @Step(".*close the " + HandlerPatterns.namePattern + " browser")
     public void quitNamedBrowser(String configName) {
         seleniumManager.quitBrowser(configName);
+    }
+    
+    @Step(".*execute the script (.*) in the browser")
+    public void executeScriptInDefaultBrowser(String scriptPath) {
+        executeScriptInNamedBrowser(scriptPath, SeleniumManager.LAST_OPENED_BROWSER);
+    }
+
+    @Step(".*execute the script (.*) in the " + HandlerPatterns.namePattern + " browser")
+    public void executeScriptInNamedBrowser(String scriptPath, String configName) {
+        seleniumManager.executeScriptFile(configName, scriptPath);
     }
 
     //Can be added to a feature when we want to investigate a test failure

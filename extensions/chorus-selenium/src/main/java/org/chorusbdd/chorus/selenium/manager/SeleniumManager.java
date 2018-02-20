@@ -36,4 +36,5 @@ public interface SeleniumManager extends Subsystem {
 
     void leaveBrowserOpenAtFeatureEnd(String configName);
 
+    void executeScriptFile(String configName, String scriptPath);
 }

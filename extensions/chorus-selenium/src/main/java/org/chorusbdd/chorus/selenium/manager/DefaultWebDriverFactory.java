@@ -21,6 +21,13 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
         WebDriver result;
         switch(seleniumConfig.getSeleniumDriverType()) {
             case CHROME:
+                // Assume chromedriver will be in user PATH so non need to set it here
+                // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+
+                //TODO support config to enable selenium log?
+                // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
+                // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
+                
                 setSpecialSilenceChromeDriverSysProperty();
                 ChromeOptions chromeOptions = new ChromeOptions();
                 seleniumConfig.getChromeArgs().map(s -> s.split(" ")).ifPresent(chromeOptions::addArguments);
