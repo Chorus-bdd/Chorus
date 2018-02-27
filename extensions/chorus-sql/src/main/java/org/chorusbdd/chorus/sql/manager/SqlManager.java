@@ -17,4 +17,6 @@ public interface SqlManager extends Subsystem {
     void connectToDatabase(String configName, Properties properties);
 
     void executeAStatement(String configName, String statement);
+
+    void executeAScript(String configName, String script);
 }

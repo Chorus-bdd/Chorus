@@ -13,6 +13,7 @@ import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilder;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBeanValidator;
 import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.FileUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
 import org.chorusbdd.chorus.util.assertion.ChorusAssertionError;
 import org.openqa.selenium.JavascriptExecutor;
@@ -124,19 +125,11 @@ public class SeleniumManagerImpl implements SeleniumManager {
     public void executeScriptFile(String configName, String scriptPath) {
         //Resolve the script path relative to the feature file
         File script = feature.getFeatureDir().toPath().resolve(scriptPath).toFile();
-        if ( script.canRead()) {
-            try {
-                log.debug(format("About to execute script at %s in browser %s", script.getAbsolutePath(), configName ));
-                String fileContents = Files.lines(script.toPath()).collect(Collectors.joining());
-                log.trace(format("About to execute script on web driver %s: [%n%s%n]", configName, fileContents));
-                ((JavascriptExecutor)getWebDriver(configName)).executeScript(fileContents);
-                log.debug("Finished executing script from " + scriptPath);
-            } catch (IOException e) {
-                throw new ChorusException("Failed while reading script file", e);
-            }
-        } else {
-            throw new ChorusException("Cannot find a script file [" + scriptPath + "] at [" + script.getAbsolutePath() + "], or it is not readable");
-        }
+        String scriptContents = FileUtils.readScriptFile(log, configName, scriptPath, script);
+
+        log.trace(format("About to execute script on web driver %s: [%n%s%n]", configName, scriptContents));
+        ((JavascriptExecutor)getWebDriver(configName)).executeScript(scriptContents);
+        log.debug("Finished executing script from " + scriptPath);
     }
 
     private void quitBrowser(NamedWebDriver d) {

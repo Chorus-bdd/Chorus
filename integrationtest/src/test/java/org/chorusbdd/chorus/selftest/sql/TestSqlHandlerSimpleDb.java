@@ -29,13 +29,9 @@
  */
 package org.chorusbdd.chorus.selftest.sql;
 
-import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.AbstractDerbyDbTest;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -44,7 +40,7 @@ import java.sql.Statement;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestSqlHandlerSimpleDb extends AbstractInterpreterTest {
+public class TestSqlHandlerSimpleDb extends AbstractDerbyDbTest {
 
     final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/sql";
 
@@ -58,41 +54,10 @@ public class TestSqlHandlerSimpleDb extends AbstractInterpreterTest {
         return featurePath;
     }
 
-    public void runTest(boolean runTestsInProcess, boolean runTestsForked) throws Exception {
-        createDb();
-        //we get problems with Derby locking the file if we try to run the test
-        //as a subprocess in addition to within jvm
-        super.runTest(true, false);
-    }
-
-    private void createDb() throws Exception {
-        File file = new File(new File(featurePath), "derby");
-        if ( file.exists() ) {
-            deleteRecursively(file);
-        }
-
-        file.mkdir();
-        String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-        Class.forName(driver);
-        String url = "jdbc:derby:" + featurePath + "/derby/sampleDB;create=true";
-        Connection connection = DriverManager.getConnection(url);
-
-        Statement s = connection.createStatement();
+    @Override
+    protected void runStatementsPostCreate(Statement s) throws SQLException {
         s.executeUpdate("create table ProcessProperties ( \"property\" varchar(256), \"value\" varchar(256))");
         s.executeUpdate("insert into ProcessProperties values('processes.myProcess.remotingPort','" + 12345 + "')");
-
-        s.close();
-        connection.close();
-    }
-
-    void deleteRecursively(File f) throws IOException {
-        if (f.isDirectory()) {
-            for (File c : f.listFiles())
-                deleteRecursively(c);
-        }
-        if (!f.delete()) {
-            throw new FileNotFoundException("Failed to delete file: " + f);
-        }
     }
 
 }

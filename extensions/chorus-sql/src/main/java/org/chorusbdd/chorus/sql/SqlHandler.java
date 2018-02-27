@@ -42,6 +42,11 @@ public class SqlHandler {
     public void executeAStatement(String statement, String configName ) {
         sqlManager.executeAStatement(configName, statement);
     }
+    
+    @Step(".*I execute the script (.*) on the " + HandlerPatterns.namePattern + " database") 
+    public void executeAScript(String script, String configName ) {
+        sqlManager.executeAScript(configName, script);
+    }
 
     private Properties getConfig(String configName) {
         Properties p = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "sql", configName);

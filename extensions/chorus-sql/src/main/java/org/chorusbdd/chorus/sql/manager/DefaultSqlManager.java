@@ -13,13 +13,16 @@ import org.chorusbdd.chorus.sql.config.SqlConfigBeanValidator;
 import org.chorusbdd.chorus.sql.config.SqlConfigBuilder;
 import org.chorusbdd.chorus.sql.config.SqlConfigBuilderFactory;
 import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.util.FileUtils;
 import org.chorusbdd.chorus.util.function.Tuple2;
 
+import java.io.File;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.chorusbdd.chorus.util.function.Tuple2.tuple2;
 
@@ -34,7 +37,9 @@ public class DefaultSqlManager implements SqlManager {
     private SqlConfigBeanValidator sqlConfigBeanValidator = new SqlConfigBeanValidator();
     
     private LinkedHashMap<String, Tuple2<Connection, SqlConfig>> configNameToConnectionDetails = new LinkedHashMap<>();
-    
+
+    private FeatureToken feature;
+
     @Override
     public void connectToDatabase(String configName, Properties properties) {
         
@@ -69,26 +74,68 @@ public class DefaultSqlManager implements SqlManager {
     
     @Override
     public void executeAStatement(String configName, String statement) {
-        Tuple2<Connection, SqlConfig> connectionDetails = configNameToConnectionDetails.get(configName);
-        if ( connectionDetails == null) {
-            throw new ChorusException("Could not find a database connection for database " + configName);
-        }
-
-        Statement stmt = null;
+        Tuple2<Connection, SqlConfig> connectionDetails = getConnectionDetails(configName);
+        executeJdbcStatements(connectionDetails.getOne(), configName, statement, statement);
+    }
+    
+    @Override
+    public void executeAScript(String configName, String scriptPath) {
+        //Resolve the script path relative to the feature file
+        File script = feature.getFeatureDir().toPath().resolve(scriptPath).toFile();
+        String scriptContents = FileUtils.readScriptFile(log, configName, scriptPath, script);
+     
+        Tuple2<Connection, SqlConfig> connectionDetails = getConnectionDetails(configName);
+        executeJdbcStatements(connectionDetails.getOne(), configName, scriptContents, "script at " + scriptPath);
+    }
+    
+    private Statement createStatement(String configName, Connection connection) {
+        Statement stmt;
         try {
             log.trace("Creating a JDBC statement");
-            Connection connection = connectionDetails.getOne();
             stmt = connection.createStatement();
         } catch (SQLException e) {
             throw new ChorusException("Failed to create a statement against database " + configName, e);
         }
+        return stmt;
+    }
 
+    private Tuple2<Connection, SqlConfig> getConnectionDetails(String configName) {
+        Tuple2<Connection, SqlConfig> connectionDetails = configNameToConnectionDetails.get(configName);
+        if ( connectionDetails == null) {
+            throw new ChorusException("Could not find a database connection for database " + configName);
+        }
+        return connectionDetails;
+    }
+
+
+    /**
+     * Execute one or more SQL statements
+     * 
+     * @param statements, a String which may contain one or more semi-colon-delimited SQL statements
+     */
+    private void executeJdbcStatements(Connection connection, String configName, String statements, String description) {
+        Statement stmt = createStatement(configName, connection);
         try {
-            log.debug("Executing statement [" + statement + "]");
-            stmt.execute(statement);
+            log.debug("Executing statement [" + description + "]");
+            
+            List<String> stmtsToExecute = Stream.of(statements.split(";"))
+                    .map(String::trim)
+                    .filter(s -> s.length() > 0)
+                    .collect(Collectors.toList());
+            
+            if ( log.isTraceEnabled()) {
+                log.trace("These statements will be executed:");
+                stmtsToExecute.forEach(s -> log.trace("Statement: [" + s + "]"));
+            }
+            
+            for ( String currentStatement : stmtsToExecute) {
+                stmt.execute(currentStatement);
+                log.trace("Executing statement: " + currentStatement + " OK!");
+            }
+            
         } catch (SQLException e) {
             throw new ChorusException(
-                String.format("Failed while executing statement [%s] on database + %s [%s]", statement, configName, e.toString(), e)
+                    String.format("Failed while executing statement [%s] on database + %s [%s]", description, configName, e.toString(), e)
             );
         }
     }
@@ -104,12 +151,14 @@ public class DefaultSqlManager implements SqlManager {
     @Override
     public ExecutionListener getExecutionListener() {
         return new ExecutionListenerAdapter() {
-            
+
+            public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
+                DefaultSqlManager.this.feature = feature;
+            }
 
             public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
                 closeConnectionsForScope(Scope.SCENARIO);
             }
-
 
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
                 closeConnectionsForScope(Scope.FEATURE);
