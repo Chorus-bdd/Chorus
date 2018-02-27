@@ -143,6 +143,12 @@ project(':chorus-spring') {
     }
 }
 
+project(':chorus-sql') {
+    dependencies {
+        compile project (':chorus')
+    }
+}
+
 project(':chorus-stepinvoker') {
     dependencies {
         compile project (':chorus-annotations')
@@ -197,5 +203,6 @@ project(':integrationtest') {
         compile project (':chorus-spring')
         compile project (':chorus-selenium')
         compile project (':chorus-websockets')
+        compile project (':chorus-sql')
     }
 }

@@ -1,6 +1,5 @@
 package org.chorusbdd.chorus.selenium.manager;
 
-import org.chorusbdd.chorus.Chorus;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -22,7 +21,6 @@ import org.openqa.selenium.WebDriver;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,7 +34,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumManagerImpl.class);
 
-    private final SeleniumConfigBuilderFactory seleniumConfigBuilder = new SeleniumConfigBuilderFactory();
+    private final SeleniumConfigBuilderFactory seleniumConfigBuilderFactory = new SeleniumConfigBuilderFactory();
     private final SeleniumConfigBeanValidator seleniumConfigBeanValidator = new SeleniumConfigBeanValidator();
     private final WebDriverFactory webDriverFactory = new DefaultWebDriverFactory();
     
@@ -59,7 +57,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
 
     private SeleniumConfig createAndValidateConfig(Properties properties, String configName) {
         SeleniumConfig seleniumConfig = getSeleniumConfig(configName, properties);
-        checkConfigAndNotAlreadyOpened(configName, seleniumConfig);
+        checkConfigValidAndNotAlreadyOpened(configName, seleniumConfig);
         return seleniumConfig;
     }
 
@@ -75,7 +73,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     }
 
 
-    private void checkConfigAndNotAlreadyOpened(String configName, SeleniumConfig seleniumConfig) {
+    private void checkConfigValidAndNotAlreadyOpened(String configName, SeleniumConfig seleniumConfig) {
         ChorusAssert.assertFalse(
             "There is already a browser open with the config name " + configName, webDriverMap.containsKey(configName)
         );
@@ -83,7 +81,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
         boolean valid = seleniumConfigBeanValidator.isValid(seleniumConfig);
         if ( ! valid) {
             log.warn(seleniumConfigBeanValidator.getErrorDescription());
-            ChorusAssert.fail("The selenium config for " + configName + " must be valid");
+            throw new ChorusException("The selenium config for " + configName + " must be valid");
         }
     }
 
@@ -197,14 +195,14 @@ public class SeleniumManagerImpl implements SeleniumManager {
                         .stream()
                         .filter(wd -> wd.getSeleniumConfig().getScope() == scope)
                         .collect(Collectors.toList());
-}
+            }
 
         };
     }
 
 
     private SeleniumConfig getSeleniumConfig(String configName, Properties processProperties) {
-        SeleniumConfigBuilder config = seleniumConfigBuilder.createConfigBuilder(processProperties, configName);
+        SeleniumConfigBuilder config = seleniumConfigBuilderFactory.createConfigBuilder(processProperties, configName);
         return config.build();
     }
 

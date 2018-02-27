@@ -46,14 +46,13 @@ import java.util.Properties;
  */
 public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<SeleniumConfigBuilder> implements ConfigBuilderFactory<SeleniumConfigBuilder> {
 
+    private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBuilderFactory.class);
+
     private static final String scope = "scope";
     private static final String chromeArguments = "chromeArguments";
     public static final String driverType = "driverType";
     public static final String remoteWebDriverURL = "remoteWebDriverURL";
-
-
-    private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBuilderFactory.class);
-
+    
     protected SeleniumConfigBuilder createBuilder() {
         return new SeleniumConfigBuilder();
     }

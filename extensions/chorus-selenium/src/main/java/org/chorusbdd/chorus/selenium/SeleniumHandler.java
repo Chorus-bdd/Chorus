@@ -30,11 +30,7 @@ public class SeleniumHandler {
     private SeleniumLoggingSuppression seleniumLogging = new SeleniumLoggingSuppression();
 
     @ChorusResource(value="feature.token")
-    private FeatureToken feature;
-
-    private WebDriver driver;
-    private boolean closeBrowserAtEndOfFeature = true;
-
+    private FeatureToken feature; 
 
     @ChorusResource("subsystem.configurationManager")
     private ConfigurationManager configurationManager;

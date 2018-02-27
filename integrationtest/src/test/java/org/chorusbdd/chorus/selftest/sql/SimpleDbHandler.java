@@ -27,44 +27,30 @@
  *  the Software, or for combinations of the Software with other software or
  *  hardware.
  */
-package org.chorusbdd.chorus.selenium.config;
+package org.chorusbdd.chorus.selftest.sql;
 
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
-import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.annotations.Step;
+
+import java.io.File;
 
 /**
- * Created by nick on 23/09/2014.
+ * Created by IntelliJ IDEA.
+ * User: Nick Ebbutt
+ * Date: 14/06/12
+ * Time: 09:21
  */
-public class SeleniumConfigBeanValidator extends AbstractConfigBeanValidator<SeleniumConfig> {
+@Handler(value = "Sql Handler Simple Db", scope = Scope.FEATURE)
+public class SimpleDbHandler {
 
-    protected boolean checkValid(SeleniumConfig seleniumConfig) {
-        boolean valid = true;
+    @Step(".*I create a derbydb database")
+    public void featureStart() throws Exception {
+    }
+    
+    @Step(".*the derbydb database is connected") 
+    public void checkConnection() {
         
-        switch(seleniumConfig.getSeleniumDriverType()) {
-            case CHROME:
-                valid = checkChromeProperties(seleniumConfig);
-                break;
-            case REMOTE_WEB_DRIVER:
-                valid = checkRemoteWebDriverProperites(seleniumConfig);
-                break;
-            default:
-                throw new ChorusException("Selenium Driver Type " + seleniumConfig.getSeleniumDriverType() + 
-                        " config cannot be validated");
-        }
-        return valid;
     }
-
-    private boolean checkRemoteWebDriverProperites(SeleniumConfig seleniumConfig) {
-        boolean result = true;
-        if ( ! isSet(seleniumConfig.getRemoteWebDriverURL())) {
-            logInvalidConfig(SeleniumConfigBuilderFactory.remoteWebDriverURL + " cannot be null", seleniumConfig);
-            result = false;
-        }
-        return result;
-    }
-
-    private boolean checkChromeProperties(SeleniumConfig seleniumConfig) {
-        return true;        
-    }
-
 }

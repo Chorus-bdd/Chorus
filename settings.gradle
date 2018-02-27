@@ -22,6 +22,7 @@ include 'chorus',
         'chorus-sikulix',
         'chorus-spring',
         'chorus-websockets',
+        'chorus-sql',
         'chorus-mocksuite',
         'chorus-webagent',
         'chorus-xml',
@@ -49,6 +50,7 @@ project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")
 project(':chorus-sikulix').projectDir = file("extensions/chorus-sikulix")
 project(':chorus-spring').projectDir = file("extensions/chorus-spring")
 project(':chorus-websockets').projectDir = file("extensions/chorus-websockets")
+project(':chorus-sql').projectDir = file("extensions/chorus-sql")
 project(':chorus-mocksuite').projectDir = file("services/chorus-mocksuite")
 project(':chorus-webagent').projectDir = file("services/chorus-webagent")
 project(':chorus-xml').projectDir = file("services/chorus-xml")

@@ -48,7 +48,8 @@ public class ChorusConstants {
         "org.chorusbdd.chorus.handlerconfig",
         "org.chorusbdd.chorus.selftest",
         "org.chorusbdd.chorus.selenium",
-        "org.chorusbdd.chorus.websockets"
+        "org.chorusbdd.chorus.websockets",
+        "org.chorusbdd.chorus.sql"
     };
 
     public static final String CONSOLE_COLOUR_OUTPUT_DISABLED_PROPERTY = "org.chorusbdd.chorus.console.colouroutput";

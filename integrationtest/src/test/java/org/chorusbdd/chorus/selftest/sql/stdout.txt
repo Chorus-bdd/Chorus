@@ -1,0 +1,15 @@
+Feature: Sql Handler Simple Db                                                                       
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/sql/sqlhandlersimpledb.feature
+  Scenario: Feature-Start
+Chorus --> INFO    - Processing scenario: Feature-Start
+    First I create a derbydb database                                                        PASSED  
+    And I connect to the derbydb database                                                    PASSED  
+  Scenario: 
+Chorus --> INFO    - Processing scenario: 
+    Given the derbydb database is connected                                                  PASSED  
+    Then I execute the statement 'select * from ProcessProperties' on the derbydb database   PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:0) (passed:0) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

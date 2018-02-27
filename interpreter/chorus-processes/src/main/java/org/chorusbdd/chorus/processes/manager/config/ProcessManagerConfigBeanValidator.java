@@ -68,7 +68,7 @@ public class ProcessManagerConfigBeanValidator extends AbstractConfigBeanValidat
     private boolean checkPropertiesForNativeProcess(ProcessManagerConfig processesConfig) {
         boolean valid = true;
         if (isSet(processesConfig.getMainclass())) {
-            logInvalidConfig("Cannot the mainclass property for non-java process configured with pathToExecutable", processesConfig);
+            logInvalidConfig("Cannot set the mainclass property for non-java process configured with pathToExecutable", processesConfig);
             valid = false;
         } else if (isSet(processesConfig.getJvmargs()) ) {
             logInvalidConfig("Cannot set jvmargs property for non-java process configured with pathToExecutable", processesConfig);
