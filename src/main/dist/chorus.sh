@@ -32,8 +32,11 @@ done
 SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 #If the output stream is directed to a terminal and the user didn't specify a console mode explicitly, then use console mode, -c
-#Add the '/choruslibs' directory which provides a path to allow the user to mount extra jar dependencies within a docker image
-CP="${SCRIPTDIR}/lib/*:${SCRIPTDIR}/choruslibs/*:"
+#Add the '/choruslibs' directory which provides a path which can be mounted in a docker container 
+#to allow the user to add extra jar dependencies, and also add '/chorusclasspath' which provides a path which 
+#to allow the user to add other classes and resources onto the Chorus interpreter classpath 
+CP="${SCRIPTDIR}/lib/*:/choruslibs/*:/chorusclasspath"
+
 if [[ -t 1 && "${NO_CONSOLE_IN_ARGS}" = true ]] ; then
   java -cp "${CP}" org.chorusbdd.chorus.Chorus -console ${ARGS}
 else
