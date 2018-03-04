@@ -42,9 +42,14 @@ public interface SeleniumConfig extends HandlerConfigBean {
     Scope getScope();
 
     SeleniumDriverType getSeleniumDriverType();
-
-    Optional<String> getChromeArgs();
     
     String getRemoteWebDriverURL();
+
+    // Chrome Driver specific:
     
+    Optional<String> getChromeArgs();
+
+    // Chrome Driver specific:
+
+    String getRemoteWebDriverBrowserType();
 }

@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.selenium.manager;
 
 import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
 import org.chorusbdd.chorus.util.ChorusException;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -34,7 +35,11 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 result = new ChromeDriver(chromeOptions);
                 break;
             case REMOTE_WEB_DRIVER:
-                DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+                DesiredCapabilities capabilities = new DesiredCapabilities(
+                        seleniumConfig.getRemoteWebDriverBrowserType(), 
+                        "",   //can't configure version yet
+                        Platform.ANY  //can't configure platform yet
+                );
                 capabilities.setJavascriptEnabled(true);
                 URL url = getRemoteWebDriverURL(seleniumConfig.getRemoteWebDriverURL());
                 result = new RemoteWebDriver(url, capabilities);;

@@ -87,6 +87,8 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
                     throw (StepFailedException)e.getCause();
                 }
                throw new ChorusException("Failed while executing a Step Server step", e);
+            } finally {
+                executingStep.set(NO_STEP_EXECUTING);
             }
 
             //Update local ChorusContext with state returned from remote client
@@ -146,42 +148,28 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     //this is called by web socket thread not Chorus interpreter so log don't throw ChorusException, log errors instead
     public void stepSucceeded(StepSucceededMessage stepSuccessMessage) {
         ExecutingStep s = executingStep.get();
-        if ( s == NO_STEP_EXECUTING ) {
-            log.error("Web Socket server invalid state, a step which is not executing cannot succeed");
+        if ( ! s.getExecutionUUID().equals(stepSuccessMessage.getExecutionId())) {
+            //This could happen if chorus interpreter timed out the previous step while waiting for the reply
+            //Hence log to debug rather than error
+            log.debug("Received a StepSucceededMessage for a step execution id " + stepSuccessMessage.getExecutionId() + " which did not match the currently executing step " + s.getExecutionUUID());
         } else {
-
-            if ( ! s.getExecutionUUID().equals(stepSuccessMessage.getExecutionId())) {
-                log.error("The execution id " + stepSuccessMessage.getExecutionId() + " did not match the currently executing step " + s.getExecutionUUID());
-            } else {
-                boolean result = executingStep.compareAndSet(s, NO_STEP_EXECUTING);
-                if ( ! result) {
-                    log.error("Failed to set NO_STEP_EXECUTING");
-                }
-                s.getCompletableFuture().complete(stepSuccessMessage);
-            }
+            s.getCompletableFuture().complete(stepSuccessMessage);
         }
     }
 
     //this is called by web socket thread not Chorus interpreter so log don't throw ChorusException, log errors instead
     public void stepFailed(StepFailedMessage stepFailedMessage) {
         ExecutingStep s = executingStep.get();
-        if ( s == NO_STEP_EXECUTING ) {
-            log.error("Web Socket server invalid state, a step which is not executing cannot fail");
+        if ( ! s.getExecutionUUID().equals(stepFailedMessage.getExecutionId())) {
+            //This could happen if chorus interpreter timed out the previous step while waiting for the reply
+            //Hence log to debug rather than error
+            log.debug("Received a StepFailedMessage for execution id " + stepFailedMessage.getExecutionId() + " which did not match the currently executing step " + s.getExecutionUUID());
         } else {
-
-            if ( ! s.getExecutionUUID().equals(stepFailedMessage.getExecutionId())) {
-                log.error("The execution id " + stepFailedMessage.getExecutionId() + " did not match the currently executing step " + s.getExecutionUUID());
-            } else {
-                boolean result = executingStep.compareAndSet(s, NO_STEP_EXECUTING);
-                if ( ! result) {
-                    log.error("Failed to set NO_STEP_EXECUTING");
-                }
-                StepFailedException stepFailedException = new StepFailedException(
-                    stepFailedMessage.getDescription(),
-                    stepFailedMessage.getErrorText()
-                );
-                s.getCompletableFuture().completeExceptionally(stepFailedException);
-            }
+            StepFailedException stepFailedException = new StepFailedException(
+                stepFailedMessage.getDescription(),
+                stepFailedMessage.getErrorText()
+            );
+            s.getCompletableFuture().completeExceptionally(stepFailedException);
         }
     }
 

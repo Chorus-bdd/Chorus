@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBuilderFactor
 import org.chorusbdd.chorus.handlerconfig.configbean.ConfigBuilderFactory;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.openqa.selenium.remote.BrowserType;
 
 import java.util.Map;
 import java.util.Properties;
@@ -49,10 +50,11 @@ public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<S
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumConfigBuilderFactory.class);
 
     private static final String scope = "scope";
-    private static final String chromeArguments = "chromeArguments";
+    private static final String chromeArguments = "chromeDriver.arguments";
     public static final String driverType = "driverType";
-    public static final String remoteWebDriverURL = "remoteWebDriverURL";
-    
+    public static final String remoteWebDriverURL = "remoteWebDriver.URL";
+    public static final String remoteWebDriverBrowserType = "remoteWebDriver.browserType";
+
     protected SeleniumConfigBuilder createBuilder() {
         return new SeleniumConfigBuilder();
     }
@@ -70,7 +72,9 @@ public class SeleniumConfigBuilderFactory extends AbstractConfigBuilderFactory<S
                 c.setChromeArgs(value);
             } else if ( remoteWebDriverURL.equals(key)) {
                 c.setRemoteWebDriverURL(value);
-            } else {
+            } else if ( remoteWebDriverBrowserType.equals(key)) {
+                c.setRemoteWebDriverBrowserType(value);
+            }else {
                 log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
             }
         }

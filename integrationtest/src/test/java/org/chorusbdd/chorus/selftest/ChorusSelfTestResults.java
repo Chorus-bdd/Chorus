@@ -85,6 +85,8 @@ public class ChorusSelfTestResults {
         output = removeJavaOptionsVariable(output);
         output = replaceWindowsWithUnixPaths(output);
         output = replaceSystemSpecificProcessDetails(output);
+        output = replaceLineNumbers(output);
+        output = replaceSystemExceptions(output);
         return output;
     }
 
@@ -101,6 +103,15 @@ public class ChorusSelfTestResults {
     private String removeJavaOptionsVariable(String result) {
         return result.replaceAll("Picked up _JAVA_OPTIONS: .*?\n", "");
     }
+
+    private String replaceLineNumbers(String stdOut) {
+        return stdOut.replaceAll("\\(([\\w\\$]+)" + ":\\d+\\)-", "($1:linenumber)-");
+    }
+
+    private String replaceSystemExceptions(String stdOut) {
+        return stdOut.replaceAll(", caused by: \\[(.*)\\]", " caused by: [replaced]");
+    }
+
 
     private String removeCarriageReturns(String output) {
         return output.replaceAll("\r", "");

@@ -141,7 +141,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
         }
     }
     
-    private WebDriver getWebDriver(String configName) {
+    public WebDriver getWebDriver(String configName) {
         return getNamedWebDriver(configName).getWebDriver();
     }
 

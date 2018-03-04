@@ -30,6 +30,7 @@
 package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.openqa.selenium.remote.BrowserType;
 
 import java.util.Optional;
 
@@ -43,13 +44,15 @@ public class SeleniumConfigBean implements SeleniumConfig {
     private final SeleniumDriverType seleniumDriverType;
     private final String chromeArgs;
     private final String remoteWebDriverURL;
+    private final String remoteWebDriverBrowserType;
 
-    public SeleniumConfigBean(String configName, Scope scope, SeleniumDriverType seleniumDriverType, String chromeArgs, String remoteWebDriverURL) {
+    public SeleniumConfigBean(String configName, Scope scope, SeleniumDriverType seleniumDriverType, String chromeArgs, String remoteWebDriverURL, String remoteWebDriverBrowserType) {
         this.configName = configName;
         this.scope = scope;
         this.seleniumDriverType = seleniumDriverType;
         this.chromeArgs = chromeArgs;
         this.remoteWebDriverURL = remoteWebDriverURL;
+        this.remoteWebDriverBrowserType = remoteWebDriverBrowserType;
     }
 
     public String getConfigName() {
@@ -70,6 +73,9 @@ public class SeleniumConfigBean implements SeleniumConfig {
     public Optional<String> getChromeArgs() {
         return Optional.ofNullable(chromeArgs);
     }
+    
+    
+    public String getRemoteWebDriverBrowserType() { return remoteWebDriverBrowserType; }
 
     @Override
     public String getRemoteWebDriverURL() {

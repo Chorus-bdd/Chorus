@@ -59,7 +59,9 @@ public class SeleniumConfigBeanValidator extends AbstractConfigBeanValidator<Sel
         if ( ! isSet(seleniumConfig.getRemoteWebDriverURL())) {
             logInvalidConfig(SeleniumConfigBuilderFactory.remoteWebDriverURL + " cannot be null", seleniumConfig);
             result = false;
-        }
+        } else if ( ! isSet(seleniumConfig.getRemoteWebDriverBrowserType())) {
+            logInvalidConfig(SeleniumConfigBuilderFactory.remoteWebDriverBrowserType + " cannot be null", seleniumConfig);
+            result = false;        }
         return result;
     }
 

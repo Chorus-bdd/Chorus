@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBuilder;
+import org.openqa.selenium.remote.BrowserType;
 
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ public class SeleniumConfigBuilder implements HandlerConfigBuilder<SeleniumConfi
     private String chromeArgs;
     private SeleniumDriverType seleniumDriverType = SeleniumDriverType.REMOTE_WEB_DRIVER;
     private String remoteWebDriverURL = "http://localhost:4444/wd/hub";
+    private String remoteWebDriverBrowserType = BrowserType.CHROME;
 
     @Override
     public String getConfigName() {
@@ -58,6 +60,15 @@ public class SeleniumConfigBuilder implements HandlerConfigBuilder<SeleniumConfi
         this.seleniumDriverType = seleniumDriverType;
     }
 
+    public void setRemoteWebDriverBrowserType(String remoteWebDriverBrowserType) {
+        this.remoteWebDriverBrowserType = remoteWebDriverBrowserType;
+    }
+
+    @Override
+    public String getRemoteWebDriverBrowserType() {
+        return remoteWebDriverBrowserType;
+    }
+
     @Override
     public SeleniumConfigBean build() {
         return new SeleniumConfigBean(
@@ -65,7 +76,8 @@ public class SeleniumConfigBuilder implements HandlerConfigBuilder<SeleniumConfi
             scope, 
             seleniumDriverType, 
             chromeArgs, 
-            remoteWebDriverURL
+            remoteWebDriverURL,
+            remoteWebDriverBrowserType
         );
     }
 

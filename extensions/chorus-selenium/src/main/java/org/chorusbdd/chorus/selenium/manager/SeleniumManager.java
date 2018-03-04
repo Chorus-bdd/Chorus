@@ -2,6 +2,7 @@ package org.chorusbdd.chorus.selenium.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
 import org.chorusbdd.chorus.subsystem.Subsystem;
+import org.openqa.selenium.WebDriver;
 
 import java.util.Properties;
 
@@ -37,4 +38,12 @@ public interface SeleniumManager extends Subsystem {
     void leaveBrowserOpenAtFeatureEnd(String configName);
 
     void executeScriptFile(String configName, String scriptPath);
+
+    /**
+     * This is here to allow users to write handlers which reuse the SeleniumManager for creation of the WebDriver instance, 
+     * but add extra custom steps using the WebDriver instance
+     * 
+     * @return the WebDriver instance created for this config
+     */
+    WebDriver getWebDriver(String configName);
 }

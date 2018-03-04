@@ -148,13 +148,11 @@ public abstract class AbstractInterpreterTest extends Assert {
     }
 
     protected void processExpected(ChorusSelfTestResults expectedResults) {
-        replaceLineNumbers(expectedResults);
         processExpectedResults(expectedResults);
     }
 
     //hook for subclass processing
     protected void processActual(ChorusSelfTestResults actualResults) {
-        replaceLineNumbers(actualResults);
         processActualResults(actualResults);
     }
     
@@ -164,12 +162,6 @@ public abstract class AbstractInterpreterTest extends Assert {
 
     //hook for subclass processing
     protected void processActualResults(ChorusSelfTestResults actualResults) {
-    }
-
-    private void replaceLineNumbers(ChorusSelfTestResults expectedResults) {
-        String stdOut = expectedResults.getStandardOutput();
-        stdOut = stdOut.replaceAll("\\(([\\w\\$]+)" + ":\\d+\\)-", "($1:linenumber)-");
-        expectedResults.setStandardOutput(stdOut);
     }
 
     /**

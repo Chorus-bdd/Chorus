@@ -41,7 +41,17 @@ public class ChorusException extends RuntimeException {
     }
 
     public ChorusException(String message, Throwable cause) {
-        super(message, cause);
+        super(getMessage(message, cause), cause);
+    }
+
+    private static String getMessage(String message, Throwable cause) {
+        return cause.getMessage() == null ? 
+                message : 
+                message + ", caused by: [" + 
+                        cause.getMessage()
+                                .replace("\r", "")
+                                .replace("\n", " ") + 
+                        "]";
     }
 
     public ChorusException(Throwable cause) {
