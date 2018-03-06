@@ -220,14 +220,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     private void removeClient(String clientId) {
         connectedClients.remove(clientId);
         alignedClients.remove(clientId);
-
-        Iterator<WebSocketClientStepInvoker> i = stepIdToInvoker.values().iterator();
-        while(i.hasNext()) {
-            WebSocketClientStepInvoker stepInvoker = i.next();
-            if ( stepInvoker.getClientId().equals(clientId)) {
-                i.remove();
-            }
-        }
+        stepIdToInvoker.values().removeIf(stepInvoker -> stepInvoker.getClientId().equals(clientId));
     }
 
     private WebSocketsConfig getWebSocketsConfig(String configName, Properties webSocketsProperties) {

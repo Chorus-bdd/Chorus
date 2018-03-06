@@ -74,11 +74,10 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
         boolean success = executingStep.compareAndSet(NO_STEP_EXECUTING, s);
 
         if ( success) {
-            log.debug("Executing step " + s + " and waiting " + timeoutSeconds + " seconds");
-            messageRouter.sendMessage(clientId, executeStepMessage);
-
             StepSucceededMessage stepSucceededMessage;
             try {
+                log.debug("Executing step " + s + " and waiting " + timeoutSeconds + " seconds");
+                messageRouter.sendMessage(clientId, executeStepMessage);
                 stepSucceededMessage = s.getCompletableFuture().get(timeoutSeconds, TimeUnit.SECONDS);
             } catch (Exception e) {
                 if ( e instanceof TimeoutException ) {
