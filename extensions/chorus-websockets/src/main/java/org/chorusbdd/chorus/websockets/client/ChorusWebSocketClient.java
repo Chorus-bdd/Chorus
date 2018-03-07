@@ -1,8 +1,5 @@
 package org.chorusbdd.chorus.websockets.client;
 
-import com.pusher.java_websocket.WebSocket;
-import com.pusher.java_websocket.client.WebSocketClient;
-import com.pusher.java_websocket.handshake.ServerHandshake;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.websockets.message.AbstractTypedMessage;
@@ -10,6 +7,9 @@ import org.chorusbdd.chorus.websockets.message.ExecuteStepMessage;
 import org.chorusbdd.chorus.websockets.message.MessageType;
 import org.chorusbdd.chorus.websockets.util.JsonUtils;
 import org.chorusbdd.chorus.util.ChorusException;
+import org.java_websocket.WebSocket;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.util.Map;

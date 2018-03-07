@@ -26,7 +26,7 @@ public class TestClientMessages {
 
     private static WebSocketClient webSocketClient;
     private static WebSocketMessageProcessor mockProcessor;
-    private static final ChorusWebSocketRegistry chorusWebSocketServer = new ChorusWebSocketRegistry(9080);
+    private static final ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080);
 
     @BeforeClass
     public static void startTestServer() {

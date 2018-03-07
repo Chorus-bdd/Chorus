@@ -34,7 +34,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     private final WebSocketsConfigBeanValidator webSocketsConfigBeanValidator = new WebSocketsConfigBeanValidator();
 
 
-    private ChorusWebSocketRegistry webSocketServer;
+    private ChorusWebSocketServer webSocketServer;
     private final AtomicBoolean isRunning = new AtomicBoolean();
 
     private final Map<String, WebSocketClientStepInvoker> stepIdToInvoker = new ConcurrentHashMap<>();
@@ -66,7 +66,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
 
             int port = webSocketsConfig.getPort();
             log.info("Starting Web Socket server on port " + port);
-            webSocketServer = new ChorusWebSocketRegistry(port);
+            webSocketServer = new ChorusWebSocketServer(port);
 
             MessageProcessor messageProcessor = new MessageProcessor(webSocketServer);
             webSocketServer.setWebSocketMessageProcessor(messageProcessor);

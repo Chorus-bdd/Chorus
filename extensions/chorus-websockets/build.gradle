@@ -6,9 +6,8 @@ description = "chorus-websockets"
 
 dependencies {
     compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
-//    compile group: 'org.java-websocket', name: 'Java-WebSocket', version:'1.3.0'
-
-    compile group: 'com.pusher', name: 'java-websocket', version:'1.4.1'
+    compile group: 'org.java-websocket', name: 'Java-WebSocket', version:'1.3.8'
+//    compile group: 'com.pusher', name: 'java-websocket', version:'1.4.1'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.7.5'
     compileOnly group: 'log4j', name: 'log4j', version:'1.2.16'
 

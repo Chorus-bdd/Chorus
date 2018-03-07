@@ -1,18 +1,17 @@
 package org.chorusbdd.chorus.websockets;
 
-import com.pusher.java_websocket.WebSocket;
-import com.pusher.java_websocket.handshake.ClientHandshake;
-import com.pusher.java_websocket.server.WebSocketServer;
+
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.websockets.message.*;
 import org.chorusbdd.chorus.websockets.util.JsonUtils;
 import org.chorusbdd.chorus.util.ChorusException;
+import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
-import java.nio.channels.Selector;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,16 +19,17 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by nick on 08/12/2016.
  */
-public class ChorusWebSocketRegistry extends WebSocketServer implements WebSocketMessageRouter {
+public class ChorusWebSocketServer extends WebSocketServer implements WebSocketMessageRouter {
 
-    private ChorusLog log = ChorusLogFactory.getLog(ChorusWebSocketRegistry.class);
+    private ChorusLog log = ChorusLogFactory.getLog(ChorusWebSocketServer.class);
 
     private volatile WebSocketMessageProcessor webSocketMessageProcessor;
 
     private Map<String, WebSocket> clientIdToSocket = new ConcurrentHashMap<>();
 
-    public ChorusWebSocketRegistry(int port) {
-        super( new InetSocketAddress( port ) );
+    public ChorusWebSocketServer(int port) {
+        super( new InetSocketAddress( port ), 1);
+        setReuseAddr(true);  //otherwise we can't restart the server-socket quickly enough (it's stuck in TIME_WAIT state)
     }
 
     @Override
@@ -143,7 +143,8 @@ public class ChorusWebSocketRegistry extends WebSocketServer implements WebSocke
         super.stop();
 
         //workaround for server socket left open on Windows
-        closeSelector();
+        //This issue is hopefully fixed in latest version of java websockets, or by setting 'reuse address' on the server socket
+        //        closeSelector();
     }
 
     /**
@@ -151,23 +152,26 @@ public class ChorusWebSocketRegistry extends WebSocketServer implements WebSocke
      * Here we use reflection to access the selector and close this, which is a workaround for the issue
      * https://stackoverflow.com/questions/39656477/serversocketchannel-in-non-blocking-mode-is-not-closing-properly
      */
-    private void closeSelector() {
-        try {
-            Field field = WebSocketServer.class.getDeclaredField("selector");
-            field.setAccessible(true);
-            Selector selector = (Selector)field.get(this);
-            selector.close();
-        } catch (Exception e) {
-            log.error("Failed to close selector", e);
-        }
-    }
+//    private void closeSelector() {
+//        try {
+//            Field field = WebSocketServer.class.getDeclaredField("selector");
+//            field.setAccessible(true);
+//            Selector selector = (Selector)field.get(this);
+//            if ( selector.isOpen()) {
+//                selector.close();
+//            }
+//        } catch (Exception e) {
+//            log.error("Failed to close selector", e);
+//        }
+//    }
 
 
     @Override
     public void onError( WebSocket conn, Exception ex ) {
         if( conn != null ) {
-            //TODO these happen on disconnect, review how to log
             log.debug("Error on connection " + conn.getRemoteSocketAddress() + " ", ex);
+        } else {
+            log.debug("Error on WebSocketServer ", ex);
         }
     }
 }

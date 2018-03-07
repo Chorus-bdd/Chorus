@@ -30,7 +30,7 @@ public class TestStepPublisher {
 
     private static StepPublisher stepPublisher;
     private static WebSocketMessageProcessor mockProcessor;
-    private static final ChorusWebSocketRegistry chorusWebSocketServer = new ChorusWebSocketRegistry(9080);
+    private static final ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080);
     private static final AtomicBoolean stepCalled = new AtomicBoolean();
 
     @BeforeClass
