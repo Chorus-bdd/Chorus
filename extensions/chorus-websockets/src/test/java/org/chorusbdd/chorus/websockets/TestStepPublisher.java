@@ -29,7 +29,7 @@ public class TestStepPublisher {
 
 
     private static StepPublisher stepPublisher;
-    private static StepRegistryMessageProcessor mockProcessor;
+    private static WebSocketMessageProcessor mockProcessor;
     private static final ChorusWebSocketRegistry chorusWebSocketServer = new ChorusWebSocketRegistry(9080);
     private static final AtomicBoolean stepCalled = new AtomicBoolean();
 
@@ -38,9 +38,9 @@ public class TestStepPublisher {
 
         StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
 
-        mockProcessor = mock(StepRegistryMessageProcessor.class);
+        mockProcessor = mock(WebSocketMessageProcessor.class);
 
-        chorusWebSocketServer.setStepRegistryMessageProcessor(mockProcessor);
+        chorusWebSocketServer.setWebSocketMessageProcessor(mockProcessor);
         chorusWebSocketServer.start();
         try {
             Thread.sleep(1500);

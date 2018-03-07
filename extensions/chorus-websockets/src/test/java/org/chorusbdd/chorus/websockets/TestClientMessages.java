@@ -1,12 +1,12 @@
 package org.chorusbdd.chorus.websockets;
 
-import com.pusher.java_websocket.client.WebSocketClient;
-import com.pusher.java_websocket.handshake.ServerHandshake;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
 import org.chorusbdd.chorus.websockets.message.*;
 import org.chorusbdd.chorus.websockets.util.JsonUtils;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class TestClientMessages {
 
 
     private static WebSocketClient webSocketClient;
-    private static StepRegistryMessageProcessor mockProcessor;
+    private static WebSocketMessageProcessor mockProcessor;
     private static final ChorusWebSocketRegistry chorusWebSocketServer = new ChorusWebSocketRegistry(9080);
 
     @BeforeClass
@@ -33,9 +33,9 @@ public class TestClientMessages {
 
         StdOutLogProvider.setLogLevel(LogLevel.INFO);
 
-        mockProcessor = mock(StepRegistryMessageProcessor.class);
+        mockProcessor = mock(WebSocketMessageProcessor.class);
 
-        chorusWebSocketServer.setStepRegistryMessageProcessor(mockProcessor);
+        chorusWebSocketServer.setWebSocketMessageProcessor(mockProcessor);
         chorusWebSocketServer.start();
         try {
             Thread.sleep(1500);

@@ -5,7 +5,7 @@ import org.chorusbdd.chorus.websockets.message.*;
 /**
  * Created by nick on 09/12/2016.
  */
-public interface StepRegistryMessageProcessor {
+public interface WebSocketMessageProcessor {
 
     void receiveClientConnected(ConnectMessage connectMessage);
 

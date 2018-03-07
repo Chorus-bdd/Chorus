@@ -5,7 +5,7 @@ import org.chorusbdd.chorus.websockets.message.AbstractTypedMessage;
 /**
  * Created by nick on 12/12/2016.
  */
-public interface StepRegistryMessageRouter {
+public interface WebSocketMessageRouter {
 
     void sendMessage(String clientId, AbstractTypedMessage message);
 }

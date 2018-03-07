@@ -42,12 +42,21 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     private final Set<String> connectedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Set<String> alignedClients = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
+    private CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+    
     /**
      * At present we only support one step server instance, the 'default', and this is the config
      */
     private WebSocketsConfig webSocketsConfig;
 
-    public WebSocketsManagerImpl() {}
+    public WebSocketsManagerImpl() {
+        addShutdownHook();
+    }
+
+    private void addShutdownHook() {
+        log.trace("Adding shutdown hook for ProcessHandler " + this);
+        Runtime.getRuntime().addShutdownHook(cleanupShutdownHook);
+    }
 
     public void startWebSocketServer(Properties properties) {
         if ( ! isRunning.getAndSet(true)) {
@@ -60,7 +69,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
             webSocketServer = new ChorusWebSocketRegistry(port);
 
             MessageProcessor messageProcessor = new MessageProcessor(webSocketServer);
-            webSocketServer.setStepRegistryMessageProcessor(messageProcessor);
+            webSocketServer.setWebSocketMessageProcessor(messageProcessor);
             webSocketServer.start();
         } else {
             //when multiple configurations are supported this will change
@@ -83,7 +92,9 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
                 @Override
                 protected void validate() throws Exception {
                 if ( ! alignedClients.contains(clientName)) {
-                    throw new ChorusException("Client " + clientName + " did not connect");
+                    boolean connected = connectedClients.contains(clientName);
+                    String message = connected ? "connect" : "finish publishing steps (send steps aligned)";
+                    throw new ChorusException("Client " + clientName + " did not " + message);
                 }
                 }
             };
@@ -96,7 +107,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
             }
             return result;
         } else {
-            throw new ChorusException("Step Server is not running");
+            throw new ChorusException("Web Socket Server is not running");
         }
     }
 
@@ -152,12 +163,12 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         };
     }
 
-    private class MessageProcessor implements StepRegistryMessageProcessor {
+    private class MessageProcessor implements WebSocketMessageProcessor {
 
 
-        private StepRegistryMessageRouter messageRouter;
+        private WebSocketMessageRouter messageRouter;
 
-        public MessageProcessor(StepRegistryMessageRouter messageRouter) {
+        public MessageProcessor(WebSocketMessageRouter messageRouter) {
             this.messageRouter = messageRouter;
         }
 
@@ -227,6 +238,21 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         WebSocketsConfigBuilder config = webSocketsConfigBeanFactory.createConfigBuilder(webSocketsProperties, configName);
         return config.build();
     }
+
+    /**
+     * If shut down before a scenario completes, try as hard as we can to cleanly close down any open web socket servers
+     */
+    private class CleanupShutdownHook extends Thread {
+        public void run() {
+            log.debug("Running Cleanup on shutdown for " + this.getClass().getSimpleName());
+            try {
+                stopWebSocketServer();
+            } catch (Throwable t) {
+                log.debug("Failed during cleanup", t);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         StdOutLogProvider.setLogLevel(LogLevel.DEBUG);

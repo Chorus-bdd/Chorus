@@ -2,14 +2,17 @@
 
 ### Chorus is a BDD test interpreter targeted at distributed architectures
 
-Chorus is great for testing microservice architectures and distributed systems
-It allows a team to write plain language tests with steps that can execute on components running remotely.
+Chorus is a versatile BDD (Behaviour Driven Development) testing interpreter
 
-Chorus supports an extended version of the 'Gherkin' syntax popularised by Cucumber and JBehave.
-The Gherkin extensions and other features of the framework may be useful to you even if your project is not distributed.
+Conventional BDD tools require you to provide step definitions locally. 
+This is possible with Chorus too. 
+ 
+However, the Chorus interpreter also allows you to publish step definitions over the network from your components or microservices under test.
+When the interpreter runs it can connect to your components, find the step definitons and execute them.  
 
-Chorus presently provides a solution to connect to and test Java (or JVM-based) components.
-We are presently developing connectivity solutions for other languages as part of a new major version of Chorus expected out later in 2017
+Chorus supports both Java (JVM-based) and Javascript components (enabling a direct connection to test Web apps in the browser)
+
+Chorus is ideal for integration testing systems with microservice-based architectures. 
 
 **Getting Started:**
 

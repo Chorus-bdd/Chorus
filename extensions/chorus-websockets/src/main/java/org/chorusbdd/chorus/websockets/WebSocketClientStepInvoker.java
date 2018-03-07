@@ -29,7 +29,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
 
     private static ChorusLog log = ChorusLogFactory.getLog(WebSocketClientStepInvoker.class);
 
-    private final StepRegistryMessageRouter messageRouter;
+    private final WebSocketMessageRouter messageRouter;
     private final String clientId;
     private final String stepId;
     private final String technicalDescription;
@@ -40,7 +40,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     private final AtomicReference<ExecutingStep> executingStep = new AtomicReference<>(NO_STEP_EXECUTING);
 
     private WebSocketClientStepInvoker(
-            StepRegistryMessageRouter messageRouter,
+            WebSocketMessageRouter messageRouter,
             String clientId,
             String stepId,
             Pattern stepPattern,
@@ -85,7 +85,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
                 } else if ( e.getCause() instanceof StepFailedException) {
                     throw (StepFailedException)e.getCause();
                 }
-               throw new ChorusException("Failed while executing a Step Server step", e);
+               throw new ChorusException("Failed while executing a Web Socket step", e);
             } finally {
                 executingStep.set(NO_STEP_EXECUTING);
             }
@@ -117,7 +117,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
         return clientId;
     }
 
-    public static WebSocketClientStepInvoker create(StepRegistryMessageRouter messageRouter, PublishStepMessage publishStepMessage, int timeoutSeconds) throws InvalidStepException {
+    public static WebSocketClientStepInvoker create(WebSocketMessageRouter messageRouter, PublishStepMessage publishStepMessage, int timeoutSeconds) throws InvalidStepException {
 
         Pattern pattern;
         try {

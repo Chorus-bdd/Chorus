@@ -20,11 +20,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by nick on 08/12/2016.
  */
-public class ChorusWebSocketRegistry extends WebSocketServer implements StepRegistryMessageRouter {
+public class ChorusWebSocketRegistry extends WebSocketServer implements WebSocketMessageRouter {
 
     private ChorusLog log = ChorusLogFactory.getLog(ChorusWebSocketRegistry.class);
 
-    private volatile StepRegistryMessageProcessor stepRegistryMessageProcessor;
+    private volatile WebSocketMessageProcessor webSocketMessageProcessor;
 
     private Map<String, WebSocket> clientIdToSocket = new ConcurrentHashMap<>();
 
@@ -32,8 +32,13 @@ public class ChorusWebSocketRegistry extends WebSocketServer implements StepRegi
         super( new InetSocketAddress( port ) );
     }
 
-    public void setStepRegistryMessageProcessor(StepRegistryMessageProcessor stepRegistryMessageProcessor) {
-        this.stepRegistryMessageProcessor = stepRegistryMessageProcessor;
+    @Override
+    public void onStart() {
+        log.debug("Started WebSocketServer on address " + getAddress());
+    }
+
+    public void setWebSocketMessageProcessor(WebSocketMessageProcessor webSocketMessageProcessor) {
+        this.webSocketMessageProcessor = webSocketMessageProcessor;
     }
 
     @Override
@@ -49,7 +54,7 @@ public class ChorusWebSocketRegistry extends WebSocketServer implements StepRegi
         clientId.ifPresent(id -> {
             log.debug("Removing web socket for client id " + id);
             clientIdToSocket.remove(id);
-            stepRegistryMessageProcessor.clientDisconnected(id);
+            webSocketMessageProcessor.clientDisconnected(id);
         });
     }
 
@@ -107,23 +112,23 @@ public class ChorusWebSocketRegistry extends WebSocketServer implements StepRegi
                 case CONNECT :
                     ConnectMessage connectMessage = JsonUtils.convertToObject(message, ConnectMessage.class);
                     clientIdToSocket.put(connectMessage.getChorusClientId(), socket);
-                    stepRegistryMessageProcessor.receiveClientConnected(connectMessage);
+                    webSocketMessageProcessor.receiveClientConnected(connectMessage);
                     break;
                 case PUBLISH_STEP :
                     PublishStepMessage publishStep = JsonUtils.convertToObject(message, PublishStepMessage.class);
-                    stepRegistryMessageProcessor.receivePublishStep(publishStep);
+                    webSocketMessageProcessor.receivePublishStep(publishStep);
                     break;
                 case STEPS_ALIGNED :
                     StepsAlignedMessage stepsAlignedMessage = JsonUtils.convertToObject(message, StepsAlignedMessage.class);
-                    stepRegistryMessageProcessor.receiveStepsAligned(stepsAlignedMessage);
+                    webSocketMessageProcessor.receiveStepsAligned(stepsAlignedMessage);
                     break;
                 case STEP_SUCCEEDED :
                     StepSucceededMessage stepSucceededMessage = JsonUtils.convertToObject(message, StepSucceededMessage.class);
-                    stepRegistryMessageProcessor.receiveStepSucceeded(stepSucceededMessage);
+                    webSocketMessageProcessor.receiveStepSucceeded(stepSucceededMessage);
                     break;
                 case STEP_FAILED :
                     StepFailedMessage stepFailedMessage = JsonUtils.convertToObject(message, StepFailedMessage.class);
-                    stepRegistryMessageProcessor.receiveStepFailed(stepFailedMessage);
+                    webSocketMessageProcessor.receiveStepFailed(stepFailedMessage);
                     break;
                 default:
                     log.warn("Received message with unsupported type " + type);
