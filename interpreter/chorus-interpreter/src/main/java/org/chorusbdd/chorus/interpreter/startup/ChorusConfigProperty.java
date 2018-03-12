@@ -87,13 +87,19 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
     "Number of seconds after which a scenario will timeout", PropertySourceMode.OVERRIDE),
     
-    EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
+    EXECUTION_LISTENER("-executionListener", "-x", "chorusExecutionListener", false, 1, Integer.MAX_VALUE, null, "[\\w\\.]+", "com.mycom.MyListener", 
+    "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
     
-    OUTPUT_WRITER("-outputWriter", "-w", "chorusOutputWriter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputWriter"}, "[\\w\\.]+", "-w org.myorg.MyWriter", "The output writer used to write interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
+    OUTPUT_WRITER("-outputWriter", "-w", "chorusOutputWriter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputWriter"}, "[\\w\\.]+", "-w org.myorg.MyWriter", 
+    "The output writer used to write interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
-    CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE),
+    CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", 
+    "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE),
 
-    PROFILE("-profile", "-p", "chorusProfile", false, 0, 1, new String[] {ExecutionToken.BASE_PROFILE}, "\\w+", "-p myProfile", "The configured profile may adjust behaviour, e.g. a handler might change settings based on the current profile", PropertySourceMode.OVERRIDE );
+    PROFILE("-profile", "-p", "chorusProfile", false, 0, 1, new String[] {ExecutionToken.BASE_PROFILE}, "\\w+", "-p myProfile", 
+    "The configured profile may adjust behaviour, e.g. a handler might change settings based on the current profile", PropertySourceMode.OVERRIDE );
+    
+    
     
     
     private String switchName;
@@ -146,16 +152,6 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
             );
         }
         return sb.toString();
-//
-//        ChorusOut.err.println("Parameters: -f [feature_dirs | feature_files] " +
-//                "-h [handler base packages] " +
-//                "[-name Test Suite Name] " +
-//                "[-t tag_expression] " +
-//                "[-jmxListener host:port] " +
-//                "[-showErrors] " +
-//                "[-dryrun] " +
-//                "[-showsummary] "
-//        );
     }
 
 

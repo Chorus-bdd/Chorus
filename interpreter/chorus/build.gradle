@@ -33,6 +33,15 @@ dependencies {
 
 }
 
+task createChorusVersionResource(type: Copy) {
+    from 'src/etc/CHORUS_VERSION'
+    into 'build/classes/main'
+    expand(version: project.version)
+    filteringCharset = 'UTF-8'
+}
+
+build.dependsOn createChorusVersionResource
+
 
 ////// Maven publication
 

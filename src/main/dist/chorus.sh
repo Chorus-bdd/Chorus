@@ -31,18 +31,20 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-#If the output stream is directed to a terminal and the user didn't specify a console mode explicitly, then use console mode, -c
-#Add the '/choruslibs' directory which provides a path which can be mounted in a docker container 
-#to allow the user to add extra jar dependencies, and also add '/chorusclasspath' which provides a path which 
-#to allow the user to add other classes and resources onto the Chorus interpreter classpath 
+# Add the '/choruslibs' directory which provides a path which can be mounted in a docker container 
+# to allow the user to add extra jar dependencies, and also add '/chorusclasspath' which provides a path which 
+# to allow the user to add other classes and resources onto the Chorus interpreter classpath 
 CP="${SCRIPTDIR}/lib/*:/choruslibs/*:/chorusclasspath"
 
+# Handle --version and --help switches
+if [[ "${1}" == "--help" || "${1}" == "--version" ]] ; then
+  java -cp  "${CP}" org.chorusbdd.chorus.Chorus $1
+  exit 0
+fi
+
 if [[ -t 1 && "${NO_CONSOLE_IN_ARGS}" = true ]] ; then
+  #If the output stream is directed to a terminal and the user didn't specify a console mode explicitly, then use console mode, -c
   java -cp "${CP}" org.chorusbdd.chorus.Chorus -console ${ARGS}
 else
   java -cp "${CP}" org.chorusbdd.chorus.Chorus ${ARGS}
 fi
-
-
-
-

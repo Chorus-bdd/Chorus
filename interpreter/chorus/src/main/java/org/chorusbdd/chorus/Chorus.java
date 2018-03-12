@@ -49,6 +49,8 @@ import org.chorusbdd.chorus.results.FeatureToken;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.chorusbdd.chorus.SwitchPreprocessing.handleVersionOrHelpSwitches;
+
 /**
  * Created by: Steve Neal & Nick Ebbutt, ChorusBDD.org
  */
@@ -70,27 +72,29 @@ public class Chorus {
     private final SubsystemManager subsystemManager;
 
     public static void main(String[] args) {
-        boolean success = false;
-        try {
-            Chorus chorus = new Chorus(args);
-            success = chorus.run();
-        } catch (InterpreterPropertyException e) {
-            ChorusOut.err.println(e.getMessage());
-            ChorusOut.err.print(ChorusConfigProperty.getHelpText());
-        } catch (Throwable t) {
-            ChorusOut.err.println("Chorus encountered an error and had to exit");
-            ChorusOut.err.print(t.toString());
-        }
+        boolean proceed = handleVersionOrHelpSwitches(args);
+        if ( proceed ) {
+            boolean success = false;
+            try {
+                Chorus chorus = new Chorus(args);
+                success = chorus.run();
+            } catch (InterpreterPropertyException e) {
+                ChorusOut.err.println(e.getMessage());
+                ChorusOut.err.print(ChorusConfigProperty.getHelpText());
+            } catch (Throwable t) {
+                ChorusOut.err.println("Chorus encountered an error and had to exit");
+                ChorusOut.err.print(t.toString());
+            }
 
-        //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
-        //(windows supports signed integer exit status, unix does not)
-        //choosing the most obvious, 0 = success, 1 = failure, we could expand on this if needed
-        int exitCode = success ? 0 : 1;
-        System.exit(exitCode);
+            //We should exit with a code between 0-255 since this is the valid range for unix exit statuses
+            //(windows supports signed integer exit status, unix does not)
+            //choosing the most obvious, 0 = success, 1 = failure, we could expand on this if needed
+            int exitCode = success ? 0 : 1;
+            System.exit(exitCode);
+        }
     }
 
     public Chorus(String[] args) throws InterpreterPropertyException {
-
         //*********  To set up config and logging / output
         configReader = new ConfigReader(ChorusConfigProperty.getAll(), args);
         configReader.readConfiguration();
