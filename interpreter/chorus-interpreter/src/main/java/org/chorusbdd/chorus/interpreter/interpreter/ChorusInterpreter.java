@@ -44,12 +44,14 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.CompositeStepInvokerProvider;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.catalogue.HandlerClassCatalogue;
 import org.chorusbdd.chorus.util.NamedExecutors;
 
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created by: Steve Neal
@@ -78,6 +80,7 @@ public class ChorusInterpreter {
 
     private SubsystemManager subsystemManager;
     private HashMap<String, Class> allHandlerClasses;
+    private boolean showSteps;
 
     public ChorusInterpreter(ExecutionListenerSupport executionListenerSupport) {
         this.executionListenerSupport = executionListenerSupport;
@@ -87,6 +90,11 @@ public class ChorusInterpreter {
     public void initialize() {
         //load all available handler classes
         allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(handlerClassBasePackages);
+        
+        if ( showSteps ) {
+            HandlerClassCatalogue handlerClassCatalogue = new HandlerClassCatalogue(new ArrayList<>(allHandlerClasses.values()));
+            handlerClassCatalogue.writeHandlerCatalogueToConsole();
+        }
     }
 
     public void runFeatures(ExecutionToken executionToken, List<FeatureToken> features) {
@@ -308,5 +316,9 @@ public class ChorusInterpreter {
 
     public void setSubsystemManager(SubsystemManager subsystemManager) {
         this.subsystemManager = subsystemManager;
+    }
+
+    public void setShowSteps(boolean showSteps) {
+        this.showSteps = showSteps;
     }
 }

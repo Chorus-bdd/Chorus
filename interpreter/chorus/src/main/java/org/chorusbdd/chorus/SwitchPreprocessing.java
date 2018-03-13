@@ -23,7 +23,7 @@ class SwitchPreprocessing {
                 case "--help" :
                     showHelp();
                     result = false;
-                    break;
+                    break;                 
             }
         }
         return result;

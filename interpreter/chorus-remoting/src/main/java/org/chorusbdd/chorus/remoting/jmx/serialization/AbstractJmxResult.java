@@ -59,6 +59,10 @@ public class AbstractJmxResult implements Serializable {
     public Object get(Object key) {
         return fieldMap.get(key);
     }
+    
+    public Object getOrDefault(String key, Object defaultResult) { 
+        return fieldMap.getOrDefault(key, defaultResult); 
+    }
 
     public Object put(String key, Object value) {
         return fieldMap.put(key, value);

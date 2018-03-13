@@ -97,9 +97,10 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE),
 
     PROFILE("-profile", "-p", "chorusProfile", false, 0, 1, new String[] {ExecutionToken.BASE_PROFILE}, "\\w+", "-p myProfile", 
-    "The configured profile may adjust behaviour, e.g. a handler might change settings based on the current profile", PropertySourceMode.OVERRIDE );
+    "The configured profile may adjust behaviour, e.g. a handler might change settings based on the current profile", PropertySourceMode.OVERRIDE ),
     
-    
+    SHOW_STEPS("-showSteps", "-b", "chorusShowSteps", false, 0, 1, new String[] {"false"}, "(?i)(false|true)",  "-b (false|true)",
+    "Show steps supported by local handler classes", PropertySourceMode.OVERRIDE);
     
     
     private String switchName;

@@ -51,11 +51,11 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
     private final Method method;
     private final String id;
 
-    public SimpleMethodInvoker(Step step, Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage, StepRetry stepRetry) {
-        super(pendingMessage, stepPattern, stepRetry);
+    public SimpleMethodInvoker(Step step, Object handlerInstance, Method method, Pattern stepPattern, String pendingMessage, StepRetry stepRetry, String handlerName, boolean isDeprecated) {
+        super(pendingMessage, stepPattern, stepRetry, handlerName, isDeprecated);
         this.handlerInstance = handlerInstance;
         this.method = method;
-                
+
         String stepId = step.id();
         
         //If the user has set a custom id in the Step annotation, we can use that, otherwise use a UUID based identifier

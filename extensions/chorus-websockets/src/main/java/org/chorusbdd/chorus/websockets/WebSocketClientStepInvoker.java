@@ -48,7 +48,7 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             String pendingMessage,
             int timeoutSeconds,
             StepRetry stepRetry) throws InvalidStepException {
-        super(pendingMessage, stepPattern, stepRetry);
+        super(pendingMessage, stepPattern, stepRetry, "WebSocket: " + clientId, false);
         this.messageRouter = messageRouter;
         this.clientId = clientId;
         this.stepId = stepId;

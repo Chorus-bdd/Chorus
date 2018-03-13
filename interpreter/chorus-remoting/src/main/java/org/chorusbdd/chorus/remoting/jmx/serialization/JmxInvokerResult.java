@@ -50,6 +50,7 @@ public class JmxInvokerResult extends AbstractJmxResult {
     public static final String TECHNICAL_DESCRIPTION = "TECHNICAL_DESCRIPTION";
     public static final String RETRY_DURATION = "RETRY_DURATION";
     public static final String RETRY_INTERVAL = "RETRY_INTERVAL";
+    public static final String IS_DEPRECATED = "IS_DEPRECATED";
 
 
     /**
@@ -65,6 +66,7 @@ public class JmxInvokerResult extends AbstractJmxResult {
         put(TECHNICAL_DESCRIPTION, i.getTechnicalDescription());
         put(RETRY_DURATION, i.getRetry().getDuration());
         put(RETRY_INTERVAL, i.getRetry().getInterval());
+        put(IS_DEPRECATED, i.isDeprecated());
     }
 
 }

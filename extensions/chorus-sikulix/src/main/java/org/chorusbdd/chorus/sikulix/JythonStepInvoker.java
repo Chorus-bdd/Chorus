@@ -101,6 +101,16 @@ public class JythonStepInvoker implements StepInvoker {
 		return id;
 	}
 
+	@Override
+	public String getCategory() {
+		return "Sikulix";
+	}
+
+	@Override
+	public boolean isDeprecated() {
+		return false;
+	}
+
 
 	@Override
 	public String toString() {

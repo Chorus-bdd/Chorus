@@ -48,22 +48,27 @@ import static org.chorusbdd.chorus.stepinvoker.DefaultStepRetry.createStepRetry;
  */
 public class RemoteStepInvoker implements StepInvoker {
 
-    private ChorusHandlerJmxProxy proxy;
-    private String remoteStepId;
-    private Boolean isPending;
-    private String pendingMessage;
-    private String technicalDescription;
+    private final ChorusHandlerJmxProxy proxy;
+    private final String remoteStepId;
+    private final boolean isPending;
+    private final String pendingMessage;
+    private final String technicalDescription;
     private final Pattern pattern;
-    private StepRetry stepRetry;
+    private final StepRetry stepRetry;
+    private final String categoryName;
+    private final boolean deprecated;
 
     private RemoteStepInvoker(
+            String remotingConfigName,
             String regex,
             ChorusHandlerJmxProxy proxy,
             String remoteStepId,
-            Boolean isPending,
+            boolean isPending,
             String pendingMessage,
             String technicalDescription,
-            StepRetry stepRetry) {
+            StepRetry stepRetry,
+            boolean deprecated) {
+        this.categoryName = "Remoting: " + remotingConfigName;
         this.proxy = proxy;
         this.remoteStepId = remoteStepId;
         this.isPending = isPending;
@@ -71,6 +76,7 @@ public class RemoteStepInvoker implements StepInvoker {
         this.technicalDescription = technicalDescription;
         this.pattern = Pattern.compile(regex);
         this.stepRetry = stepRetry;
+        this.deprecated = deprecated;
     }
 
     /**
@@ -129,6 +135,16 @@ public class RemoteStepInvoker implements StepInvoker {
         return "RemoteComponent:" + proxy.getComponentName() + ":" + technicalDescription;
     }
 
+    @Override
+    public String getCategory() {
+        return categoryName;
+    }
+
+    @Override
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
     public String toString() {
         return pattern.toString();
     }
@@ -136,24 +152,37 @@ public class RemoteStepInvoker implements StepInvoker {
     /**
      * @return a StepInvoker which will invoke the remote method
      */
-    public static RemoteStepInvoker createRemoteStepInvoker(JmxInvokerResult jmxInvokerResult, ChorusHandlerJmxProxy jmxProxy) {
+    static RemoteStepInvoker createRemoteStepInvoker(JmxInvokerResult jmxInvokerResult, ChorusHandlerJmxProxy jmxProxy) {
         String remoteStepId = (String) jmxInvokerResult.get(JmxInvokerResult.STEP_ID);
         String regex = (String) jmxInvokerResult.get(JmxInvokerResult.PATTERN);
         String pending = (String) jmxInvokerResult.get(JmxInvokerResult.PENDING_MSG);
         String technicalDescription = (String)jmxInvokerResult.get(JmxInvokerResult.TECHNICAL_DESCRIPTION);
         Boolean isPending=(Boolean)jmxInvokerResult.get(JmxInvokerResult.IS_PENDING);
 
-        Long retryInterval = (Long)jmxInvokerResult.get(JmxInvokerResult.RETRY_INTERVAL);
-        retryInterval = retryInterval == null ? 0 : retryInterval;  //Chorus 2.0.x did not support retryInterval so it may be null
+        //Chorus 2.0.x did not support retryInterval so it may be null
+        Long retryInterval = (Long)jmxInvokerResult.getOrDefault(JmxInvokerResult.RETRY_INTERVAL, 0);
 
-        Long retryDuration = (Long)jmxInvokerResult.get(JmxInvokerResult.RETRY_DURATION);
-        retryDuration = retryDuration == null ? 0 : retryDuration;  //Chorus 2.0.x did not support retryDuration so it may be null
+        //Chorus 2.0.x did not support retryDuration so it may be null
+        Long retryDuration = (Long)jmxInvokerResult.getOrDefault(JmxInvokerResult.RETRY_DURATION, 0);
 
         StepRetry stepRetry = createStepRetry(retryDuration, retryInterval);
 
+        //Chorus 2.0.x did not support retryDuration so it may be null
+        Boolean isDeprecated = (Boolean)jmxInvokerResult.getOrDefault(JmxInvokerResult.IS_DEPRECATED, false);
+
         //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
         //to actually invoke the remote method with it
-        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(regex, jmxProxy, remoteStepId, isPending, pending, technicalDescription, stepRetry);
+        RemoteStepInvoker stepInvoker = new RemoteStepInvoker(
+            jmxProxy.getComponentName(), 
+            regex, 
+            jmxProxy, 
+            remoteStepId, 
+            isPending, 
+            pending, 
+            technicalDescription, 
+            stepRetry,
+            isDeprecated
+        );
         return stepInvoker;
     }
 }

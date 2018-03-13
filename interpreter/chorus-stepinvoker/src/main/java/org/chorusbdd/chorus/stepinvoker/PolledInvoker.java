@@ -123,4 +123,8 @@ public abstract class PolledInvoker implements StepInvoker {
     public int getRetryAttempts() {
         return retryAttempts;
     }
+    
+    public boolean isDeprecated() { return wrappedInvoker.isDeprecated(); }
+    
+    public String getCategory() { return wrappedInvoker.getCategory(); }
 }

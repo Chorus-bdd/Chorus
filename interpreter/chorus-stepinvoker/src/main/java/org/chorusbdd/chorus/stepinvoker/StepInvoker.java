@@ -97,4 +97,16 @@ public interface StepInvoker {
      */
     String getTechnicalDescription();
 
+    
+    /**
+     * @return A Category into which to group steps for documentation and step cataloging
+     */
+    String getCategory();
+
+    /**
+     * 
+     * @return true if this step is deprecated which implies that support for it may be discontinued in future releases
+     */
+    boolean isDeprecated();
+
 }

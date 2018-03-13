@@ -63,6 +63,7 @@ public class InterpreterBuilder {
         chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
         chorusInterpreter.setSubsystemManager(subsystemManager);
+        chorusInterpreter.setShowSteps(config.isTrue(ChorusConfigProperty.SHOW_STEPS));
         return chorusInterpreter;
     }
 }

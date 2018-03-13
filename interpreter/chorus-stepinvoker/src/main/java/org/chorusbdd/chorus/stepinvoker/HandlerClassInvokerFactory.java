@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.stepinvoker;
 
+import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.PassesWithin;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -38,6 +39,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -48,11 +50,21 @@ import java.util.regex.Pattern;
 public class HandlerClassInvokerFactory implements StepInvokerProvider {
 
     private ChorusLog log = ChorusLogFactory.getLog(HandlerClassInvokerFactory.class);
-    private Object handlerInstance;
+    private final Object handlerInstance;
+    private final String handlerName;
     private List<StepInvoker> invokersForMethods;
 
+    /**
+     * Create a StepInvoker from an instance of a class annotated with @Handler
+     * @param handlerInstance
+     */
     public HandlerClassInvokerFactory(Object handlerInstance) {
+        Objects.requireNonNull(handlerInstance, "Handler instance cannot be null");
         this.handlerInstance = handlerInstance;
+
+        Handler handlerAnnotation = handlerInstance.getClass().getAnnotation(Handler.class);
+        Objects.requireNonNull(handlerAnnotation, "Handler annotation must be present on a Handler class");
+        this.handlerName = handlerAnnotation.value();
     }
 
     public List<StepInvoker> getStepInvokers() {
@@ -118,8 +130,13 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
         String pendingText = stepAnnotation.pending();
         pendingText = ( Step.NO_PENDING_MESSAGE.equals(pendingText)) ? null : pendingText;
 
+
+        Deprecated deprecated = method.getAnnotation(Deprecated.class);
+        boolean isDeprecated = deprecated != null;
+        
         StepRetry stepRetry = DefaultStepRetry.fromStepAnnotation(stepAnnotation);
-        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(stepAnnotation, handlerInstance, method, stepPattern, pendingText, stepRetry);
+        StepInvoker simpleMethodInvoker = new SimpleMethodInvoker(stepAnnotation, handlerInstance, method, stepPattern, pendingText, stepRetry, handlerName, isDeprecated);
+        
 
         //if the step is annotated with @PassesWithin then we wrap the simple invoker with the appropriate
         //PolledInvoker
