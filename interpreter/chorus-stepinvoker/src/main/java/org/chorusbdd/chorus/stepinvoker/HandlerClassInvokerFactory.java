@@ -62,9 +62,9 @@ public class HandlerClassInvokerFactory implements StepInvokerProvider {
         Objects.requireNonNull(handlerInstance, "Handler instance cannot be null");
         this.handlerInstance = handlerInstance;
 
-        Handler handlerAnnotation = handlerInstance.getClass().getAnnotation(Handler.class);
-        Objects.requireNonNull(handlerAnnotation, "Handler annotation must be present on a Handler class");
-        this.handlerName = handlerAnnotation.value();
+        Class<?> handlerClazz = handlerInstance.getClass();
+        Handler handlerAnnotation = handlerClazz.getAnnotation(Handler.class);
+        this.handlerName = handlerAnnotation == null ? handlerClazz.getName() : handlerAnnotation.value();
     }
 
     public List<StepInvoker> getStepInvokers() {

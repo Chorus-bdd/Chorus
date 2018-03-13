@@ -86,6 +86,16 @@ public class BillAndBenHandler implements StepInvokerProvider {
             public String getTechnicalDescription() {
                 return regex;
             }
+
+            @Override
+            public String getCategory() {
+                return "Mock";
+            }
+
+            @Override
+            public boolean isDeprecated() {
+                return false;
+            }
         };
 
         StepInvoker two = new StepInvoker() {
@@ -125,6 +135,16 @@ public class BillAndBenHandler implements StepInvokerProvider {
             @Override
             public String getTechnicalDescription() {
                 return regex;
+            }
+
+            @Override
+            public String getCategory() {
+                return "Mock";
+            }
+
+            @Override
+            public boolean isDeprecated() {
+                return false;
             }
         };
 
