@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
 /**
@@ -45,6 +46,17 @@ public class SeleniumManagerImpl implements SeleniumManager {
 
     private FeatureToken feature;
 
+    private CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+
+    public SeleniumManagerImpl() {
+        addShutdownHook();
+    }
+    
+    private void addShutdownHook() {
+        log.trace("Adding shutdown hook for SeleniumManager " + this);
+        Runtime.getRuntime().addShutdownHook(cleanupShutdownHook);
+    }
+    
 
     @Override
     public void openABrowser(Properties properties, String configName) {
@@ -112,7 +124,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     @Override
     public void quitBrowser(String configName) {
         NamedWebDriver driver = getNamedWebDriver(configName);
-        quitBrowser(driver);
+        quitAndRemoveWebDrivers(singletonList(driver));
     }
 
     @Override
@@ -130,15 +142,6 @@ public class SeleniumManagerImpl implements SeleniumManager {
         log.trace(format("About to execute script on web driver %s: [%n%s%n]", configName, scriptContents));
         ((JavascriptExecutor)getWebDriver(configName)).executeScript(scriptContents);
         log.debug("Finished executing script from " + scriptPath);
-    }
-
-    private void quitBrowser(NamedWebDriver d) {
-        if (d.isLeaveOpen()) {
-            log.debug("Not Quitting the browser for config named " + d.getName() + " since leave open is set true");
-        } else {
-            log.debug("Quitting the browser for config named " + d.getName());
-            d.getWebDriver().quit();
-        }
     }
     
     public WebDriver getWebDriver(String configName) {
@@ -176,10 +179,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
                     log.trace("Removing these Selenium WebDrivers at " + scope + " end: " + l);
                 }
 
-                l.forEach(d -> {
-                    quitBrowser(d);
-                    removeWebDriver(d.getName());
-                });
+                quitAndRemoveWebDrivers(l);
             }
 
             private List<NamedWebDriver> getNamedWebDriversWithScope(Scope scope) {
@@ -193,10 +193,51 @@ public class SeleniumManagerImpl implements SeleniumManager {
         };
     }
 
+    private void quitAndRemoveAllWebDrivers() {
+        log.debug("Quitting and removing all web drivers");
+        List<NamedWebDriver> webDrivers = new LinkedList<>(webDriverMap.values());
+        quitAndRemoveWebDrivers(webDrivers);
+    }
+
+    private void quitAndRemoveWebDrivers(List<NamedWebDriver> l) {
+        l.forEach(d -> {
+            log.trace("Quitting and removing web driver named " + d.getName());
+            try {
+                quitBrowser(d);
+            } finally {
+                removeWebDriver(d.getName());
+            }
+        });
+    }
+
+    private void quitBrowser(NamedWebDriver d) {
+        if (d.isLeaveOpen()) {
+            log.debug("Not Quitting the browser for config named " + d.getName() + " since leave open is set true");
+        } else {
+            log.debug("Quitting the browser for config named " + d.getName());
+            d.getWebDriver().quit();
+        }
+    }
 
     private SeleniumConfig getSeleniumConfig(String configName, Properties processProperties) {
         SeleniumConfigBuilder config = seleniumConfigBuilderFactory.createConfigBuilder(processProperties, configName);
         return config.build();
     }
+
+    /**
+     * If shut down before a scenario completes, try as hard as we can to cleanly close down any open web drivers
+     * Not doing so can leave selenium hub in an inoperable state
+     */
+    private class CleanupShutdownHook extends Thread {
+        public void run() {
+            log.debug("Running Cleanup on shutdown for " + this.getClass().getSimpleName());
+            try {
+                quitAndRemoveAllWebDrivers();
+            } catch (Throwable t) {
+                log.debug("Failed during cleanup", t);
+            }
+        }
+    }
+    
 
 }
