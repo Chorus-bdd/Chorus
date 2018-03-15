@@ -35,7 +35,7 @@ dependencies {
 
 task createChorusVersionResource(type: Copy) {
     from 'src/etc/CHORUS_VERSION'
-    into 'build/classes/main'
+    into 'src/main/resources'
     expand(version: project.version)
     filteringCharset = 'UTF-8'
 }
