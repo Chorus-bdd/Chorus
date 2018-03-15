@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Created by nickebbutt on 13/03/2018.
  */
-public interface CatalogueWriter {
+public interface StepCatalogueWriter {
     
-    void writeCatalogue(Collection<StepInvoker> stepInvokers, PrintWriter writer);
+    void writeCatalogue(Collection<CataloguedStepInvoker> stepInvokers, PrintWriter writer);
 }

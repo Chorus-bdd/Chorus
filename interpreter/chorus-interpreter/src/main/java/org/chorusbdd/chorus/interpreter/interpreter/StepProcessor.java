@@ -38,6 +38,7 @@ import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.StepEndState;
 import org.chorusbdd.chorus.results.StepToken;
 import org.chorusbdd.chorus.stepinvoker.*;
+import org.chorusbdd.chorus.stepinvoker.catalogue.StepInvokerCatalogue;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.PolledAssertion;
@@ -86,10 +87,10 @@ public class StepProcessor {
      *
      * @return a StepEndState is the StepMacro step's end state, if these steps are executed as part of a StepMacro rather than scenario
      */
-    public StepEndState runSteps(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, List<StepToken> stepList, boolean skip) {
+    public StepEndState runSteps(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, List<StepToken> stepList, StepInvokerCatalogue stepInvokerCatalogue, boolean skip) {
 
         for (StepToken step : stepList) {
-            StepEndState endState = processStep(executionToken, stepInvokerProvider, step, skip);
+            StepEndState endState = processStep(executionToken, stepInvokerProvider, step, stepInvokerCatalogue, skip);
             switch (endState) {
                 case PASSED:
                     break;
@@ -122,18 +123,18 @@ public class StepProcessor {
     /**
      * @param stepInvokerProvider container for StepInvoker to run the steps
      * @param step      details of the step to be executed
-     * @param skip      is true the step will be skipped if found
-     * @return the exit state of the executed step
+     * @param stepInvokerCatalogue
+     *@param skip      is true the step will be skipped if found  @return the exit state of the executed step
      */
-    private StepEndState processStep(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, StepToken step, boolean skip) {
+    private StepEndState processStep(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, StepToken step, StepInvokerCatalogue stepInvokerCatalogue, boolean skip) {
         log.trace("Starting to process step " + (step.isStepMacro() ? "macro " : "") + step);
         executionListenerSupport.notifyStepStarted(executionToken, step);
 
         StepEndState endState;
         if ( step.isStepMacro() ) {
-            endState = runSteps(executionToken, stepInvokerProvider, step.getChildSteps(), skip);
+            endState = runSteps(executionToken, stepInvokerProvider, step.getChildSteps(), stepInvokerCatalogue, skip);
         } else {
-            endState = processHandlerStep(executionToken, stepInvokerProvider, step, skip);
+            endState = processHandlerStep(executionToken, stepInvokerProvider, step, stepInvokerCatalogue, skip);
         }
 
         step.setEndState(endState);
@@ -141,7 +142,7 @@ public class StepProcessor {
         return endState;
     }
 
-    private StepEndState processHandlerStep(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, StepToken step, boolean skip) {
+    private StepEndState processHandlerStep(ExecutionToken executionToken, StepInvokerProvider stepInvokerProvider, StepToken step, StepInvokerCatalogue stepInvokerCatalogue, boolean skip) {
         //return this at the end
         StepEndState endState = null;
 
@@ -157,6 +158,8 @@ public class StepProcessor {
 
             //identify what method should be called and its parameters
             List<StepInvoker> stepInvokers = stepInvokerProvider.getStepInvokers();
+            stepInvokerCatalogue.addSteps(stepInvokers);
+            
             sortInvokersByPattern(stepInvokers);
             StepMatcher stepMatcher = new StepMatcher(stepInvokers, step.getAction());
             stepMatcher.findStepMethod();
@@ -164,7 +167,7 @@ public class StepProcessor {
             StepMatchResult stepMatchResult = stepMatcher.getStepMatchResult();
             switch(stepMatchResult) {
                 case STEP_FOUND :
-                    endState = callStepMethod(executionToken, step, endState, stepMatcher);
+                    endState = callStepMethod(executionToken, step, endState, stepMatcher, stepInvokerCatalogue);
                     break;
                 case STEP_NOT_FOUND:
                     log.debug("Could not find a step method definition for step " + step);
@@ -198,7 +201,7 @@ public class StepProcessor {
         });
     }
 
-    private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepMatcher stepMatcher) {
+    private StepEndState callStepMethod(ExecutionToken executionToken, StepToken step, StepEndState endState, StepMatcher stepMatcher, StepInvokerCatalogue stepInvokerCatalogue) {
         //setting a pending message in the step annotation implies the step is pending - we don't execute it
         StepInvoker chosenStepInvoker = stepMatcher.getFoundStepInvoker();
         if ( chosenStepInvoker.isPending()) {
@@ -214,19 +217,20 @@ public class StepProcessor {
                 endState = StepEndState.DRYRUN;
                 executionToken.incrementStepsPassed(); // treat dry run as passed? This state was unsupported in previous results
             } else {
-                endState = executeStepMethod(executionToken, step, stepMatcher);
+                endState = executeStepMethod(executionToken, step, stepMatcher, stepInvokerCatalogue);
             }
         }
         return endState;
     }
 
-    private StepEndState executeStepMethod(ExecutionToken executionToken, StepToken step, StepMatcher stepMatcher) {
-        StepEndState endState;
+    private StepEndState executeStepMethod(ExecutionToken executionToken, StepToken step, StepMatcher stepMatcher, StepInvokerCatalogue stepInvokerCatalogue) {
+        StepEndState endState = StepEndState.UNDEFINED;
         log.debug("Now executing the step using method " + stepMatcher);
         long startTime = System.currentTimeMillis();
+        StepInvoker foundStepInvoker = null;
         try {
             //call the step method using reflection
-            StepInvoker foundStepInvoker = stepMatcher.getFoundStepInvoker();
+            foundStepInvoker = stepMatcher.getFoundStepInvoker();
 
             Object result = invokeAndGetResult(step, stepMatcher, foundStepInvoker);
             log.debug("Finished executing the step, step passed, result was " + result);
@@ -254,7 +258,11 @@ public class StepProcessor {
         } catch (Throwable t) {
             endState = handleRootCause(executionToken, step, t);
         } finally {
-            step.setTimeTaken(System.currentTimeMillis() - startTime);
+            long executionTime = System.currentTimeMillis() - startTime;
+            step.setTimeTaken(executionTime);
+            if ( foundStepInvoker != null) {
+                stepInvokerCatalogue.addExecutedStep(foundStepInvoker, executionTime, StepEndState.PASSED == endState);
+            }
         }
         return endState;
     }
