@@ -2,34 +2,32 @@ package org.chorusbdd.chorus.stepinvoker.catalogue;
 
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.logging.ChorusOut;
+import org.chorusbdd.chorus.results.CataloguedStep;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.max;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.Collections.unmodifiableSet;
 
 /**
  * Created by nickebbutt on 13/03/2018.
  */
-public class DefaultStepInvokerCatalogue implements StepInvokerCatalogue {
+public class DefaultStepCatalogue implements StepCatalogue {
 
-    private ChorusLog log = ChorusLogFactory.getLog(DefaultStepInvokerCatalogue.class);
+    private ChorusLog log = ChorusLogFactory.getLog(DefaultStepCatalogue.class);
     
-    private final ConcurrentMap<CatalogueKey, CataloguedStepInvoker> cataloguedStepInvokers = new ConcurrentHashMap<>();
+    private final ConcurrentMap<CatalogueKey, CataloguedStep> cataloguedStepInvokers = new ConcurrentHashMap<>();
     
-    public void addToCatalogue(CataloguedStepInvoker cataloguedStepInvoker) {
-        CatalogueKey catalogueKey = cataloguedStepInvoker.getCatalogueKey();
-        cataloguedStepInvokers.merge(catalogueKey, cataloguedStepInvoker, this::mergeCatalogueSteps);
+    public void addToCatalogue(CataloguedStep cataloguedStep) {
+        CatalogueKey catalogueKey = new CatalogueKey(cataloguedStep);
+        cataloguedStepInvokers.merge(catalogueKey, cataloguedStep, this::mergeCatalogueSteps);
     }
 
+    @Override
     public void addStepsForHandlerClasses(List<Class> classes) {
         //we need to create handler instances in order to get StepInvokers for catalogue writing
         //Cataloguing is performed against StepInvoker since this is more general than class specific invocation
@@ -45,8 +43,8 @@ public class DefaultStepInvokerCatalogue implements StepInvokerCatalogue {
 
     @Override
     public void addSteps(List<StepInvoker> l) {
-        List<CataloguedStepInvoker> c = l.stream()
-                .map( si -> new CataloguedStepInvoker(si.getCategory(), si.isDeprecated(), si.getStepPattern().toString()))
+        List<CataloguedStep> c = l.stream()
+                .map( si -> new CataloguedStep(si.getCategory(), si.isDeprecated(), si.getStepPattern().toString()))
                 .collect(Collectors.toList());
 
         c.forEach(this::addToCatalogue);
@@ -54,7 +52,7 @@ public class DefaultStepInvokerCatalogue implements StepInvokerCatalogue {
 
     @Override
     public void addExecutedStep(StepInvoker foundStepInvoker, long executionTime, boolean passed) {
-        CataloguedStepInvoker cataloguedStepInvoker = new CataloguedStepInvoker(
+        CataloguedStep cataloguedStep = new CataloguedStep(
                 foundStepInvoker.getCategory(), 
                 foundStepInvoker.isDeprecated(), 
                 foundStepInvoker.getStepPattern().toString(), 
@@ -64,7 +62,7 @@ public class DefaultStepInvokerCatalogue implements StepInvokerCatalogue {
                 passed ? 1 : 0,
                 passed ? 0 : 1
         );
-        addToCatalogue(cataloguedStepInvoker);
+        addToCatalogue(cataloguedStep);
     }
     
     private List<Object> createHandlerInstances(List<Class> classes) {
@@ -80,8 +78,8 @@ public class DefaultStepInvokerCatalogue implements StepInvokerCatalogue {
         return handlerInstances;
     }
 
-    private CataloguedStepInvoker mergeCatalogueSteps(CataloguedStepInvoker s1, CataloguedStepInvoker s2) {
-        return new CataloguedStepInvoker(
+    private CataloguedStep mergeCatalogueSteps(CataloguedStep s1, CataloguedStep s2) {
+        return new CataloguedStep(
                 s1.getCategory(),
                 s1.isDeprecated(),
                 s1.getPattern(),
@@ -94,7 +92,7 @@ public class DefaultStepInvokerCatalogue implements StepInvokerCatalogue {
     }
 
     @Override
-    public Set<CataloguedStepInvoker> getCataloguedStepInvokers() {
+    public Set<CataloguedStep> getSteps() {
         return new HashSet<>(cataloguedStepInvokers.values());
     }
 }

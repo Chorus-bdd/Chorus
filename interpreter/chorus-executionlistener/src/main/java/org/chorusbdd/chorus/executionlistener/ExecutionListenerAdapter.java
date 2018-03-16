@@ -29,12 +29,10 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: nick
@@ -45,27 +43,35 @@ import java.util.List;
  */
 public class ExecutionListenerAdapter implements ExecutionListener {
 
+    @Override
     public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
     }
 
-    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+    @Override
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
     }
 
+    @Override
     public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
     }
 
+    @Override
     public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
     }
 
+    @Override
     public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
+    @Override
     public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
+    @Override
     public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
     }
 
+    @Override
     public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
     }
 }

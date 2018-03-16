@@ -266,8 +266,9 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
     }
 
     public void accept(TokenVisitor tokenVisitor) {
-        tokenVisitor.visit(this);
+        tokenVisitor.startVisit(this);
         resultsSummary.accept(tokenVisitor);
+        tokenVisitor.endVisit(this);
     }
 
     public void calculateTimeTaken() {

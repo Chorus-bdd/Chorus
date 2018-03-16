@@ -152,14 +152,17 @@ public class DefaultSqlManager implements SqlManager {
     public ExecutionListener getExecutionListener() {
         return new ExecutionListenerAdapter() {
 
+            @Override
             public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
                 DefaultSqlManager.this.feature = feature;
             }
 
+            @Override
             public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
                 closeConnectionsForScope(Scope.SCENARIO);
             }
 
+            @Override
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
                 closeConnectionsForScope(Scope.FEATURE);
             }

@@ -35,23 +35,15 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.parser.KeyWord;
 import org.chorusbdd.chorus.pathscanner.HandlerClassDiscovery;
-import org.chorusbdd.chorus.results.EndState;
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.results.*;
 import org.chorusbdd.chorus.stepinvoker.CompositeStepInvokerProvider;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
-import org.chorusbdd.chorus.stepinvoker.catalogue.ConsoleStepCatalogueWriter;
-import org.chorusbdd.chorus.stepinvoker.catalogue.DefaultStepInvokerCatalogue;
-import org.chorusbdd.chorus.stepinvoker.catalogue.StepCatalogueWriter;
-import org.chorusbdd.chorus.stepinvoker.catalogue.StepInvokerCatalogue;
+import org.chorusbdd.chorus.stepinvoker.catalogue.StepCatalogue;
 import org.chorusbdd.chorus.util.NamedExecutors;
 
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -84,9 +76,8 @@ public class ChorusInterpreter {
 
     private SubsystemManager subsystemManager;
     private HashMap<String, Class> allHandlerClasses;
-    private boolean catalogueSteps;
     
-    private StepInvokerCatalogue stepInvokerCatalogue = StepInvokerCatalogue.NULL_CATALOGUE;
+    private StepCatalogue stepCatalogue = StepCatalogue.NULL_CATALOGUE;
 
     public ChorusInterpreter(ExecutionListenerSupport executionListenerSupport) {
         this.executionListenerSupport = executionListenerSupport;
@@ -96,17 +87,9 @@ public class ChorusInterpreter {
     public void initialize() {
         //load all available handler classes
         allHandlerClasses = handlerClassDiscovery.discoverHandlerClasses(handlerClassBasePackages);
-        
-        if (catalogueSteps) {
-            createStepCatalogue();
-        }
-    }
 
-    private void createStepCatalogue() {
-        DefaultStepInvokerCatalogue c = new DefaultStepInvokerCatalogue();
         //make sure we catalogue all the local classpath handler steps, whether or not they are ever used
-        c.addStepsForHandlerClasses(new ArrayList<>(allHandlerClasses.values()));
-        this.stepInvokerCatalogue = c;
+        stepCatalogue.addStepsForHandlerClasses(new ArrayList<>(allHandlerClasses.values()));
     }
 
     public void runFeatures(ExecutionToken executionToken, List<FeatureToken> features) {
@@ -122,11 +105,6 @@ public class ChorusInterpreter {
                 executionToken.incrementFeaturesFailed();
             }
         } 
-        
-        if ( catalogueSteps) {
-            StepCatalogueWriter stepCatalogueWriter = new ConsoleStepCatalogueWriter();
-            stepCatalogueWriter.writeCatalogue(stepInvokerCatalogue.getCataloguedStepInvokers(), new PrintWriter(ChorusOut.out));
-        }
     }
 
     private void runFeature(ExecutionToken executionToken, FeatureToken feature) {
@@ -220,7 +198,7 @@ public class ChorusInterpreter {
 
         log.debug("Running scenario steps for Scenario " + scenario);
         StepInvokerProvider p = getStepInvokers(handlerInstances);
-        stepProcessor.runSteps(executionToken, p, scenario.getSteps(), stepInvokerCatalogue, skip);
+        stepProcessor.runSteps(executionToken, p, scenario.getSteps(), stepCatalogue, skip);
 
         stopTimeoutTasks();
 
@@ -335,7 +313,12 @@ public class ChorusInterpreter {
         this.subsystemManager = subsystemManager;
     }
 
-    public void setCatalogueSteps(boolean catalogueSteps) {
-        this.catalogueSteps = catalogueSteps;
+
+    public Set<CataloguedStep> getCataloguedSteps() {
+        return stepCatalogue.getSteps();
+    }
+
+    public void setStepCatalogue(StepCatalogue stepCatalogue) {
+        this.stepCatalogue = stepCatalogue;
     }
 }

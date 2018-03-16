@@ -36,13 +36,23 @@ package org.chorusbdd.chorus.results;
  */
 public interface TokenVisitor {
 
-    public void visit(ExecutionToken executionToken);
+    void startVisit(ExecutionToken executionToken);
 
-    public void visit(ResultsSummary resultsSummary);
+    void endVisit(ExecutionToken executionToken);
 
-    public void visit(FeatureToken featureToken);
+    void startVisit(ResultsSummary resultsSummary);
 
-    public void visit(ScenarioToken scenarioToken);
+    void endVisit(ResultsSummary resultsSummary);
 
-    public void visit(StepToken stepToken);
+    void startVisit(FeatureToken featureToken);
+
+    void endVisit(FeatureToken featureToken);
+
+    void startVisit(ScenarioToken scenarioToken);
+
+    void endVisit(ScenarioToken scenarioToken);
+
+    void startVisit(StepToken stepToken);
+
+    void endVisit(StepToken stepToken);
 }

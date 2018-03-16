@@ -30,12 +30,10 @@
 package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * A null implementation of OutputFormatter
@@ -66,7 +64,7 @@ class NullOutputWriter implements ChorusOutputWriter {
     public void printMessage(String message) {
     }
 
-    public void printResults(ResultsSummary summary, List<FeatureToken> featureList) {
+    public void printResults(ResultsSummary summary, List<FeatureToken> featureList, Set<CataloguedStep> cataloguedSteps) {
     }
 
     public void log(LogLevel type, Object message) {

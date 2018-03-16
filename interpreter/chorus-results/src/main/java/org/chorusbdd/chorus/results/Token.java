@@ -57,8 +57,7 @@ public interface Token extends Serializable, DeepCopy {
      * @return an immutable id representing this token
      */
     long getTokenId();
-
-
-    public void accept(TokenVisitor tokenVisitor);
+    
+    void accept(TokenVisitor tokenVisitor);
 
 }

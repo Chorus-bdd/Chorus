@@ -29,10 +29,7 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.*;
 
@@ -112,9 +109,9 @@ public class ExecutionListenerSupport {
         }
     }
 
-    public void notifyTestsCompleted(ExecutionToken t, List<FeatureToken> features) {
+    public void notifyTestsCompleted(ExecutionToken t, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
         for (ExecutionListener listener : listeners) {
-            listener.testsCompleted(t, features);
+            listener.testsCompleted(t, features, cataloguedSteps);
         }
     }
 

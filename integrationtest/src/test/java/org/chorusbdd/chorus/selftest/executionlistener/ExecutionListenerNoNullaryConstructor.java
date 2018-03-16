@@ -30,12 +30,10 @@
 package org.chorusbdd.chorus.selftest.executionlistener;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: nick
@@ -52,6 +50,7 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests starting execution
      * @param features
      */
+    @Override
     public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
     }
 
@@ -59,13 +58,15 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests
      * @param features           a List of features executed
      */
-    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+    @Override
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
     }
 
     /**
      * @param testExecutionToken a token representing the current suite of tests running
      * @param feature            a token representing the feature which is starting
      */
+    @Override
     public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
     }
 
@@ -73,6 +74,7 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests running
      * @param feature            a token representing the feature which has just completed
      */
+    @Override
     public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
     }
 
@@ -80,6 +82,7 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests running
      * @param scenario           a token representing the scenario which is starting
      */
+    @Override
     public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
@@ -87,6 +90,7 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests running
      * @param scenario           a token representing the scenario which has just completed
      */
+    @Override
     public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
@@ -94,6 +98,7 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests running
      * @param step               a token representing the test stop which has just started execution
      */
+    @Override
     public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
     }
 
@@ -101,6 +106,7 @@ public class ExecutionListenerNoNullaryConstructor implements ExecutionListener 
      * @param testExecutionToken a token representing the current suite of tests running
      * @param step               a token representing the test stop which has just completed execution
      */
+    @Override
     public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
     }
 }

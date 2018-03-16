@@ -35,16 +35,14 @@ import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerSupport;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListener;
 import org.chorusbdd.chorus.executionlistener.RemoteExecutionListenerMBean;
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -131,10 +129,11 @@ public class WebAgentSuiteListener implements ExecutionListener {
     }
 
     @Override
-    public void testsCompleted(final ExecutionToken testExecutionToken, final List<FeatureToken> features) {
+    public void testsCompleted(final ExecutionToken testExecutionToken, final List<FeatureToken> features, final Set<CataloguedStep> cataloguedSteps
+    ) {
         eventPropagator.execute(new Runnable() {
             public void run() {
-                executionListenerSupport.notifyTestsCompleted(testExecutionToken, features);
+                executionListenerSupport.notifyTestsCompleted(testExecutionToken, features, cataloguedSteps);
             }
         });
     }

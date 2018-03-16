@@ -38,6 +38,7 @@ import org.chorusbdd.chorus.results.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by: Steve Neal
@@ -63,15 +64,18 @@ public class InterpreterOutputExecutionListener extends AbstractChorusOutputWrit
         this.verbose = verbose;
     }
 
+    @Override
     public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
         tokenLogCapture.setLastToken(testExecutionToken);
     }
 
+    @Override
     public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
         tokenLogCapture.setLastToken(feature);
         printFeature(feature);
     }
 
+    @Override
     public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
         if (! feature.foundAllHandlers()) {
             printMessage(feature.getUnavailableHandlersMessage());
@@ -79,20 +83,24 @@ public class InterpreterOutputExecutionListener extends AbstractChorusOutputWrit
         printMessage(""); //just a blank line between features
     }
 
+    @Override
     public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
         tokenLogCapture.setLastToken(scenario);
         printScenario(scenario);
     }
 
+    @Override
     public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
     }
 
+    @Override
     public void stepStarted(ExecutionToken testExecutionToken, StepToken step) {
         tokenLogCapture.setLastToken(step);
         stepMacroDepth ++;  //are we processing a top level scenario step (depth == 1) or a step macro step ( depth > 1 )
         printStepStart(step, stepMacroDepth);
     }
 
+    @Override
     public void stepCompleted(ExecutionToken testExecutionToken, StepToken step) {
         processStepEnd(step, stepMacroDepth);
         stepMacroDepth --;
@@ -105,9 +113,10 @@ public class InterpreterOutputExecutionListener extends AbstractChorusOutputWrit
         }
     }
 
-    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+    @Override
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
         if (showSummary) {
-            printResults(testExecutionToken.getResultsSummary(), features);
+            printResults(testExecutionToken.getResultsSummary(), features, cataloguedSteps);
         }
     }
 

@@ -205,10 +205,11 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     }
 
     public void accept(TokenVisitor tokenVisitor) {
-        tokenVisitor.visit(this);
+        tokenVisitor.startVisit(this);
         for ( ScenarioToken s : scenarios) {
             s.accept(tokenVisitor);
         }
+        tokenVisitor.endVisit(this);
     }
 
     /**

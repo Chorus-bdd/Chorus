@@ -1,5 +1,7 @@
 package org.chorusbdd.chorus.stepinvoker.catalogue;
 
+import org.chorusbdd.chorus.results.CataloguedStep;
+
 import java.util.Objects;
 
 /**
@@ -11,12 +13,12 @@ public class CatalogueKey {
     private final boolean deprecated;
     private final String pattern;
 
-    public CatalogueKey(String category, boolean deprecated, String pattern) {
-        Objects.requireNonNull(category, "category cannot be null");
-        Objects.requireNonNull(pattern, "pattern cannot be null");
-        this.category = category;
-        this.deprecated = deprecated;
-        this.pattern = pattern;
+    public CatalogueKey(CataloguedStep cataloguedStep) {
+        Objects.requireNonNull(cataloguedStep.getCategory(), "category cannot be null");
+        Objects.requireNonNull(cataloguedStep.getPattern(), "pattern cannot be null");
+        this.category = cataloguedStep.getCategory();
+        this.deprecated = cataloguedStep.isDeprecated();
+        this.pattern = cataloguedStep.getPattern();
     }
 
     @Override

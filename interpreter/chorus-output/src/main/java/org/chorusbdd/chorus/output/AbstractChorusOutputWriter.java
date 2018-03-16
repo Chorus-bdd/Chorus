@@ -35,11 +35,16 @@ import org.chorusbdd.chorus.results.*;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.sort;
+import static java.util.Comparator.comparing;
 
 /**
  * User: nick
@@ -126,56 +131,175 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     @Override
-    public void printResults(ResultsSummary s, List<FeatureToken> featuresList) {
-        if (s != null) {
-            
-            //If there's more than one feature and at least one failed, list the name(s)
-            if ( s.getFeaturesFailed() > 0 && s.getTotalFeatures() > 1 ) {
-                printMessage("Features failed:");
-                featuresList.stream().filter(f -> f.getEndState() == EndState.FAILED).forEachOrdered(f ->
-                    printMessage("  " + f.getNameWithConfiguration())
-                );
-            }
-            
-            //only show the pending count if there were pending steps, makes the summary more legible
-            if ( s.getFeaturesPending() > 0) {
-                printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
-                        s.getTotalFeatures(),
-                        s.getFeaturesPassed(),
-                        s.getFeaturesPending(),
-                        s.getFeaturesFailed()));
-            } else {
-                printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
-                        s.getTotalFeatures(),
-                        s.getFeaturesPassed(),
-                        s.getFeaturesFailed()));
-            }
-
-            //only show the pending count if there were pending steps, makes the summary more legible
-            if ( s.getScenariosPending() > 0 ) {
-                //print scenarios summary
-                printMessage(String.format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
-                        s.getTotalScenarios(),
-                        s.getScenariosPassed(),
-                        s.getScenariosPending(),
-                        s.getScenariosFailed()));
-            } else {
-                //print scenarios summary
-                printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
-                        s.getTotalScenarios(),
-                        s.getScenariosPassed(),
-                        s.getScenariosFailed()));
-            }
-
-            //print steps summary
-            printMessage(String.format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
-                    s.getStepsPassed() + s.getStepsFailed() + s.getStepsUndefined() + s.getStepsPending() + s.getStepsSkipped(),
-                    s.getStepsPassed(),
-                    s.getStepsFailed(),
-                    s.getStepsUndefined(),
-                    s.getStepsPending(),
-                    s.getStepsSkipped()));
+    public void printResults(ResultsSummary s, List<FeatureToken> featuresList, Set<CataloguedStep> cataloguedSteps) {
+        
+        if ( cataloguedSteps.size() > 0) {
+            printStepCatalogue(cataloguedSteps);
         }
+        
+        if (s != null) {
+            printResultSummary(s, featuresList);
+        }
+    }
+
+    protected void printStepCatalogue(Set<CataloguedStep> cataloguedSteps) {
+        printMessage("");
+        printMessage("Step Catalogue: (Steps By Category) --> ");
+        printMessage("");
+
+        Map<String, List<CataloguedStep>> invokersByCategory = cataloguedSteps
+                .stream()
+                .collect(Collectors.groupingBy(CataloguedStep::getCategory));
+
+        SortedMap<String, List<CataloguedStep>> sortedByCategory = new TreeMap<>(invokersByCategory);
+
+        String format = "%-20s%-120s%-14s%-14s%-14s";
+        printMessage(String.format(format, "Category: ", "Pattern: ", "Invocations: ", "Failed: ", "TotalTime: "));
+
+        sortedByCategory.values().forEach(l -> {
+            List<CataloguedStep> snapshot = new LinkedList<>(l);
+
+            sort(snapshot, comparing(CataloguedStep::getPattern));
+            printCataloguedSteps(format, snapshot);
+        });
+
+        printTopFive("Step Catalogue: (Longest Running) --> ", 
+                comparing(CataloguedStep::getMaxTime).reversed(), s -> s.getMaxTime() > 0, cataloguedSteps, format);
+
+        printTopFive("Step Catalogue: (Cumulative Time) --> ", 
+                comparing(CataloguedStep::getCumulativeTime).reversed(), s -> s.getCumulativeTime() > 0, cataloguedSteps, format);
+        
+    }
+
+    private void printTopFive(String title, Comparator<CataloguedStep> comparator, Predicate<CataloguedStep> stepPredicate, Set<CataloguedStep> cataloguedSteps, String format) {
+        List<CataloguedStep> sortedSteps = sortCataloguedSteps(cataloguedSteps, comparator, stepPredicate);
+        if ( sortedSteps.size() > 0) {
+            printMessage("");
+            printMessage(title);
+            printMessage("");
+            printCataloguedSteps(format, sortedSteps);
+        }
+        printMessage("");
+    }
+
+    private List<CataloguedStep> sortCataloguedSteps(Set<CataloguedStep> cataloguedSteps, Comparator<CataloguedStep> comparator, Predicate<CataloguedStep> stepPredicate) {
+        return cataloguedSteps.stream()
+        .filter(stepPredicate)
+        .sorted(comparator)
+        .limit(5)
+        .collect(Collectors.toList());
+    }
+
+    private void printCataloguedSteps(String format, List<CataloguedStep> snapshot) {
+        snapshot.forEach(stepInvoker -> {
+            printMessage(String.format(format,  
+                stepInvoker.getCategory(), 
+                stepInvoker.getPattern(), 
+                stepInvoker.getInvocationCount(), 
+                stepInvoker.getFailCount(), 
+                stepInvoker.getCumulativeTime()));
+        });
+    }
+
+    protected void printResultSummary(ResultsSummary s, List<FeatureToken> featuresList) {
+        //If there's more than one feature and at least one failed, list the name(s)
+        if ( s.getFeaturesFailed() > 0 && s.getTotalFeatures() > 1 ) {
+            printMessage("Failed Step Report:");
+            printMessage("");
+            printFailedSteps(featuresList);
+            printMessage("");
+
+        }
+
+        //only show the pending count if there were pending steps, makes the summary more legible
+        if ( s.getFeaturesPending() > 0) {
+            printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
+                    s.getTotalFeatures(),
+                    s.getFeaturesPassed(),
+                    s.getFeaturesPending(),
+                    s.getFeaturesFailed()));
+        } else {
+            printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
+                    s.getTotalFeatures(),
+                    s.getFeaturesPassed(),
+                    s.getFeaturesFailed()));
+        }
+
+        //only show the pending count if there were pending steps, makes the summary more legible
+        if ( s.getScenariosPending() > 0 ) {
+            //print scenarios summary
+            printMessage(String.format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
+                    s.getTotalScenarios(),
+                    s.getScenariosPassed(),
+                    s.getScenariosPending(),
+                    s.getScenariosFailed()));
+        } else {
+            //print scenarios summary
+            printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
+                    s.getTotalScenarios(),
+                    s.getScenariosPassed(),
+                    s.getScenariosFailed()));
+        }
+
+        //print steps summary
+        printMessage(String.format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
+                s.getStepsPassed() + s.getStepsFailed() + s.getStepsUndefined() + s.getStepsPending() + s.getStepsSkipped(),
+                s.getStepsPassed(),
+                s.getStepsFailed(),
+                s.getStepsUndefined(),
+                s.getStepsPending(),
+                s.getStepsSkipped()));
+    }
+
+    protected void printFailedSteps(List<FeatureToken> featuresList) {
+        
+        featuresList.stream().filter(f-> f.getEndState() == EndState.FAILED).forEachOrdered(f -> {
+            f.accept(new TokenVisitorAdapter() {
+              
+                StringBuilder stringBuilder = new StringBuilder();
+                
+                @Override
+                public void startVisit(FeatureToken featureToken) {
+                    stringBuilder.append("Feature: ").append(featureToken.getName()).append(" > ");
+                }
+
+                @Override
+                public void endVisit(FeatureToken featureToken) {
+                    stringBuilder.setLength(0);
+                }
+
+                @Override
+                public void startVisit(ScenarioToken scenarioToken) {
+                    stringBuilder.append("Scenario: ").append(scenarioToken.getName()).append(" > ");
+                }
+
+                @Override
+                public void endVisit(ScenarioToken scenarioToken) {
+                    stringBuilder.setLength(stringBuilder.length() - (13 + scenarioToken.getName().length()));
+                }
+
+                @Override
+                public void startVisit(StepToken stepToken) {
+                    if ( stepToken.isStepMacro()) {
+                        stringBuilder.append("Step: ").append(stepToken.getAction()).append(" > ");
+                    } else if ( stepToken.getEndState() == StepEndState.FAILED || stepToken.getEndState() == StepEndState.TIMEOUT || stepToken.getEndState() == StepEndState.UNDEFINED) {
+                        printMessage(String.format("%s %s %s %s %s", stringBuilder, stepToken.getType(), stepToken.getAction(), stepToken.getEndState(), stepToken.getMessage()));
+                    }
+                }
+
+                @Override
+                public void endVisit(StepToken stepToken) {
+                    if (stepToken.isStepMacro()) {
+                        stringBuilder.setLength(stringBuilder.length() - (9 + stepToken.getAction().length()));
+                    }
+                }
+            });
+        });
+        
+        
+        
+        
+        
     }
 
     public void printStackTrace(String stackTrace) {

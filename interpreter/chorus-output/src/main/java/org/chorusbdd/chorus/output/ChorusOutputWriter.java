@@ -30,12 +30,10 @@
 package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Write the output for the Chrous interpreter
@@ -54,7 +52,7 @@ public interface ChorusOutputWriter {
 
     void printMessage(String message);
 
-    void printResults(ResultsSummary summary, List<FeatureToken> features);
+    void printResults(ResultsSummary summary, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps);
 
     void log(LogLevel type, Object message);
     

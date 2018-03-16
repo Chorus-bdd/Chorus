@@ -331,6 +331,7 @@ public class ProcessManagerImpl implements ProcessManager {
          * @param testExecutionToken a token representing the current suite of tests running
          * @param scenario a token representing the scenario which has just completed
          */
+        @Override
         public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
             stopProcesses(Scope.SCENARIO);
         }
@@ -339,6 +340,7 @@ public class ProcessManagerImpl implements ProcessManager {
          * @param testExecutionToken a token representing the current suite of tests running
          * @param feature a token representing the feature which has just completed
          */
+        @Override
         public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
             stopProcesses(Scope.FEATURE);
         }

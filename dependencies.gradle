@@ -154,6 +154,7 @@ project(':chorus-stepinvoker') {
         compile project (':chorus-annotations')
         compile project (':chorus-logging')
         compile project (':chorus-util')
+        compile project (':chorus-results')
     }
 }
 

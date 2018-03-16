@@ -144,10 +144,11 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     }
 
     public void accept(TokenVisitor tokenVisitor) {
-        tokenVisitor.visit(this);
+        tokenVisitor.startVisit(this);
         for ( StepToken s : steps) {
             s.accept(tokenVisitor);
         }
+        tokenVisitor.endVisit(this);
     }
 
     @Override

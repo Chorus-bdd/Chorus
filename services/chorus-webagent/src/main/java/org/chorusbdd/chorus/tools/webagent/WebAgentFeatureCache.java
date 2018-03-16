@@ -32,6 +32,7 @@ package org.chorusbdd.chorus.tools.webagent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.results.CataloguedStep;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.TestSuite;
@@ -100,7 +101,8 @@ public class WebAgentFeatureCache extends ExecutionListenerAdapter {
         }
     }
 
-    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+    @Override
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
         WebAgentTestSuite testSuite = new WebAgentTestSuite(new TestSuite(testExecutionToken, features));
         addToCachedSuites(testSuite);
         suiteStore.addSuiteToStore(testSuite);

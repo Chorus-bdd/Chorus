@@ -42,12 +42,14 @@ import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManagerImpl;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.pathscanner.FeatureListBuilder;
+import org.chorusbdd.chorus.results.CataloguedStep;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static org.chorusbdd.chorus.SwitchPreprocessing.handleVersionOrHelpSwitches;
 
@@ -188,7 +190,7 @@ public class Chorus {
      */
     public void endTests(ExecutionToken t, List<FeatureToken> features) {
         t.calculateTimeTaken();
-        listenerSupport.notifyTestsCompleted(t, features);
+        listenerSupport.notifyTestsCompleted(t, features, interpreter.getCataloguedSteps());
     }
 
     void addJUnitExecutionListener(ExecutionListener listener) {

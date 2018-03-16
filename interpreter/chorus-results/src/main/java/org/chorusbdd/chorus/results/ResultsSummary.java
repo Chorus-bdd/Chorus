@@ -262,7 +262,8 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
     }
 
     public void accept(TokenVisitor tokenVisitor) {
-        tokenVisitor.visit(this);
+        tokenVisitor.startVisit(this);
+        tokenVisitor.endVisit(this);
     }
 
     public ResultsSummary deepCopy() {

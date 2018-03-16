@@ -30,12 +30,10 @@
 package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.logging.LogLevel;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ResultsSummary;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Nick E on 14/01/2015.
@@ -81,8 +79,8 @@ public abstract class AbstractChorusOutputWriterDecorator implements ChorusOutpu
     }
 
     @Override
-    public void printResults(ResultsSummary summary, List<FeatureToken> featureList) {
-        wrappedFormatter.printResults(summary, featureList);
+    public void printResults(ResultsSummary summary, List<FeatureToken> featureList, Set<CataloguedStep> cataloguedSteps) {
+        wrappedFormatter.printResults(summary, featureList, cataloguedSteps);
     }
 
     @Override

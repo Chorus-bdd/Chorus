@@ -36,29 +36,55 @@ package org.chorusbdd.chorus.results;
  */
 public class TokenVisitorAdapter implements TokenVisitor {
 
-    public void visit(ExecutionToken executionToken) {
-        doVisit(executionToken);
+    @Override
+    public void startVisit(ExecutionToken executionToken) {
+        doStartVisit(executionToken);
     }
 
-    public void visit(ResultsSummary resultsSummary) {
-        doVisit(resultsSummary);
+    @Override
+    public void endVisit(ExecutionToken executionToken) {doEndVisit(executionToken);}
+
+    @Override
+    public void startVisit(ResultsSummary resultsSummary) {
+        doStartVisit(resultsSummary);
     }
 
-    public void visit(FeatureToken featureToken) {
-        doVisit(featureToken);
+    @Override
+    public void endVisit(ResultsSummary resultsSummary) {doEndVisit(resultsSummary);}
+
+    @Override
+    public void startVisit(FeatureToken featureToken) {
+        doStartVisit(featureToken);
     }
 
-    public void visit(ScenarioToken scenarioToken) {
-        doVisit(scenarioToken);
+    @Override
+    public void endVisit(FeatureToken featureToken) { doEndVisit(featureToken);}
+
+    @Override
+    public void startVisit(ScenarioToken scenarioToken) {
+        doStartVisit(scenarioToken);
     }
 
-    public void visit(StepToken stepToken) {
-        doVisit(stepToken);
+    @Override
+    public void endVisit(ScenarioToken scenarioToken) { doEndVisit(scenarioToken);}
+
+    @Override
+    public void startVisit(StepToken stepToken) {
+        doStartVisit(stepToken);
+    }
+
+    @Override
+    public void endVisit(StepToken stepToken) { doEndVisit(stepToken);}
+
+    /**
+     * Subclass may override to provide generic handling for Token
+     */
+    protected void doStartVisit(Token token) {
     }
 
     /**
      * Subclass may override to provide generic handling for Token
      */
-    protected void doVisit(Token token) {
+    protected void doEndVisit(Token token) {
     }
 }

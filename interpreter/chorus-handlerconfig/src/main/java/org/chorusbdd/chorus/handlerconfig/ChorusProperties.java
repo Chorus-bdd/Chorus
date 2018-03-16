@@ -191,11 +191,13 @@ public class ChorusProperties implements ConfigurationManager {
             loadSessionProperties();
         }
 
+        @Override
         public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
             currentFeature = feature;
             loadFeatureProperties(feature);
         }
 
+        @Override
         public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
             clearFeatureProperties();
         }

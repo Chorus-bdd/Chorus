@@ -1,12 +1,10 @@
 package org.chorusbdd.chorus.tools.xml.writer;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
 * Created by Nick E on 19/02/2015.
@@ -19,7 +17,7 @@ public class MockExecutionListener implements ExecutionListener {
     public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
     }
 
-    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
         this.testExecutionToken = testExecutionToken;
         this.featureTokens = features;
     }

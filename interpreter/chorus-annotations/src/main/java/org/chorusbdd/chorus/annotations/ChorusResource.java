@@ -90,8 +90,9 @@ import java.lang.annotation.Target;
  * feature.file - annotation for a File field, interpreter will set this to the executing feature file
  * feature.token - annotation for a FeatureToken field, interpreter will set this to the FeatureToken which contains details of the currently running Feature
  * scenario.token - annotation for a ScenarioToken field, interpreter will set this to the ScenarioToken which contains details of the currently running Scenario
- * process.manager - interpreter will set this to ProcessMaanger subsystem in use
- * remoting.manager - interpreter will set this to RemotingManager subsystem in use
+ * subsystem.processManager - interpreter will set this to ProcessManager subsystem in use
+ * subsystem.remotingManager - interpreter will set this to RemotingManager subsystem in use
+ * subsystem.configurationManager - interpreter will set this to ConfigurationManager subsystem in use
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

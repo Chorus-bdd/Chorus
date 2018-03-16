@@ -190,7 +190,11 @@ public class StepToken extends AbstractToken {
     }
 
     public void accept(TokenVisitor tokenVisitor) {
-        tokenVisitor.visit(this);
+        tokenVisitor.startVisit(this);
+        if ( isStepMacro()) {
+            childSteps.forEach(c -> c.accept(tokenVisitor));
+        }
+        tokenVisitor.endVisit(this);
     }
 
     public boolean isStepMacro() {

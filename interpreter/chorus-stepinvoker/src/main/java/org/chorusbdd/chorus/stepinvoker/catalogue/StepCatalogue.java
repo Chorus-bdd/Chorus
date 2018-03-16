@@ -1,8 +1,8 @@
 package org.chorusbdd.chorus.stepinvoker.catalogue;
 
+import org.chorusbdd.chorus.results.CataloguedStep;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -11,9 +11,12 @@ import static java.util.Collections.emptySet;
 /**
  * Created by nickebbutt on 15/03/2018.
  */
-public interface StepInvokerCatalogue {
+public interface StepCatalogue {
     
-    StepInvokerCatalogue NULL_CATALOGUE = new StepInvokerCatalogue() {
+    StepCatalogue NULL_CATALOGUE = new StepCatalogue() {
+        @Override
+        public void addStepsForHandlerClasses(List<Class> classes) {}
+
         @Override
         public void addSteps(List<StepInvoker> l) {}
 
@@ -21,14 +24,16 @@ public interface StepInvokerCatalogue {
         public void addExecutedStep(StepInvoker foundStepInvoker, long executionTime, boolean passed) {}
 
         @Override
-        public Set<CataloguedStepInvoker> getCataloguedStepInvokers() {
+        public Set<CataloguedStep> getSteps() {
             return emptySet();
         }
     };
-    
+
+    void addStepsForHandlerClasses(List<Class> classes);
+
     void addSteps(List<StepInvoker> l);
 
     void addExecutedStep(StepInvoker foundStepInvoker, long executionTime, boolean passed);
 
-    Set<CataloguedStepInvoker> getCataloguedStepInvokers();
+    Set<CataloguedStep> getSteps();
 }

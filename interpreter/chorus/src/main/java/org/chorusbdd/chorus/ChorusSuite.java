@@ -402,6 +402,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
 
         private volatile boolean timedOut = false;
 
+        @Override
         public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
             pauseForJUnitOutput();
             this.features = features;
@@ -409,12 +410,14 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             pauseForJUnitOutput();
         }
 
+        @Override
         public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
             pauseForJUnitOutput();
             awaitFeatureStart();
             pauseForJUnitOutput();
         }
 
+        @Override
         public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
             pauseForJUnitOutput();
             for ( ScenarioToken s : feature.getScenarios()) {
@@ -431,12 +434,14 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
             pauseForJUnitOutput();
         }
 
+        @Override
         public void scenarioStarted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
             pauseForJUnitOutput();
             awaitScenarioStart();
             pauseForJUnitOutput();
         }
 
+        @Override
         public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
             pauseForJUnitOutput();
             completedScenarios.add(scenario);

@@ -159,16 +159,18 @@ public class SeleniumManagerImpl implements SeleniumManager {
     @Override
     public ExecutionListener getExecutionListener() {
         return new ExecutionListenerAdapter() {
-            
+
+            @Override
             public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
                 SeleniumManagerImpl.this.feature = feature;
             }
-            
+
+            @Override
             public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenario) {
                 removeWebDriversForScope(Scope.SCENARIO);
             }
 
-
+            @Override
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
                 removeWebDriversForScope(Scope.FEATURE);
             }

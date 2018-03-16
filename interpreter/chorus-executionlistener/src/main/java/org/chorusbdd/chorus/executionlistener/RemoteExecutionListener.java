@@ -29,12 +29,10 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.results.ExecutionToken;
-import org.chorusbdd.chorus.results.FeatureToken;
-import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.results.StepToken;
+import org.chorusbdd.chorus.results.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -56,8 +54,8 @@ public class RemoteExecutionListener implements RemoteExecutionListenerMBean {
         chorusExecutionListener.testsStarted(testExecutionToken, features);
     }
 
-    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
-        chorusExecutionListener.testsCompleted(testExecutionToken, features);
+    public void testsCompleted(ExecutionToken testExecutionToken, List<FeatureToken> features, Set<CataloguedStep> cataloguedStepSet) {
+        chorusExecutionListener.testsCompleted(testExecutionToken, features, cataloguedStepSet);
     }
 
     public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {

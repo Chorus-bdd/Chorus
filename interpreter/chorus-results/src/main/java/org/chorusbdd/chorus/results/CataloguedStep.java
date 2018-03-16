@@ -1,12 +1,15 @@
-package org.chorusbdd.chorus.stepinvoker.catalogue;
+package org.chorusbdd.chorus.results;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Created by nickebbutt on 15/03/2018.
  */
-public class CataloguedStepInvoker {
-    
+public class CataloguedStep implements Serializable {
+
+    private static final long serialVersionUID = 4;
+
     private final String category;
     private final boolean deprecated;
     private final String pattern;
@@ -16,7 +19,7 @@ public class CataloguedStepInvoker {
     private final long passCount;
     private final long failCount;
 
-    public CataloguedStepInvoker(String category, boolean deprecated, String pattern, long invocationCount, long cumulativeTime, long maxTime, long passCount, long failCount) {
+    public CataloguedStep(String category, boolean deprecated, String pattern, long invocationCount, long cumulativeTime, long maxTime, long passCount, long failCount) {
         Objects.requireNonNull(category, "category cannot be null");
         Objects.requireNonNull(pattern, "pattern cannot be null");
         
@@ -30,7 +33,7 @@ public class CataloguedStepInvoker {
         this.failCount = failCount;
     }
 
-    public CataloguedStepInvoker(String category, boolean deprecated, String pattern) {
+    public CataloguedStep(String category, boolean deprecated, String pattern) {
         this(category, deprecated, pattern, 0,0,0,0,0);
     }
 
@@ -66,19 +69,17 @@ public class CataloguedStepInvoker {
         return failCount;
     }
 
-    public CatalogueKey getCatalogueKey() {
-        return new CatalogueKey(category, deprecated, pattern);
-    }
-
     @Override
     public String toString() {
-        return "CataloguedStepInvoker{" +
+        return "CataloguedStep{" +
                 "category='" + category + '\'' +
                 ", deprecated=" + deprecated +
                 ", pattern='" + pattern + '\'' +
                 ", invocationCount=" + invocationCount +
                 ", cumulativeTime=" + cumulativeTime +
                 ", maxTime=" + maxTime +
+                ", passCount=" + passCount +
+                ", failCount=" + failCount +
                 '}';
     }
 }

@@ -148,13 +148,15 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     @Override
     public ExecutionListener getExecutionListener() {
         return new ExecutionListenerAdapter() {
-            
+
+            @Override
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
                 if ( isRunning.get() && webSocketsConfig.getScope() == Scope.FEATURE) {
                     stopWebSocketServer();
                 }
             }
 
+            @Override
             public void scenarioCompleted(ExecutionToken testExecutionToken, ScenarioToken scenarioToken) {
                 if ( isRunning.get() && webSocketsConfig.getScope() == Scope.SCENARIO) {
                     stopWebSocketServer();

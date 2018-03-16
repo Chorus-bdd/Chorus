@@ -35,6 +35,10 @@ import org.chorusbdd.chorus.interpreter.interpreter.ChorusInterpreter;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.stepinvoker.catalogue.DefaultStepCatalogue;
+import org.chorusbdd.chorus.stepinvoker.catalogue.StepCatalogue;
+
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,7 +46,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
  * Date: 24/02/13
  * Time: 16:16
  *
- * Build and configurea a ChorusInterpreter
+ * Build and configure a ChorusInterpreter
  */
 public class InterpreterBuilder {
 
@@ -63,7 +67,15 @@ public class InterpreterBuilder {
         chorusInterpreter.setScenarioTimeoutMillis(Integer.valueOf(config.getValue(ChorusConfigProperty.SCENARIO_TIMEOUT)) * 1000);
         chorusInterpreter.setDryRun(config.isTrue(ChorusConfigProperty.DRY_RUN));
         chorusInterpreter.setSubsystemManager(subsystemManager);
-        chorusInterpreter.setCatalogueSteps(config.isTrue(ChorusConfigProperty.SHOW_STEPS));
+
+        StepCatalogue stepCatalogue = createStepCatalogue(config);
+        chorusInterpreter.setStepCatalogue(stepCatalogue);
         return chorusInterpreter;
+    }
+
+
+    private StepCatalogue createStepCatalogue(ConfigProperties config) {
+        return config.isTrue(ChorusConfigProperty.SHOW_STEPS) ?
+                new DefaultStepCatalogue() : StepCatalogue.NULL_CATALOGUE;
     }
 }
