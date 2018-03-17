@@ -48,6 +48,8 @@ public class SimpleWebSocketStepPublisher {
         private int tryCount = 0;
         private StepPublisher stepPublisher;
 
+        public SimpleWebSocketStepPublisherHandler() {}  //nullary constructor has to exist otherwise this is not a valid handler class
+        
         public SimpleWebSocketStepPublisherHandler(StepPublisher stepPublisher) {
             this.stepPublisher = stepPublisher;
         }

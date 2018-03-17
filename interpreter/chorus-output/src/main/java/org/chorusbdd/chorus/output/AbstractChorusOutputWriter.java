@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Collections.sort;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingInt;
 
 /**
  * User: nick
@@ -153,9 +154,14 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
                 .collect(Collectors.groupingBy(CataloguedStep::getCategory));
 
         SortedMap<String, List<CataloguedStep>> sortedByCategory = new TreeMap<>(invokersByCategory);
-
-        String format = "%-20s%-120s%-14s%-14s%-14s";
+        
+        //work out how wide to make the output
+        int maxPatternWidth = sortedByCategory.values().stream().flatMap(Collection::stream).mapToInt(cs -> cs.getPattern().length()).max().orElse(0);
+        int maxCategoryWidth = sortedByCategory.keySet().stream().mapToInt(String::length).max().orElse(0);
+        String format = "%-" + maxCategoryWidth + "s %-" + maxPatternWidth + "s %14s %14s %14s";
+        
         printMessage(format(format, "Category: ", "Pattern: ", "Invocations: ", "Failed: ", "TotalTime: "));
+        printMessage("");
 
         sortedByCategory.values().forEach(l -> {
             List<CataloguedStep> snapshot = new LinkedList<>(l);

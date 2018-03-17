@@ -38,8 +38,6 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.stepinvoker.catalogue.DefaultStepCatalogue;
 import org.chorusbdd.chorus.stepinvoker.catalogue.StepCatalogue;
 
-import java.util.ArrayList;
-
 /**
  * Created with IntelliJ IDEA.
  * User: nick
@@ -75,7 +73,7 @@ public class InterpreterBuilder {
 
 
     private StepCatalogue createStepCatalogue(ConfigProperties config) {
-        return config.isTrue(ChorusConfigProperty.SHOW_STEPS) ?
+        return config.isTrue(ChorusConfigProperty.SHOW_STEP_CATALOGUE) ?
                 new DefaultStepCatalogue() : StepCatalogue.NULL_CATALOGUE;
     }
 }
