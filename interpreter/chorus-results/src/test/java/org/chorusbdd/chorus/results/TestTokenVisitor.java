@@ -50,6 +50,7 @@ public class TestTokenVisitor extends Assert {
     private StepToken stepOne;
     private StepToken stepTwo;
     private StepToken stepThree;
+    private StepToken stepFour;
     private FeatureToken featureToken;
     private FeatureToken featureTwo;
     private ExecutionToken executionToken;
@@ -60,9 +61,12 @@ public class TestTokenVisitor extends Assert {
         scenarioToken.setName("Test Scenario");
         stepOne = scenarioToken.addStep(StepToken.createStep("If", "I create a step"));
         stepTwo = scenarioToken.addStep(StepToken.createStep("If", "I create a second step"));
+        
+        stepThree = StepToken.createStep("If", "I create a step macro child step");
+        stepTwo.addChildStep(stepThree);
 
         scenarioTwo = new ScenarioToken();
-        stepThree = scenarioTwo.addStep(StepToken.createStep("If", "I add a step to scenario 2"));
+        stepFour = scenarioTwo.addStep(StepToken.createStep("If", "I add a step to scenario 2"));
         featureToken = new FeatureToken();
         featureToken.addScenario(scenarioToken);
         featureToken.addScenario(scenarioTwo);
@@ -77,7 +81,7 @@ public class TestTokenVisitor extends Assert {
     public void testVisitation() {
         MockVisitor m = new MockVisitor();
         testSuite.accept(m);
-        assertEquals("Expected visit count", 9, m.visitations);
+        assertEquals("Expected visit count", 20, m.visitations);
     }
 
     private class MockVisitor extends Assert implements TokenVisitor {
@@ -86,8 +90,21 @@ public class TestTokenVisitor extends Assert {
 
         private List<Token> expectedTokenOrder = new LinkedList<>(
                 Arrays.asList(
-                        (Token) executionToken, executionToken.getResultsSummary(), featureToken, scenarioToken, stepOne, stepTwo,
-                        scenarioTwo, stepThree, featureTwo
+                        (Token) executionToken,  executionToken.getResultsSummary(), 
+                        executionToken.getResultsSummary(), executionToken, 
+                        featureToken, 
+                            scenarioToken,  
+                              stepOne, stepOne,
+                                stepTwo, //stepmacro
+                                   stepThree, stepThree, 
+                                stepTwo, 
+                            scenarioToken,
+                            scenarioTwo, 
+                                stepFour, stepFour, 
+                            scenarioTwo,
+                        featureToken,
+                        featureTwo, 
+                        featureTwo
                 ));
 
         public void startVisit(ExecutionToken executionToken) {
@@ -95,40 +112,44 @@ public class TestTokenVisitor extends Assert {
         }
 
         @Override
-        public void endVisit(ExecutionToken executionToken) {}
+        public void endVisit(ExecutionToken executionToken) { checkExpectedToken(executionToken);}
+        
+        @Override
+        public void startVisit(ResultsSummary resultsSummary) {
+            checkExpectedToken(resultsSummary);
+        }
+
+        @Override
+        public void endVisit(ResultsSummary resultsSummary) { checkExpectedToken(resultsSummary);}
+
+        @Override
+        public void startVisit(FeatureToken featureToken) {
+            checkExpectedToken(featureToken);
+        }
+
+        @Override
+        public void endVisit(FeatureToken featureToken) {checkExpectedToken(featureToken);}
+
+        @Override
+        public void startVisit(ScenarioToken scenarioToken) {
+            checkExpectedToken(scenarioToken);
+        }
+
+        @Override
+        public void endVisit(ScenarioToken scenarioToken) {checkExpectedToken(scenarioToken);}
+
+        @Override
+        public void startVisit(StepToken stepToken) {
+            checkExpectedToken(stepToken);
+        }
+
+        @Override
+        public void endVisit(StepToken stepToken) {checkExpectedToken(stepToken);}
 
         private void checkExpectedToken(Token token) {
             Token t = expectedTokenOrder.remove(0);
             assertSame(token, t);
             visitations++;
         }
-
-        public void startVisit(ResultsSummary resultsSummary) {
-            checkExpectedToken(resultsSummary);
-        }
-
-        @Override
-        public void endVisit(ResultsSummary resultsSummary) {}
-
-        public void startVisit(FeatureToken featureToken) {
-            checkExpectedToken(featureToken);
-        }
-
-        @Override
-        public void endVisit(FeatureToken featureToken) {}
-
-        public void startVisit(ScenarioToken scenarioToken) {
-            checkExpectedToken(scenarioToken);
-        }
-
-        @Override
-        public void endVisit(ScenarioToken scenarioToken) {}
-
-        public void startVisit(StepToken stepToken) {
-            checkExpectedToken(stepToken);
-        }
-
-        @Override
-        public void endVisit(StepToken stepToken) {}
     }
 }
