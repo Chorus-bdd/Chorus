@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static java.util.Collections.sort;
 import static java.util.Comparator.comparing;
 
@@ -97,7 +98,7 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     protected void printCompletedStep(StepToken step, StringBuilder depthPadding, int stepLengthChars) {
-        StringBuilder output = new StringBuilder(String.format("    " + depthPadding + "%-" + stepLengthChars + "s %-7s %s", getStepText(step), getEndState(step), getMessage(step)));
+        StringBuilder output = new StringBuilder(format("    " + depthPadding + "%-" + stepLengthChars + "s %-7s %s", getStepText(step), getEndState(step), getMessage(step)));
         if ( step.getErrorDetails().length() > 0) {
             output.append(" ").append(step.getErrorDetails());
         }
@@ -154,7 +155,7 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
         SortedMap<String, List<CataloguedStep>> sortedByCategory = new TreeMap<>(invokersByCategory);
 
         String format = "%-20s%-120s%-14s%-14s%-14s";
-        printMessage(String.format(format, "Category: ", "Pattern: ", "Invocations: ", "Failed: ", "TotalTime: "));
+        printMessage(format(format, "Category: ", "Pattern: ", "Invocations: ", "Failed: ", "TotalTime: "));
 
         sortedByCategory.values().forEach(l -> {
             List<CataloguedStep> snapshot = new LinkedList<>(l);
@@ -192,7 +193,7 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
 
     private void printCataloguedSteps(String format, List<CataloguedStep> snapshot) {
         snapshot.forEach(stepInvoker -> {
-            printMessage(String.format(format,  
+            printMessage(format(format,  
                 stepInvoker.getCategory(), 
                 stepInvoker.getPattern(), 
                 stepInvoker.getInvocationCount(), 
@@ -204,22 +205,19 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     protected void printResultSummary(ResultsSummary s, List<FeatureToken> featuresList) {
         //If there's more than one feature and at least one failed, list the name(s)
         if ( s.getFeaturesFailed() > 0 && s.getTotalFeatures() > 1 ) {
-            printMessage("Failed Step Report:");
-            printMessage("");
+            printMessage("Failed Steps:");
             printFailedSteps(featuresList);
-            printMessage("");
-
         }
 
         //only show the pending count if there were pending steps, makes the summary more legible
         if ( s.getFeaturesPending() > 0) {
-            printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
+            printMessage(format("%nFeatures  (total:%d) (passed:%d) (pending:%d) (failed:%d)",
                     s.getTotalFeatures(),
                     s.getFeaturesPassed(),
                     s.getFeaturesPending(),
                     s.getFeaturesFailed()));
         } else {
-            printMessage(String.format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
+            printMessage(format("%nFeatures  (total:%d) (passed:%d) (failed:%d)",
                     s.getTotalFeatures(),
                     s.getFeaturesPassed(),
                     s.getFeaturesFailed()));
@@ -228,21 +226,21 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
         //only show the pending count if there were pending steps, makes the summary more legible
         if ( s.getScenariosPending() > 0 ) {
             //print scenarios summary
-            printMessage(String.format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
+            printMessage(format("Scenarios (total:%d) (passed:%d) (pending:%d) (failed:%d)",
                     s.getTotalScenarios(),
                     s.getScenariosPassed(),
                     s.getScenariosPending(),
                     s.getScenariosFailed()));
         } else {
             //print scenarios summary
-            printMessage(String.format("Scenarios (total:%d) (passed:%d) (failed:%d)",
+            printMessage(format("Scenarios (total:%d) (passed:%d) (failed:%d)",
                     s.getTotalScenarios(),
                     s.getScenariosPassed(),
                     s.getScenariosFailed()));
         }
 
         //print steps summary
-        printMessage(String.format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
+        printMessage(format("Steps     (total:%d) (passed:%d) (failed:%d) (undefined:%d) (pending:%d) (skipped:%d)",
                 s.getStepsPassed() + s.getStepsFailed() + s.getStepsUndefined() + s.getStepsPending() + s.getStepsSkipped(),
                 s.getStepsPassed(),
                 s.getStepsFailed(),
@@ -255,51 +253,38 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
         
         featuresList.stream().filter(f-> f.getEndState() == EndState.FAILED).forEachOrdered(f -> {
             f.accept(new TokenVisitorAdapter() {
-              
-                StringBuilder stringBuilder = new StringBuilder();
                 
-                @Override
-                public void startVisit(FeatureToken featureToken) {
-                    stringBuilder.append("Feature: ").append(featureToken.getName()).append(" > ");
-                }
+                final String INDENT = "  ";
+                private StringBuilder stepIndent = new StringBuilder(INDENT + INDENT);
 
                 @Override
-                public void endVisit(FeatureToken featureToken) {
-                    stringBuilder.setLength(0);
+                public void startVisit(FeatureToken featureToken) {
+                    printMessage("");
+                    printMessage(INDENT + featureToken.getNameWithConfiguration() + " >");
                 }
 
                 @Override
                 public void startVisit(ScenarioToken scenarioToken) {
-                    stringBuilder.append("Scenario: ").append(scenarioToken.getName()).append(" > ");
-                }
-
-                @Override
-                public void endVisit(ScenarioToken scenarioToken) {
-                    stringBuilder.setLength(stringBuilder.length() - (13 + scenarioToken.getName().length()));
+                    printMessage(INDENT + INDENT + scenarioToken.getName() + " >");
                 }
 
                 @Override
                 public void startVisit(StepToken stepToken) {
+                    stepIndent.append(INDENT);
+                    String stepText = format("%s %s", stepToken.getType(), stepToken.getAction());
                     if ( stepToken.isStepMacro()) {
-                        stringBuilder.append("Step: ").append(stepToken.getAction()).append(" > ");
+                        printMessage(stepText + " >");
                     } else if ( stepToken.getEndState() == StepEndState.FAILED || stepToken.getEndState() == StepEndState.TIMEOUT || stepToken.getEndState() == StepEndState.UNDEFINED) {
-                        printMessage(String.format("%s %s %s %s %s", stringBuilder, stepToken.getType(), stepToken.getAction(), stepToken.getEndState(), stepToken.getMessage()));
+                        printMessage(format("%s %s %s", stepIndent, stepText, stepToken.getEndState(), stepToken.getMessage()));
                     }
                 }
 
                 @Override
                 public void endVisit(StepToken stepToken) {
-                    if (stepToken.isStepMacro()) {
-                        stringBuilder.setLength(stringBuilder.length() - (9 + stepToken.getAction().length()));
-                    }
+                    stepIndent.setLength(stepIndent.length() - INDENT.length());
                 }
             });
         });
-        
-        
-        
-        
-        
     }
 
     public void printStackTrace(String stackTrace) {
@@ -332,14 +317,14 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     protected void logOut(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
-        getPrintWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        getPrintWriter().println(format("%s --> %-7s - %s", "Chorus", type, message));
         getPrintWriter().flush();
     }
 
     protected void logErr(LogLevel type, Object message) {
         //Use 'Chorus' instead of class name for logging, since we are testing the log output up to info level
         //and don't want refactoring the code to break tests if log statements move class
-        getPrintWriter().println(String.format("%s --> %-7s - %s", "Chorus", type, message));
+        getPrintWriter().println(format("%s --> %-7s - %s", "Chorus", type, message));
         getPrintWriter().flush();
     }
 
