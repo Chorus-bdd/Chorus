@@ -271,18 +271,27 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
 
                 @Override
                 public void startVisit(ScenarioToken scenarioToken) {
-                    printMessage(INDENT + INDENT + scenarioToken.getName() + " >");
+                    if ( scenarioToken.getEndState() == EndState.FAILED) {
+                        printMessage(INDENT + INDENT + scenarioToken.getName() + " >");
+                    }
                 }
 
                 @Override
                 public void startVisit(StepToken stepToken) {
                     stepIndent.append(INDENT);
                     String stepText = format("%s %s", stepToken.getType(), stepToken.getAction());
-                    if ( stepToken.isStepMacro()) {
-                        printMessage(stepText + " >");
-                    } else if ( stepToken.getEndState() == StepEndState.FAILED || stepToken.getEndState() == StepEndState.TIMEOUT || stepToken.getEndState() == StepEndState.UNDEFINED) {
-                        printMessage(format("%s %s %s", stepIndent, stepText, stepToken.getEndState(), stepToken.getMessage()));
+                    boolean consideredFailed = isConsideredFailed(stepToken);
+                    
+                    if ( consideredFailed ) {
+                        String message = stepToken.isStepMacro() ? 
+                            stepText + " >" :
+                            format("%s %s %s", stepIndent, stepText, stepToken.getEndState(), stepToken.getMessage());
+                        printMessage(message);
                     }
+                }
+
+                private boolean isConsideredFailed(StepToken stepToken) {
+                    return stepToken.inOneOf(StepEndState.FAILED, StepEndState.TIMEOUT , StepEndState.UNDEFINED);
                 }
 
                 @Override
