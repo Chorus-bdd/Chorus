@@ -20,19 +20,22 @@ public class FailureSummaryWriterTest extends AbstractOutputWriterTest {
     
     private String expected = "Failure Summary:\n" +
             "\n" +
-            "  Feature One >\n" +
-            "    Test Scenario >\n" +
+            "  Feature One\n" +
+            "    Test Scenario\n" +
             "       If I create a second step >\n" +
             "         If I create a step macro child step >\n" +
             "           If I create a step grandchild - FAILED (Failed due to a horrific and unforseen cataclysm)\n" +
             "\n" +
-            "  Feature Two >\n" +
-            "    Scenario Two >\n" +
+            "  Feature Two\n" +
+            "    Scenario Two\n" +
             "       If I add a step to scenario 2 - UNDEFINED \n" +
             "\n" +
-            "  Feature Three >\n" +
-            "    Scenario Three >\n" +
-            "       If I add a step to scenario 3 - TIMEOUT \n";
+            "  Feature Three\n" +
+            "    Scenario Three\n" +
+            "       If I add a step to scenario 3 - TIMEOUT \n" +
+            "\n" +
+            "  Feature Four Failed No Handler\n" +
+            "    Scenario Four\n";
 
     @Before
     public void doBefore() {
