@@ -54,8 +54,14 @@ public interface ChorusOutputWriter {
 
     void printResults(ResultsSummary summary, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps);
 
+    /**
+     * Print a log message (when the ChorusOutputWriter is being used for log output as well as step output)
+     */
     void log(LogLevel type, Object message);
-    
+
+    /**
+     * Print an error message (when the ChorusOutputWriter is being used for for log output as well as step output)
+     */
     void logError(LogLevel type, Throwable t);
 
     /**
