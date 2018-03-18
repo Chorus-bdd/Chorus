@@ -16,7 +16,7 @@ public class FailureSummaryWriter {
     static final boolean suppressFailureSummary = Boolean.getBoolean(ChorusConstants.SUPPRESS_FAILURE_SUMMARY_PROPERTY);
 
     void printFailureSummary(List<FeatureToken> featuresList, Consumer<String> messageWriter) {
-        if ( ! suppressFailureSummary) {
+        if ( ! suppressFailureSummary && featuresList.size() > 1) {
             if (featuresList.stream().filter(f -> f.getEndState() == EndState.FAILED).count() > 0) {
                 messageWriter.accept("Failure Summary:");
                 printFailures(featuresList, messageWriter);
