@@ -53,6 +53,7 @@ public class ChorusConstants {
     };
 
     public static final String CONSOLE_COLOUR_OUTPUT_DISABLED_PROPERTY = "org.chorusbdd.chorus.console.colouroutput";
+    public static final String SUPPRESS_FAILURE_SUMMARY_PROPERTY = "org.chorusbdd.chorus.console.failuresummary.disable";
 
     public static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
 
@@ -71,4 +72,5 @@ public class ChorusConstants {
      * The name of the properties group which may be defined to supply default settings for other configs
      */
     public static final String DEFAULT_PROPERTIES_GROUP = "default";
+    
 }

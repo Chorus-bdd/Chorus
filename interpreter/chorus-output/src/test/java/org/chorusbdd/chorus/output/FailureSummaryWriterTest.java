@@ -13,12 +13,12 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by nickebbutt on 18/03/2018.
  */
-public class FailedStepsWriterTest extends AbstractOutputWriterTest {
-        FailedStepsWriter failedStepsWriter = new FailedStepsWriter();
+public class FailureSummaryWriterTest extends AbstractOutputWriterTest {
+    FailureSummaryWriter failureSummaryWriter = new FailureSummaryWriter();
     
     List<FeatureToken> listOfFeatures = new LinkedList<>();
     
-    private String expected = "Failed Steps:\n" +
+    private String expected = "Failure Summary:\n" +
             "\n" +
             "  Feature One >\n" +
             "    Test Scenario >\n" +
@@ -39,6 +39,20 @@ public class FailedStepsWriterTest extends AbstractOutputWriterTest {
         createFeatureOne();
         createFeatureTwo();
         createFeatureThree();
+        createFeatureFour();
+    }
+
+    private void createFeatureFour() {
+        ScenarioToken scenarioFour = new ScenarioToken();
+        scenarioFour.setName("Scenario Four");
+
+        StepToken step = scenarioFour.addStep(StepToken.createStep("If", "I add a step to scenario 3"));
+        step.setEndState(StepEndState.SKIPPED);
+        
+        FeatureToken featureFour = new FeatureToken();
+        featureFour.setName("Feature Four Failed No Handler");
+        featureFour.addScenario(scenarioFour);
+        listOfFeatures.add(featureFour);
     }
 
     private void createFeatureThree() {
@@ -106,7 +120,7 @@ public class FailedStepsWriterTest extends AbstractOutputWriterTest {
     }
     
     protected void writeTestOutput(Consumer<String> println) {
-        failedStepsWriter.printFailedSteps(listOfFeatures, println);
+        failureSummaryWriter.printFailureSummary(listOfFeatures, println);
     }
     
 

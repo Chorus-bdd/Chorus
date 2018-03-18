@@ -148,7 +148,7 @@ public abstract class AbstractChorusOutputWriter implements ChorusOutputWriter {
     }
 
     protected void printResultSummary(ResultsSummary s, List<FeatureToken> featuresList) {
-        new FailedStepsWriter().printFailedSteps(featuresList, this::printMessage);
+        new FailureSummaryWriter().printFailureSummary(featuresList, this::printMessage);
         new ResultSummaryWriter().printResultSummary(s, this::printMessage);
     }
 
