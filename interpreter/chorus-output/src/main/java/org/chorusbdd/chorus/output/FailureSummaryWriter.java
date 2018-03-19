@@ -40,7 +40,7 @@ public class FailureSummaryWriter {
 
                 @Override
                 public void startVisit(ScenarioToken scenarioToken) {
-                    if ( scenarioToken.getEndState() == EndState.FAILED) {
+                    if ( scenarioToken.getEndState() == EndState.FAILED && ! scenarioToken.wasSkipped()) {
                         messageWriter.accept(INDENT + INDENT + scenarioToken.getName());
                     }
                 }

@@ -143,6 +143,15 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
         return result;
     }
 
+    /**
+     * If a Feature-Start: section fails or a handler for a feature is not found, all steps may be skipped
+     * 
+     * @return true if this scenario Failed because it was skipped (all child steps are skipped)
+     */
+    public boolean wasSkipped() {
+        return getSteps().stream().filter(s -> s.getEndState() != StepEndState.SKIPPED).count() == 0;
+    }
+
     public void accept(TokenVisitor tokenVisitor) {
         tokenVisitor.startVisit(this);
         for ( StepToken s : steps) {

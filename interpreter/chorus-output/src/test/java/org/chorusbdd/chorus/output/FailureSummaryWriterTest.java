@@ -34,9 +34,7 @@ public class FailureSummaryWriterTest extends AbstractOutputWriterTest {
             "    Scenario Three\n" +
             "       If I add a step to scenario 3 - TIMEOUT \n" +
             "\n" +
-            "  Feature Four Failed No Handler\n" +
-            "    Scenario Four\n";
-
+            "  Feature Four Failed No Handler\n";
     @Before
     public void doBefore() {
         createFeatureOne();
