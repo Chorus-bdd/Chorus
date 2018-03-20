@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.handlerconfig;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.handlerconfig.properties.ClassPathPropertyLoader;
@@ -186,7 +186,7 @@ public class ChorusProperties implements ConfigurationManager {
     /**
      * Load and remove properties at the appropriate points in the chorus lifecyle
      */
-    @Priority(Priority.PROPERTY_SUBSYSTEM_PRIORITY)
+    @ExecutionPriority(ExecutionPriority.PROPERTY_SUBSYSTEM_PRIORITY)
     private class PropertySubsystemExecutionListener extends ExecutionListenerAdapter {
         public void testsStarted(ExecutionToken testExecutionToken, List<FeatureToken> features) {
             currentProfile = testExecutionToken.getProfile();

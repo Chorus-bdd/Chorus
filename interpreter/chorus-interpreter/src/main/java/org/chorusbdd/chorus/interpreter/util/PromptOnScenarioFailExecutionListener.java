@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.interpreter.util;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -20,7 +20,7 @@ import java.io.Console;
  * This listener has a priority which will ensure it is called before system execution listeners run clean up 
  * (e.g. before closing Selenium web drivers and web sockets to shut down browsers..)
  */
-@Priority(200)
+@ExecutionPriority(200)
 public class PromptOnScenarioFailExecutionListener extends ExecutionListenerAdapter {
 
     private ChorusLog log = ChorusLogFactory.getLog(PromptOnScenarioFailExecutionListener.class);

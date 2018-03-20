@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -215,7 +215,7 @@ public class JmxRemotingManager implements RemotingManager {
         return new RemotingManagerExecutionListener();
     }
 
-    @Priority(Priority.REMOTING_MANAGER_PRIORITY)
+    @ExecutionPriority(ExecutionPriority.REMOTING_MANAGER_PRIORITY)
     private class RemotingManagerExecutionListener extends ExecutionListenerAdapter {
 
 

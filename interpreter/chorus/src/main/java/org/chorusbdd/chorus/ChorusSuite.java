@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.config.InterpreterPropertyException;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.logging.ChorusOut;
@@ -385,7 +385,7 @@ public class ChorusSuite extends ParentRunner<ChorusSuite.ChorusFeatureTest> {
     }
 
 
-    @Priority(Priority.JUNIT_SUITE_LISTENER_PRIORITY)
+    @ExecutionPriority(ExecutionPriority.JUNIT_SUITE_LISTENER_PRIORITY)
     private class JUnitSuiteExecutionListener extends ExecutionListenerAdapter {
 
         long waitForTestStartLimit = Long.parseLong(System.getProperty("chorusJUnitScenarioTimeout", "10"));   //10 seconds

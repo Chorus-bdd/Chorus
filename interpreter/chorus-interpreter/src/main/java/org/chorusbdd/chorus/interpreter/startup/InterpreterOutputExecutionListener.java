@@ -29,7 +29,7 @@
  */
 package org.chorusbdd.chorus.interpreter.startup;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.output.AbstractChorusOutputWriterDecorator;
@@ -50,7 +50,7 @@ import java.util.Set;
  * It delegates to a wrapped OutputWriter for the actual output
  * It also captures any Chorus log output into the current
  */
-@Priority(Priority.INTERPRETER_OUTPUT_PRIORITY)
+@ExecutionPriority(ExecutionPriority.INTERPRETER_OUTPUT_PRIORITY)
 public class InterpreterOutputExecutionListener extends AbstractChorusOutputWriterDecorator implements ExecutionListener {
 
     private boolean showSummary = true;

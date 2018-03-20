@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.selenium.manager;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -21,8 +21,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -160,7 +158,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     @Override
     public ExecutionListener getExecutionListener() {
         
-        @Priority(Priority.SELENIUM_MANAGER_PRIORITY)
+        @ExecutionPriority(ExecutionPriority.SELENIUM_MANAGER_PRIORITY)
         class SeleniumExecutionListenerAdapter extends ExecutionListenerAdapter {
 
             @Override

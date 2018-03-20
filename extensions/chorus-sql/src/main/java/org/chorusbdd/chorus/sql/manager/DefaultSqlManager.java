@@ -1,6 +1,6 @@
 package org.chorusbdd.chorus.sql.manager;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -151,7 +151,7 @@ public class DefaultSqlManager implements SqlManager {
 
     @Override
     public ExecutionListener getExecutionListener() {
-        @Priority(Priority.SQL_MANAGER_PRIORITY)
+        @ExecutionPriority(ExecutionPriority.SQL_MANAGER_PRIORITY)
         class SqlManagerExecutionListener extends ExecutionListenerAdapter {
 
             @Override

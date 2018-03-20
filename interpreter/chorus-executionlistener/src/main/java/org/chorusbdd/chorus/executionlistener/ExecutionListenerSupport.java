@@ -29,12 +29,11 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
-import org.chorusbdd.chorus.annotations.Priority;
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.results.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -47,8 +46,8 @@ import static java.util.Comparator.comparing;
  * 
  * Maintain an ordered set of execution listeners and provide a mechanism to invoke their lifecycle methods
  * 
- * ExecutionListeners are ordered according to the priority value in the {@link Priority Priority} annotation
- * An listener which does not have the Priority annotation will be assigned a default priority
+ * ExecutionListeners are ordered according to the priority value in the {@link ExecutionPriority ExecutionPriority} annotation
+ * An listener which does not have the ExecutionPriority annotation will be assigned a default priority
  * 
  * The 'started' lifecycle methods will be invoked in reverse order (higher priority value first)
  * The 'completed' lifecycle methods will be invoked lower priority first
@@ -89,8 +88,8 @@ public class ExecutionListenerSupport {
 
     private void addListener(ExecutionListener l) {
         if ( ! containsListener(l)) {
-            Priority p = l.getClass().getAnnotation(Priority.class);
-            int priority = p == null ? Priority.DEFAULT_USER_LISTENER_PRIORITY : p.value();
+            ExecutionPriority p = l.getClass().getAnnotation(ExecutionPriority.class);
+            int priority = p == null ? ExecutionPriority.DEFAULT_USER_LISTENER_PRIORITY : p.value();
             PrioritisedListener prioritisedListener = new PrioritisedListener(priority, l);
             listeners.add(prioritisedListener);
         }
