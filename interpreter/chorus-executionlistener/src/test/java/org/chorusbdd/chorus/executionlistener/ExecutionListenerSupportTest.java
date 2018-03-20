@@ -92,32 +92,32 @@ public class ExecutionListenerSupportTest {
         executionListenerSupport.notifyFeatureCompleted(executionToken, featureToken);
         executionListenerSupport.notifyTestsCompleted(executionToken, featureList, Collections.emptySet());
         
-        List<String> expected = asList(new String[] {
-             "testsStartedPriorityThreeHundred", 
-             "testsStartedPriorityTwoHundred",
-             "testsStartedPriorityOneHundred",
-             "featureStartedPriorityThreeHundred",
-             "featureStartedPriorityTwoHundred",
-             "featureStartedPriorityOneHundred",
-             "scenarioStartedPriorityThreeHundred",
-             "scenarioStartedPriorityTwoHundred",
-             "scenarioStartedPriorityOneHundred",
-             "stepStartedPriorityThreeHundred",
-             "stepStartedPriorityTwoHundred",
-             "stepStartedPriorityOneHundred",
-             "stepCompletedPriorityOneHundred",
-             "stepCompletedPriorityTwoHundred",
-             "stepCompletedPriorityThreeHundred",
-             "scenarioCompletedPriorityOneHundred",
-             "scenarioCompletedPriorityTwoHundred",
-             "scenarioCompletedPriorityThreeHundred",
-             "featureCompletedPriorityOneHundred",
-             "featureCompletedPriorityTwoHundred",
-             "featureCompletedPriorityThreeHundred",
-             "testsCompletedPriorityOneHundred",
-             "testsCompletedPriorityTwoHundred",
-             "testsCompletedPriorityThreeHundred"
-        });
+        List<String> expected = asList(
+            "testsStartedPriorityThreeHundred",
+                "testsStartedPriorityTwoHundred",
+                "testsStartedPriorityOneHundred",
+                "featureStartedPriorityThreeHundred",
+                "featureStartedPriorityTwoHundred",
+                "featureStartedPriorityOneHundred",
+                "scenarioStartedPriorityThreeHundred",
+                "scenarioStartedPriorityTwoHundred",
+                "scenarioStartedPriorityOneHundred",
+                "stepStartedPriorityThreeHundred",
+                "stepStartedPriorityTwoHundred",
+                "stepStartedPriorityOneHundred",
+                "stepCompletedPriorityOneHundred",
+                "stepCompletedPriorityTwoHundred",
+                "stepCompletedPriorityThreeHundred",
+                "scenarioCompletedPriorityOneHundred",
+                "scenarioCompletedPriorityTwoHundred",
+                "scenarioCompletedPriorityThreeHundred",
+                "featureCompletedPriorityOneHundred",
+                "featureCompletedPriorityTwoHundred",
+                "featureCompletedPriorityThreeHundred",
+                "testsCompletedPriorityOneHundred",
+                "testsCompletedPriorityTwoHundred",
+                "testsCompletedPriorityThreeHundred"
+        );
         
         assertEquals(expected, executions);
     }
