@@ -23,6 +23,8 @@ allprojects  {
             // standard out or error is shown
             // in Gradle output.
             showStandardStreams = true
+            events "failed"
+            exceptionFormat "short"
         }
     }
 }
