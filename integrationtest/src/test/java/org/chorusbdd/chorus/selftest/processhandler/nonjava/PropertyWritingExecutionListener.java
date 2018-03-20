@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.selftest.processhandler.nonjava;
 
+import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -43,6 +44,7 @@ import java.util.Properties;
 * Date: 19/12/13
 * Time: 18:55
 */
+@ExecutionPriority(2000)  //set the priority high to generate the properties file before anything else runs!
 public class PropertyWritingExecutionListener extends ExecutionListenerAdapter {
            
     public void featureStarted(ExecutionToken testExecutionToken, FeatureToken featureToken) {
