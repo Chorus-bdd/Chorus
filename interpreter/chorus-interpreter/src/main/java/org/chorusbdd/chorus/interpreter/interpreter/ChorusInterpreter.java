@@ -113,65 +113,64 @@ public class ChorusInterpreter {
         //notify we started, even if there are missing handlers
         //(but nothing will be done)
         //this is still important so execution listeners at least see the feature (but will show as 'unimplemented')
-        String config = feature.isConfiguration() ? " in config " + feature.getConfigurationName() : "";
-        log.info("Running feature from file: " + feature.getFeatureFile() + config);
+        log.info("Running feature from file: " + feature.getFeatureFile() + (feature.isConfiguration() ? " in config " + feature.getConfigurationName() : ""));
 
         //check that the required handler classes are all available and list them in order of precedence
         List<Class> orderedHandlerClasses = new ArrayList<>();
         StringBuilder unavailableHandlersMessage = handlerClassDiscovery.findHandlerClassesForFeature(allHandlerClasses, feature, orderedHandlerClasses);
         boolean foundAllHandlerClasses = unavailableHandlersMessage.length() == 0;
-
-
-        //run the scenarios in the feature
-        if (foundAllHandlerClasses) {
-            log.debug("The following handlers will be used " + orderedHandlerClasses);
-            List<ScenarioToken> scenarios = feature.getScenarios();
-
-            try {
-                HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager, executionToken.getProfile());
-                handlerManager.createFeatureScopedHandlers();
-                handlerManager.processStartOfFeature();
-
-                runScenarios(executionToken, feature, scenarios, handlerManager);
-
-                handlerManager.processEndOfFeature();
-            } catch (Exception e) {
-                log.error("Exception while running feature " + feature.getName(), e);
-            }
-
-            String description = feature.getEndState() == EndState.PASSED ? " passed! " : feature.getEndState() == EndState.PENDING ? " pending! " : " failed! ";
-            log.trace("The feature " + description);
-
-            if ( feature.getEndState() == EndState.PASSED) {
-                executionToken.incrementFeaturesPassed();
-            } else if ( feature.getEndState() == EndState.PENDING ) {
-                executionToken.incrementFeaturesPending();
-            } else {
-                executionToken.incrementFeaturesFailed();
-            }
-        } else {
+        
+        if ( ! foundAllHandlerClasses ) {
             log.warn("The following handlers were not available, failing feature " + feature.getName() + " " + unavailableHandlersMessage);
             feature.setUnavailableHandlersMessage(unavailableHandlersMessage.toString());
             executionToken.incrementUnavailableHandlers();
-            executionToken.incrementFeaturesFailed();
+        } else {
+            log.debug("The following handlers will be used " + orderedHandlerClasses);
         }
 
+        boolean skipAllScenarios = ! foundAllHandlerClasses;
+            
+
+        try {
+            HandlerManager handlerManager = new HandlerManager(feature, orderedHandlerClasses, springContextSupport, subsystemManager, executionToken.getProfile());
+            if ( ! skipAllScenarios) {
+                handlerManager.createFeatureScopedHandlers();
+            }
+            handlerManager.processStartOfFeature();
+
+            runScenarios(executionToken, feature, feature.getScenarios(), handlerManager, skipAllScenarios);
+
+            handlerManager.processEndOfFeature();
+        } catch (Exception e) {
+            log.error("Exception while running feature " + feature.getName(), e);
+        }
+
+        String description = feature.getEndState() == EndState.PASSED ? " passed! " : feature.getEndState() == EndState.PENDING ? " pending! " : " failed! ";
+        log.trace("The feature " + description);
+
+        if ( feature.getEndState() == EndState.PASSED) {
+            executionToken.incrementFeaturesPassed();
+        } else if ( feature.getEndState() == EndState.PENDING ) {
+            executionToken.incrementFeaturesPending();
+        } else {
+            executionToken.incrementFeaturesFailed();
+        }
+        
         executionListenerSupport.notifyFeatureCompleted(executionToken, feature);
     }
 
-    private void runScenarios(ExecutionToken executionToken, FeatureToken feature, List<ScenarioToken> scenarios, HandlerManager handlerManager) throws Exception {
+    private void runScenarios(ExecutionToken executionToken, FeatureToken feature, List<ScenarioToken> scenarios, HandlerManager handlerManager, boolean skipAllScenarios) throws Exception {
         log.debug("Now running scenarios " + scenarios + " for feature " + feature);
         for (Iterator<ScenarioToken> iterator = scenarios.iterator(); iterator.hasNext(); ) {
             ScenarioToken scenario = iterator.next();
 
-            //if the feature start scenario exists and failed we skip all but feature end scenario
-            boolean skip =
-                    ! scenario.isFeatureStartScenario() &&
-                    ! scenario.isFeatureEndScenario() &&
-                    feature.isFeatureStartScenarioFailed();
-
-            if ( skip ) {
+            boolean skip = false;
+            if ( skipAllScenarios ) {
+                log.warn("Skipping scenario " + scenario);
+                skip = true;
+            } else if ( feature.isFeatureStartScenarioFailed() && ! scenario.isFeatureStartScenario() && ! scenario.isFeatureEndScenario()) {
                 log.warn("Skipping scenario " + scenario + " since " + KeyWord.FEATURE_START_SCENARIO_NAME + " failed");
+                skip = true;
             }
 
             runScenario(
@@ -183,7 +182,7 @@ public class ChorusInterpreter {
         }
     }
 
-    private void runScenario(ExecutionToken executionToken, HandlerManager handlerManager, ScenarioToken scenario, boolean skip) throws Exception {
+    private void runScenario(ExecutionToken executionToken, HandlerManager handlerManager, ScenarioToken scenario, boolean skipScenario) throws Exception {
         executionListenerSupport.notifyScenarioStarted(executionToken, scenario);
         log.info(String.format("Processing scenario: %s", scenario.getName()));
 
@@ -191,14 +190,19 @@ public class ChorusInterpreter {
         ChorusContext.destroy();
 
         handlerManager.setCurrentScenario(scenario);
-        List<Object> handlerInstances = handlerManager.getOrCreateHandlersForScenario();
-        handlerManager.processStartOfScope(Scope.SCENARIO, handlerInstances);
+        
+        List<Object> handlerInstances = Collections.emptyList();
+        if ( ! skipScenario) {
+            handlerInstances = handlerManager.getOrCreateHandlersForScenario();
+        }
 
+        handlerManager.processStartOfScope(Scope.SCENARIO, handlerInstances);
+        StepInvokerProvider p = getStepInvokers(handlerInstances);
+        
         createTimeoutTasks(Thread.currentThread()); //will interrupt or eventually kill thread / interpreter if blocked
 
-        log.debug("Running scenario steps for Scenario " + scenario);
-        StepInvokerProvider p = getStepInvokers(handlerInstances);
-        stepProcessor.runSteps(executionToken, p, scenario.getSteps(), stepCatalogue, skip);
+        log.debug((skipScenario ? "Skipping" : "Running") +  " scenario steps for Scenario " + scenario);
+        stepProcessor.runSteps(executionToken, p, scenario.getSteps(), stepCatalogue, skipScenario);
 
         stopTimeoutTasks();
 
@@ -206,7 +210,7 @@ public class ChorusInterpreter {
         if ( ! scenario.isStartOrEndScenario() ) {
             updateExecutionStats(executionToken, scenario);
         }
-
+        
         handlerManager.processEndOfScope(Scope.SCENARIO, handlerInstances);
         executionListenerSupport.notifyScenarioCompleted(executionToken, scenario);
     }

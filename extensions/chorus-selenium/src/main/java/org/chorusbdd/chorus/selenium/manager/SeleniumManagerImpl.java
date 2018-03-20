@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.selenium.manager;
 
+import org.chorusbdd.chorus.annotations.Priority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -158,7 +159,9 @@ public class SeleniumManagerImpl implements SeleniumManager {
 
     @Override
     public ExecutionListener getExecutionListener() {
-        return new ExecutionListenerAdapter() {
+        
+        @Priority(Priority.SELENIUM_MANAGER_PRIORITY)
+        class SeleniumExecutionListenerAdapter extends ExecutionListenerAdapter {
 
             @Override
             public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
@@ -193,6 +196,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
             }
 
         };
+        return new SeleniumExecutionListenerAdapter();
     }
 
     private void quitAndRemoveAllWebDrivers() {

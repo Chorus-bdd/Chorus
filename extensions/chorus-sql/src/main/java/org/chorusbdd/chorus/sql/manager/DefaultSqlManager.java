@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.sql.manager;
 
+import org.chorusbdd.chorus.annotations.Priority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -150,7 +151,8 @@ public class DefaultSqlManager implements SqlManager {
 
     @Override
     public ExecutionListener getExecutionListener() {
-        return new ExecutionListenerAdapter() {
+        @Priority(Priority.SQL_MANAGER_PRIORITY)
+        class SqlManagerExecutionListener extends ExecutionListenerAdapter {
 
             @Override
             public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {
@@ -180,6 +182,7 @@ public class DefaultSqlManager implements SqlManager {
                 });
             }
         };
+        return new SqlManagerExecutionListener();
     }
 
     private void closeAndRemoveConnection(String configName, Connection c) {

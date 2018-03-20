@@ -98,15 +98,15 @@ public class WebAgentSuiteListener implements ExecutionListener {
     //delegate to  executionListenerSupport to enable adding / removing listeners
 
     public void addExecutionListener(ExecutionListener... listeners) {
-        executionListenerSupport.addExecutionListener(listeners);
+        executionListenerSupport.addExecutionListeners(listeners);
     }
 
     public boolean removeExecutionListener(ExecutionListener... listeners) {
-        return executionListenerSupport.removeExecutionListener(listeners);
+        return executionListenerSupport.removeExecutionListeners(listeners);
     }
 
     public void addExecutionListener(Collection<ExecutionListener> listeners) {
-        executionListenerSupport.addExecutionListener(listeners);
+        executionListenerSupport.addExecutionListeners(listeners);
     }
 
     public void removeExecutionListeners(List<ExecutionListener> listeners) {
@@ -123,7 +123,7 @@ public class WebAgentSuiteListener implements ExecutionListener {
     public void testsStarted(final ExecutionToken testExecutionToken, final List<FeatureToken> features) {
         eventPropagator.execute(new Runnable() {
             public void run() {
-                executionListenerSupport.notifyStartTests(testExecutionToken, features);
+                executionListenerSupport.notifyTestsStarted(testExecutionToken, features);
             }
         });
     }

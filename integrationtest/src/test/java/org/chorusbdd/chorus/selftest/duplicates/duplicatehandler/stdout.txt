@@ -1,9 +1,13 @@
 Feature: Duplicate Handlers                                                                          
 Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/duplicates/duplicatehandler/duplicatehandler.feature
 Chorus --> WARN    - The following handlers were not available, failing feature Duplicate Handlers Duplicate Handlers [Duplicate Handlers] org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerTwo and org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerOne
-Duplicate Handlers [Duplicate Handlers] org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerTwo and org.chorusbdd.chorus.selftest.duplicates.duplicatehandler.DuplicateHandlerOne
+Chorus --> WARN    - Skipping scenario Scenario: Simple Scenario
+  Scenario: Simple Scenario
+Chorus --> INFO    - Processing scenario: Simple Scenario
+    Given Chorus is working properly                                                         SKIPPED 
+    Then I can run a feature with a single scenario                                          SKIPPED 
 
 
 Features  (total:1) (passed:0) (failed:1)
-Scenarios (total:0) (passed:0) (failed:0)
-Steps     (total:0) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:1) (passed:0) (failed:1)
+Steps     (total:2) (passed:0) (failed:0) (undefined:0) (pending:0) (skipped:2)

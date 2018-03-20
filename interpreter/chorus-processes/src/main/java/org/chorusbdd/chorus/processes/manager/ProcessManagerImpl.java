@@ -29,6 +29,7 @@
  */
 package org.chorusbdd.chorus.processes.manager;
 
+import org.chorusbdd.chorus.annotations.Priority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -321,6 +322,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
 
+    @Priority(Priority.PROCESS_MANAGER_PRIORITY)
     private class ProcessManagerExecutionListener extends ExecutionListenerAdapter {
 
         public void featureStarted(ExecutionToken testExecutionToken, FeatureToken feature) {

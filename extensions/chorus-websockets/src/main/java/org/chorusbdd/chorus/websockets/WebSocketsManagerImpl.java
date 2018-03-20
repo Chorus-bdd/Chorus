@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.websockets;
 
+import org.chorusbdd.chorus.annotations.Priority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
@@ -147,7 +148,9 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
 
     @Override
     public ExecutionListener getExecutionListener() {
-        return new ExecutionListenerAdapter() {
+
+        @Priority(Priority.WEB_SOCKETS_MANAGER_PRIORITY)
+        class WebSocketsExecutionListener extends ExecutionListenerAdapter {
 
             @Override
             public void featureCompleted(ExecutionToken testExecutionToken, FeatureToken feature) {
@@ -163,6 +166,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
                 }
             }
         };
+        return new WebSocketsExecutionListener();
     }
 
     private class MessageProcessor implements WebSocketMessageProcessor {

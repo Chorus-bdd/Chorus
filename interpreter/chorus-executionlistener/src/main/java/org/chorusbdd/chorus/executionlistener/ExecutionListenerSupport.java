@@ -29,94 +29,182 @@
  */
 package org.chorusbdd.chorus.executionlistener;
 
+import org.chorusbdd.chorus.annotations.Priority;
 import org.chorusbdd.chorus.results.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
 
 /**
  * Created with IntelliJ IDEA.
  * User: nick
  * Date: 16/05/12
  * Time: 22:03
- * To change this template use File | Settings | File Templates.
+ * 
+ * Maintain an ordered set of execution listeners and provide a mechanism to invoke their lifecycle methods
+ * 
+ * ExecutionListeners are ordered according to the priority value in the {@link Priority Priority} annotation
+ * An listener which does not have the Priority annotation will be assigned a default priority
+ * 
+ * The 'started' lifecycle methods will be invoked in reverse order (higher priority value first)
+ * The 'completed' lifecycle methods will be invoked lower priority first
  */
 public class ExecutionListenerSupport {
 
-    private List<ExecutionListener> listeners = new ArrayList<>();
-
-    //
-    // Execution event methods
-    //
-    public void addExecutionListener(ExecutionListener... listeners) {
-        this.listeners.addAll(Arrays.asList(listeners));
+    private TreeSet<PrioritisedListener> listeners = new TreeSet<>(
+        comparing(PrioritisedListener::getPriorty).thenComparing(PrioritisedListener::getId)
+    );
+    
+    public void addExecutionListeners(ExecutionListener... listeners) {
+        for ( ExecutionListener l : listeners) {
+            addListener(l);
+        }
     }
 
-    public boolean removeExecutionListener(ExecutionListener... listeners) {
-        return this.listeners.removeAll(Arrays.asList(listeners));
-    }
-
-    public void addExecutionListener(Collection<ExecutionListener> listeners) {
-        this.listeners.addAll(listeners);
+    public void addExecutionListeners(Collection<ExecutionListener> listeners) {
+        listeners.forEach(this::addListener);
     }
 
     public void removeExecutionListeners(List<ExecutionListener> listeners) {
-        this.listeners.removeAll(listeners);
+        listeners.forEach(this::removeListener);
     }
 
-    public void prependExecutionListener(ExecutionListener listener) {
-        listeners.add(0, listener);
+    public boolean removeExecutionListeners(ExecutionListener... listeners) {
+        boolean result = false;
+        for ( ExecutionListener l : listeners) {
+            result |= removeListener(l);
+        }
+        return result;
     }
 
-    public void notifyStartTests(ExecutionToken t, List<FeatureToken> features) {
-        for (ExecutionListener listener : listeners) {
-            listener.testsStarted(t, features);
+    public List<ExecutionListener> getListeners() {
+        return listeners.stream()
+                .map(PrioritisedListener::getListener)
+                .collect(Collectors.toList());
+    }
+
+    private void addListener(ExecutionListener l) {
+        if ( ! containsListener(l)) {
+            Priority p = l.getClass().getAnnotation(Priority.class);
+            int priority = p == null ? Priority.DEFAULT_USER_LISTENER_PRIORITY : p.value();
+            PrioritisedListener prioritisedListener = new PrioritisedListener(priority, l);
+            listeners.add(prioritisedListener);
+        }
+    }
+
+    private boolean containsListener(ExecutionListener l) {
+        return listeners.stream().filter(pl -> pl.getListener() == l).count() > 0;
+    }
+
+    private boolean removeListener(ExecutionListener l) {
+        Iterator<PrioritisedListener> i = listeners.iterator();
+        boolean removed = false;
+        while(i.hasNext()) {
+            if ( i.next().getListener() == l) {
+                i.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
+
+    //////////////////////////////////////
+    ////// Lifecycle methods
+    
+    public void notifyTestsStarted(ExecutionToken t, List<FeatureToken> features) {
+        for (PrioritisedListener listener : listeners.descendingSet()) {
+            listener.getListener().testsStarted(t, features);
         }
     }
 
     public void notifyStepStarted(ExecutionToken t, StepToken step) {
-        for (ExecutionListener listener : listeners) {
-            listener.stepStarted(t, step);
+        for (PrioritisedListener listener : listeners.descendingSet()) {
+            listener.getListener().stepStarted(t, step);
         }
     }
 
     public void notifyStepCompleted(ExecutionToken t, StepToken step) {
-        for (ExecutionListener listener : listeners) {
-            listener.stepCompleted(t, step);
+        for (PrioritisedListener listener : listeners) {
+            listener.getListener().stepCompleted(t, step);
         }
     }
 
     public void notifyFeatureStarted(ExecutionToken t, FeatureToken feature) {
-        for (ExecutionListener listener : listeners) {
-            listener.featureStarted(t, feature);
+        for (PrioritisedListener listener : listeners.descendingSet()) {
+            listener.getListener().featureStarted(t, feature);
         }
     }
 
     public void notifyFeatureCompleted(ExecutionToken t, FeatureToken feature) {
-        for (ExecutionListener listener : listeners) {
-            listener.featureCompleted(t, feature);
+        for (PrioritisedListener listener : listeners) {
+            listener.getListener().featureCompleted(t, feature);
         }
     }
 
     public void notifyScenarioStarted(ExecutionToken t, ScenarioToken scenario) {
-        for (ExecutionListener listener : listeners) {
-            listener.scenarioStarted(t, scenario);
+        for (PrioritisedListener listener : listeners.descendingSet()) {
+            listener.getListener().scenarioStarted(t, scenario);
         }
     }
 
     public void notifyScenarioCompleted(ExecutionToken t, ScenarioToken scenario) {
-        for (ExecutionListener listener : listeners) {
-            listener.scenarioCompleted(t, scenario);
+        for (PrioritisedListener listener : listeners) {
+            listener.getListener().scenarioCompleted(t, scenario);
         }
     }
 
     public void notifyTestsCompleted(ExecutionToken t, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
-        for (ExecutionListener listener : listeners) {
-            listener.testsCompleted(t, features, cataloguedSteps);
+        for (PrioritisedListener listener : listeners) {
+            listener.getListener().testsCompleted(t, features, cataloguedSteps);
         }
     }
 
-    public List<ExecutionListener> getListeners() {
-        return new ArrayList<>(listeners);
-    }
+    
+    private static class PrioritisedListener {
+        
+        static final AtomicInteger idFactory = new AtomicInteger();
 
+        private final int id = idFactory.getAndAdd(1);
+        private final int priorty;
+        private final ExecutionListener listener;
+        
+        PrioritisedListener(int priorty, ExecutionListener listener) {
+            this.priorty = priorty;
+            this.listener = listener;
+        }
+
+        Integer getPriorty() {
+            return priorty;
+        }
+
+        ExecutionListener getListener() {
+            return listener;
+        }
+
+        int getId() {
+            return id;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            PrioritisedListener that = (PrioritisedListener) o;
+
+            if (priorty != that.priorty) return false;
+            return id == that.id;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = priorty;
+            result = 31 * result + id;
+            return result;
+        }
+    }
 }

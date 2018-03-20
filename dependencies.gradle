@@ -29,6 +29,7 @@ project(':chorus-context') {
 project(':chorus-executionlistener') {
     dependencies {
         compile project (':chorus-results')
+        compile project (':chorus-annotations')
     }
 }
 

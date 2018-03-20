@@ -42,14 +42,12 @@ import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManager;
 import org.chorusbdd.chorus.interpreter.subsystem.SubsystemManagerImpl;
 import org.chorusbdd.chorus.logging.ChorusOut;
 import org.chorusbdd.chorus.pathscanner.FeatureListBuilder;
-import org.chorusbdd.chorus.results.CataloguedStep;
 import org.chorusbdd.chorus.results.EndState;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import static org.chorusbdd.chorus.SwitchPreprocessing.handleVersionOrHelpSwitches;
 
@@ -121,18 +119,18 @@ public class Chorus {
     private void configureSubsystems() {
         List<String> handlerClassBasePackages = configReader.getValues(ChorusConfigProperty.HANDLER_PACKAGES);
         subsystemManager.initializeSubsystems(handlerClassBasePackages);
-        listenerSupport.addExecutionListener(subsystemManager.getExecutionListeners());
+        listenerSupport.addExecutionListeners(subsystemManager.getExecutionListeners());
     }
 
     private void configureOutputAndLogging() {
         outputAndLoggingConfigurer.configureOutputAndLogging(configReader);
         ExecutionListener l = outputAndLoggingConfigurer.getOutputExecutionListener();
-        listenerSupport.addExecutionListener(l);
+        listenerSupport.addExecutionListeners(l);
     }
 
     private void addCustomExecutionListeners() {
         List<ExecutionListener> listeners = new ExecutionListenerFactory().createExecutionListeners(configReader);
-        listenerSupport.addExecutionListener(listeners);
+        listenerSupport.addExecutionListeners(listeners);
     }
 
     /**
@@ -180,7 +178,7 @@ public class Chorus {
      * @return an executionToken to collate results for this test run
      */
     public void startTests(ExecutionToken executionToken, List<FeatureToken> features) {
-        listenerSupport.notifyStartTests(executionToken, features);
+        listenerSupport.notifyTestsStarted(executionToken, features);
     }
 
     /**
@@ -194,7 +192,7 @@ public class Chorus {
     }
 
     void addJUnitExecutionListener(ExecutionListener listener) {
-        listenerSupport.prependExecutionListener(listener);
+        listenerSupport.addExecutionListeners(listener);
     }
 
     void dispose() {

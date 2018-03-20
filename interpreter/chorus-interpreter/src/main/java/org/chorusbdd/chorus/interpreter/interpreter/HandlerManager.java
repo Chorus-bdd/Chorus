@@ -77,7 +77,7 @@ public class HandlerManager {
             if (handlerAnnotation.scope() != Scope.SCENARIO) { //feature or unmanaged
                 Object handler = createAndInitHandlerInstance(handlerClass);
                 featureScopedHandlers.put(handlerClass, handler);
-                log.debug("Created new unmanaged handler: " + handlerAnnotation.value());
+                log.debug("Created new feature scoped handler: " + handlerAnnotation.value());
             }
         }    
     }
