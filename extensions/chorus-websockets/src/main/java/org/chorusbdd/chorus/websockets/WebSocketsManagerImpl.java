@@ -250,7 +250,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
      */
     private class CleanupShutdownHook extends Thread {
         public void run() {
-            log.debug("Running Cleanup on shutdown for " + this.getClass().getSimpleName());
+            log.debug("Running Cleanup on shutdown for WebSocketsManager");
             try {
                 stopWebSocketServer();
             } catch (Throwable t) {

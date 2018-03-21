@@ -223,7 +223,7 @@ public class DefaultSqlManager implements SqlManager {
      */
     private class CleanupShutdownHook extends Thread {
         public void run() {
-            log.debug("Running Cleanup on shutdown for " + this.getClass().getSimpleName());
+            log.debug("Running Cleanup on shutdown for SqlManager");
             try {
                 closeAllConnections();
             } catch (Throwable t) {
