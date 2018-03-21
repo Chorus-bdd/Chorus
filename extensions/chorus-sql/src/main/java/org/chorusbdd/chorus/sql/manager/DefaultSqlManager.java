@@ -19,10 +19,8 @@ import org.chorusbdd.chorus.util.function.Tuple2;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +36,7 @@ public class DefaultSqlManager implements SqlManager {
     private SqlConfigBuilderFactory sqlConfigBuilderFactory = new SqlConfigBuilderFactory();
     private SqlConfigBeanValidator sqlConfigBeanValidator = new SqlConfigBeanValidator();
     
-    private LinkedHashMap<String, Tuple2<Connection, SqlConfig>> configNameToConnectionDetails = new LinkedHashMap<>();
+    private Map<String, Tuple2<Connection, SqlConfig>> configNameToConnectionDetails = new ConcurrentHashMap<>();
 
     private FeatureToken feature;
 
