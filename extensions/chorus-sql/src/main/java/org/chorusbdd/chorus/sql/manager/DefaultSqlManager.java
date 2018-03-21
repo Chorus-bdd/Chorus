@@ -19,6 +19,7 @@ import org.chorusbdd.chorus.util.function.Tuple2;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Properties;
@@ -40,6 +41,17 @@ public class DefaultSqlManager implements SqlManager {
     private LinkedHashMap<String, Tuple2<Connection, SqlConfig>> configNameToConnectionDetails = new LinkedHashMap<>();
 
     private FeatureToken feature;
+
+    private CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
+    
+    public DefaultSqlManager() {
+        addShutdownHook();
+    }
+
+    private void addShutdownHook() {
+        log.trace("Adding shutdown hook for SqlManager " + this);
+        Runtime.getRuntime().addShutdownHook(cleanupShutdownHook);
+    }
 
     @Override
     public void connectToDatabase(String configName, Properties properties) {
@@ -185,22 +197,41 @@ public class DefaultSqlManager implements SqlManager {
         return new SqlManagerExecutionListener();
     }
 
+    private void closeAllConnections() {
+        List<Tuple2<Connection, SqlConfig>> allConfigs = new ArrayList<>(configNameToConnectionDetails.values());
+        allConfigs.forEach(c -> closeAndRemoveConnection(c.getTwo().getConfigName(), c.getOne()));
+    }
+
     private void closeAndRemoveConnection(String configName, Connection c) {
         log.debug("Closing connection for database " + configName);
         try {
             c.close();
-        } catch (SQLException e) {
+            
+            //only do this if close succeeds - guard against creating another connection / connection leak
+            configNameToConnectionDetails.remove(configName);
+        } catch (Exception e) {
             throw new ChorusException("Failed to close database connection for " + configName, e);
-        }  
-        
-        //Probably best not to remove it if the close fails - otherwise we could end up creating more and taking down dataservers if there are lots of tests
-        //Leaving it in the map will fail the next create connection step.
-        configNameToConnectionDetails.remove(configName);
+        }
     }
 
     private SqlConfig getSqlConfig(String configName, Properties processProperties) {
         SqlConfigBuilder builder = sqlConfigBuilderFactory.createConfigBuilder(processProperties, configName);
         return builder.build();
+    }
+
+    /**
+     * If shut down before a scenario completes, try as hard as we can to cleanly close down any open web drivers
+     * Not doing so can leave selenium hub in an inoperable state
+     */
+    private class CleanupShutdownHook extends Thread {
+        public void run() {
+            log.debug("Running Cleanup on shutdown for " + this.getClass().getSimpleName());
+            try {
+                closeAllConnections();
+            } catch (Throwable t) {
+                log.debug("Failed during cleanup", t);
+            }
+        }
     }
 
 }
