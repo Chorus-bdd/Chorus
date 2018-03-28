@@ -1,11 +1,17 @@
 
+plugins {
+    id "com.github.hierynomus.license" version "0.14.0" apply false
+}
+
 apply plugin: 'java-library-distribution'
 
 def dependencyFile = new File("dependencies.gradle")
 
 allprojects  {
+    
     apply plugin: 'java'
     apply plugin: 'maven'
+    apply plugin: 'com.github.hierynomus.license'
 
     repositories {
         mavenLocal()
@@ -13,7 +19,7 @@ allprojects  {
         maven { url "http://repo.maven.apache.org/maven2" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
-
+    
     group = "org.chorusbdd"
     version = '3.0.0.DEV45'
 
