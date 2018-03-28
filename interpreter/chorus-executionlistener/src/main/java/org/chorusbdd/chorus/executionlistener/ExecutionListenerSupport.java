@@ -30,12 +30,16 @@
 package org.chorusbdd.chorus.executionlistener;
 
 import org.chorusbdd.chorus.annotations.ExecutionPriority;
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 
 /**
@@ -53,6 +57,8 @@ import static java.util.Comparator.comparing;
  * The 'completed' lifecycle methods will be invoked lower priority first
  */
 public class ExecutionListenerSupport {
+
+    private ChorusLog log = ChorusLogFactory.getLog(ExecutionListenerSupport.class);
 
     private TreeSet<PrioritisedListener> listeners = new TreeSet<>(
         comparing(PrioritisedListener::getPriorty).thenComparing(PrioritisedListener::getId)
@@ -115,53 +121,50 @@ public class ExecutionListenerSupport {
     ////// Lifecycle methods
     
     public void notifyTestsStarted(ExecutionToken t, List<FeatureToken> features) {
-        for (PrioritisedListener listener : listeners.descendingSet()) {
-            listener.getListener().testsStarted(t, features);
-        }
+        safelyInvokeCallback("testsStarted", l -> l.testsStarted(t, features), listeners.descendingSet());
     }
 
     public void notifyStepStarted(ExecutionToken t, StepToken step) {
-        for (PrioritisedListener listener : listeners.descendingSet()) {
-            listener.getListener().stepStarted(t, step);
-        }
+        safelyInvokeCallback("stepStarted", l -> l.stepStarted(t, step), listeners.descendingSet());
     }
 
     public void notifyStepCompleted(ExecutionToken t, StepToken step) {
-        for (PrioritisedListener listener : listeners) {
-            listener.getListener().stepCompleted(t, step);
-        }
+        safelyInvokeCallback("stepCompleted", l -> l.stepCompleted(t, step), listeners);
     }
 
     public void notifyFeatureStarted(ExecutionToken t, FeatureToken feature) {
-        for (PrioritisedListener listener : listeners.descendingSet()) {
-            listener.getListener().featureStarted(t, feature);
-        }
+        safelyInvokeCallback("featureStarted", l -> l.featureStarted(t, feature), listeners.descendingSet());
+
     }
 
     public void notifyFeatureCompleted(ExecutionToken t, FeatureToken feature) {
-        for (PrioritisedListener listener : listeners) {
-            listener.getListener().featureCompleted(t, feature);
-        }
+        safelyInvokeCallback("featureCompleted", l -> l.featureCompleted(t, feature), listeners);
+
     }
 
     public void notifyScenarioStarted(ExecutionToken t, ScenarioToken scenario) {
-        for (PrioritisedListener listener : listeners.descendingSet()) {
-            listener.getListener().scenarioStarted(t, scenario);
-        }
+        safelyInvokeCallback("scenarioStarted", l -> l.scenarioStarted(t, scenario), listeners.descendingSet());
+
     }
 
     public void notifyScenarioCompleted(ExecutionToken t, ScenarioToken scenario) {
-        for (PrioritisedListener listener : listeners) {
-            listener.getListener().scenarioCompleted(t, scenario);
-        }
+        safelyInvokeCallback("scenarioCompleted", l -> l.scenarioCompleted(t, scenario), listeners);
     }
 
     public void notifyTestsCompleted(ExecutionToken t, List<FeatureToken> features, Set<CataloguedStep> cataloguedSteps) {
-        for (PrioritisedListener listener : listeners) {
-            listener.getListener().testsCompleted(t, features, cataloguedSteps);
-        }
+        safelyInvokeCallback("testsCompleted", l -> l.testsCompleted(t, features, cataloguedSteps), listeners);
     }
 
+    private void safelyInvokeCallback(String callbackName, Consumer<ExecutionListener> c, Collection<PrioritisedListener> prioritisedListeners) {
+        for (PrioritisedListener p : prioritisedListeners) {
+            ExecutionListener l = p.getListener();
+            try {
+                c.accept(l);
+            } catch (Exception e) {
+                log.error(format("ExecutionListener of class %s throw exception during callback %s", l.getClass().getName(), callbackName));
+            }
+        }
+    }
     
     private static class PrioritisedListener {
         

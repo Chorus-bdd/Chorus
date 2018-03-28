@@ -30,6 +30,7 @@ project(':chorus-executionlistener') {
     dependencies {
         compile project (':chorus-results')
         compile project (':chorus-annotations')
+        compile project (':chorus-logging')
     }
 }
 
