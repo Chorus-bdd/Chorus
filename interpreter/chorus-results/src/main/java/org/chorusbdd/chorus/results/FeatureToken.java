@@ -24,9 +24,7 @@
 package org.chorusbdd.chorus.results;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by: Steve Neal
@@ -42,7 +40,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
 
     public static final String BASE_CONFIGURATION = "base";
 
-    private static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 4;
 
 
     private String name;
@@ -52,6 +50,13 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
 
     private StringBuilder description = new StringBuilder();
     private List<ScenarioToken> scenarios = new ArrayList<>();
+    
+    /**
+     * This field is included for future proofing
+     * It may be possible to attach resources to features (e.g. screen shots following a failure)
+     */
+    private Map attachments;
+    
     private transient File featureFile;
 
     private String unavailableHandlersMessage;

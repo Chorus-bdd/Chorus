@@ -23,10 +23,7 @@
  */
 package org.chorusbdd.chorus.results;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.chorusbdd.chorus.results.StepEndState.*;
 
@@ -44,12 +41,18 @@ import static org.chorusbdd.chorus.results.StepEndState.*;
  */
 public class ScenarioToken extends AbstractToken implements PassPendingFailToken {
 
-    private static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 4;
 
     private String name;
     private List<StepToken> steps = new ArrayList<>();
     private List<String> tags = new ArrayList<>();//all tags listed on this scenario and its parent feature
 
+    /**
+     * This field is included for future proofing
+     * It may be possible to attach resources to scenarios (e.g. screen shots following a failure)
+     */
+    private Map attachments;
+    
     public ScenarioToken() {
         super(getNextId());
     }

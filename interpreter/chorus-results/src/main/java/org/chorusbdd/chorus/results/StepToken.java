@@ -23,16 +23,14 @@
  */
 package org.chorusbdd.chorus.results;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents a Scenario step
  */
 public class StepToken extends AbstractToken {
 
-    private static final long serialVersionUID = 4;
+    private static final long serialVersionUID = 5;
 
     public static final String DIRECTIVE_TYPE = "#!";
 
@@ -44,6 +42,12 @@ public class StepToken extends AbstractToken {
     private String errorDetails = "";
 
     private int retryAttempts;
+
+    /**
+     * This field is included for future proofing
+     * It may be possible to attach resources to steps (e.g. screen shots following a failure)
+     */
+    private Map attachments;
 
     /**
      * Step macro are composite steps which contain child steps
