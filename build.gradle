@@ -33,6 +33,10 @@ allprojects  {
             exceptionFormat "short"
         }
     }
+
+    license {
+        include "**/*.java"
+    }
 }
 
 
