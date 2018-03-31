@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.results.FeatureToken;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -68,16 +69,16 @@ public class ChorusProcessFactory {
                 new NativeProcessCommandLineBuilder(namedProcess, featureDir);
 
         List<String> commandTokens = b.buildCommandLine();
-        logCommandLine(commandTokens);
+        logCommandLine(namedProcess, commandTokens);
         return commandTokens;
     }
 
-    private void logCommandLine(List<String> commandTokens) {
-        StringBuilder commandBuilder = new StringBuilder();
-        for ( String s : commandTokens) {
-            commandBuilder.append(s).append(" ");
+    private void logCommandLine(NamedProcess namedProcess, List<String> commandTokens) {
+        String command = commandTokens.stream().collect(Collectors.joining(" "));
+        log.info("About to run process: " + namedProcess.getProcessName());
+        if (log.isDebugEnabled()) {
+            log.debug("Process config name " + namedProcess.getConfigName());
+            log.debug("Command line: " + command);
         }
-        commandBuilder.deleteCharAt(commandBuilder.length() - 1);
-        log.info("About to run process: " + commandBuilder);
     }
 }

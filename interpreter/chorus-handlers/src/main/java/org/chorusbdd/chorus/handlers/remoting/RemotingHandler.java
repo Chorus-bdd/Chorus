@@ -97,17 +97,26 @@ public class RemotingHandler {
         return remotingManager.performActionInRemoteComponent(componentName, remotingProperties, action);
     }
 
-    //A Directive which can be used to connect to one or more processes
+    //A Directive which can be used to connect to one or more remote processes
     @Step("Remoting connect " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
+        connectRemoteProcesses(processNameList);
+    }
 
+    //A Directive which can be used to connect to one or more remote processes
+    @Step(".*connect to the remote process(?:es)? " + HandlerPatterns.nameListPattern)
+    public void connectToRemoteProcesses(String processNameList) throws Exception {
+        connectRemoteProcesses(processNameList);
+    }
+    
+    private void connectRemoteProcesses(String processNameList) {
         List<String> componentNames = HandlerPatterns.getNames(processNameList);
         for ( String componentName : componentNames) {
             Properties remotingProperties = getRemotingConfigForComponent(componentName);
             remotingManager.connect(componentName, remotingProperties);
         }
     }
-
+    
     private Properties getRemotingConfigForComponent(String configName) {
         HandlerConfigLoader handlerConfigLoader = new HandlerConfigLoader();
         Properties p = handlerConfigLoader.loadPropertiesForSubGroup(configurationManager, "remoting", configName);

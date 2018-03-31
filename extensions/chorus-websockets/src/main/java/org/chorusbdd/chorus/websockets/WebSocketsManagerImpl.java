@@ -105,7 +105,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         boolean validConfig = webSocketsConfigBeanValidator.isValid(config);
         if ( ! validConfig) {
             log.warn(webSocketsConfigBeanValidator.getErrorDescription());
-            fail("Remoting config must be valid for " + config.getConfigName());
+            fail("WebSockets config must be valid for " + config.getConfigName());
         }
     }
 

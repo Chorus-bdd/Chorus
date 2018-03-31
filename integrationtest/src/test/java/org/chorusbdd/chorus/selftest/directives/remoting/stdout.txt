@@ -25,8 +25,14 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     #! Processes start NoComponentName                                                       PASSED  
     #! Remoting connect NoComponentName                                                      PASSED  
     Check I can call a step method exported by the handler                                   PASSED  
+  Scenario: Connect using step not directive
+Chorus --> INFO    - Processing scenario: Connect using step not directive
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    #! Processes start NoComponentName                                                       PASSED  
+    When I connect to the remote process NoComponentName                                     PASSED  
+    Check I can call a step method exported by the handler                                   PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:4) (passed:4) (failed:0)
-Steps     (total:12) (passed:12) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:5) (passed:5) (failed:0)
+Steps     (total:15) (passed:15) (failed:0) (undefined:0) (pending:0) (skipped:0)

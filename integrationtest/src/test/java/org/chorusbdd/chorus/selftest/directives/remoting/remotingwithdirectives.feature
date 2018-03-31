@@ -24,8 +24,10 @@ Feature: Remoting With Directives
   Scenario: Call An Exported Method
     Check I can call a step method exported by the handler                        #! Processes start NoComponentName  #! Remoting connect NoComponentName
 
-
-
+    
+  Scenario: Connect using step not directive
+    When I connect to the remote process NoComponentName                                             #! Processes start NoComponentName
+    Check I can call a step method exported by the handler
 
 
 

@@ -59,19 +59,7 @@ public class ChorusContextHandler {
         }
     }
 
-    /**
-     * the 'in it' suffix can conflict with the Remoting Handler
-     * When the Remoting Handler is Uses this step becomes unusable - hence deprecated
-     * Use the 'context is empty' step instead
-     */
-    @Step("the context has no values in it")
-    @Deprecated
-    public void contextHasNoValues() {
-        ChorusContext context = ChorusContext.getContext();
-        ChorusAssert.assertTrue("The context has values: " + context, context.isEmpty());
-    }
-
-    @Step("the context is empty")
+    @Step(".*the context is empty")
     public void contextIsEmpty() {
         ChorusContext context = ChorusContext.getContext();
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());

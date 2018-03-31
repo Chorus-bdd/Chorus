@@ -11,7 +11,7 @@ Feature: Feature Start Scoping
     When I run feature start
     And I start a notScopedProcess process named myNotScoped
     And I start a scopedProcess process named myScopedToScenario
-    And Remoting connect myNotScoped, myScopedToScenario
+    And I connect to the remote processes myNotScoped, myScopedToScenario
   
   Scenario: Scenario One
     Then the process named myNotScoped is running
