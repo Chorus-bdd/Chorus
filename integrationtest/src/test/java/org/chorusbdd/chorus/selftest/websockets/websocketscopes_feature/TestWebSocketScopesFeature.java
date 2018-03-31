@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selftest.websockets.websocketscopes;
+package org.chorusbdd.chorus.selftest.websockets.websocketscopes_feature;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
@@ -31,9 +31,9 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestWebSocketScopes extends AbstractInterpreterTest {
+public class TestWebSocketScopesFeature extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/websockets/websocketscopes/websocketscope.feature";
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/websockets/websocketscopes_feature/websocketscope_feature.feature";
 
     final int expectedExitCode = 0;  //pass
 

@@ -27,7 +27,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
-import org.chorusbdd.chorus.websockets.client.StepPublisher;
+import org.chorusbdd.chorus.websockets.client.WebSocketStepPublisher;
 import org.chorusbdd.chorus.websockets.message.ExecuteStepMessage;
 import org.chorusbdd.chorus.websockets.message.PublishStepMessage;
 import org.chorusbdd.chorus.util.PolledAssertion;
@@ -48,10 +48,10 @@ import static org.mockito.Mockito.*;
 /**
  * Created by nick on 09/12/2016.
  */
-public class TestStepPublisher {
+public class TestWebSocketStepPublisher {
 
 
-    private static StepPublisher stepPublisher;
+    private static WebSocketStepPublisher stepPublisher;
     private static WebSocketMessageProcessor mockProcessor;
     private static final ChorusWebSocketServer chorusWebSocketServer = new ChorusWebSocketServer(9080);
     private static final AtomicBoolean stepCalled = new AtomicBoolean();
@@ -93,7 +93,7 @@ public class TestStepPublisher {
     public void aClientCanPublishAStepAndAServerCanExecuteIt() {
 
         URI uri = URI.create("ws://localhost:9080");
-        stepPublisher = new StepPublisher("testPublisher", uri, new MockHandler());
+        stepPublisher = new WebSocketStepPublisher("testPublisher", uri, new MockHandler());
         stepPublisher.publish();
 
         PublishStepMessage publishStepMessage = new PublishStepMessage(

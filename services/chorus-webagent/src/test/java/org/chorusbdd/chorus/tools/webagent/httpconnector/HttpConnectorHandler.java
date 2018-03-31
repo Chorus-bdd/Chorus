@@ -99,7 +99,7 @@ public class HttpConnectorHandler extends Assert {
     }
 
     private String replaceVariableContent(String content) {
-        content = content.replaceAll("\\d{2} \\w{3} \\d{4} \\d\\d:\\d\\d:\\d\\d \\w\\w\\w", "{DATETIME}");
+        content = content.replaceAll("\\d{2} \\w{3} \\d{4} \\d\\d:\\d\\d:\\d\\d \\w\\w\\w(\\w)?", "{DATETIME}");
         content = content.replaceAll("\\d{13}", "{TIMESTAMP}");
         content = content.replaceAll("timeTaken=\"\\d{0,5}\"", "timeTaken=\"{TIMETAKEN}\"");
         content = content.replaceAll("timeTakenSeconds=\"\\d{0,5}\\.?\\d?\"", "timeTakenSeconds=\"{TIMETAKEN_SECONDS}\"");

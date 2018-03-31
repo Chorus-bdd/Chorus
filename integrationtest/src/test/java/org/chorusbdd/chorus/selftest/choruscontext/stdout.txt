@@ -3,7 +3,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
   Scenario: Test Context Variables
 Chorus --> INFO    - Processing scenario: Test Context Variables
     Given Chorus is working properly                                                         PASSED  
-    And the context has no values in it                                                      PASSED  
+    And the context is empty                                                                 PASSED  
     And I create a variable varone with value 1.2                                            PASSED  
     And I create a context variable vartwo with value wibble                                 PASSED  
     Then variable varone exists                                                              PASSED  
@@ -14,7 +14,7 @@ Chorus --> INFO    - Processing scenario: Test Context Variables
     And I show context variable vartwo                                                       PASSED  vartwo='wibble'
   Scenario: Context Variables Are Cleared For Each Scenario
 Chorus --> INFO    - Processing scenario: Context Variables Are Cleared For Each Scenario
-    Check the context has no values in it                                                    PASSED  
+    Check the context is empty                                                               PASSED  
   Scenario: Context Variable Expansion into Steps
 Chorus --> INFO    - Processing scenario: Context Variable Expansion into Steps
     Given I create a variable myVar with value wibble                                        PASSED  

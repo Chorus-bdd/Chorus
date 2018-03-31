@@ -42,16 +42,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
+ * A Java client which can connect to the Chorus interpreter WebSocketsHandler and publish step definitions
+ * 
+ * This is not very useful for daemon processes which are not started by the interpreter, since there is no mechanism 
+ * to attempt connection periodically. For these it is better for the interpreter to connect outwards rather than the daemon
+ * process to call in. Use the Remoting / JMX handler capability for this use case instead.
+ * 
  * Created by Nick E on 13/12/2016.
  */
-public class StepPublisher {
+public class WebSocketStepPublisher {
 
-    private ChorusLog log = ChorusLogFactory.getLog(StepPublisher.class);
+    private ChorusLog log = ChorusLogFactory.getLog(WebSocketStepPublisher.class);
 
     private static AtomicBoolean connected = new AtomicBoolean(false);
 
     //synchronized since may be accessed by application thread for export and jmx thread for step invoker retrieval
-    //Linked map for reproducible ordering which is a nice property to have for unit testing although shouldn't affect test pass/fail
+    //Linked map for deterministic ordering which is a nice property to have for unit testing although shouldn't affect test pass/fail
     private static Map<String, StepInvoker> stepInvokers = Collections.synchronizedMap(
         new LinkedHashMap<String, StepInvoker>()
     );
@@ -60,12 +66,16 @@ public class StepPublisher {
     private final ChorusWebSocketClient chorusWebSocketClient;
     private volatile String description = "";
 
-    public StepPublisher(String chorusClientId, URI stepRegistryURI, Object... handlers) {
+    public WebSocketStepPublisher(String chorusClientId, URI webSocketServerURI, Object... handlers) {
         this.chorusClientId = chorusClientId;
-        this.chorusWebSocketClient = new ChorusWebSocketClient(stepRegistryURI, new MessageProcessor());
+        this.chorusWebSocketClient = new ChorusWebSocketClient(webSocketServerURI, new MessageProcessor());
         addHandlers(handlers);
     }
-    
+
+    /**
+     * Add handler classes containing the step definitions to publish
+     * This must be done before publish is called (or while the step publisher is disconnected)
+     */
     public void addHandlers(Object... handlers) {
         for ( Object handler : handlers) {
             //assert that this is a Handler
@@ -87,7 +97,7 @@ public class StepPublisher {
     }
 
     /**
-     * Set a description of this client
+     * Set a description for this web socket client
      */
     public void setDescription(String description) {
         this.description = description;
@@ -108,16 +118,21 @@ public class StepPublisher {
 
     }
 
+    /**
+     * Add a step to be published
+     */
     private void addStepInvoker(StepInvoker stepInvoker) {
+        if ( connected.get() ) {
+            throw new ChorusException("You cannot add more steps once the WebSocketStepPublisher is connected");
+        }
         stepInvokers.put(stepInvoker.getId(), stepInvoker);
     }
 
+
     /**
-     * Call this method once all handlers are fully initialized, to register the chorus remoting JMX bean
-     * and make all chorus handlers accessible remotely
+     * Connect to the server and publish all steps
      */
-    public StepPublisher publish() {
-        //export this object as an MBean
+    public WebSocketStepPublisher publish() {
         if (connected.getAndSet(true) == false) {
 
             try {
@@ -165,9 +180,9 @@ public class StepPublisher {
 
     public void disconnect() throws InterruptedException {
         if ( connected.getAndSet(false)) {
-            log.debug("StepPublisher disconnecting");
+            log.debug("WebSocketStepPublisher disconnecting");
             chorusWebSocketClient.closeBlocking();
-            log.debug("StepPublisher disconnected");
+            log.debug("WebSocketStepPublisher disconnected");
         }
     }
 
@@ -217,6 +232,7 @@ public class StepPublisher {
                 chorusWebSocketClient.sendMessage(stepSucceededMessage);
             }
         }
+        
         private void sendFailure(String message, ExecuteStepMessage executeStepMessage) {
             StepFailedMessage stepFailedMessage = new StepFailedMessage(
                     executeStepMessage.getStepId(),

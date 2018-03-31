@@ -64,7 +64,7 @@ public class WebSocketsConfigBuilderFactory extends AbstractConfigBuilderFactory
             } else if (scope.equals(key)) {
                 c.setScope(parseScope(value));
             } else {
-                log.warn("Ignoring property " + key + " which is not a supported WebSocketsManagerImpl handler property");
+                log.warn("Ignoring property " + key + " which is not a supported Web Sockets handler property");
             }
         }
     }

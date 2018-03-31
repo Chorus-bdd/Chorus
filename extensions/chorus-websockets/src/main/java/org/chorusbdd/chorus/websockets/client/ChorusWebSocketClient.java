@@ -40,13 +40,13 @@ import java.util.Map;
 /**
  * Created by Nick E on 13/12/2016.
  */
-public class ChorusWebSocketClient extends WebSocketClient implements StepClientMessageRouter {
+class ChorusWebSocketClient extends WebSocketClient implements StepClientMessageRouter {
 
-    private ChorusLog log = ChorusLogFactory.getLog(StepPublisher.class);
+    private ChorusLog log = ChorusLogFactory.getLog(WebSocketStepPublisher.class);
     private StepClientMessageProcessor stepClientMessageProcessor;
 
-    public ChorusWebSocketClient(URI stepRegistryUri, StepClientMessageProcessor stepClientMessageProcessor) {
-        super(stepRegistryUri);
+    public ChorusWebSocketClient(URI webSocketServerURI, StepClientMessageProcessor stepClientMessageProcessor) {
+        super(webSocketServerURI);
         this.stepClientMessageProcessor = stepClientMessageProcessor;
     }
 

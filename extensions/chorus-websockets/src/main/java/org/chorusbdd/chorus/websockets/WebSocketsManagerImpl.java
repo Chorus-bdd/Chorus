@@ -282,16 +282,16 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         }
     }
 
-
-    public static void main(String[] args) {
-        StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
-        WebSocketsManagerImpl webSocketsManager = new WebSocketsManagerImpl();
-        Properties properties = new Properties();
-        properties.put("port", "9080");
-        properties.put("stepTimeoutSeconds", 30);
-        webSocketsManager.startWebSocketServer(properties);
-
-        log.info("Socket Server Started!");
-    }
+//
+//    public static void main(String[] args) {
+//        StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
+//        WebSocketsManagerImpl webSocketsManager = new WebSocketsManagerImpl();
+//        Properties properties = new Properties();
+//        properties.put("port", "9080");
+//        properties.put("stepTimeoutSeconds", 30);
+//        webSocketsManager.startWebSocketServer(properties);
+//
+//        log.info("Socket Server Started!");
+//    }
 
 }

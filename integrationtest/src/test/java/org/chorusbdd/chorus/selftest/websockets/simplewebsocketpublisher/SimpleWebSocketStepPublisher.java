@@ -28,7 +28,7 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.LogLevel;
 import org.chorusbdd.chorus.logging.StdOutLogProvider;
-import org.chorusbdd.chorus.websockets.client.StepPublisher;
+import org.chorusbdd.chorus.websockets.client.WebSocketStepPublisher;
 import org.chorusbdd.chorus.util.ChorusException;
 
 import java.net.URI;
@@ -50,7 +50,7 @@ public class SimpleWebSocketStepPublisher {
 
         StdOutLogProvider.setLogLevel(LogLevel.DEBUG);
         
-        StepPublisher stepPublisher = new StepPublisher(
+        WebSocketStepPublisher stepPublisher = new WebSocketStepPublisher(
             "SimpleWebSocketStepPublisher",
             URI.create("ws://localhost:9080")
         );
@@ -69,11 +69,11 @@ public class SimpleWebSocketStepPublisher {
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         private int tryCount = 0;
-        private StepPublisher stepPublisher;
+        private WebSocketStepPublisher stepPublisher;
 
         public SimpleWebSocketStepPublisherHandler() {}  //nullary constructor has to exist otherwise this is not a valid handler class
         
-        public SimpleWebSocketStepPublisherHandler(StepPublisher stepPublisher) {
+        public SimpleWebSocketStepPublisherHandler(WebSocketStepPublisher stepPublisher) {
             this.stepPublisher = stepPublisher;
         }
 

@@ -33,12 +33,17 @@ public class WebSocketsConfigBeanValidator extends AbstractConfigBeanValidator<W
     protected boolean checkValid(WebSocketsConfig webSocketsConfig) {
         boolean valid = true;
 
-        //some properties are mandatory for java processes
         if ( webSocketsConfig.getPort() == 0) {
             logInvalidConfig("port not set or 0", webSocketsConfig);
             valid = false;
         } else if ( webSocketsConfig.getStepTimeoutSeconds() < 1) {
             logInvalidConfig("stepTimeoutSeconds was less than 1", webSocketsConfig);
+            valid = false;
+        } else if ( webSocketsConfig.getScope() == null) {
+            logInvalidConfig("scope was not set", webSocketsConfig);
+            valid = false;
+        } else if ( webSocketsConfig.getClientConnectTimeoutSeconds() < 1) {
+            logInvalidConfig("client connect timeout seconds cannot be < 1", webSocketsConfig);
             valid = false;
         }
         return valid;

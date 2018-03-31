@@ -1,5 +1,5 @@
 Feature: Simple Step Publisher                                                                       
-Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/websockets/websocketscopes/websocketscope.feature
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/websockets/websocketscopes_scenario/websocketscope_scenario.feature
 Chorus --> INFO    - No default handler found for Feature: (Simple Step Publisher), will use built-in handlers and Uses: statements
   Scenario: I can start a web socket server which is scenario scoped
 Chorus --> INFO    - Processing scenario: I can start a web socket server which is scenario scoped

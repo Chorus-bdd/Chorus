@@ -7,7 +7,7 @@ Feature: Check Chorus Context Handler
 
   Scenario: Test Context Variables
     Given Chorus is working properly
-    And the context has no values in it
+    And the context is empty
     And I create a variable varone with value 1.2
     And I create a context variable vartwo with value wibble
     Then variable varone exists
@@ -19,7 +19,7 @@ Feature: Check Chorus Context Handler
 
 
    Scenario: Context Variables Are Cleared For Each Scenario
-     Check the context has no values in it
+     Check the context is empty
 
    Scenario: Context Variable Expansion into Steps
      Given I create a variable myVar with value wibble

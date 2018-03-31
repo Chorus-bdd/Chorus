@@ -21,43 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selftest.websockets.twowebsocketpublishers;
+package org.chorusbdd.chorus.selftest.websockets.websocketscopes_scenario;
 
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.websockets.client.WebSocketStepPublisher;
-
-import java.net.URI;
-
-import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 
 /**
- * Created by nick on 28/09/15.
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 25/06/12
+ * Time: 22:14
  */
-public class SecondWebSocketStepPublisher {
+public class TestWebSocketScopesScenario extends AbstractInterpreterTest {
 
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/websockets/websocketscopes_scenario/websocketscope_scenario.feature";
 
-    public static void main(String[] args) throws InterruptedException {
+    final int expectedExitCode = 0;  //pass
 
-        WebSocketStepPublisher stepPublisher = new WebSocketStepPublisher(
-            "SecondWebSocketStepPublisher",
-            URI.create("ws://localhost:9080"),
-            new SecondWebSocketStepPublisherHandler()
-        );
-
-        stepPublisher.publish();
-
-        sleep(60000);
+    protected int getExpectedExitCode() {
+        return expectedExitCode;
     }
 
-    @Handler("SecondWebSocketStepPublisherHandler")
-    public static class SecondWebSocketStepPublisherHandler {
-        
-        @Step(".* call a step on the second publisher")
-        public String sayHelloFromSecondPublisher() {
-            return "Hello!";
-        }
+    protected String getFeaturePath() {
+        return featurePath;
     }
+
 }
