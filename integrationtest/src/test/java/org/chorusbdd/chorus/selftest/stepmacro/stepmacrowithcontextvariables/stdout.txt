@@ -2,13 +2,13 @@ Feature: Step Macro With Context Variables
 Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/stepmacro/stepmacrowithcontextvariables/stepmacrowithcontextvariables.feature
   Scenario: Simple Step Macro Scenario
 Chorus --> INFO    - Processing scenario: Simple Step Macro Scenario
-    Given I create a variable myVar with value wibble                                        PASSED  
+    Given I create a context variable myVar with value wibble                                PASSED  
     Then I can call a step macro with two variables 1234 and ${myVar}                       
     .. Then I can call a handler step with group 1234                                        PASSED  1234
     .. And I can call a handler step with group wibble                                       PASSED  wibble
   Scenario: Step Macro With Outline [1] 123
 Chorus --> INFO    - Processing scenario: Step Macro With Outline [1] 123
-    Given I create a variable myVar with value wibble                                        PASSED  
+    Given I create a context variable myVar with value wibble                                PASSED  
     Then I can call a step macro with two variables 123 and ${myVar}                        
     .. Then I can call a handler step with group 123                                         PASSED  123
     .. And I can call a handler step with group wibble                                       PASSED  wibble

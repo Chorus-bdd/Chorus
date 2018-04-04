@@ -44,17 +44,17 @@ Chorus --> INFO    - Processing scenario: Fail nicely if client is not connected
     Given web socket client DoesNotExist is connected                                        FAILED  Client DoesNotExist is not connected (WebSocketsHandler:linenumber)-ChorusException
   Scenario: I can read a variable from the Chorus Context in the step publisher
 Chorus --> INFO    - Processing scenario: I can read a variable from the Chorus Context in the step publisher
-    Given I create a variable outbound with the value do                                     PASSED  
+    Given I create a context variable outbound with the value do                             PASSED  
     Then in the step publisher outbound has the value do                                     PASSED  
   Scenario: I can set a variable in the Chorus Context in the step publisher
 Chorus --> INFO    - Processing scenario: I can set a variable in the Chorus Context in the step publisher
     When I set the inbound variable to re in the step publisher                              PASSED  
-    Then the variable inbound has the value re                                               PASSED  
+    Then the context variable inbound has the value re                                       PASSED  
   Scenario: I can overwrite a variable in the Chorus Context in the step publisher
 Chorus --> INFO    - Processing scenario: I can overwrite a variable in the Chorus Context in the step publisher
-    Given I create a variable outbound with the value re                                     PASSED  
+    Given I create a context variable outbound with the value re                             PASSED  
     When I set the outbound variable to mi in the step publisher                             PASSED  
-    Then the variable outbound has the value mi                                              PASSED  
+    Then the context variable outbound has the value mi                                      PASSED  
 
 
 Features  (total:1) (passed:0) (failed:1)

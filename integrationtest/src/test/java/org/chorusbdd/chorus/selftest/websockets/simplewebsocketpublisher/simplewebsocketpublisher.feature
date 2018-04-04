@@ -37,17 +37,17 @@ Feature: Simple Step Publisher
     Given web socket client DoesNotExist is connected
 
   Scenario: I can read a variable from the Chorus Context in the step publisher
-    Given I create a variable outbound with the value do
+    Given I create a context variable outbound with the value do
     Then in the step publisher outbound has the value do
 
   Scenario: I can set a variable in the Chorus Context in the step publisher
     When I set the inbound variable to re in the step publisher
-    Then the variable inbound has the value re
+    Then the context variable inbound has the value re
 
   Scenario: I can overwrite a variable in the Chorus Context in the step publisher
-    Given I create a variable outbound with the value re
+    Given I create a context variable outbound with the value re
     When I set the outbound variable to mi in the step publisher
-    Then the variable outbound has the value mi
+    Then the context variable outbound has the value mi
 
 
 

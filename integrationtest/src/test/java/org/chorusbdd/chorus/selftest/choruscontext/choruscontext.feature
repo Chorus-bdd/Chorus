@@ -8,13 +8,13 @@ Feature: Check Chorus Context Handler
   Scenario: Test Context Variables
     Given Chorus is working properly
     And the context is empty
-    And I create a variable varone with value 1.2
+    And I create a context variable varone with value 1.2
     And I create a context variable vartwo with value wibble
-    Then variable varone exists
+    Then context variable varone exists
     And context variable vartwo exists
-    And variable varone has the value 1.2
-    And variable vartwo has the value wibble
-    And I show variable varone
+    And context variable varone has the value 1.2
+    And context variable vartwo has the value wibble
+    And I show context variable varone
     And I show context variable vartwo
 
 
@@ -22,8 +22,8 @@ Feature: Check Chorus Context Handler
      Check the context is empty
 
    Scenario: Context Variable Expansion into Steps
-     Given I create a variable myVar with value wibble
-     And I create a variable variable containing spaces with value value
+     Given I create a context variable myVar with value wibble
+     And I create a context variable variable containing spaces with value value
      Then I call a step passing the value ${myVar} and the variable gets expanded
      And I call a step passing the ${variable containing spaces} ${myVar} and the variables get expanded
 
@@ -33,74 +33,74 @@ Feature: Check Chorus Context Handler
     #match a decimal point / floating point value
     #Where possible it seems a good idea to permit expanded values to match these simple captures even where
     #the underlying numeric type is floating point
-    Given I create a variable floatWithNoDecimalPlaces with value 1.0
-    Given I create a variable floatWithDecmialPlaces with value 1.2
+    Given I create a context variable floatWithNoDecimalPlaces with value 1.0
+    Given I create a context variable floatWithDecmialPlaces with value 1.2
     Then I call a step passing the value ${floatWithNoDecimalPlaces} and the variable gets expanded
     Then I call a step passing the value ${floatWithDecmialPlaces} and the variable gets expanded
 
    Scenario: Mathematical operations simple floating point
-     Given I create a variable myVar with value 1.2
-     And the type of variable myVar is Double
-     And I add the value 1.2 to myVar
-     Then variable myVar has the value 2.4
-     And the type of variable myVar is Double
+     Given I create a context variable myVar with value 1.2
+     And the type of context variable myVar is Double
+     And I add the value 1.2 to the context variable myVar
+     Then context variable myVar has the value 2.4
+     And the type of context variable myVar is Double
 
    Scenario: Mathematical operations promote integer to big decimal where required
-     Given I create a variable myVar with value 1
-     And the type of variable myVar is Long
-     And I add the value 1.2 to myVar
-     Then variable myVar has the value 2.2
-     And the type of variable myVar is BigDecimal
+     Given I create a context variable myVar with value 1
+     And the type of context variable myVar is Long
+     And I add the value 1.2 to the context variable myVar
+     Then context variable myVar has the value 2.2
+     And the type of context variable myVar is BigDecimal
 
    Scenario: The numeric class type is immaterial when checking a numeric value
-     Given I create a variable myVar with value 1
-     And the type of variable myVar is Long
-     Then variable myVar has the value 1.0
-     And variable myVar has the value 1
+     Given I create a context variable myVar with value 1
+     And the type of context variable myVar is Long
+     Then context variable myVar has the value 1.0
+     And context variable myVar has the value 1
 
    Scenario: Values which don't fit into Long are paresed as BigInteger
-     Given I create a variable myVar with value 1000000000000000000000
-     And the type of variable myVar is BigInteger
-     Then the variable myVar has the value 1000000000000000000000.0
+     Given I create a context variable myVar with value 1000000000000000000000
+     And the type of context variable myVar is BigInteger
+     Then the context variable myVar has the value 1000000000000000000000.0
 
    Scenario: Adding values
-     Given I create a variable myVar with value 1
-     And I add 1000 to myVar
-     Then the variable myVar has the value 1001
+     Given I create a context variable myVar with value 1
+     And I add 1000 to the context variable myVar
+     Then the context variable myVar has the value 1001
 
    Scenario: Subtracting values
-     Given I create a variable myVar with value 1000
-     And I subtract 50 from myVar
-     Then the variable myVar has the value 950
+     Given I create a context variable myVar with value 1000
+     And I subtract 50 from the context variable myVar
+     Then the context variable myVar has the value 950
 
    Scenario: Multiplying values
-     Given I create a variable myVar with value 1000
-     And I multiply myVar by 5
-     Then the variable myVar has the value 5000
+     Given I create a context variable myVar with value 1000
+     And I multiply the context variable myVar by 5
+     Then the context variable myVar has the value 5000
 
   Scenario: Multiplying values
-     Given I create a variable myVar with value 10
-     And I divide myVar by 5
-     Then the variable myVar has the value 2
+     Given I create a context variable myVar with value 10
+     And I divide the context variable myVar by 5
+     Then the context variable myVar has the value 2
 
   #If we don't set maths context then any fractions which can't be represented perfectly in base 2 result in an error instead of rounding behaviour
   Scenario: Check maths context DECIMAL64 for divide
-     Given I create a variable myVar with value 10
-     And I divide myVar by 6
-     Then the variable myVar has the value 1.666666666666667
+     Given I create a context variable myVar with value 10
+     And I divide the context variable myVar by 6
+     Then the context variable myVar has the value 1.666666666666667
 
   Scenario: Remainder
-    Given I create a variable myVar with value 10
-    And I divide myVar by 3 and take the remainder
-    Then the variable myVar has the value 1
+    Given I create a context variable myVar with value 10
+    And I divide the context variable myVar by 3 and take the remainder
+    Then the context variable myVar has the value 1
 
   Scenario: Increment variable
-    Given I create a variable myVar with value 10
-    And I increment myVar
-    Then the variable myVar has the value 11
+    Given I create a context variable myVar with value 10
+    And I increment the context variable myVar
+    Then the context variable myVar has the value 11
 
   Scenario: Decrement variable
-    Given I create a variable myVar with value 10
-    And I decrement myVar
-    Then the variable myVar has the value 9
+    Given I create a context variable myVar with value 10
+    And I decrement the context variable myVar
+    Then the context variable myVar has the value 9
 

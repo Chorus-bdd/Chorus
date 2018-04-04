@@ -13,11 +13,11 @@ Feature: Step Macro With Context Variables
   executed are shown.
 
   Scenario: Simple Step Macro Scenario
-    Given I create a variable myVar with value wibble
+    Given I create a context variable myVar with value wibble
     Then I can call a step macro with two variables 1234 and ${myVar}
 
   Scenario-Outline: Step Macro With Outline
-    Given I create a variable myVar with value wibble
+    Given I create a context variable myVar with value wibble
     Then I can call a step macro with two variables <group1> and <group2>
 
   Examples:
