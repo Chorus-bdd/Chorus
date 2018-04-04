@@ -8,7 +8,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     And I set the context variable theUsualSuspects to Nick in Casablanca                    PASSED  
     Then I can access the context variable theUsualSuspects in Casablanca                    PASSED  Nick:String
     And_if I set the context variable theUsualSuspects to Steve in Casablanca                PASSED  
-    Then I show variable theUsualSuspects                                                    PASSED  theUsualSuspects='Steve'
+    Then I show the context variable theUsualSuspects                                        PASSED  theUsualSuspects='Steve'
   Scenario: Set a Variable Locally and Read it Remotely
 Chorus --> INFO    - Processing scenario: Set a Variable Locally and Read it Remotely
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
