@@ -59,19 +59,19 @@ public class ChorusContextHandler {
         }
     }
 
-    @Step(".*the context is empty")
+    @Step(".*the context variable is empty")
     public void contextIsEmpty() {
         ChorusContext context = ChorusContext.getContext();
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
     }
 
-    @Step(".*create a (?:context )?variable (.*) with (?:the )?value (.*)")
+    @Step(".*create a context variable  (.*) with (?:the )?value (.*)")
     public void createVariable(String varName, Object value) {
         //See type TypeCoercion.coerceObject - value will be a Boolean, Float, or Long if it can be parsed as such  
         ChorusContext.getContext().put(varName, value);
     }
 
-    @Step(".*(?:context )?variable (.*) has (?:the )?value (.*)")
+    @Step(".*context variable (.*) has (?:the )?value (.*)")
     public void assertVariableValue(String varName, Object expected) {
         //See type TypeCoercion.coerceObject - expected will be a Boolean, Float, or Long if it can be parsed as such
 
@@ -95,13 +95,13 @@ public class ChorusContextHandler {
         }
     }
 
-    @Step(".*(?:context )?variable (.*) exists")
+    @Step(".*context variable (.*) exists")
     public void assertVariableExists(String varName) {
         boolean exists = ChorusContext.getContext().containsKey(varName);
         ChorusAssert.assertTrue("Variable " + varName + " should exist", exists);
     }
 
-    @Step(".*show (?:the )?(?:context )?variable (.*)")
+    @Step(".*show (?:the )?context variable (.*)")
     public Object showVariable(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
@@ -112,7 +112,7 @@ public class ChorusContextHandler {
         }
     }
 
-    @Step(".*type of (?:the )?(?:context )?variable (.*) is (.*)")
+    @Step(".*type of (?:the )?context variable (.*) is (.*)")
     public void checkType(String varName, String type) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
@@ -123,42 +123,42 @@ public class ChorusContextHandler {
         );
     }
     
-    @Step(".*add (?:the )?(?:value )?([\\d\\.]+) to (?:the )?(?:context )?(?:variable )?(.*)")
+    @Step(".*add (?:the )?(?:value )?([\\d\\.]+) to (?:the )?context variable (.*)")
     public void addToContextVariable(BigDecimal value, String varName) {
         new Addition().performCalculation(value, varName);
     }
 
-    @Step(".*subtract (?:the )?(?:value )?([\\d\\.]+) from (?:the )?(?:context )?(?:variable )?(.*)")
+    @Step(".*subtract (?:the )?(?:value )?([\\d\\.]+) from (?:the )?context variable (.*)")
     public void subtractFromContextVariable(BigDecimal value, String varName) {
         new Subtraction().performCalculation(value, varName);
     }
 
-    @Step(".*multiply (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
+    @Step(".*multiply (?:the )?context variable (.*) by (?:the )?(?:value )?([\\d\\.]+)")
     public void multiplyContextVariable(String varName, BigDecimal value) {
         new Multiplication().performCalculation(value, varName);
     }
 
-    @Step(".*divide (?:the )?(?:context )?(?:variable )?(.*) by (?:the )?(?:value )?([\\d\\.]+)")
+    @Step(".*divide (?:the )?context variable (.*) by (?:the )?(?:value )?([\\d\\.]+)")
     public void divideContextVariable(String varName, BigDecimal value) {
         new Division().performCalculation(value, varName);
     }
 
-    @Step(".*increment (?:the )?(?:context )?(?:variable )?(.*)")
+    @Step(".*increment (?:the )?context variable (.*)")
     public void incrementContextVariable(String varName) {
         new Addition().performCalculation(new BigDecimal(1), varName);
     }
 
-    @Step(".*decrement (?:the )?(?:context )?(?:variable )?(.*)")
+    @Step(".*decrement (?:the )?context variable (.*)")
     public void decrementContextVariable(String varName) {
         new Subtraction().performCalculation(new BigDecimal(1), varName);
     }
 
-    @Step(".*I divide (?:the )?(?:context )?(?:variable )?(.*) by (.*) and take the remainder")
+    @Step(".*I divide (?:the )?context variable (.*) by (.*) and take the remainder")
     public void remainder(String varName, BigDecimal value) {
         new Remainder().performCalculation(value, varName);
     }
 
-    @Step(".*(?:the )?(?:context )?variable (.*) is a (.*)")
+    @Step(".*(?:the )?context variable (.*) is a (.*)")
     public void checkVariableType(String varName, String type) {
         Object o = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("Check " + varName + " is not null");
