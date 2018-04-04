@@ -59,13 +59,13 @@ public class ChorusContextHandler {
         }
     }
 
-    @Step(".*the context variable is empty")
+    @Step(".*the context is empty")
     public void contextIsEmpty() {
         ChorusContext context = ChorusContext.getContext();
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
     }
 
-    @Step(".*create a context variable  (.*) with (?:the )?value (.*)")
+    @Step(".*create a context variable (.*) with (?:the )?value (.*)")
     public void createVariable(String varName, Object value) {
         //See type TypeCoercion.coerceObject - value will be a Boolean, Float, or Long if it can be parsed as such  
         ChorusContext.getContext().put(varName, value);
