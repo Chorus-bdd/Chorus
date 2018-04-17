@@ -87,15 +87,14 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
     private Map executionParameters = new HashMap();
 
     public ExecutionToken(String testSuiteName) {
-        this(getNextId(), testSuiteName, System.currentTimeMillis(), NetworkUtils.getHostname());
+        this(testSuiteName, System.currentTimeMillis(), NetworkUtils.getHostname());
     }
 
     public ExecutionToken(String testSuiteName, long executionStartTime) {
-        this(getNextId(), testSuiteName, executionStartTime, NetworkUtils.getHostname());
+        this(testSuiteName, executionStartTime, NetworkUtils.getHostname());
     }
 
-    private ExecutionToken(long id, String testSuiteName, long executionStartTime, String executionHost) {
-        super(id);
+    private ExecutionToken(String testSuiteName, long executionStartTime, String executionHost) {
         this.testSuiteName = testSuiteName;
         this.executionStartTime = executionStartTime;
         this.executionHost = executionHost;
@@ -271,7 +270,7 @@ public class ExecutionToken extends AbstractToken implements PassPendingFailToke
 
     public ExecutionToken deepCopy() {
         ExecutionToken t = new ExecutionToken(
-            getNextId(), testSuiteName, executionStartTime, executionHost
+            testSuiteName, executionStartTime, executionHost
         );
         super.deepCopy(t);
         t.resultsSummary = resultsSummary.deepCopy();

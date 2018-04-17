@@ -155,7 +155,7 @@ public class ExecutionListenerSupport {
             try {
                 c.accept(l);
             } catch (Exception e) {
-                log.error(format("ExecutionListener of class %s throw exception during callback %s", l.getClass().getName(), callbackName));
+                log.error(format("ExecutionListener of class %s throw exception during callback %s", l.getClass().getName(), callbackName), e);
             }
         }
     }

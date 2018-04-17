@@ -55,15 +55,7 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
     private int stepsSkipped = 0;
 
     private long timeTaken = 0; //time taken to run the test suite in millis
-
-    public ResultsSummary() {
-        super(getNextId());
-    }
-
-    private ResultsSummary(long tokenId) {
-        super(tokenId);
-    }
-
+    
     public int getScenariosPassed() {
         return scenariosPassed;
     }
@@ -261,7 +253,7 @@ public class ResultsSummary extends AbstractToken implements PassPendingFailToke
     }
 
     public ResultsSummary deepCopy() {
-        ResultsSummary s = new ResultsSummary(getNextId());
+        ResultsSummary s = new ResultsSummary();
         super.deepCopy(s);
         s.featuresFailed = featuresFailed;
         s.featuresPending = featuresPending;

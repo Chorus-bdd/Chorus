@@ -60,15 +60,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
     private transient File featureFile;
 
     private String unavailableHandlersMessage;
-
-    public FeatureToken() {
-        this(getNextId());
-    }
-
-    private FeatureToken(long tokenId) {
-        super(tokenId);
-    }
-
+    
     public String getName() {
         return name;
     }
@@ -215,7 +207,7 @@ public class FeatureToken extends AbstractToken implements PassPendingFailToken 
      * @return a deep copy of the feature results and all its sub tokens
      */
     public FeatureToken deepCopy() {
-        FeatureToken copy = new FeatureToken(getNextId());
+        FeatureToken copy = new FeatureToken();
         super.deepCopy(copy);
         copy.name = this.name;
         copy.usesHandlers = usesHandlers.clone();

@@ -33,6 +33,7 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
 import org.chorusbdd.chorus.selenium.config.SeleniumDriverType;
 import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
+import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.openqa.selenium.WebDriver;
@@ -140,18 +141,10 @@ public class SeleniumHandler {
 
     @Step(".*execute the script (.*) in the " + HandlerPatterns.namePattern + " browser")
     public void executeScriptInNamedBrowser(String scriptPath, String configName) {
-        seleniumManager.executeScriptFile(configName, scriptPath);
-    }
-
-    //Can be added to a feature when we want to investigate a test failure
-    @Step(".*leave the browser open(?: at the end of the feature)?")
-    public void leaveTheBrowserOpen() {
-        leaveTheNamedBrowserOpen(SeleniumManager.LAST_OPENED_BROWSER);
-    }
-
-    @Step(".*leave the " + HandlerPatterns.namePattern + " browser open(?: at the end of the feature)?")
-    public void leaveTheNamedBrowserOpen(String configName) {
-        seleniumManager.leaveBrowserOpenAtFeatureEnd(configName);
+        Object o = seleniumManager.executeScriptFile(configName, scriptPath);
+        if ( o instanceof Boolean && !((Boolean)o)) {
+            throw new ChorusException("Execution of script failed (script returned false)");   
+        }
     }
 
     private Properties getConfig(String configName) {

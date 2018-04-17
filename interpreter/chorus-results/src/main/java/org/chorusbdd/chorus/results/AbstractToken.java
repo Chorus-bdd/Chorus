@@ -27,6 +27,7 @@ import org.chorusbdd.chorus.results.util.StackTraceUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -37,11 +38,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public abstract class AbstractToken implements Token {
 
-    //The token id only needs to be unique within the context of each
-    //test execution. Here it will be unique to the JVM instance which is even better
-    private static final AtomicLong lastId = new AtomicLong();
-
-    private final long tokenId;
+    private final String tokenId = UUID.randomUUID().toString();
 
     //not serializing throwable, there's a chance remote processes will not be able deserialize if they don't have the Throwable subclass
     //instead we convert to Strings
@@ -54,10 +51,6 @@ public abstract class AbstractToken implements Token {
      */
     private List<String> interpreterOutput = new LinkedList<>();
 
-    public AbstractToken(long tokenId) {
-        this.tokenId = tokenId;
-    }
-
     public List<String> getInterpreterOutput() {
         return interpreterOutput;
     }
@@ -66,14 +59,10 @@ public abstract class AbstractToken implements Token {
         interpreterOutput.add(output);
     }
 
-    public long getTokenId() {
+    public String getTokenId() {
         return tokenId;
     }
-
-    protected static long getNextId() {
-        return lastId.incrementAndGet();
-    }
-
+    
     public String getStackTrace() {
         return stackTrace;
     }

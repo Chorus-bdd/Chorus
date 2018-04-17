@@ -156,14 +156,15 @@ public class SeleniumManagerImpl implements SeleniumManager {
     }
 
     @Override
-    public void executeScriptFile(String configName, String scriptPath) {
+    public Object executeScriptFile(String configName, String scriptPath) {
         //Resolve the script path relative to the feature file
         File script = feature.getFeatureDir().toPath().resolve(scriptPath).toFile();
         String scriptContents = FileUtils.readScriptFile(log, configName, scriptPath, script);
 
         log.trace(format("About to execute script on web driver %s: [%n%s%n]", configName, scriptContents));
-        ((JavascriptExecutor)getWebDriver(configName)).executeScript(scriptContents);
+        Object result = ((JavascriptExecutor)getWebDriver(configName)).executeScript(scriptContents);
         log.debug("Finished executing script from " + scriptPath);
+        return result;
     }
     
     public WebDriver getWebDriver(String configName) {

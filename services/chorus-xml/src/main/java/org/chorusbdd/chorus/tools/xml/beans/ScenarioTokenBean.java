@@ -39,16 +39,16 @@ public class ScenarioTokenBean {
     private List<StepToken> steps ;
     private String tags;
     private EndState endState;
-    private long tokenId;
+    private String tokenId;
 
     public ScenarioTokenBean() {}
 
     @XmlAttribute
-    public long getTokenId() {
+    public String getTokenId() {
         return tokenId;
     }
 
-    public void setTokenId(long tokenId) {
+    public void setTokenId(String tokenId) {
         this.tokenId = tokenId;
     }
 

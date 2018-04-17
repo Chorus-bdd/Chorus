@@ -53,14 +53,6 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
      */
     private Map attachments;
     
-    public ScenarioToken() {
-        super(getNextId());
-    }
-
-    private ScenarioToken(long tokenId) {
-        super(tokenId);
-    }
-
     public String getName() {
         return name;
     }
@@ -113,7 +105,7 @@ public class ScenarioToken extends AbstractToken implements PassPendingFailToken
     }
     
     public ScenarioToken deepCopy() {
-        ScenarioToken copy = new ScenarioToken(getNextId());
+        ScenarioToken copy = new ScenarioToken();
         super.deepCopy(copy);
         copy.name = this.name;
         copy.steps = new ArrayList<>();

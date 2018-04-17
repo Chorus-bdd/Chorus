@@ -60,7 +60,10 @@ public interface SeleniumManager extends Subsystem {
 
     void leaveBrowserOpenAtFeatureEnd(String configName);
 
-    void executeScriptFile(String configName, String scriptPath);
+    /**
+     *  return One of Boolean, Long, Double, String, List, Map or WebElement. Or null.
+     */
+    Object executeScriptFile(String configName, String scriptPath);
 
     /**
      * This is here to allow users to write handlers which reuse the SeleniumManager for creation of the WebDriver instance, 

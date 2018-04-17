@@ -36,7 +36,7 @@ import java.io.Serializable;
 public interface Token extends Serializable, DeepCopy {
 
     /**
-     * It is useful for each token to supply an immutable id which logically
+     * It is useful for each token to supply an immutable UUID which logically
      * represents this token within the context of the currently executing test suite
      * (i.e. the current TestExecutionToken)
      *
@@ -48,9 +48,9 @@ public interface Token extends Serializable, DeepCopy {
      * remotely to match two received token instances - it simplifies things greatly
      * if the token has an id which is guaranteed not to change
      *
-     * @return an immutable id representing this token
+     * @return an immutable UUID representing this token
      */
-    long getTokenId();
+    String getTokenId();
     
     void accept(TokenVisitor tokenVisitor);
 

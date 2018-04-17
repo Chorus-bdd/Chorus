@@ -59,8 +59,7 @@ public class StepToken extends AbstractToken {
     /**
      * Use the static factory methods to create an instance of a StepToken
      */
-    private StepToken(long id, String type, String action) {
-        super(id);
+    private StepToken(String type, String action) {
         Objects.requireNonNull(action, "action cannot be null");
         Objects.requireNonNull(type, "type cannot be null");
         this.type = type;
@@ -200,15 +199,15 @@ public class StepToken extends AbstractToken {
     }
 
     public static StepToken createDirective(String action) {
-        return new StepToken(getNextId(), DIRECTIVE_TYPE, action);
+        return new StepToken(DIRECTIVE_TYPE, action);
     }
 
     public static StepToken createStep(String type, String action) {
-        return new StepToken(getNextId(), type, action);
+        return new StepToken(type, action);
     }
 
     public StepToken deepCopy() {
-        StepToken copy = new StepToken(getNextId(), this.type, this.action);
+        StepToken copy = new StepToken(this.type, this.action);
         super.deepCopy(copy);
         copy.endState = this.endState;
         copy.message = this.message;

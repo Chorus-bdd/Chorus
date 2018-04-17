@@ -56,16 +56,16 @@ public class StepTokenBean {
 
     private boolean isStepMacro;
     private List<StepToken> childSteps = new ArrayList<StepToken>();
-    private long tokenId;
+    private String tokenId;
 
     public StepTokenBean() {}
 
     @XmlAttribute
-    public long getTokenId() {
+    public String getTokenId() {
         return tokenId;
     }
 
-    public void setTokenId(long tokenId) {
+    public void setTokenId(String tokenId) {
         this.tokenId = tokenId;
     }
 
