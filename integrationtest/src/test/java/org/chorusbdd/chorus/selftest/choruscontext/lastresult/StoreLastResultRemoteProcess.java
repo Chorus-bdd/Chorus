@@ -25,6 +25,9 @@ package org.chorusbdd.chorus.selftest.choruscontext.lastresult;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -35,7 +38,11 @@ public class StoreLastResultRemoteProcess {
 
     public static void main(String[] args) throws InterruptedException {
         StoreLastResultHandler handler = new StoreLastResultHandler();
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
+
+        //add a suffix so we can separate remote steps from local invocations of the handler
+        Function<Pattern, Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in storelastremote"); 
+        
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(patternFunction, handler);
         exporter.export();
 
         Thread.sleep(60000);

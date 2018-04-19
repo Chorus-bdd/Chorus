@@ -47,7 +47,7 @@ public class CalculatorHandler {
     @Resource //not used by the calulator, just here to test the dependency injection
     private Integer injectedInteger;
 
-    @Step("I have entered ([0-9]*) ?.*")
+    @Step("I have entered ([0-9]*)")
     public void enterNumber(Double number) {
         calc.enterNumber(number);
     }
@@ -58,7 +58,7 @@ public class CalculatorHandler {
         ChorusContext.getContext().put("calc.result", calc.getResult());
     }
 
-    @Step(".*add variables ([a-z]*) and ([a-z]*)$")
+    @Step(".*add variables ([a-z]*) and ([a-z]*)")
     public void addContextVariables(String a, String b) {
         Number n1 = ChorusContext.getContext().get(a, Number.class);
         Number n2 = ChorusContext.getContext().get(b, Number.class);
@@ -68,7 +68,7 @@ public class CalculatorHandler {
         ChorusContext.getContext().put("calc.result", calc.getResult());
     }
 
-    @Step("the result should be (-?[0-9]*).*")
+    @Step("the result should be (-?[0-9]*)")
     public void checkCalculation(double expectedResult) {
         assertEquals(expectedResult, calc.getResult());
     }

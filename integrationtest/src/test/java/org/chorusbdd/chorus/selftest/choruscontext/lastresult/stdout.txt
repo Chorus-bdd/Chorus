@@ -4,6 +4,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - Processing scenario: Feature-Start
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     First I start a storelastremote process                                                  PASSED  
+    And I connect to the process storelastremote                                             PASSED  
   Scenario: Test Last Result With No Intervening Step
 Chorus --> INFO    - Processing scenario: Test Last Result With No Intervening Step
     When I call a step which returns a String myTestString                                   PASSED  myTestString
@@ -40,4 +41,4 @@ Chorus --> INFO    - Processing scenario: Test Last Result With Intervening Step
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:6) (passed:6) (failed:0)
-Steps     (total:21) (passed:21) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:22) (passed:22) (failed:0) (undefined:0) (pending:0) (skipped:0)

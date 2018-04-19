@@ -46,17 +46,6 @@ import java.util.Properties;
     overrideImplementationClassSystemProperty = "chorusRemotingManager")
 public interface RemotingManager extends Subsystem, StepInvokerProvider {
 
-    /**
-     * Find a step method in the remote component which matches the 'action' String
-     *
-     * @param configName
-     * @param remotingConfig
-     * @param action            - the step text from the scenario which we want to match to a remote step
-     * @return                    the value returned by the remote component when invoking the remote step implementation
-     * @throws org.chorusbdd.chorus.util.ChorusException if executing the step fails
-     **/
-    Object performActionInRemoteComponent(String configName, Properties remotingConfig, String action);
-
     void connect(String configName, Properties remotingProperties);
 
     List<StepInvoker> getStepInvokers();

@@ -8,6 +8,7 @@ Feature: Store Last Result
 
   Feature-Start:
     First I start a storelastremote process
+    And I connect to the process storelastremote
 
   Scenario: Test Last Result With No Intervening Step
     When I call a step which returns a String myTestString

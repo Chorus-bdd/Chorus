@@ -34,9 +34,9 @@ import java.util.Map;
  */
 public interface ChorusHandlerJmxExporterMBean {
 
-    public List<JmxInvokerResult> getStepInvokers();
+    List<JmxInvokerResult> getStepInvokers();
 
-    public JmxStepResult invokeStep(String stepId, Map chorusContext, List<String> params) throws Exception;
+    JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<String> params) throws Exception;
 
-    public float getApiVersion();
+    float getApiVersion();
 }

@@ -80,13 +80,14 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     }
 
     @Override
-    public Object invoke(List<String> args) {
+    public Object invoke(final String stepTokenId, List<String> args) {
         String executionUUID = UUID.randomUUID().toString();
 
         ExecuteStepMessage executeStepMessage = new ExecuteStepMessage(
             clientId,
             stepId,
             executionUUID,
+            stepTokenId,
             getStepPattern().toString(),
             timeoutSeconds,
             args,

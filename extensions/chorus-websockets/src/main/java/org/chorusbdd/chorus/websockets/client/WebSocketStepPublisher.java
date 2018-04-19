@@ -193,24 +193,25 @@ public class WebSocketStepPublisher {
         @Override
         public void executeStep(final ExecuteStepMessage executeStepMessage) {
             final String stepId = executeStepMessage.getStepId();
+            final String stepTokenId = executeStepMessage.getStepTokenId();
 
             StepInvoker stepInvoker = stepInvokers.get(stepId);
 
             if ( stepInvoker == null) {
                 sendFailure("No step with id " + stepId, executeStepMessage);
             } else {
-                stepExecutor.runWithinPeriod(() -> runStep(executeStepMessage, stepId, stepInvoker), executeStepMessage);
+                stepExecutor.runWithinPeriod(() -> runStep(executeStepMessage, stepId, stepTokenId, stepInvoker), executeStepMessage);
             }
         }
 
-        private void runStep(ExecuteStepMessage executeStepMessage, String stepId, StepInvoker stepInvoker) {
+        private void runStep(ExecuteStepMessage executeStepMessage, String stepId, String stepTokenId, StepInvoker stepInvoker) {
 
             //Set the context variables for the invocation thread
             ChorusContext.resetContext(executeStepMessage.getContextVariables());
 
             Object result = null;
             try {
-                result = stepInvoker.invoke(executeStepMessage.getArguments());
+                result = stepInvoker.invoke(stepTokenId, executeStepMessage.getArguments());
             } catch (PolledAssertion.PolledAssertionError e) { //typically AssertionError propagated by PolledInvoker
                 sendFailure(e.getCause().getMessage(), executeStepMessage);
             } catch (InvocationTargetException e) {

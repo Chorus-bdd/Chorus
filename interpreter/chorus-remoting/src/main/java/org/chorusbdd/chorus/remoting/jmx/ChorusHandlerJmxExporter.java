@@ -34,6 +34,7 @@ import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
+import org.chorusbdd.chorus.stepinvoker.util.PatternPreProcessingProvider;
 import org.chorusbdd.chorus.util.*;
 
 import javax.management.MBeanServer;
@@ -42,6 +43,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * This class will wrap and export any Objects that declare the @Handler annotation for a Chorus interpreter to call
@@ -52,6 +55,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
+    private static final Function<Pattern, Pattern> DEFAULT_STEP_PATTERN_PREPROCESSOR = Function.identity();
+    
+    private final Function<Pattern, Pattern> patternPreProcessor;
+    
     private ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxExporter.class);
 
     private static AtomicBoolean exported = new AtomicBoolean(false);
@@ -65,19 +72,38 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         new LinkedHashMap<String, StepInvoker>()
     );
 
+    /**
+     * @param handlers - Instances of handler classes which should be exported
+     */
     public ChorusHandlerJmxExporter(Object... handlers) {
+        this(DEFAULT_STEP_PATTERN_PREPROCESSOR, handlers);
+    }
+
+    /**
+     * @param patternPreProcessor - A function to perform a mapping on the patterns of all exported handler steps
+     * @param handlers - Instances of handler classes which should be exported
+     */
+    public ChorusHandlerJmxExporter(Function<Pattern, Pattern> patternPreProcessor, Object... handlers) {
+        this.patternPreProcessor = patternPreProcessor;
 
         for ( Object handler : handlers) {
             //assert that this is a Handler
             checkValidHandlerType(handler);
 
             StepInvokerProvider invokerFactory = new HandlerClassInvokerFactory(handler);
+            
+            //Process the patterns if a step pattern pre processor is set
+            //This mechanism lets the user transform the patterns of all steps exported by a component, for example
+            if ( patternPreProcessor != DEFAULT_STEP_PATTERN_PREPROCESSOR) {
+                invokerFactory = new PatternPreProcessingProvider(patternPreProcessor, invokerFactory);
+            }
+            
             List<StepInvoker> invokers = invokerFactory.getStepInvokers();
 
             if (invokers.isEmpty()) {
                 Class<?> handlerClass = handler.getClass();
                 log.warn(String.format("Cannot export object of type (%s) it either:  1) Has no methods that declare the @Step annotation  " +
-                                "2) Returns zero StepInvoker's from a StepInvokerProvider instance", handlerClass.getName()));
+                        "2) Returns zero StepInvoker's from a StepInvokerProvider instance", handlerClass.getName()));
             }
 
             for ( StepInvoker i : invokers) {
@@ -129,12 +155,12 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return this;
     }
 
-    public JmxStepResult invokeStep(String stepId, Map chorusContext, List<String> args) throws Exception {
+    public JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<String> args) throws Exception {
 
         //log debug messages
         if (log.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder("About to invoke method (");
-            builder.append(stepId);
+            builder.append(stepInvokerId);
             builder.append(") with parameters (");
             for (int i = 0; i < args.size(); i++) {
                 builder.append(args.get(i));
@@ -149,11 +175,11 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         try {
             //reset the local context for the calling thread
             ChorusContext.resetContext(chorusContext);
-            StepInvoker i = stepInvokers.get(stepId);
+            StepInvoker i = stepInvokers.get(stepInvokerId);
             if ( i == null) {
-                throw new ChorusException("Cannot find a step invoker for remote method with id " + stepId);
+                throw new ChorusException("Cannot find a step invoker for remote method with id " + stepInvokerId);
             }
-            Object result = i.invoke(args);
+            Object result = i.invoke(stepTokenId, args);
             
             //return the updated context
             return new JmxStepResult(ChorusContext.getContext().getSnapshot(), result);

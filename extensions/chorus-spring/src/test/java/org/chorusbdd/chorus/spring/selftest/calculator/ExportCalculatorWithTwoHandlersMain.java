@@ -27,6 +27,9 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
 /**
  * Used to run a simple process that can be used to test Chorus features
  *
@@ -36,8 +39,15 @@ import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 public class ExportCalculatorWithTwoHandlersMain {
 
     public static void main(String[] args) throws Exception {
+
+        String calcName = args[0];
+
+        //change the steps exported according to the name of the calc process we have started
+        Function<Pattern, Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in " + calcName);
+
         //export calculator handlers
         new ChorusHandlerJmxExporter(
+            patternFunction, 
             new EchoingHandler(),
             new CalculatorHandler()
         ).export();
@@ -47,7 +57,7 @@ public class ExportCalculatorWithTwoHandlersMain {
 
     @Handler("Echo Values")
     public static class EchoingHandler {
-        @Step("^.*accept a string with value '(.*)'$")
+        @Step(".*accept a string with value '(.*)'")
         public void accept(String s) {
             System.out.println(s);
         }

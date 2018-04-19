@@ -25,6 +25,9 @@ package org.chorusbdd.chorus.spring.selftest.calculator;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
 /**
  * Used to run a simple process that can be used to test Chorus features
  *
@@ -34,7 +37,12 @@ import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 public class ExportCalculatorHandlerMain {
 
     public static void main(String[] args) throws Exception {
-        new ChorusHandlerJmxExporter(new CalculatorHandler()).export();
+        String calcName = args[0];
+
+        //change the steps exported according to the name of the calc process we have started
+        Function<Pattern, Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in " + calcName); 
+        
+        new ChorusHandlerJmxExporter(patternFunction, new CalculatorHandler()).export();
         Thread.sleep(1000 * 60 * 5); //keeps process alive for 5 mins
     }
 

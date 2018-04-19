@@ -64,9 +64,11 @@ public interface StepInvoker {
     /**
      * Invoke the step passing the String values from the step action which match the capture groups in the step pattern
      *
+     * @param stepTokenId, A unique ID of the step being executed, this ID is unique for each test run
+     * @param args A list of arguments, one for each capturing group in the step pattern, extracted from the step text/action             
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    Object invoke(List<String> args) throws Exception;
+    Object invoke(String stepTokenId, List<String> args) throws Exception;
 
 
     /**

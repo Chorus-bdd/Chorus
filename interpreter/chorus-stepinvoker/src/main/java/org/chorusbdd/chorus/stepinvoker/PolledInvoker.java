@@ -58,14 +58,15 @@ public abstract class PolledInvoker implements StepInvoker {
 
     /**
      * Invoke the method
+     * @param stepTokenId
      * @param args
      */
-    public Object invoke(final List<String> args) {
+    public Object invoke(final String stepTokenId, final List<String> args) {
         final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
             protected void validate() throws Exception {
-                Object r = wrappedInvoker.invoke(args);
+                Object r = wrappedInvoker.invoke(stepTokenId, args);
                 resultRef.set(r);
             }
 

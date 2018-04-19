@@ -63,7 +63,7 @@ public class SikuliStepInvokerCallTest {
 
         StepInvoker stepInvoker = findById(stepInvokers, "status.getIntValue");
         assertNotNull(stepInvoker);
-        Object returnValue = stepInvoker.invoke(Collections.<String>emptyList());
+        Object returnValue = stepInvoker.invoke("stepTokenId", Collections.<String>emptyList());
 
         assertEquals(123, returnValue);
     }
@@ -75,7 +75,7 @@ public class SikuliStepInvokerCallTest {
 
         StepInvoker stepInvoker = findById(stepInvokers, "status.sumValues");
         assertNotNull(stepInvoker);
-        Object returnValue = stepInvoker.invoke(Arrays.asList("Steve", "Lake"));
+        Object returnValue = stepInvoker.invoke("stepTokenId", Arrays.asList("Steve", "Lake"));
 
         assertEquals("SteveLake", returnValue);
     }
@@ -88,7 +88,7 @@ public class SikuliStepInvokerCallTest {
         StepInvoker stepInvoker = findById(stepInvokers, "status.badCall");
         assertNotNull(stepInvoker);
         try {
-            Object returnValue = stepInvoker.invoke(Arrays.asList("Steve", "Lake"));
+            Object returnValue = stepInvoker.invoke("stepTokenId", Arrays.asList("Steve", "Lake"));
             fail();
         }
         catch(RuntimeException re) {

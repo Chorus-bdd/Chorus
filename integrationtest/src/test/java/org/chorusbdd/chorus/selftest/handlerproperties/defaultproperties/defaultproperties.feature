@@ -8,7 +8,8 @@ Feature: Default Handler Properties
 
   Scenario: Start a Single Java Process
     I can start a config1 process
-    And call a remote method in config1
+    And connect to the process named config1
+    And call a remote method
     And stop process config1
 
 

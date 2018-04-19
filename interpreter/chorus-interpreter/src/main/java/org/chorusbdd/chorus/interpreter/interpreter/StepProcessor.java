@@ -264,6 +264,7 @@ public class StepProcessor {
     private Object invokeAndGetResult(StepToken step, StepMatcher stepMatcher, StepInvoker foundStepInvoker) throws Exception {
         StepRetryDecorator retryInvoker = new StepRetryDecorator(foundStepInvoker);
         ResultWithRetryCount resultWithRetryCount = retryInvoker.invoke(
+            step.getTokenId(),
             stepMatcher.getInvokerArgs()
         );
         step.setRetryAttempts(resultWithRetryCount.getRetryAttempts());

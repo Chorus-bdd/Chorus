@@ -62,7 +62,7 @@ public class BillAndBenHandler implements StepInvokerProvider {
             }
 
             @Override
-            public Object invoke(List<String> args) throws ReflectiveOperationException {
+            public Object invoke(final String stepTokenId, List<String> args) throws ReflectiveOperationException {
                 return StepInvoker.VOID_RESULT;
             }
 
@@ -111,7 +111,7 @@ public class BillAndBenHandler implements StepInvokerProvider {
             }
 
             @Override
-            public Object invoke(List<String> args) throws ReflectiveOperationException {
+            public Object invoke(final String stepTokenId, List<String> args) throws ReflectiveOperationException {
                 Integer port = Integer.valueOf(jmxProperty);
                 return port;
             }

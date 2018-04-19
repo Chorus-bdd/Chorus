@@ -34,6 +34,7 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
     private String stepId;
     private String executionId;
     private String chorusClientId;
+    private String stepTokenId;
     private String pattern;
     private int timeoutPeriodSeconds;
     private List<String> arguments;
@@ -46,11 +47,12 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         super(MessageType.EXECUTE_STEP.name());
     }
 
-    public ExecuteStepMessage(String chorusClientId, String stepId, String executionId, String pattern, int timeoutPeriodSeconds, List<String> arguments, Map<String, Object> contextVariables) {
+    public ExecuteStepMessage(String chorusClientId, String stepId, String executionId, String stepTokenId, String pattern, int timeoutPeriodSeconds, List<String> arguments, Map<String, Object> contextVariables) {
         this();
         this.stepId = stepId;
         this.executionId = executionId;
         this.chorusClientId = chorusClientId;
+        this.stepTokenId = stepTokenId;
         this.pattern = pattern;
         this.timeoutPeriodSeconds = timeoutPeriodSeconds;
         this.arguments = arguments;
@@ -113,6 +115,14 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         this.contextVariables = contextVariables;
     }
 
+    public String getStepTokenId() {
+        return stepTokenId;
+    }
+
+    public void setStepTokenId(String stepTokenId) {
+        this.stepTokenId = stepTokenId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,10 +134,10 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         if (!stepId.equals(that.stepId)) return false;
         if (!executionId.equals(that.executionId)) return false;
         if (!chorusClientId.equals(that.chorusClientId)) return false;
+        if (!stepTokenId.equals(that.stepTokenId)) return false;
         if (!pattern.equals(that.pattern)) return false;
         if (!arguments.equals(that.arguments)) return false;
         return contextVariables.equals(that.contextVariables);
-
     }
 
     @Override
@@ -135,6 +145,7 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         int result = stepId.hashCode();
         result = 31 * result + executionId.hashCode();
         result = 31 * result + chorusClientId.hashCode();
+        result = 31 * result + stepTokenId.hashCode();
         result = 31 * result + pattern.hashCode();
         result = 31 * result + timeoutPeriodSeconds;
         result = 31 * result + arguments.hashCode();
@@ -147,6 +158,7 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         return "ExecuteStepMessage{" +
             "stepId='" + stepId + '\'' +
             ", executionId='" + executionId + '\'' +
+            ", stepTokenId='" + stepTokenId + '\'' +
             ", chorusClientId='" + chorusClientId + '\'' +
             ", pattern='" + pattern + '\'' +
             ", timeoutPeriodSeconds=" + timeoutPeriodSeconds +

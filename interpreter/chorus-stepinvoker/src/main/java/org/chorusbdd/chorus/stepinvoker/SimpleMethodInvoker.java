@@ -59,7 +59,7 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
                 stepId;
     }
 
-    public Object invoke(List<String> args) throws ReflectiveOperationException {
+    public Object invoke(final String stepTokenId, List<String> args) throws ReflectiveOperationException {
         Class<?>[] parameterTypes = getMethod().getParameterTypes();
 
         checkArgumentCount(args, parameterTypes);

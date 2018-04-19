@@ -24,7 +24,6 @@
 package org.chorusbdd.chorus.remoting.jmx.remotingmanager;
 
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
-import org.chorusbdd.chorus.stepinvoker.DefaultStepRetry;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepRetry;
 import org.chorusbdd.chorus.util.ChorusException;
@@ -96,14 +95,12 @@ public class RemoteStepInvoker implements StepInvoker {
 
     /**
      * Invoke the method
-     *
-     * @param args
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    public Object invoke(List<String> args) {
+    public Object invoke(final String stepTokenId, List<String> args) {
         Object result;
         try {
-            result = proxy.invokeStep(remoteStepId, args);
+            result = proxy.invokeStep(remoteStepId, stepTokenId, args);
         } catch (RuntimeMBeanException mbe) {
             RuntimeException targetException = mbe.getTargetException();
             throw targetException;

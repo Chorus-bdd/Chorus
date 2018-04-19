@@ -67,51 +67,7 @@ public class JmxRemotingManager implements RemotingManager {
 
     private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
     private final RemotingConfigBuilderFactory remotingConfigBeanFactory = new RemotingConfigBuilderFactory();
-
-    /**
-     *
-     * Perform an action on a specific remote component
-     * Here we try to find a matching step method on a remote handler to delegate the call to
-     * We need this to support the old-style steps suffixed with 'in ${componentName}'
-     *
-     * The new way of doing remoting returns all the available remote steps as List<StepInvoker>
-     * so they can be matched against the step action by the interpreter alongside any local steps
-     * This new mechanism is used when the directive #! Remoting is used
-     *
-     */
-    public Object performActionInRemoteComponent(String configName, Properties remotingProperties, String action) {
-
-        RemotingManagerConfig remotingConfig = buildRemotingConfig(configName, remotingProperties);
-
-        String componentName = remotingConfig.getConfigName();
-
-        checkConfig(remotingConfig);
-
-        ChorusHandlerJmxProxy proxy = getProxyForComponent(componentName, remotingConfig);
-
-        List<StepInvoker> invokers = getRemoteStepInvokers(proxy);
-
-        StepMatcher stepMatcher = new StepMatcher(invokers, action);
-        stepMatcher.findStepMethod();
-
-        Object result;
-        StepMatchResult stepMatchResult = stepMatcher.getStepMatchResult();
-        switch(stepMatchResult) {
-            case STEP_FOUND:
-                result = processRemoteMethod(stepMatcher.getFoundStepInvoker(), stepMatcher.getInvokerArgs());
-                break;
-            case STEP_NOT_FOUND:
-                String message = String.format("There is no step handler available for action (%s) on component (%s)", action, componentName);
-                log.error(message);
-                throw new RemoteStepNotFoundException(action, componentName);
-            case DUPLICATE_MATCH_ERROR:
-                throw stepMatcher.getMatchException();
-            default:
-                throw new ChorusException("Unsupported StepMatchResult");
-        }
-        return result;
-    }
-
+    
     @Override
     public void connect(String configName, Properties remotingProperties) {
         RemotingManagerConfig remotingConfig = buildRemotingConfig(configName, remotingProperties);
@@ -162,27 +118,6 @@ public class JmxRemotingManager implements RemotingManager {
         }
         return proxy;
     }
-
-    private Object processRemoteMethod(StepInvoker remoteStepInvoker, List<String> args) {
-        Object result;
-        if (remoteStepInvoker.isPending()) {
-            throw new StepPendingException(remoteStepInvoker.getPendingMessage());
-        }
-
-        try {
-            result = remoteStepInvoker.invoke(args);
-
-        //let any runtime exceptions propagate otherwise wrap as RuntimeException
-        } catch (Exception e) {
-            if ( ! (e instanceof RuntimeException)) {
-                throw new ChorusException(e);
-            } else {
-                throw (RuntimeException)e;
-            }
-        }
-        return result;
-    }
-
 
     private void closeConnection(RemotingManagerConfig c) {
         ChorusHandlerJmxProxy proxy = proxies.remove(c.getConfigName());

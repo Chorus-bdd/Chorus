@@ -3,8 +3,8 @@ Uses: Calculator
 Feature: Calculator with Scenario-Outline keyword
 
   Scenario-Outline: Check the calculator operators
-    Given I have entered <a> into the calculator
-    And I have entered <b> into the calculator
+    Given I have entered <a>
+    And I have entered <b>
     When I press <operator>
     Then the result should be <result>
 
@@ -16,8 +16,8 @@ Feature: Calculator with Scenario-Outline keyword
       | 500 | 10  | divide   | 50     |
 
   Scenario-Outline: Check another Scenario-Outline in same file still works
-    Given I have entered <x> into the calculator
-    And I have entered <y> into the calculator
+    Given I have entered <x>
+    And I have entered <y>
     When I press <button>
     Then the result should be <result>
 

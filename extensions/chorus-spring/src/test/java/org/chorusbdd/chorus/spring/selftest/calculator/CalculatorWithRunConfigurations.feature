@@ -7,14 +7,14 @@ Feature: Calculator with simple Scenario syntax
     This feature is used to test very basic functionality within the Chorus interpreter.
 
   Scenario: Add two numbers
-    Given I have entered 50 into the calculator #this is an eol comment and should not be picked up by the parser either
-    And I have entered 70 into the calculator
+    Given I have entered 50 #this is an eol comment and should not be picked up by the parser either
+    And I have entered 70
     When I press add
-    Then the result should be 120 on the screen
+    Then the result should be 120
 
   Scenario-Outline: Check the calculator operators
-    Given I have entered <a> into the calculator
-    And I have entered <b> into the calculator
+    Given I have entered <a>
+    And I have entered <b>
     When I press <operator>
     Then the result should be <result>
 

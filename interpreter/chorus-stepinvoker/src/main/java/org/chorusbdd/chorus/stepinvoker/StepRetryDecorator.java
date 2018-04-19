@@ -46,18 +46,18 @@ public class StepRetryDecorator {
         this.foundStepInvoker = foundStepInvoker;
     }
 
-    public ResultWithRetryCount invoke(List<String> args) throws Exception {
+    public ResultWithRetryCount invoke(final String stepTokenId, List<String> args) throws Exception {
         ResultWithRetryCount result;
         StepRetry retry = foundStepInvoker.getRetry();
         if ( retry.isValid()) {
-            result = invokeWithRetry(args, retry);
+            result = invokeWithRetry(stepTokenId, args, retry);
         } else {
-            result = createResult(foundStepInvoker.invoke(args), 0);
+            result = createResult(foundStepInvoker.invoke(stepTokenId, args), 0);
         }
         return result;
     }
 
-    private ResultWithRetryCount invokeWithRetry(List<String> args, StepRetry retry) {
+    private ResultWithRetryCount invokeWithRetry(final String stepTokenId, List<String> args, StepRetry retry) {
         Object result;
         if ( log.isTraceEnabled()) {
             log.trace("Wrapping step " + foundStepInvoker.getStepPattern() + " with a StepRetry decorator");
@@ -67,7 +67,7 @@ public class StepRetryDecorator {
         long interval = retry.getInterval();
         
         UntilFirstPassInvoker i = new UntilFirstPassInvoker(foundStepInvoker, duration, MILLISECONDS, interval);
-        result = i.invoke(args);
+        result = i.invoke(stepTokenId, args);
         
         return createResult(result, i.getRetryAttempts());
     }

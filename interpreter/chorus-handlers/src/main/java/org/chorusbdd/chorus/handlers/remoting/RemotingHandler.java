@@ -88,23 +88,15 @@ public class RemotingHandler {
     @ChorusResource("subsystem.configurationManager")
     private ConfigurationManager configurationManager;
 
-    /**
-     * Will delegate calls to a remote Handler exported as a JMX MBean
-     */
-    @Step("(.*) (?:in|from) " + HandlerPatterns.namePattern + "$")
-    public Object performActionInRemoteComponent(String action, String componentName) throws Exception {  
-        Properties remotingProperties = getRemotingConfigForComponent(componentName);
-        return remotingManager.performActionInRemoteComponent(componentName, remotingProperties, action);
-    }
-
+    
     //A Directive which can be used to connect to one or more remote processes
     @Step("Remoting connect " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }
 
-    //A Directive which can be used to connect to one or more remote processes
-    @Step(".*connect to the remote process(?:es)? " + HandlerPatterns.nameListPattern)
+    //A step which can be used to connect to one or more remote processes
+    @Step(".*connect to the (?:remote )?process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
     public void connectToRemoteProcesses(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }

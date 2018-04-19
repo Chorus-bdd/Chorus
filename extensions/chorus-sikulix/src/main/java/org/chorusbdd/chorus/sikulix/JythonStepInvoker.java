@@ -70,7 +70,7 @@ public class JythonStepInvoker implements StepInvoker {
 	}
 
 	@Override
-	public Object invoke(List<String> args) throws ReflectiveOperationException {
+	public Object invoke(String stepTokenId, List<String> args) throws ReflectiveOperationException {
 		PyObject[] pyArgs = new PyObject[args.size()+1];
 		pyArgs[0] = instance;
 		for (int argsIndex=0;argsIndex<args.size();argsIndex++) {
