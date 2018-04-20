@@ -6,7 +6,8 @@ Chorus --> INFO    - Processing scenario: Config Properties Override Main Proper
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
 Chorus --> ERROR   - Failed to connect to mBean server on (localhost:18800)
-    Then I can call a step method exported by the handler in SingleHandlerExport             FAILED  Failed to connect to mBean server on (localhost:18800) caused by: [replaced] (AbstractJmxProxy:linenumber)-ChorusException
+    And I connect to the process named SingleHandlerExport                                   FAILED  Failed to connect to mBean server on (localhost:18800) caused by: [replaced] (AbstractJmxProxy:linenumber)-ChorusException
+    Then I can call a step method exported by the handler                                    SKIPPED 
 
 Feature: Jmx With Configurations [config2]                                                           
 Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/remoting/jmx/jmxwithconfigurations/jmxwithconfigurations.feature in config config2
@@ -15,9 +16,10 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurati
 Chorus --> INFO    - Processing scenario: Config Properties Override Main Properties For Jmx Remoting
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-    Then I can call a step method exported by the handler in SingleHandlerExport             PASSED  
+    And I connect to the process named SingleHandlerExport                                   PASSED  
+    Then I can call a step method exported by the handler                                    PASSED  
 
 
 Features  (total:2) (passed:1) (failed:1)
 Scenarios (total:2) (passed:1) (failed:1)
-Steps     (total:4) (passed:3) (failed:1) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:6) (passed:4) (failed:1) (undefined:0) (pending:0) (skipped:1)

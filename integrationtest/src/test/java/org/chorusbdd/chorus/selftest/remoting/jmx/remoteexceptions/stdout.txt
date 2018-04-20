@@ -5,22 +5,25 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx Single Handler E
 Chorus --> INFO    - Processing scenario: Handle Exceptions In Remote Steps
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-    And I call a method which throws an exception in SingleHandlerExport                     FAILED  remote RuntimeException - This message should appear in interpreter output (JmxRemoteExceptionsHandler:linenumber)-JmxRemotingException
+    And I connect to the process named SingleHandlerExport                                   PASSED  
+    And I call a method which throws an exception                                            FAILED  remote RuntimeException - This message should appear in interpreter output (JmxRemoteExceptionsHandler:linenumber)-JmxRemotingException
     Then my subsequent steps are skipped                                                     SKIPPED 
   Scenario: Handle Assertion Exceptions In Remote Steps
 Chorus --> INFO    - Processing scenario: Handle Assertion Exceptions In Remote Steps
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-    And I call a method which throws an assertion exception in SingleHandlerExport           FAILED  remote ChorusAssertionError - This assertion failed (JmxRemoteExceptionsHandler:linenumber)-JmxRemotingException
+    And I connect to the process named SingleHandlerExport                                   PASSED  
+    And I call a method which throws an assertion exception                                  FAILED  remote ChorusAssertionError - This assertion failed (JmxRemoteExceptionsHandler:linenumber)-JmxRemotingException
     Then my subsequent steps are skipped                                                     SKIPPED 
   Scenario: Handler Null Pointer Exceptions in Remote Steps
 Chorus --> INFO    - Processing scenario: Handler Null Pointer Exceptions in Remote Steps
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-    And I call a method which throws a NullPointerException in SingleHandlerExport           FAILED  remote NullPointerException  (JmxRemoteExceptionsHandler:linenumber)-JmxRemotingException
+    And I connect to the process named SingleHandlerExport                                   PASSED  
+    And I call a method which throws a NullPointerException                                  FAILED  remote NullPointerException  (JmxRemoteExceptionsHandler:linenumber)-JmxRemotingException
     Then my subsequent steps are skipped                                                     SKIPPED 
 
 
 Features  (total:1) (passed:0) (failed:1)
 Scenarios (total:3) (passed:0) (failed:3)
-Steps     (total:9) (passed:3) (failed:3) (undefined:0) (pending:0) (skipped:3)
+Steps     (total:12) (passed:6) (failed:3) (undefined:0) (pending:0) (skipped:3)

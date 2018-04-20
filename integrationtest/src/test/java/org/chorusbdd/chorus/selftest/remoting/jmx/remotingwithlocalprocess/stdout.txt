@@ -21,17 +21,6 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     And I can get the debug port for Ben from processes manager                              PASSED  19807
     Then I can call a step and get the jmx port from the 18808 handler                       PASSED  18808
     And I can get the debug port for Flowerpot from processes manager                        PASSED  19808
-  Scenario: I can run steps using the Remoting handler 'in componentName' suffix without a remoting config
-Chorus --> INFO    - Processing scenario: I can run steps using the Remoting handler 'in componentName' suffix without a remoting config
-Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    Given I start a config1 process named Bill                                               PASSED  
-Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    And I start a config1 process named Ben                                                  PASSED  
-Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    And I start a config1 process named Flowerpot                                            PASSED  
-    Then I can call a step and get the jmx port from the 18806 handler in Bill               PASSED  18806
-    Then I can call a step and get the jmx port from the 18807 handler in Ben                PASSED  18807
-    Then I can call a step and get the jmx port from the 18808 handler in Flowerpot          PASSED  18808
   Scenario: Remoting and debug ports do not auto-increment if no initial port set in template configuration
 Chorus --> INFO    - Processing scenario: Remoting and debug ports do not auto-increment if no initial port set in template configuration
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
@@ -45,5 +34,5 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 
 
 Features  (total:1) (passed:1) (failed:0)
-Scenarios (total:4) (passed:4) (failed:0)
-Steps     (total:25) (passed:25) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Scenarios (total:3) (passed:3) (failed:0)
+Steps     (total:19) (passed:19) (failed:0) (undefined:0) (pending:0) (skipped:0)

@@ -5,18 +5,20 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx Dual Handler Exp
 Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named DualHandlerExport                                  PASSED  
-    Then I can call a step method exported by the handler in DualHandlerExport               PASSED  
+    And I connect to the process named DualHandlerExport                                     PASSED  
+    Then I can call a step method exported by the handler                                    PASSED  
     And I can stop process DualHandlerExport                                                 PASSED  
   Scenario: Call A Conflicting Method
 Chorus --> INFO    - Processing scenario: Call A Conflicting Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named DualHandlerExport                                  PASSED  
-    And I call a step method exported by handler one in DualHandlerExport                    PASSED  One
-    And I call a step method exported by handler two in DualHandlerExport                    PASSED  two
-    And I call a step method exported by both handlers in DualHandlerExport                  FAILED  Ambiguous step [I call a step method exported by both handlers], more than one implementation (RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth / RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth) (StepMatcher:linenumber)-DuplicateStepMatchException
+    And I connect to the process named DualHandlerExport                                     PASSED  
+    And I call a step method exported by handler one                                         PASSED  One
+    And I call a step method exported by handler two                                         PASSED  two
+    And I call a step method exported by both handlers                                       FAILED  Ambiguous step [I call a step method exported by both handlers], more than one implementation (RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandler:canCallAStepMethodExportedByBoth / RemoteComponent:DualHandlerExport:JmxDualHandlerExportHandlerTwo:canCallAStepMethodExportedByBoth) (StepMatcher:linenumber)-DuplicateStepMatchException
     Then a ChorusException is thrown with a message which reports the ambiguity              SKIPPED 
 
 
 Features  (total:1) (passed:0) (failed:1)
 Scenarios (total:2) (passed:1) (failed:1)
-Steps     (total:8) (passed:6) (failed:1) (undefined:0) (pending:0) (skipped:1)
+Steps     (total:10) (passed:8) (failed:1) (undefined:0) (pending:0) (skipped:1)

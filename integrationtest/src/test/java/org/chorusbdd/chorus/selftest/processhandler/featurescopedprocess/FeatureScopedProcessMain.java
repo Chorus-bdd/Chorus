@@ -25,6 +25,10 @@ package org.chorusbdd.chorus.selftest.processhandler.featurescopedprocess;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -34,8 +38,14 @@ import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 public class FeatureScopedProcessMain {
 
     public static void main(String[] args) throws InterruptedException {
+        
+        String name = args[0];
+        
+        //add the process name to the step patterns so we can distinguish steps on each process
+        UnaryOperator<Pattern> patternPreProcessor = pattern -> Pattern.compile(pattern.pattern() + " in " + name);
+        
         FeatureScopedProcessHandler handler = new FeatureScopedProcessHandler();
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(patternPreProcessor, handler);
         exporter.export();
 
         Thread.sleep(60000);

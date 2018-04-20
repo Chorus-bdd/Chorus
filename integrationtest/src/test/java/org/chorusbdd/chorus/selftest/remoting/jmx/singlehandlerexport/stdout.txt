@@ -4,16 +4,18 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx Single Handler E
   Scenario: Call An Exported Method
 Chorus --> INFO    - Processing scenario: Call An Exported Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
-    Given I start a config1 process named SingleHandlerExport                                PASSED  
-    Then I can call a step method exported by the handler in SingleHandlerExport             PASSED  
-    And I can stop the process named SingleHandlerExport                                     PASSED  
+    Given I start a config1 process                                                          PASSED  
+    When I connect to the process named config1                                              PASSED  
+    Then I can call a step method exported by the handler                                    PASSED  
+    And I can stop the process named config1                                                 PASSED  
   Scenario: Call a Pending Method
 Chorus --> INFO    - Processing scenario: Call a Pending Method
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-    And I can declare a step pending remotely in SingleHandlerExport                         PENDING This step is pending
+    When I connect to the process named SingleHandlerExport                                  PASSED  
+    Then I can declare a step pending remotely                                               PENDING This step is pending
 
 
 Features  (total:1) (passed:0) (pending:1) (failed:0)
 Scenarios (total:2) (passed:1) (pending:1) (failed:0)
-Steps     (total:5) (passed:4) (failed:0) (undefined:0) (pending:1) (skipped:0)
+Steps     (total:7) (passed:6) (failed:0) (undefined:0) (pending:1) (skipped:0)

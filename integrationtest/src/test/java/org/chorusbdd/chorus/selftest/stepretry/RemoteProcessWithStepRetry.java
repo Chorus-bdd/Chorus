@@ -89,7 +89,7 @@ public class RemoteProcessWithStepRetry {
 
         private AtomicLong passesWithinStartTime = new AtomicLong();
 
-        @Step(value = ".*call a passes within step method it can be terminated immediately by FailImmediatelyException", retryDuration = 360)
+        @Step(value = ".*call a passes within step method remotely it can be terminated immediately by FailImmediatelyException", retryDuration = 360)
         public void testFailImmediately() {
             passesWithinStartTime.compareAndSet(0, System.currentTimeMillis());
             long zeroWhenFailingImmediately = (System.currentTimeMillis() - passesWithinStartTime.get()) / 1000;

@@ -4,6 +4,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - Processing scenario: Feature-Start
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     First I start a remotePolled process                                                     PASSED  
+    And I connect to the process named remotePolled                                          PASSED  
   Scenario: Step Retry Is Working In Local Handler
 Chorus --> INFO    - Processing scenario: Step Retry Is Working In Local Handler
     Given I increment a value with a timer task                                              PASSED  
@@ -21,20 +22,20 @@ Chorus --> INFO    - Processing scenario: I can immediately break out of a Step 
     When call a passes within step method it can be terminated immediately by FailImmediatelyException FAILED  Fail this step immediately - time elapsed 0 seconds (StepRetryHandler:linenumber)-FailImmediatelyException
   Scenario: Remoting with Step Retry
 Chorus --> INFO    - Processing scenario: Remoting with Step Retry
-    When I start a timer in remotePolled                                                     PASSED  
-    Then test condition eventually passes in remotePolled                                    PASSED  
-    And another test condition fails with AssertionError in remotePolled                     FAILED  remote ChorusAssertionError - Failed condition (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
+    When I start a timer                                                                     PASSED  
+    Then test condition eventually passes                                                    PASSED  
+    And another test condition fails with AssertionError                                     FAILED  remote ChorusAssertionError - Failed condition (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
   Scenario: Exceptions fail tests with remote Step Retry
 Chorus --> INFO    - Processing scenario: Exceptions fail tests with remote Step Retry
-    Then another test condition fails with Exception in remotePolled                         FAILED  remote Exception - My Exception Message (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
+    Then another test condition fails with Exception                                         FAILED  remote Exception - My Exception Message (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
   Scenario: Runtime Exceptions fail tests with remote Step Retry
 Chorus --> INFO    - Processing scenario: Runtime Exceptions fail tests with remote Step Retry
-    Then another test condition fails with RuntimeException in remotePolled                  FAILED  remote RuntimeException - My Runtime Exception Message (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
+    Then another test condition fails with RuntimeException                                  FAILED  remote RuntimeException - My Runtime Exception Message (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
   Scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
 Chorus --> INFO    - Processing scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
-    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolled FAILED  remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
+    When call a passes within step method remotely it can be terminated immediately by FailImmediatelyException FAILED  remote FailImmediatelyException - Fail this step immediately - time elapsed 0 seconds (RemoteProcessWithPolledAssertion$MyHandler:linenumber)-JmxRemotingException
 
 
 Features  (total:1) (passed:0) (failed:1)
 Scenarios (total:7) (passed:0) (failed:7)
-Steps     (total:16) (passed:8) (failed:7) (undefined:0) (pending:0) (skipped:1)
+Steps     (total:17) (passed:9) (failed:7) (undefined:0) (pending:0) (skipped:1)

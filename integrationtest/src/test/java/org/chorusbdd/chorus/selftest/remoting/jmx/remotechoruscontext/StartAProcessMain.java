@@ -25,6 +25,9 @@ package org.chorusbdd.chorus.selftest.remoting.jmx.remotechoruscontext;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
@@ -34,13 +37,18 @@ import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 public class StartAProcessMain {
 
     public static void main(String[] args) throws InterruptedException {
+        String name = args[0];
+        
+        //add a suffix to step patterns to identify the process instance
+        UnaryOperator<Pattern> patternPreProcessor = pattern -> Pattern.compile(pattern + " in " + name);
+        
         //write out all the arguments so we can test them
         for (String s : args) {
             System.out.println(s);
         }
 
         JmxRemoteChorusContextHandler handler = new JmxRemoteChorusContextHandler();
-        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
+        ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(patternPreProcessor, handler);
         exporter.export();
 
         Thread.sleep(10000);

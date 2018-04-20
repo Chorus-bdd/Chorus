@@ -23,17 +23,20 @@ Feature: Polled Assertion
      
   Scenario: Remoting with Polled Assertions
     Given I start a remotePolled process
-    When I start a timer in remotePolled
-    Then test condition eventually passes in remotePolled
-    And another test condition fails with AssertionError in remotePolled
+    And I connect to the process named remotePolled
+    When I start a timer
+    Then test condition eventually passes
+    And another test condition fails with AssertionError
 
   Scenario: Remoting with Polled Assertions with Exception
     Given I start a remotePolled process
-    Then another test condition fails with Exception in remotePolled
+    And I connect to the process named remotePolled
+    Then another test condition fails with Exception
 
   Scenario: Remoting with Polled Assertions with RuntimeException
     Given I start a remotePolled process
-    Then another test condition fails with RuntimeException in remotePolled
+    And I connect to the process named remotePolled
+    Then another test condition fails with RuntimeException
 
      
   Scenario: Long running step method overruns passes within period
@@ -56,4 +59,5 @@ Feature: Polled Assertion
 
   Scenario: I can immediately break out of a remote passes within by throwing FailImmediatelyException
     Given I start a remotePolled process
-    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolled
+    And I connect to the process named remotePolled
+    When call a passes within step method remotely it can be terminated immediately by FailImmediatelyException

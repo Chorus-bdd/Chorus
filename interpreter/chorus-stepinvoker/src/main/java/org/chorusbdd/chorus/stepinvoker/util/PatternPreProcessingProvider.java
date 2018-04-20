@@ -4,7 +4,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
  */
 public class PatternPreProcessingProvider implements StepInvokerProvider {
 
-    private final Function<Pattern, Pattern> patternProcessingFunction;
+    private final UnaryOperator<Pattern> patternProcessingFunction;
     private final StepInvokerProvider wrappedProvider;
 
-    public PatternPreProcessingProvider(Function<Pattern, Pattern> patternProcessingFunction, StepInvokerProvider wrappedProvider) {
+    public PatternPreProcessingProvider(UnaryOperator<Pattern> patternProcessingFunction, StepInvokerProvider wrappedProvider) {
         this.patternProcessingFunction = patternProcessingFunction;
         this.wrappedProvider = wrappedProvider;
     }
@@ -35,7 +35,7 @@ public class PatternPreProcessingProvider implements StepInvokerProvider {
 
         private final Pattern processedPattern;
 
-        public StepInvokerPatternWrapper(StepInvoker wrappedInvoker, Function<Pattern, Pattern> patternFunction) {
+        public StepInvokerPatternWrapper(StepInvoker wrappedInvoker, UnaryOperator<Pattern> patternFunction) {
             super(wrappedInvoker);
             this.processedPattern = patternFunction.apply(wrappedInvoker.getStepPattern());
         }

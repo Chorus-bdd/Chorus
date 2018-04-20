@@ -44,6 +44,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 /**
@@ -55,9 +56,9 @@ import java.util.regex.Pattern;
  */
 public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
 
-    private static final Function<Pattern, Pattern> DEFAULT_STEP_PATTERN_PREPROCESSOR = Function.identity();
+    private static final UnaryOperator<Pattern> DEFAULT_STEP_PATTERN_PREPROCESSOR = UnaryOperator.identity();
     
-    private final Function<Pattern, Pattern> patternPreProcessor;
+    private final UnaryOperator<Pattern> patternPreProcessor;
     
     private ChorusLog log = ChorusLogFactory.getLog(ChorusHandlerJmxExporter.class);
 
@@ -83,7 +84,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
      * @param patternPreProcessor - A function to perform a mapping on the patterns of all exported handler steps
      * @param handlers - Instances of handler classes which should be exported
      */
-    public ChorusHandlerJmxExporter(Function<Pattern, Pattern> patternPreProcessor, Object... handlers) {
+    public ChorusHandlerJmxExporter(UnaryOperator<Pattern> patternPreProcessor, Object... handlers) {
         this.patternPreProcessor = patternPreProcessor;
 
         for ( Object handler : handlers) {

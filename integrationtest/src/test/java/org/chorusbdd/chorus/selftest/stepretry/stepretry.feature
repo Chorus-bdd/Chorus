@@ -7,6 +7,7 @@ Feature: Step Retry
 
   Feature-Start:
     First I start a remotePolled process
+    And I connect to the process named remotePolled
 
   Scenario: Step Retry Is Working In Local Handler
     Given I increment a value with a timer task
@@ -28,15 +29,15 @@ Feature: Step Retry
     When call a passes within step method it can be terminated immediately by FailImmediatelyException
 
   Scenario: Remoting with Step Retry
-    When I start a timer in remotePolled
-    Then test condition eventually passes in remotePolled
-    And another test condition fails with AssertionError in remotePolled
+    When I start a timer
+    Then test condition eventually passes
+    And another test condition fails with AssertionError
 
   Scenario: Exceptions fail tests with remote Step Retry
-    Then another test condition fails with Exception in remotePolled
+    Then another test condition fails with Exception
 
   Scenario: Runtime Exceptions fail tests with remote Step Retry
-    Then another test condition fails with RuntimeException in remotePolled
+    Then another test condition fails with RuntimeException
 
   Scenario: I can immediately break out of a remote Step Retry by throwing FailImmediatelyException
-    When call a passes within step method it can be terminated immediately by FailImmediatelyException in remotePolled
+    When call a passes within step method remotely it can be terminated immediately by FailImmediatelyException

@@ -95,7 +95,7 @@ public class RemoteProcessWithPolledAssertion {
 
         private AtomicLong passesWithinStartTime = new AtomicLong();
 
-        @Step(".*call a passes within step method it can be terminated immediately by FailImmediatelyException")
+        @Step(".*call a passes within step method remotely it can be terminated immediately by FailImmediatelyException")
         @PassesWithin(length=360, timeUnit = TimeUnit.SECONDS)
         public void testFailImmediately() {
             passesWithinStartTime.compareAndSet(0, System.currentTimeMillis());
