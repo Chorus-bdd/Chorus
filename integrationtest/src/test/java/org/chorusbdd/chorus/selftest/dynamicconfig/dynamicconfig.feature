@@ -17,7 +17,7 @@ Feature: Dynamic Configuration
     Given I add a process config on port 23456 called hagrid
     And I add a remoting config on port 23456 called harryPotter
     And I start a hagrid process
-    And I connect to the process named hagrid
+    And I connect to the hagrid process
     Then I can call an exported method
 
 

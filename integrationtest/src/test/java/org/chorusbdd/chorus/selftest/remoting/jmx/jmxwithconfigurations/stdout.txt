@@ -6,7 +6,7 @@ Chorus --> INFO    - Processing scenario: Config Properties Override Main Proper
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
 Chorus --> ERROR   - Failed to connect to mBean server on (localhost:18800)
-    And I connect to the process named SingleHandlerExport                                   FAILED  Failed to connect to mBean server on (localhost:18800) caused by: [replaced] (AbstractJmxProxy:linenumber)-ChorusException
+    And I connect to the SingleHandlerExport process                                         FAILED  Failed to connect to mBean server on (localhost:18800) caused by: [replaced] (AbstractJmxProxy:linenumber)-ChorusException
     Then I can call a step method exported by the handler                                    SKIPPED 
 
 Feature: Jmx With Configurations [config2]                                                           
@@ -16,7 +16,7 @@ Chorus --> INFO    - No default handler found for Feature: (Jmx With Configurati
 Chorus --> INFO    - Processing scenario: Config Properties Override Main Properties For Jmx Remoting
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named SingleHandlerExport                                PASSED  
-    And I connect to the process named SingleHandlerExport                                   PASSED  
+    And I connect to the SingleHandlerExport process                                         PASSED  
     Then I can call a step method exported by the handler                                    PASSED  
 
 

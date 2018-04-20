@@ -16,7 +16,7 @@ Chorus --> INFO    - Processing scenario: Configure remoting dynamically
     And I add a remoting config on port 23456 called harryPotter                             PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a hagrid process                                                             PASSED  
-    And I connect to the process named hagrid                                                PASSED  
+    And I connect to the hagrid process                                                      PASSED  
     Then I can call an exported method                                                       PASSED  dumbledore
 
 

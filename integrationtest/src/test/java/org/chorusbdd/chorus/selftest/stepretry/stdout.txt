@@ -4,7 +4,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - Processing scenario: Feature-Start
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     First I start a remotePolled process                                                     PASSED  
-    And I connect to the process named remotePolled                                          PASSED  
+    And I connect to the remotePolled process                                                PASSED  
   Scenario: Step Retry Is Working In Local Handler
 Chorus --> INFO    - Processing scenario: Step Retry Is Working In Local Handler
     Given I increment a value with a timer task                                              PASSED  

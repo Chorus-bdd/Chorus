@@ -10,7 +10,7 @@ Feature: Jmx With Configurations
 
   Scenario: Config Properties Override Main Properties For Jmx Remoting
     Given I start a config1 process named SingleHandlerExport
-    And I connect to the process named SingleHandlerExport
+    And I connect to the SingleHandlerExport process
     Then I can call a step method exported by the handler
 
 

@@ -10,7 +10,7 @@ Feature: Invalid Handler Config
     And I wait for config1 to terminate
 
   Scenario: Invalid config1 Remoting Properties
-    Given I can connect to the process named config1
+    Given I can connect to the config1 process
     And I can call an exported method
 
 

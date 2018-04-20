@@ -26,7 +26,7 @@ Feature: Remoting With Directives
 
     
   Scenario: Connect using step not directive
-    When I connect to the remote process NoComponentName                                             #! Processes start NoComponentName
+    When I connect to the NoComponentName process                                             #! Processes start NoComponentName
     Check I can call a step method exported by the handler
 
 

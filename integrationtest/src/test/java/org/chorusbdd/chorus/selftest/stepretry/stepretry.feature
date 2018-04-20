@@ -7,7 +7,7 @@ Feature: Step Retry
 
   Feature-Start:
     First I start a remotePolled process
-    And I connect to the process named remotePolled
+    And I connect to the remotePolled process
 
   Scenario: Step Retry Is Working In Local Handler
     Given I increment a value with a timer task

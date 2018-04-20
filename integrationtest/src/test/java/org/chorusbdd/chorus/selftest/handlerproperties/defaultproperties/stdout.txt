@@ -5,7 +5,7 @@ Chorus --> INFO    - No default handler found for Feature: (Default Handler Prop
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     I can start a config1 process                                                            PASSED  
-    And connect to the process named config1                                                 PASSED  
+    And connect to the config1 process                                                       PASSED  
     And call a remote method                                                                 PASSED  true
     And stop process config1                                                                 PASSED  
 

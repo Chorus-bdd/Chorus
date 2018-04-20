@@ -7,7 +7,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
     And I start a notScopedProcess process named myNotScoped                                 PASSED  
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     And I start a scopedProcess process named myScopedToScenario                             PASSED  
-    And I connect to the remote processes myNotScoped, myScopedToScenario                    PASSED  
+    And I connect to the processes myNotScoped, myScopedToScenario                           PASSED  
   Scenario: Scenario One
 Chorus --> INFO    - Processing scenario: Scenario One
     Then the process named myNotScoped is running                                            PASSED  

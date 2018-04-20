@@ -29,7 +29,7 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 Chorus --> INFO    - Processing scenario: Connect using step not directive
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     #! Processes start NoComponentName                                                       PASSED  
-    When I connect to the remote process NoComponentName                                     PASSED  
+    When I connect to the NoComponentName process                                            PASSED  
     Check I can call a step method exported by the handler                                   PASSED  
 
 

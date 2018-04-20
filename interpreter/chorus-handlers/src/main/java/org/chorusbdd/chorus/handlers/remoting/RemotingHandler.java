@@ -40,6 +40,7 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -89,16 +90,22 @@ public class RemotingHandler {
     private ConfigurationManager configurationManager;
 
     
-    //A Directive which can be used to connect to one or more remote processes
+    //A Directive which can be used to connect to one or more processes
     @Step("Remoting connect " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }
 
-    //A step which can be used to connect to one or more remote processes
-    @Step(".*connect to the (?:remote )?process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
+    //A step which can be used to connect to one or more processes
+    @Step(".*connect to the process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
     public void connectToRemoteProcesses(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
+    }
+
+    //A step which can be used to connect to one process
+    @Step(".*connect to the " + HandlerPatterns.namePattern + " process")
+    public void connectToRemoteProcess(String processName) throws Exception {
+        connectRemoteProcesses(processName);
     }
     
     private void connectRemoteProcesses(String processNameList) {

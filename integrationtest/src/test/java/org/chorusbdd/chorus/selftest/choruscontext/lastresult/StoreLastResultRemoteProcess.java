@@ -25,7 +25,6 @@ package org.chorusbdd.chorus.selftest.choruscontext.lastresult;
 
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 

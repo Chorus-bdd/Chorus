@@ -5,7 +5,7 @@ Chorus --> INFO    - No default handler found for Feature: (JMX Remote Chorus Co
 Chorus --> INFO    - Processing scenario: View And Change A Context Variable Remotely
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named Casablanca                                         PASSED  
-    And I connect to the process named Casablanca                                            PASSED  
+    And I connect to the Casablanca process                                                  PASSED  
     And I set the context variable theUsualSuspects to Nick in Casablanca                    PASSED  
     Then I can access the context variable theUsualSuspects in Casablanca                    PASSED  Nick:String
     And_if I set the context variable theUsualSuspects to Steve in Casablanca                PASSED  
@@ -14,14 +14,14 @@ Chorus --> INFO    - About to run process:  <system specific process details rep
 Chorus --> INFO    - Processing scenario: Set a Variable Locally and Read it Remotely
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named Casablanca                                         PASSED  
-    And I connect to the process named Casablanca                                            PASSED  
+    And I connect to the Casablanca process                                                  PASSED  
     And I create a context variable myVar with the value localValue                          PASSED  
     Then the value of variable myVar is localValue in Casablanca                             PASSED  
   Scenario: Can serialize a map
 Chorus --> INFO    - Processing scenario: Can serialize a map
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process named Casablanca                                         PASSED  
-    And I connect to the process named Casablanca                                            PASSED  
+    And I connect to the Casablanca process                                                  PASSED  
     And I create a context map myMap in Casablanca                                           PASSED  
     Then the size of map myMap is 3                                                          PASSED  
   Scenario: Can share a context variable between two remote processes
