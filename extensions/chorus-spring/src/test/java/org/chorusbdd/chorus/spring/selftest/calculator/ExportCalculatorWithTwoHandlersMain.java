@@ -28,6 +28,7 @@ import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 /**
@@ -43,7 +44,7 @@ public class ExportCalculatorWithTwoHandlersMain {
         String calcName = args[0];
 
         //change the steps exported according to the name of the calc process we have started
-        Function<Pattern, Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in " + calcName);
+        UnaryOperator<Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in " + calcName);
 
         //export calculator handlers
         new ChorusHandlerJmxExporter(

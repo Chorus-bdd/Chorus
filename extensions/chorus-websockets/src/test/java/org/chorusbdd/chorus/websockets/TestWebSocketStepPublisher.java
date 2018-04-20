@@ -112,6 +112,7 @@ public class TestWebSocketStepPublisher {
             "testPublisher",
             "step1",
             UUID.randomUUID().toString(),
+            UUID.randomUUID().toString(),
             "call a test step",
             30,
             Collections.emptyList(),

@@ -26,6 +26,7 @@ package org.chorusbdd.chorus.selftest.choruscontext.lastresult;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 /**
@@ -40,7 +41,7 @@ public class StoreLastResultRemoteProcess {
         StoreLastResultHandler handler = new StoreLastResultHandler();
 
         //add a suffix so we can separate remote steps from local invocations of the handler
-        Function<Pattern, Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in storelastremote"); 
+        UnaryOperator<Pattern> patternFunction = pattern -> Pattern.compile(pattern.pattern() + " in storelastremote"); 
         
         ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(patternFunction, handler);
         exporter.export();
