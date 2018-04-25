@@ -74,7 +74,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         );
 
         List<String> command = javaProcessCommandLineBuilder.buildCommandLine();
-        System.out.println("About to run process: " + command);
+//        System.out.println("About to run process: " + command);
 
         ByteArrayOutputStream processOut = new ByteArrayOutputStream();
         ByteArrayOutputStream processErr = new ByteArrayOutputStream();
