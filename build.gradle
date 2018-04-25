@@ -21,7 +21,7 @@ allprojects  {
     }
     
     group = "org.chorusbdd"
-    version = '3.0.0.DEV50'
+    version = '3.0.0.RC1'
 
     test {
         testLogging {
@@ -46,7 +46,7 @@ allprojects  {
 
 configure([
         project(':chorus-selenium'),
-        project(':chorus-sikulix'),
+//        project(':chorus-sikulix'),
         project(':chorus-spring'),
         project(':chorus-websockets'),
         project(':chorus-sql')]) {
