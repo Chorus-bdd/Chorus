@@ -27,10 +27,7 @@ import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.remoting.jmx.serialization.ApiVersion;
-import org.chorusbdd.chorus.remoting.jmx.serialization.JmxRemotingException;
-import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
-import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.*;
 import org.chorusbdd.chorus.stepinvoker.HandlerClassInvokerFactory;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
@@ -41,9 +38,9 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -195,7 +192,13 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
     }
 
     @Override
-    public float getApiVersion() {
+    public JmxStepFailureDiagnosticResult sendStepFailureDiagnostics(String stepTokenId, JmxStepFailureDiagnosticParams parameters) throws Exception {
+        //Take no action since this callback is here to support future functionality for 3.0.x not yet developed
+        return new JmxStepFailureDiagnosticResult();
+    }
+
+    @Override
+    public BigDecimal getApiVersion() {
         return ApiVersion.API_VERSION;
     }
 

@@ -23,43 +23,16 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.serialization;
 
-import org.chorusbdd.chorus.util.ChorusException;
-
-import java.io.Serializable;
-import java.util.Map;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
  * Date: 24/07/12
  * Time: 08:24
  *
- * Wrap the result of implementing a step remotely - this is the object returned by the
- * step implementation method - along with the remote chorus context state
+ * Parameters to allow a remote JMX component to send a diagnostic for a failed test step
  */
-public class JmxStepResult extends AbstractJmxDTO {
+public class JmxStepFailureDiagnosticParams extends AbstractJmxDTO {
 
     private static final long serialVersionUID = 1;
-
-    public static final String CHORUS_CONTEXT_FIELD = "CHORUS_CONTEXT";
-    public static final String STEP_RESULT_FIELD = "STEP_RESULT";
-
-    public JmxStepResult(Map chorusContext, Object result) {
-        put(CHORUS_CONTEXT_FIELD, chorusContext);
-        put(STEP_RESULT_FIELD, result);
-        if ( result != null && ! (result instanceof Serializable)) {
-            throw new ChorusException(
-                "The returned type of a remotely called step implementation must be Serializable, " +
-                "class type was " + result.getClass()
-            );
-        }
-    }
-
-    public Map getChorusContext() {
-        return (Map)get(CHORUS_CONTEXT_FIELD);
-    }
-
-    public Object getResult() {
-        return get(STEP_RESULT_FIELD);
-    }
+    
 }

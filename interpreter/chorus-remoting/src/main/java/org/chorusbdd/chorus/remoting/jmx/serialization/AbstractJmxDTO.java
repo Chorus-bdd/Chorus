@@ -36,9 +36,9 @@ import java.util.Map;
  * We are breaking down classes into a map of field data to make it possible
  * to introduce new fields in later versions without breaking serialization
  *
- * Subclass should define serialVersionUID = 1;
+ * Subclass should define serialVersionUID;
  */
-public class AbstractJmxResult implements Serializable {
+public class AbstractJmxDTO implements Serializable {
 
 
     /**

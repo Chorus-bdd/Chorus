@@ -23,6 +23,8 @@
  */
 package org.chorusbdd.chorus.remoting.jmx.serialization;
 
+import java.math.BigDecimal;
+
 /**
  * Created by nick on 19/01/15.
  */
@@ -31,5 +33,5 @@ public class ApiVersion {
     /**
      * Version of the JMX remoting API in use
      */
-    public static final int API_VERSION = 3;
+    public static final BigDecimal API_VERSION = new BigDecimal(3);
 }

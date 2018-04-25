@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.stepinvoker.StepInvoker;
  * This avoids serializing the invoker instance across the wire, making it easier to maintain backwards compatibility
  * when attributes are added or removed from StepInvoker
  */
-public class JmxInvokerResult extends AbstractJmxResult {
+public class JmxInvokerResult extends AbstractJmxDTO {
 
     private static final long serialVersionUID = 1;
 

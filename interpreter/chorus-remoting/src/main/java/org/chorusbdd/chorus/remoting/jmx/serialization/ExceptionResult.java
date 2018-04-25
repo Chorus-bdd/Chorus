@@ -26,7 +26,7 @@ package org.chorusbdd.chorus.remoting.jmx.serialization;
 /**
  * Created by nick on 19/01/15.
  */
-public class ExceptionResult extends AbstractJmxResult {
+public class ExceptionResult extends AbstractJmxDTO {
 
     private static final long serialVersionUID = 1;
 

@@ -24,8 +24,11 @@
 package org.chorusbdd.chorus.remoting.jmx;
 
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepFailureDiagnosticParams;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
+import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepFailureDiagnosticResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +37,31 @@ import java.util.Map;
  */
 public interface ChorusHandlerJmxExporterMBean {
 
+    /**
+     * @return a List of StepInvokers which define the steps available to be called on this remote component
+     */
     List<JmxInvokerResult> getStepInvokers();
 
+    /**
+     * The interpreter will call this method to invoke a test step
+     * 
+     * @param stepInvokerId         the id of a step returned by getStepInvokers()
+     * @param stepTokenId           a unique UUID for this step within the currently executing test suite
+     * @param chorusContext         variables within the Chorus Context
+     * @param params                one parameter for each capturing group in the regular expression which defines this step
+     * @return                      The result of executing this step which may be a returned value or StepInvoker.VOID_RESULT 
+     * @throws Exception
+     */
     JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<String> params) throws Exception;
 
-    float getApiVersion();
+    /**
+     * This is a method included to support a future feature in which the interpreter can ask the remote component to send a diagnostic 
+     * to a remote service when a step fails
+     */
+    JmxStepFailureDiagnosticResult sendStepFailureDiagnostics(String stepTokenId, JmxStepFailureDiagnosticParams parameters) throws Exception;
+
+    /**
+     * An API version which can be used by the interpreter to check compatibility of the remote component
+     */
+    BigDecimal getApiVersion();
 }
