@@ -119,3 +119,5 @@ uploadArchives {
     }
 }
 
+javadocJar.dependsOn(shadowJar)
+
