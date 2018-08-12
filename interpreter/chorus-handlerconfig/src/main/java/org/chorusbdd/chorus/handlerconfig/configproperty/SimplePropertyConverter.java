@@ -4,7 +4,10 @@ import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.function.BiFunction;
 
-public class SimpleTypeValueConverter implements BiFunction<String, Class, Object> {
+/**
+ * Convert a String property value to an instance of a target type
+ */
+public class SimplePropertyConverter implements BiFunction<String, Class, Object> {
 
     @Override
     public Object apply(String propertyValue, Class targetClass) {

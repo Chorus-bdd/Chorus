@@ -13,10 +13,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-public class ConfigClassPropertyParserTest {
+public class ConfigClassUtilsTest {
 
     
-    private ConfigClassPropertyParser configBeanPropertyParser = new ConfigClassPropertyParser();
+    private ConfigClassUtils configBeanPropertyParser = new ConfigClassUtils();
     
     @Test
     public void aBeanWithNoAnnotatedMethodsProducesAnEmptyList() {
@@ -27,21 +27,13 @@ public class ConfigClassPropertyParserTest {
     @Test(expected = ChorusException.class)
     public void anAnnotationOnAMethodWhichDoesNotStartWithSetThrowsAnException() {
         List properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAnnotationOnMethodWhichDoesNotStartWithSet());
-        assertEquals(0, properties.size());
     }
 
     @Test(expected = ChorusException.class)
     public void anAnnotationOnAMethodWithNoArgumentThrowsAnException() {
         List properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAnnotationOnSetterWithNoArgument());
-        assertEquals(0, properties.size());
     }
-
-    @Test(expected = ChorusException.class)
-    public void anAnnotationOnAMethodWithMismatchedArgumentThrowsAnException() {
-        List properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAnnotationOnSetterWhichHasMismatchedArgumentType());
-        assertEquals(0, properties.size());
-    }
-
+    
     @Test
     public void aBeanWithAValidAnnotationReturnsAConfigProperty() {
         List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAValidAnnotation());
@@ -73,7 +65,7 @@ public class ConfigClassPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("Failed while converting default value provided for HandlerConfigClassProperty annotation with name badDefaultProperty, caused by: [SimpleTypeValueConverter could not convert the property value 'wibble' to a java.lang.Integer]", e.getMessage());
+            assertEquals("Failed while converting default value provided for ConfigClassProperty annotation with name badDefaultProperty, caused by: [SimplePropertyConverter could not convert the property value 'wibble' to a java.lang.Integer]", e.getMessage());
         }
     }
 
@@ -85,7 +77,7 @@ public class ConfigClassPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("The default value did not match the validation pattern, for HandlerConfigClassProperty annotation with name prop", e.getMessage());
+            assertEquals("The default value did not match the validation pattern, for ConfigClassProperty annotation with name prop", e.getMessage());
         }
     }
 
@@ -97,7 +89,7 @@ public class ConfigClassPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("The validation pattern '^&*(%' could not be compiled, for HandlerConfigClassProperty annotation with name prop", e.getMessage());
+            assertEquals("The validation pattern '^&*(%' could not be compiled, for ConfigClassProperty annotation with name prop", e.getMessage());
         }
     }
     
@@ -108,9 +100,8 @@ public class ConfigClassPropertyParserTest {
 
     public static class ConfigBeanWithAnnotationOnMethodWhichDoesNotStartWithSet {
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "myProperty",
-            javaType = String.class,
             description = "My Property Description"
         )
         public void wibbleMyProperty(String prop) {
@@ -120,9 +111,8 @@ public class ConfigClassPropertyParserTest {
 
     public static class ConfigBeanWithAnnotationOnSetterWithNoArgument{
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "myProperty",
-            javaType = String.class,
             description = "My Property Description"
         )
         public void setMyProperty() {
@@ -130,22 +120,10 @@ public class ConfigClassPropertyParserTest {
         }
     }
 
-    public static class ConfigBeanWithAnnotationOnSetterWhichHasMismatchedArgumentType{
-        @HandlerConfigClassProperty(
-            name = "myProperty",
-            javaType = String.class,
-            description = "My Property Description"
-        )
-        public void setMyProperty(Integer badArgumentType) {
-
-        }
-    }
-
     public static class ConfigBeanWithAValidAnnotation {
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "myProperty",
-            javaType = String.class,
             description = "My Property Description"
         )
         public void setMyProperty(String goodArgument) {
@@ -155,9 +133,8 @@ public class ConfigClassPropertyParserTest {
 
     public static class ConfigBeanWithSimpleTypeProperties {
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "integerProperty",
-            javaType = Integer.class,
             description = "Integer Property",
             defaultValue = "1"
         )
@@ -165,9 +142,8 @@ public class ConfigClassPropertyParserTest {
 
         }
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "doubleProperty",
-            javaType = Double.class,
             description = "Double Property",
             defaultValue = "1.23"
         )
@@ -175,9 +151,8 @@ public class ConfigClassPropertyParserTest {
 
         }
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "booleanProperty",
-            javaType = Boolean.class,
             description = "Boolean Property",
             defaultValue = "true"
         )
@@ -185,9 +160,8 @@ public class ConfigClassPropertyParserTest {
 
         }
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "floatProperty",
-            javaType = Float.class,
             description = "Float Property",
             defaultValue = "2.34"
         )
@@ -198,9 +172,8 @@ public class ConfigClassPropertyParserTest {
 
     public static class ConfigBeanWithADefaultValueWhichCannotConvertToJavaType {
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "badDefaultProperty",
-            javaType = Integer.class,
             description = "Bad Default Property",
             defaultValue = "wibble"
         )
@@ -211,9 +184,8 @@ public class ConfigClassPropertyParserTest {
 
     public static class ConfigBeanWithADefaultValueWhichDoesNotSatisfyValidation {
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "prop",
-            javaType = String.class,
             description = "Property",
             defaultValue = "the other",
             validationPattern = "(this|that)"
@@ -225,9 +197,8 @@ public class ConfigClassPropertyParserTest {
 
     public static class ConfigBeanWithAValidationPatternWhichCannotBeCompiled {
 
-        @HandlerConfigClassProperty(
+        @ConfigClassProperty(
             name = "prop",
-            javaType = String.class,
             description = "Property",
             defaultValue = "default value",
             validationPattern = "^&*(%"
