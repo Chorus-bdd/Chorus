@@ -1,19 +1,23 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
-public interface HandlerConfigProperty<T> {
+public interface HandlerConfigProperty {
     
     String getName();
 
     String getDescription();
 
-    Class<T> getJavaType();
+    Class getJavaType();
     
-    Optional<String> getValidationPattern();
+    Optional<Pattern> getValidationPattern();
     
-    Optional<T> getDefaultValue();
+    Optional getDefaultValue();
     
     boolean isMandatory();
+    
+    Function<String, Object> getValueConverter();
     
 }
