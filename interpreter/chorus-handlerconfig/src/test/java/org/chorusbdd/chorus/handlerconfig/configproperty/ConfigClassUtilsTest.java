@@ -1,42 +1,39 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.function.Tuple2;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
 public class ConfigClassUtilsTest {
 
     
-    private ConfigClassUtils configBeanPropertyParser = new ConfigClassUtils();
+    private ConfigClassUtils configClassUtils = new ConfigClassUtils();
     
     @Test
     public void aBeanWithNoAnnotatedMethodsProducesAnEmptyList() {
-        List properties = configBeanPropertyParser.readProperties(new ConfigBeanWithNoAnnotatedProperties());
+        List properties = configClassUtils.getConfigProperties(new ConfigBeanWithNoAnnotatedProperties());
         assertEquals(0, properties.size());
     }
 
     @Test(expected = ChorusException.class)
     public void anAnnotationOnAMethodWhichDoesNotStartWithSetThrowsAnException() {
-        List properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAnnotationOnMethodWhichDoesNotStartWithSet());
+        List properties = configClassUtils.getConfigProperties(new ConfigBeanWithAnnotationOnMethodWhichDoesNotStartWithSet());
     }
 
     @Test(expected = ChorusException.class)
     public void anAnnotationOnAMethodWithNoArgumentThrowsAnException() {
-        List properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAnnotationOnSetterWithNoArgument());
+        List properties = configClassUtils.getConfigProperties(new ConfigBeanWithAnnotationOnSetterWithNoArgument());
     }
     
     @Test
     public void aBeanWithAValidAnnotationReturnsAConfigProperty() {
-        List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAValidAnnotation());
+        List<HandlerConfigProperty> properties = configClassUtils.getConfigProperties(new ConfigBeanWithAValidAnnotation());
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0).getOne();
+        HandlerConfigProperty p = properties.get(0);
         assertEquals( p.getName(), "myProperty");
         assertEquals( p.getDescription(), "My Property Description");
         assertFalse(p.getValidationPattern().isPresent());
@@ -45,27 +42,24 @@ public class ConfigClassUtilsTest {
 
     @Test
     public void aPropertyIsMandatoryByDefault() {
-        List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAValidAnnotation());
+        List<HandlerConfigProperty> properties = configClassUtils.getConfigProperties(new ConfigBeanWithAValidAnnotation());
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0).getOne();
+        HandlerConfigProperty p = properties.get(0);
         assertTrue( p.isMandatory());
     }
 
     @Test
     public void aPropertyCanBeConfiguredNotMandatory() {
-        List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanPropertyCanBeConfiguredNotMandatory());
+        List<HandlerConfigProperty> properties = configClassUtils.getConfigProperties(new ConfigBeanPropertyCanBeConfiguredNotMandatory());
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0).getOne();
+        HandlerConfigProperty p = properties.get(0);
         assertFalse( p.isMandatory());
     }
 
     @Test
     public void defaultValuesCanBeConvetedToSimpleTypes() {
-        List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanWithSimpleTypeProperties());
-        assertEquals(4, properties.size());
-
-        Map<String, HandlerConfigProperty> m = properties.stream().collect(Collectors.toMap(i -> i.getOne().getName(), Tuple2::getOne));
-        
+        Map<String, HandlerConfigProperty> m = configClassUtils.getConfigPropertiesByName(new ConfigBeanWithSimpleTypeProperties());
+        assertEquals(4, m.size());
         assertEquals(1, m.get("integerProperty").getDefaultValue().get());
         assertEquals(1.23d, m.get("doubleProperty").getDefaultValue().get());
         assertEquals(2.34f, m.get("floatProperty").getDefaultValue().get());
@@ -75,7 +69,7 @@ public class ConfigClassUtilsTest {
     @Test
     public void testDefaultValuesWhichCannotBeConvertedToJavaTypeThrowsException() {
         try {
-            List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanWithADefaultValueWhichCannotConvertToJavaType());
+            List<HandlerConfigProperty> properties = configClassUtils.getConfigProperties(new ConfigBeanWithADefaultValueWhichCannotConvertToJavaType());
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -86,7 +80,7 @@ public class ConfigClassUtilsTest {
     @Test
     public void testDefaultValuesWhichDoNotMatchValidationPatternThrowException() {
         try {
-            List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new     ConfigBeanWithADefaultValueWhichDoesNotSatisfyValidation
+            List<HandlerConfigProperty> properties = configClassUtils.getConfigProperties(new     ConfigBeanWithADefaultValueWhichDoesNotSatisfyValidation
                 ());
             fail("Should fail to convert");
         } catch (Exception e) {
@@ -98,7 +92,7 @@ public class ConfigClassUtilsTest {
     @Test
     public void testAValidationPatternWhichCannotCompileThrowsException() {
         try {
-            List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new     ConfigBeanWithAValidationPatternWhichCannotBeCompiled
+            List<HandlerConfigProperty> properties = configClassUtils.getConfigProperties(new     ConfigBeanWithAValidationPatternWhichCannotBeCompiled
                 ());
             fail("Should fail to convert");
         } catch (Exception e) {

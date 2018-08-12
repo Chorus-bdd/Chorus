@@ -1,7 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.function.Tuple2;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -9,17 +8,29 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static org.chorusbdd.chorus.util.function.Tuple2.tuple2;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 
 public class ConfigClassUtils {
     
-    public List<Tuple2<HandlerConfigProperty, Method>> readProperties(Object configBean) {
+    
+    public <C> C createInstance(Class<C> configBeanClass, Properties properties) {
+        return null;
+    }
+
+
+    public Map<String, HandlerConfigProperty> getConfigPropertiesByName(Object configBean) {
+        List<HandlerConfigProperty> properties = getConfigProperties(configBean);
+        return properties.stream().collect(toMap(HandlerConfigProperty::getName, identity()));
+    }
+    
+    public List<HandlerConfigProperty> getConfigProperties(Object configBean) {
         
         Class clazz = configBean.getClass();
         Method[] methods = clazz.getDeclaredMethods();
         
-        List<Tuple2<HandlerConfigProperty, Method>> result = new LinkedList<>();
+        List<HandlerConfigProperty> result = new LinkedList<>();
         Arrays.asList(methods)
             .stream()
             .filter(m -> m.isAnnotationPresent(ConfigClassProperty.class))
@@ -28,7 +39,7 @@ public class ConfigClassUtils {
         return result;
     }
 
-    private void addConfigProperty(List<Tuple2<HandlerConfigProperty, Method>> result, Method method) {
+    private void addConfigProperty(List<HandlerConfigProperty> result, Method method) {
         ConfigClassProperty p = method.getAnnotation(ConfigClassProperty.class);
 
         if ( ! method.getName().startsWith("set")) {
@@ -66,10 +77,11 @@ public class ConfigClassUtils {
             nullIfEmptyString(p.validationPattern()), 
             p.description(),
             value,
-            p.mandatory()
+            p.mandatory(),
+            method
         );
 
-        result.add(tuple2(h, method));
+        result.add(h);
     }
 
     private void validateDefaultValue(ConfigClassProperty p) {
@@ -122,11 +134,13 @@ public class ConfigClassUtils {
         private final String description;
         private final T defaultValue;
         private final boolean mandatory;
+        private final Method setterMethod;
 
-        public HandlerConfigPropertyImpl(String name, Class<T> javaType, String validationPattern, String description, T defaultValue, boolean mandatory) {
+        public HandlerConfigPropertyImpl(String name, Class<T> javaType, String validationPattern, String description, T defaultValue, boolean mandatory, Method setterMethod) {
             Objects.requireNonNull(name, "name cannot be null");
             Objects.requireNonNull(javaType, "javaType cannot be null");
             Objects.requireNonNull(description, "description cannot be null");
+            Objects.requireNonNull(setterMethod, "setterMethod cannot be null");
             //defaultValue can be null as can validationPattern
             this.name = name;
             this.javaType = javaType;
@@ -134,6 +148,7 @@ public class ConfigClassUtils {
             this.description = description;
             this.defaultValue = defaultValue;
             this.mandatory = mandatory;
+            this.setterMethod = setterMethod;
         }
 
         @Override
@@ -164,6 +179,10 @@ public class ConfigClassUtils {
         @Override
         public boolean isMandatory() {
             return mandatory;
+        }
+
+        public Method getSetterMethod() {
+            return setterMethod;
         }
     }
 }
