@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ConfigClassUtilsTest {
 
@@ -43,6 +41,22 @@ public class ConfigClassUtilsTest {
         assertEquals( p.getDescription(), "My Property Description");
         assertFalse(p.getValidationPattern().isPresent());
         assertFalse(p.getDefaultValue().isPresent());
+    }
+
+    @Test
+    public void aPropertyIsMandatoryByDefault() {
+        List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanWithAValidAnnotation());
+        assertEquals(1, properties.size());
+        HandlerConfigProperty p = properties.get(0).getOne();
+        assertTrue( p.isMandatory());
+    }
+
+    @Test
+    public void aPropertyCanBeConfiguredNotMandatory() {
+        List<Tuple2<HandlerConfigProperty, Method>> properties = configBeanPropertyParser.readProperties(new ConfigBeanPropertyCanBeConfiguredNotMandatory());
+        assertEquals(1, properties.size());
+        HandlerConfigProperty p = properties.get(0).getOne();
+        assertFalse( p.isMandatory());
     }
 
     @Test
@@ -131,6 +145,18 @@ public class ConfigClassUtilsTest {
         }
     }
 
+    public static class ConfigBeanPropertyCanBeConfiguredNotMandatory {
+
+        @ConfigClassProperty(
+            name = "myProperty",
+            description = "My Property Description",
+            mandatory = false
+        )
+        public void setMyProperty(String goodArgument) {
+
+        }
+    }
+    
     public static class ConfigBeanWithSimpleTypeProperties {
 
         @ConfigClassProperty(
