@@ -48,6 +48,40 @@ public class ConfigBuilderTest {
             assertEquals("Property stringProperty is mandatory but no value was provided", e.getMessage());
         }
     }
+
+    @Test
+    public void testConfigProperiesWithConversions() {
+        Properties p = new Properties();
+        p.setProperty("intProperty", "123");
+        p.setProperty("floatProperty", "234.5");
+        p.setProperty("longProperty", "345");
+        p.setProperty("doubleProperty", "456.7");
+        p.setProperty("booleanProperty", "true");
+        
+        ConfigClassPropertyWithConversions c = configBuilder.buildConfig(ConfigClassPropertyWithConversions.class, p);
+        assertEquals( 123, c.intProperty);
+        assertEquals( 234.5f, c.floatProperty, 0);
+        assertEquals( 345, c.longProperty);
+        assertEquals(456.7d, c.doubleProperty, 0);
+        assertEquals( true, c.booleanProperty);
+    }
+
+    @Test
+    public void testConfigProperiesWithPrimitiveSetters() {
+        Properties p = new Properties();
+        p.setProperty("intProperty", "123");
+        p.setProperty("floatProperty", "234.5");
+        p.setProperty("longProperty", "345");
+        p.setProperty("doubleProperty", "456.7");
+        p.setProperty("booleanProperty", "true");
+
+        ConfigClassPropertyWithPrimitivesSetters c = configBuilder.buildConfig(ConfigClassPropertyWithPrimitivesSetters.class, p);
+        assertEquals( 123, c.intProperty);
+        assertEquals( 234.5f, c.floatProperty, 0);
+        assertEquals( 345, c.longProperty);
+        assertEquals(456.7d, c.doubleProperty, 0);
+        assertEquals( true, c.booleanProperty);
+    }
     
     static class ConfigClassWithSimpleProperty {
 
@@ -81,6 +115,104 @@ public class ConfigBuilderTest {
 
         public String getStringProperty() {
             return stringProperty;
+        }
+    }
+
+    static class ConfigClassPropertyWithConversions {
+
+        private int intProperty;
+        private long longProperty;
+        private float floatProperty;
+        private double doubleProperty;
+        private boolean booleanProperty;
+
+        @ConfigProperty(
+            name = "intProperty",
+            description = "intProperty"
+        )
+        public void setIntProperty(Integer intProperty) {
+            this.intProperty = intProperty;
+        }
+
+        @ConfigProperty(
+            name = "floatProperty",
+            description = "floatProperty"
+        )
+        public void setFloatProperty(Float floatProperty) {
+            this.floatProperty = floatProperty;
+        }
+
+        @ConfigProperty(
+            name = "longProperty",
+            description = "longProperty"
+        )
+        public void setLongProperty(Long longProperty) {
+            this.longProperty = longProperty;
+        }
+
+        @ConfigProperty(
+            name = "doubleProperty",
+            description = "doubleProperty"
+        )
+        public void setDoubleProperty(Double doubleProperty) {
+            this.doubleProperty = doubleProperty;
+        }
+
+        @ConfigProperty(
+            name = "booleanProperty",
+            description = "booleanProperty"
+        )
+        public void setBooleanProperty(Boolean booleanProperty) {
+            this.booleanProperty = booleanProperty;
+        }
+    }
+
+    static class ConfigClassPropertyWithPrimitivesSetters {
+
+        private int intProperty;
+        private long longProperty;
+        private float floatProperty;
+        private double doubleProperty;
+        private boolean booleanProperty;
+
+        @ConfigProperty(
+            name = "intProperty",
+            description = "intProperty"
+        )
+        public void setIntProperty(int intProperty) {
+            this.intProperty = intProperty;
+        }
+
+        @ConfigProperty(
+            name = "floatProperty",
+            description = "floatProperty"
+        )
+        public void setFloatProperty(float floatProperty) {
+            this.floatProperty = floatProperty;
+        }
+
+        @ConfigProperty(
+            name = "longProperty",
+            description = "longProperty"
+        )
+        public void setLongProperty(long longProperty) {
+            this.longProperty = longProperty;
+        }
+
+        @ConfigProperty(
+            name = "doubleProperty",
+            description = "doubleProperty"
+        )
+        public void setDoubleProperty(double doubleProperty) {
+            this.doubleProperty = doubleProperty;
+        }
+
+        @ConfigProperty(
+            name = "booleanProperty",
+            description = "booleanProperty"
+        )
+        public void setBooleanProperty(boolean booleanProperty) {
+            this.booleanProperty = booleanProperty;
         }
     }
 }

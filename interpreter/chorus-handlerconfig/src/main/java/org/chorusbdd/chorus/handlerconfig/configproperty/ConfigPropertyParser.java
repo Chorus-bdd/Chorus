@@ -11,6 +11,7 @@ import java.util.regex.PatternSyntaxException;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
+import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyParser.PrimitiveToWrapperClassConverter.getWrapperClass;
 
 
 public class ConfigPropertyParser {
@@ -49,6 +50,12 @@ public class ConfigPropertyParser {
         }
         
         Class javaType = method.getParameterTypes()[0];
+        
+        //always use the wrapper class to describe the required java type, although this will be unboxed as required into the primitive
+        //equivalent when the setter is invoked reflectively
+        if ( javaType.isPrimitive()) {
+            javaType = getWrapperClass(javaType);
+        }
 
         Object defaultValue = null;
         Pattern validationPattern = null;
@@ -190,6 +197,28 @@ public class ConfigPropertyParser {
 
         public Method getSetterMethod() {
             return setterMethod;
+        }
+    }
+    
+    public static class PrimitiveToWrapperClassConverter {
+        public final static Map<Class<?>, Class<?>> map = new HashMap<>();
+        static {
+            map.put(boolean.class, Boolean.class);
+            map.put(byte.class, Byte.class);
+            map.put(short.class, Short.class);
+            map.put(char.class, Character.class);
+            map.put(int.class, Integer.class);
+            map.put(long.class, Long.class);
+            map.put(float.class, Float.class);
+            map.put(double.class, Double.class);
+            map.put(void.class, Void.class);
+        }
+
+        public static Class getWrapperClass(Class primitiveType) {
+            if ( ! primitiveType.isPrimitive() ) {
+                throw new IllegalArgumentException("Parameter must be a primitive type");
+            }
+            return map.get(primitiveType);
         }
     }
 }

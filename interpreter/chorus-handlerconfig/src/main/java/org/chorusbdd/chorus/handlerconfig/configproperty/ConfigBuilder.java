@@ -64,7 +64,7 @@ public class ConfigBuilder {
                     throw new ChorusException("Property " + configPropertyName + " is mandatory but no value was provided");
                 } 
             } else {
-                if ( convertedValue.getClass() != configProperty.getJavaType()) {
+                if (convertedValue.getClass() != configProperty.getJavaType()) {
                     throw new ChorusException("The expected value type for the property " + configPropertyName + 
                         " is a " + configProperty.getJavaType().getName() + " but the converted value was a " 
                         + convertedValue.getClass().getName());

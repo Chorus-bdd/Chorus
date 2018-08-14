@@ -57,13 +57,15 @@ public class ConfigPropertyParserTest {
     }
 
     @Test
-    public void defaultValuesCanBeConvetedToSimpleTypes() {
+    public void defaultValuesCanBeConvertedToSimpleTypes() {
         Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithSimpleTypeProperties.class);
-        assertEquals(4, m.size());
+        assertEquals(6, m.size());
         assertEquals(1, m.get("integerProperty").getDefaultValue().get());
         assertEquals(1.23d, m.get("doubleProperty").getDefaultValue().get());
         assertEquals(2.34f, m.get("floatProperty").getDefaultValue().get());
         assertEquals(true, m.get("booleanProperty").getDefaultValue().get());
+        assertEquals('C', m.get("charProperty").getDefaultValue().get());
+        assertEquals((short)9, m.get("shortProperty").getDefaultValue().get());
     }
 
     @Test
@@ -73,7 +75,7 @@ public class ConfigPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("Failed while converting default value provided for ConfigProperty annotation with name badDefaultProperty, caused by: [SimplePropertyConverter could not convert the property value 'wibble' to a java.lang.Integer]", e.getMessage());
+            assertEquals("Failed while converting default value provided for ConfigProperty annotation with name badDefaultProperty, caused by: [PrimitiveTypeConverter could not convert the property value 'wibble' to a java.lang.Integer]", e.getMessage());
         }
     }
 
@@ -98,8 +100,17 @@ public class ConfigPropertyParserTest {
             assertEquals("The validation pattern '^&*(%' could not be compiled, for ConfigProperty annotation with name prop", e.getMessage());
         }
     }
-    
-    
+
+    @Test
+    public void testConfigSettersWhichHavePrimitiveArgumentAreDescribedUsingTheEquivalentWrapperType() {
+        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithASetterWithPrimitiveTypeParameter.class);
+        assertEquals(1, properties.size());
+        HandlerConfigProperty p = properties.get(0);
+        assertTrue( p.isMandatory());
+    }
+
+
+
     public static class ConfigBeanWithNoAnnotatedProperties {
         
     }
@@ -186,6 +197,24 @@ public class ConfigPropertyParserTest {
         public void setFloatProperty(Float f) {
 
         }
+
+        @ConfigProperty(
+            name = "shortProperty",
+            description = "Short Property",
+            defaultValue = "9"
+        )
+        public void setShortProperty(Short f) {
+
+        }
+
+        @ConfigProperty(
+            name = "charProperty",
+            description = "Character Property",
+            defaultValue = "C"
+        )
+        public void setShortProperty(Character f) {
+
+        }
     }
 
     public static class ConfigBeanWithADefaultValueWhichCannotConvertToJavaType {
@@ -222,6 +251,17 @@ public class ConfigPropertyParserTest {
             validationPattern = "^&*(%"
         )
         public void setMyProperty(String goodArgument) {
+
+        }
+    }
+
+    public static class ConfigBeanWithASetterWithPrimitiveTypeParameter {
+
+        @ConfigProperty(
+            name = "prop",
+            description = "Property"
+        )
+        public void setMyProperty(int myPrimitiveInt) {
 
         }
     }
