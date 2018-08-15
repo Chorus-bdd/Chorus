@@ -8,11 +8,9 @@ import java.util.function.BiFunction;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HandlerConfigClassProperty {
+public @interface ConfigProperty {
     
     String name();
-
-    Class javaType();
     
     String description();
     
@@ -25,6 +23,6 @@ public @interface HandlerConfigClassProperty {
     /**
      * @return the class of a function which can be instantiated to convert the String value and defaultValue to the configured javaType
      */
-    Class<? extends BiFunction<String,Class,Object>> valueConverter() default SimpleTypeValueConverter.class;
+    Class<? extends BiFunction<String,Class,Object>> valueConverter() default PrimitiveTypeConverter.class;
 
 }

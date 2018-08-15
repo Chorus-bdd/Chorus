@@ -13,3 +13,4 @@ logs
 build
 /dependencies.txt
 /classes/
+out
