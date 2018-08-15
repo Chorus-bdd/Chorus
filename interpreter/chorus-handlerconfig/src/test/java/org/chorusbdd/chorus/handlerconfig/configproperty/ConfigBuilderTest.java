@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.junit.Test;
 
 import java.util.Properties;
@@ -82,7 +83,33 @@ public class ConfigBuilderTest {
         assertEquals(456.7d, c.doubleProperty, 0);
         assertEquals( true, c.booleanProperty);
     }
-    
+
+    @Test
+    public void testConfigPropertiesWithEnumField() {
+        Properties p = new Properties();
+        p.setProperty("enumField", "feature");
+        p.setProperty("enumFieldCaseInsensitive", "ScEnArIo");
+
+
+        ConfigClassWithEnumTypes c = configBuilder.buildConfig(ConfigClassWithEnumTypes.class, p);
+        assertEquals(Scope.FEATURE, c.scope);
+        assertEquals(Scope.SCENARIO, c.scopeCaseInsensitive);
+    }
+
+    @Test
+    public void testAnEnumValueWhichCantBeMappedThrowsException() {
+        Properties p = new Properties();
+        p.setProperty("enumField", "rgioergergerg");
+
+        try {
+            ConfigClassWithEnumTypes c = configBuilder.buildConfig(ConfigClassWithEnumTypes.class, p);
+            fail("Should throw exception");
+        } catch (Exception e) {
+            assertEquals("Could not convert property value rgioergergerg to an instance of Enum class org.chorusbdd.chorus.annotations.Scope", e.getMessage());
+        }
+    }
+
+
     static class ConfigClassWithSimpleProperty {
 
         private String stringProperty;
@@ -213,6 +240,30 @@ public class ConfigBuilderTest {
         )
         public void setBooleanProperty(boolean booleanProperty) {
             this.booleanProperty = booleanProperty;
+        }
+    }
+
+
+    public static class ConfigClassWithEnumTypes {
+
+        private Scope scope;
+        private Scope scopeCaseInsensitive;
+
+
+        @ConfigProperty(
+            name = "enumField",
+            description = "Enum value"
+        )
+        public void setEnumField(Scope scope) {
+            this.scope = scope;
+        }
+
+        @ConfigProperty(
+            name = "enumFieldCaseInsensitive",
+            description = "Enum value"
+        )
+        public void setEnumFieldCaseInsensitive(Scope scope) {
+            this.scopeCaseInsensitive = scope;
         }
     }
 }

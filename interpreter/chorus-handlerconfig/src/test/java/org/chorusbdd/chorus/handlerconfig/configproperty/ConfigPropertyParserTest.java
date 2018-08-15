@@ -1,5 +1,6 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
+import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.junit.Test;
 
@@ -66,6 +67,14 @@ public class ConfigPropertyParserTest {
         assertEquals(true, m.get("booleanProperty").getDefaultValue().get());
         assertEquals('C', m.get("charProperty").getDefaultValue().get());
         assertEquals((short)9, m.get("shortProperty").getDefaultValue().get());
+    }
+
+    @Test
+    public void enumFieldsCanBeParsed() {
+        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithEnumTypes.class);
+        assertEquals(1, properties.size());
+        HandlerConfigProperty p = properties.get(0);
+        assertEquals( p.getJavaType(), Scope.class);
     }
 
     @Test
@@ -263,6 +272,17 @@ public class ConfigPropertyParserTest {
         )
         public void setMyProperty(int myPrimitiveInt) {
 
+        }
+    }
+    
+    public static class ConfigBeanWithEnumTypes {
+        
+        @ConfigProperty(
+            name = "enumField",
+            description = "Enum value"
+        )
+        public void setEnumField(Scope scope) {
+            
         }
     }
 }
