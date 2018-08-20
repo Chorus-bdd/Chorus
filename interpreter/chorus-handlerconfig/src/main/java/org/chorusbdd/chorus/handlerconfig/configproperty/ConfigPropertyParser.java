@@ -40,21 +40,45 @@ import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyPa
 public class ConfigPropertyParser {
     
 
-    public Map<String, HandlerConfigProperty> getConfigPropertiesByName(Class configClass) {
+    Map<String, HandlerConfigProperty> getConfigPropertiesByName(Class configClass) {
         List<HandlerConfigProperty> properties = getConfigProperties(configClass);
         return properties.stream().collect(toMap(HandlerConfigProperty::getName, identity()));
     }
     
-    public List<HandlerConfigProperty> getConfigProperties(Class configClass) {
-        Method[] methods = configClass.getDeclaredMethods();
-        
+    
+    List<HandlerConfigProperty> getConfigProperties(Class configClass) {
+        Method[] methods = getMethodsFromConfigClass(configClass);
+
         List<HandlerConfigProperty> result = new LinkedList<>();
-        Arrays.asList(methods)
-            .stream()
+        Arrays.stream(methods)
             .filter(m -> m.isAnnotationPresent(ConfigProperty.class))
             .forEach(method -> addConfigProperty(result, method));
         
         return result;
+    }
+
+    List<Method> getValidationMethods(Class configClass) {
+        Method[] methods = getMethodsFromConfigClass(configClass);
+        List<Method> result = new LinkedList<>();
+        Arrays.stream(methods)
+            .filter(m -> m.isAnnotationPresent(ConfigValidator.class))
+            .filter(method -> checkValidationMethod(method, configClass))
+            .forEach(result::add);
+        return result;
+    }
+    
+    
+    private Method[] getMethodsFromConfigClass(Class configClass) {
+        return configClass.getDeclaredMethods();
+    }
+
+    private boolean checkValidationMethod(Method method, Class configClass) {
+        if ( method.getParameterCount() > 0) {
+            throw new ChorusException("Validation method " + method.getName() + " on class " + configClass.getName() + " requires an argument and this is not supported");
+        } else if ( method.getReturnType() != Void.TYPE) {
+            throw new ChorusException("Validation method " + method.getName() + " on class " + configClass.getName() + " does not have a void return type");
+        } 
+        return true;
     }
 
     private void addConfigProperty(List<HandlerConfigProperty> result, Method method) {
