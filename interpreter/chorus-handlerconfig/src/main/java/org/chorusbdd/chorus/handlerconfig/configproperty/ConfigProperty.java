@@ -1,3 +1,26 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2018 Chorus BDD Organisation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import java.lang.annotation.ElementType;
@@ -6,22 +29,41 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.function.BiFunction;
 
+/**
+ * Describe a settable config property of a config class
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ConfigProperty {
-    
+
+    /**
+     * Property name which maps to this settable property
+     */
     String name();
-    
+
+    /**
+     * Description of this settable property
+     */
     String description();
-    
+
+    /**
+     * Default property value as a String (will be converted to the target java type, 
+     * which is the type of the argument of the annotated method, using the configured valueConverter)
+     */
     String defaultValue() default "";
 
+    /**
+     * Regular expression to validate supplied property values
+     */
     String validationPattern() default "";
 
+    /**
+     * If it is mandatory to supply a value (provision of a default values may fulfil this requirement)
+     */
     boolean mandatory() default true;
 
     /**
-     * @return the class of a function which can be instantiated to convert the String value and defaultValue to the configured javaType
+     * @return the class of a function which can be instantiated to convert the String property value and defaultValue to the configured javaType
      */
     Class<? extends BiFunction<String,Class,Object>> valueConverter() default PrimitiveOrEnumTypeConverter.class;
 

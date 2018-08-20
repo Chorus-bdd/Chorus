@@ -21,28 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.remoting.manager;
+package org.chorusbdd.chorus.handlerconfig.configproperty;
 
-import org.chorusbdd.chorus.handlerconfig.configbean.AbstractConfigBeanValidator;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Created by nick on 23/09/2014.
+ * Mark a method which can be called to validate a config class instance
  */
-public class RemotingConfigBeanValidator extends AbstractConfigBeanValidator<RemotingManagerConfig> {
-
-    protected boolean checkValid(RemotingManagerConfig remotingConfig) {
-        boolean valid = true;
-        if ( ! isSet(remotingConfig.getHost()) ) {
-            logInvalidConfig("host was not set", remotingConfig);
-            valid = false;
-        } else if ( ! isSet(remotingConfig.getProtocol())) {
-            logInvalidConfig("protocol was not set", remotingConfig);
-            valid = false;
-        } else if ( remotingConfig.getPort() <= 0 ) {
-            logInvalidConfig("port was not set", remotingConfig);
-            valid = false;
-        }
-        return valid;
-    }
-
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ConfigValidator {
 }

@@ -24,68 +24,159 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigProperty;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidator;
+import org.chorusbdd.chorus.util.ChorusException;
 
 /**
- * An immutable remoting config
+ *  Remoting config
  */
 public class RemotingConfig implements RemotingManagerConfig {
 
-    private final String protocol;
-    private final String configName;
-    private final String host;
-    private final int port;
-    private final int connectionAttempts;
-    private final int connectionAttemptMillis;
-    private final Scope scope;
+    private String protocol;
+    private String configName;
+    private String host;
+    private int port = -1;
+    private int connectionAttempts = -1;
+    private int connectionAttemptMillis = -1;
+    private Scope scope;
 
-    public RemotingConfig(String protocol, String configName, String host, int port, int connectionAttempts, int connectionAttemptMillis, Scope scope) {
-        this.protocol = protocol;
-        this.configName = configName;
-        this.host = host;
-        this.port = port;
-        this.connectionAttempts = connectionAttempts;
-        this.connectionAttemptMillis = connectionAttemptMillis;
-        this.scope = scope;
-    }
-
+    @Override
     public String getProtocol() {
         return protocol;
     }
 
+    @ConfigProperty(
+        name="protocol",
+        description="Protocol to make connection (only JMX supported at present)",
+        defaultValue = "jmx",
+        validationPattern = "jmx"
+    )
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    @Override
     public String getConfigName() {
         return configName;
     }
+    
+    public void setConfigName(String configName) {
+        this.configName = configName;
+    }
 
+    @Override
     public String getHost() {
         return host;
     }
 
+    @ConfigProperty(
+        name="host",
+        description="host where remote component is running",
+        mandatory = false //instead can set 'connection' property
+    )
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    @Override
     public int getPort() {
         return port;
     }
 
+    @ConfigProperty(
+        name="port",
+        description="port on which remote component's jmx service is listening for connections",
+        validationPattern = "\\d+",
+        mandatory = false //instead can set 'connection' property
+    )
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    @Override
     public int getConnectionAttempts() {
         return connectionAttempts;
     }
 
+    @ConfigProperty(
+        name="connectionAttempts",
+        description="Number of times to attempt connection",
+        defaultValue = "40",
+        validationPattern = "\\d+"
+    )
+    public void setConnectionAttempts(int connectionAttempts) {
+        this.connectionAttempts = connectionAttempts;
+    }
+
+    @Override
     public int getConnectionAttemptMillis() {
         return connectionAttemptMillis;
     }
 
+    @ConfigProperty(
+        name="connectionAttemptMillis",
+        description="Wait time between each connection attempt",
+        defaultValue = "250",
+        validationPattern = "\\d+"
+    )
+    public void setConnectionAttemptMillis(int connectionAttemptMillis) {
+        this.connectionAttemptMillis = connectionAttemptMillis;
+    }
+
+    @Override
     public Scope getScope() {
         return scope;
     }
 
+    @ConfigProperty(
+        name="scope",
+        description="Whether remoting connection is closed at the end of the each scenario or the end of the feature. This defaults to FEATURE for connections established during the special Feature-Start: scenario",
+        defaultValue = "SCENARIO",
+        validationPattern = Scope.SCOPE_MATCHING_PATTERN
+    )
+    public void setScope(Scope scope) {
+        this.scope = scope;
+    }
+    
+    @ConfigProperty(
+        name="connection",
+        description="A shorthand way of setting protocol host and port properties delimited by colon, e.g. jmx:myHost:myPort",
+        validationPattern = "jmx:\\S+:\\d+",
+        mandatory = false
+    )
+    public void setConnection(String connection) {
+        String[] vals = String.valueOf(connection).split(":");
+        if (vals.length != 3) {
+            throw new ChorusException(
+                "Could not parse remoting property 'connection', " +
+                    "expecting a value in the form protocol:host:port"
+            );
+        }
+        setProtocol(vals[0]);
+        setHost(vals[1]);
+        setPort(Integer.parseInt(vals[2]));
+    }
+    
+    
+    @ConfigValidator
+    public void validate() {
+        if (host == null) throw new ChorusException("host property must be set");
+        if (port < 0) throw new ChorusException("port must be set and > 0");
+        if (connectionAttempts < 0) throw new ChorusException("connectionAttempts must be set and > 0");
+        if (connectionAttemptMillis < 0) throw new ChorusException("connectionAttemptMillis must be set and > 0");
+    }
+
     @Override
     public String toString() {
-        return "RuntimeRemotingConfig{" +
-                "protocol='" + protocol + '\'' +
-                ", configName='" + configName + '\'' +
-                ", host='" + host + '\'' +
-                ", port=" + port +
-                ", connectionAttempts=" + connectionAttempts +
-                ", connectionAttemptMillis=" + connectionAttemptMillis +
-                ", scope=" + scope +
-                '}';
+        return "RemotingConfig{" +
+            "protocol='" + protocol + '\'' +
+            ", configName='" + configName + '\'' +
+            ", host='" + host + '\'' +
+            ", port=" + port +
+            ", connectionAttempts=" + connectionAttempts +
+            ", connectionAttemptMillis=" + connectionAttemptMillis +
+            ", scope=" + scope +
+            '}';
     }
 }

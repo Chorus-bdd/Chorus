@@ -27,25 +27,19 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigBuilderFactory;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfigBeanValidator;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfig;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.stepinvoker.StepMatchResult;
-import org.chorusbdd.chorus.stepinvoker.StepMatcher;
-import org.chorusbdd.chorus.stepinvoker.StepPendingException;
-import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.*;
-
-import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
 
 /**
  * Created by nick on 30/08/2014.
@@ -60,26 +54,24 @@ public class JmxRemotingManager implements RemotingManager {
      * Map: configName -> proxy
      */
     private final Map<String, ChorusHandlerJmxProxy> proxies = new HashMap<>();
-
-    private final RemotingConfigBeanValidator configValidator = new RemotingConfigBeanValidator();
-
+    
     private final List<RemotingManagerConfig> remotingConfigs = new LinkedList<>();
 
     private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
-    private final RemotingConfigBuilderFactory remotingConfigBeanFactory = new RemotingConfigBuilderFactory();
     
     @Override
     public void connect(String configName, Properties remotingProperties) {
         RemotingManagerConfig remotingConfig = buildRemotingConfig(configName, remotingProperties);
 
-        checkConfig(remotingConfig);
         ChorusHandlerJmxProxy proxy = getProxyForComponent(remotingConfig.getConfigName(), remotingConfig);
         List<StepInvoker> invokers = getRemoteStepInvokers(proxy);
         remoteInvokersToUse.put(remotingConfig, invokers);
     }
 
     private RemotingManagerConfig buildRemotingConfig(String configName, Properties remotingProperties) {
-        return remotingConfigBeanFactory.createConfigBuilder(remotingProperties, configName).build();
+        RemotingConfig config = new ConfigBuilder().buildConfig(RemotingConfig.class, remotingProperties);
+        config.setConfigName(configName);
+        return config;
     }
 
     @Override
@@ -89,14 +81,6 @@ public class JmxRemotingManager implements RemotingManager {
             invokers.addAll(l);
         }
         return invokers;
-    }
-
-    private void checkConfig(RemotingManagerConfig remotingConfig) {
-        boolean validConfig = configValidator.isValid(remotingConfig);
-        if ( ! validConfig) {
-            log.warn(configValidator.getErrorDescription());
-            fail("Remoting config must be valid for " + remotingConfig.getConfigName());
-        }
     }
 
     private List<StepInvoker> getRemoteStepInvokers(ChorusHandlerJmxProxy proxy) {
