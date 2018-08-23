@@ -6,9 +6,8 @@ Chorus --> INFO    - Processing scenario: Start a Single Java Process
 Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Processes handler property
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process                                                          PASSED  
-Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Remoting handler property
-Chorus --> WARN    - Invalid config config1 - host was not set
-    And I connect to the config1 process                                                     FAILED  Remoting config must be valid for config1 (JmxRemotingManager:linenumber)-ChorusAssertionError
+Chorus --> WARN    - A property 'myinvalidprop' was provided but no such property is supported
+    And I connect to the config1 process                                                     FAILED  Invalid config 'config1'. Validation method failed: [host property must be set] (JmxRemotingManager:linenumber)-ChorusException
     Then I can call a remote method                                                          SKIPPED 
 
 

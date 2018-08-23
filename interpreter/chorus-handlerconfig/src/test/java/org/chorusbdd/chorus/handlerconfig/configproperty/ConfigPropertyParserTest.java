@@ -24,7 +24,6 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.util.ChorusException;
 import org.junit.Test;
 
 import java.util.List;
@@ -38,23 +37,23 @@ public class ConfigPropertyParserTest {
     private ConfigPropertyParser configPropertyParser = new ConfigPropertyParser();
     
     @Test
-    public void aBeanWithNoAnnotatedMethodsProducesAnEmptyList() {
+    public void aBeanWithNoAnnotatedMethodsProducesAnEmptyList() throws ConfigBuilderException {
         List properties = configPropertyParser.getConfigProperties(ConfigBeanWithNoAnnotatedProperties.class);
         assertEquals(0, properties.size());
     }
 
-    @Test(expected = ChorusException.class)
-    public void anAnnotationOnAMethodWhichDoesNotStartWithSetThrowsAnException() {
+    @Test(expected = ConfigBuilderException.class)
+    public void anAnnotationOnAMethodWhichDoesNotStartWithSetThrowsAnException() throws ConfigBuilderException {
         configPropertyParser.getConfigProperties(ConfigBeanWithAnnotationOnMethodWhichDoesNotStartWithSet.class);
     }
 
-    @Test(expected = ChorusException.class)
-    public void anAnnotationOnAMethodWithNoArgumentThrowsAnException() {
+    @Test(expected = ConfigBuilderException.class)
+    public void anAnnotationOnAMethodWithNoArgumentThrowsAnException() throws ConfigBuilderException {
         configPropertyParser.getConfigProperties(ConfigBeanWithAnnotationOnSetterWithNoArgument.class);
     }
     
     @Test
-    public void aBeanWithAValidAnnotationReturnsAConfigProperty() {
+    public void aBeanWithAValidAnnotationReturnsAConfigProperty() throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithAValidAnnotation.class);
         assertEquals(1, properties.size());
         HandlerConfigProperty p = properties.get(0);
@@ -65,7 +64,7 @@ public class ConfigPropertyParserTest {
     }
 
     @Test
-    public void aPropertyIsMandatoryByDefault() {
+    public void aPropertyIsMandatoryByDefault() throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithAValidAnnotation.class);
         assertEquals(1, properties.size());
         HandlerConfigProperty p = properties.get(0);
@@ -73,7 +72,7 @@ public class ConfigPropertyParserTest {
     }
 
     @Test
-    public void aPropertyCanBeConfiguredNotMandatory() {
+    public void aPropertyCanBeConfiguredNotMandatory() throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanPropertyCanBeConfiguredNotMandatory.class);
         assertEquals(1, properties.size());
         HandlerConfigProperty p = properties.get(0);
@@ -81,7 +80,7 @@ public class ConfigPropertyParserTest {
     }
 
     @Test
-    public void defaultValuesCanBeConvertedToSimpleTypes() {
+    public void defaultValuesCanBeConvertedToSimpleTypes() throws ConfigBuilderException {
         Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithSimpleTypeProperties.class);
         assertEquals(6, m.size());
         assertEquals(1, m.get("integerProperty").getDefaultValue().get());
@@ -93,7 +92,7 @@ public class ConfigPropertyParserTest {
     }
 
     @Test
-    public void enumFieldsCanBeParsed() {
+    public void enumFieldsCanBeParsed() throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithEnumTypes.class);
         assertEquals(1, properties.size());
         HandlerConfigProperty p = properties.get(0);
@@ -107,7 +106,7 @@ public class ConfigPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("Failed while converting default value provided for ConfigProperty annotation with name badDefaultProperty, caused by: [PrimitiveOrEnumTypeConverter could not convert the property value 'wibble' to a java.lang.Integer]", e.getMessage());
+            assertEquals("PrimitiveOrEnumTypeConverter could not convert the property value 'wibble' to a java.lang.Integer", e.getMessage());
         }
     }
 
@@ -134,7 +133,7 @@ public class ConfigPropertyParserTest {
     }
 
     @Test
-    public void testConfigSettersWhichHavePrimitiveArgumentAreDescribedUsingTheEquivalentWrapperType() {
+    public void testConfigSettersWhichHavePrimitiveArgumentAreDescribedUsingTheEquivalentWrapperType() throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithASetterWithPrimitiveTypeParameter.class);
         assertEquals(1, properties.size());
         HandlerConfigProperty p = properties.get(0);

@@ -23,14 +23,11 @@
  */
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
-import org.chorusbdd.chorus.util.ChorusException;
-
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
@@ -40,30 +37,35 @@ import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyPa
 public class ConfigPropertyParser {
     
 
-    Map<String, HandlerConfigProperty> getConfigPropertiesByName(Class configClass) {
+    Map<String, HandlerConfigProperty> getConfigPropertiesByName(Class configClass) throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = getConfigProperties(configClass);
         return properties.stream().collect(toMap(HandlerConfigProperty::getName, identity()));
     }
     
     
-    List<HandlerConfigProperty> getConfigProperties(Class configClass) {
+    List<HandlerConfigProperty> getConfigProperties(Class configClass) throws ConfigBuilderException {
         Method[] methods = getMethodsFromConfigClass(configClass);
 
         List<HandlerConfigProperty> result = new LinkedList<>();
-        Arrays.stream(methods)
+        List<Method> l = Arrays.stream(methods)
             .filter(m -> m.isAnnotationPresent(ConfigProperty.class))
-            .forEach(method -> addConfigProperty(result, method));
+            .collect(Collectors.toList());
+        
+        for ( Method m : l) {
+            addConfigProperty(result, m);
+        }
         
         return result;
     }
 
-    List<Method> getValidationMethods(Class configClass) {
+    List<Method> getValidationMethods(Class configClass) throws ConfigBuilderException {
         Method[] methods = getMethodsFromConfigClass(configClass);
         List<Method> result = new LinkedList<>();
-        Arrays.stream(methods)
-            .filter(m -> m.isAnnotationPresent(ConfigValidator.class))
-            .filter(method -> checkValidationMethod(method, configClass))
-            .forEach(result::add);
+        for ( Method m : methods) {
+            if ( m.isAnnotationPresent(ConfigValidator.class) && checkValidationMethod(m, configClass)) {
+                result.add(m);
+            }
+        }
         return result;
     }
     
@@ -72,26 +74,26 @@ public class ConfigPropertyParser {
         return configClass.getDeclaredMethods();
     }
 
-    private boolean checkValidationMethod(Method method, Class configClass) {
+    private boolean checkValidationMethod(Method method, Class configClass) throws ConfigBuilderException {
         if ( method.getParameterCount() > 0) {
-            throw new ChorusException("Validation method " + method.getName() + " on class " + configClass.getName() + " requires an argument and this is not supported");
+            throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getName() + " requires an argument and this is not supported");
         } else if ( method.getReturnType() != Void.TYPE) {
-            throw new ChorusException("Validation method " + method.getName() + " on class " + configClass.getName() + " does not have a void return type");
+            throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getName() + " does not have a void return type");
         } 
         return true;
     }
 
-    private void addConfigProperty(List<HandlerConfigProperty> result, Method method) {
+    private void addConfigProperty(List<HandlerConfigProperty> result, Method method) throws ConfigBuilderException {
         ConfigProperty p = method.getAnnotation(ConfigProperty.class);
 
         if ( ! method.getName().startsWith("set")) {
-            throw new ChorusException(
+            throw new ConfigBuilderException(
                 "A config bean can only annotate a setter method (the method " + method.getName() + 
                     " does not start with 'set'), for " + getAnnotationDescription(p));
         }
 
         if ( method.getParameterCount() != 1) {
-            throw new ChorusException(
+            throw new ConfigBuilderException(
                 "The annotated method must take a single argument, for " + getAnnotationDescription(p)
             );
         }
@@ -106,7 +108,7 @@ public class ConfigPropertyParser {
 
         Object defaultValue = null;
         Pattern validationPattern = null;
-        Function<String, Object> converterFunction = getConverterFunction(p, javaType);
+        ConfigBuilderTypeConverter converterFunction = getConverterFunction(p, javaType);
         
         if ( ! "".equals(p.defaultValue())) {
             
@@ -114,9 +116,9 @@ public class ConfigPropertyParser {
                 validationPattern = validateDefaultValue(p);
             }
             
-            defaultValue = convertDefaultValue(p, converterFunction);
+            defaultValue = convertDefaultValue(p, converterFunction, javaType);
             if (javaType != defaultValue.getClass()) {
-                throw new ChorusException("Default value \"" + p.defaultValue() + "\" was converted to a type " +
+                throw new ConfigBuilderException("Default value \"" + p.defaultValue() + "\" was converted to a type " +
                     defaultValue.getClass().getName() + " which did not match the expected class type " +javaType.getName() 
                     + " for " + getAnnotationDescription(p));
             }
@@ -136,43 +138,37 @@ public class ConfigPropertyParser {
         result.add(h);
     }
 
-    private Pattern validateDefaultValue(ConfigProperty p) {
+    private Pattern validateDefaultValue(ConfigProperty p) throws ConfigBuilderException {
 
         Pattern pattern;
         
         try {
             pattern = Pattern.compile(p.validationPattern());
         } catch (PatternSyntaxException e) {
-            throw new ChorusException("The validation pattern '" + p.validationPattern() + "' could not be compiled, for " + getAnnotationDescription(p));   
+            throw new ConfigBuilderException("The validation pattern '" + p.validationPattern() + "' could not be compiled, for " + getAnnotationDescription(p));   
         }
         
         if ( ! pattern.matcher(p.defaultValue()).matches()) {
-            throw new ChorusException("The default value did not match the validation pattern, for " + getAnnotationDescription(p));
+            throw new ConfigBuilderException("The default value did not match the validation pattern, for " + getAnnotationDescription(p));
         }
 
         return pattern;
     }
 
-    private Function<String, Object> getConverterFunction(ConfigProperty p, Class javaType) {
-        BiFunction<String, Class, Object> f;
+    private ConfigBuilderTypeConverter getConverterFunction(ConfigProperty p, Class javaType) throws ConfigBuilderException {
+        ConfigBuilderTypeConverter f;
         try {
-            Class<? extends BiFunction<String, Class, Object>> c = p.valueConverter();
+            Class<? extends ConfigBuilderTypeConverter> c = p.valueConverter();
             f = c.newInstance();
-            
-            return str -> f.apply(str, javaType);
         } catch (Exception e) {
-            throw new ChorusException("Failed to instantiate converter class " + p.valueConverter().getClass().getName() +
+            throw new ConfigBuilderException("Failed to instantiate converter class " + p.valueConverter().getClass().getName() +
                 " for " + getAnnotationDescription(p), e);
         }
+        return f;
     }
     
-    private Object convertDefaultValue(ConfigProperty p, Function<String, Object> f) {
-        try {
-            return f.apply(p.defaultValue());
-        } catch (Exception e) {
-            throw new ChorusException("Failed while converting default value provided for " + getAnnotationDescription(p), e);
-        }
-
+    private Object convertDefaultValue(ConfigProperty p, ConfigBuilderTypeConverter f, Class javaType) throws ConfigBuilderException {
+        return f.convertToTargetType(p.defaultValue(), javaType);
     }
     
     private String getAnnotationDescription(ConfigProperty p) {
@@ -187,10 +183,10 @@ public class ConfigPropertyParser {
         private final String description;
         private final Object defaultValue;
         private final boolean mandatory;
-        private final Function<String, Object> valueConverter;
+        private final ConfigBuilderTypeConverter valueConverter;
         private final Method setterMethod;
 
-        public HandlerConfigPropertyImpl(String name, Class javaType, Pattern validationPattern, String description, Object defaultValue, boolean mandatory, Function<String, Object> valueConverter, Method setterMethod) {
+        public HandlerConfigPropertyImpl(String name, Class javaType, Pattern validationPattern, String description, Object defaultValue, boolean mandatory, ConfigBuilderTypeConverter valueConverter, Method setterMethod) {
             Objects.requireNonNull(name, "name cannot be null");
             Objects.requireNonNull(javaType, "javaType cannot be null");
             Objects.requireNonNull(description, "description cannot be null");
@@ -238,7 +234,7 @@ public class ConfigPropertyParser {
         }
 
         @Override
-        public Function<String, Object> getValueConverter() {
+        public ConfigBuilderTypeConverter getValueConverter() {
             return valueConverter;
         }
 

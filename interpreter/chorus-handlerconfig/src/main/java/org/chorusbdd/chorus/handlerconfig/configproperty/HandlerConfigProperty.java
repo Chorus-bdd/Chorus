@@ -24,7 +24,6 @@
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public interface HandlerConfigProperty {
@@ -40,7 +39,7 @@ public interface HandlerConfigProperty {
     Optional getDefaultValue();
     
     boolean isMandatory();
-    
-    Function<String, Object> getValueConverter();
+
+    ConfigBuilderTypeConverter getValueConverter();
     
 }

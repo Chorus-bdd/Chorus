@@ -28,6 +28,7 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
@@ -38,6 +39,7 @@ import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
+import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.*;
 
@@ -69,7 +71,12 @@ public class JmxRemotingManager implements RemotingManager {
     }
 
     private RemotingManagerConfig buildRemotingConfig(String configName, Properties remotingProperties) {
-        RemotingConfig config = new ConfigBuilder().buildConfig(RemotingConfig.class, remotingProperties);
+        RemotingConfig config = null;
+        try {
+            config = new ConfigBuilder().buildConfig(RemotingConfig.class, remotingProperties);
+        } catch (ConfigBuilderException e) {
+            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
+        }
         config.setConfigName(configName);
         return config;
     }

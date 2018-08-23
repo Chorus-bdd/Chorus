@@ -23,23 +23,19 @@
  */
 package org.chorusbdd.chorus.handlerconfig.configproperty;
 
-import org.chorusbdd.chorus.util.ChorusException;
-
-import java.util.function.BiFunction;
-
 /**
  * Convert a String property value to an instance of a target primitive type wrapper class
  */
-public class PrimitiveOrEnumTypeConverter implements BiFunction<String, Class, Object> {
+public class PrimitiveOrEnumTypeConverter implements ConfigBuilderTypeConverter {
 
     @Override
-    public Object apply(String propertyValue, Class targetClass) {
+    public Object convertToTargetType(String propertyValue, Class targetClass) throws ConfigBuilderException {
         return  targetClass == String.class ? 
             propertyValue : 
             mapToEnumOrPrimitiveWrapper(propertyValue, targetClass);
     }
 
-    private Object mapToEnumOrPrimitiveWrapper(String propertyValue, Class targetClass) {
+    private Object mapToEnumOrPrimitiveWrapper(String propertyValue, Class targetClass) throws ConfigBuilderException {
         Object result;
         try {
             if ( targetClass.isEnum()) {
@@ -48,13 +44,13 @@ public class PrimitiveOrEnumTypeConverter implements BiFunction<String, Class, O
                 result = mapToPrimitiveWrapper(propertyValue, targetClass);
             }
         } catch (NumberFormatException nfe) {
-            throw new ChorusException(getClass().getSimpleName() +  " could not convert the property value '" +
+            throw new ConfigBuilderException(getClass().getSimpleName() +  " could not convert the property value '" +
                 propertyValue + "' to a " + targetClass.getName());
         }
         return result;
     }
 
-    private Object mapToPrimitiveWrapper(String propertyValue, Class targetClass) {
+    private Object mapToPrimitiveWrapper(String propertyValue, Class targetClass) throws ConfigBuilderException {
         switch (targetClass.getName()) {
             case "java.lang.String":
                 return propertyValue;
@@ -81,22 +77,22 @@ public class PrimitiveOrEnumTypeConverter implements BiFunction<String, Class, O
                 if (propertyValue.length() == 1) {
                     return propertyValue.charAt(0);
                 } else {
-                    throw new ChorusException("Could not convert a String with more than one character to a single char");
+                    throw new ConfigBuilderException("Could not convert a String with more than one character to a char");
                 }
             default:
-                throw new ChorusException(getClass().getSimpleName() +
+                throw new ConfigBuilderException(getClass().getSimpleName() +
                     " cannot convert property value to a " + targetClass.getName() + " consider configuring a custom value converter");
         }
     }
 
-    private Object mapToEnum(String propertyValue, Class targetClass) {
+    private Object mapToEnum(String propertyValue, Class targetClass) throws ConfigBuilderException {
         Object[] enumConstants = targetClass.getEnumConstants();
         for (Object e: enumConstants) {
             if ( ((Enum)e).name().equalsIgnoreCase(propertyValue)) {
                 return e;
             }
         }
-        throw new ChorusException("Could not convert property value " + propertyValue + " to an instance of Enum class " + targetClass.getName());
+        throw new ConfigBuilderException("Could not convert property value " + propertyValue + " to an instance of Enum class " + targetClass.getName());
     }
 
 }

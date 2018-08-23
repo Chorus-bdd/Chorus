@@ -27,7 +27,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.function.BiFunction;
 
 /**
  * Describe a settable config property of a config class
@@ -65,6 +64,6 @@ public @interface ConfigProperty {
     /**
      * @return the class of a function which can be instantiated to convert the String property value and defaultValue to the configured javaType
      */
-    Class<? extends BiFunction<String,Class,Object>> valueConverter() default PrimitiveOrEnumTypeConverter.class;
+    Class<? extends ConfigBuilderTypeConverter> valueConverter() default PrimitiveOrEnumTypeConverter.class;
 
 }

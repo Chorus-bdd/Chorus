@@ -8,8 +8,7 @@ Chorus --> WARN    - Invalid config config1 - main class was null or empty
     And I wait for config1 to terminate                                                      SKIPPED 
   Scenario: Invalid config1 Remoting Properties
 Chorus --> INFO    - Processing scenario: Invalid config1 Remoting Properties
-Chorus --> WARN    - Invalid config config1 - host was not set
-    Given I can connect to the config1 process                                               FAILED  Remoting config must be valid for config1 (JmxRemotingManager:linenumber)-ChorusAssertionError
+    Given I can connect to the config1 process                                               FAILED  Invalid config 'config1'. Validation method failed: [host property must be set] (JmxRemotingManager:linenumber)-ChorusException
     And I can call an exported method                                                        SKIPPED 
 
 

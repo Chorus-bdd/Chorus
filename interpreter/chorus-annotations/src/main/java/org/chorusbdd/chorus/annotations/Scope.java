@@ -57,5 +57,5 @@ public enum Scope {
     FEATURE;
 
 
-    public final static String SCOPE_MATCHING_PATTERN = "(?)(FEATURE|SCENARIO)";
+    public final static String SCOPE_MATCHING_PATTERN = "(?i)(FEATURE|SCENARIO)";
 }
