@@ -27,12 +27,11 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
-import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfigBeanValidator;
-import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilderFactory;
-import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilder;
+import org.chorusbdd.chorus.processes.manager.config.*;
 import org.chorusbdd.chorus.processes.manager.process.ChorusProcess;
 import org.chorusbdd.chorus.processes.manager.process.NamedProcess;
 import org.chorusbdd.chorus.results.ExecutionToken;
@@ -67,10 +66,7 @@ public class ProcessManagerImpl implements ProcessManager {
     private final Map<String, NamedProcess> processes = new ConcurrentHashMap<>();
 
     private final CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
-
-    private final ProcessesConfigBuilderFactory processesConfigBuilderFactory = new ProcessesConfigBuilderFactory();
-    private final ProcessManagerConfigBeanValidator processesConfigValidator = new ProcessManagerConfigBeanValidator();
-
+    
     private ExecutionListener processManagerExecutionListener = new ProcessManagerExecutionListener();
     private ChorusProcessFactory chorusProcessFactory = new ChorusProcessFactory();
 
@@ -90,7 +86,7 @@ public class ProcessManagerImpl implements ProcessManager {
      */
     public synchronized void startProcess(String configName, String processName, Properties processProperties) throws Exception {
 
-        ProcessManagerConfig runtimeConfig = getRuntimeConfig(configName, processProperties);
+        ProcessManagerConfig runtimeConfig = getProcessManagerConfig(configName, processProperties);
 
         if ( runtimeConfig.isEnabled()) {  //could be disabled in some profiles
             doStart(processName, runtimeConfig);
@@ -101,7 +97,7 @@ public class ProcessManagerImpl implements ProcessManager {
 
     private void doStart(String processName, ProcessManagerConfig runtimeConfig) throws Exception {
         NamedProcess namedProcess = new NamedProcess(processName, runtimeConfig);
-        checkConfigAndNotAlreadyStarted(namedProcess);
+        checkNotAlreadyStarted(namedProcess);
 
         ChorusProcess chorusProcess = chorusProcessFactory.startChorusProcess(namedProcess, featureToken);
         namedProcess.setProcess(chorusProcess);
@@ -111,22 +107,45 @@ public class ProcessManagerImpl implements ProcessManager {
         chorusProcess.checkNoFailureWithin(namedProcess.getProcessCheckDelay());
     }
 
-    private ProcessManagerConfig getRuntimeConfig(String configName, Properties processProperties) {
-        ProcessesConfigBuilder config = processesConfigBuilderFactory.createConfigBuilder(processProperties, configName);
-        int startedCount = getNumberOfInstancesStarted(configName);
-        config.incrementDebugPort(startedCount);       //auto increment if multiple instances
-        config.incrementRemotingPort(startedCount); //auto increment if multiple instances
-        return config.build();
+    private ProcessManagerConfig getProcessManagerConfig(String configName, Properties processProperties) {
+        ProcessConfig config = buildProcessesConfig(configName, processProperties);
+        incrementPortsIfDuplicateName(configName, config);
+
+
+        return config;
     }
 
-    private void checkConfigAndNotAlreadyStarted(NamedProcess namedProcess) {
+    /**
+     *  If we already have an instance of a process with this name, auto increment ports to avoid a conflict
+     */
+    private void incrementPortsIfDuplicateName(String configName, ProcessConfig config) {
+        int startedCount = getNumberOfInstancesStarted(configName);
+
+        int debugPort = config.getDebugPort();
+        if ( debugPort != -1) {
+            config.setDebugPort(debugPort + startedCount);
+        }
+
+        int remotingPort = config.getRemotingPort();
+        if (remotingPort != -1) {
+            config.setRemotingPort(remotingPort + startedCount);
+        }
+    }
+
+    private ProcessConfig buildProcessesConfig(String configName, Properties processProperties) {
+        ProcessConfig config = null;
+        try {
+            config = new ConfigBuilder().buildConfig(ProcessConfig.class, processProperties);
+        } catch (ConfigBuilderException e) {
+            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
+        }
+        config.setConfigName(configName);
+        return config;
+    }
+
+    private void checkNotAlreadyStarted(NamedProcess namedProcess) {
         String processName = namedProcess.getProcessName();
         ChorusAssert.assertFalse("There is already a process with the processName " + processName, processes.containsKey(processName));
-        boolean valid = processesConfigValidator.isValid(namedProcess);
-        if ( ! valid) {
-            log.warn(processesConfigValidator.getErrorDescription());
-            ChorusAssert.fail("The config for " + processName + " must be valid");
-        }
     }
 
 

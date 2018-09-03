@@ -58,7 +58,7 @@ public class ConfigBuilderTest {
             configBuilder.buildConfig(ConfigClassWithSimpleProperty.class, p);
             fail("Should not validate");
         } catch (Exception e) {
-            assertEquals("Property value 'This value will not validate' does not match pattern 'My.*'", e.getMessage());
+            assertEquals("Property stringProperty value 'This value will not validate' does not match pattern 'My.*'", e.getMessage());
         }
     }
 

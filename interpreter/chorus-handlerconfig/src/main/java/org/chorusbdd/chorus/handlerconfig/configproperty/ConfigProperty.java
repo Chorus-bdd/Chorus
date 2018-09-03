@@ -47,10 +47,10 @@ public @interface ConfigProperty {
 
     /**
      * Default property value as a String (will be converted to the target java type, 
-     * which is the type of the argument of the annotated method, using the configured valueConverter)
+     * which is the type of the argument of the annotated method, using the configured or default valueConverter)
      */
     String defaultValue() default "";
-
+    
     /**
      * Regular expression to validate supplied property values
      */
@@ -65,5 +65,6 @@ public @interface ConfigProperty {
      * @return the class of a function which can be instantiated to convert the String property value and defaultValue to the configured javaType
      */
     Class<? extends ConfigBuilderTypeConverter> valueConverter() default PrimitiveOrEnumTypeConverter.class;
+    
 
 }

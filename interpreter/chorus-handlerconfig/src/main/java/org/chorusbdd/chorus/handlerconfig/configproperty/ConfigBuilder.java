@@ -93,10 +93,10 @@ public class ConfigBuilder {
 
         if ( propertyValue != null) {
             log.trace("Validating config property " + configPropertyName + " with value " + propertyValue);
-            validate(propertyValue, configProperty.getValidationPattern());
+            validate(configPropertyName, propertyValue, configProperty.getValidationPattern());
 
             log.trace("Converting config property " + configPropertyName + " with value " + propertyValue);
-            convertedValue = applyConverterFunction(configProperty, propertyValue);
+            convertedValue = applyConverterFunction(configPropertyName, configProperty, propertyValue);
         }
 
         if ( convertedValue == null) {
@@ -137,20 +137,20 @@ public class ConfigBuilder {
         });
     }
 
-    private Object applyConverterFunction(HandlerConfigPropertyImpl configProperty, String propertyValue) throws ConfigBuilderException {
+    private Object applyConverterFunction(String propertyName, HandlerConfigPropertyImpl configProperty, String propertyValue) throws ConfigBuilderException {
         Object result = configProperty.getValueConverter().convertToTargetType(propertyValue, configProperty.getJavaType());
         
         if ( result == null) {
-            throw new ConfigBuilderException("Converte2r function returned null when converting property value " + propertyValue);
+            throw new ConfigBuilderException("Property " + propertyName + " converter function returned null when converting value " + propertyValue);
         }
         return result;
     }
 
-    private void validate(String propertyValue, Optional<Pattern> p) throws ConfigBuilderException {
+    private void validate(String propertyName, String propertyValue, Optional<Pattern> p) throws ConfigBuilderException {
         if ( p.isPresent() ) {
             Pattern pattern = p.get();
             if ( ! pattern.matcher(propertyValue).matches()) {
-                throw new ConfigBuilderException("Property value '" + propertyValue + "' does not match pattern '" + pattern + "'");
+                throw new ConfigBuilderException("Property " + propertyName + " value '" + propertyValue + "' does not match pattern '" + pattern + "'");
             }
             
         } 

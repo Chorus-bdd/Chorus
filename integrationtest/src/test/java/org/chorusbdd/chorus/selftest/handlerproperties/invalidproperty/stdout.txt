@@ -3,7 +3,7 @@ Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chor
 Chorus --> INFO    - No default handler found for Feature: (Invalid Properties), will use built-in handlers and Uses: statements
   Scenario: Start a Single Java Process
 Chorus --> INFO    - Processing scenario: Start a Single Java Process
-Chorus --> WARN    - Ignoring property myinvalidprop which is not a supported Processes handler property
+Chorus --> WARN    - A property 'myinvalidprop' was provided but no such property is supported
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process                                                          PASSED  
 Chorus --> WARN    - A property 'myinvalidprop' was provided but no such property is supported

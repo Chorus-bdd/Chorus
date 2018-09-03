@@ -26,7 +26,7 @@ package org.chorusbdd.chorus.remoting.manager;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigProperty;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidator;
-import org.chorusbdd.chorus.util.ChorusException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidatorException;
 
 /**
  *  Remoting config
@@ -36,9 +36,9 @@ public class RemotingConfig implements RemotingManagerConfig {
     private String protocol;
     private String configName;
     private String host;
-    private int port = -1;
-    private int connectionAttempts = -1;
-    private int connectionAttemptMillis = -1;
+    private int port;
+    private int connectionAttempts;
+    private int connectionAttemptMillis;
     private Scope scope;
 
     @Override
@@ -88,7 +88,7 @@ public class RemotingConfig implements RemotingManagerConfig {
         name="port",
         description="port on which remote component's jmx service is listening for connections",
         validationPattern = "\\d+",
-        mandatory = false //instead can set 'connection' property
+        mandatory = false  //instead can set 'connection' property
     )
     public void setPort(int port) {
         this.port = port;
@@ -131,7 +131,7 @@ public class RemotingConfig implements RemotingManagerConfig {
 
     @ConfigProperty(
         name="scope",
-        description="Whether remoting connection is closed at the end of the each scenario or the end of the feature. This defaults to FEATURE for connections established during the special Feature-Start: scenario",
+        description="Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be defaulted to FEATURE for connections established during 'Feature-Start:' otherwise SCENARIO",
         defaultValue = "SCENARIO",
         validationPattern = Scope.SCOPE_MATCHING_PATTERN
     )
@@ -148,7 +148,7 @@ public class RemotingConfig implements RemotingManagerConfig {
     public void setConnection(String connection) {
         String[] vals = String.valueOf(connection).split(":");
         if (vals.length != 3) {
-            throw new ChorusException(
+            throw new ConfigValidatorException(
                 "Could not parse remoting property 'connection', " +
                     "expecting a value in the form protocol:host:port"
             );
@@ -161,10 +161,10 @@ public class RemotingConfig implements RemotingManagerConfig {
     
     @ConfigValidator
     public void validate() {
-        if (host == null) throw new ChorusException("host property must be set");
-        if (port < 0) throw new ChorusException("port must be set and > 0");
-        if (connectionAttempts < 0) throw new ChorusException("connectionAttempts must be set and > 0");
-        if (connectionAttemptMillis < 0) throw new ChorusException("connectionAttemptMillis must be set and > 0");
+        if (host == null) throw new ConfigValidatorException("host property must be set");
+        if (port < 0) throw new ConfigValidatorException("port must be set and > 0");
+        if (connectionAttempts < 0) throw new ConfigValidatorException("connectionAttempts must be set and > 0");
+        if (connectionAttemptMillis < 0) throw new ConfigValidatorException("connectionAttemptMillis must be set and > 0");
     }
 
     @Override
