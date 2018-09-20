@@ -139,11 +139,15 @@ public class ConfigPropertyParserTest {
         HandlerConfigProperty p = properties.get(0);
         assertTrue( p.isMandatory());
     }
-    
 
-    public static class ConfigBeanWithNoAnnotatedProperties {
-        
+    @Test
+    public void testAValidationPatternCanBeSetWithoutADefaultValue() throws ConfigBuilderException {
+        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithValidationPatternAndNoDefaultValue.class);
+        HandlerConfigProperty p = properties.get(0);
+        assertEquals("test.*", p.getValidationPattern().get().pattern());
     }
+    
+    public static class ConfigBeanWithNoAnnotatedProperties {}
 
     public static class ConfigBeanWithAnnotationOnMethodWhichDoesNotStartWithSet {
 
@@ -151,9 +155,7 @@ public class ConfigPropertyParserTest {
             name = "myProperty",
             description = "My Property Description"
         )
-        public void wibbleMyProperty(String prop) {
-            
-        }
+        public void wibbleMyProperty(String prop) {}
     }
 
     public static class ConfigBeanWithAnnotationOnSetterWithNoArgument{
@@ -162,9 +164,7 @@ public class ConfigPropertyParserTest {
             name = "myProperty",
             description = "My Property Description"
         )
-        public void setMyProperty() {
-
-        }
+        public void setMyProperty() {}
     }
 
     public static class ConfigBeanWithAValidAnnotation {
@@ -173,9 +173,7 @@ public class ConfigPropertyParserTest {
             name = "myProperty",
             description = "My Property Description"
         )
-        public void setMyProperty(String goodArgument) {
-
-        }
+        public void setMyProperty(String goodArgument) {}
     }
 
     public static class ConfigBeanPropertyCanBeConfiguredNotMandatory {
@@ -185,9 +183,7 @@ public class ConfigPropertyParserTest {
             description = "My Property Description",
             mandatory = false
         )
-        public void setMyProperty(String goodArgument) {
-
-        }
+        public void setMyProperty(String goodArgument) {}
     }
     
     public static class ConfigBeanWithSimpleTypeProperties {
@@ -197,54 +193,42 @@ public class ConfigPropertyParserTest {
             description = "Integer Property",
             defaultValue = "1"
         )
-        public void setIntegerProperty(Integer i) {
-
-        }
+        public void setIntegerProperty(Integer i) {}
 
         @ConfigProperty(
             name = "doubleProperty",
             description = "Double Property",
             defaultValue = "1.23"
         )
-        public void setDoubleProperty(Double d) {
-
-        }
+        public void setDoubleProperty(Double d) {}
 
         @ConfigProperty(
             name = "booleanProperty",
             description = "Boolean Property",
             defaultValue = "true"
         )
-        public void setBooleanProperty(Boolean b) {
-
-        }
+        public void setBooleanProperty(Boolean b) {}
 
         @ConfigProperty(
             name = "floatProperty",
             description = "Float Property",
             defaultValue = "2.34"
         )
-        public void setFloatProperty(Float f) {
-
-        }
+        public void setFloatProperty(Float f) {}
 
         @ConfigProperty(
             name = "shortProperty",
             description = "Short Property",
             defaultValue = "9"
         )
-        public void setShortProperty(Short f) {
-
-        }
+        public void setShortProperty(Short f) {}
 
         @ConfigProperty(
             name = "charProperty",
             description = "Character Property",
             defaultValue = "C"
         )
-        public void setShortProperty(Character f) {
-
-        }
+        public void setShortProperty(Character f) {}
     }
 
     public static class ConfigBeanWithADefaultValueWhichCannotConvertToJavaType {
@@ -254,9 +238,7 @@ public class ConfigPropertyParserTest {
             description = "Bad Default Property",
             defaultValue = "wibble"
         )
-        public void setMyProperty(Integer goodArgument) {
-
-        }
+        public void setMyProperty(Integer goodArgument) {}
     }
 
     public static class ConfigBeanWithADefaultValueWhichDoesNotSatisfyValidation {
@@ -267,9 +249,7 @@ public class ConfigPropertyParserTest {
             defaultValue = "the other",
             validationPattern = "(this|that)"
         )
-        public void setMyProperty(String goodArgument) {
- 
-        }
+        public void setMyProperty(String goodArgument) {}
     }
 
     public static class ConfigBeanWithAValidationPatternWhichCannotBeCompiled {
@@ -280,9 +260,7 @@ public class ConfigPropertyParserTest {
             defaultValue = "default value",
             validationPattern = "^&*(%"
         )
-        public void setMyProperty(String goodArgument) {
-
-        }
+        public void setMyProperty(String goodArgument) {}
     }
 
     public static class ConfigBeanWithASetterWithPrimitiveTypeParameter {
@@ -291,9 +269,7 @@ public class ConfigPropertyParserTest {
             name = "prop",
             description = "Property"
         )
-        public void setMyProperty(int myPrimitiveInt) {
-
-        }
+        public void setMyProperty(int myPrimitiveInt) {}
     }
     
     public static class ConfigBeanWithEnumTypes {
@@ -302,8 +278,16 @@ public class ConfigPropertyParserTest {
             name = "enumField",
             description = "Enum value"
         )
-        public void setEnumField(Scope scope) {
-            
-        }
+        public void setEnumField(Scope scope) {}
+    }
+    
+    public static class ConfigBeanWithValidationPatternAndNoDefaultValue {
+
+        @ConfigProperty(
+            name = "stringField",
+            description = "String Field",
+            validationPattern = "test.*"
+        )
+        public void setStringField(String scope) {}
     }
 }

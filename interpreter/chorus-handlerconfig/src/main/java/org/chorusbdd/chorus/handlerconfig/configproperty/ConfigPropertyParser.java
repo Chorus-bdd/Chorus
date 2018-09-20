@@ -107,13 +107,13 @@ public class ConfigPropertyParser {
         }
 
         Object defaultValue = null;
-        Pattern validationPattern = null;
+        Optional<Pattern> validationPattern = getValidationPattern(p);
         ConfigBuilderTypeConverter converterFunction = getConverterFunction(p, javaType);
         
         if ( ! "".equals(p.defaultValue())) {
             
-            if ( ! "".equals(p.validationPattern())) {
-                validationPattern = validateDefaultValue(p);
+            if ( validationPattern.isPresent()) {
+                validateDefaultValue(validationPattern.get(), p);
             }
             
             defaultValue = convertDefaultValue(p, converterFunction, javaType);
@@ -127,7 +127,7 @@ public class ConfigPropertyParser {
         HandlerConfigProperty h = new HandlerConfigPropertyImpl(
             p.name(),
             javaType,
-            validationPattern, 
+            validationPattern.orElse(null), 
             p.description(),
             defaultValue,
             p.mandatory(),
@@ -138,21 +138,26 @@ public class ConfigPropertyParser {
         result.add(h);
     }
 
-    private Pattern validateDefaultValue(ConfigProperty p) throws ConfigBuilderException {
+    private Optional<Pattern> getValidationPattern(ConfigProperty p) throws ConfigBuilderException {
+        Optional<Pattern> pattern = p.validationPattern().equals("") ? Optional.empty() : Optional.of(compilePattern(p));
+        return pattern;
+    }
 
+    private Pattern compilePattern(ConfigProperty p) throws ConfigBuilderException {
         Pattern pattern;
-        
         try {
             pattern = Pattern.compile(p.validationPattern());
         } catch (PatternSyntaxException e) {
-            throw new ConfigBuilderException("The validation pattern '" + p.validationPattern() + "' could not be compiled, for " + getAnnotationDescription(p));   
+            throw new ConfigBuilderException("The validation pattern '" + p.validationPattern() + "' could not be compiled, for " + getAnnotationDescription(p));
         }
-        
-        if ( ! pattern.matcher(p.defaultValue()).matches()) {
+        return pattern;
+    }
+
+    private void validateDefaultValue(Pattern validationPattern, ConfigProperty p) throws ConfigBuilderException {
+
+        if ( ! validationPattern.matcher(p.defaultValue()).matches()) {
             throw new ConfigBuilderException("The default value did not match the validation pattern, for " + getAnnotationDescription(p));
         }
-
-        return pattern;
     }
 
     private ConfigBuilderTypeConverter getConverterFunction(ConfigProperty p, Class javaType) throws ConfigBuilderException {
