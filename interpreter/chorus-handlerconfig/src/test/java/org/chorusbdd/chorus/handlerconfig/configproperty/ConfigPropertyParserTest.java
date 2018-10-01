@@ -81,14 +81,27 @@ public class ConfigPropertyParserTest {
 
     @Test
     public void defaultValuesCanBeConvertedToSimpleTypes() throws ConfigBuilderException {
-        Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithSimpleTypeProperties.class);
-        assertEquals(6, m.size());
+        Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithPrimitiveTypedProperties.class);
+        assertEquals(7, m.size());
         assertEquals(1, m.get("integerProperty").getDefaultValue().get());
+        assertEquals(1000000L, m.get("longProperty").getDefaultValue().get());
         assertEquals(1.23d, m.get("doubleProperty").getDefaultValue().get());
         assertEquals(2.34f, m.get("floatProperty").getDefaultValue().get());
         assertEquals(true, m.get("booleanProperty").getDefaultValue().get());
         assertEquals('C', m.get("charProperty").getDefaultValue().get());
         assertEquals((short)9, m.get("shortProperty").getDefaultValue().get());
+    }
+
+    @Test
+    public void primitiveTypedPropertiesGetDefaultValidation() throws ConfigBuilderException {
+        Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithPrimitiveTypedProperties.class);
+        assertEquals("^[-+]?\\d+$", m.get("integerProperty").getValidationPattern().get().pattern());
+        assertEquals("^[-+]?\\d+$", m.get("longProperty").getValidationPattern().get().pattern());
+        assertEquals("^[-+]?\\d+$", m.get("shortProperty").getValidationPattern().get().pattern());
+        assertEquals("^[-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?$", m.get("floatProperty").getValidationPattern().get().pattern());
+        assertEquals("^[-+]?[0-9]*\\.?[0-9]+(?:[eE][-+]?[0-9]+)?$", m.get("doubleProperty").getValidationPattern().get().pattern());
+        assertEquals("(?i)^true|false$", m.get("booleanProperty").getValidationPattern().get().pattern());
+        assertEquals("^\\S$", m.get("charProperty").getValidationPattern().get().pattern());
     }
 
     @Test
@@ -106,7 +119,7 @@ public class ConfigPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("PrimitiveOrEnumTypeConverter could not convert the property value 'wibble' to a java.lang.Integer", e.getMessage());
+            assertEquals("The default value [wibble] did not match the validation pattern [^[-+]?\\d+$], for ConfigProperty annotation with name badDefaultProperty", e.getMessage());
         }
     }
 
@@ -117,7 +130,7 @@ public class ConfigPropertyParserTest {
             fail("Should fail to convert");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("The default value did not match the validation pattern, for ConfigProperty annotation with name prop", e.getMessage());
+            assertEquals("The default value [the other] did not match the validation pattern [(this|that)], for ConfigProperty annotation with name prop", e.getMessage());
         }
     }
 
@@ -186,7 +199,15 @@ public class ConfigPropertyParserTest {
         public void setMyProperty(String goodArgument) {}
     }
     
-    public static class ConfigBeanWithSimpleTypeProperties {
+    public static class ConfigBeanWithPrimitiveTypedProperties {
+
+
+        @ConfigProperty(
+            name = "longProperty",
+            description = "Long Property",
+            defaultValue = "1000000"
+        )
+        public void setLongProperty(Long i) {}
 
         @ConfigProperty(
             name = "integerProperty",
@@ -228,7 +249,7 @@ public class ConfigPropertyParserTest {
             description = "Character Property",
             defaultValue = "C"
         )
-        public void setShortProperty(Character f) {}
+        public void setCharacterProperty(Character f) {}
     }
 
     public static class ConfigBeanWithADefaultValueWhichCannotConvertToJavaType {

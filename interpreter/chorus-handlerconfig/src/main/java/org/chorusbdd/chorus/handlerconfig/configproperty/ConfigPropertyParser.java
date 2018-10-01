@@ -35,111 +35,114 @@ import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyPa
 
 
 public class ConfigPropertyParser {
-    
+
 
     Map<String, HandlerConfigProperty> getConfigPropertiesByName(Class configClass) throws ConfigBuilderException {
         List<HandlerConfigProperty> properties = getConfigProperties(configClass);
         return properties.stream().collect(toMap(HandlerConfigProperty::getName, identity()));
     }
-    
-    
+
+
     List<HandlerConfigProperty> getConfigProperties(Class configClass) throws ConfigBuilderException {
         Method[] methods = getMethodsFromConfigClass(configClass);
 
         List<HandlerConfigProperty> result = new LinkedList<>();
         List<Method> l = Arrays.stream(methods)
-            .filter(m -> m.isAnnotationPresent(ConfigProperty.class))
-            .collect(Collectors.toList());
-        
-        for ( Method m : l) {
+                .filter(m -> m.isAnnotationPresent(ConfigProperty.class))
+                .collect(Collectors.toList());
+
+        for (Method m : l) {
             addConfigProperty(result, m);
         }
-        
+
         return result;
     }
 
     List<Method> getValidationMethods(Class configClass) throws ConfigBuilderException {
         Method[] methods = getMethodsFromConfigClass(configClass);
         List<Method> result = new LinkedList<>();
-        for ( Method m : methods) {
-            if ( m.isAnnotationPresent(ConfigValidator.class) && checkValidationMethod(m, configClass)) {
+        for (Method m : methods) {
+            if (m.isAnnotationPresent(ConfigValidator.class) && checkValidationMethod(m, configClass)) {
                 result.add(m);
             }
         }
         return result;
     }
-    
-    
+
+
     private Method[] getMethodsFromConfigClass(Class configClass) {
         return configClass.getDeclaredMethods();
     }
 
     private boolean checkValidationMethod(Method method, Class configClass) throws ConfigBuilderException {
-        if ( method.getParameterCount() > 0) {
+        if (method.getParameterCount() > 0) {
             throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getName() + " requires an argument and this is not supported");
-        } else if ( method.getReturnType() != Void.TYPE) {
+        } else if (method.getReturnType() != Void.TYPE) {
             throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getName() + " does not have a void return type");
-        } 
+        }
         return true;
     }
 
     private void addConfigProperty(List<HandlerConfigProperty> result, Method method) throws ConfigBuilderException {
         ConfigProperty p = method.getAnnotation(ConfigProperty.class);
 
-        if ( ! method.getName().startsWith("set")) {
+        if (!method.getName().startsWith("set")) {
             throw new ConfigBuilderException(
-                "A config bean can only annotate a setter method (the method " + method.getName() + 
-                    " does not start with 'set'), for " + getAnnotationDescription(p));
+                    "A config bean can only annotate a setter method (the method " + method.getName() +
+                            " does not start with 'set'), for " + getAnnotationDescription(p));
         }
 
-        if ( method.getParameterCount() != 1) {
+        if (method.getParameterCount() != 1) {
             throw new ConfigBuilderException(
-                "The annotated method must take a single argument, for " + getAnnotationDescription(p)
+                    "The annotated method must take a single argument, for " + getAnnotationDescription(p)
             );
         }
-        
+
         Class javaType = method.getParameterTypes()[0];
-        
+
         //always use the wrapper class to describe the required java type, although this will be unboxed as required into the primitive
         //equivalent when the setter is invoked reflectively
-        if ( javaType.isPrimitive()) {
+        if (javaType.isPrimitive()) {
             javaType = getWrapperClass(javaType);
         }
 
         Object defaultValue = null;
-        Optional<Pattern> validationPattern = getValidationPattern(p);
+        Optional<Pattern> validationPattern = getValidationPattern(p, javaType);
         ConfigBuilderTypeConverter converterFunction = getConverterFunction(p, javaType);
-        
-        if ( ! "".equals(p.defaultValue())) {
-            
-            if ( validationPattern.isPresent()) {
+
+        if (!"".equals(p.defaultValue())) {
+
+            if (validationPattern.isPresent()) {
                 validateDefaultValue(validationPattern.get(), p);
             }
-            
+
             defaultValue = convertDefaultValue(p, converterFunction, javaType);
             if (javaType != defaultValue.getClass()) {
                 throw new ConfigBuilderException("Default value \"" + p.defaultValue() + "\" was converted to a type " +
-                    defaultValue.getClass().getName() + " which did not match the expected class type " +javaType.getName() 
-                    + " for " + getAnnotationDescription(p));
+                        defaultValue.getClass().getName() + " which did not match the expected class type " + javaType.getName()
+                        + " for " + getAnnotationDescription(p));
             }
         }
 
         HandlerConfigProperty h = new HandlerConfigPropertyImpl(
-            p.name(),
-            javaType,
-            validationPattern.orElse(null), 
-            p.description(),
-            defaultValue,
-            p.mandatory(),
-            converterFunction,
-            method
+                p.name(),
+                javaType,
+                validationPattern.orElse(null),
+                p.description(),
+                defaultValue,
+                p.mandatory(),
+                converterFunction,
+                method
         );
 
         result.add(h);
     }
 
-    private Optional<Pattern> getValidationPattern(ConfigProperty p) throws ConfigBuilderException {
-        Optional<Pattern> pattern = p.validationPattern().equals("") ? Optional.empty() : Optional.of(compilePattern(p));
+    private Optional<Pattern> getValidationPattern(ConfigProperty p, Class javaType) throws ConfigBuilderException {
+        Optional<Pattern> pattern = p.validationPattern().equals("") ?
+                PrimitiveOrEnumValidationPattern.getDefaultPatternIfPrimitive(javaType) :
+                Optional.of(compilePattern(p));
+
         return pattern;
     }
 
@@ -155,8 +158,14 @@ public class ConfigPropertyParser {
 
     private void validateDefaultValue(Pattern validationPattern, ConfigProperty p) throws ConfigBuilderException {
 
-        if ( ! validationPattern.matcher(p.defaultValue()).matches()) {
-            throw new ConfigBuilderException("The default value did not match the validation pattern, for " + getAnnotationDescription(p));
+        if (!validationPattern.matcher(p.defaultValue()).matches()) {
+            throw new ConfigBuilderException(
+                String.format("The default value [%s] did not match the validation pattern [%s], for %s",
+                    p.defaultValue(),
+                    validationPattern.pattern(),
+                    getAnnotationDescription(p)
+                )
+            );
         }
     }
 
@@ -167,21 +176,21 @@ public class ConfigPropertyParser {
             f = c.newInstance();
         } catch (Exception e) {
             throw new ConfigBuilderException("Failed to instantiate converter class " + p.valueConverter().getClass().getName() +
-                " for " + getAnnotationDescription(p), e);
+                    " for " + getAnnotationDescription(p), e);
         }
         return f;
     }
-    
+
     private Object convertDefaultValue(ConfigProperty p, ConfigBuilderTypeConverter f, Class javaType) throws ConfigBuilderException {
         return f.convertToTargetType(p.defaultValue(), javaType);
     }
-    
+
     private String getAnnotationDescription(ConfigProperty p) {
         return ConfigProperty.class.getSimpleName() + " annotation with name " + p.name();
     }
 
     static class HandlerConfigPropertyImpl implements HandlerConfigProperty {
-        
+
         private final String name;
         private final Class javaType;
         private final Pattern validationPattern;
@@ -247,9 +256,10 @@ public class ConfigPropertyParser {
             return setterMethod;
         }
     }
-    
+
     public static class PrimitiveToWrapperClassConverter {
         public final static Map<Class<?>, Class<?>> map = new HashMap<>();
+
         static {
             map.put(boolean.class, Boolean.class);
             map.put(byte.class, Byte.class);
@@ -263,7 +273,7 @@ public class ConfigPropertyParser {
         }
 
         public static Class getWrapperClass(Class primitiveType) {
-            if ( ! primitiveType.isPrimitive() ) {
+            if (!primitiveType.isPrimitive()) {
                 throw new IllegalArgumentException("Parameter must be a primitive type");
             }
             return map.get(primitiveType);

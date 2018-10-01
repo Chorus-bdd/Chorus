@@ -52,7 +52,7 @@ public @interface ConfigProperty {
     String defaultValue() default "";
     
     /**
-     * Regular expression to validate supplied property values
+     * Regular expression to validate property values
      */
     String validationPattern() default "";
 
