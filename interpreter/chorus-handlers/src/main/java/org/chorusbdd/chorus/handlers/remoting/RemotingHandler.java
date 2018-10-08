@@ -29,18 +29,17 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
-import org.chorusbdd.chorus.processes.manager.config.ProcessesConfigBuilderFactory;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.ScopeUtils;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -131,7 +130,7 @@ public class RemotingHandler {
     private void getProcessManagerProperties(String configName, Properties p) {
         Properties processManagerConfig = processManager.getProcessProperties(configName);
         if ( processManagerConfig != null) {
-            String port = processManagerConfig.getProperty(ProcessesConfigBuilderFactory.remotingPort);
+            String port = processManagerConfig.getProperty(ProcessConfig.REMOTING_PORT_PROPERTY);
             if ( ! "-1".equals(port)) {
                 p.setProperty("connection","jmx:localhost:" + port);
             }

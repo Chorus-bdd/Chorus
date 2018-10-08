@@ -29,15 +29,47 @@ import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidator;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidatorException;
 
 import java.io.File;
+import java.util.Properties;
 
 /**
  * An immutable runtime config for a process
+ *
+ * The process will be a java process if pathToExecutable property is not provided.
+ * In this case the jre and classpath default to the interpreter's jvm and classpath
+ * These can be overridden by setting the jre and classpath properties
+ *
+ * jvmargs and mainclass are only applicable for java processes, they should not be set
+ * if the process is a native process with pathToExecutable specified.
+ *
+ * ProcessesConfig represents a template config / builder from which one or more ProcessInfo, representing a runtime
+ * process, can be built. Where multiple processes are launched from the same ProcessesConfig we derive a new jmx port
+ * or debug port for each ProcessInfo by auto-incrementing the ports
  */
 public class ProcessConfig implements ProcessManagerConfig {
     
     private static final String JAVA_HOME = System.getProperty("java.home");
     private static final String JAVA_CLASS_PATH = System.getProperty("java.class.path");
-    
+
+    public static final String SCOPE_PROPERTY = "scope";
+    public static final String REMOTING_PORT_PROPERTY = "remotingPort";
+    public static final String PATH_TO_EXECUTABLE_PROPERTY = "pathToExecutable";
+    public static final String JRE_PROPERTY = "jre";
+    public static final String CLASSPATH_PROPERTY = "classpath";
+    public static final String JVMARGS_PROPERTY = "jvmargs";
+    public static final String MAINCLASS_PROPERTY = "mainclass";
+    public static final String ARGS_PROPERTY = "args";
+    public static final String STD_OUT_MODE_PROPERTY = "stdOutMode";
+    public static final String STD_ERR_MODE_PROPERTY = "stdErrMode";
+    public static final String LOGGING_PROPERTY = "logging";
+    public static final String DEBUG_PORT_PROPERTY = "debugPort";
+    public static final String TERMINATE_WAIT_TIME_PROPERTY = "terminateWaitTime";
+    public static final String LOG_DIRECTORY_PROPERTY = "logDirectory";
+    public static final String APPEND_TO_LOGS_PROPERTY = "appendToLogs";
+    public static final String CREATE_LOG_DIR_PROPERTY = "createLogDir";
+    public static final String PROCESS_CHECK_DELAY_PROPERTY = "processCheckDelay";
+    public static final String READ_TIMEOUT_SECONDS_PROPERTY = "readTimeoutSeconds";
+    public static final String ENABLED_PROPERTY = "enabled";
+
     private String configName;
     private String pathToExecutable;
     private String jre;
@@ -103,7 +135,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="pathToExecutable",
+        name= PATH_TO_EXECUTABLE_PROPERTY,
         description="Path to a native executable process or script, the path may be absolute or relative to the feature directory. This property and the mainclass property are mutually exclusive - you should either one but not both",
         mandatory = false
     )
@@ -117,7 +149,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="jre",
+        name= JRE_PROPERTY,
         description="Path to the JRE to be used when executing a Java process. If not set, the Chorus interpreter's JVM will be used",
         mandatory = false
     )
@@ -131,7 +163,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="classpath",
+        name= CLASSPATH_PROPERTY,
         description="The classpath to use when executing a Java process. If not set, the Chorus interpreter's classpath will be used",
         mandatory = false
     )
@@ -145,7 +177,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="jvmargs",
+        name= JVMARGS_PROPERTY,
         description="System properties (-D switches) to use when executing a Java process",
         mandatory = false
     )
@@ -159,7 +191,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="mainclass",
+        name= MAINCLASS_PROPERTY,
         description="The class containing the main method which starts up your component (java processes only)",
         mandatory = false
     )
@@ -173,7 +205,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="args",
+        name= ARGS_PROPERTY,
         description="Arguments to pass to the process",
         mandatory = false
     )
@@ -187,7 +219,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="stdOutMode",
+        name= STD_OUT_MODE_PROPERTY,
         description="What do to with standard output stream from started process, one of INLINE (combine with interpreter stdout), FILE (write output to file). Other values are deprecated",
         validationPattern = "(?i)FILE|INLINE|CAPTURED|CAPTUREDWITHLOG",
         mandatory = false //logging prop may be set instead
@@ -202,7 +234,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="stdErrMode",
+        name= STD_ERR_MODE_PROPERTY,
         description="What do to with standard error stream from started process, one of INLINE (combine with interpreter stderr) or FILE (write output to file). Other values are deprecated",
         validationPattern = "(?i)FILE|INLINE|CAPTURED|CAPTUREDWITHLOG",
         mandatory = false //logging prop may be set instead
@@ -213,7 +245,7 @@ public class ProcessConfig implements ProcessManagerConfig {
 
 
     @ConfigProperty(
-        name="logging",
+        name= LOGGING_PROPERTY,
         description="If this property is set true, it will switch stdOutMode and stdErrorMode to FILE. If false then both will be INLINE. Leave it unset if you wish to set the stdOutMode and stdErrorMode individually",
         validationPattern = "true|false",
         mandatory = false    //may set stdErr or stdOut mode directly instead
@@ -233,7 +265,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="remotingPort",
+        name= REMOTING_PORT_PROPERTY,
         description="Port on which to start the JMX remoting service. This is required when you want to use Chorus' Remoting features to connect to the process being started using JMX. Setting this property will add java system properties to turn on the JMX platform service. (java processes only), -1 to disable",
         validationPattern = "(-?)\\d+",
         defaultValue = "-1"
@@ -248,7 +280,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="debugPort",
+        name= DEBUG_PORT_PROPERTY,
         description="Enable the debugger when starting the jvm and set it up to listen for connections on the port specified (java processes only), -1 to disable",
         validationPattern = "(-?)\\d+",
         defaultValue = "-1"
@@ -263,7 +295,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="terminateWaitTime",
+        name= TERMINATE_WAIT_TIME_PROPERTY,
         description="Maximum time to wait for a process to terminate in seconds",
         validationPattern = "\\d+",
         defaultValue = "30"
@@ -278,7 +310,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="logDirectory",
+        name= LOG_DIRECTORY_PROPERTY,
         description="If you turn logging on, use this property to set the log directory. If not specified a logs directory will be created in the same directory as the feature file. May be an absolute path or a path relative to the working directory",
         mandatory = false
     )
@@ -292,7 +324,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="appendToLogs",
+        name= APPEND_TO_LOGS_PROPERTY,
         description="Whether to append to or overwrite log files",
         defaultValue = "false",
         validationPattern = "true|false"
@@ -307,7 +339,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="createLogDir",
+        name= CREATE_LOG_DIR_PROPERTY,
         description="Whether to auto-create the log directory if it does not exist",
         defaultValue = "true",
         validationPattern = "true|false"
@@ -322,7 +354,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="processCheckDelay",
+        name= PROCESS_CHECK_DELAY_PROPERTY,
         description="Milliseconds after which to check started process is still running or fail the start process step. Longer values add better detection of immediate process start failures but incur an increased delay before subsequent steps run",
         defaultValue = "500",
         validationPattern = "(-?)\\d+"
@@ -337,7 +369,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="readTimeoutSeconds",
+        name= READ_TIMEOUT_SECONDS_PROPERTY,
         description="When matching a pattern against process output set the max time to wait for a match",
         defaultValue = "10",
         validationPattern = "\\d+"
@@ -352,7 +384,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="scope",
+        name= SCOPE_PROPERTY,
         description="Whether the process should be shut down at the end of the scenario or the end of the feature. This will be defaulted to FEATURE for processes started during 'Feature-Start:' otherwise SCENARIO",
         defaultValue = "SCENARIO",
         validationPattern = Scope.SCOPE_MATCHING_PATTERN,
@@ -368,7 +400,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     @ConfigProperty(
-        name="enabled",
+        name= ENABLED_PROPERTY,
         description="This property can be set to true to disable process start up when running in certain profiles",
         defaultValue = "true",
         validationPattern = "true|false"
@@ -421,6 +453,35 @@ public class ProcessConfig implements ProcessManagerConfig {
         }
         return valid;
     }
+
+    public static Properties convertToProperties(ProcessManagerConfig processConfig) {
+        Properties p = new Properties();
+        addIfSet(p, PATH_TO_EXECUTABLE_PROPERTY, processConfig.getPathToExecutable());
+        addIfSet(p, JRE_PROPERTY, processConfig.getJre());
+        addIfSet(p, CLASSPATH_PROPERTY, processConfig.getClasspath());
+        addIfSet(p, ARGS_PROPERTY, processConfig.getArgs());
+        addIfSet(p, JVMARGS_PROPERTY, processConfig.getJvmargs());
+        addIfSet(p, MAINCLASS_PROPERTY, processConfig.getMainclass());
+        p.setProperty(REMOTING_PORT_PROPERTY, String.valueOf(processConfig.getRemotingPort()));
+        p.setProperty(DEBUG_PORT_PROPERTY, String.valueOf(processConfig.getDebugPort()));
+        p.setProperty(TERMINATE_WAIT_TIME_PROPERTY, String.valueOf(processConfig.getTerminateWaitTime()));
+        addIfSet(p, LOG_DIRECTORY_PROPERTY, processConfig.getLogDirectory());
+        p.setProperty(APPEND_TO_LOGS_PROPERTY, String.valueOf(processConfig.isAppendToLogs()));
+        p.setProperty(CREATE_LOG_DIR_PROPERTY, String.valueOf(processConfig.isCreateLogDir()));
+        p.setProperty(PROCESS_CHECK_DELAY_PROPERTY, String.valueOf(processConfig.getProcessCheckDelay()));
+        p.setProperty(STD_ERR_MODE_PROPERTY, processConfig.getStdErrMode().name());
+        p.setProperty(STD_OUT_MODE_PROPERTY, processConfig.getStdOutMode().name());
+        p.setProperty(READ_TIMEOUT_SECONDS_PROPERTY, String.valueOf(processConfig.getReadTimeoutSeconds()));
+        p.setProperty(SCOPE_PROPERTY, processConfig.getProcessScope().name());
+        return p;
+    }
+
+    private static void addIfSet(Properties p, String propertyKey, String value) {
+        if ( value != null) {
+            p.setProperty(propertyKey, value);
+        }
+    }
+
     
     public ProcessConfig copy() {
         return new ProcessConfig(
