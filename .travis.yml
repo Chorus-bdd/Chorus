@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk10
+- openjdk10
 script: ./gradlew build
 deploy:
   skip_cleanup: true      #Otherwise travis blats the distribution before we upload it  
