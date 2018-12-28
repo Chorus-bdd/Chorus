@@ -19,7 +19,6 @@ include 'chorus',
         'chorus-subsystem',
         'chorus-util',
         'chorus-selenium',
-        'chorus-sikulix',
         'chorus-spring',
         'chorus-websockets',
         'chorus-sql',
@@ -47,7 +46,6 @@ project(':chorus-stepinvoker').projectDir = file("interpreter/chorus-stepinvoker
 project(':chorus-subsystem').projectDir = file("interpreter/chorus-subsystem")
 project(':chorus-util').projectDir = file("interpreter/chorus-util")
 project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")
-project(':chorus-sikulix').projectDir = file("extensions/chorus-sikulix")
 project(':chorus-spring').projectDir = file("extensions/chorus-spring")
 project(':chorus-websockets').projectDir = file("extensions/chorus-websockets")
 project(':chorus-sql').projectDir = file("extensions/chorus-sql")

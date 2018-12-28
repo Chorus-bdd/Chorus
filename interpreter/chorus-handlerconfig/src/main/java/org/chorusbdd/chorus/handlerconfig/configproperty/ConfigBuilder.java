@@ -128,7 +128,7 @@ public class ConfigBuilder {
     }
 
     private void warnOnUnusedProperties(Properties properties, Map<String, HandlerConfigProperty> configPropertiesByName) {
-        Set<String> p = properties.stringPropertyNames();
+        Set<String> p = new HashSet<>(properties.stringPropertyNames());
         p.removeAll(configPropertiesByName.keySet());
         
         //warn in deterministic sorted order (facilitate testing)

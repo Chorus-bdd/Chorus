@@ -70,7 +70,7 @@ public class TestSuiteHandler extends XmlStreamingHandler {
                 } catch (PropertyException pe) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     log.error("Failed to serialize test suite to xml, PropertyException, probably your Marshaller " +
-                         "implementation does not support the property com.sun.xml.internal.bind.xmlHeaders", pe);
+                         "implementation does not support the property com.sun.xml.bind.xmlHeaders", pe);
                 } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //client may not see this if we have already written output
                     log.error("Failed to serialize test suite to xml", e);
@@ -82,7 +82,7 @@ public class TestSuiteHandler extends XmlStreamingHandler {
     private void handleForSuite(HttpServletResponse response, WebAgentTestSuite s) throws Exception {
         TestSuiteXmlMarshaller testSuiteWriter = new TestSuiteXmlMarshaller();
         testSuiteWriter.addMarshallerProperty(
-            "com.sun.xml.internal.bind.xmlHeaders",      //:( this may break with some Marshaller implementations
+            "com.sun.xml.bind.xmlHeaders",      //:( this may break with some Marshaller implementations
             "<?xml-stylesheet type='text/xsl' href='testSuiteResponse.xsl'?>\n"
         );
         testSuiteWriter.write(response.getWriter(), s.getTestSuite());

@@ -133,12 +133,6 @@ project(':chorus-selenium') {
     }
 }
 
-project(':chorus-sikulix') {
-    dependencies {
-        compile project (':chorus')
-    }
-}
-
 project(':chorus-spring') {
     dependencies {
         compile project (':chorus')

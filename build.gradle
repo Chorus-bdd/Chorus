@@ -46,7 +46,6 @@ allprojects  {
 
 configure([
         project(':chorus-selenium'),
-//        project(':chorus-sikulix'),
         project(':chorus-spring'),
         project(':chorus-websockets'),
         project(':chorus-sql')]) {
@@ -185,10 +184,6 @@ dependencies {
     compile project ('chorus-selenium')
     compile project ('chorus-websockets')
     compile project ('chorus-sql')
-
-    //TODO Sikuli is omitted for now. It needs different jars for different OS and so would
-    //require us to create distributions with differing contents
-    //compile project ('chorus-sikulix')
 }
 
 distributions {
