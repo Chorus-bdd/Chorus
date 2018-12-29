@@ -3,6 +3,19 @@
 <changes>
 
     <version>
+        <versionNumber>3.1.0</versionNumber>
+        <comment>Support for JDK 11</comment>
+        <change desc="Build under JDK 11, support JDK 8+ as a runtime environment"/>
+    </version>
+    <version>
+        <versionNumber>3.0.0</versionNumber>
+        <comment>Major release of Chorus with lots of new capabilities</comment>
+        <change desc="Addition of chorus-js to connect browser-based apps to the Chorus interpreter"/>
+        <change desc="Addition of Web Sockets Handler to allow connections from browser-based apps using chorus-js (and other future wesocket client APIs)"/>
+        <change desc="Support for Docker in Chorus-Docker project, provides Chorus images to run a Chorus interpreter within a Docker container"/>
+        <change desc="Add extra summary stats and closing report on test failures"/>
+    </version>
+    <version>
         <versionNumber>2.0.2</versionNumber>
         <comment>Minor patch release with some small fixes and improvements</comment>
         <change desc="Don't fail with duplicate steps if default handler is named in Uses list"/>

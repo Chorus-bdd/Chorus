@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 3.1.0 ###
+        
+*Support for JDK 11*
+        
+| Changes in 3.1.0 |
+| ------ |
+| Build under JDK 11, support JDK 8+ as a runtime environment |
+        
+### Version 3.0.0 ###
+        
+*Major release of Chorus with lots of new capabilities*
+        
+| Changes in 3.0.0 |
+| ------ |
+| Addition of chorus-js to connect browser-based apps to the Chorus interpreter |
+| Addition of Web Sockets Handler to allow connections from browser-based apps using chorus-js (and other future wesocket client APIs) |
+| Support for Docker in Chorus-Docker project, provides Chorus images to run a Chorus interpreter within a Docker container |
+| Add extra summary stats and closing report on test failures |
+        
 ### Version 2.0.2 ###
         
 *Minor patch release with some small fixes and improvements*
