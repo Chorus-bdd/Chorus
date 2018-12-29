@@ -18,6 +18,13 @@
 | Addition of Web Sockets Handler to allow connections from browser-based apps using chorus-js (and other future wesocket client APIs) |
 | Support for Docker in Chorus-Docker project, provides Chorus images to run a Chorus interpreter within a Docker container |
 | Add extra summary stats and closing report on test failures |
+| Show step catalogue feature (-b, -showStepCatalogue) |
+| ExecutionPriority annotation to fix ordering of ExecutionListener lifecycle callbacks |
+| Support for pluggable Subsystems - SubsystemManager classpath scanning for subsystems, @SubsystemConfig annotation |
+| Addition of Selenium Handler and SeleniumManager to launch and interact with browsers |
+| Build bundle to run Chorus from terminal |
+| Colour highlighting for terminal output |
+| Add SQL Handler |
         
 ### Version 2.0.2 ###
         
