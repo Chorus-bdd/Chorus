@@ -43,7 +43,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
     @Override
     public WebDriver createWebDriver(SeleniumConfig seleniumConfig) {
         WebDriver result;
-        switch(seleniumConfig.getSeleniumDriverType()) {
+        switch(seleniumConfig.getDriverType()) {
             case CHROME:
                 // Assume chromedriver will be in user PATH so non need to set it here
                 // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
@@ -68,7 +68,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 result = new RemoteWebDriver(url, capabilities);;
                 break;
             default:
-                throw new ChorusException("SeleniumDriverType " + seleniumConfig.getSeleniumDriverType() + " is not supported");
+                throw new ChorusException("SeleniumDriverType " + seleniumConfig.getDriverType() + " is not supported");
         }
         return result;
     }

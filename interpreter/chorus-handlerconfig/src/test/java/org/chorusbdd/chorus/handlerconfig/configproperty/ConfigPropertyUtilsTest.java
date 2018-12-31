@@ -21,29 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selenium.config;
+package org.chorusbdd.chorus.handlerconfig.configproperty;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.junit.Test;
 
-import java.util.Optional;
+import java.util.regex.Pattern;
 
-/**
- * Created by nick on 24/09/2014.
- */
-public interface SeleniumConfig extends HandlerConfigBean {
-    
-    Scope getScope();
+import static org.junit.Assert.*;
 
-    SeleniumDriverType getDriverType();
-    
-    String getRemoteWebDriverURL();
+public class ConfigPropertyUtilsTest {
 
-    // Chrome Driver specific:
-    
-    Optional<String> getChromeArgs();
+    @Test
+    public void testEnumWithPermittedCharacters() {
+        Pattern actual = ConfigPropertyUtils.createValidationPatternFromEnumType(Scope.class);
+        assertEquals("(?i)SCENARIO|FEATURE", actual.pattern());
+    }
 
-    // Chrome Driver specific:
+    @Test
+    public void testEnumWithBadCharacters() {
+        Pattern actual = ConfigPropertyUtils.createValidationPatternFromEnumType(BadBadEnum.class);
+        assertEquals("(?i)This_Enum_Val_Cointains_Really_\\$_BAD_CHARS_£", actual.pattern());
+        assertTrue(actual.matcher(BadBadEnum.This_Enum_Val_Cointains_Really_$_BAD_CHARS_£.name()).matches());
+    }
 
-    String getRemoteWebDriverBrowserType();
+    private enum BadBadEnum {
+       This_Enum_Val_Cointains_Really_$_BAD_CHARS_£;
+    }
+
 }

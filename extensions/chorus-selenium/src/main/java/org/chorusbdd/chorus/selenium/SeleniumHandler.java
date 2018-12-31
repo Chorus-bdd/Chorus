@@ -30,18 +30,15 @@ import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
 import org.chorusbdd.chorus.selenium.config.SeleniumDriverType;
 import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
-import org.openqa.selenium.WebDriver;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 
 /**
  * Created by nick on 23/12/2016.
@@ -76,13 +73,13 @@ public class SeleniumHandler {
     public void openChrome() throws IOException {
         
         //Set some sensible default properties for Chrome if not already set
-        String chromeArgsKey = "selenium.Chrome.chromeArguments";
+        String chromeArgsKey = "selenium.Chrome.chromeDriver.arguments";
         Properties properties = new Properties();
 
         if ( ! configurationManager.getFeatureProperties().containsKey(chromeArgsKey)) {
             properties.setProperty(chromeArgsKey, "--disable-logging --silent");
         }
-        properties.setProperty("selenium.Chrome." + SeleniumConfigBuilderFactory.driverType, SeleniumDriverType.CHROME.name());
+        properties.setProperty("selenium.Chrome.driverType", SeleniumDriverType.CHROME.name());
         configurationManager.addFeatureProperties(properties);
 
         openNamedBrowser("Chrome");

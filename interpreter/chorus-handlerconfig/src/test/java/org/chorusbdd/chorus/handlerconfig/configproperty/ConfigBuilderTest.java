@@ -95,7 +95,7 @@ public class ConfigBuilderTest {
             ConfigClassWithEnumTypes c = configBuilder.buildConfig(ConfigClassWithEnumTypes.class, p);
             fail("Should throw exception");
         } catch (Exception e) {
-            assertEquals("Could not convert property value rgioergergerg to an instance of Enum class org.chorusbdd.chorus.annotations.Scope", e.getMessage());
+            assertEquals("Property enumField value 'rgioergergerg' does not match pattern '(?i)SCENARIO|FEATURE'", e.getMessage());
         }
     }
 

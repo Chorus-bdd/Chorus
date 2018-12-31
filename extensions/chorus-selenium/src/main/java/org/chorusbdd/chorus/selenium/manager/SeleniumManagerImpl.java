@@ -27,15 +27,15 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
-import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilder;
-import org.chorusbdd.chorus.selenium.config.SeleniumConfigBuilderFactory;
-import org.chorusbdd.chorus.selenium.config.SeleniumConfigBeanValidator;
+import org.chorusbdd.chorus.selenium.config.SeleniumConfigBean;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.FileUtils;
 import org.chorusbdd.chorus.util.assertion.ChorusAssert;
@@ -58,8 +58,6 @@ public class SeleniumManagerImpl implements SeleniumManager {
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumManagerImpl.class);
 
-    private final SeleniumConfigBuilderFactory seleniumConfigBuilderFactory = new SeleniumConfigBuilderFactory();
-    private final SeleniumConfigBeanValidator seleniumConfigBeanValidator = new SeleniumConfigBeanValidator();
     private final WebDriverFactory webDriverFactory = new DefaultWebDriverFactory();
     
     private Map<String, NamedWebDriver> webDriverMap = new LinkedHashMap<>();
@@ -92,7 +90,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
 
     private SeleniumConfig createAndValidateConfig(Properties properties, String configName) {
         SeleniumConfig seleniumConfig = getSeleniumConfig(configName, properties);
-        checkConfigValidAndNotAlreadyOpened(configName, seleniumConfig);
+        checkConfigValidAndNotAlreadyOpened(configName);
         return seleniumConfig;
     }
 
@@ -108,16 +106,10 @@ public class SeleniumManagerImpl implements SeleniumManager {
     }
 
 
-    private void checkConfigValidAndNotAlreadyOpened(String configName, SeleniumConfig seleniumConfig) {
+    private void checkConfigValidAndNotAlreadyOpened(String configName) {
         ChorusAssert.assertFalse(
             "There is already a browser open with the config name " + configName, webDriverMap.containsKey(configName)
         );
-        
-        boolean valid = seleniumConfigBeanValidator.isValid(seleniumConfig);
-        if ( ! valid) {
-            log.warn(seleniumConfigBeanValidator.getErrorDescription());
-            throw new ChorusException("The selenium config for " + configName + " must be valid");
-        }
     }
 
     @Override
@@ -247,9 +239,15 @@ public class SeleniumManagerImpl implements SeleniumManager {
         }
     }
 
-    private SeleniumConfig getSeleniumConfig(String configName, Properties processProperties) {
-        SeleniumConfigBuilder config = seleniumConfigBuilderFactory.createConfigBuilder(processProperties, configName);
-        return config.build();
+    private SeleniumConfig getSeleniumConfig(String configName, Properties remotingProperties) {
+        SeleniumConfigBean config = null;
+        try {
+            config = new ConfigBuilder().buildConfig(SeleniumConfigBean.class, remotingProperties);
+        } catch (ConfigBuilderException e) {
+            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
+        }
+        config.setConfigName(configName);
+        return config;
     }
 
     /**

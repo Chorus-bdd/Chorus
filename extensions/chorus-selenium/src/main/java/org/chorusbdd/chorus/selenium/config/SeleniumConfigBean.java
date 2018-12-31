@@ -24,33 +24,33 @@
 package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.openqa.selenium.remote.BrowserType;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigProperty;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidator;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidatorException;
 
 import java.util.Optional;
+
+import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyUtils.createValidationPatternFromEnumType;
 
 /**
  * An immutable runtime config for a process
  */
 public class SeleniumConfigBean implements SeleniumConfig {
 
-    private final String configName;
-    private final Scope scope;
-    private final SeleniumDriverType seleniumDriverType;
-    private final String chromeArgs;
-    private final String remoteWebDriverURL;
-    private final String remoteWebDriverBrowserType;
+    private String configName;
+    private Scope scope;
+    private SeleniumDriverType seleniumDriverType;
+    private String chromeArgs;
+    private String remoteWebDriverURL;
 
-    public SeleniumConfigBean(String configName, Scope scope, SeleniumDriverType seleniumDriverType, String chromeArgs, String remoteWebDriverURL, String remoteWebDriverBrowserType) {
-        this.configName = configName;
-        this.scope = scope;
-        this.seleniumDriverType = seleniumDriverType;
-        this.chromeArgs = chromeArgs;
-        this.remoteWebDriverURL = remoteWebDriverURL;
-        this.remoteWebDriverBrowserType = remoteWebDriverBrowserType;
-    }
+    private String remoteWebDriverBrowserType;
 
     public String getConfigName() {
         return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 
     @Override
@@ -58,21 +58,94 @@ public class SeleniumConfigBean implements SeleniumConfig {
         return scope;
     }
 
+    @ConfigProperty(
+            name = "scope",
+            description = "Defines whether a browser connection should be closed at the end of a feature, or after each scenario",
+            defaultValue = "SCENARIO"
+    )
+    public void setScope(Scope scope) {
+        this.scope = scope;
+    }
+
     @Override
-    public SeleniumDriverType getSeleniumDriverType() {
+    public SeleniumDriverType getDriverType() {
         return seleniumDriverType;
+    }
+
+    @ConfigProperty(
+            name = "driverType",
+            description = "Defines the selenium driver type, e.g. CHROME or REMOTE_WEB_DRIVER",
+            defaultValue = "REMOTE_WEB_DRIVER"
+    )
+    public void setDriverType(SeleniumDriverType seleniumDriverType) {
+        this.seleniumDriverType = seleniumDriverType;
     }
 
     @Override
     public Optional<String> getChromeArgs() {
         return Optional.ofNullable(chromeArgs);
     }
-    
-    
-    public String getRemoteWebDriverBrowserType() { return remoteWebDriverBrowserType; }
+
+    @ConfigProperty(
+            name = "chromeDriver.arguments",
+            description = "Arguments to pass to the chrome browser if using CHROME driver type",
+            mandatory = false
+    )
+    public void setChromeArgs(String chromeArgs) {
+        this.chromeArgs = chromeArgs;
+    }
+
+    @Override
+    public String getRemoteWebDriverBrowserType() {
+        return remoteWebDriverBrowserType;
+    }
+
+    @ConfigProperty(
+            name = "remoteWebDriver.browserType",
+            description = "If using REMOTE_WEB_DRIVER, a value to pass to the remote selenium web driver to request a browser type, e.g. chrome, firefox, safari",
+            defaultValue = "chrome",
+            mandatory = false
+    )
+    public void setRemoteWebDriverBrowserType(String remoteWebDriverBrowserType) {
+        this.remoteWebDriverBrowserType = remoteWebDriverBrowserType;
+    }
 
     @Override
     public String getRemoteWebDriverURL() {
         return remoteWebDriverURL;
     }
+
+    @ConfigProperty(
+            name = "remoteWebDriver.URL",
+            description = "If using REMOTE_WEB_DRIVER, the URL to use to make the connection to the remote web driver or selenium grid",
+            defaultValue = "http://localhost:4444/wd/hub",
+            mandatory = false
+    )
+    public void setRemoteWebDriverURL(String remoteWebDriverURL) {
+        this.remoteWebDriverURL = remoteWebDriverURL;
+    }
+
+    @ConfigValidator
+    protected void checkValid() {
+        switch (seleniumDriverType) {
+            case CHROME:
+                checkChromeProperties();
+                break;
+            case REMOTE_WEB_DRIVER:
+                checkRemoteWebDriverProperites();
+                break;
+            default:
+                throw new ConfigValidatorException("Selenium Driver Type " + seleniumDriverType + " config cannot be validated");
+        }
+    }
+
+    private void checkRemoteWebDriverProperites() {
+        if ("".equals(remoteWebDriverURL) || remoteWebDriverURL == null) {
+            throw new ConfigValidatorException("remoteWebDriver.URL must be specified");
+        } else if ("".equals(remoteWebDriverBrowserType) || remoteWebDriverBrowserType == null) {
+            throw new ConfigValidatorException("remoteWebDriver.browserType must be specified");
+        }
+    }
+
+    private void checkChromeProperties() { }
 }

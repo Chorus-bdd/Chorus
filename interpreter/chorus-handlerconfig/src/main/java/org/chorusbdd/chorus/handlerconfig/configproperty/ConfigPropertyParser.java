@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyParser.PrimitiveToWrapperClassConverter.getWrapperClass;
+import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyUtils.createValidationPatternFromEnumType;
+import static org.chorusbdd.chorus.handlerconfig.configproperty.PrimitiveOrEnumValidationPattern.getDefaultPatternIfPrimitive;
 
 
 public class ConfigPropertyParser {
@@ -140,10 +142,22 @@ public class ConfigPropertyParser {
 
     private Optional<Pattern> getValidationPattern(ConfigProperty p, Class javaType) throws ConfigBuilderException {
         Optional<Pattern> pattern = p.validationPattern().equals("") ?
-                PrimitiveOrEnumValidationPattern.getDefaultPatternIfPrimitive(javaType) :
+                getDefaultValidationPattern(javaType) :
                 Optional.of(compilePattern(p));
 
         return pattern;
+    }
+
+    /**
+     * Try to create a sensible default for validation pattern, in the case where the java type
+     * of the parameter is an enum type or a primitive or primitive wrapper type
+     * @param javaType
+     * @return
+     */
+    private Optional<Pattern> getDefaultValidationPattern(Class javaType) {
+        return javaType.isEnum() ?
+                Optional.of(createValidationPatternFromEnumType(javaType)) :
+                getDefaultPatternIfPrimitive(javaType);
     }
 
     private Pattern compilePattern(ConfigProperty p) throws ConfigBuilderException {

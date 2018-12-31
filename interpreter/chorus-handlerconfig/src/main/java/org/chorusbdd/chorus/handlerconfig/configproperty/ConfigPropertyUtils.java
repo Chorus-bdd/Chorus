@@ -21,29 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selenium.config;
+package org.chorusbdd.chorus.handlerconfig.configproperty;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import java.util.Optional;
+public class ConfigPropertyUtils {
 
-/**
- * Created by nick on 24/09/2014.
- */
-public interface SeleniumConfig extends HandlerConfigBean {
-    
-    Scope getScope();
+    /**
+     * Create a regular expression which will match any of the values from the supplied enum type
+     */
+    public static <T extends Enum<T>> Pattern createValidationPatternFromEnumType(Class<T> enumType) {
 
-    SeleniumDriverType getDriverType();
-    
-    String getRemoteWebDriverURL();
+        String regEx = Stream.of(enumType.getEnumConstants())
+                .map(Enum::name)
+                .collect(Collectors.joining("|", "(?i)", ""));
 
-    // Chrome Driver specific:
-    
-    Optional<String> getChromeArgs();
+        //Enum constants may contain $ which needs to be escaped
+        regEx = regEx.replace("$", "\\$");
+        return Pattern.compile(regEx);
+    }
 
-    // Chrome Driver specific:
-
-    String getRemoteWebDriverBrowserType();
 }
