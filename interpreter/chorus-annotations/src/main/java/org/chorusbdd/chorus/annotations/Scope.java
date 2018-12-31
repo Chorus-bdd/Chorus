@@ -54,8 +54,6 @@ public enum Scope {
     /**
      *  A new instance of the handler will be created for each feature and reused by all scenarios
      */
-    FEATURE;
+    FEATURE
 
-
-    public final static String SCOPE_MATCHING_PATTERN = "(?i)(FEATURE|SCENARIO)";
 }

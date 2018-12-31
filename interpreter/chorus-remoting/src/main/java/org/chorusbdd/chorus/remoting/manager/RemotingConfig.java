@@ -132,8 +132,7 @@ public class RemotingConfig implements RemotingManagerConfig {
     @ConfigProperty(
         name="scope",
         description="Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be defaulted to FEATURE for connections established during 'Feature-Start:' otherwise SCENARIO",
-        defaultValue = "SCENARIO",
-        validationPattern = Scope.SCOPE_MATCHING_PATTERN
+        defaultValue = "SCENARIO"
     )
     public void setScope(Scope scope) {
         this.scope = scope;
