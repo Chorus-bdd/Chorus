@@ -27,15 +27,15 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.sql.config.SqlConfig;
-import org.chorusbdd.chorus.sql.config.SqlConfigBeanValidator;
-import org.chorusbdd.chorus.sql.config.SqlConfigBuilder;
-import org.chorusbdd.chorus.sql.config.SqlConfigBuilderFactory;
+import org.chorusbdd.chorus.sql.config.SqlConfigBean;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.FileUtils;
 import org.chorusbdd.chorus.util.function.Tuple2;
@@ -56,9 +56,6 @@ public class DefaultSqlManager implements SqlManager {
 
     private ChorusLog log = ChorusLogFactory.getLog(DefaultSqlManager.class);
 
-    private SqlConfigBuilderFactory sqlConfigBuilderFactory = new SqlConfigBuilderFactory();
-    private SqlConfigBeanValidator sqlConfigBeanValidator = new SqlConfigBeanValidator();
-    
     private Map<String, Tuple2<Connection, SqlConfig>> configNameToConnectionDetails = new ConcurrentHashMap<>();
 
     private FeatureToken feature;
@@ -82,7 +79,6 @@ public class DefaultSqlManager implements SqlManager {
         }
         
         SqlConfig sqlConfig = getSqlConfig(configName, properties);
-        validateConfig(configName, sqlConfig);
 
         try {
             log.debug("Loading database driver " + sqlConfig.getDriverClassName());
@@ -174,14 +170,6 @@ public class DefaultSqlManager implements SqlManager {
         }
     }
 
-    private void validateConfig(String configName, SqlConfig sqlConfig) {
-        boolean valid = sqlConfigBeanValidator.isValid(sqlConfig);
-        if ( ! valid) {
-            log.warn(sqlConfigBeanValidator.getErrorDescription());
-            throw new ChorusException("The sql config for " + configName + " must be valid");
-        }    
-    }
-
     @Override
     public ExecutionListener getExecutionListener() {
         @ExecutionPriority(ExecutionPriority.SQL_MANAGER_PRIORITY)
@@ -236,8 +224,14 @@ public class DefaultSqlManager implements SqlManager {
     }
 
     private SqlConfig getSqlConfig(String configName, Properties processProperties) {
-        SqlConfigBuilder builder = sqlConfigBuilderFactory.createConfigBuilder(processProperties, configName);
-        return builder.build();
+        SqlConfigBean config;
+        try {
+            config = new ConfigBuilder().buildConfig(SqlConfigBean.class, processProperties);
+        } catch (ConfigBuilderException e) {
+            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
+        }
+        config.setConfigName(configName);
+        return config;
     }
 
     /**

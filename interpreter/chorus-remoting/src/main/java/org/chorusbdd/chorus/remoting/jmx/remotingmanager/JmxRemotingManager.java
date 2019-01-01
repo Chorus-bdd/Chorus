@@ -71,7 +71,7 @@ public class JmxRemotingManager implements RemotingManager {
     }
 
     private RemotingManagerConfig buildRemotingConfig(String configName, Properties remotingProperties) {
-        RemotingConfig config = null;
+        RemotingConfig config;
         try {
             config = new ConfigBuilder().buildConfig(RemotingConfig.class, remotingProperties);
         } catch (ConfigBuilderException e) {

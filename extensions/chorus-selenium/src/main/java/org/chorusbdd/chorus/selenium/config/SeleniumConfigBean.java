@@ -30,10 +30,10 @@ import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidatorExceptio
 
 import java.util.Optional;
 
-import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyUtils.createValidationPatternFromEnumType;
+import static org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyUtils.checkNotNullAndNotEmpty;
 
 /**
- * An immutable runtime config for a process
+ * Config for a Selenium browser session
  */
 public class SeleniumConfigBean implements SeleniumConfig {
 
@@ -60,7 +60,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
 
     @ConfigProperty(
             name = "scope",
-            description = "Defines whether a browser connection should be closed at the end of a feature, or after each scenario",
+            description = "Defines whether a browser connection should be closed at the end of a feature, or after each scenario" +
+                    " This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario",
             defaultValue = "SCENARIO"
     )
     public void setScope(Scope scope) {
@@ -140,11 +141,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
     }
 
     private void checkRemoteWebDriverProperites() {
-        if ("".equals(remoteWebDriverURL) || remoteWebDriverURL == null) {
-            throw new ConfigValidatorException("remoteWebDriver.URL must be specified");
-        } else if ("".equals(remoteWebDriverBrowserType) || remoteWebDriverBrowserType == null) {
-            throw new ConfigValidatorException("remoteWebDriver.browserType must be specified");
-        }
+        checkNotNullAndNotEmpty(remoteWebDriverURL, "remoteWebDriverURL");
+        checkNotNullAndNotEmpty(remoteWebDriverBrowserType, "remoteWebDriverBrowserType");
     }
 
     private void checkChromeProperties() { }

@@ -133,7 +133,7 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     private ProcessConfig buildProcessesConfig(String configName, Properties processProperties) {
-        ProcessConfig config = null;
+        ProcessConfig config;
         try {
             config = new ConfigBuilder().buildConfig(ProcessConfig.class, processProperties);
         } catch (ConfigBuilderException e) {

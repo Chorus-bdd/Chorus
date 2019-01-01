@@ -240,7 +240,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     }
 
     private SeleniumConfig getSeleniumConfig(String configName, Properties remotingProperties) {
-        SeleniumConfigBean config = null;
+        SeleniumConfigBean config;
         try {
             config = new ConfigBuilder().buildConfig(SeleniumConfigBean.class, remotingProperties);
         } catch (ConfigBuilderException e) {

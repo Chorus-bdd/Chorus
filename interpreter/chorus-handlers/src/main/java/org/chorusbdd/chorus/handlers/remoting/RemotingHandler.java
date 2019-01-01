@@ -83,6 +83,7 @@ public class RemotingHandler {
     private ProcessManager processManager;
 
     @ChorusResource("subsystem.remotingManager")
+
     private RemotingManager remotingManager;
 
     @ChorusResource("subsystem.configurationManager")

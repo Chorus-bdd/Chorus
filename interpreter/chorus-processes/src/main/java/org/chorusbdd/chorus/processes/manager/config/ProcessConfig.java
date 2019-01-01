@@ -385,7 +385,8 @@ public class ProcessConfig implements ProcessManagerConfig {
 
     @ConfigProperty(
         name= SCOPE_PROPERTY,
-        description="Whether the process should be shut down at the end of the scenario or the end of the feature. This will be defaulted to FEATURE for processes started during 'Feature-Start:' otherwise SCENARIO",
+        description="Whether the process should be shut down at the end of the scenario or the end of the feature." +
+                " this will be set automatically to FEATURE for processes started during 'Feature-Start:' if not provided, otherwise Scenario",
         defaultValue = "SCENARIO",
         mandatory = false
     )

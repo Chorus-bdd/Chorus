@@ -27,15 +27,15 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.*;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.websockets.config.WebSocketsConfig;
-import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBuilderFactory;
-import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBeanValidator;
-import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBuilder;
+import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBean;
 import org.chorusbdd.chorus.websockets.message.*;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.PolledAssertion;
@@ -45,18 +45,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
-
 /**
  * Created by nick on 09/12/2016.
  */
 public class WebSocketsManagerImpl implements WebSocketsManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(WebSocketsManagerImpl.class);
-
-    private final WebSocketsConfigBuilderFactory webSocketsConfigBeanFactory = new WebSocketsConfigBuilderFactory();
-    private final WebSocketsConfigBeanValidator webSocketsConfigBeanValidator = new WebSocketsConfigBeanValidator();
-
 
     private ChorusWebSocketServer webSocketServer;
     private final AtomicBoolean isRunning = new AtomicBoolean();
@@ -86,7 +80,6 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         if ( ! isRunning.getAndSet(true)) {
 
             webSocketsConfig = getWebSocketsConfig(DEFAULT_WEB_SOCKET_SERVER_NAME, properties);
-            checkConfig(webSocketsConfig);
 
             int port = webSocketsConfig.getPort();
             log.info("Starting Web Socket server on port " + port);
@@ -98,14 +91,6 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         } else {
             //when multiple configurations are supported this will change
             log.error("Only one step server can be started");
-        }
-    }
-
-    private void checkConfig(WebSocketsConfig config) {
-        boolean validConfig = webSocketsConfigBeanValidator.isValid(config);
-        if ( ! validConfig) {
-            log.warn(webSocketsConfigBeanValidator.getErrorDescription());
-            fail("WebSockets config must be valid for " + config.getConfigName());
         }
     }
 
@@ -264,8 +249,14 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     }
 
     private WebSocketsConfig getWebSocketsConfig(String configName, Properties webSocketsProperties) {
-        WebSocketsConfigBuilder config = webSocketsConfigBeanFactory.createConfigBuilder(webSocketsProperties, configName);
-        return config.build();
+        WebSocketsConfigBean config;
+        try {
+            config = new ConfigBuilder().buildConfig(WebSocketsConfigBean.class, webSocketsProperties);
+        } catch (ConfigBuilderException e) {
+            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
+        }
+        config.setConfigName(configName);
+        return config;
     }
 
     /**
