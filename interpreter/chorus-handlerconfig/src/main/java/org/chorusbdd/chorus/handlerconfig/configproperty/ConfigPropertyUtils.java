@@ -43,8 +43,8 @@ public class ConfigPropertyUtils {
         return Pattern.compile(regEx);
     }
 
-    public static void checkNotNullAndNotEmpty(String url, String propertyName) {
-        if (url == null || "".equals(url.trim())) {
+    public static void checkNotNullAndNotEmpty(String value, String propertyName) {
+        if (value == null || "".equals(value.trim())) {
             throw new ConfigValidatorException(propertyName + " cannot be null or empty String");
         }
     }
