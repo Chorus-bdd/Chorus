@@ -53,7 +53,7 @@ public class ConfigBuilder {
         try {
             configInstance = configClass.newInstance();
         } catch (Exception e) {
-            throw new ConfigBuilderException("Failed to instantiate config class " + configClass.getName(), e);
+            throw new ConfigBuilderException("Failed to instantiate config class " + configClass.getSimpleName() + " - " + e.getClass().getSimpleName(), e);
         }
         
         //iterate sorted by field name for consistent/deterministic behaviour
@@ -83,7 +83,7 @@ public class ConfigBuilder {
                 log.debug("Config validation failed", i);
                 throw new ConfigBuilderException("Validation method failed: [" + i.getCause().getMessage() + "]");
             } catch (Exception e) {
-                throw new ConfigBuilderException("Failed to execute validation method " + m.getName() + " on config class " + configClass.getName(), e);
+                throw new ConfigBuilderException("Failed to execute validation method " + m.getName() + " on config class " + configClass.getSimpleName(), e);
             }
         }
     }

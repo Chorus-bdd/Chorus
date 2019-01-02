@@ -127,7 +127,7 @@ public class SeleniumConfigBean implements SeleniumConfig {
     }
 
     @ConfigValidator
-    protected void checkValid() {
+    public void checkValid() {
         switch (seleniumDriverType) {
             case CHROME:
                 checkChromeProperties();

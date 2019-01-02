@@ -43,15 +43,6 @@ public class SqlConfigBean implements SqlConfig {
     private String username;
     private String password;
 
-    public SqlConfigBean(String configName, Scope scope, String driverClassName, String url, String username, String password) {
-        this.configName = configName;
-        this.scope = scope;
-        this.driverClassName = driverClassName;
-        this.url = url;
-        this.username = username;
-        this.password = password;
-    }
-
     @ConfigProperty(
         name="scope",
         description="Whether the database connection is closed at the end of the scenario or at the end of the feature." +
@@ -95,7 +86,8 @@ public class SqlConfigBean implements SqlConfig {
 
     @ConfigProperty(
         name="username",
-        description="JDBC connection username"
+        description="JDBC connection username",
+        mandatory = false
     )
     public void setUsername(String username) {
         this.username = username;
@@ -108,7 +100,8 @@ public class SqlConfigBean implements SqlConfig {
 
     @ConfigProperty(
         name="password",
-        description="JDBC connection password"
+        description="JDBC connection password",
+        mandatory = false
     )
     public void setPassword(String password) {
         this.password = password;
@@ -129,7 +122,7 @@ public class SqlConfigBean implements SqlConfig {
     }
 
     @ConfigValidator
-    protected void checkValid(SqlConfig sqlConfig) {
+    public void checkValid() {
         checkNotNullAndNotEmpty(this.url, "url");
         checkNotNullAndNotEmpty(this.driverClassName, "driverClassName");
     }

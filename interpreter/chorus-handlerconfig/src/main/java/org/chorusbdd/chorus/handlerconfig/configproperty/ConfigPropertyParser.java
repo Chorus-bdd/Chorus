@@ -78,9 +78,9 @@ public class ConfigPropertyParser {
 
     private boolean checkValidationMethod(Method method, Class configClass) throws ConfigBuilderException {
         if (method.getParameterCount() > 0) {
-            throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getName() + " requires an argument and this is not supported");
+            throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getSimpleName() + " requires an argument and this is not supported");
         } else if (method.getReturnType() != Void.TYPE) {
-            throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getName() + " does not have a void return type");
+            throw new ConfigBuilderException("Validation method " + method.getName() + " on class " + configClass.getSimpleName() + " does not have a void return type");
         }
         return true;
     }
