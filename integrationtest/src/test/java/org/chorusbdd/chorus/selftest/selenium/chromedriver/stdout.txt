@@ -1,0 +1,13 @@
+Feature: Chrome Driver Connection                                                                    
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/selenium/chromedriver/chromeDriver.feature
+  Scenario: I can open Chrome and navigate to a page
+Chorus --> INFO    - Processing scenario: I can open Chrome and navigate to a page
+    Given I open Chrome                                                                      PASSED  
+    And I set the chorus context variable pathToTestHtmlFile                                 PASSED  
+    When I navigate to REPLACED PASSED  
+    Then the url is REPLACED PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)

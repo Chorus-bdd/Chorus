@@ -21,10 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selftest.selenium;
+package org.chorusbdd.chorus.selftest.selenium.chromedriver;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
+import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 import org.junit.Before;
+
+import java.io.IOException;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -34,9 +37,9 @@ import static org.junit.Assume.assumeTrue;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestSelenium extends AbstractInterpreterTest {
+public class TestSeleniumChromeDriver extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/selenium";
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/selenium/chromedriver";
 
     final int expectedExitCode = 0;  //success
 
@@ -46,7 +49,18 @@ public class TestSelenium extends AbstractInterpreterTest {
 
     @Before
     public void doBefore() {
-        assumeTrue(runSelenimumTests);
+        //only run if the chromedriver is on the path and executable
+        int exitStatus = -1;
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec("chromedriver --version");
+            p.waitFor();
+            exitStatus = p.exitValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Could not execute chromedriver, not on PATH? Will not run Selenium tests");
+        }
+        assumeTrue(exitStatus == 0);
     }
 
     protected int getExpectedExitCode() {
@@ -57,4 +71,11 @@ public class TestSelenium extends AbstractInterpreterTest {
         return featurePath;
     }
 
+    //hook for subclass processing
+    //strip file path which is system specific
+    protected void processActual(ChorusSelfTestResults actualResults) {
+        String output = actualResults.getStandardOutput();
+        output = output.replaceAll("file.*PASSED", "REPLACED PASSED");
+        actualResults.setStandardOutput(output);
+    }
 }
