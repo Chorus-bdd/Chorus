@@ -63,7 +63,7 @@ public class SubsystemDiscovery {
         HashMap<String, Class> result = new HashMap<>();
 
         SubsystemConfigAnnotationFilter s = new SubsystemConfigAnnotationFilter();
-        ClassFilter filter = new ClassFilterDecorator().decorateWithPackageFilters(s, basePackages);
+        ClassFilter filter = new ClassFilterDecorator().decorateWithPackageNameFilters(s, basePackages);
 
         Set<Class> classes = ClasspathScanner.doScan(filter);
         for (Class subsystemInterface : classes) {

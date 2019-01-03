@@ -36,5 +36,5 @@ public interface FilenameFilter {
      * using forward slashes and no
      * files will begin with a slash
      */
-    public boolean accept(String filename);
+    boolean accept(String filename);
 }

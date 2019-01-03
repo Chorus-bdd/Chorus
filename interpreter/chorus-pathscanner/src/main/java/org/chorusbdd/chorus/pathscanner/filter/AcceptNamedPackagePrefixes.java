@@ -23,9 +23,6 @@
  */
 package org.chorusbdd.chorus.pathscanner.filter;
 
-import org.chorusbdd.chorus.util.ChorusConstants;
-
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,23 +34,17 @@ import java.util.List;
  * Accept any packages which match user specified prefixes
  * Deny any packages which do not
  */
-public class PackagePrefixFilter extends ChainableFilterRule {
+public class AcceptNamedPackagePrefixes extends ChainablePackageFilter {
 
     private List<String> packageNames;
-    private boolean userPackagesWereSpecified;
 
-    public PackagePrefixFilter(ClassFilter filterDelegate, List<String> packageNames) {
+    public AcceptNamedPackagePrefixes(ClassFilter filterDelegate, List<String> packageNames) {
         super(filterDelegate);
         this.packageNames = packageNames;
-        userPackagesWereSpecified = ! packageNames.equals(Arrays.asList(ChorusConstants.ANY_PACKAGE));
     }
 
     public boolean shouldAccept(String className) {
-        return userPackagesWereSpecified && checkMatch(className);
-    }
-
-    public boolean shouldDeny(String className) {
-        return userPackagesWereSpecified && ! checkMatch(className);
+        return packageNames.size() > 0 && checkMatch(className);
     }
 
     private boolean checkMatch(String className) {

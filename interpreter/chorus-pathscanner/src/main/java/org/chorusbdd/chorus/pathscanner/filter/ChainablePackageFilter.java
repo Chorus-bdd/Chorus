@@ -34,13 +34,13 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
  *
  * Delegate to the chained delegate filter only if this filter rule is passed
  */
-public class ChainableFilterRule implements ClassFilter {
+public class ChainablePackageFilter implements ClassFilter {
 
-    ChorusLog log = ChorusLogFactory.getLog(ChainableFilterRule.class);
+    ChorusLog log = ChorusLogFactory.getLog(ChainablePackageFilter.class);
 
     private ClassFilter filterDelegate;
 
-    public ChainableFilterRule(ClassFilter filterDelegate) {
+    public ChainablePackageFilter(ClassFilter filterDelegate) {
         this.filterDelegate = filterDelegate;
     }
 
@@ -65,10 +65,7 @@ public class ChainableFilterRule implements ClassFilter {
     }
 
     public final boolean acceptByClass(Class clazz) {
-        return doAcceptByClass(clazz) && filterDelegate.acceptByClass(clazz);
+        return filterDelegate.acceptByClass(clazz);
     }
 
-    protected boolean doAcceptByClass(Class clazz) {
-        return true;
-    }
 }

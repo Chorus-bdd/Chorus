@@ -42,34 +42,33 @@ public class TestClassFilterDecorator extends Assert {
 
     @Test
     public void testChorusBuildInHandlersPermitted() {
-        ClassFilter classFilter = filterFactory.decorateWithPackageFilters(new HandlerAnnotationFilter(), Collections.<String>emptyList());
+        ClassFilter classFilter = filterFactory.decorateWithPackageNameFilters(new HandlerAnnotationFilter(), Collections.<String>emptyList());
         assertTrue("Allows built in handler", classFilter.acceptByName("org.chorusbdd.chorus.handlers"));
         assertTrue("Allows built in tests handlers", classFilter.acceptByName("org.chorusbdd.chorus.selftest.wibble"));
     }
 
     @Test
     public void testChorusInterpreterPackagesDenied() {
-        ClassFilter classFilter = filterFactory.decorateWithPackageFilters(new HandlerAnnotationFilter(), Collections.<String>emptyList());
+        ClassFilter classFilter = filterFactory.decorateWithPackageNameFilters(new HandlerAnnotationFilter(), Collections.<String>emptyList());
         assertFalse("Denies other interpreter packages", classFilter.acceptByName(ChorusConstants.CHORUS_ROOT_PACKAGE));
     }
 
-
     @Test
-    public void testAllowsAllOtherIfNoUserPrefixesSpecified() {
-        ClassFilter classFilter = filterFactory.decorateWithPackageFilters(new HandlerAnnotationFilter(), Collections.<String>emptyList());
-        assertTrue("Allows all non-chorus if user did not restrict", classFilter.acceptByName("com.mynew.google"));
+    public void testDoesNotAllowNonChorusIfNoUserPackagesSpecified() {
+        ClassFilter classFilter = filterFactory.decorateWithPackageNameFilters(new HandlerAnnotationFilter(), Collections.<String>emptyList());
+        assertFalse("Does not allow non-chorus if no user packages specified", classFilter.acceptByName("com.mynew.google"));
     }
 
     @Test
     public void testUserPrefixesSpecified() {
-        ClassFilter classFilter = filterFactory.decorateWithPackageFilters(new HandlerAnnotationFilter(), Arrays.asList("com.test"));
+        ClassFilter classFilter = filterFactory.decorateWithPackageNameFilters(new HandlerAnnotationFilter(), Arrays.asList("com.test"));
         assertFalse("Denies non-specified if user restricted", classFilter.acceptByName("com.mynew.google"));
         assertTrue("Allows specified if user restricted", classFilter.acceptByName("com.test.mypackage"));
     }
 
     @Test
     public void testCoreHandlersIfUserPackagesSpecified() {
-       ClassFilter classFilter = filterFactory.decorateWithPackageFilters(new HandlerAnnotationFilter(), Arrays.asList("com.test"));
+       ClassFilter classFilter = filterFactory.decorateWithPackageNameFilters(new HandlerAnnotationFilter(), Arrays.asList("com.test"));
        assertTrue("Allow standard handlers even if users sets handler package prefixes", classFilter.acceptByName("org.chorusbdd.chorus.handlers.MyHandler"));
     }
 

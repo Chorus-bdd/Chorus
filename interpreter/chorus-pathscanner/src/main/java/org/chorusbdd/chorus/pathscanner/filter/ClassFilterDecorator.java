@@ -23,9 +23,6 @@
  */
 package org.chorusbdd.chorus.pathscanner.filter;
 
-import org.chorusbdd.chorus.util.ChorusConstants;
-
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,17 +31,18 @@ import java.util.List;
  * Date: 19/06/12
  * Time: 08:18
  *
- * Construct filters for class search, by decorating a supplied ClassFilter with other filter rules
+ * Loading classes is expensive and may generate class loading errors, so we only permit scanning/classloading 
+ * for preconfigured packages, and those configured by the user (and their subpackages)
+ * 
+ * Construct filters to accept or deny by package name, by decorating a supplied ClassFilter with other filter rules
  *
  * Process for each class name found on the classpath until that class is 'accepted' or 'denied' by a rule
+ * If the package is accepted, delegate to the wrapped filter to perform further filtering by Class type
  *
- * 1. Accept all handlers from Chorus handlers package
- * 2. If the user specified package prefixes, accept only those deny any others
- * 3. Deny any other chorus packages so that we don't trigger class load of optional dependencies
- * 4. Deny handler scanning from standard jdk or library package prefixes
- * 5. Delegate to wrapped classFilter (e.g. to check annotation exists on class)
- *
- * 2 before 3 allows us to specify an extra chorus package as a handler package for chorus self testing
+ * Rules will be processed in this order:
+ * 1. Accept Chorus built in handler packages
+ * 2. Accept packages named by the user (and their subpackages)
+ * 3. Deny all packages not otherwise allowed
  */
 public class ClassFilterDecorator {
     
@@ -54,18 +52,14 @@ public class ClassFilterDecorator {
      * @param filterToDecorate this filter will be decorated with extra rules to check package names
      * @param userSpecifiedPrefixes any handler package prefixes specified by user
      */
-    public ClassFilter decorateWithPackageFilters(ClassFilter filterToDecorate, List<String> userSpecifiedPrefixes) {
-
-        //deny other chorus packages from the non-standard handlers package
-        DenyOtherChorusPackagesRule denyOtherChorusPackagesRule = new DenyOtherChorusPackagesRule(filterToDecorate);
+    public ClassFilter decorateWithPackageNameFilters(ClassFilter filterToDecorate, List<String> userSpecifiedPrefixes) {
+        DenyAllPackageNames denyAllPackageNames = new DenyAllPackageNames(filterToDecorate);
 
         //if user has specified package prefixes, restrict to those
-        List<String> userPackageNames = userSpecifiedPrefixes.isEmpty() ? Arrays.asList(ChorusConstants.ANY_PACKAGE) : userSpecifiedPrefixes;
-        ClassFilter packagePrefixFilter = new PackagePrefixFilter(denyOtherChorusPackagesRule, userPackageNames);
+        ClassFilter packagePrefixFilter = new AcceptNamedPackagePrefixes(denyAllPackageNames, userSpecifiedPrefixes);
 
          //always permit built in handlers, deny other chorus packages
-        ClassFilter builtInHandlerClassFilter = new AlwaysAllowBuiltInPackageRule(packagePrefixFilter);
-        return builtInHandlerClassFilter;
+        return new AlwaysAllowBuiltInPackageRule(packagePrefixFilter);
     }
 
 }

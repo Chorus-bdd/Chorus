@@ -93,8 +93,7 @@ public class ClasspathScanner {
      * in that the slashes will be changed to dots
      * and the .class file extension will be removed.
      */
-    static String[] getClasspathClassNames()
-            throws ZipException, IOException {
+    static String[] getClasspathClassNames() throws ZipException, IOException {
         final String[] classes = getClasspathFileNamesWithExtension(".class");
         for (int i = 0; i < classes.length; i++) {
             classes[i] = classes[i].substring(0, classes[i].length() - 6).replace("/", ".");
@@ -110,8 +109,7 @@ public class ClasspathScanner {
         });
     }
 
-    static String[] getClasspathFileNames(FilenameFilter filter)
-            throws ZipException, IOException {
+    static String[] getClasspathFileNames(FilenameFilter filter) throws ZipException, IOException {
         final List<String> filenames = new ArrayList<>();
         for (String filename : getClasspathFileNames()) {
             if (filter.accept(filename)) {

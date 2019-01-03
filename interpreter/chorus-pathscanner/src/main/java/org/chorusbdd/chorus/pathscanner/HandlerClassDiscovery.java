@@ -59,7 +59,7 @@ public class HandlerClassDiscovery {
         HashMap<String, Class> handlerNameToHandlerClass = new HashMap<>();
 
         HandlerAnnotationFilter handlerAnnotationFilter = new HandlerAnnotationFilter();
-        ClassFilter filter = new ClassFilterDecorator().decorateWithPackageFilters(handlerAnnotationFilter, basePackages);
+        ClassFilter filter = new ClassFilterDecorator().decorateWithPackageNameFilters(handlerAnnotationFilter, basePackages);
 
         Set<Class> classes = ClasspathScanner.doScan(filter);
         for (Class handlerClass : classes) {

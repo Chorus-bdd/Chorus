@@ -23,33 +23,21 @@
  */
 package org.chorusbdd.chorus.pathscanner.filter;
 
-import org.chorusbdd.chorus.util.ChorusConstants;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Nick Ebbutt
  * Date: 18/06/12
  * Time: 18:49
- *
- * Always accept built in handler packages
- * Always deny all other org.chorusbdd.* packages, avoid scanning classes which might load optional dependencies
- *
- *  We only look for handlers in the dedicated interpreter handler package
- * loading other classes in the interpreter may trigger class locating of
- * classes from optional dependencies, which we do not want to do since
- * this would make those optional dependencies mandatory
+ * 
+ * Deny all classes irrespective of package prefix
  */
-public class DenyOtherChorusPackagesRule extends ChainableFilterRule {
+public class DenyAllPackageNames extends ChainablePackageFilter {
 
-    public DenyOtherChorusPackagesRule(ClassFilter filterDelegate) {
-        super(filterDelegate);
-    }
-
-    protected boolean shouldAccept(String className) {
-        return false;
+    public DenyAllPackageNames(ClassFilter classFilter) {
+        super(classFilter);
     }
 
     protected boolean shouldDeny(String className) {
-        return className.startsWith(ChorusConstants.CHORUS_ROOT_PACKAGE);
+        return true;
     }
 }

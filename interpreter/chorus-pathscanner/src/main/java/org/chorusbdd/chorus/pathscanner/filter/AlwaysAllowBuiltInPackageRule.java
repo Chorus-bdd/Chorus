@@ -33,7 +33,7 @@ import org.chorusbdd.chorus.util.ChorusConstants;
  *
  * Always accept built in handler packages
  */
-public class AlwaysAllowBuiltInPackageRule extends ChainableFilterRule {
+public class AlwaysAllowBuiltInPackageRule extends ChainablePackageFilter {
 
     public AlwaysAllowBuiltInPackageRule(ClassFilter filterDelegate) {
         super(filterDelegate);
@@ -41,10 +41,6 @@ public class AlwaysAllowBuiltInPackageRule extends ChainableFilterRule {
 
     protected boolean shouldAccept(String className) {
         return isBuiltInHandler(className);
-    }
-
-    protected boolean shouldDeny(String className) {
-        return false;
     }
 
     private boolean isBuiltInHandler(String className) {
