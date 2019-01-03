@@ -23,7 +23,7 @@ allprojects  {
     group = "org.chorusbdd"
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-    version = '3.1.0.RC1'
+    version = '3.1.0.RC2'
 
     test {
         testLogging {
