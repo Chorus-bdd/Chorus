@@ -65,7 +65,7 @@ public class SubsystemDiscovery {
         SubsystemConfigAnnotationFilter s = new SubsystemConfigAnnotationFilter();
         ClassFilter filter = new ClassFilterDecorator().decorateWithPackageNameFilters(s, basePackages);
 
-        Set<Class> classes = ClasspathScanner.doScan(filter);
+        Set<Class> classes = ClasspathScanner.doScan(filter, log);
         for (Class subsystemInterface : classes) {
             SubsystemConfig subsystemConfig = (SubsystemConfig) subsystemInterface.getAnnotation(SubsystemConfig.class);
 

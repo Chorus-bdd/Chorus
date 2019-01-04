@@ -61,7 +61,7 @@ public class HandlerClassDiscovery {
         HandlerAnnotationFilter handlerAnnotationFilter = new HandlerAnnotationFilter();
         ClassFilter filter = new ClassFilterDecorator().decorateWithPackageNameFilters(handlerAnnotationFilter, basePackages);
 
-        Set<Class> classes = ClasspathScanner.doScan(filter);
+        Set<Class> classes = ClasspathScanner.doScan(filter, log);
         for (Class handlerClass : classes) {
             Handler f = (Handler) handlerClass.getAnnotation(Handler.class);
             String handlerName = f.value();

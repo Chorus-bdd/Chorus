@@ -59,16 +59,15 @@ public class ClasspathScanner {
 
     private static String[] classpathNames;
 
-    public static Set<Class> doScan(ClassFilter classFilter) {
+    public static Set<Class> doScan(ClassFilter classFilter, ChorusLog log) {
+        String[] classNames = findClassNames(log);
+        Set<Class> result = filterClasses(classFilter, log, classNames);
+        return result;
+    }
+
+    private static Set<Class> filterClasses(ClassFilter classFilter, ChorusLog log, String[] classNames) {
         Set<Class> s = new HashSet<>();
-        
-        String[] classNames;
-        try {
-            classNames = getClasspathClassNames();
-        } catch (Throwable t) {
-            throw new ChorusException("Failed during classpath scanning", t);
-        }
-        
+        long startTime = System.currentTimeMillis();
         for (String clazz : classNames) {
             try {
                 //check the name/package first before we try class loading
@@ -83,7 +82,22 @@ public class ClasspathScanner {
                 throw new ChorusException("Failed during classpath scanning could not load class " + clazz, t);
             }
         }
+        long timeTaken = System.currentTimeMillis() - startTime;
+        log.trace("ClasspathScanner filtering took " + timeTaken + " millis and returned " + s.size() + " classes");
         return s;
+    }
+
+    private static String[] findClassNames(ChorusLog log) {
+        String[] classNames;
+        try {
+            long startTime = System.currentTimeMillis();
+            classNames = getClasspathClassNames();
+            long timeTaken = System.currentTimeMillis() - startTime;
+            log.trace("ClasspathScanner class scanning took " + timeTaken + " millis and found " + classNames.length + " class names");
+        } catch (Throwable t) {
+            throw new ChorusException("Failed during classpath scanning", t);
+        }
+        return classNames;
     }
 
     /**
