@@ -53,7 +53,9 @@ processResources.dependsOn createChorusVersionResource
 // Must be BELOW subprojects{}
 task alljavadoc(type: Javadoc) {
     source subprojects.collect { it.sourceSets.main.allJava }
-    classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+    def collect = subprojects.collect { it.sourceSets.main.compileClasspath }
+    collect.add(sourceSets.main.compileClasspath)
+    classpath = files(collect)
     destinationDir = file("${buildDir}/docs/javadoc")
 }
 
@@ -65,7 +67,9 @@ task javadocJar(type: Jar, dependsOn: alljavadoc) {
 task sourcesJar(type: Jar) {
     sourceSets.main.allSource.sourceDirectories.asPath
     classifier = 'sources'
-    from subprojects.collect { it.sourceSets.main.allSource }
+    def collect = subprojects.collect { it.sourceSets.main.allSource }
+    collect.add(sourceSets.main.allSource)
+    from collect
 }
 
 shadowJar.finalizedBy javadocJar
