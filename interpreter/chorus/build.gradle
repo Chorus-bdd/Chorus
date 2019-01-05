@@ -52,10 +52,14 @@ processResources.dependsOn createChorusVersionResource
 
 // Must be BELOW subprojects{}
 task alljavadoc(type: Javadoc) {
-    source subprojects.collect { it.sourceSets.main.allJava }
+    def sourceCollect = subprojects.collect { it.sourceSets.main.allJava }
+    sourceCollect.add(sourceSets.main.allJava)
+    source sourceCollect
+    
     def collect = subprojects.collect { it.sourceSets.main.compileClasspath }
     collect.add(sourceSets.main.compileClasspath)
     classpath = files(collect)
+    
     destinationDir = file("${buildDir}/docs/javadoc")
 }
 
