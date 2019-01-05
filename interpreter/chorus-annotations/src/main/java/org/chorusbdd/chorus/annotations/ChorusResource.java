@@ -31,7 +31,8 @@ import java.lang.annotation.Target;
 /**
  * Allows named resources to be injected into handlers by the interpreter. Supported resources are:
  * 
- * <table summary="Chrorus Resource Annotation Resources">
+ * <table>
+ *     <caption>ChorusResource resources by id</caption>
  * <tr>
  * <td>feature.dir</td>
  * <td>File</td>
