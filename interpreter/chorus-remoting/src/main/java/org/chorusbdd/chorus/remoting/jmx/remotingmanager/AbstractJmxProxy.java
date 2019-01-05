@@ -37,7 +37,6 @@ import java.util.Set;
 
 /**
  * Simple abstraction for accessing JMX MBeans.
- * <p/>
  * Created by: Steve Neal
  * Date: 12/10/11
  */

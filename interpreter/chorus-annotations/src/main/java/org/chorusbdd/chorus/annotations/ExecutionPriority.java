@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * 
  * A priority can be used to order ExecutionListeners 
  * 
- * Most system ExecutionListeners are generally assigned priority values > 1000
+ * Most system ExecutionListeners are generally assigned priority values greater than 1000
  * These accomplish clean up tasks such as opening closing sockets/files and are generally executed before/after any user specified listeners
  * 
  * An ExecutionListener with a higher priority will have its 'started' methods invoked before a listener with a 
@@ -43,7 +43,6 @@ import java.lang.annotation.Target;
  *      LowPriority: Start
  *      LowPriority: Complete
  * HighPriority: Complete
- * 
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

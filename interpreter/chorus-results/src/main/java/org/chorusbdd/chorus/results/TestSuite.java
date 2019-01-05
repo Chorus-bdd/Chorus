@@ -39,7 +39,7 @@ import java.util.List;
  * Since it contains no extra state, it is not itself a Token instance, and it is not serialized and sent to local or
  * remote ExecutionListener. Instead such listeners may themselves create a TestSuite instance of they so desire.
  * This is easy since once a test suite is completed the interpreter calls the testsCompleted() method on any listeners
- * registered, and supplies an ExecutionToken and List<Feature> as parameters.
+ * registered, and supplies an ExecutionToken and List&lt;Feature&gt; as parameters.
  *
  * TestSuite also provides an accept() method for a TokenVisitor, and this can be called to have the visitor visit
  * the ExecutionToken, ResultsSummary, and the Features, Scenarios and Steps in a predictable order.

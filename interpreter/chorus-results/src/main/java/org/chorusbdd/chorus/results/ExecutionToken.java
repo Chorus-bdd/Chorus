@@ -48,7 +48,7 @@ import java.util.Map;
  * It would be too heavyweight to send the entire tree of features/scenarios/steps each time, but a summary of
  * current results is beneficial. A full list of features is send on completion.
  *
- * This will enable two things -->
+ * This will enable two things:
  * - parallelisation of test execution, with output separated by execution token
  * - collation of results across multiple test executions, in a swing test runner, for example
  *

@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
- * Created by: Steve Neal & Nick Ebbutt
+ * Created by: Steve Neal and Nick Ebbutt
  * Date: 03/11/11
  */
 @Handler(value = "Chorus Context", scope= Scope.FEATURE)

@@ -250,7 +250,7 @@ public class ChorusAssert {
     	/**
     	 * Asserts that an object is null. If it isn't an {@link AssertionError} is
     	 * thrown.
-    	 * Message contains: Expected: <null> but was: object
+    	 * Message contains: Expected: null but was: object
     	 *
     	 * @param object
     	 *            Object to check or <code>null</code>

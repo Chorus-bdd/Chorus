@@ -40,7 +40,7 @@ import java.util.zip.ZipFile;
  * You are free to use this code however you
  * like but I assume no responsibility for it's
  * correctness and provide no warranty of any kind.
- * <p/>
+ * 
  * Code to find files on your classpath.
  * Have you ever wanted to get a list of the files on your classpath or perhaps
  * get a list of the classes on your classpath? It's not exactly trivial.

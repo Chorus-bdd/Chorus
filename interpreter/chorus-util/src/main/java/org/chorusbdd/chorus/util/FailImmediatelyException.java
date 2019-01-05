@@ -34,15 +34,15 @@ package org.chorusbdd.chorus.util;
  *
  * e.g.
  *
- * @PassesWithin(length=60, timeUnit=TimeUnit.SECONDS)
- * @Step("wait for a message to be received")
+ * {@literal @}PassesWithin(length=60, timeUnit=TimeUnit.SECONDS)
+ * {@literal @}Step("wait for a message to be received")
  * public void testMessageReceived() {
 *      if ( transport.failedToConnect() ) {
  *         //this test can now never pass, so break out immediately rather than wait for the rest of the 60 seconds
 *          throw new FailImmediatelyException("Failed to connect to messaging transport");
 *      }
  *
-*      assertTrue("at least one message should be received", messageCount > 0);
+*      assertTrue("at least one message should be received", messageCount &gt; 0);
  * }
  *
  */

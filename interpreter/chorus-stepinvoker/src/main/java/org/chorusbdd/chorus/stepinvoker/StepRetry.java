@@ -41,7 +41,7 @@ public interface StepRetry {
     /**
      * Total length of time over which to retry a failing step
      *
-     * @return 0 if there is no retry, or a value in milliseconds >= 1
+     * @return 0 if there is no retry, or a value in milliseconds is greater or equal to 1
      */
     long getDuration();
 
@@ -49,7 +49,7 @@ public interface StepRetry {
     /**
      * Defines the interval between retries
      *
-     * @return 0 if there is no retry, or a value in milliseconds >= 1 and <= duration
+     * @return 0 if there is no retry, or a value in milliseconds greater than or equal to 1 and less than or equal to duration
      */
     long getInterval();
 }

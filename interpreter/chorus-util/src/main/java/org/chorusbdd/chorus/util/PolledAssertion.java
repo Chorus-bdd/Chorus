@@ -54,7 +54,8 @@ import java.util.concurrent.TimeUnit;
  *
  * e.g. wait for up to 5 seconds for a message to arrive:
  *
- * @Step("a message was received with ID=(.*)")
+ * {@code
+ * {@literal @}Step("a message was received with ID=(.*)")
  * public void checkMessageWasReceived(final String id) {
  *   new PolledAssertion() {
  *      protected void validate() {
@@ -62,6 +63,7 @@ import java.util.concurrent.TimeUnit;
  *          assertNotNull("The message exists", p);
  *      }
  *   }.await(5);
+ * }
  * }
  */
 public abstract class PolledAssertion {

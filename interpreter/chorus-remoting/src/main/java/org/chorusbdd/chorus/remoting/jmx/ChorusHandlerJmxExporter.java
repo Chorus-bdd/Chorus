@@ -47,7 +47,6 @@ import java.util.regex.Pattern;
 /**
  * This class will wrap and export any Objects that declare the @Handler annotation for a Chorus interpreter to call
  * as an MBean. The object must also declare methods that have a correctly configured @Step annotation.
- * <p/>
  * Created by: Steve Neal
  * Date: 14/10/11
  */

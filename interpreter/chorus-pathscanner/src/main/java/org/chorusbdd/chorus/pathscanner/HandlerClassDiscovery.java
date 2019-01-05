@@ -52,7 +52,7 @@ public class HandlerClassDiscovery {
      * Scans the classpath for handler classes
      *
      * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
-     * @return a Map of [feature-name -> feature class]
+     * @return a Map of [feature-name -&gt; feature class]
      */
     public HashMap<String, Class> discoverHandlerClasses(List<String> basePackages) {
         //always include the Chorus handlers package

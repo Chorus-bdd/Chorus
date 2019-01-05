@@ -38,7 +38,6 @@ import java.util.Map;
  * Provides simple interface for interacting with the methods exposed by the ChorusHandlerJmxExporter:
  * allows for step metadata to be downloaded from remote handlers, and for these methods to be
  * invoked.
- * <p/>
  * Created by: Steve Neal
  * Date: 14/10/11
  */

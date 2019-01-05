@@ -48,7 +48,7 @@ public class SubsystemDiscovery {
      * Scans the classpath for handler classes
      *
      * @param basePackages name of the base package under which a recursive scan for @Handler classes will be performed
-     * @return a Map of subsystemId -> implementationClass
+     * @return a Map of subsystemId -&gt; implementationClass
      */
     public HashMap<String, Class> discoverSubsystems(List<String> basePackages) {
         return discoverSubsystems(basePackages, log);

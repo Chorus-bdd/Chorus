@@ -2,75 +2,75 @@
 
 project(':chorus') {
     dependencies {
-        compile project (':chorus-handlers')
-        compile project (':chorus-interpreter')
-        compile project (':chorus-processes')
-        compile project (':chorus-remoting')
+        compile project (':chorus:chorus-handlers')
+        compile project (':chorus:chorus-interpreter')
+        compile project (':chorus:chorus-processes')
+        compile project (':chorus:chorus-remoting')
     }
 }
 
-project(':chorus-annotations') {
+project(':chorus:chorus-annotations') {
     dependencies {
     }
 }
 
-project(':chorus-config') {
+project(':chorus:chorus-config') {
     dependencies {
-        compile project (':chorus-util')
+        compile project (':chorus:chorus-util')
     }
 }
 
-project(':chorus-context') {
+project(':chorus:chorus-context') {
     dependencies {
-        compile project (':chorus-util')
+        compile project (':chorus:chorus-util')
     }
 }
 
-project(':chorus-executionlistener') {
+project(':chorus:chorus-executionlistener') {
     dependencies {
-        compile project (':chorus-results')
-        compile project (':chorus-annotations')
-        compile project (':chorus-logging')
+        compile project (':chorus:chorus-results')
+        compile project (':chorus:chorus-annotations')
+        compile project (':chorus:chorus-logging')
     }
 }
 
-project(':chorus-handlerconfig') {
+project(':chorus:chorus-handlerconfig') {
     dependencies {
-        compile project (':chorus-results')
-        compile project (':chorus-logging')
-        compile project (':chorus-util')
-        compile project (':chorus-annotations')
-        compile project (':chorus-subsystem')
+        compile project (':chorus:chorus-results')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-util')
+        compile project (':chorus:chorus-annotations')
+        compile project (':chorus:chorus-subsystem')
     }
 }
 
-project(':chorus-handlers') {
+project(':chorus:chorus-handlers') {
     dependencies {
-        compile project (':chorus-interpreter')
-        compile project (':chorus-remoting')
-        compile project (':chorus-processes')
-        compile project (':chorus-annotations')
+        compile project (':chorus:chorus-interpreter')
+        compile project (':chorus:chorus-remoting')
+        compile project (':chorus:chorus-processes')
+        compile project (':chorus:chorus-annotations')
     }
 }
 
-project(':chorus-interpreter') {
+project(':chorus:chorus-interpreter') {
     dependencies {
-        compile project (':chorus-util')
-        compile project (':chorus-output')
-        compile project (':chorus-logging')
-        compile project (':chorus-parser')
-        compile project (':chorus-results')
-        compile project (':chorus-config')
-        compile project (':chorus-executionlistener')
-        compile project (':chorus-handlerconfig')
-        compile project (':chorus-annotations')
-        compile project (':chorus-stepinvoker')
-        compile project (':chorus-subsystem')
-        compile project (':chorus-pathscanner')
+        compile project (':chorus:chorus-util')
+        compile project (':chorus:chorus-output')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-parser')
+        compile project (':chorus:chorus-results')
+        compile project (':chorus:chorus-config')
+        compile project (':chorus:chorus-executionlistener')
+        compile project (':chorus:chorus-handlerconfig')
+        compile project (':chorus:chorus-annotations')
+        compile project (':chorus:chorus-stepinvoker')
+        compile project (':chorus:chorus-subsystem')
+        compile project (':chorus:chorus-pathscanner')
     }
 }
 
-project(':chorus-logging') {
+project(':chorus:chorus-logging') {
     dependencies {
     }
 }
@@ -81,48 +81,48 @@ project(':chorus-mocksuite') {
     }
 }
 
-project(':chorus-output') {
+project(':chorus:chorus-output') {
     dependencies {
-        compile project (':chorus-util')
-        compile project (':chorus-logging')
-        compile project (':chorus-results')
+        compile project (':chorus:chorus-util')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-results')
     }
 }
 
-project(':chorus-parser') {
+project(':chorus:chorus-parser') {
     dependencies {
-        compile project (':chorus-results')
-        compile project (':chorus-logging')
-        compile project (':chorus-util')
+        compile project (':chorus:chorus-results')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-util')
     }
 }
 
-project(':chorus-pathscanner') {
+project(':chorus:chorus-pathscanner') {
     dependencies {
-        compile project (':chorus-results')
-        compile project (':chorus-parser')
-        compile project (':chorus-annotations')
-        compile project (':chorus-logging')
-        compile project (':chorus-util')
+        compile project (':chorus:chorus-results')
+        compile project (':chorus:chorus-parser')
+        compile project (':chorus:chorus-annotations')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-util')
     }
 }
 
-project(':chorus-processes') {
+project(':chorus:chorus-processes') {
     dependencies {
-        compile project (':chorus-subsystem')
-        compile project (':chorus-handlerconfig')
+        compile project (':chorus:chorus-subsystem')
+        compile project (':chorus:chorus-handlerconfig')
     }
 }
 
-project(':chorus-remoting') {
+project(':chorus:chorus-remoting') {
     dependencies {
-        compile project (':chorus-subsystem')
-        compile project (':chorus-stepinvoker')
-        compile project (':chorus-handlerconfig')
+        compile project (':chorus:chorus-subsystem')
+        compile project (':chorus:chorus-stepinvoker')
+        compile project (':chorus:chorus-handlerconfig')
     }
 }
 
-project(':chorus-results') {
+project(':chorus:chorus-results') {
     dependencies {
     }
 }
@@ -145,29 +145,29 @@ project(':chorus-sql') {
     }
 }
 
-project(':chorus-stepinvoker') {
+project(':chorus:chorus-stepinvoker') {
     dependencies {
-        compile project (':chorus-annotations')
-        compile project (':chorus-logging')
-        compile project (':chorus-util')
-        compile project (':chorus-results')
+        compile project (':chorus:chorus-annotations')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-util')
+        compile project (':chorus:chorus-results')
     }
 }
 
-project(':chorus-subsystem') {
+project(':chorus:chorus-subsystem') {
     dependencies {
-        compile project (':chorus-util')
-        compile project (':chorus-output')
-        compile project (':chorus-logging')
-        compile project (':chorus-results')
-        compile project (':chorus-executionlistener')
-        compile project (':chorus-annotations')
-        compile project (':chorus-context')
-        compile project (':chorus-pathscanner')
+        compile project (':chorus:chorus-util')
+        compile project (':chorus:chorus-output')
+        compile project (':chorus:chorus-logging')
+        compile project (':chorus:chorus-results')
+        compile project (':chorus:chorus-executionlistener')
+        compile project (':chorus:chorus-annotations')
+        compile project (':chorus:chorus-context')
+        compile project (':chorus:chorus-pathscanner')
     }
 }
 
-project(':chorus-util') {
+project(':chorus:chorus-util') {
     dependencies {
     }
 }

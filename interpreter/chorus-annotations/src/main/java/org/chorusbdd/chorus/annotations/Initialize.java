@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 
 /**
  * Used to annotate an initialize method on a feature Handler
- * <p/>
+ * 
  * Created by: Nick Ebbutt
  * Date: 23/11/13
  */

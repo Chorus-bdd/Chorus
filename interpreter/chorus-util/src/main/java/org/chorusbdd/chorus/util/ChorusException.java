@@ -25,7 +25,6 @@ package org.chorusbdd.chorus.util;
 
 /**
  * General exeption to indicate a problem running Chorus
- * <p/>
  * Created by: Steve Neal
  * Date: 26/10/11
  */

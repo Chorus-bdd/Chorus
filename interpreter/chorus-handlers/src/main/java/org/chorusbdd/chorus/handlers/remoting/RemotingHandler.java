@@ -45,7 +45,7 @@ import java.util.Properties;
 
 /**
  * This handler can be used to invoke steps on components running remotely across the network.
- * <p/>
+ * 
  * The single Step method will match any regexp that ends with "(in|from) [mbean name]". 
  * 
  * In order to work, this handler must have metadata available for the mbean names that it will be connecting to. 

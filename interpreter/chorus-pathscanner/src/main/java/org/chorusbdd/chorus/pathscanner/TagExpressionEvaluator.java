@@ -30,9 +30,7 @@ import java.util.Set;
 /**
  * <p>This class is used by the interpreter to determine whether or not a scenario should be executed based upon the
  * tags is has. See the wiki for examples of scenario filtering.</p>
- * <p/>
  * <p>The syntax for a tag expression is as given in BNF as follows:</p>
- * <p/>
  * <pre>
  * {@code
  * <TAG_EXPRESSION> ::= SIMPLE_TAG_EXPRESSION ['|' TAG_EXPRESSION]
@@ -41,7 +39,6 @@ import java.util.Set;
  * <TAG_NAME> ::= <text>
  * }
  * </pre>
- * <p/>
  * Created by: Steve Neal
  * Date: 20/01/12
  */

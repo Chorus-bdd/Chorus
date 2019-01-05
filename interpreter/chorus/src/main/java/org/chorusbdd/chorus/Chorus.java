@@ -46,7 +46,7 @@ import java.util.List;
 import static org.chorusbdd.chorus.SwitchPreprocessing.handleVersionOrHelpSwitches;
 
 /**
- * Created by: Steve Neal & Nick Ebbutt, ChorusBDD.org
+ * Created by: Steve Neal and Nick Ebbutt, ChorusBDD.org
  */
 public class Chorus {
 
@@ -169,7 +169,6 @@ public class Chorus {
 
     /**
      * Start tests, notifying executionListeners
-     * @return an executionToken to collate results for this test run
      */
     public void startTests(ExecutionToken executionToken, List<FeatureToken> features) {
         listenerSupport.notifyTestsStarted(executionToken, features);

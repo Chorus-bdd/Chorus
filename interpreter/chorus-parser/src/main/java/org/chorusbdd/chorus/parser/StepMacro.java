@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
  * Date: 23/02/13
  * Time: 19:53
  *
+ * <pre>
  * A StepMacro represents a sequence of steps which can be reused in scenarios
  * Each StepMacro has an associated pattern
  *
@@ -52,14 +53,16 @@ import java.util.regex.Pattern;
  * The declaration of a step macro is as follows:
  * The first line contains a pattern definition, and subsequent lines contain the steps which will be reused when the macro is referenced
  *
+ * {@code 
  * StepMacro: I fill in the login form with name <name> and password <password>
  *   Given I click on the login button
  *   Then the login form is displayed
  *   And I enter <name> into the name input
  *   And I enter <password> into the password input
+ * }
  *
  * The first line (starting with the StepMacro: key word) contains the pattern against which scenario steps will be matched.
- * The text following the StepMacro: keyword may contain parameters in the form <parameterName>
+ * The text following the StepMacro: keyword may contain parameters in the form &lt;parameterName&gt;
  *
  * During subsequent parsing of scenarios, scenario steps are matched against the patterns defined for StepMacro,
  * Only the action portion of the step is matched (i.e. we strip the first word such as Given/Then/When before attempting
@@ -69,7 +72,7 @@ import java.util.regex.Pattern;
  * scenario step. (From Chorus 1.5.x StepToken can contain child steps, forming a composite step structure).
  *
  * Before the macro steps are inserted into the parent step, any capturing groups referenced in the macro steps are first expanded.
- * A capturing group referenced in a macro step appears in the form <$n>, where n is the index of a capturing group
+ * A capturing group referenced in a macro step appears in the form &lt;$n&gt;, where n is the index of a capturing group
  * within the StepMacro's regular expression.
  *
  * Subsequent to the expansion of capturing groups, and before the StepMacro step is inserted into the parent step,
@@ -80,6 +83,7 @@ import java.util.regex.Pattern;
  * When the Chorus interpreter runs a scenario is run, composite steps (steps with children, i.e. macro steps) are treated
  * differently from leaf steps. Instead of matching such composite steps with handler class methods, Chorus will instead run each of
  * the child steps. The end state of the parent step is then derived from the success or failure of its child steps.
+ * </pre>
  */
 public class StepMacro {
 

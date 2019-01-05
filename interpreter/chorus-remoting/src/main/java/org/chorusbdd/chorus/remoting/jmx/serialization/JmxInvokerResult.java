@@ -48,7 +48,7 @@ public class JmxInvokerResult extends AbstractJmxDTO {
 
 
     /**
-     * @return a map of properties representing a step invoker exported over the network using RMI protocol,
+     * a map of properties representing a step invoker exported over the network using RMI protocol,
      * or null if the step invoker cannot be converted for remoting
      */
     public JmxInvokerResult(StepInvoker i) {
