@@ -7,12 +7,6 @@ description = "chorus-pathscanner"
 
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus-results', version: "${version}"
-    compile group: 'org.chorusbdd', name: 'chorus-parser', version: "${version}"
-    compile group: 'org.chorusbdd', name: 'chorus-annotations', version: "${version}"
-    compile group: 'org.chorusbdd', name: 'chorus-logging', version: "${version}"
-    compile group: 'org.chorusbdd', name: 'chorus-util', version: "${version}"
-    
     testCompile group: 'junit', name: 'junit', version:'4.10'
     testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
 }

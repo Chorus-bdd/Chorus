@@ -5,8 +5,6 @@ plugins {
 
 apply plugin: 'java-library-distribution'
 
-def dependencyFile = new File("dependencies.gradle")
-
 allprojects  {
     
     apply plugin: 'java'
@@ -138,56 +136,7 @@ configure([
     }
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////
-// Dependencies
-
-//Add to all sub-projects a task which lets us calculate on demand the inter-module dependencies and create
-//the dependencies file this project then consumes
-
-subprojects {
-
-    task updateGradleModuleDependencies {
-        doLast {
-            dependencyFile << "\n"
-            dependencyFile << "project(':" + project.name + "') {\n"
-            dependencyFile << "    dependencies {\n"
-
-//            project.configurations.getByName("compile").allDependencies
-//                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
-//                    .stream()
-//                    .map({ dep -> dep.name })
-//                    .distinct()
-//                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
-
-            //TODO deal correctly with test vs compile classpath
-            project.configurations.getByName("testCompile").allDependencies
-                    .findAll { depend -> depend.group.equals('org.chorusbdd') }
-                    .stream()
-                    .map({ dep -> dep.name })
-                    .distinct()
-                    .forEach { d -> dependencyFile << "        compile project (':" + d + "')\n" }
-
-            dependencyFile << "    }\n"
-
-            dependencyFile << "}\n"
-        }
-    }
-
-}
-
-task clearGradleModuleDependencies {
-    doLast {
-        dependencyFile.write "// Dependencies\n"
-    }
-}
-
-task recalculateGradleDependencies
-
-recalculateGradleDependencies.dependsOn clearGradleModuleDependencies, subprojects.updateGradleModuleDependencies
-
 apply from: 'dependencies.gradle'
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Distribution

@@ -11,16 +11,12 @@ sourceSets {
 }
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus-spring', version: "${version}"
-    compile group: 'org.chorusbdd', name: 'chorus-xml', version: "${version}"
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: "9.0.0.M4"
     compile group: 'commons-logging', name: 'commons-logging', version: "1.1.1"
     compile group: 'log4j', name: 'log4j', version: "1.2.16"
     //slf4j is yet another logging facade required to make jetty use the log4j framework for logging
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: "1.7.2"
 
-    testCompile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
     testCompile group: 'xmlunit', name: 'xmlunit', version: '1.3'
-    testCompile group: 'org.chorusbdd', name: 'chorus-mocksuite', version: "${version}"
     testCompile group: 'junit', name: 'junit', version:'4.10'
 }

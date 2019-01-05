@@ -10,7 +10,6 @@ sourceSets {
 }
 
 dependencies {
-    compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
     compile group: 'javax.annotation', name: 'jsr250-api', version:'1.0'
     compile group: 'org.springframework', name: 'spring-beans', version:'5.1.2.RELEASE'
     compile group: 'org.springframework', name: 'spring-context', version:'5.1.2.RELEASE'

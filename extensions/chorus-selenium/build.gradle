@@ -4,8 +4,6 @@ description = "chorus-selenium"
 
 dependencies {
 
-    compile group: 'org.chorusbdd', name: 'chorus', version: "${version}"
-
     compile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version:'3.9.0'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version:'3.9.0'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-support', version:'3.9.0'

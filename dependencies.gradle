@@ -16,13 +16,13 @@ project(':chorus:chorus-annotations') {
 
 project(':chorus:chorus-config') {
     dependencies {
-        compile project (':chorus:chorus-util')
+        testCompile project (':chorus:chorus-util')
     }
 }
 
 project(':chorus:chorus-context') {
     dependencies {
-        compile project (':chorus:chorus-util')
+        testCompile project (':chorus:chorus-util')
     }
 }
 
@@ -75,11 +75,6 @@ project(':chorus:chorus-logging') {
     }
 }
 
-project(':chorus-mocksuite') {
-    dependencies {
-        compile project (':chorus')
-    }
-}
 
 project(':chorus:chorus-output') {
     dependencies {
@@ -127,24 +122,6 @@ project(':chorus:chorus-results') {
     }
 }
 
-project(':chorus-selenium') {
-    dependencies {
-        compile project (':chorus')
-    }
-}
-
-project(':chorus-spring') {
-    dependencies {
-        compile project (':chorus')
-    }
-}
-
-project(':chorus-sql') {
-    dependencies {
-        compile project (':chorus')
-    }
-}
-
 project(':chorus:chorus-stepinvoker') {
     dependencies {
         compile project (':chorus:chorus-annotations')
@@ -172,12 +149,36 @@ project(':chorus:chorus-util') {
     }
 }
 
+project(':chorus-mocksuite') {
+    dependencies {
+        compile project (':chorus')
+    }
+}
+
+project(':chorus-selenium') {
+    dependencies {
+        compile project (':chorus')
+    }
+}
+
+project(':chorus-spring') {
+    dependencies {
+        compile project (':chorus')
+    }
+}
+
+project(':chorus-sql') {
+    dependencies {
+        compile project (':chorus')
+    }
+}
+
 project(':chorus-webagent') {
     dependencies {
         compile project (':chorus')
-        compile project (':chorus-mocksuite')
         compile project (':chorus-spring')
         compile project (':chorus-xml')
+        testCompile project (':chorus-mocksuite')
     }
 }
 
@@ -190,7 +191,7 @@ project(':chorus-websockets') {
 project(':chorus-xml') {
     dependencies {
         compile project (':chorus')
-        compile project (':chorus-mocksuite')
+        testCompile project (':chorus-mocksuite')
     }
 }
 
