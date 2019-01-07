@@ -23,7 +23,7 @@
  */
 package org.chorusbdd.chorus.selftest;
 
-import org.chorusbdd.chorus.config.ConfigurationProperty;
+import org.chorusbdd.chorus.config.ExecutionProperty;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.output.AbstractChorusOutputWriter;
 import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
@@ -113,7 +113,7 @@ public class ForkedRunner implements ChorusSelfTestRunner {
         for ( Map.Entry<Object,Object> property : sysPropsForTest.entrySet()) {
             String propertyName = property.getKey().toString();
             if ( isAChorusSwitchProperty(propertyName)) {
-                ConfigurationProperty c = ChorusConfigProperty.getConfigPropertyForSysProp(propertyName);
+                ExecutionProperty c = ChorusConfigProperty.getConfigPropertyForSysProp(propertyName);
                 sb.append(" ").append(c.getHyphenatedSwitch());
                 sb.append(" ").append(property.getValue().toString());
             }

@@ -37,14 +37,14 @@ import java.util.Map;
  *  Multiple sources may be used to set up the interpreter configuration, the two enabled by
  *  default are command line properties and system properties
  */
-public interface ConfigSource {
+public interface ExecutionConfigSource {
 
     /**
      * Add to the provided propertyMap any properties available from this source
      *
      * @return propertyMap, with parsed properties added
      */
-    Map<ConfigurationProperty, List<String>> parseProperties(
-            Map<ConfigurationProperty, List<String>> propertyMap,
+    Map<ExecutionProperty, List<String>> parseProperties(
+            Map<ExecutionProperty, List<String>> propertyMap,
             String... args) throws InterpreterPropertyException;
 }

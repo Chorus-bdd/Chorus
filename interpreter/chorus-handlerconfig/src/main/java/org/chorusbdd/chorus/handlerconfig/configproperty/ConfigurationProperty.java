@@ -26,7 +26,7 @@ package org.chorusbdd.chorus.handlerconfig.configproperty;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public interface HandlerConfigProperty {
+public interface ConfigurationProperty {
     
     String getName();
 

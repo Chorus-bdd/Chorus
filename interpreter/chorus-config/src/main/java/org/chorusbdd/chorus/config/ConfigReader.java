@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  *
  * Reads and validates configuration specified either as system properties, command line switches or defaults
  *
- * Takes a collection of ConfigurationProperty which define the options and possible values - in the case of
+ * Takes a collection of ExecutionProperty which define the options and possible values - in the case of
  * Chorus itself these settings are defined in ChorusConfigurationProperty enum
  *
  * Configuration may be provided as switches/arguments to the process, or alternatively as System properties
@@ -50,29 +50,29 @@ public class ConfigReader implements ConfigProperties {
     //there's a chicken and egg problem which means we can't use ChorusLog here since the config properties themselves
     //are used to set the log implementation in use
     
-    private List<ConfigurationProperty> properties;
+    private List<ExecutionProperty> properties;
     private String[] args;
 
     //the properties provided be each source
-    private Map<ConfigSource, Map<ConfigurationProperty, List<String>>> sourceToPropertiesMap = new HashMap<>();
+    private Map<ExecutionConfigSource, Map<ExecutionProperty, List<String>>> sourceToPropertiesMap = new HashMap<>();
 
     //the merged set of properties, after PropertySourceMode is applied
-    private Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<>();
+    private Map<ExecutionProperty, List<String>> propertyMap = new HashMap<>();
 
     //ordered list of property sources
-    private ConfigSource[] propertySources;
+    private ExecutionConfigSource[] propertySources;
 
     /**
      * Create a configuration using System Properties and defaults only
      */
-    public ConfigReader(List<ConfigurationProperty> properties) {
+    public ConfigReader(List<ExecutionProperty> properties) {
         this(properties, new String[0]);
     }
 
     /**
      * Create a configuration using process arguments, System Properties and defaults
      */
-    public ConfigReader(List<ConfigurationProperty> properties, String[] args) {
+    public ConfigReader(List<ExecutionProperty> properties, String[] args) {
         this.properties = properties;
         this.args = args;
 
@@ -81,7 +81,7 @@ public class ConfigReader implements ConfigProperties {
         //parameters for test suites which run as part of a component build which is checked in to source control -
         //otherwise it is necessary to commit changes to files to achieve something simple like increasing logging
         //to debug level. Continuous integration tools such as team city let you set a sys prop easily to do this.
-        propertySources = new ConfigSource[] {
+        propertySources = new ExecutionConfigSource[] {
             new DefaultsConfigSource(properties),
             new CommandLineParser(properties),
             new SystemPropertyParser(properties)
@@ -89,8 +89,8 @@ public class ConfigReader implements ConfigProperties {
     }
 
     public ConfigReader readConfiguration() throws InterpreterPropertyException {
-        for ( ConfigSource s : propertySources) {
-            Map<ConfigurationProperty, List<String>> propertyMap = new HashMap<>();
+        for ( ExecutionConfigSource s : propertySources) {
+            Map<ExecutionProperty, List<String>> propertyMap = new HashMap<>();
             propertyMap = s.parseProperties(propertyMap, args);
             sourceToPropertiesMap.put(s, propertyMap);
         }
@@ -101,10 +101,10 @@ public class ConfigReader implements ConfigProperties {
     }
 
     //deermine the final set of properties according to PropertySourceMode for each property
-    private void mergeProperties(Map<ConfigSource, Map<ConfigurationProperty, List<String>>> sourceToPropertiesMap) {
-        for ( ConfigSource s : propertySources) {
-            Map<ConfigurationProperty, List<String>> properties = sourceToPropertiesMap.get(s);
-            for ( ConfigurationProperty p : properties.keySet()) {
+    private void mergeProperties(Map<ExecutionConfigSource, Map<ExecutionProperty, List<String>>> sourceToPropertiesMap) {
+        for ( ExecutionConfigSource s : propertySources) {
+            Map<ExecutionProperty, List<String>> properties = sourceToPropertiesMap.get(s);
+            for ( ExecutionProperty p : properties.keySet()) {
                 List<String> valuesFromSource = properties.get(p);
                 if ( valuesFromSource != null && !valuesFromSource.isEmpty()) {
                     List<String> vals = getOrCreatePropertyValues(p);
@@ -114,7 +114,7 @@ public class ConfigReader implements ConfigProperties {
         }
     }
 
-    private void mergeValues(List<String> valuesFromSource, ConfigurationProperty p, List<String> vals) {
+    private void mergeValues(List<String> valuesFromSource, ExecutionProperty p, List<String> vals) {
         switch(p.getPropertySourceMode()) {
             case APPEND:
                 vals.addAll(valuesFromSource);
@@ -128,7 +128,7 @@ public class ConfigReader implements ConfigProperties {
         }
     }
 
-    private List<String> getOrCreatePropertyValues(ConfigurationProperty p) {
+    private List<String> getOrCreatePropertyValues(ExecutionProperty p) {
         List<String> vals = propertyMap.get(p);
         if ( vals == null) {
             vals = new LinkedList<>();
@@ -137,36 +137,36 @@ public class ConfigReader implements ConfigProperties {
         return vals;
     }
 
-    public void setProperty(ConfigurationProperty property, List<String> values) {
+    public void setProperty(ExecutionProperty property, List<String> values) {
         propertyMap.put(property, values);
     }
 
-    public List<String> getValues(ConfigurationProperty property) {
+    public List<String> getValues(ExecutionProperty property) {
         return propertyMap.containsKey(property) ? propertyMap.get(property) : Collections.<String>emptyList();
     }
 
     /**
      * @return Single value for a property
      */
-    public String getValue(ConfigurationProperty property) {
+    public String getValue(ExecutionProperty property) {
         List<String> values = propertyMap.get(property);
         return values != null ? values.get(0) : null;
     }
 
-    public boolean isSet(ConfigurationProperty property) {
+    public boolean isSet(ExecutionProperty property) {
         return propertyMap.containsKey(property);
     }
 
     /**
      * for boolean properties, is the property set true
      */
-    public boolean isTrue(ConfigurationProperty property) {
+    public boolean isTrue(ExecutionProperty property) {
         return isSet(property) && propertyMap.get(property).size() == 1
             && "true".equalsIgnoreCase(propertyMap.get(property).get(0));
     }
 
-    private void validateProperties(Map<ConfigurationProperty, List<String>> results) throws InterpreterPropertyException {
-        for ( ConfigurationProperty p : properties) {
+    private void validateProperties(Map<ExecutionProperty, List<String>> results) throws InterpreterPropertyException {
+        for ( ExecutionProperty p : properties) {
             checkIfMandatory(results, p);
 
             if ( results.containsKey(p)) {
@@ -178,7 +178,7 @@ public class ConfigReader implements ConfigProperties {
 
     }
 
-    private void checkValues(ConfigurationProperty p, List<String> values) throws InterpreterPropertyException {
+    private void checkValues(ExecutionProperty p, List<String> values) throws InterpreterPropertyException {
         Pattern pattern = Pattern.compile(p.getValidatingExpression());
         for (String value : values) {
             Matcher m = pattern.matcher(value);
@@ -191,7 +191,7 @@ public class ConfigReader implements ConfigProperties {
         }
     }
 
-    private void checkValueCount(ConfigurationProperty p, List<String> values) throws InterpreterPropertyException {
+    private void checkValueCount(ExecutionProperty p, List<String> values) throws InterpreterPropertyException {
         if ( values.size() < p.getMinValueCount()) {
             throw new InterpreterPropertyException("At least " + p.getMinValueCount() + " value(s) must be supplied for the property " + p);
         } else if ( values.size() > p.getMaxValueCount()) {
@@ -199,7 +199,7 @@ public class ConfigReader implements ConfigProperties {
         }
     }
 
-    private void checkIfMandatory(Map<ConfigurationProperty, List<String>> results, ConfigurationProperty p) throws InterpreterPropertyException {
+    private void checkIfMandatory(Map<ExecutionProperty, List<String>> results, ExecutionProperty p) throws InterpreterPropertyException {
         if ( p.isMandatory() && ! results.containsKey(p)) {
             throw new InterpreterPropertyException(
                 "Mandatory property " + p + " was not set. " +

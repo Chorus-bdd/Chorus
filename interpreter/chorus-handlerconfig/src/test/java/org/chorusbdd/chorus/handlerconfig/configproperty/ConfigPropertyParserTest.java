@@ -54,9 +54,9 @@ public class ConfigPropertyParserTest {
     
     @Test
     public void aBeanWithAValidAnnotationReturnsAConfigProperty() throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithAValidAnnotation.class);
+        List<ConfigurationProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithAValidAnnotation.class);
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0);
+        ConfigurationProperty p = properties.get(0);
         assertEquals( p.getName(), "myProperty");
         assertEquals( p.getDescription(), "My Property Description");
         assertFalse(p.getValidationPattern().isPresent());
@@ -65,23 +65,23 @@ public class ConfigPropertyParserTest {
 
     @Test
     public void aPropertyIsMandatoryByDefault() throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithAValidAnnotation.class);
+        List<ConfigurationProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithAValidAnnotation.class);
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0);
+        ConfigurationProperty p = properties.get(0);
         assertTrue( p.isMandatory());
     }
 
     @Test
     public void aPropertyCanBeConfiguredNotMandatory() throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanPropertyCanBeConfiguredNotMandatory.class);
+        List<ConfigurationProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanPropertyCanBeConfiguredNotMandatory.class);
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0);
+        ConfigurationProperty p = properties.get(0);
         assertFalse( p.isMandatory());
     }
 
     @Test
     public void defaultValuesCanBeConvertedToSimpleTypes() throws ConfigBuilderException {
-        Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithPrimitiveTypedProperties.class);
+        Map<String, ConfigurationProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithPrimitiveTypedProperties.class);
         assertEquals(7, m.size());
         assertEquals(1, m.get("integerProperty").getDefaultValue().get());
         assertEquals(1000000L, m.get("longProperty").getDefaultValue().get());
@@ -94,7 +94,7 @@ public class ConfigPropertyParserTest {
 
     @Test
     public void primitiveTypedPropertiesGetDefaultValidation() throws ConfigBuilderException {
-        Map<String, HandlerConfigProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithPrimitiveTypedProperties.class);
+        Map<String, ConfigurationProperty> m = configPropertyParser.getConfigPropertiesByName(ConfigBeanWithPrimitiveTypedProperties.class);
         assertEquals("^[-+]?\\d+$", m.get("integerProperty").getValidationPattern().get().pattern());
         assertEquals("^[-+]?\\d+$", m.get("longProperty").getValidationPattern().get().pattern());
         assertEquals("^[-+]?\\d+$", m.get("shortProperty").getValidationPattern().get().pattern());
@@ -106,9 +106,9 @@ public class ConfigPropertyParserTest {
 
     @Test
     public void enumFieldsCanBeParsed() throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithEnumTypes.class);
+        List<ConfigurationProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithEnumTypes.class);
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0);
+        ConfigurationProperty p = properties.get(0);
         assertEquals( p.getJavaType(), Scope.class);
     }
 
@@ -147,16 +147,16 @@ public class ConfigPropertyParserTest {
 
     @Test
     public void testConfigSettersWhichHavePrimitiveArgumentAreDescribedUsingTheEquivalentWrapperType() throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithASetterWithPrimitiveTypeParameter.class);
+        List<ConfigurationProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithASetterWithPrimitiveTypeParameter.class);
         assertEquals(1, properties.size());
-        HandlerConfigProperty p = properties.get(0);
+        ConfigurationProperty p = properties.get(0);
         assertTrue( p.isMandatory());
     }
 
     @Test
     public void testAValidationPatternCanBeSetWithoutADefaultValue() throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithValidationPatternAndNoDefaultValue.class);
-        HandlerConfigProperty p = properties.get(0);
+        List<ConfigurationProperty> properties = configPropertyParser.getConfigProperties(ConfigBeanWithValidationPatternAndNoDefaultValue.class);
+        ConfigurationProperty p = properties.get(0);
         assertEquals("test.*", p.getValidationPattern().get().pattern());
     }
     

@@ -30,20 +30,20 @@ import java.util.List;
  * Date: 23/07/12
  * Time: 13:23
  *
- * Provide access to get and set ConfigurationProperty
+ * Provide access to get and set ExecutionProperty
  */
 public interface ConfigProperties {
 
-    void setProperty(ConfigurationProperty property, List<String> values);
+    void setProperty(ExecutionProperty property, List<String> values);
 
     /**
      * Return a list of the values for property, if the property has no values return an empty list
      */
-    List<String> getValues(ConfigurationProperty property);
+    List<String> getValues(ExecutionProperty property);
 
-    String getValue(ConfigurationProperty property);
+    String getValue(ExecutionProperty property);
 
-    boolean isSet(ConfigurationProperty property);
+    boolean isSet(ExecutionProperty property);
 
-    boolean isTrue(ConfigurationProperty property);
+    boolean isTrue(ExecutionProperty property);
 }

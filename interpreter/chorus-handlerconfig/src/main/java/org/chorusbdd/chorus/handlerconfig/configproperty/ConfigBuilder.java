@@ -47,7 +47,7 @@ public class ConfigBuilder {
     
     public <C> C buildConfig(Class<C> configClass, Properties properties) throws ConfigBuilderException {
 
-        Map<String, HandlerConfigProperty> configPropertiesByName = configPropertyParser.getConfigPropertiesByName(configClass);
+        Map<String, ConfigurationProperty> configPropertiesByName = configPropertyParser.getConfigPropertiesByName(configClass);
 
         C configInstance;
         try {
@@ -127,7 +127,7 @@ public class ConfigBuilder {
         }
     }
 
-    private void warnOnUnusedProperties(Properties properties, Map<String, HandlerConfigProperty> configPropertiesByName) {
+    private void warnOnUnusedProperties(Properties properties, Map<String, ConfigurationProperty> configPropertiesByName) {
         Set<String> p = new HashSet<>(properties.stringPropertyNames());
         p.removeAll(configPropertiesByName.keySet());
         

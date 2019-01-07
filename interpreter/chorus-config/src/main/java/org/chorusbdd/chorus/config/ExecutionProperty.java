@@ -21,29 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.handlerconfig.configbean;
-
-import java.util.Properties;
+package org.chorusbdd.chorus.config;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Nick Ebbutt
- * Date: 21/09/12
- * Time: 08:59
- *
- * Create a handler configuration and a validator from the supplied properties
+ * Created with IntelliJ IDEA.
+ * User: nick
+ * Date: 06/07/12
+ * Time: 23:05
+ * To change this template use File | Settings | File Templates.
  */
-public interface ConfigBuilderFactory<E extends HandlerConfigBean> {
+public interface ExecutionProperty {
+
+    String getSwitchName();
+
+    String getSwitchShortName();
+
+    String getHyphenatedSwitch();
+
+    String getSystemProperty();
+
+    boolean isMandatory();
+
+    int getMinValueCount();
+
+    int getMaxValueCount();
+
+    String getValidatingExpression();
+
+    String getExample();
+
+    String getDescription();
+
+    String[] getDefaults();
+
+    boolean hasDefaults();
+
+    PropertySourceMode getPropertySourceMode();
 
     /**
-     * Create a config, initializing with Properties in the order supplied in the List
-     * Later Properties in the list may override values set by earlier Properties
-     *
-     * Initially this list contains default properties plus config specific properties
-     * (property inheritance from a named parent group may be added at some future point)
-     *  @param p
-     * @param configName
+     * @return true if switchName or switchShortName matches switchName
      */
-    E createConfigBuilder(Properties p, String configName);
-
+    boolean matchesSwitch(String s);
 }

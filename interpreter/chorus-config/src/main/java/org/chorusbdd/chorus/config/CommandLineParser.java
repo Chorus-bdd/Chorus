@@ -35,7 +35,7 @@ import java.util.StringTokenizer;
  */
 public class CommandLineParser extends AbstractConfigSource {
 
-    public CommandLineParser(List<ConfigurationProperty> properties) {
+    public CommandLineParser(List<ExecutionProperty> properties) {
         super(properties);
     }
 
@@ -47,7 +47,7 @@ public class CommandLineParser extends AbstractConfigSource {
 
      * @return propertyMap, with parsed properties added
      */
-    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
+    public Map<ExecutionProperty, List<String>> parseProperties(Map<ExecutionProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
 
         //if some command line switches were specified
         if ( args.length > 0 ) {
@@ -74,7 +74,7 @@ public class CommandLineParser extends AbstractConfigSource {
                 StringTokenizer st = new StringTokenizer(parameterList, " ");
 
                 //find the property
-                ConfigurationProperty property = getProperty(parameterList, st);
+                ExecutionProperty property = getProperty(parameterList, st);
 
                 //add its values
                 addPropertyValues(propertyMap, st, property);
@@ -83,7 +83,7 @@ public class CommandLineParser extends AbstractConfigSource {
         return propertyMap;
     }
 
-    private void addPropertyValues(Map<ConfigurationProperty, List<String>> propertyMap, StringTokenizer st, ConfigurationProperty property) throws InterpreterPropertyException {
+    private void addPropertyValues(Map<ExecutionProperty, List<String>> propertyMap, StringTokenizer st, ExecutionProperty property) throws InterpreterPropertyException {
         List<String> l = getOrCreatePropertyList(propertyMap, property);
         if ( ! st.hasMoreTokens() ) {
             if (isBooleanSwitchProperty(property)) {
@@ -112,13 +112,13 @@ public class CommandLineParser extends AbstractConfigSource {
      * @param property
      * @return true if this is a boolean switch property
      */
-    private boolean isBooleanSwitchProperty(ConfigurationProperty property) {
+    private boolean isBooleanSwitchProperty(ExecutionProperty property) {
         return property.hasDefaults() && property.getDefaults().length == 1 && property.getDefaults()[0].equals("false");
     }
 
-    private ConfigurationProperty getProperty(String parameterList, StringTokenizer st) throws InterpreterPropertyException {
+    private ExecutionProperty getProperty(String parameterList, StringTokenizer st) throws InterpreterPropertyException {
         String switchProperty = st.nextToken();
-        ConfigurationProperty property = getProperty(switchProperty);
+        ExecutionProperty property = getProperty(switchProperty);
         if (property == null ) {
            throw new InterpreterPropertyException("Unsupported parameter " + parameterList);
         }

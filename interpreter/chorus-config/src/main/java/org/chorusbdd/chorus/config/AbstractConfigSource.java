@@ -33,15 +33,15 @@ import java.util.Map;
  * Date: 12/06/12
  * Time: 10:15
  */
-public abstract class AbstractConfigSource implements ConfigSource {
+public abstract class AbstractConfigSource implements ExecutionConfigSource {
 
-    List<ConfigurationProperty> properties;
+    List<ExecutionProperty> properties;
 
-    protected AbstractConfigSource(List<ConfigurationProperty> properties) {
+    protected AbstractConfigSource(List<ExecutionProperty> properties) {
         this.properties = properties;
     }
 
-    protected List<String> getOrCreatePropertyList(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty switchName) {
+    protected List<String> getOrCreatePropertyList(Map<ExecutionProperty, List<String>> propertyMap, ExecutionProperty switchName) {
         List<String> tokens = propertyMap.get(switchName);
         if ( tokens == null) {
             tokens = new ArrayList<>();
@@ -50,13 +50,13 @@ public abstract class AbstractConfigSource implements ConfigSource {
         return tokens;
     }
 
-    protected List<ConfigurationProperty> getProperties() {
+    protected List<ExecutionProperty> getProperties() {
         return properties;
     }
 
-    protected ConfigurationProperty getProperty(String s) {
-        ConfigurationProperty result = null;
-        for (ConfigurationProperty p : properties) {
+    protected ExecutionProperty getProperty(String s) {
+        ExecutionProperty result = null;
+        for (ExecutionProperty p : properties) {
             if ( p.matchesSwitch(s)) {
                 result = p;
                 break;

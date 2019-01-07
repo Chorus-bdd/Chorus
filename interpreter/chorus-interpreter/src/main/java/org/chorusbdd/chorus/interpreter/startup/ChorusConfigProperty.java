@@ -23,7 +23,7 @@
  */
 package org.chorusbdd.chorus.interpreter.startup;
 
-import org.chorusbdd.chorus.config.ConfigurationProperty;
+import org.chorusbdd.chorus.config.ExecutionProperty;
 import org.chorusbdd.chorus.config.PropertySourceMode;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.util.ChorusConstants;
@@ -43,7 +43,7 @@ import java.util.List;
  * Each has a long switch name, a short switch name, min and max bounds for number of values,
  * and regular expression to validate values
  */
-public enum ChorusConfigProperty implements ConfigurationProperty {
+public enum ChorusConfigProperty implements ExecutionProperty {
 
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
     "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.OVERRIDE),
@@ -151,7 +151,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
 
 
     /**
-     * @return the ConfigurationProperty for which either switchName or switchShortName matches flag
+     * @return the ExecutionProperty for which either switchName or switchShortName matches flag
      */
     public boolean matchesSwitch(String s) {
         return getSwitchName().equals(s) || getSwitchShortName().equals(s);
@@ -216,9 +216,9 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
         return getDefaults().length > 0;
     }
 
-    public static ConfigurationProperty getConfigPropertyForSysProp(String systemProperty) {
-        ConfigurationProperty result = null;
-        for ( ConfigurationProperty p : values()) {
+    public static ExecutionProperty getConfigPropertyForSysProp(String systemProperty) {
+        ExecutionProperty result = null;
+        for ( ExecutionProperty p : values()) {
             if ( p.getSystemProperty().equals(systemProperty)) {
                 result = p;
                 break;
@@ -227,8 +227,8 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
         return result;
     }
 
-    public static List<ConfigurationProperty> getAll() {
-        List<ConfigurationProperty> l = new ArrayList<>();
+    public static List<ExecutionProperty> getAll() {
+        List<ExecutionProperty> l = new ArrayList<>();
         Collections.addAll(l, values());
         return l;
     }
@@ -236,7 +236,7 @@ public enum ChorusConfigProperty implements ConfigurationProperty {
     //useful for generating a table of chorus' input parameters in csv format
 //    public static void main(String[] args) {
 //        StringBuilder sb = new StringBuilder();
-//        for ( ConfigurationProperty p : values() ) {
+//        for ( ExecutionProperty p : values() ) {
 //            sb.append(p.getSwitchName()).append(",").
 //               append("-").append(p.getSwitchShortName()).append(",").
 //               append(p.getSystemProperty()).append(",").

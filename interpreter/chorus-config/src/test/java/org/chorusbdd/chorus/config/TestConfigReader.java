@@ -92,7 +92,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testCannotSetLessThanMinimumValues() {
-        ConfigurationProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
+        ExecutionProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
             public int getMinValueCount() {
                 return 2;
             }
@@ -110,7 +110,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void testCannotSetMoreThanMaxValues() {
-        ConfigurationProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
+        ExecutionProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
             public int getMaxValueCount() {
                 return 1;
             }
@@ -142,7 +142,7 @@ public class TestConfigReader extends ChorusAssert {
 
     @Test
     public void appendPropertyMayBeSetFromMultipleSources() throws InterpreterPropertyException {
-        ConfigurationProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
+        ExecutionProperty propertyWithMinValues = new TestProperty(TestConfigProperty.HANDLER_PACKAGES) {
             public PropertySourceMode getPropertySourceMode() {
                 return PropertySourceMode.APPEND;
             }
@@ -159,11 +159,11 @@ public class TestConfigReader extends ChorusAssert {
         }
     }
 
-    private class TestProperty implements ConfigurationProperty {
+    private class TestProperty implements ExecutionProperty {
 
-        private ConfigurationProperty delegate;
+        private ExecutionProperty delegate;
 
-        private TestProperty(ConfigurationProperty delegate) {
+        private TestProperty(ExecutionProperty delegate) {
             this.delegate = delegate;
         }
 

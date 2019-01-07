@@ -21,45 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.config;
+package org.chorusbdd.chorus.handlerconfig;
 
-/**
- * Created with IntelliJ IDEA.
- * User: nick
- * Date: 06/07/12
- * Time: 23:05
- * To change this template use File | Settings | File Templates.
- */
-public interface ConfigurationProperty {
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 
-    String getSwitchName();
+import java.util.List;
 
-    String getSwitchShortName();
-
-    String getHyphenatedSwitch();
-
-    String getSystemProperty();
-
-    boolean isMandatory();
-
-    int getMinValueCount();
-
-    int getMaxValueCount();
-
-    String getValidatingExpression();
-
-    String getExample();
-
-    String getDescription();
-
-    String[] getDefaults();
-
-    boolean hasDefaults();
-
-    PropertySourceMode getPropertySourceMode();
+public interface ConfigPropertySource {
 
     /**
-     * @return true if switchName or switchShortName matches switchName
+     * @return a List describing the legal configuration properties supported by this handler
      */
-    boolean matchesSwitch(String s);
+    List<ConfigurationProperty> getConfigProperties();
 }

@@ -34,9 +34,9 @@ import java.util.StringTokenizer;
  * Time: 10:04
  * To change this template use File | Settings | File Templates.
  */
-public class SystemPropertyParser extends AbstractConfigSource implements ConfigSource {
+public class SystemPropertyParser extends AbstractConfigSource implements ExecutionConfigSource {
 
-    public SystemPropertyParser(List<ConfigurationProperty> properties) {
+    public SystemPropertyParser(List<ExecutionProperty> properties) {
         super(properties);
     }
 
@@ -48,8 +48,8 @@ public class SystemPropertyParser extends AbstractConfigSource implements Config
 
      * @return propertyMap, with parsed properties added
      */
-    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) {
-        for ( ConfigurationProperty p : getProperties()) {
+    public Map<ExecutionProperty, List<String>> parseProperties(Map<ExecutionProperty, List<String>> propertyMap, String... args) {
+        for ( ExecutionProperty p : getProperties()) {
            String value = System.getProperty(p.getSystemProperty());
            if ( value != null ) {
                addValues(propertyMap, p, value);
@@ -58,7 +58,7 @@ public class SystemPropertyParser extends AbstractConfigSource implements Config
         return propertyMap;
     }
 
-    private void addValues(Map<ConfigurationProperty, List<String>> propertyMap, ConfigurationProperty property, String value) {
+    private void addValues(Map<ExecutionProperty, List<String>> propertyMap, ExecutionProperty property, String value) {
         StringTokenizer st = new StringTokenizer(value, " ");
         List<String> tokens = getOrCreatePropertyList(propertyMap, property);
         while(st.hasMoreElements()) {

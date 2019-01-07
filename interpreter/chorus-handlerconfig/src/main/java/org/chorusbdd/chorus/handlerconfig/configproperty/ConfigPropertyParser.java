@@ -39,16 +39,16 @@ import static org.chorusbdd.chorus.handlerconfig.configproperty.PrimitiveOrEnumV
 public class ConfigPropertyParser {
 
 
-    Map<String, HandlerConfigProperty> getConfigPropertiesByName(Class configClass) throws ConfigBuilderException {
-        List<HandlerConfigProperty> properties = getConfigProperties(configClass);
-        return properties.stream().collect(toMap(HandlerConfigProperty::getName, identity()));
+    Map<String, ConfigurationProperty> getConfigPropertiesByName(Class configClass) throws ConfigBuilderException {
+        List<ConfigurationProperty> properties = getConfigProperties(configClass);
+        return properties.stream().collect(toMap(ConfigurationProperty::getName, identity()));
     }
 
 
-    List<HandlerConfigProperty> getConfigProperties(Class configClass) throws ConfigBuilderException {
+    List<ConfigurationProperty> getConfigProperties(Class configClass) throws ConfigBuilderException {
         Method[] methods = getMethodsFromConfigClass(configClass);
 
-        List<HandlerConfigProperty> result = new LinkedList<>();
+        List<ConfigurationProperty> result = new LinkedList<>();
         List<Method> l = Arrays.stream(methods)
                 .filter(m -> m.isAnnotationPresent(ConfigProperty.class))
                 .collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class ConfigPropertyParser {
         return true;
     }
 
-    private void addConfigProperty(List<HandlerConfigProperty> result, Method method) throws ConfigBuilderException {
+    private void addConfigProperty(List<ConfigurationProperty> result, Method method) throws ConfigBuilderException {
         ConfigProperty p = method.getAnnotation(ConfigProperty.class);
 
         if (!method.getName().startsWith("set")) {
@@ -126,7 +126,7 @@ public class ConfigPropertyParser {
             }
         }
 
-        HandlerConfigProperty h = new HandlerConfigPropertyImpl(
+        ConfigurationProperty h = new HandlerConfigPropertyImpl(
                 p.name(),
                 javaType,
                 validationPattern.orElse(null),
@@ -203,7 +203,7 @@ public class ConfigPropertyParser {
         return ConfigProperty.class.getSimpleName() + " annotation with name " + p.name();
     }
 
-    static class HandlerConfigPropertyImpl implements HandlerConfigProperty {
+    static class HandlerConfigPropertyImpl implements ConfigurationProperty {
 
         private final String name;
         private final Class javaType;

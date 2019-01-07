@@ -38,12 +38,12 @@ import java.util.Map;
 public class DefaultsConfigSource extends AbstractConfigSource {
 
 
-    public DefaultsConfigSource(List<ConfigurationProperty> properties) {
+    public DefaultsConfigSource(List<ExecutionProperty> properties) {
         super(properties);
     }
 
-    public Map<ConfigurationProperty, List<String>> parseProperties(Map<ConfigurationProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
-        for ( ConfigurationProperty p : getProperties()) {
+    public Map<ExecutionProperty, List<String>> parseProperties(Map<ExecutionProperty, List<String>> propertyMap, String... args) throws InterpreterPropertyException {
+        for ( ExecutionProperty p : getProperties()) {
             if (  p.hasDefaults()) {
                 List<String> properties = getOrCreatePropertyList(propertyMap, p);
                 Collections.addAll(properties, p.getDefaults());
