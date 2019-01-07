@@ -1,0 +1,44 @@
+<div class="sidebar">
+  <div class="container">
+    <div class="sidebar-about">
+      <h1>
+        <a href="/">
+          {{ site.title }}
+        </a>
+      </h1>
+      <p class="lead">{{ site.description }}</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="/">Home</a>
+
+      {% comment %}
+        The code below dynamically generates a sidebar nav of pages with
+        `layout: page` in the front-matter. See readme for usage.
+      {% endcomment %}
+
+      <!--{% assign pages_list = site.pages %}-->
+      <!--{% for node in pages_list %}-->
+        <!--{% if node.title != null %}-->
+          <!--{% if node.layout == "page" %}-->
+            <!--<a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="{{ node.url }}">{{ node.title }}</a>-->
+          <!--{% endif %}-->
+        <!--{% endif %}-->
+      <!--{% endfor %}-->
+
+        <a class="sidebar-nav-item" href="/pages/GettingStarted/GettingStarted/">Getting Started</a>
+        <a class="sidebar-nav-item" href="/pages/Handlers/HandlerClasses/">Handler Classes</a>
+        <a class="sidebar-nav-item" href="/pages/BuiltInHandlers/BuiltInSteps/">Built In Steps</a>
+        <a class="sidebar-nav-item" href="/pages/DistributedTesting/DistributedSteps/">Distributed Steps</a>
+        <a class="sidebar-nav-item" href="/pages/GherkinExtensions/GherkinExtensions/">Gherkin Extensions</a>
+        <a class="sidebar-nav-item" href="/pages/Resources/Download/">Download</a>
+        <a class="sidebar-nav-item" href="/pages/siteMap/">Site Map</a>
+        <br/>
+        <a class="sidebar-nav-item" href="/pages/about">About Chorus</a>
+        <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub project</a>
+      <span class="sidebar-nav-item">Currently v{{ site.version }}</span>
+    </nav>
+
+    <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>
+  </div>
+</div>

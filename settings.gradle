@@ -25,7 +25,8 @@ include 'chorus',
         'chorus-mocksuite',
         'chorus-webagent',
         'chorus-xml',
-        'integrationtest'
+        'integrationtest',
+        'chorus-website'
 
 project(':chorus').projectDir = file("interpreter/chorus")
 project(':chorus:chorus-annotations').projectDir = file("interpreter/chorus-annotations")
@@ -52,3 +53,4 @@ project(':chorus-sql').projectDir = file("extensions/chorus-sql")
 project(':chorus-mocksuite').projectDir = file("services/chorus-mocksuite")
 project(':chorus-webagent').projectDir = file("services/chorus-webagent")
 project(':chorus-xml').projectDir = file("services/chorus-xml")
+project(':chorus-website').projectDir = file("site/chorus-website")

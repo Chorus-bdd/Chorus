@@ -1,0 +1,6 @@
+
+description = "Jekyll website for Chorus"
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version:'4.10'
+}

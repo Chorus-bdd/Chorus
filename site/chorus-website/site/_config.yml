@@ -1,0 +1,29 @@
+# Dependencies
+markdown:         kramdown
+highlighter:      rouge
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            Chorus BDD
+tagline:          'BDD testing for distributed systems'
+description:      'BDD testing for distributed systems'
+url:              https://www.chorus-bdd.org/
+baseurl:          /
+
+author:
+  name:           'Chorus BDD'
+  url:            https://github.com/Chorus-bdd/
+
+# Custom vars
+version:          3.0.0
+
+github:
+  repo:           https://github.com/Chorus-bdd/Chorus
+
+plugins: [jekyll_github_sample]
+
+include:          ['pages']
+
+
