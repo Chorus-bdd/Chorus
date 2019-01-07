@@ -17,9 +17,11 @@ import java.util.stream.Stream;
 public class UpdatePageLinks {
 
     public static final Charset charset = StandardCharsets.UTF_8;
+    
+    private static File siteDir = new File("site");
 
     public static void main(String[] args) throws IOException {
-        File f = new File("pages");
+        File f = new File(siteDir, "pages");
         if ( ! f.canRead()) {
             System.err.println("Can't find pages dir");
             System.exit(1);
@@ -29,7 +31,7 @@ public class UpdatePageLinks {
 
         Map<String, Path> paths = new HashMap<String, Path>();
         markdownFiles.stream().forEach(p -> {
-            paths.put(p.getFileName().toString(), p);
+            paths.put(p.getFileName().toString(), p.subpath(1, p.getNameCount()));
         });
 
         generateSiteMap(markdownFiles);
@@ -68,7 +70,7 @@ public class UpdatePageLinks {
         LinkedHashMap<String, Section> sections = getSections();
         addPages(markdownFiles, sections);
 
-        BufferedWriter siteMapContents = new BufferedWriter(new FileWriter(new File("pages","siteMap.md")));
+        BufferedWriter siteMapContents = new BufferedWriter(new FileWriter(new File(siteDir,"pages" + File.separator + "siteMap.md")));
         siteMapContents.append("---\n");
         siteMapContents.append("layout: page\n");
         siteMapContents.append("title: Site Map\n");
@@ -112,7 +114,7 @@ public class UpdatePageLinks {
     private static LinkedHashMap<String, Section> getSections() throws IOException {
         LinkedHashMap<String, Section> sections = new LinkedHashMap<>();
 
-        try ( BufferedReader sectionReader = new BufferedReader(new FileReader(new File("sections.txt")));
+        try ( BufferedReader sectionReader = new BufferedReader(new FileReader(new File(siteDir, "sections.txt")));
               Stream<String> lines = sectionReader.lines(); ) {
             lines.map(l -> l.trim()).forEach(l -> {
                 String[] s = l.split(",");
