@@ -23,6 +23,7 @@
  */
 package org.chorusbdd.chorus.handlerconfig;
 
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 
 import java.util.List;
@@ -32,5 +33,5 @@ public interface ConfigPropertySource {
     /**
      * @return a List describing the legal configuration properties supported by this handler
      */
-    List<ConfigurationProperty> getConfigProperties();
+    List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException;
 }

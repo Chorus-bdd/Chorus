@@ -7,7 +7,7 @@ Chorus --> WARN    - A property 'myinvalidprop' was provided but no such propert
 Chorus --> INFO    - About to run process:  <system specific process details replaced>
     Given I start a config1 process                                                          PASSED  
 Chorus --> WARN    - A property 'myinvalidprop' was provided but no such property is supported
-    And I connect to the config1 process                                                     FAILED  Invalid config 'config1'. Validation method failed: [host property must be set] (JmxRemotingManager:linenumber)-ChorusException
+    And I connect to the config1 process                                                     FAILED  Invalid remoting config 'config1'. Validation method failed: [host property must be set] (ConfigurableManager:linenumber)-ChorusException
     Then I can call a remote method                                                          SKIPPED 
 
 

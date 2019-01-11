@@ -27,8 +27,11 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ScenarioToken;
@@ -36,13 +39,14 @@ import org.chorusbdd.chorus.sql.manager.SqlManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
  * Created by nickebbutt on 27/02/2018.
  */
 @Handler(value = "SQL", scope = Scope.FEATURE)
-public class SqlHandler {
+public class SqlHandler implements ConfigPropertySource {
 
     private ChorusLog log = ChorusLogFactory.getLog(SqlHandler.class);
 
@@ -76,6 +80,9 @@ public class SqlHandler {
         new ScopeUtils().setScopeForContextIfNotConfigured(scenarioToken, p);
         return p;
     }
-    
-    
+
+    @Override
+    public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
+        return sqlManager.getConfigProperties();
+    }
 }

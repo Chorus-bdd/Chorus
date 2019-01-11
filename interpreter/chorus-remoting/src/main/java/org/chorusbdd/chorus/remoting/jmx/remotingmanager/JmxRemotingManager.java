@@ -27,6 +27,7 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -46,7 +47,7 @@ import java.util.*;
 /**
  * Created by nick on 30/08/2014.
  */
-public class JmxRemotingManager implements RemotingManager {
+public class JmxRemotingManager extends ConfigurableManager<RemotingConfig> implements RemotingManager {
 
     public static final String REMOTING_PROTOCOL = "jmx";
 
@@ -60,25 +61,18 @@ public class JmxRemotingManager implements RemotingManager {
     private final List<RemotingManagerConfig> remotingConfigs = new LinkedList<>();
 
     private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
-    
+
+    public JmxRemotingManager() {
+        super(RemotingConfig.class);
+    }
+
     @Override
     public void connect(String configName, Properties remotingProperties) {
-        RemotingManagerConfig remotingConfig = buildRemotingConfig(configName, remotingProperties);
+        RemotingManagerConfig remotingConfig = getConfig(configName, remotingProperties, "remoting");
 
         ChorusHandlerJmxProxy proxy = getProxyForComponent(remotingConfig.getConfigName(), remotingConfig);
         List<StepInvoker> invokers = getRemoteStepInvokers(proxy);
         remoteInvokersToUse.put(remotingConfig, invokers);
-    }
-
-    private RemotingManagerConfig buildRemotingConfig(String configName, Properties remotingProperties) {
-        RemotingConfig config;
-        try {
-            config = new ConfigBuilder().buildConfig(RemotingConfig.class, remotingProperties);
-        } catch (ConfigBuilderException e) {
-            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
-        }
-        config.setConfigName(configName);
-        return config;
     }
 
     @Override

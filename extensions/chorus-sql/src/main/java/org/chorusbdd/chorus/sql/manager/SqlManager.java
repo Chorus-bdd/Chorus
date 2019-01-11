@@ -24,8 +24,11 @@
 package org.chorusbdd.chorus.sql.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -35,11 +38,12 @@ import java.util.Properties;
         id = "sqlManager",
         implementationClass = "org.chorusbdd.chorus.sql.manager.DefaultSqlManager",
         overrideImplementationClassSystemProperty = "chorusSqlManager")
-public interface SqlManager extends Subsystem {
+public interface SqlManager extends Subsystem, ConfigPropertySource {
     
     void connectToDatabase(String configName, Properties properties);
 
     void executeAStatement(String configName, String statement);
 
     void executeAScript(String configName, String script);
+
 }

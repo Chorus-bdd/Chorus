@@ -27,6 +27,7 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -52,7 +53,7 @@ import static org.chorusbdd.chorus.util.function.Tuple2.tuple2;
 /**
  * Created by nickebbutt on 27/02/2018.
  */
-public class DefaultSqlManager implements SqlManager {
+public class DefaultSqlManager extends ConfigurableManager<SqlConfigBean> implements SqlManager {
 
     private ChorusLog log = ChorusLogFactory.getLog(DefaultSqlManager.class);
 
@@ -63,6 +64,7 @@ public class DefaultSqlManager implements SqlManager {
     private CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
     
     public DefaultSqlManager() {
+        super(SqlConfigBean.class);
         addShutdownHook();
     }
 
@@ -78,7 +80,7 @@ public class DefaultSqlManager implements SqlManager {
             throw new ChorusException("The database " + configName + " is already connected");
         }
         
-        SqlConfig sqlConfig = getSqlConfig(configName, properties);
+        SqlConfig sqlConfig = getConfig(configName, properties, "sql");
 
         try {
             log.debug("Loading database driver " + sqlConfig.getDriverClassName());
@@ -221,17 +223,6 @@ public class DefaultSqlManager implements SqlManager {
         } catch (Exception e) {
             throw new ChorusException("Failed to close database connection for " + configName, e);
         }
-    }
-
-    private SqlConfig getSqlConfig(String configName, Properties processProperties) {
-        SqlConfigBean config;
-        try {
-            config = new ConfigBuilder().buildConfig(SqlConfigBean.class, processProperties);
-        } catch (ConfigBuilderException e) {
-            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
-        }
-        config.setConfigName(configName);
-        return config;
     }
 
     /**

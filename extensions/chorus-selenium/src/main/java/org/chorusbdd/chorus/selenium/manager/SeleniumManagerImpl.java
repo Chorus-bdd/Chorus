@@ -27,6 +27,7 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -54,7 +55,7 @@ import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
 /**
  * Created by nickebbutt on 05/02/2018.
  */
-public class SeleniumManagerImpl implements SeleniumManager {
+public class SeleniumManagerImpl extends ConfigurableManager<SeleniumConfigBean> implements SeleniumManager {
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumManagerImpl.class);
 
@@ -69,6 +70,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     private CleanupShutdownHook cleanupShutdownHook = new CleanupShutdownHook();
 
     public SeleniumManagerImpl() {
+        super(SeleniumConfigBean.class);
         addShutdownHook();
     }
     
@@ -89,7 +91,7 @@ public class SeleniumManagerImpl implements SeleniumManager {
     }
 
     private SeleniumConfig createAndValidateConfig(Properties properties, String configName) {
-        SeleniumConfig seleniumConfig = getSeleniumConfig(configName, properties);
+        SeleniumConfig seleniumConfig = getConfig(configName, properties, "selenium");
         checkConfigValidAndNotAlreadyOpened(configName);
         return seleniumConfig;
     }
@@ -237,17 +239,6 @@ public class SeleniumManagerImpl implements SeleniumManager {
             log.debug("Quitting the browser for config named " + d.getName());
             d.getWebDriver().quit();
         }
-    }
-
-    private SeleniumConfig getSeleniumConfig(String configName, Properties remotingProperties) {
-        SeleniumConfigBean config;
-        try {
-            config = new ConfigBuilder().buildConfig(SeleniumConfigBean.class, remotingProperties);
-        } catch (ConfigBuilderException e) {
-            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
-        }
-        config.setConfigName(configName);
-        return config;
     }
 
     /**

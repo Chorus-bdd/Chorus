@@ -24,12 +24,12 @@
 package org.chorusbdd.chorus.processes.manager.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.chorusbdd.chorus.handlerconfig.configbean.NamedConfigBean;
 
 /**
  * Created by nick on 24/09/2014.
  */
-public interface ProcessManagerConfig extends HandlerConfigBean {
+public interface ProcessManagerConfig extends NamedConfigBean {
 
     String getJre();
 

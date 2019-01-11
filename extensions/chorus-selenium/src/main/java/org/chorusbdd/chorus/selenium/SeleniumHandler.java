@@ -24,8 +24,11 @@
 package org.chorusbdd.chorus.selenium;
 
 import org.chorusbdd.chorus.annotations.*;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -37,6 +40,7 @@ import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -44,7 +48,7 @@ import java.util.Properties;
  * Created by nick on 23/12/2016.
  */
 @Handler(value = "Selenium", scope = Scope.FEATURE)
-public class SeleniumHandler {
+public class SeleniumHandler implements ConfigPropertySource {
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumHandler.class);
 
@@ -148,5 +152,10 @@ public class SeleniumHandler {
         Properties p = new HandlerConfigLoader().loadPropertiesForSubGroup(configurationManager, "selenium", configName);
         new ScopeUtils().setScopeForContextIfNotConfigured(scenarioToken, p);
         return p;
+    }
+
+    @Override
+    public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
+        return seleniumManager.getConfigProperties();
     }
 }

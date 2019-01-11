@@ -27,6 +27,7 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -58,7 +59,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * ProcessManager processManager;
  */
-public class ProcessManagerImpl implements ProcessManager {
+public class ProcessManagerImpl extends ConfigurableManager<ProcessConfig> implements ProcessManager {
 
     private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
@@ -74,6 +75,7 @@ public class ProcessManagerImpl implements ProcessManager {
     private volatile FeatureToken featureToken;
 
     public ProcessManagerImpl() {
+        super(ProcessConfig.class);
         addShutdownHook();
     }
 
@@ -109,10 +111,8 @@ public class ProcessManagerImpl implements ProcessManager {
     }
 
     private ProcessManagerConfig getProcessManagerConfig(String configName, Properties processProperties) {
-        ProcessConfig config = buildProcessesConfig(configName, processProperties);
+        ProcessConfig config = getConfig(configName, processProperties, "process");
         incrementPortsIfDuplicateName(configName, config);
-
-
         return config;
     }
 
@@ -131,17 +131,6 @@ public class ProcessManagerImpl implements ProcessManager {
         if (remotingPort != -1) {
             config.setRemotingPort(remotingPort + startedCount);
         }
-    }
-
-    private ProcessConfig buildProcessesConfig(String configName, Properties processProperties) {
-        ProcessConfig config;
-        try {
-            config = new ConfigBuilder().buildConfig(ProcessConfig.class, processProperties);
-        } catch (ConfigBuilderException e) {
-            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
-        }
-        config.setConfigName(configName);
-        return config;
     }
 
     private void checkNotAlreadyStarted(NamedProcess namedProcess) {

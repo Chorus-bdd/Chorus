@@ -27,6 +27,7 @@ import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.*;
@@ -48,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by nick on 09/12/2016.
  */
-public class WebSocketsManagerImpl implements WebSocketsManager {
+public class WebSocketsManagerImpl extends ConfigurableManager<WebSocketsConfigBean> implements WebSocketsManager {
 
     private static ChorusLog log = ChorusLogFactory.getLog(WebSocketsManagerImpl.class);
 
@@ -68,6 +69,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     private WebSocketsConfig webSocketsConfig;
 
     public WebSocketsManagerImpl() {
+        super(WebSocketsConfigBean.class);
         addShutdownHook();
     }
 
@@ -79,7 +81,7 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
     public void startWebSocketServer(Properties properties) {
         if ( ! isRunning.getAndSet(true)) {
 
-            webSocketsConfig = getWebSocketsConfig(DEFAULT_WEB_SOCKET_SERVER_NAME, properties);
+            webSocketsConfig = getConfig(DEFAULT_WEB_SOCKET_SERVER_NAME, properties, "websockets");
 
             int port = webSocketsConfig.getPort();
             log.info("Starting Web Socket server on port " + port);
@@ -246,17 +248,6 @@ public class WebSocketsManagerImpl implements WebSocketsManager {
         connectedClients.remove(clientId);
         alignedClients.remove(clientId);
         stepIdToInvoker.values().removeIf(stepInvoker -> stepInvoker.getClientId().equals(clientId));
-    }
-
-    private WebSocketsConfig getWebSocketsConfig(String configName, Properties webSocketsProperties) {
-        WebSocketsConfigBean config;
-        try {
-            config = new ConfigBuilder().buildConfig(WebSocketsConfigBean.class, webSocketsProperties);
-        } catch (ConfigBuilderException e) {
-            throw new ChorusException(String.format("Invalid config '%s'. %s", configName, e.getMessage()));
-        }
-        config.setConfigName(configName);
-        return config;
     }
 
     /**

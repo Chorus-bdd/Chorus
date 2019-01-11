@@ -24,6 +24,8 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
+import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;
@@ -44,7 +46,7 @@ import java.util.Properties;
     id = "remotingManager", 
     implementationClass = "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager",
     overrideImplementationClassSystemProperty = "chorusRemotingManager")
-public interface RemotingManager extends Subsystem, StepInvokerProvider {
+public interface RemotingManager extends Subsystem, StepInvokerProvider, ConfigPropertySource {
 
     void connect(String configName, Properties remotingProperties);
 

@@ -62,6 +62,11 @@ public class NamedProcess implements ProcessManagerConfig {
         return processManagerConfig.getConfigName();
     }
 
+    @Override
+    public void setConfigName(String configName) {
+        throw new UnsupportedOperationException("Cannot change the config name of a running process");    
+    }
+
     public String getJre() {
         return processManagerConfig.getJre();
     }

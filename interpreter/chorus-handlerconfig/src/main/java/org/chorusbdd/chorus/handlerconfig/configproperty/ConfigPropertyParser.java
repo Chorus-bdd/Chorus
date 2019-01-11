@@ -45,7 +45,7 @@ public class ConfigPropertyParser {
     }
 
 
-    List<ConfigurationProperty> getConfigProperties(Class configClass) throws ConfigBuilderException {
+    public List<ConfigurationProperty> getConfigProperties(Class configClass) throws ConfigBuilderException {
         Method[] methods = getMethodsFromConfigClass(configClass);
 
         List<ConfigurationProperty> result = new LinkedList<>();

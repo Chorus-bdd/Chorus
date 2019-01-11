@@ -24,6 +24,7 @@
 package org.chorusbdd.chorus.selenium.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.openqa.selenium.WebDriver;
 
@@ -36,7 +37,7 @@ import java.util.Properties;
         id = "seleniumManager", 
         implementationClass = "org.chorusbdd.chorus.selenium.manager.SeleniumManagerImpl", 
         overrideImplementationClassSystemProperty = "chorusSeleniumManager")
-public interface SeleniumManager extends Subsystem {
+public interface SeleniumManager extends Subsystem, ConfigPropertySource {
 
 
     /**

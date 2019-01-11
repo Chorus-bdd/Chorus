@@ -24,12 +24,12 @@
 package org.chorusbdd.chorus.sql.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.chorusbdd.chorus.handlerconfig.configbean.NamedConfigBean;
 
 /**
  * Created by nickebbutt on 27/02/2018.
  */
-public interface SqlConfig extends HandlerConfigBean {
+public interface SqlConfig extends NamedConfigBean {
     
     Scope getScope();
 

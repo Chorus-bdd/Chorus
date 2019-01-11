@@ -27,8 +27,11 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
@@ -51,7 +54,7 @@ import java.util.function.Function;
  */
 @Handler(value = "Web Sockets", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class WebSocketsHandler {
+public class WebSocketsHandler implements ConfigPropertySource {
 
     private ChorusLog log = ChorusLogFactory.getLog(WebSocketsHandler.class);
 
@@ -136,4 +139,8 @@ public class WebSocketsHandler {
         return p;
     }
 
+    @Override
+    public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
+        return webSocketsManager.getConfigProperties();
+    }
 }

@@ -27,8 +27,11 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -49,7 +52,7 @@ import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class ProcessesHandler {
+public class ProcessesHandler implements ConfigPropertySource {
 
     private ChorusLog log = ChorusLogFactory.getLog(ProcessesHandler.class);
 
@@ -228,4 +231,8 @@ public class ProcessesHandler {
     }
 
 
+    @Override
+    public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
+        return processManager.getConfigProperties();
+    }
 }

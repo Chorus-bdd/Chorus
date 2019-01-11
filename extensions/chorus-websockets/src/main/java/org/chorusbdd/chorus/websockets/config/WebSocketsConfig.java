@@ -24,12 +24,12 @@
 package org.chorusbdd.chorus.websockets.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.HandlerConfigBean;
+import org.chorusbdd.chorus.handlerconfig.configbean.NamedConfigBean;
 
 /**
  * Created by nick on 24/09/2014.
  */
-public interface WebSocketsConfig extends HandlerConfigBean {
+public interface WebSocketsConfig extends NamedConfigBean {
 
     int getClientConnectTimeoutSeconds();
 

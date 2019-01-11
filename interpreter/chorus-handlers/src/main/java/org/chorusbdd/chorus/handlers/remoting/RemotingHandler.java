@@ -27,8 +27,11 @@ import org.chorusbdd.chorus.annotations.ChorusResource;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -63,7 +66,7 @@ import java.util.Properties;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @SuppressWarnings("UnusedDeclaration")
-public class RemotingHandler {
+public class RemotingHandler implements ConfigPropertySource {
 
     private ChorusLog log = ChorusLogFactory.getLog(RemotingHandler.class);
 
@@ -138,4 +141,8 @@ public class RemotingHandler {
         }
     }
 
+    @Override
+    public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
+        return remotingManager.getConfigProperties();
+    }
 }

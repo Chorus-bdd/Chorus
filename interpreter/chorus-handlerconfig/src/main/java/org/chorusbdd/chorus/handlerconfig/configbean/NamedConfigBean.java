@@ -31,10 +31,15 @@ package org.chorusbdd.chorus.handlerconfig.configbean;
  *
  * Interface for a handler config bean which supports validation rules
  */
-public interface HandlerConfigBean {
+public interface NamedConfigBean {
 
     /**
      * @return the config name to which this HandlerConfig relates
      */
     String getConfigName();
+
+    /**
+     * Set the config name for this NamedConfigBean, generally this should be done only once after the config is created
+     */
+    void setConfigName(String configName);
 }
