@@ -195,7 +195,7 @@ project(':chorus-xml') {
     }
 }
 
-project(':integrationtest') {
+project(':chorus-website') {
     dependencies {
         compile project (':chorus')
         compile project (':chorus-spring')
