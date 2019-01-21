@@ -204,3 +204,13 @@ project(':chorus-website') {
         compile project (':chorus-sql')
     }
 }
+
+project(':integrationtest') {
+    dependencies {
+        compile project (':chorus')
+        compile project (':chorus-spring')
+        compile project (':chorus-selenium')
+        compile project (':chorus-websockets')
+        compile project (':chorus-sql')
+    }
+}
