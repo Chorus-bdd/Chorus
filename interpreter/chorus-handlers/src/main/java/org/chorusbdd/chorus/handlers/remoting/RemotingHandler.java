@@ -31,8 +31,10 @@ import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyParser;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
-import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
+import org.chorusbdd.chorus.processes.manager.config.ProcessConfigBean;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBean;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -134,7 +136,7 @@ public class RemotingHandler implements ConfigPropertySource {
     private void getProcessManagerProperties(String configName, Properties p) {
         Properties processManagerConfig = processManager.getProcessProperties(configName);
         if ( processManagerConfig != null) {
-            String port = processManagerConfig.getProperty(ProcessConfig.REMOTING_PORT_PROPERTY);
+            String port = processManagerConfig.getProperty(ProcessConfigBean.REMOTING_PORT_PROPERTY);
             if ( ! "-1".equals(port)) {
                 p.setProperty("connection","jmx:localhost:" + port);
             }
@@ -143,6 +145,6 @@ public class RemotingHandler implements ConfigPropertySource {
 
     @Override
     public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
-        return remotingManager.getConfigProperties();
+        return new ConfigPropertyParser().getConfigProperties(RemotingConfigBean.class);
     }
 }

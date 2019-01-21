@@ -38,7 +38,7 @@ import java.util.Properties;
         id = "sqlManager",
         implementationClass = "org.chorusbdd.chorus.sql.manager.DefaultSqlManager",
         overrideImplementationClassSystemProperty = "chorusSqlManager")
-public interface SqlManager extends Subsystem, ConfigPropertySource {
+public interface SqlManager extends Subsystem {
     
     void connectToDatabase(String configName, Properties properties);
 

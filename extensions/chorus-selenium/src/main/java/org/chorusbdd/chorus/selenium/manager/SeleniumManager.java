@@ -37,7 +37,7 @@ import java.util.Properties;
         id = "seleniumManager", 
         implementationClass = "org.chorusbdd.chorus.selenium.manager.SeleniumManagerImpl", 
         overrideImplementationClassSystemProperty = "chorusSeleniumManager")
-public interface SeleniumManager extends Subsystem, ConfigPropertySource {
+public interface SeleniumManager extends Subsystem {
 
 
     /**

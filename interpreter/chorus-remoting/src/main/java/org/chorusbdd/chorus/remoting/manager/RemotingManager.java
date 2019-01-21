@@ -46,7 +46,7 @@ import java.util.Properties;
     id = "remotingManager", 
     implementationClass = "org.chorusbdd.chorus.remoting.ProtocolAwareRemotingManager",
     overrideImplementationClassSystemProperty = "chorusRemotingManager")
-public interface RemotingManager extends Subsystem, StepInvokerProvider, ConfigPropertySource {
+public interface RemotingManager extends Subsystem, StepInvokerProvider {
 
     void connect(String configName, Properties remotingProperties);
 

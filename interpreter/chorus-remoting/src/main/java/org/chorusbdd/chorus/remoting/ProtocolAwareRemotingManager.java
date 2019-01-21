@@ -61,8 +61,4 @@ public class ProtocolAwareRemotingManager implements RemotingManager {
         return jmxRemotingManager.getExecutionListener();
     }
 
-    @Override
-    public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
-        return jmxRemotingManager.getConfigProperties();
-    }
 }

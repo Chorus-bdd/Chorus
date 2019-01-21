@@ -45,7 +45,7 @@ import java.util.Properties;
  * process, can be built. Where multiple processes are launched from the same ProcessesConfig we derive a new jmx port
  * or debug port for each ProcessInfo by auto-incrementing the ports
  */
-public class ProcessConfig implements ProcessManagerConfig {
+public class ProcessConfigBean implements ProcessManagerConfig {
     
     private static final String JAVA_HOME = System.getProperty("java.home");
     private static final String JAVA_CLASS_PATH = System.getProperty("java.class.path");
@@ -93,12 +93,12 @@ public class ProcessConfig implements ProcessManagerConfig {
     /**
      * Invoked by reflection
      */
-    public ProcessConfig() {}
+    public ProcessConfigBean() {}
     
-    public ProcessConfig(String configName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
-                         String args, OutputMode stdOutMode, OutputMode stdErrMode, int remotingPort, int debugPort, int terminateWaitTime,
-                         String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
-                         int readTimeoutSeconds, Scope processScope, boolean enabled) {
+    public ProcessConfigBean(String configName, String pathToExecutable, String jre, String classpath, String jvmargs, String mainclass,
+                             String args, OutputMode stdOutMode, OutputMode stdErrMode, int remotingPort, int debugPort, int terminateWaitTime,
+                             String logDirectory, boolean appendToLogs, boolean createLogDir, int processCheckDelay,
+                             int readTimeoutSeconds, Scope processScope, boolean enabled) {
         this.configName = configName;
         this.pathToExecutable = pathToExecutable;
         this.jre = jre;
@@ -483,8 +483,8 @@ public class ProcessConfig implements ProcessManagerConfig {
     }
 
     
-    public ProcessConfig copy() {
-        return new ProcessConfig(
+    public ProcessConfigBean copy() {
+        return new ProcessConfigBean(
             configName, 
             pathToExecutable, 
             jre, 
@@ -509,7 +509,7 @@ public class ProcessConfig implements ProcessManagerConfig {
     
     @Override
     public String toString() {
-        return "ProcessConfig{" +
+        return "ProcessConfigBean{" +
             "configName='" + configName + '\'' +
             ", pathToExecutable='" + pathToExecutable + '\'' +
             ", jre='" + jre + '\'' +

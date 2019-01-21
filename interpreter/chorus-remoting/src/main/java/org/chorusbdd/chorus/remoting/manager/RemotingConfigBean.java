@@ -31,7 +31,7 @@ import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigValidatorExceptio
 /**
  *  Remoting config
  */
-public class RemotingConfig implements RemotingManagerConfig {
+public class RemotingConfigBean implements RemotingManagerConfig {
 
     private String protocol;
     private String configName;
@@ -169,7 +169,7 @@ public class RemotingConfig implements RemotingManagerConfig {
 
     @Override
     public String toString() {
-        return "RemotingConfig{" +
+        return "RemotingConfigBean{" +
             "protocol='" + protocol + '\'' +
             ", configName='" + configName + '\'' +
             ", host='" + host + '\'' +

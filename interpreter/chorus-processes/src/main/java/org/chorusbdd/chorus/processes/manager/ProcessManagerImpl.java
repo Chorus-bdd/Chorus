@@ -28,8 +28,6 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.config.*;
@@ -59,7 +57,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * ProcessManager processManager;
  */
-public class ProcessManagerImpl extends ConfigurableManager<ProcessConfig> implements ProcessManager {
+public class ProcessManagerImpl extends ConfigurableManager<ProcessConfigBean> implements ProcessManager {
 
     private static ScheduledExecutorService processesHandlerExecutor = NamedExecutors.newSingleThreadScheduledExecutor("ProcessesHandlerScheduler");
 
@@ -75,7 +73,7 @@ public class ProcessManagerImpl extends ConfigurableManager<ProcessConfig> imple
     private volatile FeatureToken featureToken;
 
     public ProcessManagerImpl() {
-        super(ProcessConfig.class);
+        super(ProcessConfigBean.class);
         addShutdownHook();
     }
 
@@ -111,7 +109,7 @@ public class ProcessManagerImpl extends ConfigurableManager<ProcessConfig> imple
     }
 
     private ProcessManagerConfig getProcessManagerConfig(String configName, Properties processProperties) {
-        ProcessConfig config = getConfig(configName, processProperties, "process");
+        ProcessConfigBean config = getConfig(configName, processProperties, "process");
         incrementPortsIfDuplicateName(configName, config);
         return config;
     }
@@ -119,7 +117,7 @@ public class ProcessManagerImpl extends ConfigurableManager<ProcessConfig> imple
     /**
      *  If we already have an instance of a process with this name, auto increment ports to avoid a conflict
      */
-    private void incrementPortsIfDuplicateName(String configName, ProcessConfig config) {
+    private void incrementPortsIfDuplicateName(String configName, ProcessConfigBean config) {
         int startedCount = getNumberOfInstancesStarted(configName);
 
         int debugPort = config.getDebugPort();

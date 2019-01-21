@@ -37,7 +37,7 @@ import java.util.Properties;
     id = "processManager", 
     implementationClass = "org.chorusbdd.chorus.processes.manager.ProcessManagerImpl",
     overrideImplementationClassSystemProperty = "chorusProcessManager")
-public interface ProcessManager extends ConfigPropertySource, Subsystem {
+public interface ProcessManager extends Subsystem {
 
     void startProcess(String configName, String processName, Properties processProperties) throws Exception;
 

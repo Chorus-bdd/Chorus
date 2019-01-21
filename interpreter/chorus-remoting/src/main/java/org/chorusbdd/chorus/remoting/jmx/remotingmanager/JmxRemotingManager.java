@@ -28,26 +28,23 @@ import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
 import org.chorusbdd.chorus.executionlistener.ExecutionListenerAdapter;
 import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilder;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.remoting.jmx.serialization.JmxInvokerResult;
-import org.chorusbdd.chorus.remoting.manager.RemotingConfig;
+import org.chorusbdd.chorus.remoting.manager.RemotingConfigBean;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManagerConfig;
 import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
-import org.chorusbdd.chorus.util.ChorusException;
 
 import java.util.*;
 
 /**
  * Created by nick on 30/08/2014.
  */
-public class JmxRemotingManager extends ConfigurableManager<RemotingConfig> implements RemotingManager {
+public class JmxRemotingManager extends ConfigurableManager<RemotingConfigBean> implements RemotingManager {
 
     public static final String REMOTING_PROTOCOL = "jmx";
 
@@ -63,7 +60,7 @@ public class JmxRemotingManager extends ConfigurableManager<RemotingConfig> impl
     private Map<RemotingManagerConfig, List<StepInvoker>> remoteInvokersToUse = new HashMap<>();
 
     public JmxRemotingManager() {
-        super(RemotingConfig.class);
+        super(RemotingConfigBean.class);
     }
 
     @Override

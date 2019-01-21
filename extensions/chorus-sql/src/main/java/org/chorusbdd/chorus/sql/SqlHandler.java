@@ -31,10 +31,12 @@ import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyParser;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ScenarioToken;
+import org.chorusbdd.chorus.sql.config.SqlConfigBean;
 import org.chorusbdd.chorus.sql.manager.SqlManager;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
@@ -83,6 +85,6 @@ public class SqlHandler implements ConfigPropertySource {
 
     @Override
     public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
-        return sqlManager.getConfigProperties();
+        return new ConfigPropertyParser().getConfigProperties(SqlConfigBean.class);
     }
 }

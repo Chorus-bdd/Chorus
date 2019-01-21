@@ -25,7 +25,7 @@ package org.chorusbdd.chorus.processes.manager.process;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.processes.manager.config.OutputMode;
-import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
+import org.chorusbdd.chorus.processes.manager.config.ProcessConfigBean;
 import org.chorusbdd.chorus.processes.manager.config.ProcessManagerConfig;
 
 import java.util.Properties;
@@ -148,7 +148,7 @@ public class NamedProcess implements ProcessManagerConfig {
     }
 
     public Properties getProperties() {
-        return ProcessConfig.convertToProperties(processManagerConfig);
+        return ProcessConfigBean.convertToProperties(processManagerConfig);
     }
 
     @Override

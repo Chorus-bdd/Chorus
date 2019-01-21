@@ -31,16 +31,18 @@ import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyParser;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
-import org.chorusbdd.chorus.websockets.ClientConnectionException;
-import org.chorusbdd.chorus.websockets.WebSocketsManager;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
+import org.chorusbdd.chorus.websockets.ClientConnectionException;
+import org.chorusbdd.chorus.websockets.WebSocketsManager;
+import org.chorusbdd.chorus.websockets.config.WebSocketsConfigBean;
 
 import java.io.File;
 import java.util.List;
@@ -141,6 +143,6 @@ public class WebSocketsHandler implements ConfigPropertySource {
 
     @Override
     public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
-        return webSocketsManager.getConfigProperties();
+        return new ConfigPropertyParser().getConfigProperties(WebSocketsConfigBean.class);
     }
 }

@@ -31,16 +31,17 @@ import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigPropertyParser;
 import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
-import org.chorusbdd.chorus.processes.manager.config.ProcessConfig;
-import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.processes.manager.ProcessManager;
+import org.chorusbdd.chorus.processes.manager.config.ProcessConfigBean;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.ScopeUtils;
+import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 
 import java.io.File;
 import java.util.List;
@@ -218,8 +219,8 @@ public class ProcessesHandler implements ConfigPropertySource {
             fail("Process " + processName + " is not running");
         }
 
-        int remotingPort = Integer.parseInt(processProps.getProperty(ProcessConfig.REMOTING_PORT_PROPERTY));
-        String scope = processProps.getProperty(ProcessConfig.SCOPE_PROPERTY);
+        int remotingPort = Integer.parseInt(processProps.getProperty(ProcessConfigBean.REMOTING_PORT_PROPERTY));
+        String scope = processProps.getProperty(ProcessConfigBean.SCOPE_PROPERTY);
 
         if ( remotingPort == -1) {
             fail("Cannot connect " + processName + " unknown remoting port");
@@ -233,6 +234,6 @@ public class ProcessesHandler implements ConfigPropertySource {
 
     @Override
     public List<ConfigurationProperty> getConfigProperties() throws ConfigBuilderException {
-        return processManager.getConfigProperties();
+        return new ConfigPropertyParser().getConfigProperties(ProcessConfigBean.class);
     }
 }

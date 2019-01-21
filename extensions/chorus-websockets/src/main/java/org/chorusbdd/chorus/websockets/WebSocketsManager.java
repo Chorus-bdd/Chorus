@@ -39,7 +39,7 @@ import java.util.Properties;
     id = "webSocketsManager", 
     implementationClass = "org.chorusbdd.chorus.websockets.WebSocketsManagerImpl",
     overrideImplementationClassSystemProperty = "chorusWebSocketsManager")
-public interface WebSocketsManager extends ConfigPropertySource, Subsystem, StepInvokerProvider {
+public interface WebSocketsManager extends Subsystem, StepInvokerProvider {
 
     String DEFAULT_WEB_SOCKET_SERVER_NAME = "default";
 

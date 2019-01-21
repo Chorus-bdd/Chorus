@@ -36,7 +36,7 @@ public interface ConfigurationProperty {
     
     Optional<Pattern> getValidationPattern();
     
-    Optional getDefaultValue();
+    Optional<Object> getDefaultValue();
     
     boolean isMandatory();
 
