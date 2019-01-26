@@ -36,6 +36,7 @@ import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
 import org.chorusbdd.chorus.pathscanner.filter.ClassFilterDecorator;
 import org.chorusbdd.chorus.pathscanner.filter.HandlerAnnotationFilter;
 import org.chorusbdd.chorus.util.ChorusConstants;
+import org.chorusbdd.chorus.util.function.Tuple2;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -111,8 +112,8 @@ public class PageGenerator {
         Method[] methods = handlerClass.getMethods();
         List<TemplateStep> steps = Stream.of(methods)
                 .filter(m -> m.isAnnotationPresent(Step.class))
-                .map(m -> m.getAnnotation(Step.class))
-                .map(TemplateStep::new)
+                .map(m -> Tuple2.tuple2(m.getAnnotation(Step.class), m.isAnnotationPresent(Deprecated.class)))
+                .map(t -> new TemplateStep(t.getOne(), t.getTwo()))
                 .collect(Collectors.toList());
         handlerProperties.put("steps", steps);
     }

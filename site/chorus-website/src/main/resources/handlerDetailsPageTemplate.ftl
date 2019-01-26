@@ -9,18 +9,19 @@ The steps available in the ${handler.name} Handler:
 
 <table>
     <tr>
-        <th>Step</th><th>Description</th><th>Retry Duration</th>
+        <th>Step</th><th>Deprecated</th><th>Example</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
     </tr>
     <#list handler.steps as step>
     <tr>
         <td>${step.value}</td>
-        <td></td>
-        <td></td>
+        <td>${step.deprecated?string('yes', 'no')}</td>
+        <td>${step.example}</td>
+        <td>${step.description}</td>
+        <td>${step.retryDuration}</td>
     </tr>
     </#list>
 
 </table>
-
 
 
 The supported configuration properties for the ${handler.name} Handler:
