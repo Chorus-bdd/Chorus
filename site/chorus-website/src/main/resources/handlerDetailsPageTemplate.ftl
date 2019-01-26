@@ -5,6 +5,24 @@ section: ${site.section}
 sectionIndex: ${site.sectionIndex}
 ---
 
+The steps available in the ${handler.name} Handler:
+
+<table>
+    <tr>
+        <th>Step</th><th>Description</th><th>Retry Duration</th>
+    </tr>
+    <#list handler.steps as step>
+    <tr>
+        <td>${step.value}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    </#list>
+
+</table>
+
+
+
 The supported configuration properties for the ${handler.name} Handler:
 
 <table>

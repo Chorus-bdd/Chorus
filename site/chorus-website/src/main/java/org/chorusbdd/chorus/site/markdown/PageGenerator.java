@@ -27,6 +27,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
@@ -37,8 +38,10 @@ import org.chorusbdd.chorus.pathscanner.filter.HandlerAnnotationFilter;
 import org.chorusbdd.chorus.util.ChorusConstants;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
@@ -56,26 +59,35 @@ public class PageGenerator {
         Set<Class> classSet = ClasspathScanner.doScan(filter, log);
         
         for (Class handlerClass : classSet) {
+            String handlerName = ((Handler) handlerClass.getAnnotation(Handler.class)).value();
+
             Map<String,Object> freemarkerModel = new HashMap<>();
 
-            String handlerName = ((Handler) handlerClass.getAnnotation(Handler.class)).value();
-            Map<String,Object> handlerProperties = new HashMap<>();
-            handlerProperties.put("name", handlerName);
-            freemarkerModel.put("handler", handlerProperties);
+            addSiteSectionProperties(freemarkerModel);
             
-            Map<String,Object> siteProperties = new HashMap<>();
-            siteProperties.put("section", "Handlers");
-            siteProperties.put("sectionIndex", 30);
-            freemarkerModel.put("site", siteProperties);
+            addHandlerSectionProperties(handlerClass, handlerName, freemarkerModel);
 
-            String handlerNameNoSpaces = handlerName.replace(" ", "");
-            File ouputFile = new File("site/pages/BuiltInHandlers/" +  handlerNameNoSpaces, handlerNameNoSpaces + "ConfigProperties.md");
-            generateHandlerPropertiesPage(handlerClass, freemarkerModel, handlerProperties, ouputFile);
+            writeDetailsPage(handlerName, freemarkerModel);
         }
     }
 
-    private void generateHandlerPropertiesPage(Class handlerClass, Map<String, Object> freemarkerModel, Map<String, Object> handlerProperties, File ouputFile) throws IOException, TemplateException {
-        Configuration cfg = FreemarkerConfig.createFreemarkerConfiguration();
+    private void addSiteSectionProperties(Map<String, Object> freemarkerModel) {
+        Map<String,Object> siteProperties = new HashMap<>();
+        freemarkerModel.put("site", siteProperties);
+        siteProperties.put("section", "Handlers");
+        siteProperties.put("sectionIndex", 30);
+    }
+
+    private void addHandlerSectionProperties(Class handlerClass, String handlerName, Map<String, Object> freemarkerModel) throws IOException, TemplateException {
+        Map<String,Object> handlerProperties = new HashMap<>();
+        freemarkerModel.put("handler", handlerProperties);
+        handlerProperties.put("name", handlerName);
+
+        addHandlerConfigPropertyMetadata(handlerClass, handlerProperties);
+        addHandlerStepMetadata(handlerClass, handlerProperties);
+    }
+
+    private void addHandlerConfigPropertyMetadata(Class handlerClass, Map<String, Object> handlerProperties) throws IOException, TemplateException {
         
         List<TemplateConfigProperty> configProperties = Collections.emptyList();
         if (ConfigPropertySource.class.isAssignableFrom(handlerClass)) {
@@ -92,8 +104,25 @@ public class PageGenerator {
         }
         handlerProperties.put("configProperties", configProperties);
 
-        Template template = cfg.getTemplate("handlerPropertiesPageTemplate.ftl");
+    }
+    
+    private void addHandlerStepMetadata(Class handlerClass, Map<String, Object> handlerProperties) throws IOException, TemplateException {
+
+        Method[] methods = handlerClass.getMethods();
+        List<TemplateStep> steps = Stream.of(methods)
+                .filter(m -> m.isAnnotationPresent(Step.class))
+                .map(m -> m.getAnnotation(Step.class))
+                .map(TemplateStep::new)
+                .collect(Collectors.toList());
+        handlerProperties.put("steps", steps);
+    }
+
+    private void writeDetailsPage(String handlerName, Map<String, Object> freemarkerModel) throws IOException, TemplateException {
+        Configuration cfg = FreemarkerConfig.createFreemarkerConfiguration();
+        Template template = cfg.getTemplate("handlerDetailsPageTemplate.ftl");
 //        Writer out = new OutputStreamWriter(System.out);
+        String handlerNameNoSpaces = handlerName.replace(" ", "");
+        File ouputFile = new File("site/pages/BuiltInHandlers/" +  handlerNameNoSpaces, handlerNameNoSpaces + "HandlerDetails.md");
         FileWriter fileWriter = new FileWriter(ouputFile);
         template.process(freemarkerModel, fileWriter);
     }
