@@ -96,19 +96,30 @@ public class RemotingHandler implements ConfigPropertySource {
 
     
     //A Directive which can be used to connect to one or more processes
-    @Step("Remoting connect " + HandlerPatterns.nameListPattern)
+    @Step(description = "Connect to one or more remote processes (as a Directive) at the hostnames and ports specified in the handler properties. " +
+            "The remote processes must be exporting steps using Chorus JMX remoting utilities, ChorusHandlerJmxExporter. " +
+            "The number of connection attempts and wait time between each attempt are configured in the handler properties",
+          example = "#! Remoting connect myServiceA, myServiceB",
+          value = "Remoting connect " + HandlerPatterns.nameListPattern)
     public void remotingUseDirective(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }
 
     //A step which can be used to connect to one or more processes
-    @Step(".*connect to the process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
+    @Step(description = "Connect to one or more remote processes at the hostnames and ports specified in the handler properties. " +
+            "The remote processes must be exporting steps using Chorus JMX remoting utilities, ChorusHandlerJmxExporter. " +
+            "The number of connection attempts and wait time between each attempt are configured in the handler properties",
+          example = "Given I connect to the processes named myProcessA, myProcessB",
+          value = ".*connect to the process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
     public void connectToRemoteProcesses(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }
 
     //A step which can be used to connect to one process
-    @Step(".*connect to the " + HandlerPatterns.namePattern + " process")
+    @Step(description = "Connect to a remote process at the hostname and port specified in the handler properties. " +
+            "The number of connection attempts and wait time between each attempt are configured in the handler properties",
+          example = "Given I connect to the myProcessA",
+          value = ".*connect to the " + HandlerPatterns.namePattern + " process")
     public void connectToRemoteProcess(String processName) throws Exception {
         connectRemoteProcesses(processName);
     }

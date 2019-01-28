@@ -61,18 +61,25 @@ public class SqlHandler implements ConfigPropertySource {
     @ChorusResource("subsystem.sqlManager")
     private SqlManager sqlManager;
     
-    @Step(".*I connect to the " + HandlerPatterns.namePattern + " database") 
+    @Step(description = "Connect to the named database using the connection parameters configured in the handler properties",
+          example = "Given I connect to the mySql database",
+          value = ".*I connect to the " + HandlerPatterns.namePattern + " database") 
     public void connectToDatabase(String configName) {
         Properties properties = getConfig(configName);
         sqlManager.connectToDatabase(configName, properties);
     }
     
-    @Step(".*I execute the statement '(.*)' on the " + HandlerPatterns.namePattern + " database")
+    @Step(description = "Execute the provided text as a statement against the connected database with given name",
+          example = "When I execute the statement 'insert into MyUsers values (\"Bob\")' on the mySql database",
+          value = ".*I execute the statement '(.*)' on the " + HandlerPatterns.namePattern + " database")
     public void executeAStatement(String statement, String configName ) {
         sqlManager.executeAStatement(configName, statement);
     }
     
-    @Step(".*I execute the script (.*) on the " + HandlerPatterns.namePattern + " database") 
+    @Step(description = "Execute a SQL script from a file path relative to the feature directory against the connected database with given name. " +
+            "The script file may contain one or more semi-colon delimited SQL statements",
+          example = "When I execute the script mySqlScript.sql on the mySql database",
+          value = ".*I execute the script (.*) on the " + HandlerPatterns.namePattern + " database") 
     public void executeAScript(String script, String configName ) {
         sqlManager.executeAScript(configName, script);
     }
