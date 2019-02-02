@@ -9,13 +9,13 @@ The steps available in the ${handler.name} Handler:
 
 <table>
     <tr>
-        <th>Step</th><th>Deprecated</th><th>Example</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
+        <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
     </tr>
     <#list handler.steps as step>
     <tr>
         <td>${step.value}</td>
-        <td>${step.deprecated?string('yes', 'no')}</td>
         <td>${step.example}</td>
+        <td>${step.deprecated?string('Deprecated', 'No')}</td>
         <td>${step.description}</td>
         <td>${step.retryDuration}</td>
     </tr>
