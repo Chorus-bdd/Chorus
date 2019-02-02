@@ -69,16 +69,6 @@ public @interface Step {
     int retryIntervalMillis() default 100;
 
     /**
-     * A description of the step for documentation purposes
-     */
-    String description() default "";
-
-    /**
-     * An example usage of the step for documentation purposes
-     */
-    String example() default "";
-    
-    /**
      * Technical id used by the Chorus interpreter to uniquely identify the step
      * 
      * If this is set to the default value (AUTO_GENERATE_ID) Chorus will generate its own UUID based ID for the step 

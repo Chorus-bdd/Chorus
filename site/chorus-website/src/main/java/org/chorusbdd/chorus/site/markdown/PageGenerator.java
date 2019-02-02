@@ -26,6 +26,7 @@ package org.chorusbdd.chorus.site.markdown;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.chorusbdd.chorus.annotations.Documentation;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
@@ -37,6 +38,7 @@ import org.chorusbdd.chorus.pathscanner.filter.ClassFilterDecorator;
 import org.chorusbdd.chorus.pathscanner.filter.HandlerAnnotationFilter;
 import org.chorusbdd.chorus.util.ChorusConstants;
 import org.chorusbdd.chorus.util.function.Tuple2;
+import org.chorusbdd.chorus.util.function.Tuple3;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -112,8 +114,9 @@ public class PageGenerator {
         Method[] methods = handlerClass.getMethods();
         List<TemplateStep> steps = Stream.of(methods)
                 .filter(m -> m.isAnnotationPresent(Step.class))
-                .map(m -> Tuple2.tuple2(m.getAnnotation(Step.class), m.isAnnotationPresent(Deprecated.class)))
-                .map(t -> new TemplateStep(t.getOne(), t.getTwo()))
+                .map(m -> Tuple3.tuple3(m.getAnnotation(Step.class), m.isAnnotationPresent(Deprecated.class), m.isAnnotationPresent(Documentation.class) ? m.getAnnotation(Documentation.class) : null))
+                .map(t -> new TemplateStep(t.getOne(), t.getTwo(), t.getThree()))
+                .sorted(Comparator.comparing(TemplateStep::getOrder))
                 .collect(Collectors.toList());
         handlerProperties.put("steps", steps);
     }
