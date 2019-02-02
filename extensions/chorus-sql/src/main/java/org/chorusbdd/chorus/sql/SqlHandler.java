@@ -23,10 +23,7 @@
  */
 package org.chorusbdd.chorus.sql;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
@@ -61,25 +58,21 @@ public class SqlHandler implements ConfigPropertySource {
     @ChorusResource("subsystem.sqlManager")
     private SqlManager sqlManager;
     
-    @Step(description = "Connect to the named database using the connection parameters configured in the handler properties",
-          example = "Given I connect to the mySql database",
-          value = ".*I connect to the " + HandlerPatterns.namePattern + " database") 
+    @Step(".*I connect to the " + HandlerPatterns.namePattern + " database")
+    @Documentation(order = 10, description = "Connect to the named database using the connection parameters configured in the handler properties", example = "Given I connect to the mySql database")
     public void connectToDatabase(String configName) {
         Properties properties = getConfig(configName);
         sqlManager.connectToDatabase(configName, properties);
     }
     
-    @Step(description = "Execute the provided text as a statement against the connected database with given name",
-          example = "When I execute the statement 'insert into MyUsers values (\"Bob\")' on the mySql database",
-          value = ".*I execute the statement '(.*)' on the " + HandlerPatterns.namePattern + " database")
+    @Step(".*I execute the statement '(.*)' on the " + HandlerPatterns.namePattern + " database")
+    @Documentation(order = 10, description = "Execute the provided text as a statement against the connected database with given name", example = "When I execute the statement 'insert into MyUsers values (\"Bob\")' on the mySql database")
     public void executeAStatement(String statement, String configName ) {
         sqlManager.executeAStatement(configName, statement);
     }
     
-    @Step(description = "Execute a SQL script from a file path relative to the feature directory against the connected database with given name. " +
-            "The script file may contain one or more semi-colon delimited SQL statements",
-          example = "When I execute the script mySqlScript.sql on the mySql database",
-          value = ".*I execute the script (.*) on the " + HandlerPatterns.namePattern + " database") 
+    @Step(".*I execute the script (.*) on the " + HandlerPatterns.namePattern + " database")
+    @Documentation(order = 10, description = "Execute a SQL script from a file path relative to the feature directory against the connected database with given name. The script file may contain one or more semi-colon delimited SQL statements", example = "When I execute the script mySqlScript.sql on the mySql database")
     public void executeAScript(String script, String configName ) {
         sqlManager.executeAScript(configName, script);
     }

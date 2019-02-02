@@ -23,10 +23,7 @@
  */
 package org.chorusbdd.chorus.websockets.handler;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
@@ -80,36 +77,43 @@ public class WebSocketsHandler implements ConfigPropertySource {
 
 
     @Step("Web Sockets start")
+    @Documentation(order = 1000, description = "Directive to start a web socket server. The listening port will be 9080 if not specified in properties.", example = "#! Web Sockets start")
     public void startWebSocketsDirective() throws Exception {
         start();
     }
 
     @Step("Web Sockets stop")
+    @Documentation(order = 1010, description = "Directive to stop a web socket server.", example = "#! Web Sockets stop")
     public void stopWebSocketsDirective() throws Exception {
         stop();
     }
 
     @Step(".*start (?:a|the) web socket server")
+    @Documentation(order = 30, description = "Start a web socket server. The listening port will be 9080 if not specified in properties.", example = "Given I start a web socket server")
     public void startWebSocketServer() {
         start();
     }
 
     @Step(".*stop (?:a|the) web socket server")
+    @Documentation(order = 40, description = "Stop a web socket server.", example = "Then I stop the web socket server")
     public void stopWebSocketServer() {
         start();
     }
 
     @Step(".*wait for (?:the )web socket clients? " + HandlerPatterns.nameListPattern)
+    @Documentation(order = 50, description = "Wait for one or more named web socket clients to connect to the web socket. If more than one name is specified the list is comma delimited", example = "And I wait for the web socket client singlePageApp")
     public void waitForClientsToConnect(String processNameList) throws Exception {
         checkConnection(processNameList, clientName -> webSocketsManager.waitForClientConnection(clientName));
     }
 
     @Step(".*(?:the )?web socket clients? " + HandlerPatterns.nameListPattern + " (?:is|are) connected")
+    @Documentation(order = 60, description = "Check that the named web socket clients are connected. If more than one name is specified the list is comma delimited", example = "Then the web socket clients singlePageApp1, singlePageApp2 are connected")
     public void checkClientConnnected(String processNameList) throws Exception {
         checkConnection(processNameList, clientName -> webSocketsManager.isClientConnected(clientName));
     }
 
     @Step(".*show all the steps published by connected web socket clients")
+    @Documentation(order = 70, description = "Show the steps published by all connected web socket clients in Chorus' interpreter's output", example = "THen I show all the steps published by connected web socket clients")
     public void showAllSteps() {
         webSocketsManager.showAllSteps();
     }

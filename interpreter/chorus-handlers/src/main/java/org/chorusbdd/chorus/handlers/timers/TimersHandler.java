@@ -23,6 +23,7 @@
  */
 package org.chorusbdd.chorus.handlers.timers;
 
+import org.chorusbdd.chorus.annotations.Documentation;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.Step;
@@ -44,9 +45,8 @@ public class TimersHandler {
      *
      * @param seconds the number of seconds that the thread will sleep for
      */
-    @Step(description = "Wait for a number of seconds",
-          example = "And I wait for 6 seconds",
-          value = ".*wait (?:for )?([0-9]*) seconds?.*")
+    @Step(".*wait (?:for )?([0-9]*) seconds?.*")
+    @Documentation(order = 10, description = "Wait for a number of seconds", example = "And I wait for 6 seconds")
     public void waitForSeconds(int seconds) {
         try {
             Thread.sleep(seconds * 1000);
@@ -55,9 +55,8 @@ public class TimersHandler {
         }
     }
 
-    @Step(description = "Wait for a number of milliseconds",
-          example = "And I wait for 100 milliseconds",
-          value = ".*wait (?:for )?([0-9]*) milliseconds?.*")
+    @Step(".*wait (?:for )?([0-9]*) milliseconds?.*")
+    @Documentation(order = 20, description = "Wait for a number of milliseconds", example = "And I wait for 100 milliseconds")
     public void waitForMilliseconds(int millis) {
         try {
             Thread.sleep(millis);
@@ -66,9 +65,8 @@ public class TimersHandler {
         }
     }
 
-    @Step(description = "Wait for half a second",
-          example = "And I wait half a second",
-          value = ".*wait (?:for )?half a second.*")
+    @Step(".*wait (?:for )?half a second.*")
+    @Documentation(order = 30, description = "Wait for half a second", example = "And I wait half a second")
     public void waitForHalfASecond() {
        try {
            Thread.sleep(500);

@@ -60,18 +60,20 @@ public class ChorusContextHandler {
     }
 
     @Step(".*the context is empty")
-    public void contextIsEmpty() {
-        ChorusContext context = ChorusContext.getContext();
+    @Documentation( order = 10, description = "Check there are no variables set in the Chorus Context", example = "Given then context is empty")
+    public void contextIsEmpty() { ChorusContext context = ChorusContext.getContext();
         ChorusAssert.assertTrue("The context is not empty: " + context, context.isEmpty());
     }
 
     @Step(".*create a context variable (.*) with (?:the )?value (.*)")
+    @Documentation(order = 20, description = "Create a variable within the Chorus Context with the value provided", example = "When I create a context variable foo with the value bar")
     public void createVariable(String varName, Object value) {
         //See type TypeCoercion.coerceObject - value will be a Boolean, Float, or Long if it can be parsed as such  
         ChorusContext.getContext().put(varName, value);
     }
 
     @Step(".*context variable (.*) has (?:the )?value (.*)")
+    @Documentation(order = 30, description = "Check the named context variable has the value specified", example = "Then the context variable foo has the value bar")
     public void assertVariableValue(String varName, Object expected) {
         //See type TypeCoercion.coerceObject - expected will be a Boolean, Float, or Long if it can be parsed as such
 
@@ -96,12 +98,14 @@ public class ChorusContextHandler {
     }
 
     @Step(".*context variable (.*) exists")
+    @Documentation(order = 40, description = "Check the named Chorus Context variable exists", example = "Then the context variable foo exists")
     public void assertVariableExists(String varName) {
         boolean exists = ChorusContext.getContext().containsKey(varName);
         ChorusAssert.assertTrue("Variable " + varName + " should exist", exists);
     }
 
     @Step(".*show (?:the )?context variable (.*)")
+    @Documentation(order = 50, description = "Show the current value of the context variable in Chorus' output", example = "And I show the context variable foo")
     public Object showVariable(String varName) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
@@ -113,6 +117,7 @@ public class ChorusContextHandler {
     }
 
     @Step(".*type of (?:the )?context variable (.*) is (.*)")
+    @Documentation(order = 60, description = "Check the type of the context variable (matching against the Java Class simple name)", example = "Then the type of the context variable foo is String")
     public void checkType(String varName, String type) {
         Object actual = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("no such variable exists: " + varName, actual);
@@ -124,41 +129,49 @@ public class ChorusContextHandler {
     }
     
     @Step(".*add (?:the )?(?:value )?([\\d\\.]+) to (?:the )?context variable (.*)")
+    @Documentation(order = 70, description = "Add the value provided to the named context variable which must contain a numeric value", example = "And I add 5 to the context variable myNumericValue")
     public void addToContextVariable(BigDecimal value, String varName) {
         new Addition().performCalculation(value, varName);
     }
 
     @Step(".*subtract (?:the )?(?:value )?([\\d\\.]+) from (?:the )?context variable (.*)")
+    @Documentation(order = 80, description = "Subtract the value provided to the named context variable which must contain a numeric value", example = "And I subtract 5 from the context variable myNumericValue")
     public void subtractFromContextVariable(BigDecimal value, String varName) {
         new Subtraction().performCalculation(value, varName);
     }
 
     @Step(".*multiply (?:the )?context variable (.*) by (?:the )?(?:value )?([\\d\\.]+)")
+    @Documentation(order = 90, description = "Multiply the named context variable which must contain a numeric value by the specified number", example = "And I multiply the context variable myNumericValue by 10")
     public void multiplyContextVariable(String varName, BigDecimal value) {
         new Multiplication().performCalculation(value, varName);
     }
 
     @Step(".*divide (?:the )?context variable (.*) by (?:the )?(?:value )?([\\d\\.]+)")
+    @Documentation(order = 100, description = "Divide the named context variable which must contain a numeric value by the specified number", example = "And I divide the context variable myNumericValue by 10")
     public void divideContextVariable(String varName, BigDecimal value) {
         new Division().performCalculation(value, varName);
     }
 
     @Step(".*increment (?:the )?context variable (.*)")
+    @Documentation(order = 110, description = "Add one to the named context variable which must contain a numeric value", example = "When I increment the context variable myVariable")
     public void incrementContextVariable(String varName) {
         new Addition().performCalculation(new BigDecimal(1), varName);
     }
 
     @Step(".*decrement (?:the )?context variable (.*)")
+    @Documentation(order = 120, description = "Subtract one from the named context variable which must contain a numeric value", example = "When I decrement the context variable myVariable")
     public void decrementContextVariable(String varName) {
         new Subtraction().performCalculation(new BigDecimal(1), varName);
     }
 
-    @Step(".*I divide (?:the )?context variable (.*) by (.*) and take the remainder")
+    @Step(".*divide (?:the )?context variable (.*) by (.*) and take the remainder")
+    @Documentation(order = 130, description = "Set the named context variable to the remainder after dividing it by the specified number", example = "When I divide context variable myVar by 10 and take the remainder")
     public void remainder(String varName, BigDecimal value) {
         new Remainder().performCalculation(value, varName);
     }
 
     @Step(".*(?:the )?context variable (.*) is a (.*)")
+    @Documentation(order = 140, description = "Assert the type of a context variable, by specifying the name of a concrete Java class.", example = "Then the context variable myVar is a String")
     public void checkVariableType(String varName, String type) {
         Object o = ChorusContext.getContext().get(varName);
         ChorusAssert.assertNotNull("Check " + varName + " is not null");

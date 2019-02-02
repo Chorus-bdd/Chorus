@@ -23,10 +23,7 @@
  */
 package org.chorusbdd.chorus.handlers.remoting;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
@@ -96,30 +93,22 @@ public class RemotingHandler implements ConfigPropertySource {
 
     
     //A Directive which can be used to connect to one or more processes
-    @Step(description = "Connect to one or more remote processes (as a Directive) at the hostnames and ports specified in the handler properties. " +
-            "The remote processes must be exporting steps using Chorus JMX remoting utilities, ChorusHandlerJmxExporter. " +
-            "The number of connection attempts and wait time between each attempt are configured in the handler properties",
-          example = "#! Remoting connect myServiceA, myServiceB",
-          value = "Remoting connect " + HandlerPatterns.nameListPattern)
+    @Step("Remoting connect " + HandlerPatterns.nameListPattern)
+    @Documentation(order = 10, description = "Connect to one or more remote processes (as a Directive) at the hostnames and ports specified in the handler properties. The remote processes must be exporting steps using Chorus JMX remoting utilities, ChorusHandlerJmxExporter. The number of connection attempts and wait time between each attempt are configured in the handler properties", example = "#! Remoting connect myServiceA) myServiceB")
     public void remotingUseDirective(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }
 
     //A step which can be used to connect to one or more processes
-    @Step(description = "Connect to one or more remote processes at the hostnames and ports specified in the handler properties. " +
-            "The remote processes must be exporting steps using Chorus JMX remoting utilities, ChorusHandlerJmxExporter. " +
-            "The number of connection attempts and wait time between each attempt are configured in the handler properties",
-          example = "Given I connect to the processes named myProcessA, myProcessB",
-          value = ".*connect to the process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
+    @Step(".*connect to the process(?:es)? (?:named )?" + HandlerPatterns.nameListPattern)
+    @Documentation(order = 20, description = "Connect to one or more remote processes at the hostnames and ports specified in the handler properties. The remote processes must be exporting steps using Chorus JMX remoting utilities, ChorusHandlerJmxExporter. The number of connection attempts and wait time between each attempt are configured in the handler properties", example = "Given I connect to the processes named myProcessA) myProcessB")
     public void connectToRemoteProcesses(String processNameList) throws Exception {
         connectRemoteProcesses(processNameList);
     }
 
     //A step which can be used to connect to one process
-    @Step(description = "Connect to a remote process at the hostname and port specified in the handler properties. " +
-            "The number of connection attempts and wait time between each attempt are configured in the handler properties",
-          example = "Given I connect to the myProcessA",
-          value = ".*connect to the " + HandlerPatterns.namePattern + " process")
+    @Step(".*connect to the " + HandlerPatterns.namePattern + " process")
+    @Documentation(order = 30, description = "Connect to a remote process at the hostname and port specified in the handler properties. The number of connection attempts and wait time between each attempt are configured in the handler properties", example = "Given I connect to the myProcessA")
     public void connectToRemoteProcess(String processName) throws Exception {
         connectRemoteProcesses(processName);
     }

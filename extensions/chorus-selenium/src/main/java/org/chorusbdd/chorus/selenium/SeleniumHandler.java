@@ -74,9 +74,8 @@ public class SeleniumHandler implements ConfigPropertySource {
         seleniumLogging.suppressLogging();
     }
 
-    @Step(description = "Open a window in a local Chrome browser using the chromedriver installed on the system. Deprecated - use 'open the Chrome browser' which allows configuration",
-          example = "Given I open Chrome",
-          value = ".*open Chrome")
+    @Step(".*open Chrome")
+    @Documentation(order = 10, description = "Open a window in a local Chrome browser using the chromedriver installed on the system. Deprecated - use 'open the Chrome browser' which allows configuration", example = "Given I open Chrome")
     @Deprecated
     public void openChrome() throws IOException {
         
@@ -93,80 +92,69 @@ public class SeleniumHandler implements ConfigPropertySource {
         openNamedBrowser("Chrome");
     }
     
-    @Step(description = "Open a window in a named browser which is defined in handler properties",
-          example = "Given I open the myChrome browser",
-          value = ".*open the " + HandlerPatterns.namePattern + " browser")
+    @Step(".*open the " + HandlerPatterns.namePattern + " browser")
+    @Documentation(order = 20, description = "Open a window in a named browser which is defined in handler properties", example = "Given I open the myChrome browser")
     public void openNamedBrowser(String configName) {
         Properties properties = getConfig(configName);
         seleniumManager.openABrowser(properties, configName);
     }
 
-    @Step(description = "Open an provided URL in the window of the named browser",
-          example = "When I navigate the myChrome browser to http://www.bbc.co.uk",
-          value = ".*navigate the " + HandlerPatterns.namePattern + " browser to (.*)")
+    @Step(".*navigate the " + HandlerPatterns.namePattern + " browser to (.*)")
+    @Documentation(order = 30, description = "Open an provided URL in the window of the named browser", example = "When I navigate the myChrome browser to http://www.bbc.co.uk")
     public void navigateTo(String configName, String url) {
         seleniumManager.navigateTo(configName, url);
     }
 
-    @Step(description = "Open the provided URL in the most recently opened browser window",
-          example = "When I navigate to http://www.bbc.co.uk",
-          value = ".*navigate to (.*)")
+    @Step(".*navigate to (.*)")
+    @Documentation(order = 40, description = "Open the provided URL in the most recently opened browser window", example = "When I navigate to http://www.bbc.co.uk")
     public void navigateNamedBrowserTo(String url) {
         navigateTo(SeleniumManager.LAST_OPENED_BROWSER, url);
     }
 
-    @Step(description = "Refresh the current page in the most recently opened browser window",
-          example = "And I refresh the page",
-          value = ".*refresh the page")
+    @Step(".*refresh the page")
+    @Documentation(order = 50, description = "Refresh the current page in the most recently opened browser window", example = "And I refresh the page")
     public void refresh() {
         refreshNamedBrowser(SeleniumManager.LAST_OPENED_BROWSER);
     }
     
-    @Step(description = "Refresh the current page in the named browser window",
-          example = "And I refresh the page in the myChrome browser",
-          value = ".*refresh the page in the " + HandlerPatterns.namePattern + " browser")
+    @Step(".*refresh the page in the " + HandlerPatterns.namePattern + " browser")
+    @Documentation(order = 60, description = "Refresh the current page in the named browser window", example = "And I refresh the page in the myChrome browser")
     public void refreshNamedBrowser(String configName) {
         seleniumManager.refreshThePage(configName);
     }
 
-    @Step(description = "Test the URL in the most recently opened browser matches the provided URL",
-          example = "Then the url is http://www.bbc.co.uk",
-          value = ".*the url is (.*)", retryDuration = 2)
+    @Step(value = ".*the url is (.*)", retryDuration = 2)
+    @Documentation(order = 70, description = "Test the URL in the most recently opened browser matches the provided URL", example = "Then the url is http://www.bbc.co.uk")
     public void checkCurrentUrl(String url) {
         checkCurrentUrlInNamedBrowser(SeleniumManager.LAST_OPENED_BROWSER, url);
     }
 
-    @Step(description = "Test the URL in the named browser matches the provided URL",
-          example = "Then the url in the myChrome browser is http://www.bbc.co.uk",
-          value = ".*the url in the " + HandlerPatterns.namePattern + " browser is (.*)", retryDuration = 2)
+    @Step(value = ".*the url in the " + HandlerPatterns.namePattern + " browser is (.*)", retryDuration = 2)
+    @Documentation(order = 80, description = "Test the URL in the named browser matches the provided URL", example = "Then the url in the myChrome browser is http://www.bbc.co.uk")
     public void checkCurrentUrlInNamedBrowser(String configName, String url) {
        seleniumManager.checkCurrentURL(configName, url);
     }
 
-    @Step(description = "Close the most recently opened browser window",
-          example = "Then I close the browser",
-          value = ".*close the browser")
+    @Step(".*close the browser")
+    @Documentation(order = 90, description = "Close the most recently opened browser window", example = "Then I close the browser")
     public void quit() {
         quitNamedBrowser(SeleniumManager.LAST_OPENED_BROWSER);
     }
 
-    @Step(description = "Close the open window in the named browser",
-          example = "Then I close the myChrome browser",
-          value = ".*close the " + HandlerPatterns.namePattern + " browser")
+    @Step(".*close the " + HandlerPatterns.namePattern + " browser")
+    @Documentation(order = 100, description = "Close the open window in the named browser", example = "Then I close the myChrome browser")
     public void quitNamedBrowser(String configName) {
         seleniumManager.quitBrowser(configName);
     }
 
-    @Step(description = "Execute a script at the file path relative to the feature directory within the window of the last opened browser",
-          example = "Then I execute the script myJavascript.js in the browser",
-          value = ".*execute the script (.*) in the browser")
+    @Step(".*execute the script (.*) in the browser")
+    @Documentation(order = 110, description = "Execute a script at the file path relative to the feature directory within the window of the last opened browser", example = "Then I execute the script myJavascript.js in the browser")
     public void executeScriptInDefaultBrowser(String scriptPath) {
         executeScriptInNamedBrowser(scriptPath, SeleniumManager.LAST_OPENED_BROWSER);
     }
 
-    @Step(description = "Execute a script at the file path relative to the feature directory within the window of the named browser",
-          example = "Then I execute the script myJavascript.js in the myChrome browser",
-          value = ".*execute the script (.*) in the " + HandlerPatterns.namePattern + " browser")
+    @Step(".*execute the script (.*) in the " + HandlerPatterns.namePattern + " browser")
+    @Documentation(order = 110, description = "Execute a script at the file path relative to the feature directory within the window of the named browser", example = "Then I execute the script myJavascript.js in the myChrome browser")
     public void executeScriptInNamedBrowser(String scriptPath, String configName) {
         Object o = seleniumManager.executeScriptFile(configName, scriptPath);
         if ( o instanceof Boolean && !((Boolean)o)) {

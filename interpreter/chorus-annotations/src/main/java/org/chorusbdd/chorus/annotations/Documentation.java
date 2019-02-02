@@ -25,5 +25,20 @@ package org.chorusbdd.chorus.annotations;
 
 public @interface Documentation {
     
+    int DEFAULT_ORDER = 100;
+
+    /**
+     * Description for documented item
+     */
     String description() default "";
+
+    /**
+     * Example usage for documented item
+     */
+    String example() default "";
+
+    /**
+     * Relative ordering, in relation to other documented items of the same type
+     */
+    int order() default DEFAULT_ORDER;
 }

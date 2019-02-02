@@ -23,10 +23,7 @@
  */
 package org.chorusbdd.chorus.handlers.processes;
 
-import org.chorusbdd.chorus.annotations.ChorusResource;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.annotations.*;
 import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.handlerconfig.ConfigurationManager;
 import org.chorusbdd.chorus.handlerconfig.HandlerConfigLoader;
@@ -80,9 +77,8 @@ public class ProcessesHandler implements ConfigPropertySource {
 
     // -------------------------------------------------------------- Steps
 
-    @Step(description = "Start a process which is configured in handler properties",
-          example = "Given I start a myProcess process",
-          value = ".*start a (.*) process")
+    @Step(".*start a (.*) process")
+    @Documentation(order = 10, description = "Start a process which is configured in handler properties", example = "Given I start a myProcess process")
     public void startProcessFromConfig(String configName) throws Exception {
         //no user process name was supplied so use the config name,
         //or the config name with a count appended if this config has already been started during the scenario
@@ -91,141 +87,112 @@ public class ProcessesHandler implements ConfigPropertySource {
         processManager.startProcess(configName, processName, config);
     }
 
-    @Step(description = "Start a process which is configured in handler properties, given it a name/alias. This allows the same configuration" +
-            "to be used for several named process instances", 
-          example = "Given I start a myProcess process named myProcess_A",
-          value = ".*start an? (.+) process named " + HandlerPatterns.namePattern + ".*?")
+    @Step(".*start an? (.+) process named " + HandlerPatterns.namePattern + ".*?")
+    @Documentation(order = 20, description = "Start a process which is configured in handler properties, given it a name/alias. This allows the same configuration to be used for several named process instances", example = "Given I start a myProcess process named myProcess_A")
     public void startNamedProcessFromConfig(String configName, String processName) throws Exception {
         Properties config = getConfig(configName);
         processManager.startProcess(configName, processName, config);
     }
 
-    @Step(description = "Stop the process with the given name", 
-          example = "Then I stop the process myProcess",
-          value = ".*stop (?:the )?process (?:named )?" + HandlerPatterns.namePattern + ".*?")
+    @Step(".*stop (?:the )?process (?:named )?" + HandlerPatterns.namePattern + ".*?")
+    @Documentation(order = 30, description = "Stop the process with the given name", example = "Then I stop the process myProcess")
     public void stopProcess(String processName) {
         processManager.stopProcess(processName);
     }
 
-    @Step(description = "Check the process with the given name which was running is now stopped",
-          example = "And the process myProcess has stopped",
-          retryDuration = 5,
-          value = ".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " (?:is |has )(?:stopped|terminated).*?")
+    @Step(value = ".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " (?:is |has )(?:stopped|terminated).*?", retryDuration = 5)
+    @Documentation(order = 40, description = "Check the process with the given name which was running is now stopped", example = "And the process myProcess has stopped")
     public void checkProcessHasStopped(String processName) {
         processManager.checkProcessHasStopped(processName);
     }
 
-    @Step(description = "Check the process with the given name is running",
-          example = "And the process myProcess is running",
-          value = ".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " is running")
+    @Step(".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " is running")
+    @Documentation(order = 50, description = "Check the process with the given name is running", example = "And the process myProcess is running")
     public void checkProcessIsRunning(String processName) {
         processManager.checkProcessIsRunning(processName);
     }
 
-    @Step(description = "Check the process with the given name is not running",
-          example = "Then the process myProcess is not running",
-          retryDuration = 5,
-          value = ".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " is not running")
+    @Step(value = ".*?(?:the process )?(?:named )?" + HandlerPatterns.namePattern + " is not running", retryDuration = 5)
+    @Documentation(order = 60, description = "Check the process with the given name is not running", example = "Then the process myProcess is not running")
     public void checkProcessIsNotRunning(String processName) {
         processManager.checkProcessIsNotRunning(processName);
     }
 
-    @Step(description = "Wait for a running process to terminate for up to the specified number of seconds",
-          example = "When I wait for up to 10 seconds for the process named myProcess to stop",
-          value = ".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?" + HandlerPatterns.namePattern + " to (?:stop|terminate).*?")
+    @Step(".*wait for (?:up to )?(\\d+) seconds for (?:the process )?(?:named )?" + HandlerPatterns.namePattern + " to (?:stop|terminate).*?")
+    @Documentation(order = 70, description = "Wait for a running process to terminate for up to the specified number of seconds", example = "When I wait for up to 10 seconds for the process named myProcess to stop")
     public void waitXSecondsForProcessToTerminate(int waitSeconds, String processName) {
         processManager.waitForProcessToTerminate(processName, waitSeconds);
     }
 
-    @Step(description = "Wait for a running process to terminate for up to the terminate wait time specified in the process config",
-          example = "When I wait for myProcess to stop",
-          value = ".*wait for (?:the process )?(?:named )?" + HandlerPatterns.namePattern + " to (?:stop|terminate).*?")
+    @Step(".*wait for (?:the process )?(?:named )?" + HandlerPatterns.namePattern + " to (?:stop|terminate).*?")
+    @Documentation(order = 80, description = "Wait for a running process to terminate for up to the terminate wait time specified in the process config", example = "When I wait for myProcess to stop")
     public void waitForProcessToTerminate(String processName) {
         processManager.waitForProcessToTerminate(processName);
     }
 
-    @Step(description = "Read a line of standard output from the named process which matches the pattern specified, " +
-            "this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the read timeout specified in the process config",
-          example = "Then I read the line 'user \\w+ logged in' from the myProcess process",
-          value = ".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Documentation(order = 90, description = "Read a line of standard output from the named process which matches the pattern specified, this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the read timeout specified in the process config", example = "Then I read the line 'user \\w+ logged in' from the myProcess process")
     public void readLineFromProcess(String pattern, String processName) {
         processManager.readFromProcess(pattern, processName, false);
     }
 
-    @Step(description = "Read a line of standard error from the named process which matches the pattern specified, " +
-            "this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the read timeout specified in the process config",
-          example = "Then I read the line 'user \\w+ logged in' from the myProcess process std error",
-          value = ".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error")
+    @Documentation(order = 100, description = "Read a line of standard error from the named process which matches the pattern specified, this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the read timeout specified in the process config", example = "Then I read the line 'user \\w+ logged in' from the myProcess process std error")
     public void readLineFromProcessStdError(String pattern, String processName) {
         processManager.readFromProcessStdError(pattern, processName, false);
     }
 
-    @Step(description = "Read a line of standard output from the named process which matches the pattern specified, " +
-            "this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the number of seconds specified",
-          example = "Then I read the line 'user \\w+ logged in' from the myProcess process within 5 seconds",
-          value = ".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process within (\\d+) second(?:s)?")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process within (\\d+) second(?:s)?")
+    @Documentation(order = 110, description = "Read a line of standard output from the named process which matches the pattern specified, this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the number of seconds specified", example = "Then I read the line 'user \\w+ logged in' from the myProcess process within 5 seconds")
     public void readLineFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessWithinNSeconds(pattern, processName, false, seconds);
     }
 
-    @Step(description = "Read a line of standard error from the named process which matches the pattern specified, " +
-            "this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the number of seconds specified",
-          example = "Then I read the line 'user \\w+ logged in' from the myProcess process within 5 seconds",
-          value = ".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error within (\\d+) second(?:s)?")
+    @Step(".*read the line '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error within (\\d+) second(?:s)?")
+    @Documentation(order = 120, description = "Read a line of standard error from the named process which matches the pattern specified, this will be stored into the Chorus Context variable 'ProcessesHandler.match', waiting for the number of seconds specified", example = "Then I read the line 'user \\w+ logged in' from the myProcess process within 5 seconds")
     public void readLineFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessStdErrorWithinNSeconds(pattern, processName, false, seconds);
     }
 
-    @Step(description = "Read standard output from the named process which matches the pattern specified, matching within lines. " +
-            "This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for up to the read timeout specified in the process config",
-          example = "Then I read 'user \\w+ logged in' from the myProcess process",
-          value = ".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Documentation(order = 130, description = "Read standard output from the named process which matches the pattern specified, matching within lines. This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for up to the read timeout specified in the process config", example = "Then I read 'user \\w+ logged in' from the myProcess process")
     public void readFromProcess(String pattern, String processName) {
         processManager.readFromProcess(pattern, processName, true);
     }
 
-    @Step(description = "Read standard error from the named process which matches the pattern specified, matching within lines. " +
-            "This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for up to the read timeout specified in the process config",
-          example = "Then I read 'user \\w+ logged in' from the myProcess process std errorjj",
-          value = ".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error")
+    @Documentation(order = 140, description = "Read standard error from the named process which matches the pattern specified, matching within lines. This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for up to the read timeout specified in the process config", example = "Then I read 'user \\w+ logged in' from the myProcess process std errorjj")
     public void readFromProcessStdError(String pattern, String processName) {
         processManager.readFromProcessStdError(pattern, processName, true);
     }
 
-    @Step(description = "Read standard output from the named process which matches the pattern specified, matching within lines. " +
-            "This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for the specified number of seconds",
-          example = "Then I read 'user \\w+ logged in' from the myProcess process",
-          value = ".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process within (\\d+) second(?:s)?")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process within (\\d+) second(?:s)?")
+    @Documentation(order = 150, description = "Read standard output from the named process which matches the pattern specified, matching within lines. This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for the specified number of seconds", example = "Then I read 'user \\w+ logged in' from the myProcess process")
     public void readFromProcessWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessWithinNSeconds(pattern, processName, true, seconds);
     }
 
-    @Step(description = "Read standard error from the named process which matches the pattern specified, matching within lines. " +
-            "This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for the specified number of seconds",
-          example = "Then I read 'user \\w+ logged in' from the myProcess process",
-          value = ".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error within (\\d+) second(?:s)?")
+    @Step(".*read '(.*)' from (?:the )?" + HandlerPatterns.namePattern + " process std error within (\\d+) second(?:s)?")
+    @Documentation(order = 160, description = "Read standard error from the named process which matches the pattern specified, matching within lines. This will be stored into the Chorus Context variable 'ProcessesHandler.match'. Wait for the specified number of seconds", example = "Then I read 'user \\w+ logged in' from the myProcess process")
     public void readFromProcessStdErrorWithinNSeconds(String pattern, String processName, int seconds) {
         processManager.readFromProcessStdErrorWithinNSeconds(pattern, processName, true, seconds);
     }
 
-    @Step(description = "Write the supplied text followed by a line terminator to the named process standard input",
-          example = "When I write the line 'hello hello' to the myProcess process",
-          value = ".*write the line '(.*)' to (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Step(".*write the line '(.*)' to (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Documentation(order = 170, description = "Write the supplied text followed by a line terminator to the named process standard input", example = "When I write the line 'hello hello' to the myProcess process")
     public void writeLineToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, true);
     }
 
-    @Step(description = "Write the supplied text to the named process standard input, no line terminator will be appended",
-          example = "When I write the line 'hello hello' to the myProcess process",
-          value = ".*write '(.*)' to (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Step(".*write '(.*)' to (?:the )?" + HandlerPatterns.namePattern + " process")
+    @Documentation(order = 180, description = "Write the supplied text to the named process standard input, no line terminator will be appended", example = "When I write the line 'hello hello' to the myProcess process")
     public void writeToProcess(String line, String processName) {
         processManager.writeToProcess(line, processName, false);
     }
 
     //A Directive which can be used to start one or more processes using the config name
-    @Step(description = "Start the list of processes (as a directive)",
-          example = "#! Processes start myProcess, mySecondProcess, myThirdProcess",
-          value = "Processes start " + HandlerPatterns.nameListPattern)
+    @Step("Processes start " + HandlerPatterns.nameListPattern)
+    @Documentation(order = 190, description = "Start the list of processes (as a directive)", example = "#! Processes start myProcess) mySecondProcess, myThirdProcess")
     public void startProcessDirective(String processNameList) throws Exception {
         Map<String,String> processNames = HandlerPatterns.getNamesWithAliases(processNameList);
         for ( Map.Entry<String,String> e : processNames.entrySet()) {
@@ -234,10 +201,8 @@ public class ProcessesHandler implements ConfigPropertySource {
     }
 
     //A Directive which can be used to connect to one or more processes using the config name so we an run steps on them
-    @Step(description = "Connect to the list of processes using Chorus' remoting features, a remoting port must have been specified in the process config " +
-            "and the processes must be exporting step definitions",
-          example = "#! Processes connect myProcess, mySecondProcess, myThirdProcess",
-          value = "Processes connect " + HandlerPatterns.nameListPattern)
+    @Step("Processes connect " + HandlerPatterns.nameListPattern)
+    @Documentation(order = 200, description = "Connect to the list of processes using Chorus' remoting features, a remoting port must have been specified in the process config and the processes must be exporting step definitions", example = "#! Processes connect myProcess) mySecondProcess, myThirdProcess")
     public void remotingUseDirective(String processNameList) throws Exception {
         List<String> componentNames = HandlerPatterns.getNames(processNameList);
         for ( String componentName : componentNames) {
