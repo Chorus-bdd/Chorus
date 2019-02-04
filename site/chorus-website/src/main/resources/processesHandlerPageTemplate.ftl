@@ -9,6 +9,9 @@ The Processes handler provides step definitions which allow you to start and sto
 If the started process exports step definitions over JMX Chorus can connect to it to discover these  
 You can also provide input to a running process. 
 
+* [Handler Steps](#steps)  
+* [Handler Properties](#properties)
+
 ## Using the Processes Handler
 
 ### Create a test feature file which `Uses: Processes`
@@ -36,7 +39,7 @@ For a Java process, you must set a property for the main class of your process a
 
 The new process will use the same JVM and classpath as the chorus interpreter, but you can override these by setting other properties.
 
-For a full list of processes properties see [Processes Properties](/pages/BuiltInHandlers/Processes/ProcessesHandlerProperties)
+For a full list of processes properties scroll down to the bottom of this page
 For full details on chorus properties files see [Handler Configuration](/pages/Handlers/HandlerConfiguration)
 
 

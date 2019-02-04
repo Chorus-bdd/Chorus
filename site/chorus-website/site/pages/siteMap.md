@@ -38,19 +38,19 @@ title: Site Map
 ### Built In Handlers
 
  * [Built In Steps](/pages/BuiltInHandlers/BuiltInSteps)
+ * [Selenium Handler Details](/pages/BuiltInHandlers/Selenium/SeleniumHandlerDetails)
+ * [Remoting Handler Details](/pages/BuiltInHandlers/Remoting/RemotingHandlerDetails)
+ * [Timers Handler Details](/pages/BuiltInHandlers/Timers/TimersHandlerDetails)
+ * [Processes Handler](/pages/BuiltInHandlers/Processes/ProcessesHandlerDetails)
+ * [Web Sockets Handler Details](/pages/BuiltInHandlers/WebSockets/WebSocketsHandlerDetails)
+ * [Chorus Context Handler Details](/pages/BuiltInHandlers/ChorusContext/ChorusContextHandlerDetails)
+ * [SQL Handler Details](/pages/BuiltInHandlers/Sql/SQLHandlerDetails)
 
 
 #### &nbsp;&nbsp;&nbsp;Chorus Context
 
  * [Context Variables](/pages/BuiltInHandlers/ChorusContext/ChorusContext)
  * [Chorus Context Handler](/pages/BuiltInHandlers/ChorusContext/ChorusContextHandler)
-
-
-#### &nbsp;&nbsp;&nbsp;Processes
-
- * [Starting Processes](/pages/BuiltInHandlers/Processes/StartingProcesses)
- * [Processes Handler Quick Start](/pages/BuiltInHandlers/Processes/ProcessesHandlerQuickStart)
- * [Processes Handler Properties](/pages/BuiltInHandlers/Processes/ProcessesHandlerProperties)
 
 
 #### &nbsp;&nbsp;&nbsp;Remoting

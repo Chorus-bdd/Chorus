@@ -78,7 +78,7 @@ public class PageGenerator {
     private void addSiteSectionProperties(Map<String, Object> freemarkerModel) {
         Map<String,Object> siteProperties = new HashMap<>();
         freemarkerModel.put("site", siteProperties);
-        siteProperties.put("section", "Handlers");
+        siteProperties.put("section", "Built In Handlers");
         siteProperties.put("sectionIndex", 30);
     }
 

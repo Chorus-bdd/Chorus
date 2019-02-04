@@ -7,4 +7,7 @@ sectionIndex: ${site.sectionIndex}
 
 ${handler.description}
 
+* [Handler Steps](#steps)  
+* [Handler Properties](#properties)
+
 <#include "./handlerDetailsPageTemplate.ftl">

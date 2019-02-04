@@ -1,4 +1,5 @@
 
+<a name="steps"/>
 ## Steps available in the ${handler.name} Handler:
 
 
@@ -20,6 +21,7 @@
 
 
 
+<a name="properties"/>
 ## Configuration properties for the ${handler.name} Handler:
 
 <table>
