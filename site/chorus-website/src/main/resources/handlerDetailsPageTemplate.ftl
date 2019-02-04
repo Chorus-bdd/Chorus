@@ -1,11 +1,6 @@
----
-layout: page
-title: ${handler.name} Handler Properties
-section: ${site.section}
-sectionIndex: ${site.sectionIndex}
----
 
-The steps available in the ${handler.name} Handler:
+## Steps available in the ${handler.name} Handler:
+
 
 <table>
     <tr>
@@ -24,7 +19,8 @@ The steps available in the ${handler.name} Handler:
 </table>
 
 
-The supported configuration properties for the ${handler.name} Handler:
+
+## Configuration properties for the ${handler.name} Handler:
 
 <table>
     <tr>

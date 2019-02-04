@@ -64,6 +64,9 @@ import java.util.Properties;
  * the metadata are loaded from a properties file named in system property: -D org.chorusbdd.chorus.jmxexporter.db.properties=[file].
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
+@Documentation(description = 
+        "The Remoting handler allows the chorus to connect to remote JVM-based processes and discover " +
+        "step definitions they publish using the ChorusHandlerJmxExporter utility")
 @SuppressWarnings("UnusedDeclaration")
 public class RemotingHandler implements ConfigPropertySource {
 

@@ -1,64 +1,55 @@
 ---
 layout: page
-title: Processes Handler Quick Start
-section: Processes
-sectionIndex: 20
+title: ${handler.name} Handler 
+section: ${site.section}
+sectionIndex: ${site.sectionIndex}
 ---
 
-Let's imagine you are writing a feature called Publisher Test
-This has a scenario in which you want to start a publisher process, which publishes some messages.
+The Processes handler provides step definitions which allow you to start and stop local processes, and check their standard output and error.  
+If the started process exports step definitions over JMX Chorus can connect to it to discover these  
+You can also provide input to a running process. 
 
-### Create a feature file and import the Processes Handler
+## Using the Processes Handler
 
-First you might create a feature file called `publisherTest.feature`
+### Create a test feature file which `Uses: Processes`
 
-At the top of your feature, make sure the Processes Handler is imported with the `Uses:` keyword
-
-The top of your feature file may look like this:
+The top of your feature file (e.g. myProcess.feature) may look like this:
 
     Uses: Processes
 
-      Feature: Publisher Test
+    Feature: Start a Process Feature
       
-        Scenario: I start a publisher process
-      
-
-### Now add a step to start the publisher process
-
-The Processes handler provides built in steps to start and stop processes
-You can use these during the scenario to start a 'publisher' process
-
-    Scenario: I start a publisher process
-      When I start a publisher process named pub
-      ...
+      Scenario: Check we can start a process
+        Given I start a myProcess process 
 
 The process will automatically get stopped at the end of the scenario
-Initially this will fail, since you have not yet provided any config to tell Chorus how to start 'publisher'
+Initially this will fail, since you have not yet provided any config to tell Chorus how to start 'myProcess'
 
-### Configure the 'publisher' process
+### Configure the 'myProcess' process
 
-To configure the process, add a publisherTest.properties file in the same directory as your publisherTest.feature.
+To configure the process, add a myProcess.properties file in the same directory as your processTest.feature.
 
 In the properties file you can configure processes.
 For a Java process, you must set a property for the main class of your process as below:
 
-    processes.publisher.mainclass=com.mycom.publisher.Publisher
+    processes.myProcess.mainclass=com.mycom.MyProcess
 
 The new process will use the same JVM and classpath as the chorus interpreter, but you can override these by setting other properties.
 
 For a full list of processes properties see [Processes Properties](/pages/BuiltInHandlers/Processes/ProcessesHandlerProperties)
+For full details on chorus properties files see [Handler Configuration](/pages/Handlers/HandlerConfiguration)
 
 
 ### Starting the same process under different names
 
-In the example above, the configuration is called 'publisher' but the process is named 'pub'
-This distinction allows you to start multiple instances of the publisher process under different logical names:
+In the example above, the configuration is called 'myProcess' but the process is named 'pub'
+This distinction allows you to start multiple instances of the myProcess process under different logical names:
 
-    I start a publisher process named pub1
-    I start a publisher process named pub2
+    I start a myProcess process named pub1
+    I start a myProcess process named pub2
 
 
-### Stopping the pub process
+### Stopping the process
 
 You generally don't need to stop processes explicitly using 'I stop the process' steps.  
 By default any processes started during a scenario will be terminated by Chorus when that scenario is completed.
@@ -69,7 +60,7 @@ Processes started within a scenario are usually stopped automatically at the end
 
 If you wish to run a process throughout a feature, and reuse it between scenarios, you can configure it to be scoped at feature level, by setting the `scope` property:
 
-e.g. `processes.publisher.scope=feature`
+e.g. `processes.myProcess.scope=feature`
 
 Then the process will not be stopped until feature end.
 
@@ -125,25 +116,25 @@ Output mode is one of
 - inline
 - file (log to a file) (the default)
 
-The config below will write the std out of the publisher process process to a log file, and show error output inline
+The config below will write the std out of the myProcess process process to a log file, and show error output inline
 n.b. the log file name will be calculated automatically from the feature and process name
 
-    processes.publisher.stdOutMode=file
-    processes.publisher.stdErrMode=inline
-    processes.publisher.logDirectory=${user.dir}/test/chorus/logs
-    processes.publisher.appendToLogs=false
+    processes.myProcess.stdOutMode=file
+    processes.myProcess.stdErrMode=inline
+    processes.myProcess.logDirectory=${r"${user.dir}"}/test/chorus/logs
+    processes.myProcess.appendToLogs=false
 
 
 ### Log4j support
 
 If the ProcessesHandler finds a file called **log4j.xml** in the same directory as your feature file, then it will set the appropriate log4j system property when starting your processes.
 
-    -Dlog4j.configuration=${path to your log4j.xml}
+    -Dlog4j.configuration=${r"${path to your log4j.xml"}
 
 It will also set the following system properties which can be useful in your log4j configuration:
 
-    -Dfeature.dir=${path to your feature directory}
-    -Dfeature.process.name=${name of current feature}
+    -Dfeature.dir=${r"${path to your feature directory}"}
+    -Dfeature.process.name=${r"${name of current feature}"}
 
 
 ### Setting defaults for all your processes
@@ -151,7 +142,7 @@ It will also set the following system properties which can be useful in your log
 If you want all your processes to log to the same directory, you could set a default for this. The easiest way is to add a chorus.properties file at the top level on your test classpath. Use the special 'default' configuration group to specify the default property values:
 
     processes.default.logging=true
-    processes.default.logDirectory=${user.dir}/test/chorus/logs
+    processes.default.logDirectory=${r"${user.dir}"}/test/chorus/logs
 
 Now all processes will log into the above directory, unless you override them with a configuration specific property.
 
@@ -167,7 +158,7 @@ To do this you need to turn the jmx management service on for any processes you 
 You can then connect to the process by setting the remotingPort property below to the correct port for the JMX service
 started by the process under test.
 
-    processes.publisher.remotingPort=1234
+    processes.myProcess.remotingPort=1234
 
 For more details on remoting see [Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart)
 
@@ -177,28 +168,4 @@ For more details on remoting see [Remoting Handler Quick Start](/pages/BuiltInHa
 Instead of setting main class, you can set the property `pathToExecutable` to point to a script or native process.
 This may be either an absolute path or a path which is relative to the feature file directory
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<#include "./handlerDetailsPageTemplate.ftl">

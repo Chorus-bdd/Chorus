@@ -49,6 +49,7 @@ import static org.chorusbdd.chorus.util.assertion.ChorusAssert.fail;
 
 /**  A handler for starting, stopping and communicating with processes */
 @Handler(value = "Processes", scope= Scope.FEATURE)
+@Documentation(description = "The Processes Handler provides steps which allow Chorus to start and stop local processes, check their standard output and error and provide input to a started process. ")
 @SuppressWarnings("UnusedDeclaration")
 public class ProcessesHandler implements ConfigPropertySource {
 

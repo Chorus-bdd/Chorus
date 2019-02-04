@@ -26,6 +26,7 @@ package org.chorusbdd.chorus.site.markdown;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
 import org.chorusbdd.chorus.annotations.Documentation;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
@@ -88,6 +89,16 @@ public class PageGenerator {
 
         addHandlerConfigPropertyMetadata(handlerClass, handlerProperties);
         addHandlerStepMetadata(handlerClass, handlerProperties);
+        addHandlerDocumentation(handlerClass, handlerProperties);
+    }
+
+    private void addHandlerDocumentation(Class handlerClass, Map<String, Object> handlerProperties) {
+        String description = "";
+        if ( handlerClass.isAnnotationPresent(Documentation.class)) {
+            Documentation d = (Documentation)handlerClass.getAnnotation(Documentation.class);
+            description = d.description();
+        }
+        handlerProperties.put("description", description);
     }
 
     private void addHandlerConfigPropertyMetadata(Class handlerClass, Map<String, Object> handlerProperties) throws IOException, TemplateException {
@@ -123,7 +134,19 @@ public class PageGenerator {
 
     private void writeDetailsPage(String handlerName, Map<String, Object> freemarkerModel) throws IOException, TemplateException {
         Configuration cfg = FreemarkerConfig.createFreemarkerConfiguration();
-        Template template = cfg.getTemplate("handlerDetailsPageTemplate.ftl");
+
+        String customTemplateName = handlerName + "HandlerPageTemplate.ftl";
+        String basicTemplateName = "basicHandlerPageTemplate.ftl";
+
+        Template template;
+        try {
+            template = cfg.getTemplate(customTemplateName);
+            log.info("Using custom handler template at " + customTemplateName);
+        } catch (TemplateNotFoundException tnf) {
+            log.info("Could not find a custom template at " + customTemplateName + " will use basic template for this handler");
+            template = cfg.getTemplate(basicTemplateName);
+        }
+        
 //        Writer out = new OutputStreamWriter(System.out);
         String handlerNameNoSpaces = handlerName.replace(" ", "");
         File ouputFile = new File("site/pages/BuiltInHandlers/" +  handlerNameNoSpaces, handlerNameNoSpaces + "HandlerDetails.md");
