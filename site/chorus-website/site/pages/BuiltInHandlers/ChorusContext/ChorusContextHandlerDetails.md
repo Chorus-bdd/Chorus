@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Chorus Context Handler Details
-section: Built In Handlers
+section: Chorus Context
 sectionIndex: 30
 ---
 

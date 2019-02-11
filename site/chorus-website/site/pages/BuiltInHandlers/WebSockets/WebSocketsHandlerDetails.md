@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Web Sockets Handler Details
-section: Built In Handlers
+section: Web Sockets
 sectionIndex: 30
 ---
 
@@ -81,20 +81,6 @@ sectionIndex: 30
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
-        <td>clientConnectTimeoutSeconds</td>
-        <td>yes</td>
-        <td>How long the Chorus interpreter should wait to receive a connection from a client before failing the connection step</td>
-        <td>60</td>
-        <td>\d+</td>
-    </tr>
-    <tr>
-        <td>port</td>
-        <td>yes</td>
-        <td>Which local port the web socket server should listen on</td>
-        <td>9080</td>
-        <td>\d+</td>
-    </tr>
-    <tr>
         <td>scope</td>
         <td>yes</td>
         <td>Whether the web socket should be closed at the end of each scenario, or at the end of the feature</td>
@@ -106,6 +92,20 @@ sectionIndex: 30
         <td>yes</td>
         <td>How long the Chorus interpreter should wait for a result after executing a step on a web socket client before failing the step</td>
         <td>60</td>
+        <td>\d+</td>
+    </tr>
+    <tr>
+        <td>clientConnectTimeoutSeconds</td>
+        <td>yes</td>
+        <td>How long the Chorus interpreter should wait to receive a connection from a client before failing the connection step</td>
+        <td>60</td>
+        <td>\d+</td>
+    </tr>
+    <tr>
+        <td>port</td>
+        <td>yes</td>
+        <td>Which local port the web socket server should listen on</td>
+        <td>9080</td>
         <td>\d+</td>
     </tr>
 

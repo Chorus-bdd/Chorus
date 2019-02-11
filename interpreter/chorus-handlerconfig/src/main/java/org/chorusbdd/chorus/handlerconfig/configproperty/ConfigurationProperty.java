@@ -42,4 +42,6 @@ public interface ConfigurationProperty {
 
     ConfigBuilderTypeConverter getValueConverter();
     
+    int getOrder();  
+    
 }

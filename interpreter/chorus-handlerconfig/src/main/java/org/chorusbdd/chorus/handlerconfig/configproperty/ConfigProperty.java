@@ -46,6 +46,12 @@ public @interface ConfigProperty {
     String description();
 
     /**
+     * Relative ordering for documentation generator
+     * @return an int which will be used to sort properties when rendering documentation
+     */
+    int order() default 100;
+
+    /**
      * Default property value as a String (will be converted to the target java type, 
      * which is the type of the argument of the annotated method, using the configured or default valueConverter)
      */

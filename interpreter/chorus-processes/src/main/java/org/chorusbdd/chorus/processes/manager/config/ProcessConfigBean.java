@@ -130,31 +130,18 @@ public class ProcessConfigBean implements ProcessManagerConfig {
     }
 
     @Override
-    public String getPathToExecutable() {
-        return pathToExecutable;
+    public String getMainclass() {
+        return mainclass;
     }
 
     @ConfigProperty(
-        name= PATH_TO_EXECUTABLE_PROPERTY,
-        description="Path to a native executable process or script, the path may be absolute or relative to the feature directory. This property and the mainclass property are mutually exclusive - you should either one but not both",
-        mandatory = false
+        name= MAINCLASS_PROPERTY,
+        description="The class containing the main method which starts up your component (java processes only)",
+        mandatory = false,
+        order = 10
     )
-    public void setPathToExecutable(String pathToExecutable) {
-        this.pathToExecutable = pathToExecutable;
-    }
-
-    @Override
-    public String getJre() {
-        return jre == null ? JAVA_HOME : jre;
-    }
-
-    @ConfigProperty(
-        name= JRE_PROPERTY,
-        description="Path to the JRE to be used when executing a Java process. If not set, the Chorus interpreter's JVM will be used",
-        mandatory = false
-    )
-    public void setJre(String jre) {
-        this.jre = jre;
+    public void setMainclass(String mainclass) {
+        this.mainclass = mainclass;
     }
 
     @Override
@@ -165,10 +152,26 @@ public class ProcessConfigBean implements ProcessManagerConfig {
     @ConfigProperty(
         name= CLASSPATH_PROPERTY,
         description="The classpath to use when executing a Java process. If not set, the Chorus interpreter's classpath will be used",
-        mandatory = false
+        mandatory = false,
+        order = 20
     )
     public void setClasspath(String classpath) {
         this.classpath = classpath;
+    }
+
+    @Override
+    public String getJre() {
+        return jre == null ? JAVA_HOME : jre;
+    }
+
+    @ConfigProperty(
+        name= JRE_PROPERTY,
+        description="Path to the JRE to be used when executing a Java process. If not set, the Chorus interpreter's JVM will be used",
+        mandatory = false,
+        order = 30
+    )
+    public void setJre(String jre) {
+        this.jre = jre;
     }
 
     @Override
@@ -179,24 +182,11 @@ public class ProcessConfigBean implements ProcessManagerConfig {
     @ConfigProperty(
         name= JVMARGS_PROPERTY,
         description="System properties (-D switches) to use when executing a Java process",
-        mandatory = false
+        mandatory = false,
+        order = 40
     )
     public void setJvmargs(String jvmargs) {
         this.jvmargs = jvmargs;
-    }
-
-    @Override
-    public String getMainclass() {
-        return mainclass;
-    }
-
-    @ConfigProperty(
-        name= MAINCLASS_PROPERTY,
-        description="The class containing the main method which starts up your component (java processes only)",
-        mandatory = false
-    )
-    public void setMainclass(String mainclass) {
-        this.mainclass = mainclass;
     }
 
     @Override
@@ -207,10 +197,26 @@ public class ProcessConfigBean implements ProcessManagerConfig {
     @ConfigProperty(
         name= ARGS_PROPERTY,
         description="Arguments to pass to the process",
-        mandatory = false
+        mandatory = false,
+        order = 50
     )
     public void setArgs(String args) {
         this.args = args;
+    }
+
+    @Override
+    public String getPathToExecutable() {
+        return pathToExecutable;
+    }
+
+    @ConfigProperty(
+        name= PATH_TO_EXECUTABLE_PROPERTY,
+        description="Path to a native executable process or script, the path may be absolute or relative to the feature directory. This property and the mainclass property are mutually exclusive - you should either one but not both",
+        mandatory = false,
+        order = 60
+    )
+    public void setPathToExecutable(String pathToExecutable) {
+        this.pathToExecutable = pathToExecutable;
     }
 
     @Override
@@ -222,7 +228,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= STD_OUT_MODE_PROPERTY,
         description="What do to with standard output stream from started process, one of INLINE (combine with interpreter stdout), FILE (write output to file). Other values are deprecated",
         validationPattern = "(?i)FILE|INLINE|CAPTURED|CAPTUREDWITHLOG",
-        mandatory = false //logging prop may be set instead
+        mandatory = false, //logging prop may be set instead
+        order = 70
     )
     public void setStdOutMode(OutputMode stdOutMode) {
         this.stdOutMode = stdOutMode;
@@ -237,7 +244,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= STD_ERR_MODE_PROPERTY,
         description="What do to with standard error stream from started process, one of INLINE (combine with interpreter stderr) or FILE (write output to file). Other values are deprecated",
         validationPattern = "(?i)FILE|INLINE|CAPTURED|CAPTUREDWITHLOG",
-        mandatory = false //logging prop may be set instead
+        mandatory = false, //logging prop may be set instead
+        order = 80
     )
     public void setStdErrMode(OutputMode stdErrMode) {
         this.stdErrMode = stdErrMode;
@@ -248,7 +256,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= LOGGING_PROPERTY,
         description="If this property is set true, it will switch stdOutMode and stdErrorMode to FILE. If false then both will be INLINE. Leave it unset if you wish to set the stdOutMode and stdErrorMode individually",
         validationPattern = "true|false",
-        mandatory = false    //may set stdErr or stdOut mode directly instead
+        mandatory = false,    //may set stdErr or stdOut mode directly instead
+        order = 90
     )
     public void setLogging(boolean isLoggingEnabled) {
         //we still support logging property as an alternative to stdOutMode and stdErrMode
@@ -257,7 +266,6 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         setStdErrMode(m);
         setStdOutMode(m);
     }
-    
     
     @Override
     public int getRemotingPort() {
@@ -268,7 +276,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= REMOTING_PORT_PROPERTY,
         description="Port on which to start the JMX remoting service. This is required when you want to use Chorus' Remoting features to connect to the process being started using JMX. Setting this property will add java system properties to turn on the JMX platform service. (java processes only), -1 to disable",
         validationPattern = "(-?)\\d+",
-        defaultValue = "-1"
+        defaultValue = "-1",
+        order = 100
     )
     public void setRemotingPort(int remotingPort) {
         this.remotingPort = remotingPort;
@@ -283,7 +292,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= DEBUG_PORT_PROPERTY,
         description="Enable the debugger when starting the jvm and set it up to listen for connections on the port specified (java processes only), -1 to disable",
         validationPattern = "(-?)\\d+",
-        defaultValue = "-1"
+        defaultValue = "-1",
+        order = 110
     )
     public void setDebugPort(int debugPort) {
         this.debugPort = debugPort;
@@ -298,7 +308,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= TERMINATE_WAIT_TIME_PROPERTY,
         description="Maximum time to wait for a process to terminate in seconds",
         validationPattern = "\\d+",
-        defaultValue = "30"
+        defaultValue = "30",
+        order = 120
     )
     public void setTerminateWaitTime(int terminateWaitTime) {
         this.terminateWaitTime = terminateWaitTime;
@@ -312,7 +323,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
     @ConfigProperty(
         name= LOG_DIRECTORY_PROPERTY,
         description="If you turn logging on, use this property to set the log directory. If not specified a logs directory will be created in the same directory as the feature file. May be an absolute path or a path relative to the working directory",
-        mandatory = false
+        mandatory = false,
+        order = 130
     )
     public void setLogDirectory(String logDirectory) {
         this.logDirectory = logDirectory;
@@ -327,7 +339,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= APPEND_TO_LOGS_PROPERTY,
         description="Whether to append to or overwrite log files",
         defaultValue = "false",
-        validationPattern = "true|false"
+        validationPattern = "true|false",
+        order = 140
     )
     public void setAppendToLogs(boolean appendToLogs) {
         this.appendToLogs = appendToLogs;
@@ -342,7 +355,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= CREATE_LOG_DIR_PROPERTY,
         description="Whether to auto-create the log directory if it does not exist",
         defaultValue = "true",
-        validationPattern = "true|false"
+        validationPattern = "true|false",
+        order = 150
     )
     public void setCreateLogDir(boolean createLogDir) {
         this.createLogDir = createLogDir;
@@ -357,7 +371,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= PROCESS_CHECK_DELAY_PROPERTY,
         description="Milliseconds after which to check started process is still running or fail the start process step. Longer values add better detection of immediate process start failures but incur an increased delay before subsequent steps run",
         defaultValue = "500",
-        validationPattern = "(-?)\\d+"
+        validationPattern = "(-?)\\d+",
+        order = 160
     )
     public void setProcessCheckDelay(int processCheckDelay) {
         this.processCheckDelay = processCheckDelay;
@@ -372,7 +387,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= READ_TIMEOUT_SECONDS_PROPERTY,
         description="When matching a pattern against process output set the max time to wait for a match",
         defaultValue = "10",
-        validationPattern = "\\d+"
+        validationPattern = "\\d+",
+        order = 170
     )
     public void setReadTimeoutSeconds(int readTimeoutSeconds) {
         this.readTimeoutSeconds = readTimeoutSeconds;
@@ -388,7 +404,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         description="Whether the process should be shut down at the end of the scenario or the end of the feature." +
                 " this will be set automatically to FEATURE for processes started during 'Feature-Start:' if not provided, otherwise Scenario",
         defaultValue = "SCENARIO",
-        mandatory = false
+        mandatory = false,
+        order = 180
     )
     public void setProcessScope(Scope processScope) {
         this.processScope = processScope;
@@ -403,7 +420,8 @@ public class ProcessConfigBean implements ProcessManagerConfig {
         name= ENABLED_PROPERTY,
         description="This property can be set to true to disable process start up when running in certain profiles",
         defaultValue = "true",
-        validationPattern = "true|false"
+        validationPattern = "true|false",
+        order = 190
     )
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;

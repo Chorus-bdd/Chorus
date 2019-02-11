@@ -1,6 +1,6 @@
 ---
 layout: page
-title: ${handler.name} Handler 
+title: ${handler.name} Handler Details
 section: ${site.section}
 sectionIndex: ${site.sectionIndex}
 ---
@@ -81,7 +81,7 @@ If you need to wait for a process to terminate there are steps for this..
 
 ### Matching output from processes
 
-If you set a process stdOutMode or stdErrMode to 'captured' or 'capturedwithlog' then you can match regular expressions against its output
+If you set a process stdOutMode or stdErrMode to 'FILE' then you can match regular expressions against its output
 
     #file: myfeature.properties
     processes.myProcess.stdOutMode=captured

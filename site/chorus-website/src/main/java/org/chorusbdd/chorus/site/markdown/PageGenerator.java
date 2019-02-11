@@ -67,7 +67,7 @@ public class PageGenerator {
 
             Map<String,Object> freemarkerModel = new HashMap<>();
 
-            addSiteSectionProperties(freemarkerModel);
+            addSiteSectionProperties(handlerName, freemarkerModel);
             
             addHandlerSectionProperties(handlerClass, handlerName, freemarkerModel);
 
@@ -75,10 +75,10 @@ public class PageGenerator {
         }
     }
 
-    private void addSiteSectionProperties(Map<String, Object> freemarkerModel) {
+    private void addSiteSectionProperties(String handlerName, Map<String, Object> freemarkerModel) {
         Map<String,Object> siteProperties = new HashMap<>();
         freemarkerModel.put("site", siteProperties);
-        siteProperties.put("section", "Built In Handlers");
+        siteProperties.put("section", handlerName);
         siteProperties.put("sectionIndex", 30);
     }
 

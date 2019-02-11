@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Timers Handler Details
-section: Built In Handlers
+section: Timers
 sectionIndex: 30
 ---
 

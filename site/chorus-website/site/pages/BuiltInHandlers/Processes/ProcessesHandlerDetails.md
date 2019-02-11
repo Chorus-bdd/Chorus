@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Processes Handler 
-section: Built In Handlers
+title: Processes Handler Details
+section: Processes
 sectionIndex: 30
 ---
 
@@ -81,7 +81,7 @@ If you need to wait for a process to terminate there are steps for this..
 
 ### Matching output from processes
 
-If you set a process stdOutMode or stdErrMode to 'captured' or 'capturedwithlog' then you can match regular expressions against its output
+If you set a process stdOutMode or stdErrMode to 'FILE' then you can match regular expressions against its output
 
     #file: myfeature.properties
     processes.myProcess.stdOutMode=captured
@@ -333,65 +333,9 @@ This may be either an absolute path or a path which is relative to the feature f
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
-        <td>appendToLogs</td>
-        <td>yes</td>
-        <td>Whether to append to or overwrite log files</td>
-        <td>false</td>
-        <td>One of: true, false</td>
-    </tr>
-    <tr>
-        <td>createLogDir</td>
-        <td>yes</td>
-        <td>Whether to auto-create the log directory if it does not exist</td>
-        <td>true</td>
-        <td>One of: true, false</td>
-    </tr>
-    <tr>
-        <td>debugPort</td>
-        <td>yes</td>
-        <td>Enable the debugger when starting the jvm and set it up to listen for connections on the port specified (java processes only), -1 to disable</td>
-        <td>-1</td>
-        <td>(-?)\d+</td>
-    </tr>
-    <tr>
-        <td>enabled</td>
-        <td>yes</td>
-        <td>This property can be set to true to disable process start up when running in certain profiles</td>
-        <td>true</td>
-        <td>One of: true, false</td>
-    </tr>
-    <tr>
-        <td>processCheckDelay</td>
-        <td>yes</td>
-        <td>Milliseconds after which to check started process is still running or fail the start process step. Longer values add better detection of immediate process start failures but incur an increased delay before subsequent steps run</td>
-        <td>500</td>
-        <td>(-?)\d+</td>
-    </tr>
-    <tr>
-        <td>readTimeoutSeconds</td>
-        <td>yes</td>
-        <td>When matching a pattern against process output set the max time to wait for a match</td>
-        <td>10</td>
-        <td>\d+</td>
-    </tr>
-    <tr>
-        <td>remotingPort</td>
-        <td>yes</td>
-        <td>Port on which to start the JMX remoting service. This is required when you want to use Chorus' Remoting features to connect to the process being started using JMX. Setting this property will add java system properties to turn on the JMX platform service. (java processes only), -1 to disable</td>
-        <td>-1</td>
-        <td>(-?)\d+</td>
-    </tr>
-    <tr>
-        <td>terminateWaitTime</td>
-        <td>yes</td>
-        <td>Maximum time to wait for a process to terminate in seconds</td>
-        <td>30</td>
-        <td>\d+</td>
-    </tr>
-    <tr>
-        <td>args</td>
+        <td>mainclass</td>
         <td>no</td>
-        <td>Arguments to pass to the process</td>
+        <td>The class containing the main method which starts up your component (java processes only)</td>
         <td></td>
         <td></td>
     </tr>
@@ -417,23 +361,9 @@ This may be either an absolute path or a path which is relative to the feature f
         <td></td>
     </tr>
     <tr>
-        <td>logDirectory</td>
+        <td>args</td>
         <td>no</td>
-        <td>If you turn logging on, use this property to set the log directory. If not specified a logs directory will be created in the same directory as the feature file. May be an absolute path or a path relative to the working directory</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>logging</td>
-        <td>no</td>
-        <td>If this property is set true, it will switch stdOutMode and stdErrorMode to FILE. If false then both will be INLINE. Leave it unset if you wish to set the stdOutMode and stdErrorMode individually</td>
-        <td></td>
-        <td>One of: true, false</td>
-    </tr>
-    <tr>
-        <td>mainclass</td>
-        <td>no</td>
-        <td>The class containing the main method which starts up your component (java processes only)</td>
+        <td>Arguments to pass to the process</td>
         <td></td>
         <td></td>
     </tr>
@@ -445,11 +375,11 @@ This may be either an absolute path or a path which is relative to the feature f
         <td></td>
     </tr>
     <tr>
-        <td>scope</td>
+        <td>stdOutMode</td>
         <td>no</td>
-        <td>Whether the process should be shut down at the end of the scenario or the end of the feature. this will be set automatically to FEATURE for processes started during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
+        <td>What do to with standard output stream from started process, one of INLINE (combine with interpreter stdout), FILE (write output to file). Other values are deprecated</td>
+        <td></td>
+        <td>One of: FILE, INLINE, CAPTURED, CAPTUREDWITHLOG</td>
     </tr>
     <tr>
         <td>stdErrMode</td>
@@ -459,11 +389,81 @@ This may be either an absolute path or a path which is relative to the feature f
         <td>One of: FILE, INLINE, CAPTURED, CAPTUREDWITHLOG</td>
     </tr>
     <tr>
-        <td>stdOutMode</td>
+        <td>logging</td>
         <td>no</td>
-        <td>What do to with standard output stream from started process, one of INLINE (combine with interpreter stdout), FILE (write output to file). Other values are deprecated</td>
+        <td>If this property is set true, it will switch stdOutMode and stdErrorMode to FILE. If false then both will be INLINE. Leave it unset if you wish to set the stdOutMode and stdErrorMode individually</td>
         <td></td>
-        <td>One of: FILE, INLINE, CAPTURED, CAPTUREDWITHLOG</td>
+        <td>One of: true, false</td>
+    </tr>
+    <tr>
+        <td>remotingPort</td>
+        <td>yes</td>
+        <td>Port on which to start the JMX remoting service. This is required when you want to use Chorus' Remoting features to connect to the process being started using JMX. Setting this property will add java system properties to turn on the JMX platform service. (java processes only), -1 to disable</td>
+        <td>-1</td>
+        <td>(-?)\d+</td>
+    </tr>
+    <tr>
+        <td>debugPort</td>
+        <td>yes</td>
+        <td>Enable the debugger when starting the jvm and set it up to listen for connections on the port specified (java processes only), -1 to disable</td>
+        <td>-1</td>
+        <td>(-?)\d+</td>
+    </tr>
+    <tr>
+        <td>terminateWaitTime</td>
+        <td>yes</td>
+        <td>Maximum time to wait for a process to terminate in seconds</td>
+        <td>30</td>
+        <td>\d+</td>
+    </tr>
+    <tr>
+        <td>logDirectory</td>
+        <td>no</td>
+        <td>If you turn logging on, use this property to set the log directory. If not specified a logs directory will be created in the same directory as the feature file. May be an absolute path or a path relative to the working directory</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>appendToLogs</td>
+        <td>yes</td>
+        <td>Whether to append to or overwrite log files</td>
+        <td>false</td>
+        <td>One of: true, false</td>
+    </tr>
+    <tr>
+        <td>createLogDir</td>
+        <td>yes</td>
+        <td>Whether to auto-create the log directory if it does not exist</td>
+        <td>true</td>
+        <td>One of: true, false</td>
+    </tr>
+    <tr>
+        <td>processCheckDelay</td>
+        <td>yes</td>
+        <td>Milliseconds after which to check started process is still running or fail the start process step. Longer values add better detection of immediate process start failures but incur an increased delay before subsequent steps run</td>
+        <td>500</td>
+        <td>(-?)\d+</td>
+    </tr>
+    <tr>
+        <td>readTimeoutSeconds</td>
+        <td>yes</td>
+        <td>When matching a pattern against process output set the max time to wait for a match</td>
+        <td>10</td>
+        <td>\d+</td>
+    </tr>
+    <tr>
+        <td>scope</td>
+        <td>no</td>
+        <td>Whether the process should be shut down at the end of the scenario or the end of the feature. this will be set automatically to FEATURE for processes started during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
+    </tr>
+    <tr>
+        <td>enabled</td>
+        <td>yes</td>
+        <td>This property can be set to true to disable process start up when running in certain profiles</td>
+        <td>true</td>
+        <td>One of: true, false</td>
     </tr>
 
 </table>

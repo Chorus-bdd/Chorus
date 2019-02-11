@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Selenium Handler Details
-section: Built In Handlers
+section: Selenium
 sectionIndex: 30
 ---
 
@@ -116,18 +116,18 @@ sectionIndex: 30
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
-        <td>driverType</td>
-        <td>yes</td>
-        <td>Defines the selenium driver type, e.g. CHROME or REMOTE_WEB_DRIVER</td>
-        <td>REMOTE_WEB_DRIVER</td>
-        <td>One of: CHROME, REMOTE_WEB_DRIVER</td>
-    </tr>
-    <tr>
         <td>scope</td>
         <td>yes</td>
         <td>Defines whether a browser connection should be closed at the end of a feature, or after each scenario This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
         <td>SCENARIO</td>
         <td>One of: SCENARIO, FEATURE</td>
+    </tr>
+    <tr>
+        <td>driverType</td>
+        <td>yes</td>
+        <td>Defines the selenium driver type, e.g. CHROME or REMOTE_WEB_DRIVER</td>
+        <td>REMOTE_WEB_DRIVER</td>
+        <td>One of: CHROME, REMOTE_WEB_DRIVER</td>
     </tr>
     <tr>
         <td>chromeDriver.arguments</td>
@@ -137,17 +137,17 @@ sectionIndex: 30
         <td></td>
     </tr>
     <tr>
-        <td>remoteWebDriver.URL</td>
-        <td>no</td>
-        <td>If using REMOTE_WEB_DRIVER, the URL to use to make the connection to the remote web driver or selenium grid</td>
-        <td>http://localhost:4444/wd/hub</td>
-        <td></td>
-    </tr>
-    <tr>
         <td>remoteWebDriver.browserType</td>
         <td>no</td>
         <td>If using REMOTE_WEB_DRIVER, a value to pass to the remote selenium web driver to request a browser type, e.g. chrome, firefox, safari</td>
         <td>chrome</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>remoteWebDriver.URL</td>
+        <td>no</td>
+        <td>If using REMOTE_WEB_DRIVER, the URL to use to make the connection to the remote web driver or selenium grid</td>
+        <td>http://localhost:4444/wd/hub</td>
         <td></td>
     </tr>
 

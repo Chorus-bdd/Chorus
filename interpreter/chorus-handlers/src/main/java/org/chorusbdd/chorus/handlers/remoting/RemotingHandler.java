@@ -65,7 +65,7 @@ import java.util.Properties;
  */
 @Handler(value = "Remoting", scope = Scope.FEATURE)
 @Documentation(description = 
-        "The Remoting handler allows the chorus to connect to remote JVM-based processes and discover " +
+        "The Remoting handler allows Chorus to connect to remote JVM-based processes and discover " +
         "step definitions they publish using the ChorusHandlerJmxExporter utility")
 @SuppressWarnings("UnusedDeclaration")
 public class RemotingHandler implements ConfigPropertySource {

@@ -134,7 +134,8 @@ public class ConfigPropertyParser {
                 defaultValue,
                 p.mandatory(),
                 converterFunction,
-                method
+                method,
+                p.order()
         );
 
         result.add(h);
@@ -213,13 +214,17 @@ public class ConfigPropertyParser {
         private final boolean mandatory;
         private final ConfigBuilderTypeConverter valueConverter;
         private final Method setterMethod;
+        private int order;
 
-        public HandlerConfigPropertyImpl(String name, Class javaType, Pattern validationPattern, String description, Object defaultValue, boolean mandatory, ConfigBuilderTypeConverter valueConverter, Method setterMethod) {
+        public HandlerConfigPropertyImpl(String name, Class javaType, Pattern validationPattern, String description,
+                                         Object defaultValue, boolean mandatory, ConfigBuilderTypeConverter valueConverter, 
+                                         Method setterMethod, int order) {
             Objects.requireNonNull(name, "name cannot be null");
             Objects.requireNonNull(javaType, "javaType cannot be null");
             Objects.requireNonNull(description, "description cannot be null");
             Objects.requireNonNull(valueConverter, "valueConverter cannot be null");
             Objects.requireNonNull(setterMethod, "setterMethod cannot be null");
+            Objects.requireNonNull(order, "order cannot be null");
             //defaultValue can be null as can validationPattern
             this.name = name;
             this.javaType = javaType;
@@ -229,6 +234,7 @@ public class ConfigPropertyParser {
             this.mandatory = mandatory;
             this.valueConverter = valueConverter;
             this.setterMethod = setterMethod;
+            this.order = order;
         }
 
         @Override
@@ -264,6 +270,11 @@ public class ConfigPropertyParser {
         @Override
         public ConfigBuilderTypeConverter getValueConverter() {
             return valueConverter;
+        }
+
+        @Override
+        public int getOrder() {
+            return order;
         }
 
         public Method getSetterMethod() {

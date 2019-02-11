@@ -4,7 +4,11 @@
 1,Distributed Testing
 1,Built In Handlers
 2,Chorus Context
+2,Processes
 2,Remoting
+2,Selenium
+2,SQL
 2,Timers
+2,WebSockets
 1,Language Extensions
 1,Resources

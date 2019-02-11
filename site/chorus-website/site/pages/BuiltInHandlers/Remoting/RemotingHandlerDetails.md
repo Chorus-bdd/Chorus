@@ -1,11 +1,11 @@
 ---
 layout: page
 title: Remoting Handler Details
-section: Built In Handlers
+section: Remoting
 sectionIndex: 30
 ---
 
-The Remoting handler allows the chorus to connect to remote JVM-based processes and discover step definitions they publish using the ChorusHandlerJmxExporter utility
+The Remoting handler allows Chorus to connect to remote JVM-based processes and discover step definitions they publish using the ChorusHandlerJmxExporter utility
 
 * [Handler Steps](#steps)  
 * [Handler Properties](#properties)
@@ -53,11 +53,18 @@ The Remoting handler allows the chorus to connect to remote JVM-based processes 
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
-        <td>connectionAttemptMillis</td>
+        <td>protocol</td>
         <td>yes</td>
-        <td>Wait time between each connection attempt</td>
-        <td>250</td>
-        <td>\d+</td>
+        <td>Protocol to make connection (only JMX supported at present)</td>
+        <td>jmx</td>
+        <td>jmx</td>
+    </tr>
+    <tr>
+        <td>host</td>
+        <td>no</td>
+        <td>host where remote component is running</td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>connectionAttempts</td>
@@ -67,18 +74,11 @@ The Remoting handler allows the chorus to connect to remote JVM-based processes 
         <td>\d+</td>
     </tr>
     <tr>
-        <td>protocol</td>
+        <td>connectionAttemptMillis</td>
         <td>yes</td>
-        <td>Protocol to make connection (only JMX supported at present)</td>
-        <td>jmx</td>
-        <td>jmx</td>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
+        <td>Wait time between each connection attempt</td>
+        <td>250</td>
+        <td>\d+</td>
     </tr>
     <tr>
         <td>connection</td>
@@ -88,11 +88,11 @@ The Remoting handler allows the chorus to connect to remote JVM-based processes 
         <td>jmx:\S+:\d+</td>
     </tr>
     <tr>
-        <td>host</td>
-        <td>no</td>
-        <td>host where remote component is running</td>
-        <td></td>
-        <td></td>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>port</td>

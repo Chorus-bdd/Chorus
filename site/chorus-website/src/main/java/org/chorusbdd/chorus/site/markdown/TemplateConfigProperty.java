@@ -45,8 +45,13 @@ public class TemplateConfigProperty {
         return this.configurationProperty.getDescription();
     }
     
+    public int getOrder() {
+        return configurationProperty.getOrder();
+    }
+    
     public static final Comparator<TemplateConfigProperty> getComparator() {
-        return Comparator.comparing(TemplateConfigProperty::isMandatory).reversed().thenComparing(TemplateConfigProperty::getName);
+//        return Comparator.comparing(TemplateConfigProperty::isMandatory).reversed().thenComparing(TemplateConfigProperty::getName);
+        return Comparator.comparing(TemplateConfigProperty::getOrder);
     }
 
 }
