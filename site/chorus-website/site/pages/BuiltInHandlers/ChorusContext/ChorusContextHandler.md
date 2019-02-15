@@ -5,7 +5,7 @@ section: Chorus Context
 sectionIndex: 20
 ---
 
-Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInSteps) called `ChorusContext`
+Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) called `ChorusContext`
 
 This handler is used to view or manipulate variables stored within the [Chorus Context](/pages/BuiltInHandlers/ChorusContext/ChorusContext)
 

@@ -21,7 +21,7 @@ You need to obtain this by annotating a field in your Handler class:
 When Chorus initializes your handlers for a test feature it will inject the ConfigurationManager into your handler.
 
 
-###  Getting properties for a custom Handler 
+###  Reading properties for a custom Handler 
 
 Once you have the ConfigurationManager, getting properties is very simple:
 

@@ -7,7 +7,8 @@ sectionIndex: 45
 
 Sometimes you may want to change handler configuration based on the environment in which your features are running.
 
-e.g. When running locally, you want to stop and start a local process, but in UAT you want to connect to a process which is already running
+e.g. When running locally, you want to stop and start a local process, but in a dedicated testing environment you want to 
+connect to a process which is already running
 
 To do this you can set configuration properties using a 'profile'
 

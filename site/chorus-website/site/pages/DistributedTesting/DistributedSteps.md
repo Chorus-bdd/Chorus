@@ -37,7 +37,7 @@ See also:
 You can use the `chorus-js` library to publish steps to Chorus from a Javascript component (e.g. a single page app in a Browser)
 This library can publish step definitions to the Chorus interpreter over a web socket connection.
 
-The `Web Sockets` handler provides built in steps which allow the Chorus interpreter to initiate the web socket and wait for step publication to complete.
+The `Web Sockets` handler provides Built In Handlers which allow the Chorus interpreter to initiate the web socket and wait for step publication to complete.
 The `Selenium` handler provides steps which allow Chorus to open a browser and interact with it, and inject scripts.
 
 When testing browser-based apps, the Javascript which publishes the step defintions can either be built into the app directly, or can be injected via Selenium

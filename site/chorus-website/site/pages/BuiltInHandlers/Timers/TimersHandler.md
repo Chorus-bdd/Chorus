@@ -5,7 +5,7 @@ section: Timers
 sectionIndex: 10
 ---
 
-Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInSteps) called `Timers`
+Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) called `Timers`
 
 You can use this by adding the following to the top of your feature file:
 

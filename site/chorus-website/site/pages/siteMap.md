@@ -37,7 +37,7 @@ title: Site Map
 
 ### Built In Handlers
 
- * [Built In Steps](/pages/BuiltInHandlers/BuiltInSteps)
+ * [Built In Handlers](/pages/BuiltInHandlers/BuiltInHandlers)
 
 
 #### &nbsp;&nbsp;&nbsp;Chorus Context
