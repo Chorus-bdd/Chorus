@@ -88,6 +88,13 @@ sectionIndex: 30
         <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
+        <td>port</td>
+        <td>yes</td>
+        <td>Which local port the web socket server should listen on</td>
+        <td>9080</td>
+        <td>\d+</td>
+    </tr>
+    <tr>
         <td>stepTimeoutSeconds</td>
         <td>yes</td>
         <td>How long the Chorus interpreter should wait for a result after executing a step on a web socket client before failing the step</td>
@@ -99,13 +106,6 @@ sectionIndex: 30
         <td>yes</td>
         <td>How long the Chorus interpreter should wait to receive a connection from a client before failing the connection step</td>
         <td>60</td>
-        <td>\d+</td>
-    </tr>
-    <tr>
-        <td>port</td>
-        <td>yes</td>
-        <td>Which local port the web socket server should listen on</td>
-        <td>9080</td>
         <td>\d+</td>
     </tr>
 

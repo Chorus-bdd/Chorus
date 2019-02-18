@@ -11,10 +11,10 @@ title: Site Map
 
 ### Running Chorus
 
- * [Interpreter Parameters](/pages/RunningChorus/InterpreterParameters)
  * [Running With Docker](/pages/RunningChorus/RunningWithDocker)
  * [Running Chorus as a JUnit Suite](/pages/RunningChorus/RunningAsJUnitSuite)
  * [Running as A Standalone Installable](/pages/RunningChorus/RunningAsAStandaloneInstallable)
+ * [Interpreter Switches](/pages/RunningChorus/InterpreterSwitches)
  * [Tagging Scenarios](/pages/RunningChorus/TaggingScenarios)
 
 
@@ -76,8 +76,9 @@ title: Site Map
  * [Timers Handler Details](/pages/BuiltInHandlers/Timers/TimersHandlerDetails)
 
 
-#### &nbsp;&nbsp;&nbsp;WebSockets
+#### &nbsp;&nbsp;&nbsp;Web Sockets
 
+ * [Web Sockets Handler Details](/pages/BuiltInHandlers/WebSockets/WebSocketsHandlerDetails)
 
 
 ### Language Extensions

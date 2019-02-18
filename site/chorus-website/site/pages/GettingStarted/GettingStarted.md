@@ -19,7 +19,7 @@ There are several ways to run the Chorus interpreter, depending on the needs of 
 * **From the command line:**  
   [Download Chorus and install it as a standalone installable package](/pages/RunningChorus/RunningAsAStandaloneInstallable)
 
-No matter how you run Chorus, the [same parameters](/pages/RunningChorus/InterpreterParameters) are supplied to the interpreter to invoke the tests  
+No matter how you run Chorus, the [same parameters](/pages/RunningChorus/InterpreterSwitches) are supplied to the interpreter to invoke the tests  
 
 
 ### How to write Chorus tests:

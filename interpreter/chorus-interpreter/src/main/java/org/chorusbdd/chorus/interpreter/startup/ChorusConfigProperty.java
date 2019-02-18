@@ -46,7 +46,7 @@ import java.util.List;
 public enum ChorusConfigProperty implements ExecutionProperty {
 
     FEATURE_PATHS("-featurePaths", "-f", "chorusFeaturePaths", true, 1, Integer.MAX_VALUE, null, ".*", "-f c:\\my\\path ..\\my\\path  ..\\my\\path\\myfeature.feature",
-    "Relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.OVERRIDE),
+    "One or more relative or absolute paths to the directories containing your feature files or paths to specific feature files. Directories will be searched recursively", PropertySourceMode.OVERRIDE),
 
     HANDLER_PACKAGES("-handlerPackages", "-h", "chorusHandlerPackages", false, 0, Integer.MAX_VALUE, null, "[\\w\\.\\*]+", "-h com.mycompany.mypkg",
     "Packages to scan for Handler classes. Subpackages will also be scanned", PropertySourceMode.OVERRIDE),
@@ -76,7 +76,8 @@ public enum ChorusConfigProperty implements ExecutionProperty {
     "The log level to be used by Chorus' built in log provider", PropertySourceMode.OVERRIDE),
 
     LOG_PROVIDER("-logProvider", "-v", "chorusLogProvider", false, 0, 1, null, "[\\w\\.]+", "-v org.chorusbdd.chorus.logging.ChorusCommonsLogProvider",
-    "The log provider class to be used to instantiate Chorus loggers", PropertySourceMode.OVERRIDE),
+    "ChorusLogProvider implementation used to instantiate Chorus Logger instances. Can redirect supplementary logging but not primary output. " +
+        "Set a custom OutputWriter if you want to redirect primary test output as well", PropertySourceMode.OVERRIDE),
 
     SCENARIO_TIMEOUT("-scenarioTimeout", "-o", "chorusScenarioTimeout", false, 0, 1, new String[] {"360"}, "\\d{1,8}", "360",
     "Number of seconds after which a scenario will timeout", PropertySourceMode.OVERRIDE),
@@ -85,16 +86,16 @@ public enum ChorusConfigProperty implements ExecutionProperty {
     "One or more user specified ExecutionListener classes", PropertySourceMode.OVERRIDE),
     
     OUTPUT_WRITER("-outputWriter", "-w", "chorusOutputWriter", false, 0, 1, new String[] {"org.chorusbdd.chorus.output.PlainOutputWriter"}, "[\\w\\.]+", "-w org.myorg.MyWriter", 
-    "The output writer used to write interpreter and log output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
+    "The output writer used to write primary test output for Chorus, if specified without a classname places Chorus in console mode", PropertySourceMode.OVERRIDE),
 
     CONSOLE_MODE("-console", "-c", "chorusConsoleMode", false, 0, 1, new String[] {"false"}, "(?i)(false|true)", "-c", 
     "Enable chorus console mode which is best when displaying output in a console", PropertySourceMode.OVERRIDE),
 
     PROFILE("-profile", "-p", "chorusProfile", false, 0, 1, new String[] {ExecutionToken.BASE_PROFILE}, "\\w+", "-p myProfile", 
-    "The configured profile may adjust behaviour, e.g. a handler might change settings based on the current profile", PropertySourceMode.OVERRIDE ),
+    "The configured profile for use in selecting Handler properties. A Handler might load diffent configuration based on the current profile", PropertySourceMode.OVERRIDE ),
     
     SHOW_STEP_CATALOGUE("-showStepCatalogue", "-b", "chorusShowStepCatalogue", false, 0, 1, new String[] {"false"}, "(?i)(false|true)",  "-b (false|true)",
-    "Show steps supported by local handler classes", PropertySourceMode.OVERRIDE);
+    "Show metadata on steps supported by local handler classes and discovered by Chorus during the test run, includes invocation counts and cumulative time", PropertySourceMode.OVERRIDE);
     
     
     private String switchName;

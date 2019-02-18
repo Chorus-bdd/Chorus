@@ -5,11 +5,11 @@ import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-public class TemplateConfigProperty {
+public class FreemarkerTemplateConfigProperty {
 
     private ConfigurationProperty configurationProperty;
 
-    public TemplateConfigProperty(ConfigurationProperty configurationProperty) {
+    public FreemarkerTemplateConfigProperty(ConfigurationProperty configurationProperty) {
         this.configurationProperty = configurationProperty;
     }
     
@@ -49,9 +49,9 @@ public class TemplateConfigProperty {
         return configurationProperty.getOrder();
     }
     
-    public static final Comparator<TemplateConfigProperty> getComparator() {
-//        return Comparator.comparing(TemplateConfigProperty::isMandatory).reversed().thenComparing(TemplateConfigProperty::getName);
-        return Comparator.comparing(TemplateConfigProperty::getOrder);
+    public static final Comparator<FreemarkerTemplateConfigProperty> getComparator() {
+//        return Comparator.comparing(FreemarkerTemplateConfigProperty::isMandatory).reversed().thenComparing(FreemarkerTemplateConfigProperty::getName);
+        return Comparator.comparing(FreemarkerTemplateConfigProperty::getOrder);
     }
 
 }

@@ -31,6 +31,12 @@ import org.chorusbdd.chorus.output.OutputWriterLogProvider;
 
 /**
  * Created by nick on 10/02/14.
+ * 
+ * A LogProviderFactory which creates a default LogProvider (OutputWriterLogProvider) when logging within the main 
+ * chorus interpreter process.
+ * 
+ * This factory is not suitable for logging using Chorus classes in libraries which are running in client-side
+ * API code or in unit tests outside the main Chorus interpreter process. Instead consider DefaultLogProviderFactory
  */
 public class ChorusLogProviderFactory {
 

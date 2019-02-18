@@ -69,7 +69,7 @@ Your test suite class should look like this:
         }
 	}
 
-You can use all the same [interpreter parameters](/pages/RunningChorus/InterpreterParameters) that you would use when running Chorus from the command line
+You can use all the same [interpreter parameters](/pages/RunningChorus/InterpreterSwitches) that you would use when running Chorus from the command line
 
 Most IDE should recognize the @RunWith annotation on this class, and allow you to run it as a JUnit suite with full IDE support.
 

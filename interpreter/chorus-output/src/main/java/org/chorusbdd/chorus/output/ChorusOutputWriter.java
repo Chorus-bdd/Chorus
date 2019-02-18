@@ -30,7 +30,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Write the output for the Chrous interpreter
+ * This class is the key abstraction which a user can implement to override or redirect the output of Chorus
+ * 
+ * Both primary test output and supplementary logging can be modified from here
+ * 
+ * A simple way to redirect output is to extend PlainOutputWriter and override getPrintWriter to return a custom PrintWriter instance
  */
 public interface ChorusOutputWriter {
 
@@ -54,7 +58,7 @@ public interface ChorusOutputWriter {
     void log(LogLevel type, Object message);
 
     /**
-     * Print an error message (when the ChorusOutputWriter is being used for for log output as well as step output)
+     * Print a stack track for a Throwable (when the ChorusOutputWriter is being used for for log output as well as step output)
      */
     void logError(LogLevel type, Throwable t);
 

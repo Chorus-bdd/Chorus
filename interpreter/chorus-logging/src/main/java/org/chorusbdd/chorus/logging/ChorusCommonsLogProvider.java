@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Date: 14/05/12
  * Time: 18:38
  *
- * This ChorusCommonsLogProvider can be configured to make Chorus log using Commons Logging / Log4j rather that to Std. Output
+ * This ChorusCommonsLogProvider can be configured to make Chorus log using Commons Logging / Log4j rather than to Std. Output
  *
  * To use this you need to pass the -v logProvider switch to Chorus or set the chorusLogProvider system property to this class
  * e.g. -DchorusLogProvider=org.chorusbdd.chorus.logging.ChorusCommonsLogProvider

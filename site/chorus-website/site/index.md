@@ -24,7 +24,7 @@ in Java (for Java and JVM components) and Javascript (chorus-js, for browser-bas
 Chorus also provides some other built in hander classes to help with common tasks, such as process control (starting and 
 stopping local processes), interacting with browsers via Selenium and connecting to SQL databases to execute statements.
 
-In addition, it provides several [language extensions](/pages/LanguageExtensions/LanguageExtensions) to Gherkin
+In addition, it provides several [language extensions](/pages/GherkinExtensions/GherkinExtensions) to Gherkin
 
 See [Getting Started](/pages/GettingStarted/GettingStarted) for more information
 

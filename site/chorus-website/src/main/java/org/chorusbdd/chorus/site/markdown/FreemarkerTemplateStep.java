@@ -8,13 +8,13 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class TemplateStep {
+public class FreemarkerTemplateStep {
 
     private Step step;
     private boolean deprecated;
     private Documentation documentation;
 
-    public TemplateStep(Step step, boolean deprecated, Documentation documentation) {
+    public FreemarkerTemplateStep(Step step, boolean deprecated, Documentation documentation) {
         Objects.requireNonNull(step);
         this.step = step;
         this.deprecated = deprecated;
@@ -45,8 +45,8 @@ public class TemplateStep {
         return documentation == null ? Documentation.DEFAULT_ORDER : documentation.order();
     }
 
-    //    public static final Comparator<TemplateStep> getComparator() {
-//        return Comparator.comparing(TemplateStep::isMandatory).reversed().thenComparing(TemplateStep::getName);
+    //    public static final Comparator<FreemarkerTemplateStep> getComparator() {
+//        return Comparator.comparing(FreemarkerTemplateStep::isMandatory).reversed().thenComparing(FreemarkerTemplateStep::getName);
 //    }
 
 }

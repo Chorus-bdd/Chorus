@@ -53,6 +53,13 @@ The Remoting handler allows Chorus to connect to remote JVM-based processes and 
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
+    </tr>
+    <tr>
         <td>protocol</td>
         <td>yes</td>
         <td>Protocol to make connection (only JMX supported at present)</td>
@@ -86,13 +93,6 @@ The Remoting handler allows Chorus to connect to remote JVM-based processes and 
         <td>A shorthand way of setting protocol host and port properties delimited by colon, e.g. jmx:myHost:myPort</td>
         <td></td>
         <td>jmx:\S+:\d+</td>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>port</td>

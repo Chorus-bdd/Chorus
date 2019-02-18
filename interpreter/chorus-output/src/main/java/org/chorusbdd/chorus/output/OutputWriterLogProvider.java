@@ -32,9 +32,13 @@ import org.chorusbdd.chorus.logging.LogLevel;
 * User: Nick Ebbutt
 * Date: 15/05/12
 * Time: 11:50
+*
+* This is the default ChorusLogProvider implementation
 * 
-* Provides ChorusLog instances which use the configured OutputFormatter for their logging
-* The user may supply a custom OutputFormatter which changes the way Chorus output is displayed or handled
+* It provides ChorusLog instances which use Chorus' configured OutputFormatter for their logging
+* By default this will go to the Std out / Std err streams, which means that the Log statements will be combined with Chorus' primary
+* test output. However, the user may supply a custom OutputFormatter which changes the way Chorus output is displayed or handled,
+* or may configure an alternative ChorusLogProvider to redirect log output elsewhere
 */
 public class OutputWriterLogProvider implements ChorusLogProvider {
 

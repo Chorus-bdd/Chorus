@@ -9,6 +9,6 @@
 2,Selenium
 2,SQL
 2,Timers
-2,WebSockets
+2,Web Sockets
 1,Language Extensions
 1,Resources
