@@ -14,7 +14,6 @@ title: Site Map
  * [Running With Docker](/pages/RunningChorus/RunningWithDocker)
  * [Running Chorus as a JUnit Suite](/pages/RunningChorus/RunningAsJUnitSuite)
  * [Running as A Standalone Installable](/pages/RunningChorus/RunningAsAStandaloneInstallable)
- * [Interpreter Switches](/pages/RunningChorus/InterpreterSwitches)
  * [Tagging Scenarios](/pages/RunningChorus/TaggingScenarios)
 
 
@@ -30,7 +29,7 @@ title: Site Map
 
 ### Distributed Testing
 
- * [Distributed Steps](/pages/DistributedTesting/DistributedSteps)
+ * [Distributed Tests](/pages/DistributedTesting/DistributedTests)
  * [Chorus JS](/pages/DistributedTesting/ChorusJS)
  * [Step Retry](/pages/DistributedTesting/StepRetry)
 
@@ -42,8 +41,7 @@ title: Site Map
 
 #### &nbsp;&nbsp;&nbsp;Chorus Context
 
- * [Context Variables](/pages/BuiltInHandlers/ChorusContext/ChorusContext)
- * [Chorus Context Handler](/pages/BuiltInHandlers/ChorusContext/ChorusContextHandler)
+ * [Chorus Context](/pages/BuiltInHandlers/ChorusContext/ChorusContext)
  * [Chorus Context Handler Details](/pages/BuiltInHandlers/ChorusContext/ChorusContextHandlerDetails)
 
 
@@ -54,10 +52,8 @@ title: Site Map
 
 #### &nbsp;&nbsp;&nbsp;Remoting
 
- * [Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart)
  * [Remoting Handler Example](/pages/BuiltInHandlers/Remoting/RemotingHandlerExample)
  * [Remoting Handler Details](/pages/BuiltInHandlers/Remoting/RemotingHandlerDetails)
- * [Remoting Handler Properties](/pages/BuiltInHandlers/Remoting/RemotingHandlerProperties)
 
 
 #### &nbsp;&nbsp;&nbsp;Selenium
@@ -72,7 +68,6 @@ title: Site Map
 
 #### &nbsp;&nbsp;&nbsp;Timers
 
- * [Timers Handler](/pages/BuiltInHandlers/Timers/TimersHandler)
  * [Timers Handler Details](/pages/BuiltInHandlers/Timers/TimersHandlerDetails)
 
 

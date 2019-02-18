@@ -6,7 +6,6 @@ sectionIndex: 30
 ---
 
 The Processes handler provides step definitions which allow you to start and stop local processes, and check their standard output and error.  
-If the started process exports step definitions over JMX Chorus can connect to it to discover these  
 You can also provide input to a running process. 
 
 * [Handler Steps](#steps)  
@@ -171,11 +170,12 @@ For more details on remoting see [Remoting Handler Quick Start](/pages/BuiltInHa
 Instead of setting main class, you can set the property `pathToExecutable` to point to a script or native process.
 This may be either an absolute path or a path which is relative to the feature file directory
 
-
+  
+<br/>
 <a name="steps"/>
 ## Steps available in the Processes Handler:
-
-
+  
+<br/>
 <table>
     <tr>
         <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
@@ -322,12 +322,13 @@ This may be either an absolute path or a path which is relative to the feature f
     </tr>
 
 </table>
+  
 
-
-
+<br/>
 <a name="properties"/>
 ## Configuration properties for the Processes Handler:
-
+  
+<br/>
 <table>
     <tr>
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>

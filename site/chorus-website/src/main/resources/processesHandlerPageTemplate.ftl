@@ -6,7 +6,6 @@ sectionIndex: ${site.sectionIndex}
 ---
 
 The Processes handler provides step definitions which allow you to start and stop local processes, and check their standard output and error.  
-If the started process exports step definitions over JMX Chorus can connect to it to discover these  
 You can also provide input to a running process. 
 
 * [Handler Steps](#steps)  

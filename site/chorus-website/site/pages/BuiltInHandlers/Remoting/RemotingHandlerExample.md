@@ -29,7 +29,7 @@ We will need to use Chorus' built in `Remoting` handler and tell it to connect t
 
 ###  What do we need to do to make this work? 
 
-The first thing is to [write Handler classes](/pages/Handlers/HandlerClasses) for each component, [and export them](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart) 
+The first thing is to [write Handler classes](/pages/Handlers/HandlerClasses) for each component, [and export them](/pages/BuiltInHandlers/Remoting/RemotingHandlerDetails) 
 
 a) Write a NavigationHandler for the navigation process, and export it:
 
@@ -83,7 +83,7 @@ First we need start up all the components in our simulation environment (UAT). T
 
 What we will end up with is the feature file (e.g. cylonBaseShipAttack.feature) next to a properties file (e.g. cylonBaseShipAttack.properties). 
 
-See [Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart) for the details of how to set this up
+See [Remoting Handler Details](/pages/BuiltInHandlers/Remoting/RemotingHandlerDetails) for the details of how to set this up
 
 The properties file contains three properties which tell the Chorus interpreter which server and port to connect to for each of our distributed components:
 

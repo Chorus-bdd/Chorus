@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Interpreter Switches
-section: Running Chorus
+section: RunningChorus
 sectionIndex: 30
 ---
 

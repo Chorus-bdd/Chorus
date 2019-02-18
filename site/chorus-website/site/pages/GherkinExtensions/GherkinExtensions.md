@@ -12,6 +12,6 @@ Chorus provides several Gherkin language extensions [Gherkin](https://github.com
 * [Directives](/pages/GherkinExtensions/Directives) - Annotate your feature with technical directives to influence how your tests get run
 * [Context Variables](/pages/BuiltInHandlers/ChorusContext/ChorusContext) - Store and access variables within your test steps
 * [Scenario Outline Tags](/pages/GherkinExtensions/ScenarioOutlineTags) - Add tags within scenario outline tables
-* [Configurations](/pages/GherkinExtensions/Configurations) - Run a feature more than once using different configuration properties
+* [Configurations](/pages/GherkinExtensions/Configurations) - Run a feature in several different configurations
 
 

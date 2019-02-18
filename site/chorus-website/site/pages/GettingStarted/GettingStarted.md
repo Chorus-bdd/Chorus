@@ -5,9 +5,6 @@ section: Getting Started
 sectionIndex: 10
 ---
 
-To use Chorus, you must download and run the Chorus interpreter.   
-This will parse the feature files containing your BDD tests, and execute them.
-
 There are several ways to run the Chorus interpreter, depending on the needs of your project
   
 * **Integrated with a Java project as a JUnit test suite:**   
@@ -37,5 +34,5 @@ These classes are called ['Handler' classes](/pages/Handlers/HandlerClasses)
 2. **Make use of built in step definitions** from Chorus' [Built In Handlers](/pages/BuiltInHandlers/BuiltInHandlers).
 These provide a library of generic test steps to solve various common problems
 
-3. **Use Chorus' client libraries to [publish step definitions](/pages/DistributedTesting/DistributedSteps)** from components running in a test environment. 
+3. **Use Chorus' client libraries to [publish step definitions](/pages/DistributedTesting/DistributedTests)** from components running in a test environment. 
 Chorus can also start these components locally using its [Process Control](/pages/BuiltInHandlers/Processes/ProcessesHandlerQuickStart)

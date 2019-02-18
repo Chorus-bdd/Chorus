@@ -5,10 +5,36 @@ section: Resources
 sectionIndex: 10
 ---
 
-###  Version 2.0.2 
-
+### Version 3.1.0 ###
+        
+*Support for JDK 11*
+        
+| Changes in 3.1.0 |
+| ------ |
+| Build under JDK 11, support JDK 8+ as a runtime environment |
+        
+### Version 3.0.0 ###
+        
+*Major release of Chorus with lots of new capabilities*
+        
+| Changes in 3.0.0 |
+| ------ |
+| Addition of chorus-js to connect browser-based apps to the Chorus interpreter |
+| Addition of Web Sockets Handler to allow connections from browser-based apps using chorus-js (and other future wesocket client APIs) |
+| Support for Docker in Chorus-Docker project, provides Chorus images to run a Chorus interpreter within a Docker container |
+| Add extra summary stats and closing report on test failures |
+| Show step catalogue feature (-b, -showStepCatalogue) |
+| ExecutionPriority annotation to fix ordering of ExecutionListener lifecycle callbacks |
+| Support for pluggable Subsystems - SubsystemManager classpath scanning for subsystems, @SubsystemConfig annotation |
+| Addition of Selenium Handler and SeleniumManager to launch and interact with browsers |
+| Build bundle to run Chorus from terminal |
+| Colour highlighting for terminal output |
+| Add SQL Handler |
+        
+### Version 2.0.2 ###
+        
 *Minor patch release with some small fixes and improvements*
-
+        
 | Changes in 2.0.2 |
 | ------ |
 | Don't fail with duplicate steps if default handler is named in Uses list |
@@ -16,20 +42,20 @@ sectionIndex: 10
 | Initialize Chorus output streams as early as possible to avoid other libraries on the classpath redirecting this |
 | Fix for boolean switch evaluation |
 | Patched feature file parsing to remove unnecessary limit on file size |
-
-###  Version 2.0.1 
-
+        
+### Version 2.0.1 ###
+        
 *Set scope to FEATURE automatically for processes and connections established during Feauture-Start:*
-
+        
 | Changes in 2.0.1 |
 | ------ |
 | Where a scope is not configured explicitly, Chorus can now intelligently set the scope to FEATURE for processes and remoting          connections established during the special Feauture-Start: scenario |
-
-###  Version 2.0.0 
-
+        
+### Version 2.0.0 ###
+        
 *A major milestone release with a new modular chorus interpreter. This is not fully backwards compatible with major version 1.x.x due to some package renaming
             which may require minor revisions to end user step logic, and a change to remoting jmx implementation. Additionally 2.x.x requires jdk 1.7+*
-
+        
 | Changes in 2.0.0 |
 | ------ |
 | Initial chorus 2.0.0 with modular structure |
@@ -41,37 +67,37 @@ sectionIndex: 10
 | Added support for running with a profile - each profile can have associated config properties/property overrides |
 | Refactored and improved jmx remoting and restructured remoting subsystem to permit new remoting protocols |
 | Support disabling a process in config so it doesn't get started |
-
-###  Version 1.6.9 
-
+        
+### Version 1.6.9 ###
+        
 *Some improvements to Remoting logic and addition of ProcessManager*
-
+        
 | Changes in 1.6.9 |
 | ------ |
 | ProcessesHandler and RemotingHandler delegate to a ProcessManager and RemotingManager, cleaner division of responsibilities |
 | When remoting to local process started with ProcessesHandler, we don't have to provide remoting config / remoting jmx port, so long as process configuration includes it |
 | When starting multiple local processes with the same base config using ProcessesHandler, the jmx and debug ports are auto-incremented |
-
-###  Version 1.6.8 
-
+        
+### Version 1.6.8 ###
+        
 *Add FailImmediatelyException to break out of a @PassesWithin or PolledAssertion*
-
+        
 | Changes in 1.6.8 |
 | ------ |
 | Add FailImmediatelyException which can be used to fail a @PassesWithin step method immediately |
-
-###  Version 1.6.7 
-
+        
+### Version 1.6.7 ###
+        
 *A minor fix to remove some unnecessary null results from the console output when connecting to components using chorus version before 1.6.6*
-
+        
 | Changes in 1.6.7 |
 | ------ |
 | BUGFIX: Fix handling of null results in console output with earlier verisons of the chorus remoting api |
-
-###  Version 1.6.6 
-
+        
+### Version 1.6.6 ###
+        
 *Set the lastResult variable into ChorusContext following each step*
-
+        
 | Changes in 1.6.6 |
 | ------ |
 | Remove the legacy JUnitSuiteRunner (use @Uses(ChorusSuite.class) instead) |
@@ -79,20 +105,20 @@ sectionIndex: 10
 | Set the lastResult variable into ChorusContext following each step |
 | Coerce the String null to java null when captured as a step method parameter |
 | Distinguish variable exists with a null value from variable doesn't exist in ChrousContextHandler |
-
-###  Version 1.6.5 
-
+        
+### Version 1.6.5 ###
+        
 *Expand chorus context variables in steps prior to execution, improve ChorusContextHandler*
-
+        
 | Changes in 1.6.5 |
 | ------ |
 | Where a step contains a variable in the form ${variableName} replace this with the value of the         variable from the chorus context if available |
 | Support some basic mathematical operations in the Chorus Context Handler |
-
-###  Version 1.6.4 
-
+        
+### Version 1.6.4 ###
+        
 *Warn when multiple step-macro match, Support Resource annotation on handler superclasses in chorus-spring*
-
+        
 | Changes in 1.6.4 |
 | ------ |
 | When a step is matched by multiple step macro log a warning |
@@ -100,11 +126,11 @@ sectionIndex: 10
 | Gracefully handle the case where chorus-spring is on the classpath but Spring isn't |
 | Support @ChorusResource annotation on handler superclasses |
 | BUGFIX: Fix an issue where ProcessesHandler would not always find a pattern when searching within lines |
-
-###  Version 1.6.3 
-
+        
+### Version 1.6.3 ###
+        
 *Tagging for Scenario-Outline scenarios, OutputFormatter for interpreter output and logging, Console Mode for output*
-
+        
 | Changes in 1.6.3 |
 | ------ |
 | Better description for Scenario-Outline scenarios -  the first variable defined in each table row         is appended to the scenario name, to make it easier to match scenario to example in chorus' output |
@@ -114,27 +140,27 @@ sectionIndex: 10
 | Show the parent step for a step macro in the console output up front, before the child steps are executed, rather than waiting for the child steps to complete |
 | Add console output for long running test steps |
 | BUGFIX: Fix ProcessHandler for Mac/OS X when using JDK 1.5/1.6 |
-
-###  Version 1.6.2 
-
+        
+### Version 1.6.2 ###
+        
 *Minor bugfix release*
-
+        
 | Changes in 1.6.2 |
 | ------ |
 | BUGFIX: PassesWithin / PolledAssertion will now stop polling if the polled step method execution time overruns the specified period |
-
-###  Version 1.6.1 
-
+        
+### Version 1.6.1 ###
+        
 *Add support to allow non-java processes or scripts to be launched and configured with properties in the same manner as java processes.*
-
+        
 | Changes in 1.6.1 |
 | ------ |
 | Added a pathToExecutable property for the Processes Handler. This can be a relative path from the feature directory or an absolute path. Where set this causes Chorus to treat the process as a native process instead of launching a new jvm instance. The other non-java-specific properties may be set as usual so that native processes now have first class support. |
-
-###  Version 1.6.0 
-
+        
+### Version 1.6.0 ###
+        
 *A major release with some significant new features. Backwards compatible with 1.5.x apart from renaming of the class HandlerScope to Scope*
-
+        
 | Changes in 1.6.0 |
 | ------ |
 | Add support for Feature-Start: and Feature-End: scenarios |
@@ -145,28 +171,28 @@ sectionIndex: 10
 | @Initialize and @Destroy methods on handlers can be scoped to HandlerScope.FEATURE or HandlerScope.SCENARIO |
 | When using Chorus Context Handler, context variables set during Feature-Start: are made available to all scenarios |
 | Added support for custom ExecutionListener |
-
-###  Version 1.5.4 
-
+        
+### Version 1.5.4 ###
+        
 *Support extra characters in step macro parameter names and fix an issue with @PassesWithin under jdk 1.5*
-
+        
 | Changes in 1.5.4 |
 | ------ |
 | Allow - and _ characters within step macro parameters |
 | BUGFIX: Fix for @PassesWithin when used in remote process under jdk 1.5 |
-
-###  Version 1.5.3 
-
+        
+### Version 1.5.3 ###
+        
 *Addition of @PassesWithin annotation to help eliminate waits in scenarios*
-
+        
 | Changes in 1.5.3 |
 | ------ |
 | Add the @PassesWithin annotation as a better alternative to the direct use of PolledAssertion |
-
-###  Version 1.5.2 
-
+        
+### Version 1.5.2 ###
+        
 *Enhancements to process handling and JUnit suite*
-
+        
 | Changes in 1.5.2 |
 | ------ |
 | When running under JDK 1.7, use ProcessBuilder to create a process. Set io redirect on std out/err atomically on process start |
@@ -178,22 +204,22 @@ sectionIndex: 10
 | New ChorusSuite runner for use with JUnit 4 @RunWith |
 | Chorus JUnit runners now correctly observe tags / tagged tests |
 | If all else fails kill hung interpreter after timeout expires |
-
-###  Version 1.5.1 
-
+        
+### Version 1.5.1 ###
+        
 *Add support for Step-Macro language feature - resuable groups of steps which are preparsed and available within Scenario*
-
+        
 | Changes in 1.5.1 |
 | ------ |
 | Support feature-local and global StepMacro |
 | Steps may now have child steps (when the step matches a defined StepMacro the macro steps become child steps) |
 | Support stepMacroPaths config parameter which defaults to be the same as featurePaths when not specified |
-
-###  Version 1.5.0 
-
+        
+### Version 1.5.0 ###
+        
 *New milestone release of Chorus. This release provides better support for chorus tools via enhanced interpreter result Tokens. Work is underway in the chorus tools project to
         provide a Chorus web agent which can receive results from the interpreter and allows viewing of test suite results in the browser, along with a run history, step timings and rss feed*
-
+        
 | Changes in 1.5.0 |
 | ------ |
 | New configuration property modes to set certain interpreter properties to override value. This allows log level to be overridden as a classpath switch, for example |
@@ -204,37 +230,37 @@ sectionIndex: 10
 | Add timing information to tokens at step level and a total execution time in suite results |
 | Add configurable scenario timeout which will attempt to interrupt a scenario if it takes too long. New interpreter switch to set the max time |
 | Support the visitor pattern in Chorus results tokens |
-
-###  Version 1.4.16 
-
+        
+### Version 1.4.16 ###
+        
 *Bugfixes*
-
+        
 | Changes in 1.4.16 |
 | ------ |
 | BUGFIX: Fix premature closing of standard output stream which was causing some lost output when running Chorus tests as junit suites |
-
-###  Version 1.4.15 
-
+        
+### Version 1.4.15 ###
+        
 *Minor enhancements*
-
+        
 | Changes in 1.4.15 |
 | ------ |
 | Support check() method which validates conditions over the whole duration of a time period in PolledAssertion |
 | Support setting time limit through await() parameters in PolledAssertion |
 | Support for Spring's ContextConfiguration annotation is restored |
-
-###  Version 1.4.14 
-
+        
+### Version 1.4.14 ###
+        
 *Minor enhancements*
-
+        
 | Changes in 1.4.14 |
 | ------ |
 | Add shutdown hook to terminate child process under test in the event of early interpreter exit |
-
-###  Version 1.4.13 
-
+        
+### Version 1.4.13 ###
+        
 *Enhancements to process logging and minor fixes and enhancements*
-
+        
 | Changes in 1.4.13 |
 | ------ |
 | Support process property appendToLog, append to process log files instead of overwriting |
@@ -243,29 +269,29 @@ sectionIndex: 10
 | Add PolledAssertion class, a utility to remove sleeps in features by polling/waiting a limited time for an assertion to pass |
 | RemotingHandler now supports steps in the form .* from componentName in addition to .* in componentName |
 | Chorus Tools will now be released/maintained as a separate project |
-
-###  Version 1.4.12 
-
+        
+### Version 1.4.12 ###
+        
 *Minor fixes and enhancements*
-
+        
 | Changes in 1.4.12 |
 | ------ |
 | Now possible to start the interpreter using more succinct org.chorusbdd.Chorus instead of org.chorusbdd.chorus.Main |
 | BUGFIX: Pending steps should not cause interpreter to exit with fail status.         Where all tests either pass or are pending the exit code should be zero (success).         The point of marking a step as pending is to prevent that step causing failure |
-
-###  Version 1.4.11 
-
+        
+### Version 1.4.11 ###
+        
 *Minor fixes and enhancements for handler property files*
-
+        
 | Changes in 1.4.11 |
 | ------ |
 | More logging when loading handler properties, logging when encountering an unsupported property |
 | BUGFIX: Fixed a bug in which default properties not always applied |
-
-###  Version 1.4.10 
-
+        
+### Version 1.4.10 ###
+        
 *A new release of chorus with some important enhancements. In particular this release includes more robust handling for establishing remote connections using Remoting handler jmx, and more flexible configuration options for handlers*
-
+        
 | Changes in 1.4.10 |
 | ------ |
 | Remoting handler makes a configurable number of attempts to connect before failing when using JMX protocol. The number of attempts is configured using the connectionAttempts and the wait between each failed attempt and the next is configured using connectionAttemptMillis remoting handler properties |
@@ -281,11 +307,11 @@ sectionIndex: 10
 | Better handling for exceptions with no messages set, especially NullPointer |
 | New configurable property logDirectory for Processes handler - determines where the standard out and error go when logging is on |
 | Handler property files for features with configurations now expect the configuration name before the handler type suffix. e.g. configA-remoting.properties instead of remoting-configA.properties |
-
-###  Version 1.3.9 
-
+        
+### Version 1.3.9 ###
+        
 *General release, minor enhancements and fixes*
-
+        
 | Changes in 1.3.9 |
 | ------ |
 | Better error logging during feature run, don't log as a feature parsing error when the error occurs during feature processing |
@@ -293,29 +319,29 @@ sectionIndex: 10
 | ChorusJUnitRunner can now accept interpreter parameters as a String, as an alternative to setting sys props |
 | BUGFIX: Set log level correctly when executing chorus tests as a JUnit suite with ChorusJUnitRunner |
 | BUGFIX: Handle Runtime exceptions thrown by user defined handler @Destroy methods |
-
-###  Version 1.3.8 
-
+        
+### Version 1.3.8 ###
+        
 *Full Chorus Release*
-
+        
 | Changes in 1.3.8 |
 | ------ |
 | No functional changes, complete initial set of chorus self-tests |
-
-###  Version 0.3.7 
-
+        
+### Version 0.3.7 ###
+        
 *Final beta release candidate for chorus*
-
+        
 | Changes in 0.3.7 |
 | ------ |
 | Support a returned value from remote step invocations |
 | Fixes for scenario tagging features |
 | Renamed Jxm Handler to Remoting Handler to support future protocols |
-
-###  Version 0.3.6 
-
+        
+### Version 0.3.6 ###
+        
 *First beta release of Chorus*
-
+        
 | Changes in 0.3.6 |
 | ------ |
 | Set up Chorus for publication to Maven central |

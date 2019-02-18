@@ -1,8 +1,9 @@
-
+  
+<br/>
 <a name="steps"/>
 ## Steps available in the ${handler.name} Handler:
-
-
+  
+<br/>
 <table>
     <tr>
         <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
@@ -18,12 +19,13 @@
     </#list>
 
 </table>
+  
 
-
-
+<br/>
 <a name="properties"/>
 ## Configuration properties for the ${handler.name} Handler:
-
+  
+<br/>
 <table>
     <tr>
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>

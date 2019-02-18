@@ -1,19 +1,27 @@
 ---
 layout: page
-title: Chorus Context Handler
-section: Chorus Context
-sectionIndex: 20
+title: ${handler.name} Handler Details
+section: ${site.section}
+sectionIndex: ${site.sectionIndex}
 ---
 
-Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) called `ChorusContext`
+### Overview
+
+Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) called `Chorus Context`
 
 This handler is used to view or manipulate variables stored within the [Chorus Context](/pages/BuiltInHandlers/ChorusContext/ChorusContext)
 
-To use the handler, add `Uses: ChorusContext` to the top of your feature file.
+* [Handler Steps](#steps)  
+* [Handler Properties](#properties)
+
+
+## How to use the Chorus Context Handler
+
+To use the handler, add `Uses: Chorus Context` to the top of your feature file.
 
 You can then make use of the steps provided:
 
-    Uses: ChorusContext
+    Uses: Chorus Context
 
       Feature: Show Chorus Context Steps
       
@@ -42,9 +50,4 @@ So that the Chorus Context handler will load these, you need to add `Uses: Choru
 
 At present these variables are loaded into the context as String values
 
-
-
-
-
-
-
+<#include "./handlerDetailsPageTemplate.ftl">

@@ -134,7 +134,7 @@ public class HandlerPageGenerator {
     private void writeDetailsPage(String handlerName, Map<String, Object> freemarkerModel) throws IOException, TemplateException {
         Configuration cfg = FreemarkerConfig.createFreemarkerConfiguration();
 
-        String customTemplateName = handlerName + "HandlerPageTemplate.ftl";
+        String customTemplateName = handlerName.replace(" ", "") + "HandlerPageTemplate.ftl";
         String basicTemplateName = "basicHandlerPageTemplate.ftl";
 
         Template template;

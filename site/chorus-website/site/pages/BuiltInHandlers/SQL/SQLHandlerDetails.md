@@ -10,11 +10,12 @@ sectionIndex: 30
 * [Handler Steps](#steps)  
 * [Handler Properties](#properties)
 
-
+  
+<br/>
 <a name="steps"/>
 ## Steps available in the SQL Handler:
-
-
+  
+<br/>
 <table>
     <tr>
         <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
@@ -42,34 +43,28 @@ sectionIndex: 30
     </tr>
 
 </table>
+  
 
-
-
+<br/>
 <a name="properties"/>
 ## Configuration properties for the SQL Handler:
-
+  
+<br/>
 <table>
     <tr>
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
-        <td>scope</td>
+        <td>driverClassName</td>
         <td>yes</td>
-        <td>Whether the database connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
+        <td>Fully qualified Class name of the JDBC driver</td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>url</td>
         <td>yes</td>
         <td>URL to establish JDBC connection</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>driverClassName</td>
-        <td>yes</td>
-        <td>Fully qualified Class name of the JDBC driver</td>
         <td></td>
         <td></td>
     </tr>
@@ -86,6 +81,13 @@ sectionIndex: 30
         <td>JDBC connection password</td>
         <td></td>
         <td></td>
+    </tr>
+    <tr>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Whether the database connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
     </tr>
 
 </table>

@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Context Variables
+title: Chorus Context
 section: Chorus Context
 sectionIndex: 10
 ---

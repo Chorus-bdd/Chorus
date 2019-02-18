@@ -1,20 +1,25 @@
 ---
 layout: page
-title: Remoting Handler Quick Start
-section: Remoting
-sectionIndex: 20
+title: ${handler.name} Handler Details
+section: ${site.section}
+sectionIndex: ${site.sectionIndex}
 ---
 
 ### Overview
 
-The `Remoting` Handler defines steps that allow the interpreter to connect to remote Java/JVM components and discover test steps they publish.
+The `Remoting` Handler defines steps that allow the interpreter to connect to remote Java/JVM components and discover test step definitions they publish.
 See [Distributed Steps](/pages/DistributedTesting/DistributedSteps) for an overview of distributed test steps.
+
+* [Handler Steps](#steps)  
+* [Handler Properties](#properties)
+
+
+### Using the Processes Handler
 
 The processes Chorus connects to can be services deployed within a testing environment or may be running locally. 
 The interpreter can [start up local processes](/pages/BuiltInHandlers/Processes/ProcessesHandlerQuickStart) and then connect to them.
 
 Starting processes and connecting to them often occurs at the start of a feature, within Chorus' custom [Feature-Start:](/pages/GherkinExtensions/FeatureStartAndEnd) section.
-
 
 #### Example
 
@@ -60,7 +65,7 @@ This can be done by setting the following system properties when you start the j
 	java -Dcom.sun.management.jmxremote
 	-Dcom.sun.management.jmxremote.ssl=false
 	-Dcom.sun.management.jmxremote.authenticate=false
-	-Dcom.sun.management.jmxremote.port=${choose_a_port_number}
+	-Dcom.sun.management.jmxremote.port=${r"${choose_a_port_number}"}
 
 You also need to set the following system property on your remote component to turn on chorus handler export. 
 This would generally be turned *on* in your testing environment, but *off* in production.
@@ -125,9 +130,4 @@ For all the supported RemotingHandler properties see [Remoting Handler Propertie
 If you want to share remoting properties between all your features you can add their connectivity details to a chorus.properties 
 at the top level on your classpath. Here you could list all your UAT components, for example, so you don't need to keep repeating yourself.
 
-
- 
-
- 
-
-
+<#include "./handlerDetailsPageTemplate.ftl">

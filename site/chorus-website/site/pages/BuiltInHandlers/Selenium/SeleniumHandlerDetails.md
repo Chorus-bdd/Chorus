@@ -10,11 +10,12 @@ sectionIndex: 30
 * [Handler Steps](#steps)  
 * [Handler Properties](#properties)
 
-
+  
+<br/>
 <a name="steps"/>
 ## Steps available in the Selenium Handler:
-
-
+  
+<br/>
 <table>
     <tr>
         <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
@@ -105,22 +106,16 @@ sectionIndex: 30
     </tr>
 
 </table>
+  
 
-
-
+<br/>
 <a name="properties"/>
 ## Configuration properties for the Selenium Handler:
-
+  
+<br/>
 <table>
     <tr>
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Defines whether a browser connection should be closed at the end of a feature, or after each scenario This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>driverType</td>
@@ -149,6 +144,13 @@ sectionIndex: 30
         <td>If using REMOTE_WEB_DRIVER, the URL to use to make the connection to the remote web driver or selenium grid</td>
         <td>http://localhost:4444/wd/hub</td>
         <td></td>
+    </tr>
+    <tr>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Defines whether a browser connection should be closed at the end of a feature, or after each scenario This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
     </tr>
 
 </table>

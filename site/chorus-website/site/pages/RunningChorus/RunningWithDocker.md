@@ -7,8 +7,8 @@ sectionIndex: 20
 
 ## Running Chorus as a Docker container
 
-This is a good way to run Chorus if you have access to Docker.
 The Chorus interpreter comes pre-packaged as a Docker image available on Docker Hub.
+This is a good way to run Chorus if you have access to Docker.
 
 The image contains a JDK and all Chorus dependencies, making it very easy to run locally or as part of a Docker-based build pipeline
 
@@ -50,8 +50,8 @@ project as an example of this
 
 ### Customising and configuring Chorus under Docker
 
-The chorus-interpreter image also allows you to mount volumes which can contain other resources or custom Chorus handlers or extensions, 
-so that Chorus can find these when you run it.
+The chorus-interpreter image also allows you to mount volumes which can contain extra classpath resources for the Chorus
+interpreter.
 
 These are the additional directories you can mount:
 

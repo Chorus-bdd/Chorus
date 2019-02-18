@@ -1,11 +1,19 @@
 ---
 layout: page
-title: Timers Handler
-section: Timers
-sectionIndex: 10
+title: ${handler.name} Handler Details
+section: ${site.section}
+sectionIndex: ${site.sectionIndex}
 ---
 
+### Overview 
+
 Chorus provides a [built in handler](/pages/BuiltInHandlers/BuiltInHandlers) called `Timers`
+This can provide a quick way to wait for a period of time between two steps in a scenario
+
+* [Handler Steps](#steps)  
+* [Handler Properties](#properties)
+
+## How to use the Timers Handler
 
 You can use this by adding the following to the top of your feature file:
 
@@ -41,3 +49,4 @@ This approach can make your features run more quickly, and be less prone to make
         I wait half a second for a message to be received
         
         
+<#include "./handlerDetailsPageTemplate.ftl">

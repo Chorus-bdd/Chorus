@@ -26,7 +26,7 @@ Using them may bring in some additional transitive dependencies
 </tr>
 <tr>
 	<td>Remoting</td>
-	<td><a href='/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart'>Connecting to run steps on Java/JVM components</a></td>
+	<td><a href='/pages/BuiltInHandlers/Remoting/RemotingHandlerDetails'>Connecting to run steps on Java/JVM components</a></td>
 	<td>Built In</td>
 </tr>
 <tr>
@@ -36,12 +36,12 @@ Using them may bring in some additional transitive dependencies
 </tr>
 <tr>
 	<td>Chorus Context</td>
-	<td><a href='/pages/BuiltInHandlers/ChorusContext/ChorusContextHandler'>Manipulate a map of variables within each Scenario</a></td>
+	<td><a href='/pages/BuiltInHandlers/ChorusContext/ChorusContextHandlerDetails'>Manipulate a map of variables within each Scenario</a></td>
     <td>Built In</td>
 </tr>
 <tr>
 	<td>Timers</td>
-	<td><a href='/pages/BuiltInHandlers/Timers/TimersHandler'>Timing and sleeping</a></td>
+	<td><a href='/pages/BuiltInHandlers/Timers/TimersHandlerDetails'>Timing and sleeping</a></td>
     <td>Built In</td>
 </tr>
 <tr>

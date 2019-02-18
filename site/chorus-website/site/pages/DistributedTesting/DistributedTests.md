@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Distributed Steps
+title: Distributed Tests
 section: Distributed Testing
 sectionIndex: 10
 ---
@@ -27,7 +27,7 @@ also possible for Chorus to [start a process](/pages/BuiltInHandlers/Processes/P
 
 See also:
 
-[Remoting Handler Quick Start](/pages/BuiltInHandlers/Remoting/RemotingHandlerQuickStart)  
+[Remoting Handler Details](/pages/BuiltInHandlers/Remoting/RemotingHandlerDetails)  
 [Remoting Handler Example](/pages/BuiltInHandlers/Remoting/RemotingHandlerExample)
 
 

@@ -10,11 +10,12 @@ sectionIndex: 30
 * [Handler Steps](#steps)  
 * [Handler Properties](#properties)
 
-
+  
+<br/>
 <a name="steps"/>
 ## Steps available in the Web Sockets Handler:
-
-
+  
+<br/>
 <table>
     <tr>
         <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
@@ -70,22 +71,16 @@ sectionIndex: 30
     </tr>
 
 </table>
+  
 
-
-
+<br/>
 <a name="properties"/>
 ## Configuration properties for the Web Sockets Handler:
-
+  
+<br/>
 <table>
     <tr>
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Whether the web socket should be closed at the end of each scenario, or at the end of the feature</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>port</td>
@@ -93,6 +88,13 @@ sectionIndex: 30
         <td>Which local port the web socket server should listen on</td>
         <td>9080</td>
         <td>\d+</td>
+    </tr>
+    <tr>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Whether the web socket should be closed at the end of each scenario, or at the end of the feature</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>stepTimeoutSeconds</td>
