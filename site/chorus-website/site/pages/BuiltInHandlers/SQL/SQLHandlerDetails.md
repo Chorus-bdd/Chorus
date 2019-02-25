@@ -55,6 +55,13 @@ sectionIndex: 30
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Whether the database connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
+    </tr>
+    <tr>
         <td>driverClassName</td>
         <td>yes</td>
         <td>Fully qualified Class name of the JDBC driver</td>
@@ -81,13 +88,6 @@ sectionIndex: 30
         <td>JDBC connection password</td>
         <td></td>
         <td></td>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Whether the database connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
     </tr>
 
 </table>

@@ -14,6 +14,7 @@ title: Site Map
  * [Running With Docker](/pages/RunningChorus/RunningWithDocker)
  * [Running Chorus as a JUnit Suite](/pages/RunningChorus/RunningAsJUnitSuite)
  * [Running as A Standalone Installable](/pages/RunningChorus/RunningAsAStandaloneInstallable)
+ * [Interpreter Switches](/pages/RunningChorus/InterpreterSwitches)
  * [Tagging Scenarios](/pages/RunningChorus/TaggingScenarios)
 
 

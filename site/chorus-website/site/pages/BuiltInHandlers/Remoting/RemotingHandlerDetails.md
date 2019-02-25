@@ -175,11 +175,11 @@ at the top level on your classpath. Here you could list all your UAT components,
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
-        <td>protocol</td>
+        <td>scope</td>
         <td>yes</td>
-        <td>Protocol to make connection (only JMX supported at present)</td>
-        <td>jmx</td>
-        <td>jmx</td>
+        <td>Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>host</td>
@@ -187,6 +187,13 @@ at the top level on your classpath. Here you could list all your UAT components,
         <td>host where remote component is running</td>
         <td></td>
         <td></td>
+    </tr>
+    <tr>
+        <td>protocol</td>
+        <td>yes</td>
+        <td>Protocol to make connection (only JMX supported at present)</td>
+        <td>jmx</td>
+        <td>jmx</td>
     </tr>
     <tr>
         <td>connectionAttempts</td>
@@ -215,13 +222,6 @@ at the top level on your classpath. Here you could list all your UAT components,
         <td>port on which remote component's jmx service is listening for connections</td>
         <td></td>
         <td>\d+</td>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Whether the remoting connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
     </tr>
 
 </table>
