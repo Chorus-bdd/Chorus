@@ -52,7 +52,7 @@ e.g. to configure a browser named 'myBrowserName' which connects to a Selenium H
     selenium.myBrowserName.driverType=REMOTE_WEB_DRIVER
     selenium.myBrowserName.remoteWebDriver.URL=http://seleniumHub:4444/wd/hub
 
-See [Handler Configuration](/pages/Handlers/HandlerConfiguration) for more details
+See [Handler Configuration](/pages/Handlers/HandlerConfiguration) for more details on configuring handlers
 
 ### Closing the browser
 

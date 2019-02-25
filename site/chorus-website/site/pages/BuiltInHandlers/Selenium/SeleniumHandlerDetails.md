@@ -52,14 +52,14 @@ e.g. to configure a browser named 'myBrowserName' which connects to a Selenium H
     selenium.myBrowserName.driverType=REMOTE_WEB_DRIVER
     selenium.myBrowserName.remoteWebDriver.URL=http://seleniumHub:4444/wd/hub
 
-See [Handler Configuration](/pages/Handlers/HandlerConfiguration) for more details
+See [Handler Configuration](/pages/Handlers/HandlerConfiguration) for more details on configuring handlers
 
 ### Closing the browser
 
 The browser window will be closed automatically at the end of the feauture (if the scope is FEATURE) or at the end of the scenario (for SCENARIO scoped browser configs)
 
 
-### For more examples of the Selenium Handler in use
+### For more details of the Selenium Handler in use with the chorus-js library
 
 See [Chorus JS](/pages/DistributedTesting/ChorusJS) 
 
