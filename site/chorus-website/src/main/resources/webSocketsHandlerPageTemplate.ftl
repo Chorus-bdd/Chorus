@@ -62,7 +62,7 @@ See [Handler Configuration](/pages/Handlers/HandlerConfiguration) for more detai
 
 The web socket will be automatically closed at the end of the test feature (if FEATURE scope is used) or at the end of 
 each scenario (if SCENARIO scope is used). Scope will default to SCENARIO unless the web socket is created in the 
-special Feauture-Start: scenario, in which case it will default to FEATURE
+special Feature-Start: scenario, in which case it will default to FEATURE
 
 
 ### For more details of the Web Sockets Handler in use with the chorus-js library
