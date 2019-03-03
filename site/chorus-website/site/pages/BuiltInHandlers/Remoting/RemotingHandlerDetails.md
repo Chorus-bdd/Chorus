@@ -8,7 +8,7 @@ sectionIndex: 30
 ### Overview
 
 The `Remoting` Handler defines steps that allow the interpreter to connect to remote Java/JVM components and discover test step definitions they publish.
-See [Distributed Steps](/pages/DistributedTesting/DistributedSteps) for an overview of distributed test steps.
+See [Distributed Tests](/pages/DistributedTesting/DistributedTests) for an overview of distributed test steps.
 
 * [Handler Steps](#steps)  
 * [Handler Properties](#properties)

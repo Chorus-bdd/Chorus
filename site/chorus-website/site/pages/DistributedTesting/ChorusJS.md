@@ -36,7 +36,8 @@ The above handshaking is often carried out in a [Feature Start](/pages/GherkinEx
     Scenario: Scenario One
         ...scenario steps here
 
-
+The two Chorus extension Handlers [Web Sockets](/pages/BuiltInHandlers/WebSockets/WebSocketHandlerDetails) and 
+[Selenium](pages/BuiltInHandlers/Selenium/SeleniumHandlerDetails) provide the inital test steps for this feature
 
 ### Advantages over a pure Selenium solution
 
