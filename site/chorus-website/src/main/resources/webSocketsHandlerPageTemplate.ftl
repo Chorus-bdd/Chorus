@@ -31,19 +31,28 @@ You can use this by adding 'Uses: Web Sockets' to the top of your feature file:
 
 #### A typical feature file may start like this:
 
-Uses: Web Sockets
-Uses: Selenium
+    Uses: Web Sockets
+    Uses: Selenium
 
-  Feature-Start:
-    Given I start a web socket server
-    And I open the RemoteWebDriver browser
-    And I navigate to http://mywebapp-url
-    And I wait for the web socket client myWebAppPublisher
-  
-  Scenario: I can use steps exported from myWebAppPublisher
-    When I enter a user name
-    And I enter a password
-    Then I can log in to the myWebAppPublisher app
+      Feature-Start:
+        Given I start a web socket server
+        And I open the RemoteWebDriver browser
+        And I navigate to http://mywebapp-url
+        And I wait for the web socket client myWebAppPublisher
+      
+      Scenario: I can use steps exported from myWebAppPublisher
+        When I enter a user name
+        And I enter a password
+        Then I can log in to the myWebAppPublisher app
+
+You will need to ensure the chorus-websockets extension is on your classpath if using the JUnit Suite Runner, e.g. for a Maven project:
+
+    <dependency>
+        <groupId>org.chorusbdd</groupId>
+        <artifactId>chorus-websockets</artifactId>
+        <version>3.1.0</version>
+        <scope>test</scope>
+    </dependency>
 
 ### Configuring Web Sockets Handler
 

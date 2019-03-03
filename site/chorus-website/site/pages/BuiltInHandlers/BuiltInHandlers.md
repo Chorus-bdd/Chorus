@@ -14,8 +14,8 @@ These handler classes provide definitions for steps in your feature files, just 
 
 In addition, some extra Handler Classes are provided as Chrous extensions. These are included automatically when you install the interpreter as a command line tool, or via the Docker image
   
-When you use Chorus within a Java project, you will need to declare an additional dependency on these extension libraries.
-Using them may bring in some additional transitive dependencies
+When you use Chorus within a Java project as a JUnit Suite, you will need to declare an additional dependency on these extension libraries.
+Using them may bring some additional transitive dependencies onto your test classpath.
 
 
 ### Built in and Extension Handlers

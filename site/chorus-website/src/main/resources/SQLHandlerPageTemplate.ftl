@@ -36,6 +36,15 @@ to the feature directory
         Then I execute the script mySqlStatements.sql on the mydb database    
          
 
+You will need to ensure the chorus-sql extension is on your classpath if using the JUnit Suite Runner, e.g. for a Maven project:
+
+    <dependency>
+        <groupId>org.chorusbdd</groupId>
+        <artifactId>chorus-sql</artifactId>
+        <version>3.1.0</version>
+        <scope>test</scope>
+    </dependency>
+
 ### Configuring the SQL Handler
 
 You can configure named databases in your feature properties

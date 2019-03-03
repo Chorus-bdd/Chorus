@@ -25,6 +25,14 @@ You can use this by adding 'Uses: Selenium' to the top of your feature file:
 
     Uses: Selenium
     
+You will need to ensure the chorus-selenium extension is on your classpath if using the JUnit Suite Runner, e.g. for a Maven project:
+
+    <dependency>
+        <groupId>org.chorusbdd</groupId>
+        <artifactId>chorus-selenium</artifactId>
+        <version>3.1.0</version>
+        <scope>test</scope>
+    </dependency>
          
 If you don't configure a browser in the properties, the Selenium handler will default to using Chrome Driver, which must be installed
 and in the PATH on the local system. Alternatively, you can add a named config for a Chrome Driver or Remote Web Driver (which enables the use of Selenium Grid)

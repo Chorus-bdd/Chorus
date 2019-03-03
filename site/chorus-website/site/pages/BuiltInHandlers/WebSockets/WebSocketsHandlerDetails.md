@@ -31,19 +31,28 @@ You can use this by adding 'Uses: Web Sockets' to the top of your feature file:
 
 #### A typical feature file may start like this:
 
-Uses: Web Sockets
-Uses: Selenium
+    Uses: Web Sockets
+    Uses: Selenium
 
-  Feature-Start:
-    Given I start a web socket server
-    And I open the RemoteWebDriver browser
-    And I navigate to http://mywebapp-url
-    And I wait for the web socket client myWebAppPublisher
-  
-  Scenario: I can use steps exported from myWebAppPublisher
-    When I enter a user name
-    And I enter a password
-    Then I can log in to the myWebAppPublisher app
+      Feature-Start:
+        Given I start a web socket server
+        And I open the RemoteWebDriver browser
+        And I navigate to http://mywebapp-url
+        And I wait for the web socket client myWebAppPublisher
+      
+      Scenario: I can use steps exported from myWebAppPublisher
+        When I enter a user name
+        And I enter a password
+        Then I can log in to the myWebAppPublisher app
+
+You will need to ensure the chorus-websockets extension is on your classpath if using the JUnit Suite Runner, e.g. for a Maven project:
+
+    <dependency>
+        <groupId>org.chorusbdd</groupId>
+        <artifactId>chorus-websockets</artifactId>
+        <version>3.1.0</version>
+        <scope>test</scope>
+    </dependency>
 
 ### Configuring Web Sockets Handler
 
@@ -143,6 +152,13 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
     </tr>
     <tr>
+        <td>port</td>
+        <td>yes</td>
+        <td>Which local port the web socket server should listen on</td>
+        <td>9080</td>
+        <td>\d+</td>
+    </tr>
+    <tr>
         <td>stepTimeoutSeconds</td>
         <td>yes</td>
         <td>How long the Chorus interpreter should wait for a result after executing a step on a web socket client before failing the step</td>
@@ -162,13 +178,6 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <td>Whether the web socket should be closed at the end of each scenario, or at the end of the feature</td>
         <td>SCENARIO</td>
         <td>One of: SCENARIO, FEATURE</td>
-    </tr>
-    <tr>
-        <td>port</td>
-        <td>yes</td>
-        <td>Which local port the web socket server should listen on</td>
-        <td>9080</td>
-        <td>\d+</td>
     </tr>
 
 </table>

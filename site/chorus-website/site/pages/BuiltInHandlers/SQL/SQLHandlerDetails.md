@@ -36,6 +36,15 @@ to the feature directory
         Then I execute the script mySqlStatements.sql on the mydb database    
          
 
+You will need to ensure the chorus-sql extension is on your classpath if using the JUnit Suite Runner, e.g. for a Maven project:
+
+    <dependency>
+        <groupId>org.chorusbdd</groupId>
+        <artifactId>chorus-sql</artifactId>
+        <version>3.1.0</version>
+        <scope>test</scope>
+    </dependency>
+
 ### Configuring the SQL Handler
 
 You can configure named databases in your feature properties
@@ -69,13 +78,6 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <th>Step</th><th>Example</th><th>Deprecated</th><th>Description</th><th>Retry Duration (wait for step to pass)</th>
     </tr>
     <tr>
-        <td>.*I connect to the ([a-zA-Z0-9-_]+) database</td>
-        <td>Given I connect to the mySql database</td>
-        <td>No</td>
-        <td>Connect to the named database using the connection parameters configured in the handler properties</td>
-        <td></td>
-    </tr>
-    <tr>
         <td>.*I execute the statement '(.*)' on the ([a-zA-Z0-9-_]+) database</td>
         <td>When I execute the statement 'insert into MyUsers values ("Bob")' on the mySql database</td>
         <td>No</td>
@@ -87,6 +89,13 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <td>When I execute the script mySqlScript.sql on the mySql database</td>
         <td>No</td>
         <td>Execute a SQL script from a file path relative to the feature directory against the connected database with given name. The script file may contain one or more semi-colon delimited SQL statements</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>.*I connect to the ([a-zA-Z0-9-_]+) database</td>
+        <td>Given I connect to the mySql database</td>
+        <td>No</td>
+        <td>Connect to the named database using the connection parameters configured in the handler properties</td>
         <td></td>
     </tr>
 
@@ -101,13 +110,6 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
 <table>
     <tr>
         <th>Property</th><th>Is Mandatory</th><th>Description</th><th>Default</th><th>Validation</th>
-    </tr>
-    <tr>
-        <td>scope</td>
-        <td>yes</td>
-        <td>Whether the database connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
-        <td>SCENARIO</td>
-        <td>One of: SCENARIO, FEATURE</td>
     </tr>
     <tr>
         <td>driverClassName</td>
@@ -136,6 +138,13 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <td>JDBC connection password</td>
         <td></td>
         <td></td>
+    </tr>
+    <tr>
+        <td>scope</td>
+        <td>yes</td>
+        <td>Whether the database connection is closed at the end of the scenario or at the end of the feature. This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario</td>
+        <td>SCENARIO</td>
+        <td>One of: SCENARIO, FEATURE</td>
     </tr>
 
 </table>

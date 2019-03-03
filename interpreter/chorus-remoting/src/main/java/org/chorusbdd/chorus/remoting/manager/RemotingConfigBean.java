@@ -42,27 +42,48 @@ public class RemotingConfigBean implements RemotingManagerConfig {
     private Scope scope;
 
     @Override
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
+    }
+
+    @ConfigProperty(
+            name="connection",
+            description="A shorthand way of setting protocol host and port properties delimited by colon, e.g. jmx:myHost:myPort",
+            validationPattern = "jmx:\\S+:\\d+",
+            mandatory = false,
+            order = 5
+    )
+    public void setConnection(String connection) {
+        String[] vals = String.valueOf(connection).split(":");
+        if (vals.length != 3) {
+            throw new ConfigValidatorException(
+                    "Could not parse remoting property 'connection', " +
+                            "expecting a value in the form protocol:host:port"
+            );
+        }
+        setProtocol(vals[0]);
+        setHost(vals[1]);
+        setPort(Integer.parseInt(vals[2]));
+    }
+
+    @Override
     public String getProtocol() {
         return protocol;
     }
 
     @ConfigProperty(
-        name="protocol",
-        description="Protocol to make connection (only JMX supported at present)",
-        defaultValue = "jmx",
-        validationPattern = "jmx"
+            name="protocol",
+            description="Protocol to make connection (only JMX supported at present)",
+            defaultValue = "jmx",
+            validationPattern = "jmx",
+            order = 10
     )
     public void setProtocol(String protocol) {
         this.protocol = protocol;
-    }
-
-    @Override
-    public String getConfigName() {
-        return configName;
-    }
-    
-    public void setConfigName(String configName) {
-        this.configName = configName;
     }
 
     @Override
@@ -73,7 +94,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
     @ConfigProperty(
         name="host",
         description="host where remote component is running",
-        mandatory = false //instead can set 'connection' property
+        mandatory = false, //instead can set 'connection' property
+        order = 20
     )
     public void setHost(String host) {
         this.host = host;
@@ -88,7 +110,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
         name="port",
         description="port on which remote component's jmx service is listening for connections",
         validationPattern = "\\d+",
-        mandatory = false  //instead can set 'connection' property
+        mandatory = false,  //instead can set 'connection' property
+        order = 30
     )
     public void setPort(int port) {
         this.port = port;
@@ -103,7 +126,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
         name="connectionAttempts",
         description="Number of times to attempt connection",
         defaultValue = "40",
-        validationPattern = "\\d+"
+        validationPattern = "\\d+",
+        order = 40
     )
     public void setConnectionAttempts(int connectionAttempts) {
         this.connectionAttempts = connectionAttempts;
@@ -118,7 +142,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
         name="connectionAttemptMillis",
         description="Wait time between each connection attempt",
         defaultValue = "250",
-        validationPattern = "\\d+"
+        validationPattern = "\\d+",
+        order = 50
     )
     public void setConnectionAttemptMillis(int connectionAttemptMillis) {
         this.connectionAttemptMillis = connectionAttemptMillis;
@@ -128,34 +153,16 @@ public class RemotingConfigBean implements RemotingManagerConfig {
     public Scope getScope() {
         return scope;
     }
-
+    
     @ConfigProperty(
         name="scope",
         description="Whether the remoting connection is closed at the end of the scenario or at the end of the feature. " +
                 "This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario",
-        defaultValue = "SCENARIO"
+        defaultValue = "SCENARIO",
+        order = 60
     )
     public void setScope(Scope scope) {
         this.scope = scope;
-    }
-    
-    @ConfigProperty(
-        name="connection",
-        description="A shorthand way of setting protocol host and port properties delimited by colon, e.g. jmx:myHost:myPort",
-        validationPattern = "jmx:\\S+:\\d+",
-        mandatory = false
-    )
-    public void setConnection(String connection) {
-        String[] vals = String.valueOf(connection).split(":");
-        if (vals.length != 3) {
-            throw new ConfigValidatorException(
-                "Could not parse remoting property 'connection', " +
-                    "expecting a value in the form protocol:host:port"
-            );
-        }
-        setProtocol(vals[0]);
-        setHost(vals[1]);
-        setPort(Integer.parseInt(vals[2]));
     }
     
     

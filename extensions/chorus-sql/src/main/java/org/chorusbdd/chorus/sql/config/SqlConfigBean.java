@@ -44,23 +44,9 @@ public class SqlConfigBean implements SqlConfig {
     private String password;
 
     @ConfigProperty(
-        name="scope",
-        description="Whether the database connection is closed at the end of the scenario or at the end of the feature." +
-                " This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario",
-        defaultValue = "SCENARIO"
-    )
-    public void setScope(Scope scope) {
-        this.scope = scope;
-    }
-
-    @Override
-    public Scope getScope() {
-        return scope;
-    }
-
-    @ConfigProperty(
         name="driverClassName",
-        description="Fully qualified Class name of the JDBC driver"
+        description="Fully qualified Class name of the JDBC driver",
+        order = 10
     )
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;
@@ -73,7 +59,8 @@ public class SqlConfigBean implements SqlConfig {
 
     @ConfigProperty(
         name="url",
-        description="URL to establish JDBC connection"
+        description="URL to establish JDBC connection",
+        order = 20
     )
     public void setUrl(String url) {
         this.url = url;
@@ -87,7 +74,8 @@ public class SqlConfigBean implements SqlConfig {
     @ConfigProperty(
         name="username",
         description="JDBC connection username",
-        mandatory = false
+        mandatory = false,
+        order = 30
     )
     public void setUsername(String username) {
         this.username = username;
@@ -101,7 +89,8 @@ public class SqlConfigBean implements SqlConfig {
     @ConfigProperty(
         name="password",
         description="JDBC connection password",
-        mandatory = false
+        mandatory = false,
+        order = 40
     )
     public void setPassword(String password) {
         this.password = password;
@@ -110,6 +99,22 @@ public class SqlConfigBean implements SqlConfig {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public Scope getScope() {
+        return scope;
+    }
+
+    @ConfigProperty(
+            name="scope",
+            description="Whether the database connection is closed at the end of the scenario or at the end of the feature." +
+                    " This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario",
+            defaultValue = "SCENARIO",
+            order = 50
+    )
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
 
     public void setConfigName(String configName) {

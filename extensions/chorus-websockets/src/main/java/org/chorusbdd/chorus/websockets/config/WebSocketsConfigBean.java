@@ -43,6 +43,22 @@ public class WebSocketsConfigBean implements WebSocketsConfig {
         this.configName = configName;
     }
 
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    @ConfigProperty(
+            name = "port",
+            description = "Which local port the web socket server should listen on",
+            defaultValue = "9080",
+            validationPattern = "\\d+",
+            order = 10
+    )
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     public String getConfigName() {
         return configName;
     }
@@ -51,7 +67,9 @@ public class WebSocketsConfigBean implements WebSocketsConfig {
             name = "stepTimeoutSeconds",
             description = "How long the Chorus interpreter should wait for a result after executing a step on a web socket client before failing the step",
             defaultValue = "60",
-            validationPattern = "\\d+"
+            validationPattern = "\\d+",
+            order = 20
+            
     )
     public void setStepTimeoutSeconds(int stepTimeoutSeconds) {
         this.stepTimeoutSeconds = stepTimeoutSeconds;
@@ -65,7 +83,8 @@ public class WebSocketsConfigBean implements WebSocketsConfig {
             name = "clientConnectTimeoutSeconds",
             description = "How long the Chorus interpreter should wait to receive a connection from a client before failing the connection step",
             defaultValue = "60",
-            validationPattern = "\\d+"
+            validationPattern = "\\d+",
+            order = 30
     )
     public void setClientConnectTimeoutSeconds(int clientConnectTimeoutSeconds) {
         this.clientConnectTimeoutSeconds = clientConnectTimeoutSeconds;
@@ -77,24 +96,10 @@ public class WebSocketsConfigBean implements WebSocketsConfig {
     }
 
     @ConfigProperty(
-            name = "port",
-            description = "Which local port the web socket server should listen on",
-            defaultValue = "9080",
-            validationPattern = "\\d+"
-    )
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    @Override
-    public int getPort() {
-        return port;
-    }
-
-    @ConfigProperty(
             name = "scope",
             description = "Whether the web socket should be closed at the end of each scenario, or at the end of the feature",
-            defaultValue = "SCENARIO"
+            defaultValue = "SCENARIO",
+            order = 40
     )
     public void setScope(Scope scope) {
         this.scope = scope;

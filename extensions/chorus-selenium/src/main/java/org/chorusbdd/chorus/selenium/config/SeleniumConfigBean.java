@@ -54,21 +54,6 @@ public class SeleniumConfigBean implements SeleniumConfig {
     }
 
     @Override
-    public Scope getScope() {
-        return scope;
-    }
-
-    @ConfigProperty(
-            name = "scope",
-            description = "Defines whether a browser connection should be closed at the end of a feature, or after each scenario" +
-                    " This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario",
-            defaultValue = "SCENARIO"
-    )
-    public void setScope(Scope scope) {
-        this.scope = scope;
-    }
-
-    @Override
     public SeleniumDriverType getDriverType() {
         return seleniumDriverType;
     }
@@ -76,7 +61,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
     @ConfigProperty(
             name = "driverType",
             description = "Defines the selenium driver type, e.g. CHROME or REMOTE_WEB_DRIVER",
-            defaultValue = "REMOTE_WEB_DRIVER"
+            defaultValue = "REMOTE_WEB_DRIVER",
+            order = 10
     )
     public void setDriverType(SeleniumDriverType seleniumDriverType) {
         this.seleniumDriverType = seleniumDriverType;
@@ -90,7 +76,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
     @ConfigProperty(
             name = "chromeDriver.arguments",
             description = "Arguments to pass to the chrome browser if using CHROME driver type",
-            mandatory = false
+            mandatory = false,
+            order = 20
     )
     public void setChromeArgs(String chromeArgs) {
         this.chromeArgs = chromeArgs;
@@ -105,7 +92,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
             name = "remoteWebDriver.browserType",
             description = "If using REMOTE_WEB_DRIVER, a value to pass to the remote selenium web driver to request a browser type, e.g. chrome, firefox, safari",
             defaultValue = "chrome",
-            mandatory = false
+            mandatory = false,
+            order = 30
     )
     public void setRemoteWebDriverBrowserType(String remoteWebDriverBrowserType) {
         this.remoteWebDriverBrowserType = remoteWebDriverBrowserType;
@@ -120,10 +108,27 @@ public class SeleniumConfigBean implements SeleniumConfig {
             name = "remoteWebDriver.URL",
             description = "If using REMOTE_WEB_DRIVER, the URL to use to make the connection to the remote web driver or selenium grid",
             defaultValue = "http://localhost:4444/wd/hub",
-            mandatory = false
+            mandatory = false,
+            order = 40
     )
     public void setRemoteWebDriverURL(String remoteWebDriverURL) {
         this.remoteWebDriverURL = remoteWebDriverURL;
+    }
+
+    @Override
+    public Scope getScope() {
+        return scope;
+    }
+
+    @ConfigProperty(
+            name = "scope",
+            description = "Defines whether a browser connection should be closed at the end of a feature, or after each scenario" +
+                    " This will be set automatically to FEATURE for connections established during 'Feature-Start:' if not provided, otherwise Scenario",
+            defaultValue = "SCENARIO",
+            order = 50
+    )
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
 
     @ConfigValidator
