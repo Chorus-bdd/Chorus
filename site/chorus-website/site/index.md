@@ -8,11 +8,10 @@ Chorus is a versatile BDD (Behaviour Driven Development) test interpreter
 To use Chorus you write feature files in the popular 'Given, When, Then' BDD testing format [Gherkin](https://cukes.info/gherkin.html)
 
 Once you have written your features you then invoke Chorus, which will find and run the test scenarios in your feature files.
-Chorus will match each test step in your feature files to a step definition - code which which can be executed to implement the step 
-- and then invoke the step.
+Chorus will match each test step in your feature files to a step definition (code which which can be executed to implement the step) 
+and will then invoke the step.
 
-What makes Chorus different from other BDD testing tools is that the interpreter can connect to other processes 
-running in your testing environment, to discover and execute step definitions they publish. 
+What makes Chorus different is that the interpreter can connect to other processes running in your testing environment to discover step definitions. 
 
 Chorus provides 
 
