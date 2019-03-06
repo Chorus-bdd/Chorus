@@ -15,7 +15,7 @@ What about component and integration testing?
 
 #### Designing for integration testing
 
-Techniques to 'design for testability' in integration tests are less well understood.
+Techniques to 'design for testability' in integration tests are less well understood.  
 These tests require starting up one or more complete components in a testing environment.
 How might we design a component to be testable when running within an integration test environment?
 Furthermore, how might we test collaborations between components or end to end flows?
