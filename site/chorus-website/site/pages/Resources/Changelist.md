@@ -1,10 +1,12 @@
----
-layout: page
-title: Change List
-section: Resources
-sectionIndex: 10
----
-
+        
+### Version 3.1.1 ###
+        
+*Patch release to support binary distribution*
+        
+| Changes in 3.1.1 |
+| ------ |
+| Add the CHORUS_CLASSPATH environment variable onto the classpath when running Chorus from the CLI using the binary distribution |
+        
 ### Version 3.1.0 ###
         
 *Support for JDK 11*

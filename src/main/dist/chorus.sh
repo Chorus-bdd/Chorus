@@ -22,7 +22,7 @@ SCRIPTDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 # Add the '/choruslibs' directory which provides a path which can be mounted in a docker container 
 # to allow the user to add extra jar dependencies, and also add '/chorusclasspath' which provides a path which 
 # to allow the user to add other classes and resources onto the Chorus interpreter classpath 
-CP="${SCRIPTDIR}/lib/*:/choruslibs/*:/chorusclasspath"
+CP="${SCRIPTDIR}/lib/*:/choruslibs/*:/chorusclasspath:${CHORUS_CLASSPATH}"
 
 # Handle --version and --help switches
 if [[ "${1}" == "--help" || "${1}" == "--version" ]] ; then

@@ -3,6 +3,11 @@
 <changes>
 
     <version>
+        <versionNumber>3.1.1</versionNumber>
+        <comment>Patch release to support binary distribution</comment>
+        <change desc="Add the CHORUS_CLASSPATH environment variable onto the classpath when running Chorus from the CLI using the binary distribution"/>
+    </version>
+    <version>
         <versionNumber>3.1.0</versionNumber>
         <comment>Support for JDK 11</comment>
         <change desc="Build under JDK 11, support JDK 8+ as a runtime environment"/>

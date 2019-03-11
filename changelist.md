@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+        
+### Version 3.1.1 ###
+        
+*Patch release to support binary distribution*
+        
+| Changes in 3.1.1 |
+| ------ |
+| Add the CHORUS_CLASSPATH environment variable onto the classpath when running Chorus from the CLI using the binary distribution |
         
 ### Version 3.1.0 ###
         
