@@ -40,6 +40,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
     private int connectionAttempts;
     private int connectionAttemptMillis;
     private Scope scope;
+    private String userName;
+    private String password;
 
     @Override
     public String getConfigName() {
@@ -165,6 +167,30 @@ public class RemotingConfigBean implements RemotingManagerConfig {
         this.scope = scope;
     }
     
+    @Override
+    public String getUserName() {
+        return this.userName;
+    }
+    
+    @ConfigProperty(
+        name="userName",
+        description = "User Name to provide if remote component's JMX server requires authentication",
+        mandatory = false
+    )
+    public void setUserName(String userName) { this.userName = userName; }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+    
+    @ConfigProperty(
+        name="password",
+        description = "Password to provide if remote component's JMX server requires authentication",
+        mandatory = false
+    )
+    public void setPassword(String password) { this.password = password; }
+    
     
     @ConfigValidator
     public void validate() {
@@ -172,6 +198,7 @@ public class RemotingConfigBean implements RemotingManagerConfig {
         if (port < 0) throw new ConfigValidatorException("port must be set and > 0");
         if (connectionAttempts < 0) throw new ConfigValidatorException("connectionAttempts must be set and > 0");
         if (connectionAttemptMillis < 0) throw new ConfigValidatorException("connectionAttemptMillis must be set and > 0");
+        if ( userName != null && password == null) throw new ConfigValidatorException("If userName is set, then password must also be provided");
     }
 
     @Override
@@ -183,6 +210,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
             ", port=" + port +
             ", connectionAttempts=" + connectionAttempts +
             ", connectionAttemptMillis=" + connectionAttemptMillis +
+            ", userName=" + userName +
+            ", password=" + password == null ? "not set" : "*******" +
             ", scope=" + scope +
             '}';
     }

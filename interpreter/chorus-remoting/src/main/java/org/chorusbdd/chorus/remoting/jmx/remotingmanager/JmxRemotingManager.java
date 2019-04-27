@@ -93,7 +93,15 @@ public class JmxRemotingManager extends ConfigurableManager<RemotingConfigBean> 
     private ChorusHandlerJmxProxy getProxyForComponent(String componentName, RemotingManagerConfig remotingConfig) {
         ChorusHandlerJmxProxy proxy = proxies.get(componentName);
         if ( proxy == null) {
-            proxy = new ChorusHandlerJmxProxy(componentName, remotingConfig.getHost(), remotingConfig.getPort(), remotingConfig.getConnectionAttempts(), remotingConfig.getConnectionAttemptMillis());
+            proxy = new ChorusHandlerJmxProxy(
+                componentName,
+                remotingConfig.getHost(),
+                remotingConfig.getPort(),
+                remotingConfig.getUserName(),
+                remotingConfig.getPassword(),
+                remotingConfig.getConnectionAttempts(),
+                remotingConfig.getConnectionAttemptMillis()
+            );
             proxies.put(componentName, proxy);
             remotingConfigs.add(remotingConfig);
             log.debug("Opened JMX connection to: " + componentName);

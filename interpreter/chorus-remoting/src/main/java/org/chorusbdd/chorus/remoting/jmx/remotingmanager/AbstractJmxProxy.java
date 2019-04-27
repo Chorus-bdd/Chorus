@@ -33,6 +33,8 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,14 +52,18 @@ public class AbstractJmxProxy {
 
     /**
      * Connect to the remote MBean
-     *
-     * @param host      the host to connect to
+     *  @param host      the host to connect to
      * @param jmxPort   the JMX server port
      * @param mBeanName must be formatted according to the MBean spec
+     * @param userName user name if connection requires authentication, may be null if no authentication required
+     * @param password password if connection requires authentication, may be null                
      * @param connectionAttempts number of times to try to connect before giving up
      * @param millisBetweenRetries how log to wait between each connection attempt
      */
-    public AbstractJmxProxy(String host, int jmxPort, String mBeanName, int connectionAttempts, long millisBetweenRetries) {
+    public AbstractJmxProxy(String host, int jmxPort, String mBeanName, String userName, String password, int connectionAttempts, long millisBetweenRetries) {
+        
+        Map environment = createEnvironmentMap(userName, password);
+        
         Exception connectException = null;
         int attempt = 1;
         try {
@@ -68,7 +74,7 @@ public class AbstractJmxProxy {
                 attempt++;
                 connectException = null;
                 try {
-                    jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(serviceURL), null);
+                    jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(serviceURL), environment);
                 } catch (Exception e) {
                     connectException = e;
                 }
@@ -121,6 +127,18 @@ public class AbstractJmxProxy {
             log.error(msg);
             throw new ChorusException(msg, e);
         }
+    }
+
+    /**
+     * @return a Map containing environment properties if required, or null
+     */
+    private Map createEnvironmentMap(String userName, String password) {
+        Map result = null;
+        if ( userName != null && password != null) {
+            result = new HashMap();
+            result.put(JMXConnector.CREDENTIALS, new String[] { userName, password });
+        }
+        return result;
     }
 
     private boolean shouldAttemptConnection(int connectionAttempts, int attempt) {

@@ -35,7 +35,7 @@ public class DynamicMBeanProxyMain {
         String host = "localhost";
         int jmxPort = 18080;
         String mBeanName = "org.chorusbdd.chorus:name=testbean";
-        AbstractJmxProxy proxy = new AbstractJmxProxy(host, jmxPort, mBeanName, 0, 0);
+        AbstractJmxProxy proxy = new AbstractJmxProxy(host, jmxPort, mBeanName, null, null, 0, 0);
         Object result = proxy.getAttribute("StepDefinitions");
         ChorusOut.out.println(result);
     }

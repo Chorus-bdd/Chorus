@@ -36,7 +36,7 @@ public class DynamicMBeanProxyTest {
     @Test(expected = ChorusException.class)
     public void exceptionForIllegalHost() throws Exception {
         System.out.println("This test is expected to fail to connect to MBean, a logged error is expected");
-        new AbstractJmxProxy("NO-SUCH-HOST", -1, "", 0, 0);
+        new AbstractJmxProxy("NO-SUCH-HOST", -1, "", null, null, 0, 0);
     }
 
 }

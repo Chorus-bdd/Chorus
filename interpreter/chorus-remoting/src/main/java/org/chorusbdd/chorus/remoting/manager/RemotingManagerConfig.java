@@ -44,4 +44,8 @@ public interface RemotingManagerConfig extends NamedConfigBean {
     int getConnectionAttemptMillis();
 
     Scope getScope();
+
+    String getUserName();
+
+    String getPassword();
 }

@@ -32,6 +32,7 @@ import org.chorusbdd.chorus.remoting.jmx.serialization.JmxStepResult;
 import javax.management.MBeanException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * JMX proxy specifically interacting with remote steps exported by the ChorusHandlerJmxExporter class.
@@ -49,12 +50,28 @@ public class ChorusHandlerJmxProxy extends AbstractJmxProxy {
 
     private static final String JMX_EXPORTER_NAME = "org.chorusbdd.chorus:name=chorus_exporter";
     private static final String JMX_EXPORTER_STEP_METADATA = "StepInvokers";
-    private String componentName;
+    private final String componentName;
+    private final String userName;
+    private final String password;
 
     @SuppressWarnings("unchecked")
-    public ChorusHandlerJmxProxy(String componentName, String host, int jmxPort, int connectionRetryCount, int millisBetweenConnectionAttempts) {
-        super(host, jmxPort, JMX_EXPORTER_NAME, connectionRetryCount, millisBetweenConnectionAttempts);
+    /**
+     * @param componentName name of component to connect to
+     * @param host host to connect to
+     * @param jmxPort port to connect to
+     * @param userName user name if connection requires authentication, may be null if no authentication required
+     * @param password password if connection requires authentication, may be null                
+     * @param connectionRetryCount how many times to attempt connection (until an attempt succeeds)
+     * @param millisBetweenConnnectionAttempts how long to wait after a failed connection until retrying
+     */
+    public ChorusHandlerJmxProxy(String componentName, String host, int jmxPort, String userName, String password, int connectionRetryCount, int millisBetweenConnectionAttempts) {
+        super(host, jmxPort, JMX_EXPORTER_NAME, userName, password, connectionRetryCount, millisBetweenConnectionAttempts);
+        Objects.requireNonNull(componentName, "componentName cannot be null");
+        Objects.requireNonNull(host, "host cannot be null");
+        
         this.componentName = componentName;
+        this.userName = userName;
+        this.password = password;
 
         //the step metadata won't change so load from the remote MBean and cache it here
         stepMetadata = (List<JmxInvokerResult>) getAttribute(JMX_EXPORTER_STEP_METADATA);
