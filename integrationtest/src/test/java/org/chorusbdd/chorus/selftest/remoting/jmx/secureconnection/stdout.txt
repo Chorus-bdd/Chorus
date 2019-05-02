@@ -1,0 +1,15 @@
+Feature: Jmx Secure Connection                                                                       
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/remoting/jmx/secureconnection/jmxsecureconnection.feature
+Chorus --> INFO    - No default handler found for Feature: (Jmx Secure Connection), will use built-in handlers and Uses: statements
+  Scenario: Call An Exported Method
+Chorus --> INFO    - Processing scenario: Call An Exported Method
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a secureconnection process                                                 PASSED  
+    When I connect to the secureconnection process                                           PASSED  
+    Then I can call a step method exported by the handler                                    PASSED  
+    And I can stop the process named secureconnection                                        PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
