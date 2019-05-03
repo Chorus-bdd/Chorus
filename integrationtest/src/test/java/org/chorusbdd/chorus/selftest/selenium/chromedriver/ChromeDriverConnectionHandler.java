@@ -38,7 +38,9 @@ public class ChromeDriverConnectionHandler {
 
     @Step(".* set the chorus context variable pathToTestHtmlFile")
     public void setAFilePath() {
-        ChorusContext.getContext().put("pathToTestHtmlFile", "file://" + new File(featureDir, "testHtml.html").getAbsolutePath());
+        String absolutePath = new File(featureDir, "testHtml.html").getAbsolutePath();
+        absolutePath = absolutePath.replace("\\", "/");
+        ChorusContext.getContext().put("pathToTestHtmlFile", "file:///" + absolutePath);
     }
 
 }

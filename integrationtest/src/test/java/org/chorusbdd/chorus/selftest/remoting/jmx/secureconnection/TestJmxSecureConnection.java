@@ -26,6 +26,8 @@ package org.chorusbdd.chorus.selftest.remoting.jmx.secureconnection;
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
+import org.chorusbdd.chorus.util.OSUtils;
+import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +64,14 @@ public class TestJmxSecureConnection extends AbstractInterpreterTest {
     protected String getFeaturePath() {
         return featurePath;
     }
-
+    
+    @Before
+    public void nixOnly() {
+        //it turns out to be extraordinarily hard to set password file permissions correctly on Windows -
+        //since the cmd line tools to do it (icacls) are not guaranteed present on PATH (seriously?), and I can't see a Java API to do it either
+        org.junit.Assume.assumeTrue(! OSUtils.isWindows());
+    }
+    
     public void runTest() throws Exception {
         Stream.of(allFilePaths).map(p -> new File(p)).forEach(file -> {
             try {
