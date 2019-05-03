@@ -27,6 +27,15 @@ import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+
 /**
  * Created with IntelliJ IDEA.
  * User: nick
@@ -36,6 +45,13 @@ import org.chorusbdd.chorus.selftest.DefaultTestProperties;
 public class TestJmxSecureConnection extends AbstractInterpreterTest {
 
     final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/remoting/jmx/secureconnection";
+    
+    private final String pathToTrustStoreFile = featurePath + "/chorus-test-truststore.jks";
+    private final String pathToKeyStoreFile = featurePath + "/chorus-test-keystore.jks";
+    private final String pathToPasswordFile = featurePath + "/jmxremote.password";
+    private final String pathToAccessFile = featurePath + "/jmxremote.access";
+    
+    private final String[] allFilePaths = new String[] { pathToTrustStoreFile, pathToKeyStoreFile, pathToPasswordFile, pathToAccessFile};
 
     final int expectedExitCode = 0;  //success
 
@@ -47,6 +63,20 @@ public class TestJmxSecureConnection extends AbstractInterpreterTest {
         return featurePath;
     }
 
+    public void runTest() throws Exception {
+        Stream.of(allFilePaths).map(p -> new File(p)).forEach(file -> {
+            try {
+                Files.setPosixFilePermissions(file.toPath(), PosixFilePermissions.fromString("rw-------"));
+            } catch (IOException i) {
+                i.printStackTrace();
+            } catch (UnsupportedOperationException u) {
+                System.out.println("Could not set file permissions for file " + file + ", windows OS?");
+            }
+        });
+        
+        super.runTest();
+    }
+    
     protected void processActualResults(ChorusSelfTestResults actualResults) {
         if ( ! isInProcess() ) {
             removeLineFromStdOut(actualResults, "Exporting the handler", true);
@@ -54,9 +84,9 @@ public class TestJmxSecureConnection extends AbstractInterpreterTest {
     }
     
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
-        sysProps.setProperty("javax.net.ssl.keyStore", featurePath + "/chorus-test-keystore.jks");
+        sysProps.setProperty("javax.net.ssl.keyStore", pathToKeyStoreFile);
         sysProps.setProperty("javax.net.ssl.keyStorePassword", "chorusIsCool");
-        sysProps.setProperty("javax.net.ssl.trustStore", featurePath + "/chorus-test-truststore.jks");
+        sysProps.setProperty("javax.net.ssl.trustStore", pathToTrustStoreFile);
         sysProps.setProperty("javax.net.ssl.trustStorePassword", "chorusIsCool");
     }
 }
