@@ -40,7 +40,7 @@ public class ChromeDriverConnectionHandler {
     public void setAFilePath() {
         String absolutePath = new File(featureDir, "testHtml.html").getAbsolutePath();
         absolutePath = absolutePath.replace("\\", "/");
-        ChorusContext.getContext().put("pathToTestHtmlFile", "file:///" + absolutePath);
+        ChorusContext.getContext().put("pathToTestHtmlFile", "file://localhost/" + absolutePath);
     }
 
 }
