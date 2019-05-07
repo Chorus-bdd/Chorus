@@ -77,7 +77,7 @@ public class InterpreterSwitchPageGenerator {
     private void addSiteSectionProperties(Map<String, Object> freemarkerModel) {
         Map<String,Object> siteProperties = new HashMap<>();
         freemarkerModel.put("site", siteProperties);
-        siteProperties.put("section", "RunningChorus");
+        siteProperties.put("section", "Running Chorus");
         siteProperties.put("sectionIndex", 30);
     }
 

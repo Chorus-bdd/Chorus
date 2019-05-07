@@ -223,5 +223,19 @@ at the top level on your classpath. Here you could list all your UAT components,
         <td>SCENARIO</td>
         <td>One of: SCENARIO, FEATURE</td>
     </tr>
+    <tr>
+        <td>userName</td>
+        <td>no</td>
+        <td>User Name to provide if remote component's JMX server requires authentication</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>password</td>
+        <td>no</td>
+        <td>Password to provide if remote component's JMX server requires authentication</td>
+        <td></td>
+        <td></td>
+    </tr>
 
 </table>

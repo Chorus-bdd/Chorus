@@ -32,6 +32,7 @@ title: Site Map
 
  * [Distributed Tests](/pages/DistributedTesting/DistributedTests)
  * [Chorus JS](/pages/DistributedTesting/ChorusJS)
+ * [Why do we need Chorus?](/pages/DistributedTesting/WhyDoWeNeedChorus)
  * [Step Retry](/pages/DistributedTesting/StepRetry)
 
 
@@ -89,7 +90,6 @@ title: Site Map
 
 ### Resources
 
- * [Change List](/pages/Resources/Changelist)
  * [Download](/pages/Resources/Download)
 
 

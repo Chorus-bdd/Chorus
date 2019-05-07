@@ -7,3 +7,25 @@ dependencies {
     
     testCompile group: 'junit', name: 'junit', version:'4.10'
 }
+
+task generatePages(group: 'chorus-website', type: JavaExec) {
+    doFirst {
+        println("Generating website pages")
+    }
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.chorusbdd.chorus.site.markdown.PageGenerator'
+    args ''
+}
+
+task updatePageLinks(group: 'chorus-website', type: JavaExec) {
+    doFirst {
+        println("Updating page links")
+    }
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.chorusbdd.chorus.site.UpdatePageLinks'
+    args ''
+}
+
+updatePageLinks.dependsOn(generatePages)
+
+build.finalizedBy(updatePageLinks)
