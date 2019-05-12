@@ -2,7 +2,7 @@
 layout: page
 title: Tagging Scenarios
 section: Running Chorus
-sectionIndex: 40
+sectionIndex: 50
 ---
 
 Chorus allows the features and scenarios tested to be filtered using a simple filtering expression that matches tags in the feature files

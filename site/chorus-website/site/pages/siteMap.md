@@ -11,10 +11,10 @@ title: Site Map
 
 ### Running Chorus
 
- * [Running With Docker](/pages/RunningChorus/RunningWithDocker)
- * [Running Chorus as a JUnit Suite](/pages/RunningChorus/RunningAsJUnitSuite)
  * [Running as A Standalone Installable](/pages/RunningChorus/RunningAsAStandaloneInstallable)
+ * [Running Chorus as a JUnit Suite](/pages/RunningChorus/RunningAsJUnitSuite)
  * [Interpreter Switches](/pages/RunningChorus/InterpreterSwitches)
+ * [Running With Docker](/pages/RunningChorus/RunningWithDocker)
  * [Tagging Scenarios](/pages/RunningChorus/TaggingScenarios)
 
 

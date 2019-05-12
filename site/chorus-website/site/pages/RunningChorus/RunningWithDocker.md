@@ -2,7 +2,7 @@
 layout: page
 title: Running With Docker
 section: Running Chorus
-sectionIndex: 20
+sectionIndex: 30
 ---
 
 ## Running Chorus as a Docker container

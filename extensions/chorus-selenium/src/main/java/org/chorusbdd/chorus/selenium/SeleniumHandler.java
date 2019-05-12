@@ -154,7 +154,7 @@ public class SeleniumHandler implements ConfigPropertySource {
     }
 
     @Step(".*execute the script (.*) in the " + HandlerPatterns.namePattern + " browser")
-    @Documentation(order = 110, description = "Execute a script at the file path relative to the feature directory within the window of the named browser", example = "Then I execute the script myJavascript.js in the myChrome browser")
+    @Documentation(order = 120, description = "Execute a script at the file path relative to the feature directory within the window of the named browser", example = "Then I execute the script myJavascript.js in the myChrome browser")
     public void executeScriptInNamedBrowser(String scriptPath, String configName) {
         Object o = seleniumManager.executeScriptFile(configName, scriptPath);
         if ( o instanceof Boolean && !((Boolean)o)) {

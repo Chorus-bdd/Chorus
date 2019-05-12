@@ -2,7 +2,7 @@
 layout: page
 title: Running as A Standalone Installable
 section: Running Chorus
-sectionIndex: 20
+sectionIndex: 10
 ---
 
 You can download the Chorus tarball and install it locally, if you want to run the interpreter from the command line
