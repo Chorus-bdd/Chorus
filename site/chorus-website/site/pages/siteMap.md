@@ -13,8 +13,8 @@ title: Site Map
 
  * [Running as A Standalone Installable](/pages/RunningChorus/RunningAsAStandaloneInstallable)
  * [Running Chorus as a JUnit Suite](/pages/RunningChorus/RunningAsJUnitSuite)
- * [Interpreter Switches](/pages/RunningChorus/InterpreterSwitches)
  * [Running With Docker](/pages/RunningChorus/RunningWithDocker)
+ * [Interpreter Switches](/pages/RunningChorus/InterpreterSwitches)
  * [Tagging Scenarios](/pages/RunningChorus/TaggingScenarios)
 
 
