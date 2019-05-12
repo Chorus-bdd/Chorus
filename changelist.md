@@ -1,3 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        
+### Version 3.1.2 ###
+        
+*Support secure JMX connection for Chorus Remoting Handler*
+        
+| Changes in 3.1.2 |
+| ------ |
+| It is now possible to supply a username and password in the Remoting handler config and make a connection to component exporting Chorus Handlers on a secured JMX service |
         
 ### Version 3.1.1 ###
         

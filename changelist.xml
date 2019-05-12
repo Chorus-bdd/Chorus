@@ -3,6 +3,11 @@
 <changes>
 
     <version>
+        <versionNumber>3.1.2</versionNumber>
+        <comment>Support secure JMX connection for Chorus Remoting Handler</comment>
+        <change desc="It is now possible to supply a username and password in the Remoting handler config and make a connection to component exporting Chorus Handlers on a secured JMX service"/>
+    </version>
+    <version>
         <versionNumber>3.1.1</versionNumber>
         <comment>Patch release to support binary distribution</comment>
         <change desc="Add the CHORUS_CLASSPATH environment variable onto the classpath when running Chorus from the CLI using the binary distribution"/>
