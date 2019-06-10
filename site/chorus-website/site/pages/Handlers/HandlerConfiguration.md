@@ -38,7 +38,8 @@ These are in the form:
 
 ## Defaults for sub-configurations 
 
-It's also possible to set default values for sub-configurations
+It's also possible to set default values for sub-configurations. This is done by using the special 'default' sub-configuration, 
+the values in which are inherited by the other subconfigurations
 
 Imagine we need to set the mainclass for three components for the `Processes` handler.
 The same main class is required for all three
@@ -55,7 +56,32 @@ Instead we can set the mainclass property in the `default` sub-configuration:
 
 You can override the default by setting a value for a specific component
 
-## Loading Properties 
+## Expanding system properties and chorus properties in property values
+
+Configured property values may contain variables in the form ${variableName} and Chorus will try to expand these, first
+my looking for a JVM System Property with a matching name, and second by matching one of the following Chorus-specific 
+properties:
+
+* ${chorus.feature.dir} - the path to the dir containing the currently running feature file
+* $[chorus.feature.file} - the path to the currently running feature file
+* ${chorus.feature.config} - if the current feature is using Chorus 'configurations' the name of the configuration which is running
+* ${chorus.feature.name} - the name of the feature which is currently running
+
+
+## Accessing properties and changing them dynamically
+
+You can annotate a field in a Handler class with the ConfigurationManager subsystem annotation
+
+    @ChorusResource("subsystem.configurationManager")
+    private ConfigurationManager configurationManager;
+    
+This will be injected with the Chorus' ConfigurationManager when the Handler instance is created.
+The ConfigurationManager provides methods which can be called to read configuration properties for the current
+feature, and also to set properties which will be retained for the remainder of the current test suite, or set 
+properties which will be cleared at the end of the current feature. 
+
+
+## Loading Properties Programatically
 
 Chorus' built in handlers load their own properties, see the handler documentation for a description of these.
 

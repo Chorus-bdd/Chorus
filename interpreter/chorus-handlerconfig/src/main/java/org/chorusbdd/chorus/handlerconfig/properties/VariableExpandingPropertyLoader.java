@@ -30,6 +30,7 @@ import org.chorusbdd.chorus.util.properties.PropertyLoader;
 import org.chorusbdd.chorus.util.properties.PropertyOperations;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,8 +42,8 @@ public class VariableExpandingPropertyLoader implements PropertyLoader {
 
     private ChorusLog log = ChorusLogFactory.getLog(VariableExpandingPropertyLoader.class);
 
-    private PropertyLoader wrappedLoader;
-    private FeatureToken featureToken;
+    private final PropertyLoader wrappedLoader;
+    private final FeatureToken featureToken;
 
     private Pattern p = Pattern.compile("\\$\\{.+?\\}");
 
@@ -52,6 +53,8 @@ public class VariableExpandingPropertyLoader implements PropertyLoader {
     public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
     public VariableExpandingPropertyLoader(PropertyLoader wrappedLoader, FeatureToken featureToken) {
+        Objects.requireNonNull(wrappedLoader, "wrappedLoader cannot be null)");
+        Objects.requireNonNull(featureToken, "featureToken cannot be null)");
         this.wrappedLoader = wrappedLoader;
         this.featureToken = featureToken;
     }
@@ -92,7 +95,7 @@ public class VariableExpandingPropertyLoader implements PropertyLoader {
     private boolean replaceGroupVariable(String fullPropertyName, String variable, StringBuilder sb) {
         String property = variable.substring(2, variable.length() - 1);
         boolean result = replaceWithSystemProperty(fullPropertyName, variable, sb, property);
-        if ( ! result && featureToken != null) {
+        if ( ! result) {
             result = replaceWithChorusProperty(fullPropertyName, variable, sb, property);
         }
         return result;
