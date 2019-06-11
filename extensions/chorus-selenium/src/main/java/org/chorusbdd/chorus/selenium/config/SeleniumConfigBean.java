@@ -40,6 +40,7 @@ public class SeleniumConfigBean implements SeleniumConfig {
     private String configName;
     private Scope scope;
     private SeleniumDriverType seleniumDriverType;
+    private String webDriverFactoryClass;
     private String chromeArgs;
     private String remoteWebDriverURL;
 
@@ -60,12 +61,28 @@ public class SeleniumConfigBean implements SeleniumConfig {
 
     @ConfigProperty(
             name = "driverType",
-            description = "Defines the selenium driver type, e.g. CHROME or REMOTE_WEB_DRIVER",
+            description = "Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, CUSTOM (if specifying a custom webDriverFactoryClass)",
             defaultValue = "REMOTE_WEB_DRIVER",
             order = 10
     )
     public void setDriverType(SeleniumDriverType seleniumDriverType) {
         this.seleniumDriverType = seleniumDriverType;
+    }
+    
+    @Override
+    public String getWebDriverFactoryClass() {
+        return this.webDriverFactoryClass;
+    }
+    
+    @ConfigProperty(
+            name="webDriverFactoryClass",
+            description = "Set the implementation class for WebDriverFactory. Supply a fully qualified class name. Class must have a nullary constructor and implement WebDriverFactory",
+            mandatory = false,
+            defaultValue = "org.chorusbdd.chorus.selenium.manager.DefaultWebDriverFactory",
+            order = 15
+    )
+    public void setWebDriverFactory(String factoryClass) {
+        this.webDriverFactoryClass=factoryClass;
     }
 
     @Override
@@ -139,6 +156,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
                 break;
             case REMOTE_WEB_DRIVER:
                 checkRemoteWebDriverProperites();
+                break;
+            case CUSTOM:
                 break;
             default:
                 throw new ConfigValidatorException("Selenium Driver Type " + seleniumDriverType + " config cannot be validated");

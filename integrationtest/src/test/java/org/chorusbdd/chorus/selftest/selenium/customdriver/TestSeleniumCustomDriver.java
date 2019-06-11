@@ -21,13 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selftest.selenium.chromedriver;
+package org.chorusbdd.chorus.selftest.selenium.customdriver;
 
 import org.chorusbdd.chorus.selftest.AbstractInterpreterTest;
 import org.chorusbdd.chorus.selftest.ChorusSelfTestResults;
 import org.junit.Before;
-
-import java.io.IOException;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -37,9 +35,9 @@ import static org.junit.Assume.assumeTrue;
  * Date: 25/06/12
  * Time: 22:14
  */
-public class TestSeleniumChromeDriver extends AbstractInterpreterTest {
+public class TestSeleniumCustomDriver extends AbstractInterpreterTest {
 
-    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/selenium/chromedriver";
+    final String featurePath = "src/test/java/org/chorusbdd/chorus/selftest/selenium/customdriver";
 
     final int expectedExitCode = 0;  //success
 

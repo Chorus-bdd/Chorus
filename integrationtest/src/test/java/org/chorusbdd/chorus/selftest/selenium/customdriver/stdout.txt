@@ -1,0 +1,12 @@
+Feature: Set a custom WebDriverFactory for Selenium Handler                                          
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/selenium/customdriver/customWebDriver.feature
+Chorus --> INFO    - No default handler found for Feature: (Set a custom WebDriverFactory for Selenium Handler), will use built-in handlers and Uses: statements
+  Scenario: I can set a custom WebDriverFactory implementation
+Chorus --> INFO    - Processing scenario: I can set a custom WebDriverFactory implementation
+    Given I open the customBrowser browser                                                   PASSED  
+    Then the custom WebDriverFactory was instantiated                                        PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:1) (passed:1) (failed:0)
+Steps     (total:2) (passed:2) (failed:0) (undefined:0) (pending:0) (skipped:0)

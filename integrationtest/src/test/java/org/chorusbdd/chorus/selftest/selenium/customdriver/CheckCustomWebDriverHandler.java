@@ -21,25 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.selenium.config;
+package org.chorusbdd.chorus.selftest.selenium.customdriver;
 
-/**
- * Created by nickebbutt on 05/02/2018.
- */
-public enum SeleniumDriverType {
-    
-    /**
-     * Chorus built in WebDriverFactory does not support CUSTOM driver type but users may configure their own WebDriverFactory to support it
-     */
-    CUSTOM,
+import org.chorusbdd.chorus.annotations.ChorusResource;
+import org.chorusbdd.chorus.annotations.Handler;
+import org.chorusbdd.chorus.annotations.Step;
+import org.chorusbdd.chorus.context.ChorusContext;
+import org.chorusbdd.chorus.util.OSUtils;
 
-    /**
-     * Use the Chrome (local chromedriver) WebDriver 
-     */
-    CHROME,
+import java.io.File;
 
-    /**
-     * Use a RemoteWebDriver
-     */
-    REMOTE_WEB_DRIVER
+import static org.chorusbdd.chorus.util.assertion.ChorusAssert.assertEquals;
+
+@Handler(value = "CheckCustomWebDriver")
+public class CheckCustomWebDriverHandler {
+
+
+    @Step(".*the custom WebDriverFactory was instantiated")
+    public void checkInstantiated() {
+        assertEquals(1, CustomWebDriverFactory.instanceCount.get());
+    }
+
 }

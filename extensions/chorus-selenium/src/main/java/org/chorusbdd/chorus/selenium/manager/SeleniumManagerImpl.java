@@ -59,8 +59,6 @@ public class SeleniumManagerImpl extends ConfigurableManager<SeleniumConfigBean>
 
     private ChorusLog log = ChorusLogFactory.getLog(SeleniumManagerImpl.class);
 
-    private final WebDriverFactory webDriverFactory = new DefaultWebDriverFactory();
-    
     private Map<String, NamedWebDriver> webDriverMap = new LinkedHashMap<>();
     
     private String lastOpenedBrowserConfigName = "N/A";
@@ -83,6 +81,8 @@ public class SeleniumManagerImpl extends ConfigurableManager<SeleniumConfigBean>
     @Override
     public void openABrowser(Properties properties, String configName) {
         SeleniumConfig seleniumConfig = createAndValidateConfig(properties, configName);
+        
+        WebDriverFactory webDriverFactory = createWebDriverFactory(seleniumConfig);
         
         //creating the web driver has the effect of opening the browser
         WebDriver webDriver = webDriverFactory.createWebDriver(seleniumConfig);
@@ -160,7 +160,7 @@ public class SeleniumManagerImpl extends ConfigurableManager<SeleniumConfigBean>
         log.debug("Finished executing script from " + scriptPath);
         return result;
     }
-    
+
     public WebDriver getWebDriver(String configName) {
         return getNamedWebDriver(configName).getWebDriver();
     }
@@ -246,6 +246,7 @@ public class SeleniumManagerImpl extends ConfigurableManager<SeleniumConfigBean>
      * Not doing so can leave selenium hub in an inoperable state
      */
     private class CleanupShutdownHook extends Thread {
+
         public void run() {
             log.debug("Running Cleanup on shutdown for Selenium Manager");
             try {
@@ -255,6 +256,21 @@ public class SeleniumManagerImpl extends ConfigurableManager<SeleniumConfigBean>
             }
         }
     }
-    
 
+
+    /**
+     * Create a new instance of the configured WebDriverFactory
+     */
+    protected WebDriverFactory createWebDriverFactory(SeleniumConfig seleniumConfig) {
+        String webDriverFactoryClass = seleniumConfig.getWebDriverFactoryClass();
+        log.debug("Using web driver factory: " + webDriverFactoryClass);
+
+        WebDriverFactory webDriverFactory;
+        try {
+            webDriverFactory = (WebDriverFactory)Class.forName(webDriverFactoryClass).newInstance();
+        } catch (Exception e) {
+            throw new ChorusException("Failed to create instance of WebDriverFactory of type " + webDriverFactoryClass, e);
+        }
+        return webDriverFactory;
+    }
 }

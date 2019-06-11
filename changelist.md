@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+        
+### Version 3.1.3 ###
+        
+*Support setting a custom WebDriverFactory in SeleniumHandler config*
+        
+| Changes in 3.1.3 |
+| ------ |
+| The Selenium Handler config now supports setting a CUSTOM driver type and configuring a webDriverFactoryClass property. This factory class will be instantiated and used to create a WebDriver for Selenium testing |
         
 ### Version 3.1.2 ###
         

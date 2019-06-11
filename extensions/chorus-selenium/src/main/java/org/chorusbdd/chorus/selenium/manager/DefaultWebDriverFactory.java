@@ -54,6 +54,11 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 
                 setSpecialSilenceChromeDriverSysProperty();
                 ChromeOptions chromeOptions = new ChromeOptions();
+                
+                //Setting this prevents 'Error: Loading of unpacked extensions is disabled by the administrator' which pops up a warning dialog
+                //if starting chrome on an OS where the admin has disabled browser plugins/extensions
+                chromeOptions.setExperimentalOption("useAutomationExtension", false);
+                
                 seleniumConfig.getChromeArgs().map(s -> s.split(" ")).ifPresent(chromeOptions::addArguments);
                 result = new ChromeDriver(chromeOptions);
                 break;

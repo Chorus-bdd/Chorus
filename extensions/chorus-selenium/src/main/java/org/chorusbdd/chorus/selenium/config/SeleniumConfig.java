@@ -25,6 +25,7 @@ package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.configbean.NamedConfigBean;
+import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigProperty;
 
 import java.util.Optional;
 
@@ -37,13 +38,15 @@ public interface SeleniumConfig extends NamedConfigBean {
 
     SeleniumDriverType getDriverType();
     
-    String getRemoteWebDriverURL();
+    String getWebDriverFactoryClass();
 
     // Chrome Driver specific:
-    
+
     Optional<String> getChromeArgs();
 
-    // Chrome Driver specific:
+    // Remote Web Driver Specific
 
     String getRemoteWebDriverBrowserType();
+    
+    String getRemoteWebDriverURL();
 }
