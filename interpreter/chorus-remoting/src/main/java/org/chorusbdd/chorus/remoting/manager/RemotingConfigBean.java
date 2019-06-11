@@ -175,7 +175,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
     @ConfigProperty(
         name="userName",
         description = "User Name to provide if remote component's JMX server requires authentication",
-        mandatory = false
+        mandatory = false,
+        order = 70
     )
     public void setUserName(String userName) { this.userName = userName; }
 
@@ -187,7 +188,8 @@ public class RemotingConfigBean implements RemotingManagerConfig {
     @ConfigProperty(
         name="password",
         description = "Password to provide if remote component's JMX server requires authentication",
-        mandatory = false
+        mandatory = false,
+        order = 80
     )
     public void setPassword(String password) { this.password = password; }
     
