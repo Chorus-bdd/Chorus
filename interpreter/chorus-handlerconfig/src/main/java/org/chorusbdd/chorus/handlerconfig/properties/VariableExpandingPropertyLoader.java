@@ -52,9 +52,12 @@ public class VariableExpandingPropertyLoader implements PropertyLoader {
     public static final String CHORUS_FEATURE_CONFIGURATION_VARIABLE = "chorus.feature.config";
     public static final String CHORUS_FEATURE_NAME_VARIABLE = "chorus.feature.name";
 
+    /**
+     * @param wrappedLoader
+     * @param featureToken, may be null
+     */
     public VariableExpandingPropertyLoader(PropertyLoader wrappedLoader, FeatureToken featureToken) {
         Objects.requireNonNull(wrappedLoader, "wrappedLoader cannot be null)");
-        Objects.requireNonNull(featureToken, "featureToken cannot be null)");
         this.wrappedLoader = wrappedLoader;
         this.featureToken = featureToken;
     }
@@ -95,7 +98,7 @@ public class VariableExpandingPropertyLoader implements PropertyLoader {
     private boolean replaceGroupVariable(String fullPropertyName, String variable, StringBuilder sb) {
         String property = variable.substring(2, variable.length() - 1);
         boolean result = replaceWithSystemProperty(fullPropertyName, variable, sb, property);
-        if ( ! result) {
+        if ( ! result && this.featureToken != null) {
             result = replaceWithChorusProperty(fullPropertyName, variable, sb, property);
         }
         return result;

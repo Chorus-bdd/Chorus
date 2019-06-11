@@ -189,7 +189,7 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
     <tr>
         <td>webDriverFactoryClass</td>
         <td>no</td>
-        <td>Set the implementation class for WebDriverFactory</td>
+        <td>Set the implementation class for WebDriverFactory. Supply a fully qualified class name. Class must have a nullary constructor and implement WebDriverFactory</td>
         <td>org.chorusbdd.chorus.selenium.manager.DefaultWebDriverFactory</td>
         <td></td>
     </tr>
