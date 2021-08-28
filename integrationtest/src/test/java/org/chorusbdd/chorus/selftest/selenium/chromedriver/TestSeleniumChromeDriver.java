@@ -73,5 +73,10 @@ public class TestSeleniumChromeDriver extends AbstractInterpreterTest {
         String output = actualResults.getStandardOutput();
         output = output.replaceAll("file.*PASSED", "REPLACED PASSED");
         actualResults.setStandardOutput(output);
+        
+        String err = actualResults.getStandardError();
+        //some chromedriver dump this to std err!
+        err = err.replaceAll("ChromeDriver was started successfully.", "");
+        actualResults.setStandardError(err);
     }
 }

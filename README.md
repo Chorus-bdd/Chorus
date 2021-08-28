@@ -16,7 +16,7 @@ Chorus is ideal for integration testing systems with microservice-based architec
 
 **Getting Started:**
 
-#### See [The Chorus Website](http://chorus-bdd.github.io) for documentation
+#### See [The Chorus Website](https://chorus-bdd.github.io) for documentation
 #### The [Issue Tracking](https://github.com/Chorus-bdd/Chorus/issues?state=open) page, for issue tracking!
 
 Chorus is available under the open source MIT license
