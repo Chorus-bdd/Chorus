@@ -27,7 +27,7 @@ import org.chorusbdd.chorus.results.ExecutionToken;
 import org.chorusbdd.chorus.tools.xml.beans.ExecutionTokenBean;
 import org.chorusbdd.chorus.tools.xml.util.FormattingUtils;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Date;
 
 public class ExecutionTokenAdapter extends XmlAdapter<ExecutionTokenBean, ExecutionToken>{

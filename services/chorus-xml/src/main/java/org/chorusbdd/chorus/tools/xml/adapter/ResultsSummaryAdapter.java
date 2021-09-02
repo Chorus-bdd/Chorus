@@ -27,7 +27,7 @@ import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.tools.xml.beans.ResultSummaryBean;
 import org.chorusbdd.chorus.tools.xml.util.FormattingUtils;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 public class ResultsSummaryAdapter extends XmlAdapter<ResultSummaryBean, ResultsSummary> {
 

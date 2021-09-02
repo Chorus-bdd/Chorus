@@ -71,7 +71,7 @@ public abstract class LifecycleMethodsAbstractSuperclassHandler {
     }
 
     public String toString() {
-        return "LifecycleMethodsFeatureScopedHandler{\n" +
+        return getClass().getSimpleName() + "{\n" +
                 "name='" + name + '\'' + "\n" +
                 ", instanceCreationCount=" + getInstanceCreationCount() + "\n" +
                 ", initFeatureCount=" + initFeatureCount + "\n" +

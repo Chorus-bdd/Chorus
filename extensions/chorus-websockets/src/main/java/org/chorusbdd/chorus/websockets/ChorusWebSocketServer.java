@@ -162,7 +162,7 @@ public class ChorusWebSocketServer extends WebSocketServer implements WebSocketM
     }
 
 
-    public void stop() throws IOException, InterruptedException {
+    public void stop() throws InterruptedException {
         super.stop();
 
         //workaround for server socket left open on Windows

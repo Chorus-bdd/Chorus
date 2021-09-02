@@ -25,8 +25,8 @@ package org.chorusbdd.chorus.tools.xml.beans;
 
 import org.chorusbdd.chorus.results.EndState;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ResultSummaryBean {

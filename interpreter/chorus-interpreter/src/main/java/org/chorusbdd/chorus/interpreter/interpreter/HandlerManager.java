@@ -168,7 +168,14 @@ public class HandlerManager {
         log.debug("Running " + description + " methods for Handler " + handler);
 
         Class<?> handlerClass = handler.getClass();
-        for (Method method : handlerClass.getMethods()) {   //getMethods() includes inherited methods
+        Method[] methods = handlerClass.getMethods();
+        
+        //ensure that methods are called in a deterministic order since otherwise may vary with jvm implementation
+        //invoke on superclass before subclass and then alphabetically
+        Arrays.sort(methods, (Method o1, Method o2) -> o1.getDeclaringClass().equals(o2.getDeclaringClass()) ? 
+                o1.getName().compareTo(o2.getName()) : o1.getDeclaringClass().isAssignableFrom(o2.getDeclaringClass()) ? -1 : 1);
+        
+        for (Method method : methods) {   //getMethods() includes inherited methods
             if (method.getParameterTypes().length == 0) {
 
                 Scope methodScope = getMethodScope(isDestroy, method);

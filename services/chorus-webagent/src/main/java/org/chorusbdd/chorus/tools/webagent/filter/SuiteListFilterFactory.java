@@ -23,7 +23,7 @@
  */
 package org.chorusbdd.chorus.tools.webagent.filter;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * User: nick

@@ -27,7 +27,7 @@ import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.tools.xml.beans.ScenarioTokenBean;
 import org.chorusbdd.chorus.tools.xml.util.FormattingUtils;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.List;
 
 public class ScenarioTokenAdapter extends XmlAdapter<ScenarioTokenBean, ScenarioToken> {
