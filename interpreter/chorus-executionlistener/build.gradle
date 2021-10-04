@@ -4,7 +4,14 @@
 
 description = "chorus-executionlistener"
 
-
+test {
+    doFirst {
+        jvmArgs = [
+                //Required by selenium for some mocking
+                '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+        ]
+    }
+}
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.13.2'

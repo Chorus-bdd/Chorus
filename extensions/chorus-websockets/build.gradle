@@ -4,6 +4,16 @@
 
 description = "chorus-websockets"
 
+
+test {
+    doFirst {
+        jvmArgs = [
+            //Required by selenium for some mocking
+           '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+        ]
+    }
+}
+
 dependencies {
     compile group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.2'
     runtime group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'

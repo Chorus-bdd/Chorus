@@ -34,6 +34,8 @@ import org.chorusbdd.chorus.util.PolledAssertion;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.net.URI;
@@ -48,6 +50,7 @@ import static org.mockito.Mockito.*;
 /**
  * Created by nick on 09/12/2016.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class TestWebSocketStepPublisher {
 
 
