@@ -24,6 +24,13 @@ allprojects  {
     version = '3.1.3'
 
     test {
+        doFirst {
+            jvmArgs = [
+                    //Required by selenium for some mocking
+                    '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+            ]
+        }
+
         testLogging {
             // Make sure output from
             // standard out or error is shown
