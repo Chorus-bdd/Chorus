@@ -1,216 +1,363 @@
 // Dependencies
 
+
 project(':chorus') {
-    dependencies {
-        compile project (':chorus:chorus-handlers')
-        compile project (':chorus:chorus-interpreter')
-        compile project (':chorus:chorus-processes')
-        compile project (':chorus:chorus-remoting')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-handlers')
+            implementation project(':chorus:chorus-interpreter')
+            implementation project(':chorus:chorus-processes')
+            implementation project(':chorus:chorus-remoting')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-config')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-pathscanner')
+            implementation project(':chorus:chorus-handlerconfig')
+        }
     }
 }
 
 project(':chorus:chorus-annotations') {
-    dependencies {
+    afterEvaluate {
+        dependencies {
+        }
     }
 }
 
 project(':chorus:chorus-config') {
-    dependencies {
-        testCompile project (':chorus:chorus-util')
+    afterEvaluate {
+        dependencies {
+            testImplementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus:chorus-context') {
-    dependencies {
-        testCompile project (':chorus:chorus-util')
+    afterEvaluate {
+        dependencies {
+            testImplementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus:chorus-executionlistener') {
-    dependencies {
-        compile project (':chorus:chorus-results')
-        compile project (':chorus:chorus-annotations')
-        compile project (':chorus:chorus-logging')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-logging')
+        }
     }
 }
 
 project(':chorus:chorus-handlerconfig') {
-    dependencies {
-        compile project (':chorus:chorus-results')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-util')
-        compile project (':chorus:chorus-annotations')
-        compile project (':chorus:chorus-subsystem')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-executionlistener')
+        }
     }
 }
 
 project(':chorus:chorus-handlers') {
-    dependencies {
-        compile project (':chorus:chorus-interpreter')
-        compile project (':chorus:chorus-remoting')
-        compile project (':chorus:chorus-processes')
-        compile project (':chorus:chorus-annotations')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-interpreter')
+            implementation project(':chorus:chorus-remoting')
+            implementation project(':chorus:chorus-processes')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-context')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-stepinvoker')
+            implementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus:chorus-interpreter') {
-    dependencies {
-        compile project (':chorus:chorus-util')
-        compile project (':chorus:chorus-output')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-parser')
-        compile project (':chorus:chorus-results')
-        compile project (':chorus:chorus-config')
-        compile project (':chorus:chorus-executionlistener')
-        compile project (':chorus:chorus-handlerconfig')
-        compile project (':chorus:chorus-annotations')
-        compile project (':chorus:chorus-stepinvoker')
-        compile project (':chorus:chorus-subsystem')
-        compile project (':chorus:chorus-pathscanner')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-output')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-parser')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-config')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-stepinvoker')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-pathscanner')
+            implementation project(':chorus:chorus-context')
+        }
     }
 }
 
 project(':chorus:chorus-logging') {
-    dependencies {
+    afterEvaluate {
+        dependencies {
+        }
     }
 }
 
 
 project(':chorus:chorus-output') {
-    dependencies {
-        compile project (':chorus:chorus-util')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-results')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+        }
     }
 }
 
 project(':chorus:chorus-parser') {
-    dependencies {
-        compile project (':chorus:chorus-results')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-util')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus:chorus-pathscanner') {
-    dependencies {
-        compile project (':chorus:chorus-results')
-        compile project (':chorus:chorus-parser')
-        compile project (':chorus:chorus-annotations')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-util')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-parser')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus:chorus-processes') {
-    dependencies {
-        compile project (':chorus:chorus-subsystem')
-        compile project (':chorus:chorus-handlerconfig')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-context')
+        }
     }
 }
 
 project(':chorus:chorus-remoting') {
-    dependencies {
-        compile project (':chorus:chorus-subsystem')
-        compile project (':chorus:chorus-stepinvoker')
-        compile project (':chorus:chorus-handlerconfig')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-stepinvoker')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-context')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-results')
+        }
     }
 }
 
 project(':chorus:chorus-results') {
-    dependencies {
+    afterEvaluate {
+        dependencies {
+        }
     }
 }
 
 project(':chorus:chorus-stepinvoker') {
-    dependencies {
-        compile project (':chorus:chorus-annotations')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-util')
-        compile project (':chorus:chorus-results')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-results')
+        }
     }
 }
 
 project(':chorus:chorus-subsystem') {
-    dependencies {
-        compile project (':chorus:chorus-util')
-        compile project (':chorus:chorus-output')
-        compile project (':chorus:chorus-logging')
-        compile project (':chorus:chorus-results')
-        compile project (':chorus:chorus-executionlistener')
-        compile project (':chorus:chorus-annotations')
-        compile project (':chorus:chorus-context')
-        compile project (':chorus:chorus-pathscanner')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-output')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-context')
+            implementation project(':chorus:chorus-pathscanner')
+        }
     }
 }
 
 project(':chorus:chorus-util') {
-    dependencies {
+    afterEvaluate {
+        dependencies {
+        }
     }
 }
 
 project(':chorus-mocksuite') {
-    dependencies {
-        compile project (':chorus')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-stepinvoker')
+        }
     }
 }
 
 project(':chorus-selenium') {
-    dependencies {
-        compile project (':chorus')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-executionlistener')
+        }
     }
 }
 
 project(':chorus-spring') {
-    dependencies {
-        compile project (':chorus')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus:chorus-interpreter')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+            testImplementation project(':chorus:chorus-remoting')
+            testImplementation project(':chorus:chorus-annotations')
+            testImplementation project(':chorus:chorus-context')
+            testImplementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus-sql') {
-    dependencies {
-        compile project (':chorus')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-executionlistener')
+        }
     }
 }
 
 project(':chorus-webagent') {
-    dependencies {
-        compile project (':chorus')
-        compile project (':chorus-spring')
-        compile project (':chorus-xml')
-        testCompile project (':chorus-mocksuite')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus-spring')
+            implementation project(':chorus-xml')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-context')
+            testImplementation project(':chorus-mocksuite')
+            testImplementation project(':chorus:chorus-annotations')
+            testImplementation project(':chorus:chorus-util')
+        }
     }
 }
 
 project(':chorus-websockets') {
-    dependencies {
-        compile project (':chorus')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-stepinvoker')
+            implementation project(':chorus:chorus-context')
+        }
     }
 }
 
 project(':chorus-xml') {
-    dependencies {
-        compile project (':chorus')
-        testCompile project (':chorus-mocksuite')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus:chorus-results')
+            testImplementation project(':chorus-mocksuite')
+            testImplementation project(':chorus:chorus-annotations')
+            testImplementation project(':chorus:chorus-executionlistener')
+            testImplementation project(':chorus:chorus-config')
+        }
     }
 }
 
 project(':chorus-website') {
-    dependencies {
-        compile project (':chorus')
-        compile project (':chorus-spring')
-        compile project (':chorus-selenium')
-        compile project (':chorus-websockets')
-        compile project (':chorus-sql')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus-spring')
+            implementation project(':chorus-selenium')
+            implementation project(':chorus-websockets')
+            implementation project(':chorus-sql')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-pathscanner')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-interpreter')
+            implementation project(':chorus:chorus-config')
+        }
     }
 }
 
 project(':integrationtest') {
-    dependencies {
-        compile project (':chorus')
-        compile project (':chorus-spring')
-        compile project (':chorus-selenium')
-        compile project (':chorus-websockets')
-        compile project (':chorus-sql')
+    afterEvaluate {
+        dependencies {
+            implementation project(':chorus')
+            implementation project(':chorus-spring')
+            implementation project(':chorus-selenium')
+            implementation project(':chorus-websockets')
+            implementation project(':chorus-sql')
+            implementation project(':chorus:chorus-annotations')
+            implementation project(':chorus:chorus-util')
+            implementation project(':chorus:chorus-output')
+            implementation project(':chorus:chorus-interpreter')
+            implementation project(':chorus:chorus-remoting')
+            implementation project(':chorus:chorus-processes')
+            implementation project(':chorus:chorus-context')
+            implementation project(':chorus:chorus-stepinvoker')
+            implementation project(':chorus:chorus-handlers')
+            implementation project(':chorus:chorus-results')
+            implementation project(':chorus:chorus-executionlistener')
+            implementation project(':chorus:chorus-config')
+            implementation project(':chorus:chorus-handlerconfig')
+            implementation project(':chorus:chorus-logging')
+            implementation project(':chorus:chorus-subsystem')
+            implementation project(':chorus-selenium')
+        }
     }
 }

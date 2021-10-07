@@ -1,6 +1,6 @@
 
 plugins {
-    id "com.github.hierynomus.license" version "0.14.0" apply false
+    id "com.github.hierynomus.license" version "0.16.1" apply false
 }
 
 apply plugin: 'java-library-distribution'
@@ -8,7 +8,7 @@ apply plugin: 'java-library-distribution'
 allprojects  {
     
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'com.github.hierynomus.license'
 
     repositories {
@@ -91,54 +91,71 @@ configure([
         archives javadocJar, sourcesJar
     }
 
-    signing {
-        if (signArtifactsForPublication.toBoolean()) {
-            sign configurations.archives
-        }
-    }
 
-    uploadArchives {
+    publishing {
         repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+            maven {
+                name = "ossrh"
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = findProperty('ossrhUsername')
+                    password = findProperty('ossrhPassword')
                 }
+            }
 
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+            // Uncomment this only if your version ends with -SNAPSHOT, you'll get a 400 otherwhise.
+            /*
+            maven {
+                name = "ossrhSnapshot"
+                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                credentials {
+                    username = findProperty('ossrhUsername')
+                    password = findProperty('ossrhPassword')
                 }
+            }*/
+        }
 
-                pom.project {
-                    name description
-                    packaging 'jar'
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = description
+                    packaging = 'jar'
                     // optionally artifactId can be defined here
-                    description mavenDescription
-                    url 'http://www.chorus-bdd.org'
+                    description = mavenDescription
+                    url = 'http://www.chorus-bdd.org'
 
                     scm {
-                        connection 'scm:git:https://github.com/Chorus-bdd/Chorus'
-                        developerConnection 'scm:git:https://github.com/Chorus-bdd/Chorus'
-                        url 'http://github.com/Chorus-bdd/Chorus'
+                        connection = 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                        developerConnection = 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                        url = 'http://github.com/Chorus-bdd/Chorus'
                     }
 
                     licenses {
                         license {
-                            name 'MIT'
-                            url 'https://opensource.org/licenses/MIT'
+                            name = 'MIT'
+                            url = 'https://opensource.org/licenses/MIT'
                         }
                     }
 
                     developers {
                         developer {
-                            id 'nick'
-                            name 'Nick Ebbutt'
-                            email 'admin@chorus-bdd.org'
+                            id = 'nick'
+                            name = 'Nick Ebbutt'
+                            email = 'admin@chorus-bdd.org'
                         }
                     }
                 }
             }
+        }
+    }
+
+    signing {
+        if (signArtifactsForPublication.toBoolean()) {
+            sign publishing.publications.mavenJava
         }
     }
 }
@@ -151,16 +168,18 @@ apply from: 'dependencies.gradle'
 //The dependencies from this project determine which jars get included in the
 //distribution
 dependencies {
-    compile project ('chorus')
-    compile project ('chorus-spring')
-    compile project ('chorus-selenium')
-    compile project ('chorus-websockets')
-    compile project ('chorus-sql')
-}
-
-distributions {
-    main{
-        baseName = 'chorus'
+    afterEvaluate {
+        implementation project('chorus')
+        implementation project('chorus-spring')
+        implementation project('chorus-selenium')
+        implementation project('chorus-websockets')
+        implementation project('chorus-sql')
     }
 }
+
+//distributions {
+//    main{
+//        baseName = 'chorus'
+//    }
+//}
 

@@ -1,30 +1,29 @@
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
-}
+//plugins {
+//    id 'com.github.johnrengelman.shadow' version '6.1.0'
+//}
 
 // http://central.sonatype.org/pages/gradle.html#releasing-the-deployment-to-the-central-repository
 // Apply the plugin to allow gradle to sign jars for Sonatype Maven central distribution
 apply plugin: 'signing'
 
-shadowJar {
-    //prevents runtime/optional dependencies appearing in the shadow jar
-    configurations = [project.configurations.compile]
-
-    //avoid the '-all' extension for the shadow jar since we want it to replace the
-    //main chorus jar, to include the classes from Chorus' internal dependencies
-    classifier = null
-}
+//shadowJar {
+//    //prevents runtime/optional dependencies appearing in the shadow jar
+//    configurations = [project.configurations.implementation]
+//
+//    //avoid the '-all' extension for the shadow jar since we want it to replace the
+//    //main chorus jar, to include the classes from Chorus' internal dependencies
+//    classifier = null
+//}
 
 description = "chorus"
-
 
 dependencies {
     compileOnly group: 'org.apache.ant', name: 'ant', version: '1.10.11'
     compileOnly group: 'junit', name: 'junit', version: '4.13.2'
 
-    testCompile group: 'junit', name: 'junit', version: '4.13.2'
-    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
 
 }
 
@@ -76,72 +75,88 @@ task sourcesJar(type: Jar) {
     from collect
 }
 
-shadowJar.finalizedBy javadocJar
-shadowJar.finalizedBy sourcesJar
+//shadowJar.finalizedBy javadocJar
+//shadowJar.finalizedBy sourcesJar
 
 artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    if (signArtifactsForPublication.toBoolean()) {
-        sign configurations.archives
-    }
-}
-
-uploadArchives {
+publishing {
     repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+        maven {
+            name = "ossrh"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = findProperty('ossrhUsername')
+                password = findProperty('ossrhPassword')
             }
+        }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+        // Uncomment this only if your version ends with -SNAPSHOT, you'll get a 400 otherwhise.
+        /*
+        maven {
+            name = "ossrhSnapshot"
+            url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            credentials {
+                username = findProperty('ossrhUsername')
+                password = findProperty('ossrhPassword')
             }
+        }*/
+    }
 
-            pom.project {
-                name 'chorus'
-                packaging 'jar'
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = 'chorus'
+                packaging = 'jar'
                 // optionally artifactId can be defined here
-                description 'Chorus Open Source BDD Interpreter'
-                url 'http://www.chorus-bdd.org'
+                description = 'Chorus Open Source BDD Interpreter'
+                url = 'http://www.chorus-bdd.org'
 
                 scm {
-                    connection 'scm:git:https://github.com/Chorus-bdd/Chorus'
-                    developerConnection 'scm:git:https://github.com/Chorus-bdd/Chorus'
-                    url 'http://github.com/Chorus-bdd/Chorus'
+                    connection = 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                    developerConnection = 'scm:git:https://github.com/Chorus-bdd/Chorus'
+                    url = 'http://github.com/Chorus-bdd/Chorus'
                 }
 
                 licenses {
                     license {
-                        name 'MIT'
-                        url 'https://opensource.org/licenses/MIT'
+                        name = 'MIT'
+                        url = 'https://opensource.org/licenses/MIT'
                     }
                 }
 
                 developers {
                     developer {
-                        id 'nick'
-                        name 'Nick Ebbutt'
-                        email 'chorusbdd@objectdefinitions.com'
+                        id = 'nick'
+                        name = 'Nick Ebbutt'
+                        email = 'admin@chorus-bdd.org'
                     }
-                }
-
-                pom.whenConfigured {
-                    //Filter all dependencies since we don't want to see any of Chorus internal
-                    //jars, and all others are optional anyway (TODO should we include these as Maven 'Optional' dependencies?
-                    //All chorus internal jars are not required since they are subsumed into the shadow jar by shadow plugin
-                    p -> p.dependencies = p.dependencies.findAll {
-                        dep -> dep.artifactId == "none" //filter all dependencies
-                    }
-                }
+                } 
+                
+//                pom.whenConfigured {
+//                        //Filter all dependencies since we don't want to see any of Chorus internal
+//                        //jars, and all others are optional anyway (TODO should we include these as Maven 'Optional' dependencies?
+//                        //All chorus internal jars are not required since they are subsumed into the shadow jar by shadow plugin
+//                    p -> p.dependencies = p.dependencies.findAll {
+//                        dep -> dep.artifactId == "none" //filter all dependencies
+//                    }
+//                }
             }
         }
     }
 }
 
-javadocJar.dependsOn(shadowJar)
+signing {
+    if (signArtifactsForPublication.toBoolean()) {
+        sign publishing.publications.mavenJava
+    }
+}
+
+//javadocJar.dependsOn(shadowJar)
 
