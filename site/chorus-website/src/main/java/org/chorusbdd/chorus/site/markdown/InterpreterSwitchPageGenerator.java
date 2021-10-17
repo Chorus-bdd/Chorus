@@ -26,30 +26,16 @@ package org.chorusbdd.chorus.site.markdown;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
-import org.chorusbdd.chorus.annotations.Documentation;
-import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
-import org.chorusbdd.chorus.pathscanner.ClasspathScanner;
-import org.chorusbdd.chorus.pathscanner.filter.ClassFilter;
-import org.chorusbdd.chorus.pathscanner.filter.ClassFilterDecorator;
-import org.chorusbdd.chorus.pathscanner.filter.HandlerAnnotationFilter;
-import org.chorusbdd.chorus.util.ChorusConstants;
-import org.chorusbdd.chorus.util.function.Tuple3;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
 
 public class InterpreterSwitchPageGenerator {
 
