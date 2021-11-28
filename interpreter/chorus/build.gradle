@@ -32,6 +32,7 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
     testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testImplementation group: 'com.tngtech.archunit', name: 'archunit-junit4', version: '0.22.0'
 
 }
 

@@ -44,7 +44,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ChorusParserTagsTest {
 
-    protected final String TEST_FEATURE_FILE = "ChorusParserTagsTest.test.feature";
+    protected final String TEST_FEATURE_FILE = "ChorusParserTagsTest.test";
 
     @Test
     public void scenarioInheritsTagsFromFeature() throws Exception {
