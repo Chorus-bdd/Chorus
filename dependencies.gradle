@@ -9,7 +9,6 @@ project(':chorus') {
             implementation project(':chorus:chorus-processes')
             implementation project(':chorus:chorus-remoting')
             implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-config')
             implementation project(':chorus:chorus-logging')
             implementation project(':chorus:chorus-results')
             implementation project(':chorus:chorus-executionlistener')
@@ -28,14 +27,6 @@ project(':chorus') {
 project(':chorus:chorus-annotations') {
     afterEvaluate {
         dependencies {
-        }
-    }
-}
-
-project(':chorus:chorus-config') {
-    afterEvaluate {
-        dependencies {
-            testImplementation project(':chorus:chorus-util')
         }
     }
 }
@@ -97,7 +88,6 @@ project(':chorus:chorus-interpreter') {
             implementation project(':chorus:chorus-logging')
             implementation project(':chorus:chorus-parser')
             implementation project(':chorus:chorus-results')
-            implementation project(':chorus:chorus-config')
             implementation project(':chorus:chorus-executionlistener')
             implementation project(':chorus:chorus-handlerconfig')
             implementation project(':chorus:chorus-annotations')
@@ -316,7 +306,6 @@ project(':chorus-xml') {
             testImplementation project(':chorus-mocksuite')
             testImplementation project(':chorus:chorus-annotations')
             testImplementation project(':chorus:chorus-executionlistener')
-            testImplementation project(':chorus:chorus-config')
         }
     }
 }
@@ -335,7 +324,6 @@ project(':chorus-website') {
             implementation project(':chorus:chorus-pathscanner')
             implementation project(':chorus:chorus-util')
             implementation project(':chorus:chorus-interpreter')
-            implementation project(':chorus:chorus-config')
         }
     }
 }
@@ -359,7 +347,6 @@ project(':integrationtest') {
             implementation project(':chorus:chorus-handlers')
             implementation project(':chorus:chorus-results')
             implementation project(':chorus:chorus-executionlistener')
-            implementation project(':chorus:chorus-config')
             implementation project(':chorus:chorus-handlerconfig')
             implementation project(':chorus:chorus-logging')
             implementation project(':chorus:chorus-subsystem')

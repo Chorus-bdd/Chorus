@@ -2,7 +2,6 @@ rootProject.name = 'chorusproject'
 
 include 'chorus',
         'chorus:chorus-annotations',
-        'chorus:chorus-config',
         'chorus:chorus-context',
         'chorus:chorus-executionlistener',
         'chorus:chorus-handlerconfig',
@@ -30,7 +29,6 @@ include 'chorus',
 
 project(':chorus').projectDir = file("interpreter/chorus")
 project(':chorus:chorus-annotations').projectDir = file("interpreter/chorus-annotations")
-project(':chorus:chorus-config').projectDir = file("interpreter/chorus-config")
 project(':chorus:chorus-context').projectDir = file("interpreter/chorus-context")
 project(':chorus:chorus-executionlistener').projectDir = file("interpreter/chorus-executionlistener")
 project(':chorus:chorus-handlerconfig').projectDir = file("interpreter/chorus-handlerconfig")
