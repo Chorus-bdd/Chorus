@@ -28,7 +28,17 @@ package org.chorusbdd.chorus.stepinvoker;
  */
 public interface StepRetry {
 
-    StepRetry NO_RETRY = new DefaultStepRetry(0,0);
+    StepRetry NO_RETRY = new StepRetry() {
+        @Override
+        public long getDuration() {
+            return 0;
+        }
+
+        @Override
+        public long getInterval() {
+            return 0;
+        }
+    };
 
     static boolean isValidRetry(long retryDuration, long retryInterval) {
         return retryDuration > 0 && retryInterval > 0 && retryInterval < retryDuration;

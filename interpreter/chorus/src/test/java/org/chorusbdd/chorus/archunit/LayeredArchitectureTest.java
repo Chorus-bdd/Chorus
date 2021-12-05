@@ -30,7 +30,10 @@ import com.tngtech.archunit.lang.ArchRule;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
@@ -43,12 +46,22 @@ public class LayeredArchitectureTest {
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
                 .importPath(new File("build/classes/java/main").toPath());
 
-        ArchRule rule = layeredArchitecture()
-            .layer("interpreter").definedBy("..interpreter..")
-            .layer("chorusmain").definedBy("..chorus..", "..chorusbdd..")
-            .whereLayer("interpreter").mayOnlyBeAccessedByLayers("chorusmain")
-            .whereLayer("chorusmain").mayNotBeAccessedByAnyLayer();
+        List<String> dependentPackages = new ArrayList();
+        dependentPackages.add("org.chorusbdd.chorus");
+        dependentPackages.add("org.chorusbdd");
+
+        dependentPackages.add("org.chorusbdd.chorus.interpreter..");
+        ArchRule rule = classes()
+                .that().resideInAPackage("org.chorusbdd.chorus.interpreter")
+                .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[dependentPackages.size()]));
         rule.check(importedClasses);
+
+        dependentPackages.add("org.chorusbdd.chorus.config..");
+        ArchRule rule2 = classes()
+                .that().resideInAPackage("org.chorusbdd.chorus.config")
+                .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[dependentPackages.size()]));
+        rule2.check(importedClasses);
+
 
         ArchRule cycles = slices().matching("org.chorusbdd.chorus.(*)..").should().beFreeOfCycles();
         cycles.check(importedClasses);
