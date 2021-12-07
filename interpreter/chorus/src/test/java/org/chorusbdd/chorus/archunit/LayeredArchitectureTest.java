@@ -46,25 +46,38 @@ public class LayeredArchitectureTest {
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
                 .importPath(new File("build/classes/java/main").toPath());
 
+        ArchRule cycles = slices().matching("org.chorusbdd.chorus.(*)..").should().beFreeOfCycles();
+        cycles.check(importedClasses);
+
+        checkLayers(importedClasses,
+            "handlers",
+            "processes",
+            "remoting",
+            "handlerconfig",
+            "interpreter",
+            "config",
+            "context"
+        );
+    }
+
+
+    public static void checkLayers(JavaClasses javaClasses, String... orderedSubpackages) {;
+        String packagePrefix = "org.chorusbdd.chorus.";
+
         List<String> dependentPackages = new ArrayList();
         dependentPackages.add("org.chorusbdd.chorus");
         dependentPackages.add("org.chorusbdd");
 
-        dependentPackages.add("org.chorusbdd.chorus.interpreter..");
-        ArchRule rule = classes()
-                .that().resideInAPackage("org.chorusbdd.chorus.interpreter")
-                .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[dependentPackages.size()]));
-        rule.check(importedClasses);
+        for ( String layer : orderedSubpackages) {
+            String packagePattern = packagePrefix + layer + "..";
+            dependentPackages.add(packagePattern);
 
-        dependentPackages.add("org.chorusbdd.chorus.config..");
-        ArchRule rule2 = classes()
-                .that().resideInAPackage("org.chorusbdd.chorus.config")
-                .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[dependentPackages.size()]));
-        rule2.check(importedClasses);
+            ArchRule rule = classes()
+                    .that().resideInAPackage(packagePattern)
+                    .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[dependentPackages.size()]));
 
-
-        ArchRule cycles = slices().matching("org.chorusbdd.chorus.(*)..").should().beFreeOfCycles();
-        cycles.check(importedClasses);
+            rule.check(javaClasses);
+        }
     }
-    
+
 }

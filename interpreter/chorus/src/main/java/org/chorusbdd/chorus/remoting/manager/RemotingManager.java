@@ -24,8 +24,6 @@
 package org.chorusbdd.chorus.remoting.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
-import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
-import org.chorusbdd.chorus.handlerconfig.ConfigurableManager;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
 import org.chorusbdd.chorus.stepinvoker.StepInvokerProvider;
 import org.chorusbdd.chorus.subsystem.Subsystem;

@@ -25,7 +25,6 @@ package org.chorusbdd.chorus.selenium.config;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.handlerconfig.configbean.NamedConfigBean;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigProperty;
 
 import java.util.Optional;
 

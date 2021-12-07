@@ -25,7 +25,6 @@ package org.chorusbdd.chorus.processes.manager;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
-import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
 import java.util.Properties;

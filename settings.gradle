@@ -2,17 +2,11 @@ rootProject.name = 'chorusproject'
 
 include 'chorus',
         'chorus:chorus-annotations',
-        'chorus:chorus-context',
         'chorus:chorus-executionlistener',
-        'chorus:chorus-handlerconfig',
-        'chorus:chorus-handlers',
-        'chorus:chorus-interpreter',
         'chorus:chorus-logging',
         'chorus:chorus-output',
         'chorus:chorus-parser',
         'chorus:chorus-pathscanner',
-        'chorus:chorus-processes',
-        'chorus:chorus-remoting',
         'chorus:chorus-results',
         'chorus:chorus-stepinvoker',
         'chorus:chorus-subsystem',
@@ -29,17 +23,11 @@ include 'chorus',
 
 project(':chorus').projectDir = file("interpreter/chorus")
 project(':chorus:chorus-annotations').projectDir = file("interpreter/chorus-annotations")
-project(':chorus:chorus-context').projectDir = file("interpreter/chorus-context")
 project(':chorus:chorus-executionlistener').projectDir = file("interpreter/chorus-executionlistener")
-project(':chorus:chorus-handlerconfig').projectDir = file("interpreter/chorus-handlerconfig")
-project(':chorus:chorus-handlers').projectDir = file("interpreter/chorus-handlers")
-project(':chorus:chorus-interpreter').projectDir = file("interpreter/chorus-interpreter")
 project(':chorus:chorus-logging').projectDir = file("interpreter/chorus-logging")
 project(':chorus:chorus-output').projectDir = file("interpreter/chorus-output")
 project(':chorus:chorus-parser').projectDir = file("interpreter/chorus-parser")
 project(':chorus:chorus-pathscanner').projectDir = file("interpreter/chorus-pathscanner")
-project(':chorus:chorus-processes').projectDir = file("interpreter/chorus-processes")
-project(':chorus:chorus-remoting').projectDir = file("interpreter/chorus-remoting")
 project(':chorus:chorus-results').projectDir = file("interpreter/chorus-results")
 project(':chorus:chorus-stepinvoker').projectDir = file("interpreter/chorus-stepinvoker")
 project(':chorus:chorus-subsystem').projectDir = file("interpreter/chorus-subsystem")

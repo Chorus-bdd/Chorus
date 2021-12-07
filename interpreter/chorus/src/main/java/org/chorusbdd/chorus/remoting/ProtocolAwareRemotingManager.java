@@ -24,8 +24,6 @@
 package org.chorusbdd.chorus.remoting;
 
 import org.chorusbdd.chorus.executionlistener.ExecutionListener;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigBuilderException;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.remoting.jmx.remotingmanager.JmxRemotingManager;
 import org.chorusbdd.chorus.remoting.manager.RemotingManager;
 import org.chorusbdd.chorus.stepinvoker.StepInvoker;
