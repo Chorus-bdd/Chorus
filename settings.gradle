@@ -4,12 +4,9 @@ include 'chorus',
         'chorus:chorus-annotations',
         'chorus:chorus-executionlistener',
         'chorus:chorus-logging',
-        'chorus:chorus-output',
         'chorus:chorus-parser',
         'chorus:chorus-pathscanner',
         'chorus:chorus-results',
-        'chorus:chorus-stepinvoker',
-        'chorus:chorus-subsystem',
         'chorus:chorus-util',
         'chorus-selenium',
         'chorus-spring',
@@ -25,12 +22,9 @@ project(':chorus').projectDir = file("interpreter/chorus")
 project(':chorus:chorus-annotations').projectDir = file("interpreter/chorus-annotations")
 project(':chorus:chorus-executionlistener').projectDir = file("interpreter/chorus-executionlistener")
 project(':chorus:chorus-logging').projectDir = file("interpreter/chorus-logging")
-project(':chorus:chorus-output').projectDir = file("interpreter/chorus-output")
 project(':chorus:chorus-parser').projectDir = file("interpreter/chorus-parser")
 project(':chorus:chorus-pathscanner').projectDir = file("interpreter/chorus-pathscanner")
 project(':chorus:chorus-results').projectDir = file("interpreter/chorus-results")
-project(':chorus:chorus-stepinvoker').projectDir = file("interpreter/chorus-stepinvoker")
-project(':chorus:chorus-subsystem').projectDir = file("interpreter/chorus-subsystem")
 project(':chorus:chorus-util').projectDir = file("interpreter/chorus-util")
 project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")
 project(':chorus-spring').projectDir = file("extensions/chorus-spring")

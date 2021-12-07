@@ -56,7 +56,10 @@ public class LayeredArchitectureTest {
             "handlerconfig",
             "interpreter",
             "config",
-            "context"
+            "context",
+            "output",
+            "subsystem",
+            "stepinvoker"
         );
     }
 

@@ -10,10 +10,7 @@ project(':chorus') {
             implementation project(':chorus:chorus-executionlistener')
             implementation project(':chorus:chorus-pathscanner')
             implementation project(':chorus:chorus-parser')
-            implementation project(':chorus:chorus-stepinvoker')
             implementation project(':chorus:chorus-util')
-            implementation project(':chorus:chorus-subsystem')
-            implementation project(':chorus:chorus-output')
         }
     }
 }
@@ -38,16 +35,6 @@ project(':chorus:chorus-executionlistener') {
 project(':chorus:chorus-logging') {
     afterEvaluate {
         dependencies {
-        }
-    }
-}
-
-project(':chorus:chorus-output') {
-    afterEvaluate {
-        dependencies {
-            implementation project(':chorus:chorus-util')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-results')
         }
     }
 }
@@ -81,31 +68,6 @@ project(':chorus:chorus-results') {
     }
 }
 
-project(':chorus:chorus-stepinvoker') {
-    afterEvaluate {
-        dependencies {
-            implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-util')
-            implementation project(':chorus:chorus-results')
-        }
-    }
-}
-
-project(':chorus:chorus-subsystem') {
-    afterEvaluate {
-        dependencies {
-            implementation project(':chorus:chorus-util')
-            implementation project(':chorus:chorus-output')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-results')
-            implementation project(':chorus:chorus-executionlistener')
-            implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-pathscanner')
-        }
-    }
-}
-
 project(':chorus:chorus-util') {
     afterEvaluate {
         dependencies {
@@ -118,7 +80,6 @@ project(':chorus-mocksuite') {
         dependencies {
             implementation project(':chorus')
             implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-stepinvoker')
         }
     }
 }
@@ -131,7 +92,6 @@ project(':chorus-selenium') {
             implementation project(':chorus:chorus-results')
             implementation project(':chorus:chorus-util')
             implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-subsystem')
             implementation project(':chorus:chorus-executionlistener')
         }
     }
@@ -154,7 +114,6 @@ project(':chorus-sql') {
         dependencies {
             implementation project(':chorus')
             implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-subsystem')
             implementation project(':chorus:chorus-logging')
             implementation project(':chorus:chorus-results')
             implementation project(':chorus:chorus-util')
@@ -186,9 +145,7 @@ project(':chorus-websockets') {
             implementation project(':chorus:chorus-results')
             implementation project(':chorus:chorus-util')
             implementation project(':chorus:chorus-annotations')
-            implementation project(':chorus:chorus-subsystem')
             implementation project(':chorus:chorus-executionlistener')
-            implementation project(':chorus:chorus-stepinvoker')
         }
     }
 }
@@ -231,12 +188,9 @@ project(':integrationtest') {
             implementation project(':chorus-sql')
             implementation project(':chorus:chorus-annotations')
             implementation project(':chorus:chorus-util')
-            implementation project(':chorus:chorus-output')
-            implementation project(':chorus:chorus-stepinvoker')
             implementation project(':chorus:chorus-results')
             implementation project(':chorus:chorus-executionlistener')
             implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-subsystem')
             implementation project(':chorus-selenium')
         }
     }

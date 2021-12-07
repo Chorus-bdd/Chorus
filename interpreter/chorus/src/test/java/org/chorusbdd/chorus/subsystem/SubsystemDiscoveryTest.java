@@ -46,16 +46,17 @@ public class SubsystemDiscoveryTest {
     
     @Test
     public void testASubsystemCanBeLoaded() throws Exception {
-        
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.mock"), chorusLog); 
-        
+
+        String basePackages = "org.chorusbdd.chorus.subsystem.mock";
+        HashMap<String, Class> scanResult = discoverSubsystems(basePackages);
+
         assertTrue(scanResult.containsKey("mockSubsystemId"));
         assertEquals(scanResult.get("mockSubsystemId"), MockSubsystemImpl.class);
     }
 
     @Test
     public void checkTheSubsystemConfigAnotationMustBeOnAnInterfaceNotConcreteClass() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmocknotaninterface"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmocknotaninterface");
         
         verify(chorusLog).warn(
                 "Only interfaces can be annotated with SubsystemConfig, " +
@@ -67,7 +68,7 @@ public class SubsystemDiscoveryTest {
 
     @Test
     public void checkTheAnnotatedInterfaceMustExtendSubsystem() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmockdoesnotextendsubsystem"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmockdoesnotextendsubsystem");
 
         verify(chorusLog).warn(
                 "The interface annotated with SubsystemConfig must extends the interface Subsystem, [org.chorusbdd.chorus.subsystem.badmockdoesnotextendsubsystem.BadMockSubsystem] will not be initialized"
@@ -77,7 +78,7 @@ public class SubsystemDiscoveryTest {
 
     @Test
     public void checkTheSubsystemImplClassMustExtendTheInterface() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmocktheimplementationclassdoesnotimplement"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmocktheimplementationclassdoesnotimplement");
 
         verify(chorusLog).warn(
                 "The implementation class [org.chorusbdd.chorus.subsystem.badmocktheimplementationclassdoesnotimplement.BadMockSubsystemImpl] " +
@@ -91,7 +92,7 @@ public class SubsystemDiscoveryTest {
 
     @Test
     public void checkAnErrorIsRaisedWhenTheImplementationClassIsAnEmptyString() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmocknoimplclass"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmocknoimplclass");
 
         verify(chorusLog).warn(
                 "The SubsystemConfig annotation on [org.chorusbdd.chorus.subsystem.badmocknoimplclass.BadMockSubsystem] " +
@@ -102,7 +103,7 @@ public class SubsystemDiscoveryTest {
 
     @Test
     public void checkAnErrorIsRaisedWhenTheSubsystemIdIsAnEmptyString() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmocknoid"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmocknoid");
 
         verify(chorusLog).warn(
                 "The SubsystemConfig annotation on [org.chorusbdd.chorus.subsystem.badmocknoid.BadMockSubsystem] has an empty id and will be ignored"
@@ -112,7 +113,7 @@ public class SubsystemDiscoveryTest {
 
     @Test
     public void checkTheImplementationClassCannotBeAnInterface() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmockimplclassisaninterface"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmockimplclassisaninterface");
 
         verify(chorusLog).warn(
                 "The implementation class [org.chorusbdd.chorus.subsystem.badmockimplclassisaninterface.BadMockSubsystemImpl] " +
@@ -123,13 +124,26 @@ public class SubsystemDiscoveryTest {
 
     @Test
     public void checkTheImplementationClassCannotBeLoaded() throws Exception {
-        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList("org.chorusbdd.chorus.subsystem.badmockimplclasscannotload"), chorusLog);
+        HashMap<String, Class> scanResult = discoverSubsystems("org.chorusbdd.chorus.subsystem.badmockimplclasscannotload");
 
         verify(chorusLog).warn(
                 "The implementation class [org.chorusbdd.chorus.subsystem.badmockimplclasscannotload.MissingImplClass] for " +
                         "subsystem [mockSubsystemId] could not be loaded, this subsystem will not be initialized"
         );
         assertEquals(0, scanResult.size());
+    }
+
+    private HashMap<String, Class> discoverSubsystems(String basePackages) {
+        HashMap<String, Class> scanResult = subsystemDiscovery.discoverSubsystems(asList(basePackages), chorusLog);
+        removeBuiltInSubsystems(scanResult);
+        return scanResult;
+    }
+
+
+    private void removeBuiltInSubsystems(HashMap<String, Class> scanResult) {
+        scanResult.remove("remotingManager");
+        scanResult.remove("configurationManager");
+        scanResult.remove("processManager");
     }
 
 }
