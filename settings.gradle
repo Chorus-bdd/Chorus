@@ -2,10 +2,9 @@ rootProject.name = 'chorusproject'
 
 include 'chorus',
         'chorus:chorus-annotations',
-        'chorus:chorus-executionlistener',
         'chorus:chorus-logging',
         'chorus:chorus-parser',
-        'chorus:chorus-pathscanner',
+        'chorus:ner',
         'chorus:chorus-results',
         'chorus:chorus-util',
         'chorus-selenium',
@@ -20,10 +19,8 @@ include 'chorus',
 
 project(':chorus').projectDir = file("interpreter/chorus")
 project(':chorus:chorus-annotations').projectDir = file("interpreter/chorus-annotations")
-project(':chorus:chorus-executionlistener').projectDir = file("interpreter/chorus-executionlistener")
 project(':chorus:chorus-logging').projectDir = file("interpreter/chorus-logging")
 project(':chorus:chorus-parser').projectDir = file("interpreter/chorus-parser")
-project(':chorus:chorus-pathscanner').projectDir = file("interpreter/chorus-pathscanner")
 project(':chorus:chorus-results').projectDir = file("interpreter/chorus-results")
 project(':chorus:chorus-util').projectDir = file("interpreter/chorus-util")
 project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")

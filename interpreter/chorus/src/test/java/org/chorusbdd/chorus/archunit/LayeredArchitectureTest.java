@@ -59,7 +59,8 @@ public class LayeredArchitectureTest {
             "context",
             "output",
             "subsystem",
-            "stepinvoker"
+            "stepinvoker",
+            "executionlistener"
         );
     }
 
