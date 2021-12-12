@@ -48,7 +48,7 @@ public class TimeoutStepExecutorTest {
             } catch (InterruptedException e) {
                 countDownLatch.countDown();
             }
-        }, new ExecuteStepMessage(), 10, TimeUnit.MILLISECONDS);
+        }, new ExecuteStepMessage(), 50, TimeUnit.MILLISECONDS);
 
         boolean ok = countDownLatch.await(1, TimeUnit.SECONDS);
         if ( ! ok) {
