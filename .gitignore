@@ -16,3 +16,4 @@ build
 out
 /chorus-nick.ipr
 /chorus-nick.iws
+*.java.hsw
