@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Chorus-bdd/Chorus.svg?branch=master)](https://travis-ci.org/Chorus-bdd/Chorus)
+[![Build Status](https://travis-ci.org/Chorus-bdd/Chorus.svg?branch=master)](https://app.travis-ci.com/Chorus-bdd/Chorus.svg?branch=master)
 
 ### Chorus is a BDD test interpreter with extra capabilities for testing distributed architectures
 
