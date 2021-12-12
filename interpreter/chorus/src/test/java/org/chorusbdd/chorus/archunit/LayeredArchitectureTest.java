@@ -60,7 +60,11 @@ public class LayeredArchitectureTest {
             "output",
             "subsystem",
             "stepinvoker",
-            "executionlistener"
+            "executionlistener",
+            "pathscanner",
+            "parser",
+            "results",
+            "annotations"
         );
     }
 

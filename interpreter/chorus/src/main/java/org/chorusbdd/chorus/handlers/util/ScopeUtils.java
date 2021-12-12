@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.chorusbdd.chorus.util;
+package org.chorusbdd.chorus.handlers.util;
 
 import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.results.ScenarioToken;

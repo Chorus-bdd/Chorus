@@ -25,14 +25,11 @@ package org.chorusbdd.chorus.executionlistener;
 
 import org.chorusbdd.chorus.annotations.ExecutionPriority;
 import org.chorusbdd.chorus.results.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;

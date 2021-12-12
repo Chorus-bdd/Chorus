@@ -25,10 +25,7 @@ package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.results.*;
 
-import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Collections.sort;

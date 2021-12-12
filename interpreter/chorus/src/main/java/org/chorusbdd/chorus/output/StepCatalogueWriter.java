@@ -25,7 +25,6 @@ package org.chorusbdd.chorus.output;
 
 import org.chorusbdd.chorus.results.CataloguedStep;
 
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;

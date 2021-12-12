@@ -23,7 +23,6 @@
  */
 package org.chorusbdd.chorus.output;
 
-import org.chorusbdd.chorus.results.CataloguedStep;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.junit.Before;
 import org.junit.Test;

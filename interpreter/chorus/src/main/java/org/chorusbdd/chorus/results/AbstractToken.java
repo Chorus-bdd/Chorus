@@ -28,7 +28,6 @@ import org.chorusbdd.chorus.results.util.StackTraceUtil;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by IntelliJ IDEA.

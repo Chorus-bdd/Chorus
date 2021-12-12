@@ -23,14 +23,11 @@
  */
 package org.chorusbdd.chorus.util;
 
-import org.chorusbdd.chorus.annotations.Scope;
 import org.chorusbdd.chorus.logging.ChorusLog;
-import org.chorusbdd.chorus.results.ScenarioToken;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
