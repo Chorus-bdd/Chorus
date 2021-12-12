@@ -58,6 +58,11 @@ allprojects  {
             )
         }
     }
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
 }
 
 
@@ -66,6 +71,7 @@ allprojects  {
 // Signing and Publication to Maven Central
 
 configure([
+        project(':chorus'),
         project(':chorus-selenium'),
         project(':chorus-spring'),
         project(':chorus-websockets'),
@@ -78,19 +84,9 @@ configure([
     // All child projects will be independently signed and released
     apply plugin: 'signing'
 
-    task javadocJar(type: Jar) {
-        classifier = 'javadoc'
-    }
-
-    task sourcesJar(type: Jar) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
     artifacts {
         archives javadocJar, sourcesJar
     }
-
 
     publishing {
         repositories {
