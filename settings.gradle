@@ -1,8 +1,6 @@
 rootProject.name = 'chorusproject'
 
 include 'chorus',
-        'chorus:chorus-logging',
-        'chorus:chorus-util',
         'chorus-selenium',
         'chorus-spring',
         'chorus-websockets',
@@ -14,8 +12,6 @@ include 'chorus',
         'chorus-website'
 
 project(':chorus').projectDir = file("interpreter/chorus")
-project(':chorus:chorus-logging').projectDir = file("interpreter/chorus-logging")
-project(':chorus:chorus-util').projectDir = file("interpreter/chorus-util")
 project(':chorus-selenium').projectDir = file("extensions/chorus-selenium")
 project(':chorus-spring').projectDir = file("extensions/chorus-spring")
 project(':chorus-websockets').projectDir = file("extensions/chorus-websockets")

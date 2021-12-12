@@ -4,22 +4,6 @@
 project(':chorus') {
     afterEvaluate {
         dependencies {
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-util')
-        }
-    }
-}
-
-project(':chorus:chorus-logging') {
-    afterEvaluate {
-        dependencies {
-        }
-    }
-}
-
-project(':chorus:chorus-util') {
-    afterEvaluate {
-        dependencies {
         }
     }
 }
@@ -36,8 +20,6 @@ project(':chorus-selenium') {
     afterEvaluate {
         dependencies {
             implementation project(':chorus')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-util')
         }
     }
 }
@@ -46,8 +28,6 @@ project(':chorus-spring') {
     afterEvaluate {
         dependencies {
             implementation project(':chorus')
-            implementation project(':chorus:chorus-logging')
-            testImplementation project(':chorus:chorus-util')
         }
     }
 }
@@ -56,8 +36,6 @@ project(':chorus-sql') {
     afterEvaluate {
         dependencies {
             implementation project(':chorus')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-util')
         }
     }
 }
@@ -69,7 +47,6 @@ project(':chorus-webagent') {
             implementation project(':chorus-spring')
             implementation project(':chorus-xml')
             testImplementation project(':chorus-mocksuite')
-            testImplementation project(':chorus:chorus-util')
         }
     }
 }
@@ -78,8 +55,6 @@ project(':chorus-websockets') {
     afterEvaluate {
         dependencies {
             implementation project(':chorus')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-util')
         }
     }
 }
@@ -101,8 +76,6 @@ project(':chorus-website') {
             implementation project(':chorus-selenium')
             implementation project(':chorus-websockets')
             implementation project(':chorus-sql')
-            implementation project(':chorus:chorus-logging')
-            implementation project(':chorus:chorus-util')
         }
     }
 }
@@ -115,8 +88,6 @@ project(':integrationtest') {
             implementation project(':chorus-selenium')
             implementation project(':chorus-websockets')
             implementation project(':chorus-sql')
-            implementation project(':chorus:chorus-util')
-            implementation project(':chorus:chorus-logging')
             implementation project(':chorus-selenium')
         }
     }

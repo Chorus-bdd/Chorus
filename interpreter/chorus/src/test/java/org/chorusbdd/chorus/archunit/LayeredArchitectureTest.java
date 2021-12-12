@@ -64,7 +64,9 @@ public class LayeredArchitectureTest {
             "pathscanner",
             "parser",
             "results",
-            "annotations"
+            "annotations",
+            "util",
+            "logging"
         );
     }
 
