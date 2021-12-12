@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 public class LayeredArchitectureTest {
@@ -46,35 +45,35 @@ public class LayeredArchitectureTest {
                 .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
                 .importPath(new File("build/classes/java/main").toPath());
 
+        checkPackageDependencyOrdering(importedClasses,
+                "handlers",
+                "processes",
+                "remoting",
+                "handlerconfig",
+                "interpreter",
+                "config",
+                "context",
+                "output",
+                "subsystem",
+                "stepinvoker",
+                "executionlistener",
+                "pathscanner",
+                "parser",
+                "results",
+                "annotations",
+                "util",
+                "logging"
+        );
+
         ArchRule cycles = slices().matching("org.chorusbdd.chorus.(*)..").should().beFreeOfCycles();
         cycles.check(importedClasses);
-
-        checkLayers(importedClasses,
-            "handlers",
-            "processes",
-            "remoting",
-            "handlerconfig",
-            "interpreter",
-            "config",
-            "context",
-            "output",
-            "subsystem",
-            "stepinvoker",
-            "executionlistener",
-            "pathscanner",
-            "parser",
-            "results",
-            "annotations",
-            "util",
-            "logging"
-        );
     }
 
 
-    public static void checkLayers(JavaClasses javaClasses, String... orderedSubpackages) {;
+    public static void checkPackageDependencyOrdering(JavaClasses javaClasses, String... orderedSubpackages) {;
         String packagePrefix = "org.chorusbdd.chorus.";
 
-        List<String> dependentPackages = new ArrayList();
+        List<String> dependentPackages = new ArrayList<>();
         dependentPackages.add("org.chorusbdd.chorus");
         dependentPackages.add("org.chorusbdd");
 
@@ -84,7 +83,7 @@ public class LayeredArchitectureTest {
 
             ArchRule rule = classes()
                     .that().resideInAPackage(packagePattern)
-                    .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[dependentPackages.size()]));
+                    .should().onlyBeAccessed().byAnyPackage(dependentPackages.toArray(new String[0]));
 
             rule.check(javaClasses);
         }
