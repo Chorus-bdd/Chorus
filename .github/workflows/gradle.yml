@@ -29,8 +29,9 @@ jobs:
       uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
       with:
         arguments: build
-    - name: Archive code coverage results
+    - name: Upload Test Results
+      if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: JUnit Test Results
-        path: integrationtest/build/reports/tests/test/index.html
+        name: Upload Integration Test Reports
+        path: integrationtest/build/reports
