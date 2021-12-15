@@ -26,7 +26,7 @@ package org.chorusbdd.chorus.tools.xml.adapter;
 import org.chorusbdd.chorus.results.TestSuite;
 import org.chorusbdd.chorus.tools.xml.beans.TestSuiteBean;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * Created with IntelliJ IDEA.

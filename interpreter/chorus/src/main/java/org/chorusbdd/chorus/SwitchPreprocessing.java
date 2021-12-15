@@ -26,7 +26,6 @@ package org.chorusbdd.chorus;
 import org.chorusbdd.chorus.interpreter.startup.ChorusConfigProperty;
 import org.chorusbdd.chorus.logging.ChorusOut;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 

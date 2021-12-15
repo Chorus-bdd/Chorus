@@ -28,8 +28,8 @@ import org.chorusbdd.chorus.results.TestSuite;
 import org.chorusbdd.chorus.tools.xml.adapter.TestSuiteAdapter;
 import org.chorusbdd.chorus.tools.xml.beans.TestSuiteBean;
 
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.Reader;
 import java.io.Writer;

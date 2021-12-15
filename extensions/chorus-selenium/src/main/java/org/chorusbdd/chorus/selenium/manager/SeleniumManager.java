@@ -24,7 +24,6 @@
 package org.chorusbdd.chorus.selenium.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
-import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 import org.openqa.selenium.WebDriver;
 

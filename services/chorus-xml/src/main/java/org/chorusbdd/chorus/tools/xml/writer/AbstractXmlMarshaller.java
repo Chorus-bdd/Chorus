@@ -23,7 +23,7 @@
  */
 package org.chorusbdd.chorus.tools.xml.writer;
 
-import javax.xml.bind.*;
+import jakarta.xml.bind.*;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;

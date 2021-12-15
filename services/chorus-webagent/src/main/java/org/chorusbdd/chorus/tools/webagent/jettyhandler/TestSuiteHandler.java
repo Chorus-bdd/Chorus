@@ -23,6 +23,7 @@
  */
 package org.chorusbdd.chorus.tools.webagent.jettyhandler;
 
+import jakarta.xml.bind.Marshaller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chorusbdd.chorus.tools.webagent.WebAgentFeatureCache;
@@ -30,11 +31,11 @@ import org.chorusbdd.chorus.tools.webagent.WebAgentTestSuite;
 import org.chorusbdd.chorus.tools.xml.writer.TestSuiteXmlMarshaller;
 import org.eclipse.jetty.server.Request;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.PropertyException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.bind.PropertyException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * User: nick
@@ -80,11 +81,11 @@ public class TestSuiteHandler extends XmlStreamingHandler {
     }
 
     private void handleForSuite(HttpServletResponse response, WebAgentTestSuite s) throws Exception {
+        response.getWriter().println("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
+        response.getWriter().println("<?xml-stylesheet type='text/xsl' href='testSuiteResponse.xsl'?>");
+        
         TestSuiteXmlMarshaller testSuiteWriter = new TestSuiteXmlMarshaller();
-        testSuiteWriter.addMarshallerProperty(
-            "com.sun.xml.bind.xmlHeaders",      //:( this may break with some Marshaller implementations
-            "<?xml-stylesheet type='text/xsl' href='testSuiteResponse.xsl'?>\n"
-        );
+        testSuiteWriter.addMarshallerProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE); //avoid adding the xml processing instructions a second time
         testSuiteWriter.write(response.getWriter(), s.getTestSuite());
     }
 

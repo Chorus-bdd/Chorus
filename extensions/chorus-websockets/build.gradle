@@ -1,21 +1,18 @@
 
-
-
-
 description = "chorus-websockets"
 
 dependencies {
-    compile group: 'org.java-websocket', name: 'Java-WebSocket', version:'1.3.8'
-//    compile group: 'com.pusher', name: 'java-websocket', version:'1.4.1'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.7.5'
-    compileOnly group: 'log4j', name: 'log4j', version:'1.2.16'
+    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.2'
+    runtimeOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'
+//    implementation group: 'com.pusher', name: 'java-websocket', version:'1.4.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
+    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
 
-    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.9.5'
-    testCompile group: 'junit', name: 'junit', version:'4.10'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }
 //
 //task runWebSocketServer(group: 'websockets.run', type: JavaExec) {
 //    classpath = sourceSets.main.runtimeClasspath
 //    main = 'org.chorusbdd.chorus.websockets.WebSocketsManagerImpl'
 //}
-

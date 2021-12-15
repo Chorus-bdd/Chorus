@@ -24,11 +24,8 @@
 package org.chorusbdd.chorus.sql.manager;
 
 import org.chorusbdd.chorus.annotations.SubsystemConfig;
-import org.chorusbdd.chorus.handlerconfig.ConfigPropertySource;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 import org.chorusbdd.chorus.subsystem.Subsystem;
 
-import java.util.List;
 import java.util.Properties;
 
 /**

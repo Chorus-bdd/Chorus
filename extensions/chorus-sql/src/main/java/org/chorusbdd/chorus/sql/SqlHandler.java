@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.sql.config.SqlConfigBean;
 import org.chorusbdd.chorus.sql.manager.SqlManager;
-import org.chorusbdd.chorus.util.ScopeUtils;
+import org.chorusbdd.chorus.handlers.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 
 import java.util.List;

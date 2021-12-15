@@ -38,7 +38,7 @@ import org.chorusbdd.chorus.selenium.config.SeleniumConfigBean;
 import org.chorusbdd.chorus.selenium.config.SeleniumDriverType;
 import org.chorusbdd.chorus.selenium.manager.SeleniumManager;
 import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.ScopeUtils;
+import org.chorusbdd.chorus.handlers.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 
 import java.io.IOException;

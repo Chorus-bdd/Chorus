@@ -11,10 +11,10 @@ name='Feature Scoped Handler'
 , destroyScenarioCount=0
 }
 Feature Init for Feature scoped handler ---->
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsMultipleMethodsHandler{
 name='Multiple Methods Handler'
 , instanceCreationCount=1
-, initFeatureCount=2
+, initFeatureCount=1
 , initScenarioCount=0
 , destroyFeatureCount=0
 , destroyScenarioCount=0
@@ -22,7 +22,7 @@ name='Multiple Methods Handler'
   Scenario: Feature-Start
 Chorus --> INFO    - Processing scenario: Feature-Start
     Given I can run a feature start scenario                                                 PASSED  
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsScenarioScopedHandler{
 name='Scenario Scoped Handler'
 , instanceCreationCount=1
 , initFeatureCount=0
@@ -38,7 +38,7 @@ name='Feature Scoped Handler'
 , destroyFeatureCount=0
 , destroyScenarioCount=1
 }
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsMultipleMethodsHandler{
 name='Multiple Methods Handler'
 , instanceCreationCount=1
 , initFeatureCount=2
@@ -49,7 +49,7 @@ name='Multiple Methods Handler'
   Scenario: Simple Scenario
 Chorus --> INFO    - Processing scenario: Simple Scenario
     Check Chorus is working properly                                                         PASSED  
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsScenarioScopedHandler{
 name='Scenario Scoped Handler'
 , instanceCreationCount=2
 , initFeatureCount=0
@@ -65,7 +65,7 @@ name='Feature Scoped Handler'
 , destroyFeatureCount=0
 , destroyScenarioCount=2
 }
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsMultipleMethodsHandler{
 name='Multiple Methods Handler'
 , instanceCreationCount=1
 , initFeatureCount=2
@@ -76,7 +76,7 @@ name='Multiple Methods Handler'
   Scenario: Feature-End
 Chorus --> INFO    - Processing scenario: Feature-End
     Given I can run a feature end scenario                                                   PASSED  
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsScenarioScopedHandler{
 name='Scenario Scoped Handler'
 , instanceCreationCount=3
 , initFeatureCount=0
@@ -92,7 +92,7 @@ name='Feature Scoped Handler'
 , destroyFeatureCount=0
 , destroyScenarioCount=3
 }
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsMultipleMethodsHandler{
 name='Multiple Methods Handler'
 , instanceCreationCount=1
 , initFeatureCount=2
@@ -110,7 +110,7 @@ name='Feature Scoped Handler'
 , destroyScenarioCount=3
 }
 Feature Destroy for Feature scoped handler ---->
-LifecycleMethodsFeatureScopedHandler{
+LifecycleMethodsMultipleMethodsHandler{
 name='Multiple Methods Handler'
 , instanceCreationCount=1
 , initFeatureCount=2

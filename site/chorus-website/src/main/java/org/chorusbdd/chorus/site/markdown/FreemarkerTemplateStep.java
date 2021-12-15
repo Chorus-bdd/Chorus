@@ -25,11 +25,8 @@ package org.chorusbdd.chorus.site.markdown;
 
 import org.chorusbdd.chorus.annotations.Documentation;
 import org.chorusbdd.chorus.annotations.Step;
-import org.chorusbdd.chorus.handlerconfig.configproperty.ConfigurationProperty;
 
-import java.util.Comparator;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class FreemarkerTemplateStep {
 

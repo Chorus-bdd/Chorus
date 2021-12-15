@@ -35,7 +35,7 @@ import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.results.FeatureToken;
 import org.chorusbdd.chorus.results.ScenarioToken;
 import org.chorusbdd.chorus.util.ChorusException;
-import org.chorusbdd.chorus.util.ScopeUtils;
+import org.chorusbdd.chorus.handlers.util.ScopeUtils;
 import org.chorusbdd.chorus.util.handler.HandlerPatterns;
 import org.chorusbdd.chorus.websockets.ClientConnectionException;
 import org.chorusbdd.chorus.websockets.WebSocketsManager;

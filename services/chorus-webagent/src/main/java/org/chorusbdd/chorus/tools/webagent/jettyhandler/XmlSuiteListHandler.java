@@ -29,9 +29,9 @@ import org.chorusbdd.chorus.tools.webagent.WebAgentTestSuite;
 import org.chorusbdd.chorus.tools.xml.writer.ResultSummaryXmlMarshaller;
 import org.eclipse.jetty.server.Request;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.Marshaller;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.bind.Marshaller;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 

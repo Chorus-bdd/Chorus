@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Chorus-bdd/Chorus.svg?branch=master)](https://travis-ci.org/Chorus-bdd/Chorus)
+[![Build Status](https://travis-ci.org/Chorus-bdd/Chorus.svg?branch=master)](https://app.travis-ci.com/Chorus-bdd/Chorus.svg?branch=master)
 
 ### Chorus is a BDD test interpreter with extra capabilities for testing distributed architectures
 
@@ -8,7 +8,7 @@ Conventional BDD tools require you to provide step definitions locally.
 This is possible with Chorus too. 
  
 However, the Chorus interpreter also allows you to publish step definitions over the network from your components or microservices under test.
-When the interpreter runs it can connect to your components, find the step definitons and execute them.  
+When the interpreter runs it can connect to your components, find the step definitions and execute them.  
 
 Chorus supports both Java (JVM-based) and Javascript components (enabling a direct connection to test Web apps in the browser)
 

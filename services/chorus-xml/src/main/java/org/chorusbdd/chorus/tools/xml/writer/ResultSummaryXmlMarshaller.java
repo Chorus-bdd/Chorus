@@ -27,7 +27,7 @@ import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.tools.xml.adapter.ResultsSummaryAdapter;
 import org.chorusbdd.chorus.tools.xml.beans.ResultSummaryBean;
 
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.Marshaller;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.Writer;
 

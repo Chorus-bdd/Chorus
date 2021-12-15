@@ -26,9 +26,9 @@ package org.chorusbdd.chorus.tools.xml.beans;
 import org.chorusbdd.chorus.results.ResultsSummary;
 import org.chorusbdd.chorus.tools.xml.adapter.ResultsSummaryAdapter;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 public class ExecutionTokenBean {
 
