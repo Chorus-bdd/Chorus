@@ -23,9 +23,10 @@
  */
 package org.chorusbdd.chorus.selenium;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.spi.LoggerContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -51,9 +52,10 @@ public class SeleniumLoggingSuppression {
     //We don't want this in the Chorus interpreter output by default
     private void suppressLog4jLogging() {
         if ( ! log4jLoggingSuppressed.getAndSet(true) ) {
-            Logger logger = Logger.getLogger("org.apache.http");
-            logger.setLevel(Level.ERROR);
-            logger.addAppender(new ConsoleAppender());
+//            Logger logger = .getLogger("org.apache.http");
+//            logger.setLevel(Level.ERROR);
+//            logger.addAppender(new ConsoleAppender());
+            Configurator.setLevel("org.apache.http", Level.ERROR);
         }
     }
 
@@ -62,7 +64,7 @@ public class SeleniumLoggingSuppression {
     private void suppressSeleniumJavaUtilLogging() {
         if ( ! seleniumLoggingSuppressed.getAndSet(true) ) {
             try {
-                // Log4j logging is annoyingly difficult to turn off, it usually requires a config file but we can also do it with an InputStream
+                // JDK logging is annoyingly difficult to turn off, it usually requires a config file but we can also do it with an InputStream
                 Properties properties = new Properties();
                 properties.setProperty("org.openqa.selenium.remote.ProtocolHandshake.level", "OFF");
                 properties.setProperty("org.openqa.selenium.remote.ProtocolHandshake.useParentHandlers", "false");

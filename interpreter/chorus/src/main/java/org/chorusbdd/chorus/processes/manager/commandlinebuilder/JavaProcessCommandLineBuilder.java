@@ -114,22 +114,30 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
 
     private List<String> getLog4jTokens(String featureProcessName) {
         List<String> log4jTokens = new ArrayList<>();
-        File log4jConfigFile = findLog4jConfigFile();
-        if ( log4jConfigFile != null && log4jConfigFile.exists()) {
-            log.debug("Found log4j config at " + log4jConfigFile.getPath() + " will set -Dlog4j.configuration when starting process");
+        File log4jConfigFile = findLog4jConfigFile("log4j.xml");
+        if ( log4jConfigFile != null && log4jConfigFile.canRead()) {
+            log.debug("Found a log4j.xml for the process, will set -Dlog4j.configuration=file:" + log4jConfigFile.getPath());
             log4jTokens.add(String.format("-Dlog4j.configuration=file:%s", log4jConfigFile.getPath()));
+            log4jTokens.add(String.format("-Dfeature.dir=%s", featureDir.getAbsolutePath()));
+            log4jTokens.add(String.format("-Dfeature.process.name=%s", featureProcessName));
+        }
+
+        log4jConfigFile = findLog4jConfigFile("log4j2.xml");
+        if ( log4jConfigFile != null && log4jConfigFile.canRead()) {
+            log.debug("Found a log4j2.xml for the process, will set -Dlog4j.configurationFile=" + log4jConfigFile.getPath());
+            log4jTokens.add(String.format("-Dlog4j.configurationFile=%s", log4jConfigFile.getPath()));
             log4jTokens.add(String.format("-Dfeature.dir=%s", featureDir.getAbsolutePath()));
             log4jTokens.add(String.format("-Dfeature.process.name=%s", featureProcessName));
         }
         return log4jTokens;
     }
 
-    private File findLog4jConfigFile() {
-        String log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + "log4j.xml";
+    private File findLog4jConfigFile(String log4jFileName) {
+        String log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "conf" + File.separatorChar + log4jFileName;
         log.trace("looking for log4j config file at " + log4jConfigPath);
         File f = new File(log4jConfigPath);
         if ( ! f.exists()) {
-            log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + "log4j.xml";
+            log4jConfigPath = featureDir.getAbsolutePath() + File.separatorChar + log4jFileName;
             log.trace("looking for log4j config file at " + log4jConfigPath);
             f = new File(log4jConfigPath);
         }
@@ -139,4 +147,5 @@ public class JavaProcessCommandLineBuilder extends AbstractCommandLineBuilder {
         }
         return f.exists() ? f : null;
     }
+
 }
