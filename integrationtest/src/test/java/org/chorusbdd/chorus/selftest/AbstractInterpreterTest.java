@@ -46,7 +46,7 @@ public abstract class AbstractInterpreterTest extends Assert {
         setOutputWriterStepLength();
 
         //for spring test spring tries to load log4j so we need a configuration to avoid a warning
-        System.setProperty("log4j.configuration", "org/chorusbdd/chorus/selftest/chorus-selftest-log4j.xml");
+        System.setProperty("log4j.configurationFile", "org/chorusbdd/chorus/selftest/chorus-selftest-log4j.xml");
         System.setProperty(ChorusConstants.SUPPRESS_FAILURE_SUMMARY_PROPERTY, "true");
     }
 

@@ -7,7 +7,7 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version: '3.141.59'
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-chrome-driver', version: '3.141.59'
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.141.59'
-    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }

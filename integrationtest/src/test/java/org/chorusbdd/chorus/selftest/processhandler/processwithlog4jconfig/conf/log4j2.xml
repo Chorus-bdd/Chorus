@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+THIS LOG4J FILE IS USED TO CONFIGURE THE PROCESSES STARTED BY THE PROCESSES CHORUS HANDLER
+
+note that the following system properties will be made available by Chorus:
+${feature.dir} - the directory under which the currently executing .feature file can be found
+${feature.process.name} - a unique name generated for each process started
+-->
+
+<Configuration>
+    <Appenders>
+        <File name="file" fileName="${sys:feature.dir}/logs/${sys:feature.process.name}.log" append="false">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5.5p [%-20.20t] %c{1}:%L - %m%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.chorusbdd.chorus" level="DEBUG">
+            <AppenderRef ref="file"/>
+        </Logger>
+        <Logger name="org.springframework" level="DEBUG">
+            <AppenderRef ref="file"/>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="file"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -3,10 +3,9 @@ description = "chorus-websockets"
 
 dependencies {
     implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.2'
-    runtimeOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'
-//    implementation group: 'com.pusher', name: 'java-websocket', version:'1.4.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.4'
-    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.1'
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
 
     testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'

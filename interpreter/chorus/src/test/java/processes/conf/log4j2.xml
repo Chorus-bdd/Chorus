@@ -10,19 +10,19 @@ ${feature.process.name} - a unique name generated for each process started
 
 <Configuration>
 <Appenders>
-    <Console name="console" target="SYSTEM_OUT">
+    <File name="file" fileName="${sys:feature.dir}/logs/${sys:feature.process.name}.log" append="false">
         <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5.5p [%-20.20t] %c{1}:%L - %m%n"/>
-    </Console>
+    </File>
 </Appenders>
 <Loggers>
     <Logger name="org.chorusbdd.chorus" level="DEBUG">
-        <AppenderRef ref="console"/>
+        <AppenderRef ref="file"/>
     </Logger>
-    <Logger name="org.springframework" level="WARN">
-        <AppenderRef ref="console"/>
+    <Logger name="org.springframework" level="DEBUG">
+        <AppenderRef ref="file"/>
     </Logger>
     <Root level="INFO">
-        <AppenderRef ref="console"/>
+        <AppenderRef ref="file"/>
     </Root>
 </Loggers>
 </Configuration>
