@@ -114,8 +114,6 @@ configure([
         publications {
             mavenJava(MavenPublication) {
                 from components.java
-                artifact sourcesJar
-                artifact javadocJar
 
                 pom {
                     name = description
