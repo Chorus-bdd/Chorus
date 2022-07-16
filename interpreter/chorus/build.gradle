@@ -29,6 +29,7 @@ task createChorusVersionResource(type: Copy) {
     into 'src/main/resources'
     expand(version: project.version)
     filteringCharset = 'UTF-8'
+    outputs.upToDateWhen{false}
 }
 
 processResources.dependsOn createChorusVersionResource

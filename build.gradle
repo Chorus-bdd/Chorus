@@ -92,7 +92,7 @@ configure([
         repositories {
             maven {
                 name = "ossrh"
-                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                 credentials {
                     username = findProperty('ossrhUsername')
                     password = findProperty('ossrhPassword')
@@ -103,7 +103,7 @@ configure([
             /*
             maven {
                 name = "ossrhSnapshot"
-                url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                url = "https://oss.sonatype.org/content/repositories/snapshots/"
                 credentials {
                     username = findProperty('ossrhUsername')
                     password = findProperty('ossrhPassword')
@@ -114,8 +114,6 @@ configure([
         publications {
             mavenJava(MavenPublication) {
                 from components.java
-                artifact sourcesJar
-                artifact javadocJar
 
                 pom {
                     name = description
