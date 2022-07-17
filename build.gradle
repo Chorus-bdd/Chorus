@@ -21,7 +21,7 @@ allprojects  {
     group = "org.chorusbdd"
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-    version = '4.0.0-ALPHA'
+    version = '4.0.0-SNAPSHOT'
 
     test {
         doFirst {
@@ -92,23 +92,14 @@ configure([
         repositories {
             maven {
                 name = "ossrh"
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
                 credentials {
                     username = findProperty('ossrhUsername')
                     password = findProperty('ossrhPassword')
                 }
             }
-
-            // Uncomment this only if your version ends with -SNAPSHOT, you'll get a 400 otherwhise.
-            /*
-            maven {
-                name = "ossrhSnapshot"
-                url = "https://oss.sonatype.org/content/repositories/snapshots/"
-                credentials {
-                    username = findProperty('ossrhUsername')
-                    password = findProperty('ossrhPassword')
-                }
-            }*/
         }
 
         publications {
