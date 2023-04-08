@@ -38,6 +38,12 @@ public enum SeleniumDriverType {
      */
     CHROME,
 
+
+    /**
+     * Use the local Edge WebDriver
+     */
+    EDGE,
+
     /**
      * Use a RemoteWebDriver
      */

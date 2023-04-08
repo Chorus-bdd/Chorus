@@ -43,6 +43,7 @@ public interface SeleniumConfig extends NamedConfigBean {
 
     Optional<String> getChromeArgs();
 
+    Optional<String> getEdgeArgs();
     // Remote Web Driver Specific
 
     String getRemoteWebDriverBrowserType();
