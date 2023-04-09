@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
-### Version 4.0.0-ALPHA ###
+### Version 4.0.0-RC1 ###
         
-*New major version of Chorus with JDK 17 compatibility. 4.0.0-ALPHA is a pre-release version for Chorus 4.0, 3.1.x is the latest stable branch*
+*New major version of Chorus with JDK 17 compatibility. 4.0.0-RC1 is a pre-release version for Chorus 4.0, 3.1.x is the latest stable branch*
         
-| Changes in 4.0.0-ALPHA |
+| Changes in 4.0.0-RC1 |
 | ------ |
-| A chorus interperter built with JDK 17, maintaining source and target compatibility for Java 8 |
+| A chorus interpreter built with JDK 17, maintaining source and target compatibility for Java 8 |
+| Support for Edge browser (msedgedriver) in chorus-selenium |
         
 ### Version 3.1.3 ###
         

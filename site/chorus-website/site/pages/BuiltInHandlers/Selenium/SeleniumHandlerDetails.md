@@ -182,7 +182,7 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
     <tr>
         <td>driverType</td>
         <td>yes</td>
-        <td>Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, CUSTOM (if specifying a custom webDriverFactoryClass)</td>
+        <td>Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, EDGE, CUSTOM (if specifying a custom webDriverFactoryClass)</td>
         <td>REMOTE_WEB_DRIVER</td>
         <td>One of: CUSTOM, CHROME, EDGE, REMOTE_WEB_DRIVER</td>
     </tr>
