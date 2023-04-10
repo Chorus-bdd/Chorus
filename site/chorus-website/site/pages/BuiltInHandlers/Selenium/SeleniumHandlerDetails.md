@@ -182,9 +182,9 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
     <tr>
         <td>driverType</td>
         <td>yes</td>
-        <td>Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, CUSTOM (if specifying a custom webDriverFactoryClass)</td>
+        <td>Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, EDGE, CUSTOM (if specifying a custom webDriverFactoryClass)</td>
         <td>REMOTE_WEB_DRIVER</td>
-        <td>One of: CUSTOM, CHROME, REMOTE_WEB_DRIVER</td>
+        <td>One of: CUSTOM, CHROME, EDGE, REMOTE_WEB_DRIVER</td>
     </tr>
     <tr>
         <td>webDriverFactoryClass</td>
@@ -197,6 +197,13 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <td>chromeDriver.arguments</td>
         <td>no</td>
         <td>Arguments to pass to the chrome browser if using CHROME driver type</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>edgeDriver.arguments</td>
+        <td>no</td>
+        <td>Arguments to pass to the edget browser if using EDGE driver type</td>
         <td></td>
         <td></td>
     </tr>

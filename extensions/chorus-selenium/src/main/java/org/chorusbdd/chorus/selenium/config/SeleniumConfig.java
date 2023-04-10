@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2022 Chorus BDD Organisation.
+ * Copyright (c) 2023 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ public interface SeleniumConfig extends NamedConfigBean {
 
     Optional<String> getChromeArgs();
 
+    Optional<String> getEdgeArgs();
     // Remote Web Driver Specific
 
     String getRemoteWebDriverBrowserType();

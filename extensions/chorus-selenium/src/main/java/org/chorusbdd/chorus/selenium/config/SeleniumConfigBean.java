@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2022 Chorus BDD Organisation.
+ * Copyright (c) 2023 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,7 @@ public class SeleniumConfigBean implements SeleniumConfig {
     private SeleniumDriverType seleniumDriverType;
     private String webDriverFactoryClass;
     private String chromeArgs;
+    private String edgeArgs;
     private String remoteWebDriverURL;
 
     private String remoteWebDriverBrowserType;
@@ -61,7 +62,7 @@ public class SeleniumConfigBean implements SeleniumConfig {
 
     @ConfigProperty(
             name = "driverType",
-            description = "Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, CUSTOM (if specifying a custom webDriverFactoryClass)",
+            description = "Defines the selenium driver type, e.g. CHROME, REMOTE_WEB_DRIVER, EDGE, CUSTOM (if specifying a custom webDriverFactoryClass)",
             defaultValue = "REMOTE_WEB_DRIVER",
             order = 10
     )
@@ -98,6 +99,21 @@ public class SeleniumConfigBean implements SeleniumConfig {
     )
     public void setChromeArgs(String chromeArgs) {
         this.chromeArgs = chromeArgs;
+    }
+
+    @Override
+    public Optional<String> getEdgeArgs() {
+        return Optional.ofNullable(edgeArgs);
+    }
+
+    @ConfigProperty(
+            name = "edgeDriver.arguments",
+            description = "Arguments to pass to the edget browser if using EDGE driver type",
+            mandatory = false,
+            order = 25
+    )
+    public void setEdgeArgs(String edgeArgs) {
+        this.edgeArgs = edgeArgs;
     }
 
     @Override
@@ -157,6 +173,9 @@ public class SeleniumConfigBean implements SeleniumConfig {
             case REMOTE_WEB_DRIVER:
                 checkRemoteWebDriverProperites();
                 break;
+            case EDGE :
+                checkEdgeProperties();
+                break;
             case CUSTOM:
                 break;
             default:
@@ -170,4 +189,7 @@ public class SeleniumConfigBean implements SeleniumConfig {
     }
 
     private void checkChromeProperties() { }
+
+    private void checkEdgeProperties() { }
 }
+

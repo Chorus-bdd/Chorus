@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2022 Chorus BDD Organisation.
+ * Copyright (c) 2023 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,8 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -46,7 +48,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
         switch(seleniumConfig.getDriverType()) {
             case CHROME:
                 // Assume chromedriver will be in user PATH so non need to set it here
-                // System.setProperty("webdriver.chrome.driver", "/Users/nick/Desktop/dev/chromeDriver/chromedriver");
+                // System.setProperty("webdriver.chrome.driver", "/Users/nick/dev/chromeDriver/chromedriver");
 
                 //TODO support config to enable selenium log?
                 // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
@@ -61,6 +63,11 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 
                 seleniumConfig.getChromeArgs().map(s -> s.split(" ")).ifPresent(chromeOptions::addArguments);
                 result = new ChromeDriver(chromeOptions);
+                break;
+            case EDGE:
+                EdgeOptions edgeOptions = new EdgeOptions();
+                seleniumConfig.getEdgeArgs().map(s -> s.split(" ")).ifPresent(edgeOptions::addArguments);
+                result = new EdgeDriver(edgeOptions);
                 break;
             case REMOTE_WEB_DRIVER:
                 DesiredCapabilities capabilities = new DesiredCapabilities(
