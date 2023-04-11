@@ -31,7 +31,14 @@ import org.chorusbdd.chorus.util.ChorusException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -51,10 +58,15 @@ import java.util.zip.ZipFile;
  *
  * @author Michael Connor
  * @author Klaus Berg
- * @author Nick Ebbutt, added ClassFilter
+ * @author Nick Ebbutt, added ClassFilter, support for gradle pathing jar
  */
 public class ClasspathScanner {
 
+    /**
+     * Prefix for the special 'pathing jar' files which gradle 6+ creates in order to solve the 'classpath too long for Windows' problem
+     */
+    static final String GRADLE_PATHINGJAR_PREFIX = "gradle-javaexec-classpath";
+    
     private ChorusLog log = ChorusLogFactory.getLog(ClasspathScanner.class);
 
     private static String[] classpathNames;
@@ -148,14 +160,19 @@ public class ClasspathScanner {
         log.debug("Getting file names " + Thread.currentThread().getName());
         long start = System.currentTimeMillis();
         if (classpathNames == null) {
-            classpathNames = findClassNames();
+            classpathNames = findFileNames(System.getProperty("java.class.path"));
             log.debug("Getting file names took " + (System.currentTimeMillis() - start) + " millis");
         }
         return classpathNames;
     }
 
-    private static String[] findClassNames() throws IOException {
-        final StringTokenizer tokenizer = new StringTokenizer(System.getProperty("java.class.path"), File.pathSeparator, false);
+    static String[] findFileNames(String classPath) throws IOException {
+        // Limited support for 'pathing jars' created by gradle
+        // if the classpath contains only a special 'gradle pathing jar' we need to extract the real classpath
+        // from the pathing jar MANIFEST.MF Class-Path Attribute
+        classPath = extractClasspathIfGradlePathingJarClasspath(classPath);
+        
+        final StringTokenizer tokenizer = new StringTokenizer(classPath, File.pathSeparator, false);
         final Set<String> filenames = new LinkedHashSet<>();
 
         while (tokenizer.hasMoreTokens()) {
@@ -209,6 +226,57 @@ public class ClasspathScanner {
         }
 
         return uniqueNames;
+    }
+
+    /**
+     * To solve the 'classpath too long for Windows' problem gradle 6+ creates a single 'pathing jar' - this is an otherwise empty jar which contains 
+     * the full classpath as a Class-Path attribute in the MANIFEST file. 
+     * This jar is set as the sole classpath element, instead of passing the full classpath directly at the command line
+     */
+    static String extractClasspathIfGradlePathingJarClasspath(String classPath) throws IOException {
+        String result = classPath;
+        final StringTokenizer tokenizer = new StringTokenizer(classPath, File.pathSeparator, false);
+        int count = tokenizer.countTokens();
+        if ( count == 1 ) {
+            //just one element on classpath could be a pathing jar
+            final String classpathElement = tokenizer.nextToken();
+            final File classpathFile = new File(classpathElement);
+            
+            if (Paths.get(classpathElement).getFileName().toString().startsWith(GRADLE_PATHINGJAR_PREFIX) && classpathFile.exists() && classpathFile.canRead()) {
+                if (classpathElement.toLowerCase(Locale.US).endsWith(".jar")) {
+                    final ZipFile zip = new ZipFile(classpathFile);
+                    ZipEntry manifestEntry = zip.getEntry("META-INF/MANIFEST.MF");
+                    if ( manifestEntry != null) {
+                        try ( InputStream inputStream = zip.getInputStream(manifestEntry) ) {
+                            Manifest manifest = new Manifest(inputStream);
+                            Attributes mainAttributes = manifest.getMainAttributes();
+                            String extractedClassPath = mainAttributes.getValue(Attributes.Name.CLASS_PATH);
+                            if ( extractedClassPath != null) {
+                                result = convertFileURLsToClasspath(extractedClassPath);
+                            }
+                        } 
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private static String convertFileURLsToClasspath(String extractedClassPath) {
+        return Stream.of(extractedClassPath.split(" "))
+                .map(f -> f.startsWith("file") ? convertFileUrlToFilePath(f) : f)
+                .collect(Collectors.joining(File.pathSeparator));
+    }
+
+    public static String convertFileUrlToFilePath(String fileUrl) {
+        File file = null;
+        try {
+            URL url = new URL(fileUrl);
+            file = new File(url.toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
     }
 }
 //
