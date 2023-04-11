@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 4.0.0-RC2 ###
+        
+*Support gradle 6 pathing jars for classpath scanning*
+        
+| Changes in 4.0.0-RC2 |
+| ------ |
+| Support scanning java exec classpaths from gradle 6+ which use a pathing jar to avoid problems with long classpaths on Windows platform |
+        
 ### Version 4.0.0-RC1 ###
         
 *New major version of Chorus with JDK 17 compatibility. 4.0.0-RC1 is a pre-release version for Chorus 4.0, 3.1.x is the latest stable branch*
