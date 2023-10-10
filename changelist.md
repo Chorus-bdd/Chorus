@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
         
+### Version 4.0.0 ###
+        
+*Promote release candidate version to main release*
+        
+| Changes in 4.0.0 |
+| ------ |
+| Promote RC version |
+        
 ### Version 4.0.0-RC2 ###
         
 *Support gradle 6 pathing jars for classpath scanning*
