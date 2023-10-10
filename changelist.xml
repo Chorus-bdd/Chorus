@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>4.0.0</versionNumber>
+        <comment>Promote release candidate version to main release</comment>
+        <change desc="Promote RC version"/>
+    </version>
+    <version>
         <versionNumber>4.0.0-RC2</versionNumber>
         <comment>Support gradle 6 pathing jars for classpath scanning</comment>
         <change desc="Support scanning java exec classpaths from gradle 6+ which use a pathing jar to avoid problems with long classpaths on Windows platform"/>
