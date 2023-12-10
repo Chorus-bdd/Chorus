@@ -44,8 +44,8 @@ public class SeleniumConfigBean implements SeleniumConfig {
     private String chromeArgs;
     private String edgeArgs;
     private String remoteWebDriverURL;
-
     private String remoteWebDriverBrowserType;
+    private DriverLogLevel driverLogLevel;
 
     public String getConfigName() {
         return configName;
@@ -181,6 +181,22 @@ public class SeleniumConfigBean implements SeleniumConfig {
             default:
                 throw new ConfigValidatorException("Selenium Driver Type " + seleniumDriverType + " config cannot be validated");
         }
+    }
+
+    @Override
+    public DriverLogLevel getLogLevel() {
+        return driverLogLevel;
+    }
+
+    @ConfigProperty(
+            name = "driverLogLevel",
+            description = "Desired log level for the selenium web driver, an attempt will be made to configure this level if the driver supports it",
+            defaultValue = "OFF",
+            mandatory = false,
+            order = 60
+    )
+    public void setDriverLogLevel(DriverLogLevel driverLogLevel) {
+        this.driverLogLevel = driverLogLevel;
     }
 
     private void checkRemoteWebDriverProperites() {

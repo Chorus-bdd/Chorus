@@ -6,8 +6,9 @@ Chorus --> INFO    - Processing scenario: I can open Edge and navigate to a page
     And I set the chorus context variable pathToTestHtmlFile                                 PASSED  
     When I navigate to REPLACED PASSED  
     Then the url is REPLACED PASSED  
+    And I close the browser                                                                  PASSED  
 
 
 Features  (total:1) (passed:1) (failed:0)
 Scenarios (total:1) (passed:1) (failed:0)
-Steps     (total:4) (passed:4) (failed:0) (undefined:0) (pending:0) (skipped:0)
+Steps     (total:5) (passed:5) (failed:0) (undefined:0) (pending:0) (skipped:0)

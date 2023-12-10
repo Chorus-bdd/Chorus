@@ -49,4 +49,6 @@ public interface SeleniumConfig extends NamedConfigBean {
     String getRemoteWebDriverBrowserType();
     
     String getRemoteWebDriverURL();
+
+    DriverLogLevel getLogLevel();
 }
