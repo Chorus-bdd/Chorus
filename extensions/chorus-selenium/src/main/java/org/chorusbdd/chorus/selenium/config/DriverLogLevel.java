@@ -23,32 +23,11 @@
  */
 package org.chorusbdd.chorus.selenium.config;
 
-import org.chorusbdd.chorus.annotations.Scope;
-import org.chorusbdd.chorus.handlerconfig.configbean.NamedConfigBean;
-
-import java.util.Optional;
-
-/**
- * Created by nick on 24/09/2014.
- */
-public interface SeleniumConfig extends NamedConfigBean {
-    
-    Scope getScope();
-
-    SeleniumDriverType getDriverType();
-    
-    String getWebDriverFactoryClass();
-
-    // Chrome Driver specific:
-
-    Optional<String> getChromeArgs();
-
-    Optional<String> getEdgeArgs();
-    // Remote Web Driver Specific
-
-    String getRemoteWebDriverBrowserType();
-    
-    String getRemoteWebDriverURL();
-
-    DriverLogLevel getLogLevel();
+public enum DriverLogLevel {
+    ALL,
+    INFO,
+    DEBUG,
+    WARNING,
+    SEVERE,
+    OFF;
 }

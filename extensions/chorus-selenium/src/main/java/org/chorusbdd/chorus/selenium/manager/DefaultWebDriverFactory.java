@@ -23,25 +23,35 @@
  */
 package org.chorusbdd.chorus.selenium.manager;
 
+import org.chorusbdd.chorus.logging.ChorusLog;
+import org.chorusbdd.chorus.logging.ChorusLogFactory;
+import org.chorusbdd.chorus.selenium.config.DriverLogLevel;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chromium.ChromiumDriverLogLevel;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+
 
 /**
  * Created by nickebbutt on 12/02/2018.
  */
 public class DefaultWebDriverFactory implements WebDriverFactory {
-    
+
+    private final ChorusLog log = ChorusLogFactory.getLog(DefaultWebDriverFactory.class);
+
     @Override
     public WebDriver createWebDriver(SeleniumConfig seleniumConfig) {
         WebDriver result;
@@ -54,20 +64,23 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 // File logFile = new File(feature.getFeatureDir().toString(), "selenium.log");
                 // System.setProperty("webdriver.chrome.logfile",  logFile.toString());
                 
-                setSpecialSilenceChromeDriverSysProperty();
+                ChromiumDriverLogLevel chromeLogLevel = getLogLevel(seleniumConfig);
+                ChromeDriverService chromeDriverService = new ChromeDriverService.Builder().withLogLevel(chromeLogLevel).build();
                 ChromeOptions chromeOptions = new ChromeOptions();
-                
+
                 //Setting this prevents 'Error: Loading of unpacked extensions is disabled by the administrator' which pops up a warning dialog
                 //if starting chrome on an OS where the admin has disabled browser plugins/extensions
                 chromeOptions.setExperimentalOption("useAutomationExtension", false);
                 
                 seleniumConfig.getChromeArgs().map(s -> s.split(" ")).ifPresent(chromeOptions::addArguments);
-                result = new ChromeDriver(chromeOptions);
+                result = new ChromeDriver(chromeDriverService, chromeOptions);
                 break;
             case EDGE:
+                ChromiumDriverLogLevel edgelogLevel = getLogLevel(seleniumConfig);
+                EdgeDriverService edgeDriverService = new EdgeDriverService.Builder().withLoglevel(edgelogLevel).build();
                 EdgeOptions edgeOptions = new EdgeOptions();
                 seleniumConfig.getEdgeArgs().map(s -> s.split(" ")).ifPresent(edgeOptions::addArguments);
-                result = new EdgeDriver(edgeOptions);
+                result = new EdgeDriver(edgeDriverService, edgeOptions);
                 break;
             case REMOTE_WEB_DRIVER:
                 DesiredCapabilities capabilities = new DesiredCapabilities(
@@ -76,11 +89,36 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                         Platform.ANY  //can't configure platform yet
                 );
                 capabilities.setJavascriptEnabled(true);
+                Level logLevel = getJavaInfoLogLevel(seleniumConfig);
                 URL url = getRemoteWebDriverURL(seleniumConfig.getRemoteWebDriverURL());
-                result = new RemoteWebDriver(url, capabilities);;
+                RemoteWebDriver remoteWebDriver = new RemoteWebDriver(url, capabilities);
+                remoteWebDriver.setLogLevel(logLevel);
+                result = remoteWebDriver;;
                 break;
             default:
                 throw new ChorusException("SeleniumDriverType " + seleniumConfig.getDriverType() + " is not supported");
+        }
+        return result;
+    }
+
+    private Level getJavaInfoLogLevel(SeleniumConfig seleniumConfig) {
+        DriverLogLevel logLevel = seleniumConfig.getLogLevel();
+        Level level;
+        try {
+            level = Level.parse(logLevel.name());
+        } catch (IllegalArgumentException e) {
+            log.warn("The log level " + logLevel + " was not supported by the selenium driver, will be defaulted to OFF");
+            level = Level.OFF;
+        }
+        return level;
+    }
+
+    private ChromiumDriverLogLevel getLogLevel(SeleniumConfig seleniumConfig) {
+        DriverLogLevel logLevel = seleniumConfig.getLogLevel();
+        ChromiumDriverLogLevel result = ChromiumDriverLogLevel.fromString(logLevel.name());
+        if (result == null) {
+            log.warn("The log level " + logLevel + " was not supported by the selenium driver, will be defaulted to OFF");
+            result = ChromiumDriverLogLevel.OFF;
         }
         return result;
     }
@@ -93,8 +131,4 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
         }
     }
 
-    //Before creating a ChromeDriver set this to silence the verbose output
-    private void setSpecialSilenceChromeDriverSysProperty() {
-        System.setProperty("webdriver.chrome.silentOutput", "true");
-    }
 }

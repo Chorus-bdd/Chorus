@@ -9,5 +9,6 @@ Uses: Selenium
       And I set the chorus context variable pathToTestHtmlFile
       When I navigate to ${pathToTestHtmlFile}
       Then the url is ${pathToTestHtmlFile}
+      And I close the browser
 
 
