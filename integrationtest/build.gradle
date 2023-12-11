@@ -16,7 +16,7 @@ sourceSets {
 dependencies {
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
     testRuntimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.1'
-    testImplementation group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '4.8.3'
+    testImplementation group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '4.16.1'
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
     testImplementation group: 'org.apache.derby', name: 'derby', version: '10.15.2.0'
     testImplementation group: 'javax.annotation', name: 'jsr250-api', version: '1.0'
