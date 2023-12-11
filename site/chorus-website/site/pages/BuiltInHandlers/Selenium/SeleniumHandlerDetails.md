@@ -228,5 +228,12 @@ See [Chorus JS](/pages/DistributedTesting/ChorusJS)
         <td>SCENARIO</td>
         <td>One of: SCENARIO, FEATURE</td>
     </tr>
+    <tr>
+        <td>driverLogLevel</td>
+        <td>no</td>
+        <td>Desired log level for the selenium web driver, an attempt will be made to configure this level if the driver supports it</td>
+        <td>OFF</td>
+        <td>One of: ALL, INFO, DEBUG, WARNING, SEVERE, OFF</td>
+    </tr>
 
 </table>

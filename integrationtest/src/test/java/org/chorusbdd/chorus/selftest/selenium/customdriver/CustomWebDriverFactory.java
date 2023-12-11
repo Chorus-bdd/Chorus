@@ -23,6 +23,7 @@
  */
 package org.chorusbdd.chorus.selftest.selenium.customdriver;
 
+import org.chorusbdd.chorus.selenium.config.DriverLogLevel;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfig;
 import org.chorusbdd.chorus.selenium.config.SeleniumConfigBean;
 import org.chorusbdd.chorus.selenium.config.SeleniumDriverType;
@@ -51,6 +52,7 @@ public class CustomWebDriverFactory extends DefaultWebDriverFactory {
         //create a chrome config to permit a driver to be created in superclass
         SeleniumConfigBean seleniumConfigBean = new SeleniumConfigBean();
         seleniumConfigBean.setDriverType(SeleniumDriverType.CHROME);
+        seleniumConfigBean.setDriverLogLevel(DriverLogLevel.OFF);
         return super.createWebDriver(seleniumConfigBean);
     }
     

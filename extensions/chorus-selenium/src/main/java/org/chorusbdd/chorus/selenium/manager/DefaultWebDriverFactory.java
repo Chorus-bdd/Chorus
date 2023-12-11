@@ -88,7 +88,6 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                         "",   //can't configure version yet
                         Platform.ANY  //can't configure platform yet
                 );
-                capabilities.setJavascriptEnabled(true);
                 Level logLevel = getJavaInfoLogLevel(seleniumConfig);
                 URL url = getRemoteWebDriverURL(seleniumConfig.getRemoteWebDriverURL());
                 RemoteWebDriver remoteWebDriver = new RemoteWebDriver(url, capabilities);

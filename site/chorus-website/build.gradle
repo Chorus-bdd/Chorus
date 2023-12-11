@@ -28,4 +28,6 @@ task updatePageLinks(group: 'chorus-website', type: JavaExec) {
 
 updatePageLinks.dependsOn(generatePages)
 
-build.finalizedBy(updatePageLinks)
+build {
+    finalizedBy(updatePageLinks)
+}
