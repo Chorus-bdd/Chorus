@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+### Version 4.0.1 ###
+
+*Support for setting selenium driver log level*
+
+| Changes in 4.0.1   |
+|--------------------|
+| Support setting selenium driver log level in selenium handler config, suppress excess output from Edge driver by default |
         
 ### Version 4.0.0 ###
         
