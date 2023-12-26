@@ -2,6 +2,11 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>4.0.1</versionNumber>
+        <comment>Support for setting selenium driver log level</comment>
+        <change desc="Support setting selenium driver log level in selenium handler config, suppress excess output from Edge driver by default"/>
+    </version>
+    <version>
         <versionNumber>4.0.0</versionNumber>
         <comment>Promote release candidate version to main release</comment>
         <change desc="Promote RC version"/>
