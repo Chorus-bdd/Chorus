@@ -162,9 +162,9 @@ dependencies {
     }
 }
 
-//distributions {
-//    main{
-//        baseName = 'chorus'
-//    }
-//}
+distributions {
+    main{
+        distributionBaseName = 'chorus'
+    }
+}
 
