@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 package org.chorusbdd.chorus.stepinvoker;
+
+import org.chorusbdd.chorus.annotations.DataTable;
+import org.chorusbdd.chorus.annotations.DocString;
 
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.logging.ChorusLog;
@@ -59,7 +62,7 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
                 stepId;
     }
 
-    public Object invoke(final String stepTokenId, List<String> args) throws ReflectiveOperationException {
+    public Object invoke(final String stepTokenId, List<Object> args) throws ReflectiveOperationException {
         Class<?>[] parameterTypes = getMethod().getParameterTypes();
 
         checkArgumentCount(args, parameterTypes);
@@ -70,7 +73,29 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
         return result;
     }
 
-    private void checkArgumentCount(List<String> args, Class<?>[] parameterTypes) {
+    /**
+     * @return true if the last parameter of this method is of type {@link DocString},
+     *         indicating the step requires a DocString block to be present in the feature file.
+     */
+    @Override
+    public boolean requiresDocString() {
+        Class<?>[] parameterTypes = getMethod().getParameterTypes();
+        return parameterTypes.length > 0
+                && DocString.class.equals(parameterTypes[parameterTypes.length - 1]);
+    }
+
+    /**
+     * @return true if the last parameter of this method is of type {@link DataTable},
+     *         indicating the step requires a data table to be present in the feature file.
+     */
+    @Override
+    public boolean requiresDataTable() {
+        Class<?>[] parameterTypes = getMethod().getParameterTypes();
+        return parameterTypes.length > 0
+                && DataTable.class.equals(parameterTypes[parameterTypes.length - 1]);
+    }
+
+    private void checkArgumentCount(List<Object> args, Class<?>[] parameterTypes) {
         //check that there are the same number of expected values as there are regex groups
         if (args.size() != parameterTypes.length) {
             //I think this is always an error in the handler's step definition - group should always match param count
@@ -81,13 +106,13 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
         }
     }
 
-    private Object[] coerceArgs(List<String> args, Class<?>[] parameterTypes) {
+    private Object[] coerceArgs(List<Object> args, Class<?>[] parameterTypes) {
         Object[] values = new Object[args.size()];
         for (int i = 0; i < args.size(); i++) {
-            String valueStr = args.get(i);
+            Object arg = args.get(i);
             Class type = parameterTypes[i];
-            Object coercedValue = TypeCoercion.coerceType(log, valueStr, type);
-            if (("null".equals(valueStr) && coercedValue == null ) || coercedValue != null) {
+            Object coercedValue = TypeCoercion.coerceType(log, arg, type);
+            if (("null".equals(arg) && coercedValue == null) || coercedValue != null) {
                 values[i] = coercedValue;
             } else {
                 //the type coercion failed for this method parameter
@@ -97,7 +122,7 @@ public class SimpleMethodInvoker extends SkeletalStepInvoker {
                 //It seems valid to support a form of method parameter overloading here, where two methods have
                 //the same regex but different class types for their parameters, logging at warn by default might
                 //get irritating in this case
-                String message = "Matched step but could not coerce " + valueStr + " to type " + type;
+                String message = "Matched step but could not coerce " + arg + " to type " + type;
                 log.info(message);
                 throw new IllegalArgumentException(message);
             }

@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -105,7 +105,9 @@ public class TestClientMessages {
             "pending message",
             "tech description",
             0,
-            0
+            0,
+            false,
+            false
         );
 
         String json = JsonUtils.prettyFormat(publishStep);
@@ -134,7 +136,81 @@ public class TestClientMessages {
             Step.NO_PENDING_MESSAGE,
             "tech description",
             0,
-            100
+            100,
+            false,
+            false
+        );
+
+        verify(mockProcessor, timeout(1000)).receivePublishStep(expectedPublishStep);
+    }
+
+    @Test
+    public void iCanSendAPublishStepMessageWithRequiresDocString() {
+        PublishStepMessage publishStep = new PublishStepMessage(
+            "stepId",
+            "chorusClientId",
+            "click the (.*) button",
+            false,
+            Step.NO_PENDING_MESSAGE,
+            "tech description",
+            0,
+            100,
+            true,
+            false
+        );
+
+        String json = JsonUtils.prettyFormat(publishStep);
+        webSocketClient.send(json);
+
+        verify(mockProcessor, timeout(1000)).receivePublishStep(publishStep);
+    }
+
+    @Test
+    public void iCanSendAPublishStepMessageWithRequiresDataTable() {
+        PublishStepMessage publishStep = new PublishStepMessage(
+            "stepId",
+            "chorusClientId",
+            "click the (.*) button",
+            false,
+            Step.NO_PENDING_MESSAGE,
+            "tech description",
+            0,
+            100,
+            false,
+            true
+        );
+
+        String json = JsonUtils.prettyFormat(publishStep);
+        webSocketClient.send(json);
+
+        verify(mockProcessor, timeout(1000)).receivePublishStep(publishStep);
+    }
+
+    @Test
+    public void iCanSendAPublishStepMessageWithNoRequiresDocStringOrRequiresDataTableField() {
+        // Omitting requiresDocString and requiresDataTable from the JSON should default both to false
+        // for backwards compatibility with older clients that don't send these fields
+        String json = "{\n" +
+            "  \"chorusClientId\" : \"chorusClientId\",\n" +
+            "  \"pattern\" : \"click the (.*) button\",\n" +
+            "  \"stepId\" : \"backCompatStepId\",\n" +
+            "  \"technicalDescription\" : \"tech description\",\n" +
+            "  \"type\" : \"PUBLISH_STEP\"\n" +
+            "}";
+
+        webSocketClient.send(json);
+
+        PublishStepMessage expectedPublishStep = new PublishStepMessage(
+            "backCompatStepId",
+            "chorusClientId",
+            "click the (.*) button",
+            false,
+            Step.NO_PENDING_MESSAGE,
+            "tech description",
+            0,
+            100,
+            false,
+            false
         );
 
         verify(mockProcessor, timeout(1000)).receivePublishStep(expectedPublishStep);

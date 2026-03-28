@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ public class StepRetryDecorator {
         this.foundStepInvoker = foundStepInvoker;
     }
 
-    public ResultWithRetryCount invoke(final String stepTokenId, List<String> args) throws Exception {
+    public ResultWithRetryCount invoke(final String stepTokenId, List<Object> args) throws Exception {
         ResultWithRetryCount result;
         StepRetry retry = foundStepInvoker.getRetry();
         if ( retry.isValid()) {
@@ -57,7 +57,7 @@ public class StepRetryDecorator {
         return result;
     }
 
-    private ResultWithRetryCount invokeWithRetry(final String stepTokenId, List<String> args, StepRetry retry) {
+    private ResultWithRetryCount invokeWithRetry(final String stepTokenId, List<Object> args, StepRetry retry) {
         Object result;
         if ( log.isTraceEnabled()) {
             log.trace("Wrapping step " + foundStepInvoker.getStepPattern() + " with a StepRetry decorator");

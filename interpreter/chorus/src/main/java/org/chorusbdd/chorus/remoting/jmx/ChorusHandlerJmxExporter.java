@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -152,7 +152,7 @@ public class ChorusHandlerJmxExporter implements ChorusHandlerJmxExporterMBean {
         return this;
     }
 
-    public JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<String> args) throws Exception {
+    public JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<Object> args) throws Exception {
 
         //log debug messages
         if (log.isDebugEnabled()) {

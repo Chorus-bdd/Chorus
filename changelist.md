@@ -1,11 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+        
+### Version 5.0.0-ALPHA ###
+        
+*Major new version of Chorus with DocString and DataTable support, ANTLR4 parser, Gradle 9.x, and Java 25 compatibility*
+        
+| Changes in 5.0.0-ALPHA |
+| ------ |
+| DocString support: Gherkin triple-quoted doc strings (""") can now be passed to @Step methods via a DocString final parameter |
+| DataTable support: Gherkin pipe-delimited data tables can now be passed to @Step methods via a DataTable final parameter (first row treated as headers) |
+| DocString and DataTable arguments work with JMX/RMI remoting: values are serialised over RMI and coerced to the correct type on the remote handler |
+| DocString and DataTable arguments work with WebSocket remoting: requiresDocString and requiresDataTable flags added to the PublishStepMessage wire protocol (defaulting to false for backwards compatibility) |
+| StepInvoker.invoke() now accepts List&lt;Object&gt; instead of List&lt;String&gt; to carry non-String argument types (DocString, DataTable) through the invocation chain |
+| ANTLR4 grammar-based parser replaces the hand-coded FSM parser for feature files, improving robustness and maintainability |
+| Build upgraded to Gradle 9.x; ANTLR code generation switched to the Gradle antlr plugin |
+| Java 25 compatibility: project builds and tests pass under JDK 25 |
+| JmxInvokerResult wire protocol extended with requiresDocString and requiresDataTable flags |
+| Integration tests added for DocString and DataTable remoting over JMX |
+| Copyright year updated to 2026 across all source files |
+        
 ### Version 4.0.1 ###
-
+        
 *Support for setting selenium driver log level*
-
-| Changes in 4.0.1   |
-|--------------------|
+        
+| Changes in 4.0.1 |
+| ------ |
 | Support setting selenium driver log level in selenium handler config, suppress excess output from Edge driver by default |
         
 ### Version 4.0.0 ###

@@ -17,3 +17,4 @@ out
 /chorus-nick.ipr
 /chorus-nick.iws
 *.java.hsw
+.claude/settings.local.json

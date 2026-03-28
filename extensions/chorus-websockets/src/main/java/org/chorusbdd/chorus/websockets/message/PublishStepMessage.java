@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,11 +43,15 @@ public class PublishStepMessage extends AbstractTypedMessage {
     private long retryInterval = 100;
     private long retryDuration;
 
+    // Default to false for backwards compatibility with clients that do not send these fields
+    private boolean requiresDocString = false;
+    private boolean requiresDataTable = false;
+
     public PublishStepMessage() {
         super(MessageType.PUBLISH_STEP.name());
     }
 
-    public PublishStepMessage(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription, long retryDuration, long retryInterval) {
+    public PublishStepMessage(String stepId, String chorusClientId, String pattern, boolean isPending, String pendingMessage, String technicalDescription, long retryDuration, long retryInterval, boolean requiresDocString, boolean requiresDataTable) {
         this();
         this.stepId = stepId;
         this.chorusClientId = chorusClientId;
@@ -57,6 +61,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
         this.technicalDescription = technicalDescription;
         this.retryDuration = retryDuration;
         this.retryInterval = retryInterval;
+        this.requiresDocString = requiresDocString;
+        this.requiresDataTable = requiresDataTable;
     }
 
     public String getStepId() {
@@ -123,6 +129,22 @@ public class PublishStepMessage extends AbstractTypedMessage {
         this.retryDuration = retryDuration;
     }
 
+    public boolean isRequiresDocString() {
+        return requiresDocString;
+    }
+
+    public void setRequiresDocString(boolean requiresDocString) {
+        this.requiresDocString = requiresDocString;
+    }
+
+    public boolean isRequiresDataTable() {
+        return requiresDataTable;
+    }
+
+    public void setRequiresDataTable(boolean requiresDataTable) {
+        this.requiresDataTable = requiresDataTable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -133,6 +155,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
         if (isPending != that.isPending) return false;
         if (retryInterval != that.retryInterval) return false;
         if (retryDuration != that.retryDuration) return false;
+        if (requiresDocString != that.requiresDocString) return false;
+        if (requiresDataTable != that.requiresDataTable) return false;
         if (!stepId.equals(that.stepId)) return false;
         if (!chorusClientId.equals(that.chorusClientId)) return false;
         if (!pattern.equals(that.pattern)) return false;
@@ -150,6 +174,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
         result = 31 * result + technicalDescription.hashCode();
         result = 31 * result + (int) (retryInterval ^ (retryInterval >>> 32));
         result = 31 * result + (int) (retryDuration ^ (retryDuration >>> 32));
+        result = 31 * result + (requiresDocString ? 1 : 0);
+        result = 31 * result + (requiresDataTable ? 1 : 0);
         return result;
     }
 
@@ -164,6 +190,8 @@ public class PublishStepMessage extends AbstractTypedMessage {
                 ", technicalDescription='" + technicalDescription + '\'' +
                 ", retryInterval=" + retryInterval +
                 ", retryDuration=" + retryDuration +
+                ", requiresDocString=" + requiresDocString +
+                ", requiresDataTable=" + requiresDataTable +
                 '}';
     }
 }

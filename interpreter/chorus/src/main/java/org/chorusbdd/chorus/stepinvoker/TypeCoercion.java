@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 package org.chorusbdd.chorus.stepinvoker;
 
+import org.chorusbdd.chorus.annotations.DataTable;
+import org.chorusbdd.chorus.annotations.DocString;
 import org.chorusbdd.chorus.logging.ChorusLog;
 import org.chorusbdd.chorus.logging.ChorusLogFactory;
 import org.chorusbdd.chorus.util.RegexpUtils;
@@ -30,6 +32,8 @@ import org.chorusbdd.chorus.util.RegexpUtils;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -46,47 +50,59 @@ public class TypeCoercion {
     private static Pattern intPattern = Pattern.compile("-?[0-9]+");
 
     /**
-     * Will attempt to convert the String to the required type
+     * Will attempt to convert the value to the required type.
+     *
+     * <p>The {@code value} is normally a {@code String} extracted from a regex capture group or a DocString block.
+     * When {@code requiredType} is {@link DataTable}, {@code value} must be a
+     * {@code List<Map<String,String>>} (the parsed data table rows).  All other types expect a {@code String}.
      *
      * @return the coerced value, or null if the value cannot be converted to the required type
      */
-    public static <T> T coerceType(ChorusLog log, String value, Class<T> requiredType) {
+    public static <T> T coerceType(ChorusLog log, Object value, Class<T> requiredType) {
 
         T result = null;
         try {
-            if ( "null".equals(value)) {
+            if ("null".equals(value)) {
                 result = null;
-            } else if (isStringType(requiredType)) {
-                result = (T) value;
-            } else if (isStringBufferType(requiredType)) {
-                result = (T) new StringBuffer(value);
-            } else if (isIntType(requiredType)) {
-                result = (T) new Integer(value);
-            } else if (isLongType(requiredType)) {
-                result = (T) new Long(value);
-            } else if (isFloatType(requiredType)) {
-                result = (T) new Float(value);
-            } else if (isDoubleType(requiredType)) {
-                result = (T) new Double(value);
-            } else if (isBigDecimalType(requiredType)) {
-                result = (T) new BigDecimal(value);
-            } else if (isBigIntegerType(requiredType)) {
-                result = (T) new BigInteger(value);
-            } else if (isBooleanType(requiredType)
-                 && "true".equalsIgnoreCase(value)      //be stricter than Boolean.parseValue
-                 || "false".equalsIgnoreCase(value)) {  //do not accept 'wibble' as a boolean false value
-                //dont create new Booleans (there are only 2 possible values)
-                result = (T) (Boolean) Boolean.parseBoolean(value);
-            } else if (isShortType(requiredType)) {
-                result = (T) new Short(value);
-            } else if (isByteType(requiredType)) {
-                result = (T) new Byte(value);
-            } else if (isCharType(requiredType) && value.length() == 1) {
-                result = (T) (Character) value.toCharArray()[0];
-            } else if (isEnumeratedType(requiredType)) {
-                result = (T)coerceEnum(value, requiredType);
-            } else if (isObjectType(requiredType)) {//attempt to convert the String to the most appropriate value
-                result = (T)coerceObject(value);
+            } else if (DataTable.class.equals(requiredType) && value instanceof List) {
+                result = (T) new DataTable((List<Map<String, String>>) value);
+            } else {
+                // All remaining cases expect a String value (regex capture group or DocString content)
+                String stringValue = (String) value;
+                if (DocString.class.equals(requiredType)) {
+                    result = (T) new DocString(stringValue);
+                } else if (isStringType(requiredType)) {
+                    result = (T) stringValue;
+                } else if (isStringBufferType(requiredType)) {
+                    result = (T) new StringBuffer(stringValue);
+                } else if (isIntType(requiredType)) {
+                    result = (T) new Integer(stringValue);
+                } else if (isLongType(requiredType)) {
+                    result = (T) new Long(stringValue);
+                } else if (isFloatType(requiredType)) {
+                    result = (T) new Float(stringValue);
+                } else if (isDoubleType(requiredType)) {
+                    result = (T) new Double(stringValue);
+                } else if (isBigDecimalType(requiredType)) {
+                    result = (T) new BigDecimal(stringValue);
+                } else if (isBigIntegerType(requiredType)) {
+                    result = (T) new BigInteger(stringValue);
+                } else if (isBooleanType(requiredType)
+                         && "true".equalsIgnoreCase(stringValue)      //be stricter than Boolean.parseValue
+                         || "false".equalsIgnoreCase(stringValue)) {  //do not accept 'wibble' as a boolean false value
+                    //dont create new Booleans (there are only 2 possible values)
+                    result = (T) (Boolean) Boolean.parseBoolean(stringValue);
+                } else if (isShortType(requiredType)) {
+                    result = (T) new Short(stringValue);
+                } else if (isByteType(requiredType)) {
+                    result = (T) new Byte(stringValue);
+                } else if (isCharType(requiredType) && stringValue.length() == 1) {
+                    result = (T) (Character) stringValue.toCharArray()[0];
+                } else if (isEnumeratedType(requiredType)) {
+                    result = (T) coerceEnum(stringValue, requiredType);
+                } else if (isObjectType(requiredType)) { //attempt to convert the String to the most appropriate value
+                    result = (T) coerceObject(stringValue);
+                }
             }
         } catch (Throwable t) {
             //Only log at debug since this failure may be an 'expected' NumberFormatException for example

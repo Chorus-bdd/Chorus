@@ -13,7 +13,7 @@ task generatePages(group: 'chorus-website', type: JavaExec) {
         println("Generating website pages")
     }
     classpath = sourceSets.main.runtimeClasspath
-    main = 'org.chorusbdd.chorus.site.markdown.PageGenerator'
+    mainClass = 'org.chorusbdd.chorus.site.markdown.PageGenerator'
     args ''
 }
 
@@ -22,7 +22,7 @@ task updatePageLinks(group: 'chorus-website', type: JavaExec) {
         println("Updating page links")
     }
     classpath = sourceSets.main.runtimeClasspath
-    main = 'org.chorusbdd.chorus.site.UpdatePageLinks'
+    mainClass = 'org.chorusbdd.chorus.site.UpdatePageLinks'
     args ''
 }
 

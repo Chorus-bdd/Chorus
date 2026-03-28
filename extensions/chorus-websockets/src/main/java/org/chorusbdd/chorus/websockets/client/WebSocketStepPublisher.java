@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -173,7 +173,9 @@ public class WebSocketStepPublisher {
             invoker.getPendingMessage() == null ? Step.NO_PENDING_MESSAGE : invoker.getPendingMessage(),
             invoker.getTechnicalDescription(),
             invoker.getRetry().getDuration(),
-            invoker.getRetry().getInterval()
+            invoker.getRetry().getInterval(),
+            invoker.requiresDocString(),
+            invoker.requiresDataTable()
         );
         chorusWebSocketClient.sendMessage(publishStepMessage);
     }

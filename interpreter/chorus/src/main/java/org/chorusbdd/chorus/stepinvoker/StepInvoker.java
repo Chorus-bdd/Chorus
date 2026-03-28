@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,13 +62,23 @@ public interface StepInvoker {
     String getPendingMessage();
 
     /**
-     * Invoke the step passing the String values from the step action which match the capture groups in the step pattern
+     * Invoke the step with its arguments.
      *
-     * @param stepTokenId, A unique ID of the step being executed, this ID is unique for each test run
-     * @param args A list of arguments, one for each capturing group in the step pattern, extracted from the step text/action             
+     * <p>All arguments except the last are {@code String} values extracted from the capture groups in the step
+     * pattern.  The final argument may additionally be:
+     * <ul>
+     *   <li>a {@code String} representing a DocString value, when the step method requires a DocString; or</li>
+     *   <li>a {@code List<Map<String,String>>} representing a data table (first row = headers, remaining rows
+     *       keyed by header), when the step method requires a DataTable.</li>
+     * </ul>
+     *
+     * @param stepTokenId a unique ID of the step being executed, unique for each test run
+     * @param args        a list of arguments — one {@code String} per capturing group in the step pattern, with
+     *                    an optional final element that may be a {@code String} (DocString) or
+     *                    {@code List<Map<String,String>>} (DataTable)
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    Object invoke(String stepTokenId, List<String> args) throws Exception;
+    Object invoke(String stepTokenId, List<Object> args) throws Exception;
 
 
     /**
@@ -100,9 +110,23 @@ public interface StepInvoker {
     String getCategory();
 
     /**
-     * 
+     *
      * @return true if this step is deprecated which implies that support for it may be discontinued in future releases
      */
     boolean isDeprecated();
+
+    /**
+     * @return true if this invoker's step method declares a
+     *         {@link org.chorusbdd.chorus.annotations.DocString} as its final parameter,
+     *         meaning a DocString value must be present on the StepToken at invocation time.
+     */
+    boolean requiresDocString();
+
+    /**
+     * @return true if this invoker expects a
+     *         {@link org.chorusbdd.chorus.annotations.DataTable} as its final parameter,
+     *         meaning a data table must be present on the StepToken at invocation time.
+     */
+    boolean requiresDataTable();
 
 }

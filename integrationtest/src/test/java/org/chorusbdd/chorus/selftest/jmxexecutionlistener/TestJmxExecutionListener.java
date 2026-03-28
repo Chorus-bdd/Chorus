@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,12 +93,26 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
         assertTrue("The remote JMX listener produced the expected output", actualOut.endsWith(expectedOut));
     }
 
+    // Classes required for JMX/RMI serialization of Chorus result tokens.
+    // The filter factory below overrides jdk.remoteref.PRef's context-specific filter (JDK 25+)
+    // so that this global filter is used instead of PRef's more restrictive one.
+    private static final String SERIAL_FILTER =
+            "maxdepth=20;maxrefs=10000;maxbytes=10485760;java.base/*;java.util.*;java.lang.*;org.chorusbdd.chorus.**;com.sun.jmx.**;javax.management.**;!*";
+
+    // Overrides context-specific filters set by jdk.remoteref.PRef in JDK 25+ (JEP 415).
+    // Without this, PRef replaces the global jdk.serialFilter with one that only allows PRef
+    // itself, causing all Chorus token classes to be rejected during JMX deserialization.
+    private static final String SERIAL_FILTER_FACTORY =
+            "org.chorusbdd.chorus.selftest.jmxexecutionlistener.PermissiveSerialFilterFactory";
+
     private void startJmxExecutionListenerProcess(ForkedRunner f, PrintStream outStream) throws Exception {
         Properties sysPropsForTest = new Properties();
         sysPropsForTest.put("com.sun.management.jmxremote.authenticate", "false");
         sysPropsForTest.put("com.sun.management.jmxremote.port", "9999");
         sysPropsForTest.put("com.sun.management.jmxremote", "");
         sysPropsForTest.put("com.sun.management.jmxremote.ssl", "false");
+        sysPropsForTest.put("jdk.serialFilter", SERIAL_FILTER);
+        sysPropsForTest.put("jdk.serialFilterFactory", SERIAL_FILTER_FACTORY);
         f.runForked(sysPropsForTest, "org.chorusbdd.chorus.selftest.jmxexecutionlistener.ExecutionListenerMain", outStream, 0);
 
         Thread.sleep(3000);  //let the forked listener start up and create its MBeans, no easy way to poll for this
@@ -106,6 +120,8 @@ public class TestJmxExecutionListener extends AbstractInterpreterTest {
 
     protected void doUpdateTestProperties(DefaultTestProperties sysProps) {
         sysProps.put("chorusJmxListener", "localhost:9999");
+        sysProps.put("jdk.serialFilter", SERIAL_FILTER);
+        sysProps.put("jdk.serialFilterFactory", SERIAL_FILTER_FACTORY);
     }
 
 

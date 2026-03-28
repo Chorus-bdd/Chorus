@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ public class BillAndBenHandler implements StepInvokerProvider {
             }
 
             @Override
-            public Object invoke(final String stepTokenId, List<String> args) throws ReflectiveOperationException {
+            public Object invoke(final String stepTokenId, List<Object> args) throws ReflectiveOperationException {
                 return StepInvoker.VOID_RESULT;
             }
 
@@ -90,6 +90,16 @@ public class BillAndBenHandler implements StepInvokerProvider {
             public boolean isDeprecated() {
                 return false;
             }
+
+            @Override
+            public boolean requiresDocString() {
+                return false;
+            }
+
+            @Override
+            public boolean requiresDataTable() {
+                return false;
+            }
         };
 
         StepInvoker two = new StepInvoker() {
@@ -111,7 +121,7 @@ public class BillAndBenHandler implements StepInvokerProvider {
             }
 
             @Override
-            public Object invoke(final String stepTokenId, List<String> args) throws ReflectiveOperationException {
+            public Object invoke(final String stepTokenId, List<Object> args) throws ReflectiveOperationException {
                 Integer port = Integer.valueOf(jmxProperty);
                 return port;
             }
@@ -138,6 +148,16 @@ public class BillAndBenHandler implements StepInvokerProvider {
 
             @Override
             public boolean isDeprecated() {
+                return false;
+            }
+
+            @Override
+            public boolean requiresDocString() {
+                return false;
+            }
+
+            @Override
+            public boolean requiresDataTable() {
                 return false;
             }
         };

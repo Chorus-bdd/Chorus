@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,6 +57,8 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
     private final String stepId;
     private final String technicalDescription;
     private final int timeoutSeconds;
+    private final boolean requiresDocString;
+    private final boolean requiresDataTable;
 
     private ExecutingStep NO_STEP_EXECUTING = new ExecutingStep("NO_STEP_EXECUTING");
 
@@ -70,17 +72,21 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             String technicalDescription,
             String pendingMessage,
             int timeoutSeconds,
-            StepRetry stepRetry) throws InvalidStepException {
+            StepRetry stepRetry,
+            boolean requiresDocString,
+            boolean requiresDataTable) throws InvalidStepException {
         super(pendingMessage, stepPattern, stepRetry, "WebSocket: " + clientId, false);
         this.messageRouter = messageRouter;
         this.clientId = clientId;
         this.stepId = stepId;
         this.technicalDescription = technicalDescription;
         this.timeoutSeconds = timeoutSeconds;
+        this.requiresDocString = requiresDocString;
+        this.requiresDataTable = requiresDataTable;
     }
 
     @Override
-    public Object invoke(final String stepTokenId, List<String> args) {
+    public Object invoke(final String stepTokenId, List<Object> args) {
         String executionUUID = UUID.randomUUID().toString();
 
         ExecuteStepMessage executeStepMessage = new ExecuteStepMessage(
@@ -137,6 +143,17 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
         return technicalDescription;
     }
 
+
+    @Override
+    public boolean requiresDocString() {
+        return requiresDocString;
+    }
+
+    @Override
+    public boolean requiresDataTable() {
+        return requiresDataTable;
+    }
+
     public String getClientId() {
         return clientId;
     }
@@ -164,7 +181,9 @@ class WebSocketClientStepInvoker extends SkeletalStepInvoker {
             publishStepMessage.getTechnicalDescription(),
             publishStepMessage.getPendingMessage(),
             timeoutSeconds,
-            stepRetry
+            stepRetry,
+            publishStepMessage.isRequiresDocString(),
+            publishStepMessage.isRequiresDataTable()
         );
     }
 

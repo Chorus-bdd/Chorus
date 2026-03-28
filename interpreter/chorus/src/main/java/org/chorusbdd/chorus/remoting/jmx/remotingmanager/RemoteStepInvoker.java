@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,6 +50,8 @@ public class RemoteStepInvoker implements StepInvoker {
     private final StepRetry stepRetry;
     private final String categoryName;
     private final boolean deprecated;
+    private final boolean requiresDocString;
+    private final boolean requiresDataTable;
 
     private RemoteStepInvoker(
             String remotingConfigName,
@@ -60,7 +62,9 @@ public class RemoteStepInvoker implements StepInvoker {
             String pendingMessage,
             String technicalDescription,
             StepRetry stepRetry,
-            boolean deprecated) {
+            boolean deprecated,
+            boolean requiresDocString,
+            boolean requiresDataTable) {
         this.categoryName = "Remoting: " + remotingConfigName;
         this.proxy = proxy;
         this.remoteStepId = remoteStepId;
@@ -70,6 +74,8 @@ public class RemoteStepInvoker implements StepInvoker {
         this.pattern = Pattern.compile(regex);
         this.stepRetry = stepRetry;
         this.deprecated = deprecated;
+        this.requiresDocString = requiresDocString;
+        this.requiresDataTable = requiresDataTable;
     }
 
     /**
@@ -97,7 +103,7 @@ public class RemoteStepInvoker implements StepInvoker {
      * Invoke the method
      * @return the result returned by the step method, or VOID_RESULT if the step method has a void return type
      */
-    public Object invoke(final String stepTokenId, List<String> args) {
+    public Object invoke(final String stepTokenId, List<Object> args) {
         Object result;
         try {
             result = proxy.invokeStep(remoteStepId, stepTokenId, args);
@@ -136,6 +142,16 @@ public class RemoteStepInvoker implements StepInvoker {
         return deprecated;
     }
 
+    @Override
+    public boolean requiresDocString() {
+        return requiresDocString;
+    }
+
+    @Override
+    public boolean requiresDataTable() {
+        return requiresDataTable;
+    }
+
     public String toString() {
         return pattern.toString();
     }
@@ -161,18 +177,22 @@ public class RemoteStepInvoker implements StepInvoker {
         //Chorus 2.0.x did not support retryDuration so it may be null
         Boolean isDeprecated = (Boolean)jmxInvokerResult.getOrDefault(JmxInvokerResult.IS_DEPRECATED, false);
 
-        //at present we just use the remoteStepInvoker to allow the extractGroups to work but should refactor
-        //to actually invoke the remote method with it
+        // Older remote components may not publish requiresDocString / requiresDataTable; default to false
+        Boolean requiresDocString = (Boolean)jmxInvokerResult.getOrDefault(JmxInvokerResult.REQUIRES_DOC_STRING, false);
+        Boolean requiresDataTable = (Boolean)jmxInvokerResult.getOrDefault(JmxInvokerResult.REQUIRES_DATA_TABLE, false);
+
         RemoteStepInvoker stepInvoker = new RemoteStepInvoker(
-            jmxProxy.getComponentName(), 
-            regex, 
-            jmxProxy, 
-            remoteStepId, 
-            isPending, 
-            pending, 
-            technicalDescription, 
+            jmxProxy.getComponentName(),
+            regex,
+            jmxProxy,
+            remoteStepId,
+            isPending,
+            pending,
+            technicalDescription,
             stepRetry,
-            isDeprecated
+            isDeprecated,
+            requiresDocString,
+            requiresDataTable
         );
         return stepInvoker;
     }

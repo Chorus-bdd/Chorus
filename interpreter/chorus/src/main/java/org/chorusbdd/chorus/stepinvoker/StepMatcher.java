@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public class StepMatcher {
     private List<StepInvoker> stepInvokers;
     private String stepAction;
     private StepInvoker chosenStepInvoker;
-    private List<String> invokerArgs;
+    private List<Object> invokerArgs;
     private StepMatchResult stepMatchResult = StepMatchResult.STEP_NOT_FOUND;
     private ChorusException matchException;
 
@@ -60,7 +60,7 @@ public class StepMatcher {
         return chosenStepInvoker;
     }
 
-    public List<String> getInvokerArgs() {
+    public List<Object> getInvokerArgs() {
         return invokerArgs;
     }
 
@@ -88,7 +88,7 @@ public class StepMatcher {
             int groupCount = matcher.groupCount();
 
             //collect the regex group values
-            List<String> regexGroupValues = new ArrayList<>();
+            List<Object> regexGroupValues = new ArrayList<>();
             for (int i = 0; i < groupCount; i++) {
                 regexGroupValues.add(matcher.group(i + 1));
             }
@@ -96,7 +96,7 @@ public class StepMatcher {
         }
     }
 
-    private void foundStepInvoker(StepInvoker stepInvoker, List<String> stepArguments) throws DuplicateStepMatchException {
+    private void foundStepInvoker(StepInvoker stepInvoker, List<Object> stepArguments) throws DuplicateStepMatchException {
         if ( log.isTraceEnabled() ) {
             log.trace("Matched! " + stepInvoker + "," + stepArguments);
         }

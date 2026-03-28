@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
     private String stepTokenId;
     private String pattern;
     private int timeoutPeriodSeconds;
-    private List<String> arguments;
+    private List<Object> arguments;
     private Map<String, Object> contextVariables;
 
     /**
@@ -47,7 +47,7 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         super(MessageType.EXECUTE_STEP.name());
     }
 
-    public ExecuteStepMessage(String chorusClientId, String stepId, String executionId, String stepTokenId, String pattern, int timeoutPeriodSeconds, List<String> arguments, Map<String, Object> contextVariables) {
+    public ExecuteStepMessage(String chorusClientId, String stepId, String executionId, String stepTokenId, String pattern, int timeoutPeriodSeconds, List<Object> arguments, Map<String, Object> contextVariables) {
         this();
         this.stepId = stepId;
         this.executionId = executionId;
@@ -99,11 +99,11 @@ public class ExecuteStepMessage extends AbstractTypedMessage {
         this.timeoutPeriodSeconds = timeoutPeriodSeconds;
     }
 
-    public List<String> getArguments() {
+    public List<Object> getArguments() {
         return arguments;
     }
 
-    public void setArguments(List<String> arguments) {
+    public void setArguments(List<Object> arguments) {
         this.arguments = arguments;
     }
 

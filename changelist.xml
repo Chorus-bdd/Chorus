@@ -2,6 +2,21 @@
 <?xml-stylesheet type="text/xsl" href="./changelist.xsl"?>
 <changes>
     <version>
+        <versionNumber>5.0.0-ALPHA</versionNumber>
+        <comment>Major new version of Chorus with DocString and DataTable support, ANTLR4 parser, Gradle 9.x, and Java 25 compatibility</comment>
+        <change desc="DocString support: Gherkin triple-quoted doc strings (&#34;&#34;&#34;) can now be passed to @Step methods via a DocString final parameter"/>
+        <change desc="DataTable support: Gherkin pipe-delimited data tables can now be passed to @Step methods via a DataTable final parameter (first row treated as headers)"/>
+        <change desc="DocString and DataTable arguments work with JMX/RMI remoting: values are serialised over RMI and coerced to the correct type on the remote handler"/>
+        <change desc="DocString and DataTable arguments work with WebSocket remoting: requiresDocString and requiresDataTable flags added to the PublishStepMessage wire protocol (defaulting to false for backwards compatibility)"/>
+        <change desc="StepInvoker.invoke() now accepts List&lt;Object&gt; instead of List&lt;String&gt; to carry non-String argument types (DocString, DataTable) through the invocation chain"/>
+        <change desc="ANTLR4 grammar-based parser replaces the hand-coded FSM parser for feature files, improving robustness and maintainability"/>
+        <change desc="Build upgraded to Gradle 9.x; ANTLR code generation switched to the Gradle antlr plugin"/>
+        <change desc="Java 25 compatibility: project builds and tests pass under JDK 25"/>
+        <change desc="JmxInvokerResult wire protocol extended with requiresDocString and requiresDataTable flags"/>
+        <change desc="Integration tests added for DocString and DataTable remoting over JMX"/>
+        <change desc="Copyright year updated to 2026 across all source files"/>
+    </version>
+    <version>
         <versionNumber>4.0.1</versionNumber>
         <comment>Support for setting selenium driver log level</comment>
         <change desc="Support setting selenium driver log level in selenium handler config, suppress excess output from Edge driver by default"/>

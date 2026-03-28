@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,16 +43,18 @@ public interface ChorusHandlerJmxExporterMBean {
     List<JmxInvokerResult> getStepInvokers();
 
     /**
-     * The interpreter will call this method to invoke a test step
-     * 
-     * @param stepInvokerId         the id of a step returned by getStepInvokers()
-     * @param stepTokenId           a unique UUID for this step within the currently executing test suite
-     * @param chorusContext         variables within the Chorus Context
-     * @param params                one parameter for each capturing group in the regular expression which defines this step
-     * @return                      The result of executing this step which may be a returned value or StepInvoker.VOID_RESULT 
+     * The interpreter will call this method to invoke a test step.
+     *
+     * @param stepInvokerId the id of a step returned by getStepInvokers()
+     * @param stepTokenId   a unique UUID for this step within the currently executing test suite
+     * @param chorusContext variables within the Chorus Context
+     * @param params        arguments for the step — one {@code String} per capturing group in the step pattern,
+     *                      with an optional final element that may be a {@code String} (DocString) or
+     *                      {@code List<Map<String,String>>} (DataTable) when required by the step method
+     * @return              the result of executing this step, or {@code StepInvoker.VOID_RESULT}
      * @throws Exception
      */
-    JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<String> params) throws Exception;
+    JmxStepResult invokeStep(String stepInvokerId, String stepTokenId, Map chorusContext, List<Object> params) throws Exception;
 
     /**
      * This is a method included to support a future feature in which the interpreter can ask the remote component to send a diagnostic 

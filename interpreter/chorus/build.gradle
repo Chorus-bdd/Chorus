@@ -1,7 +1,42 @@
 
 apply plugin: 'signing'
+apply plugin: 'antlr'
 
 description = "chorus"
+
+// Split-grammar ordering problem: ANTLR's Tool sorts grammar files alphabetically, so
+// ChorusFeature.g4 (parser) is always processed before ChorusFeatureLexer.g4 (lexer).
+// The parser declares tokenVocab = ChorusFeatureLexer, which requires ChorusFeatureLexer.tokens
+// to already exist. We fix this by pre-generating just the lexer via a dedicated JavaExec task
+// so the tokens file is present before the main generateGrammarSource invocation runs,
+// then using -lib to tell ANTLR where to find it.
+
+// Step 1: Run ANTLR on the lexer grammar only to produce ChorusFeatureLexer.tokens.
+// We use the grammar's own package directory as workingDir so ANTLR writes the tokens
+// file flat into antlr-lib (no subdirectory). ANTLR's -lib flag is a flat lookup, so
+// the tokens file must be directly in the lib dir, not in a package subdirectory.
+task generateLexerTokens(type: JavaExec) {
+    description = 'Pre-generates ANTLR lexer tokens file required by the parser grammar'
+    workingDir = file('src/main/antlr/org/chorusbdd/chorus/parser')
+    classpath = configurations.antlr
+    mainClass = 'org.antlr.v4.Tool'
+    def libDir = layout.buildDirectory.dir('antlr-lib')
+    args '-o', libDir.get().asFile.absolutePath,
+         '-package', 'org.chorusbdd.chorus.parser',
+         'ChorusFeatureLexer.g4'
+    outputs.dir(libDir)
+    doFirst {
+        libDir.get().asFile.mkdirs()
+    }
+}
+
+// Step 2: Generate the full grammar (parser + lexer), with the tokens file already present
+generateGrammarSource {
+    maxHeapSize = "64m"
+    dependsOn generateLexerTokens
+    arguments += ["-visitor", "-no-listener", "-package", "org.chorusbdd.chorus.parser",
+                  "-lib", layout.buildDirectory.dir('antlr-lib').get().asFile.absolutePath]
+}
 
 sourceSets {
     test {
@@ -12,6 +47,9 @@ sourceSets {
 }
 
 dependencies {
+    antlr group: 'org.antlr', name: 'antlr4', version: '4.13.2'
+    implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.13.2'
+
     compileOnly group: 'org.apache.ant', name: 'ant', version: '1.10.11'
     compileOnly group: 'junit', name: 'junit', version: '4.13.2'
     compileOnly group: 'commons-logging', name: 'commons-logging', version: '1.2'
@@ -33,5 +71,16 @@ task createChorusVersionResource(type: Copy) {
 }
 
 processResources.dependsOn createChorusVersionResource
+tasks.named('sourcesJar').configure {
+    dependsOn createChorusVersionResource
+    dependsOn generateGrammarSource
+}
+
+// The license plugin scans all Java source dirs including the ANTLR-generated output dir.
+// Exclude generated files from the license header check since ANTLR doesn't add headers.
+afterEvaluate {
+    licenseMain.source = sourceSets.main.allJava.filter { !it.absolutePath.contains('generated-src') }
+    licenseTest.source = sourceSets.test.allJava.filter { !it.absolutePath.contains('generated-src') }
+}
 
 

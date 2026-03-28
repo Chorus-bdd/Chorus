@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,38 @@ public class StepMacroParser extends AbstractChorusParser<StepMacro> {
     public static final int MAX_LENGTH_CHARS = 1000000;
 
     public List<StepMacro> parse(Supplier<Reader> r) throws IOException, ParseException {
+        return parseWithAntlr(r);
+    }
+
+    private List<StepMacro> parseWithAntlr(Supplier<Reader> r) throws IOException, ParseException {
+        // Delegate to AntlrFeatureFileParser infrastructure for consistent parsing behaviour
+        org.antlr.v4.runtime.CharStream charStream = AntlrFeatureFileParser.readWithTrailingNewline(r.get());
+
+        ChorusFeatureLexer lexer = new ChorusFeatureLexer(charStream);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new ChorusAntlrErrorListener());
+
+        org.antlr.v4.runtime.CommonTokenStream tokens = new org.antlr.v4.runtime.CommonTokenStream(lexer);
+
+        ChorusFeature parser = new ChorusFeature(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new ChorusAntlrErrorListener());
+        parser.setErrorHandler(new org.antlr.v4.runtime.BailErrorStrategy());
+
+        ChorusFeature.FeatureFileContext tree;
+        try {
+            tree = parser.featureFile();
+        } catch (org.antlr.v4.runtime.misc.ParseCancellationException e) {
+            throw AntlrFeatureFileParser.toParseException(e);
+        }
+
+        ChorusStepMacroVisitor visitor = new ChorusStepMacroVisitor();
+        visitor.visit(tree);
+        return visitor.getResult();
+    }
+
+    @SuppressWarnings("unused") // retained for reference — replaced by parseWithAntlr
+    private List<StepMacro> parseLegacy(Supplier<Reader> r) throws IOException, ParseException {
 
         try (BufferedReader reader = new BufferedReader(r.get())) {
 

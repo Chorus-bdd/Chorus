@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,7 @@ public abstract class PolledInvoker implements StepInvoker {
      * @param stepTokenId
      * @param args
      */
-    public Object invoke(final String stepTokenId, final List<String> args) {
+    public Object invoke(final String stepTokenId, final List<Object> args) {
         final AtomicReference resultRef = new AtomicReference();
 
         PolledAssertion p = new PolledAssertion() {
@@ -120,6 +120,10 @@ public abstract class PolledInvoker implements StepInvoker {
     }
     
     public boolean isDeprecated() { return wrappedInvoker.isDeprecated(); }
-    
+
     public String getCategory() { return wrappedInvoker.getCategory(); }
+
+    public boolean requiresDocString() { return wrappedInvoker.requiresDocString(); }
+
+    public boolean requiresDataTable() { return wrappedInvoker.requiresDataTable(); }
 }

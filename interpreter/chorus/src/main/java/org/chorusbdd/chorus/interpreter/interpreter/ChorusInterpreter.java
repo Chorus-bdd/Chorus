@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -254,7 +254,7 @@ public class ChorusInterpreter {
 
         scenarioTimeoutStopThread = timeoutExcecutor.schedule(new Runnable() {
             public void run() {
-                stopThreadIfStillRunning(t);
+                timeoutIfStillRunning(t);
             }
         }, scenarioTimeoutMillis * 2, TimeUnit.MILLISECONDS);
 
@@ -279,16 +279,8 @@ public class ChorusInterpreter {
         }
     }
 
-    private void stopThreadIfStillRunning(Thread t) {
-        if ( t.isAlive()) {
-            log.error("Scenario did not respond to interrupt after timeout, " +
-                    "will stop the interpreter thread and fail the tests");
-            t.stop(); //this will trigger a ThreadDeath exception which we should allow to propagate and will terminate the interpreter
-        }
-    }
-
     private void killInterpreterIfStillRunning(Thread t) {
-        if ( t.isAlive()) {
+        if (t.isAlive()) {
             log.error("Scenario did not respond to thread.kill() after timeout, will now kill the interpreter");
             System.exit(1);
         }

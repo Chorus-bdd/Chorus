@@ -12,6 +12,25 @@ sourceSets {
     }
 }
 
+java {
+    // the integration tests have V9 source and target since the jmxexecutionlistener tests (which serialize tokens over RMI) need a custom
+    // PermissiveSerialFilterFactory using ObjectInputFilter which is since java 9
+    sourceCompatibility = JavaVersion.VERSION_1_9
+    targetCompatibility = JavaVersion.VERSION_1_9
+}
+
+
+test {
+    // jdk.serialFilter must be set at JVM startup — setting it via System.setProperty()
+    // at runtime has no effect because the JVM serialization filter may already be
+    // initialised by the time the test code runs.
+    //
+    // The test worker itself does not make JMX connections; it only forks the Chorus
+    // interpreter and ExecutionListenerMain processes, which each receive their own
+    // stricter filter (with !*) plus jdk.serialFilterFactory via TestJmxExecutionListener.
+    // A permissive '*' here keeps Gradle's own WorkerConfigSerializer happy.
+    jvmArgs '-Djdk.serialFilter=maxdepth=20;maxrefs=10000;maxbytes=10485760;*'
+}
 
 dependencies {
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'

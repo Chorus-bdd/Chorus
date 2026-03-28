@@ -1,0 +1,19 @@
+Feature: DataTable                                                                                   
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/datatable/datatable.feature
+  Scenario: Data table is passed to the handler
+Chorus --> INFO    - Processing scenario: Data table is passed to the handler
+    Given I receive the following table                                                      PASSED  
+    Then the table should have 2 rows                                                        PASSED  
+    And row 1 should have name equal to Alice                                                PASSED  
+    And row 2 should have email equal to bob@example.com                                     PASSED  
+  Scenario: DataTable can follow capture groups in the step expression
+Chorus --> INFO    - Processing scenario: DataTable can follow capture groups in the step expression
+    Given I receive the following table labeled users                                        PASSED  
+    Then the label should be users                                                           PASSED  
+    And the table should have 1 rows                                                         PASSED  
+    And row 1 should have name equal to Carol                                                PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:8) (passed:8) (failed:0) (undefined:0) (pending:0) (skipped:0)

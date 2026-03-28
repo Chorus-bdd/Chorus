@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,7 +56,7 @@ public class StepInvokerWrapper implements StepInvoker {
     }
 
     @Override
-    public Object invoke(String stepTokenId, List<String> args) throws Exception {
+    public Object invoke(String stepTokenId, List<Object> args) throws Exception {
         return wrappedInvoker.invoke(stepTokenId, args);
     }
 
@@ -83,5 +83,15 @@ public class StepInvokerWrapper implements StepInvoker {
     @Override
     public boolean isDeprecated() {
         return wrappedInvoker.isDeprecated();
+    }
+
+    @Override
+    public boolean requiresDocString() {
+        return wrappedInvoker.requiresDocString();
+    }
+
+    @Override
+    public boolean requiresDataTable() {
+        return wrappedInvoker.requiresDataTable();
     }
 }

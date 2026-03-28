@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,22 +48,15 @@ public class ScenarioTimeoutHandler extends Assert {
 
     @Step("I enter a perpetually blocked step")
     public void doPerpetualSleep() {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            //first sleep should be interrupted
+        }
 
         try {
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                //first sleep should be interrupted
-            }
-
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-            }
-
-            fail("Expect Thread Death");
-
-        } catch (ThreadDeath t) {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
         }
     }
 

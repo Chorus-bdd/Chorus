@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -82,6 +82,11 @@ public class FeatureFileParser extends AbstractChorusParser<FeatureToken> {
      * @param r
      */
     public List<FeatureToken> parse(Supplier<Reader> r) throws IOException, ParseException {
+        return new AntlrFeatureFileParser(globalStepMacro).parse(r);
+    }
+
+    @SuppressWarnings("unused") // retained for reference — FSM logic replaced by AntlrFeatureFileParser
+    private List<FeatureToken> parseLegacy(Supplier<Reader> r) throws IOException, ParseException {
 
         //first pre-parse the step macros
         List<StepMacro> featureLocalStepMacro = stepMacroParser.parse(r);

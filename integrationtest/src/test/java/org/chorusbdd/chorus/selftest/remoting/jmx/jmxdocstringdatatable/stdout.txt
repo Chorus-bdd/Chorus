@@ -1,0 +1,20 @@
+Feature: Jmx Remoting DocString DataTable                                                            
+Chorus --> INFO    - Running feature from file: src/test/java/org/chorusbdd/chorus/selftest/remoting/jmx/jmxdocstringdatatable/jmxdocstringdatatable.feature
+Chorus --> INFO    - No default handler found for Feature: (Jmx Remoting DocString DataTable), will use built-in handlers and Uses: statements
+  Scenario: Call a Remote Step Which Requires a DocString
+Chorus --> INFO    - Processing scenario: Call a Remote Step Which Requires a DocString
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process                                                          PASSED  
+    When I connect to the config1 process                                                    PASSED  
+    Then I can call a remote step with a doc string                                          PASSED  
+  Scenario: Call a Remote Step Which Requires a DataTable
+Chorus --> INFO    - Processing scenario: Call a Remote Step Which Requires a DataTable
+Chorus --> INFO    - About to run process:  <system specific process details replaced>
+    Given I start a config1 process                                                          PASSED  
+    When I connect to the config1 process                                                    PASSED  
+    Then I can call a remote step with a data table                                          PASSED  
+
+
+Features  (total:1) (passed:1) (failed:0)
+Scenarios (total:2) (passed:2) (failed:0)
+Steps     (total:6) (passed:6) (failed:0) (undefined:0) (pending:0) (skipped:0)

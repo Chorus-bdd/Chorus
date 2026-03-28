@@ -1,0 +1,25 @@
+Feature: DocString Feature
+
+  Scenario: Step with a single-line DocString
+    Given I receive the following body
+    """
+    Hello World
+    """
+
+  Scenario: Step with a multi-line DocString
+    Given I receive the following body
+    """
+    Line One
+    Line Two
+    Line Three
+    """
+
+  Scenario: Step with a DocString after regular steps
+    Given I perform setup
+    When I receive the following body
+    """
+    First paragraph
+
+    Second paragraph after blank line
+    """
+    Then I verify the result

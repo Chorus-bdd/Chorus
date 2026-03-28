@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2025 Chorus BDD Organisation.
+ * Copyright (c) 2026 Chorus BDD Organisation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,12 +36,15 @@ import org.chorusbdd.chorus.stepinvoker.catalogue.StepCatalogue;
 import org.chorusbdd.chorus.util.ChorusException;
 import org.chorusbdd.chorus.util.ExceptionHandling;
 import org.chorusbdd.chorus.util.PolledAssertion;
+import org.chorusbdd.chorus.util.assertion.ChorusAssertionError;
 
 import java.io.InterruptedIOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -262,10 +265,38 @@ public class StepProcessor {
     }
 
     private Object invokeAndGetResult(StepToken step, StepMatcher stepMatcher, StepInvoker foundStepInvoker) throws Exception {
+        List<Object> args = stepMatcher.getInvokerArgs();
+
+        // If the matched step method expects a DocString as its final parameter, append the
+        // step's DocString content to the argument list so TypeCoercion can produce the value.
+        if (foundStepInvoker.requiresDocString()) {
+            String docString = step.getDocString();
+            if (docString == null) {
+                throw new ChorusAssertionError(
+                    "Step method expects a DocString argument but no DocString block (\"\"\" ... \"\"\") " +
+                    "was found in the feature file for step: " + step.getAction());
+            }
+            args = new ArrayList<>(args);
+            args.add(docString);
+        }
+
+        // If the matched step method expects a DataTable as its final parameter, append the
+        // data table directly to the argument list as a List<Map<String,String>>.
+        if (foundStepInvoker.requiresDataTable()) {
+            List<Map<String, String>> dataTable = step.getDataTable();
+            if (dataTable.isEmpty()) {
+                throw new ChorusAssertionError(
+                    "Step method expects a DataTable argument but no data table was " +
+                    "found in the feature file for step: " + step.getAction());
+            }
+            args = new ArrayList<>(args);
+            args.add(dataTable);
+        }
+
         StepRetryDecorator retryInvoker = new StepRetryDecorator(foundStepInvoker);
         ResultWithRetryCount resultWithRetryCount = retryInvoker.invoke(
             step.getTokenId(),
-            stepMatcher.getInvokerArgs()
+            args
         );
         step.setRetryAttempts(resultWithRetryCount.getRetryAttempts());
         return resultWithRetryCount.getResult();
